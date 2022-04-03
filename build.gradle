@@ -1,0 +1,49 @@
+buildscript {
+    ext {
+        kotlinVersion = '1.6.10'
+        jparserVersion = '0.2.3'
+    }
+}
+
+plugins {
+    id 'scala'
+    id 'org.jetbrains.kotlin.jvm' version '1.6.10'
+}
+
+group 'com.giyeok.bibix'
+version '0.0.1-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+}
+
+sourceSets {
+    main {
+        scala {
+            srcDir 'src/generated/scala'
+            srcDir 'src/main/scala'
+        }
+        kotlin {
+            srcDir 'src/main/kotlin'
+        }
+    }
+}
+
+dependencies {
+    implementation group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk8', version: kotlinVersion
+    implementation group: 'org.jetbrains.kotlin', name: 'kotlin-compiler', version: kotlinVersion
+
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.13.1'
+    implementation group: 'com.fasterxml.jackson.module', name: 'jackson-module-kotlin', version: '2.13.1'
+
+    implementation group: 'org.codehaus.plexus', name: 'plexus-classworlds', version: '2.6.0'
+    implementation group: 'org.eclipse.jgit', name: 'org.eclipse.jgit', version: '6.1.0.202203080745-r'
+    implementation group: 'org.apache.maven', name: 'maven-resolver-provider', version: '3.8.5'
+    implementation group: 'org.apache.maven.resolver', name: 'maven-resolver-connector-basic', version: '1.7.3'
+    implementation group: 'org.apache.maven.resolver', name: 'maven-resolver-transport-file', version: '1.7.3'
+    implementation group: 'org.apache.maven.resolver', name: 'maven-resolver-transport-http', version: '1.7.3'
+
+    implementation group: 'com.giyeok', name: 'jparser-base', version: jparserVersion
+    implementation group: 'com.giyeok', name: 'jparser-fast', version: jparserVersion
+}

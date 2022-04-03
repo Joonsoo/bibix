@@ -1,0 +1,5 @@
+./protoc run_config.proto values.proto ids.proto repo.proto \
+  --proto_path=. \
+  --proto_path=./include \
+  --java_out=../../generated/java \
+  --kotlin_out=../../generated/kotlin

@@ -1,0 +1,53 @@
+syntax = "proto3";
+
+package com.giyeok.bibix.runner;
+
+option java_outer_classname = "BibixValueProto";
+
+message BibixValue {
+  oneof value {
+    bool boolean_value = 1;
+    string string_value = 2;
+    string path_value = 3;
+    string file_value = 4;
+    string directory_value = 5;
+    EnumValue enum_value = 6;
+    ListValue list_value = 7;
+    SetValue set_value = 8;
+    TupleValue tuple_value = 9;
+    NamedTupleValue named_tuple_value = 10;
+    ClassInstanceValue class_instance_value = 11;
+  }
+}
+
+message EnumValue {
+  string enum_type = 1;
+  string value = 2;
+}
+
+message ListValue {
+  repeated BibixValue values = 1;
+}
+
+message SetValue {
+  repeated BibixValue values = 1;
+}
+
+message TupleValue {
+  repeated BibixValue values = 1;
+}
+
+message NamedTupleValue {
+  repeated NamedValue values = 1;
+}
+
+message NamedValue {
+  string name = 1;
+  BibixValue value = 2;
+}
+
+message ClassInstanceValue {
+  string class_cname = 1;
+  repeated BibixValue params = 2;
+  BibixValue value = 3;
+}

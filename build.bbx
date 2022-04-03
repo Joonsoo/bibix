@@ -1,0 +1,134 @@
+from git("https://github.com/Joonsoo/jparser.git") import jparser
+import maven
+import jvm
+import java
+import "bibix-plugins/ktjvm" as ktjvm
+import "bibix-plugins/protobuf" as protobuf
+import "bibix-plugins/scala" as scala
+import bibix
+
+jparserVersion = "0.5"
+arg ktjvm.kotlinVersion as kotlinVersion: string = "1.6.10"
+// arg protobuf.protobufVersion as protobufVersion: string = "3.19.4"
+
+parserData = jparser.parsergen(
+  src = "bibix.cdg",
+  objectName = "BibixAst",
+  parserDataFile = "parserdata.pb"
+)
+
+ast = scala.library(
+  srcs = [parserData.astCode],
+  deps = [jparser.base, jparser.fast],
+  resources = [parserData.parserData]
+)
+
+namespace proto {
+  schema = protobuf.schema(
+    srcs = [
+      "bibix-core/src/main/protobuf/ids.proto",
+      "bibix-core/src/main/protobuf/repo.proto",
+      "bibix-core/src/main/protobuf/run_config.proto",
+      "bibix-core/src/main/protobuf/values.proto",
+    ]
+  )
+
+  protoset = protobuf.protoset(schema=schema)
+  javalib = java.library(
+    srcs=protobuf.java(schema=schema),
+    deps=[maven.dep("com.google.protobuf", "protobuf-java", "3.19.4")],
+  )
+  kotlinlib = ktjvm.library(
+    srcs=protobuf.kotlin(schema=schema),
+    deps=[
+      maven.dep("com.google.protobuf", "protobuf-kotlin", "3.19.4"),
+      maven.dep("org.jetbrains.kotlin", "kotlin-stdlib-jdk8", kotlinVersion),
+      javalib,
+    ],
+  )
+}
+
+ttt = proto.javalib
+
+core = ktjvm.library(
+  srcs = glob("bibix-core/src/main/kotlin/**/*.kt"),
+  deps = [
+    proto.javalib,
+    proto.kotlinlib,
+    jvm.lib("lib/bibix-ast-0.0.1-SNAPSHOT.jar"),
+
+    maven.dep("org.jetbrains.kotlin", "kotlin-stdlib-jdk8", kotlinVersion),
+    maven.dep("org.scala-lang", "scala-library", "2.13.6"),
+
+    maven.dep("com.google.protobuf", "protobuf-java-util", "3.19.4"),
+    maven.dep("com.fasterxml.jackson.core", "jackson-databind", "2.13.1"),
+    maven.dep("com.fasterxml.jackson.module", "jackson-module-kotlin", "2.13.1"),
+
+    maven.dep("org.codehaus.plexus", "plexus-classworlds", "2.6.0"),
+    maven.dep("org.eclipse.jgit", "org.eclipse.jgit", "6.1.0.202203080745-r"),
+    maven.dep("org.apache.maven", "maven-resolver-provider", "3.8.5"),
+    maven.dep("org.apache.maven.resolver", "maven-resolver-connector-basic", "1.7.3"),
+    maven.dep("org.apache.maven.resolver", "maven-resolver-transport-file", "1.7.3"),
+    maven.dep("org.apache.maven.resolver", "maven-resolver-transport-http", "1.7.3"),
+
+    jvm.lib("lib/jparser-base-0.2.3.jar"),
+    jvm.lib("lib/jparser-fast-0.2.3.jar"),
+    jvm.lib("lib/jparser-naive-0.2.3.jar"),
+    jvm.lib("lib/jparser-utils-0.2.3.jar"),
+    // maven.dep("com.giyeok", "jparser-base", jparserVersion),
+    // maven.dep("com.giyeok", "jparser-fast", jparserVersion),
+  ],
+)
+
+uberJar = jvm.executableUberJar(
+  deps = [core],
+  mainClass = "com.giyeok.bibix.MainCli",
+)
+
+action run(args) = jvm.execute(
+  deps = [core],
+  mainClass = "com.giyeok.bibix.MainCli",
+  args = args,
+)
+
+protobufVersion = "3.19.4"
+
+testImpl = java.library(
+  srcs=[
+    "bibix-plugins/ktjvm/src/com/giyeok/bibix/plugins/ktjvm/Library.java",
+  ],
+  deps=[
+    bibix.base(),
+    maven.dep("org.jetbrains.kotlin", "kotlin-compiler", "1.6.10"),
+    maven.dep("org.jetbrains.kotlin", "kotlin-stdlib-jdk8", "1.6.10"),
+    maven.dep("com.google.protobuf", "protobuf-java", protobufVersion),
+    maven.dep("com.google.protobuf", "protobuf-java-util", protobufVersion),
+  ],
+)
+test5 = "hello! $jparserVersion"
+
+def ktLibrary(
+  deps: set<jvm.ClassPaths>,
+  srcs: set<file>,
+): jvm.Classes = testImpl:com.giyeok.bibix.plugins.ktjvm.Library
+
+action def testAction(
+  args: set<string>,
+) = testImpl:com.giyeok.bibix.plugins.ktjvm.Library
+
+test2 = ktjvm.library(
+  srcs=[
+    "test/Test.kt"
+  ],
+  deps=[
+    maven.dep("org.jetbrains.kotlin", "kotlin-stdlib-jdk8", "1.6.10"),
+    testImpl
+  ],
+)
+
+protoJs = protobuf.javascript(schema=proto.schema)
+
+test3 = [proto.kotlinlib, protoJs]
+
+// action test = testAction(["hello", "joonsoo"])
+// test = parserData

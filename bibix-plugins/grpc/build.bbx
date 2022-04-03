@@ -1,0 +1,22 @@
+import bibix
+import maven
+import jvm
+import "../curl" as curl
+import "../ktjvm" as ktjvm
+
+impl = ktjvm.library(
+  srcs = glob("src/**/*.kt"),
+  deps = [
+    bibix.base(),
+    maven.dep("org.jetbrains.kotlin", "kotlin-stdlib-jdk8", "1.6.10"),
+  ],
+)
+
+def web(
+): directory = impl:com.giyeok.bibix.plugins.grpc.Compile:web
+
+def java(
+): directory = impl:com.giyeok.bibix.plugins.grpc.Compile:java
+
+def kotlin(
+): directory = impl:com.giyeok.bibix.plugins.grpc.Compile:kotlin

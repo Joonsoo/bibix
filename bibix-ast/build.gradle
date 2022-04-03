@@ -1,0 +1,33 @@
+buildscript {
+    ext {
+        jparserVersion = '0.2.3'
+    }
+}
+
+plugins {
+    id 'scala'
+}
+
+group 'com.giyeok.bibix'
+version '0.0.1-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+}
+
+sourceSets {
+    main {
+        scala {
+            srcDir 'src/generated/scala'
+        }
+        resources {
+            srcDir 'src/generated/resources'
+        }
+    }
+}
+
+dependencies {
+    implementation group: 'com.giyeok', name: 'jparser-base', version: jparserVersion
+    implementation group: 'com.giyeok', name: 'jparser-fast', version: jparserVersion
+}

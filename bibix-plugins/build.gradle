@@ -1,0 +1,31 @@
+plugins {
+    id 'java'
+    id 'scala'
+    id 'org.jetbrains.kotlin.jvm'
+}
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+}
+
+sourceSets {
+    main {
+        java {
+            srcDir 'ktjvm/src'
+        }
+        kotlin {
+            srcDir 'curl/src'
+            srcDir 'zip/src'
+            srcDir 'protobuf/src'
+            srcDir 'grpc/src'
+            srcDir 'scala/src'
+        }
+    }
+}
+
+dependencies {
+    implementation project(':bibix-core')
+
+    implementation "org.jetbrains.kotlin:kotlin-compiler:1.6.10"
+}

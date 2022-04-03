@@ -1,0 +1,85 @@
+syntax = "proto3";
+
+package com.giyeok.bibix.runner;
+
+import "values.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+
+option java_outer_classname = "BibixIdProto";
+
+message SourceId {
+  oneof source {
+    google.protobuf.Empty root_source = 1;
+    google.protobuf.Empty main_source = 2;
+    string bibix_internal_source = 3;
+    string local_source = 4;
+    RemoteSourceId remote_source = 5;
+  }
+}
+
+message RemoteSourceId {
+  string source_type = 1;
+  BibixValue source_spec = 2;
+}
+
+message SourceHashId {
+  // source_hash는 source의 내용이 변경되면 같이 변경되는 해시. git repository라면 commit id가 적당할 것
+  bytes source_hash = 1;
+}
+
+message RuleImplId {
+  oneof impl_id {
+    // bibix version
+    string native_rule_impl = 1;
+    ObjectId rule_impl_object_id = 2;
+  }
+}
+
+message ObjectId {
+  SourceId source_id = 1;
+  ObjectIdHash rule_impl_id_hash = 2;
+  // rule impl의 구현 코드가 바뀐 경우. rule_impl_id_hash는 argument가 바뀐 경우에만 변경되기 때문에 필요
+  SourceHashId rule_impl_source_hash = 3;
+  string method_name = 4;
+  ArgsMap args_map = 5;
+}
+
+message ObjectIdHash {
+  // hash는 object의 내용이 조금이라도 바뀌었으면 바뀌어야 되는 값.
+  // root_source나 main_source는 bibix 버전이 들어가면 되려나..?
+  oneof hash {
+    string root_source = 1;
+    string bibix_internal_source = 2;
+    bytes object_id_hash_string = 3;
+  }
+}
+
+message ArgsMap {
+  repeated ArgPair pairs = 1;
+}
+
+message ArgPair {
+  string name = 1;
+  BibixValue value = 2;
+}
+
+// path는 root script 기준 상대 경로
+message DirectoryHash {
+  string path = 1;
+  repeated DirectoryHash directories = 2;
+  repeated FileHash files = 3;
+}
+
+message FileHash {
+  string path = 1;
+  google.protobuf.Timestamp last_modified_time = 2;
+  int64 size = 3;
+  bytes sha1_hash = 4;
+}
+
+message InputHashes {
+  repeated DirectoryHash directories = 1;
+  repeated FileHash files = 2;
+  repeated string non_existent = 3;
+}

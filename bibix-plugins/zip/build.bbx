@@ -1,0 +1,15 @@
+import bibix
+import "../ktjvm" as ktjvm
+import maven
+
+impl = ktjvm.library(
+  srcs = glob("src/**/*.kt"),
+  deps = [
+    bibix.base(),
+    maven.dep("org.jetbrains.kotlin", "kotlin-stdlib-jdk8", "1.6.10"),
+  ],
+)
+
+def unzip(
+  zipFile: file,
+): directory = impl:com.giyeok.bibix.plugins.zip.Unzip

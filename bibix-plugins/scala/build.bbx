@@ -1,0 +1,21 @@
+import jvm
+import "../ktjvm" as ktjvm
+import maven
+import bibix
+
+arg compilerVersion: string = "2.13.8"
+arg outVersion: string = "16"
+
+impl = java.library(
+  deps = [
+    maven.dep("org.scala-lang", "scala-compiler", compilerVersion),
+    bibix.base(),
+  ],
+  srcs = glob("src/**/*.java"),
+)
+
+def library(
+  srcs: set<file>,
+  deps: set<jvm.ClassPaths>,
+  outVersion: string = outVersion,
+): jvm.Classes = impl:com.giyeok.bibix.plugins.scala.Library

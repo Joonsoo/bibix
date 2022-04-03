@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+package com.giyeok.bibix.runner;
+
+option java_outer_classname = "RunConfigProto";
+
+message RunConfig {
+  int32 max_threads = 1;
+}

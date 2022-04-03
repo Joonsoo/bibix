@@ -1,0 +1,22 @@
+import jvm
+import java
+import maven
+import bibix
+
+arg compilerVersion: string = "1.6.10"
+arg outVersion: string = "16"
+
+impl = java.library(
+  deps = [
+    maven.dep("org.jetbrains.kotlin", "kotlin-compiler", compilerVersion),
+    // jvm.lib("../../bibix-core/build/classes/kotlin/main"),
+    bibix.base(),
+  ],
+  srcs = glob("src/**/*.java"),
+)
+
+def library(
+  srcs: set<file>,
+  deps: set<jvm.ClassPaths> = [],
+  outVersion: string = outVersion,
+): jvm.Classes = impl:com.giyeok.bibix.plugins.ktjvm.Library

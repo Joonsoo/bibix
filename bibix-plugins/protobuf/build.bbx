@@ -1,0 +1,101 @@
+import bibix
+import "../ktjvm" as ktjvm
+import "../curl" as curl
+import "../zip" as zip
+import maven
+import jvm
+
+arg protobufVersion: string = "3.20.0"
+
+impl = ktjvm.library(
+  srcs = glob("src/**/*.kt"),
+  deps = [
+    bibix.base(),
+    maven.dep("org.jetbrains.kotlin", "kotlin-stdlib-jdk8", "1.6.10"),
+  ],
+)
+
+class ProtoSchema = (schemaFiles: set<file>, includes: set<path>)
+
+def protocDownloadUrl(
+  os: OS = env.os,
+  arch: Arch = env.arch,
+  protobufVersion: string = protobufVersion,
+): string = impl:com.giyeok.bibix.plugins.protobuf.ProtocDownloadUrl
+
+protocPath = zip.unzip(curl.download(protocDownloadUrl()))
+
+def schema(
+  srcs: set<file>,
+  protocPath: directory = protocPath,
+  outputFileName?: string,
+): ProtoSchema = impl:com.giyeok.bibix.plugins.protobuf.Compile:schema
+
+def protoset(
+  schema: ProtoSchema,
+  os: OS = env.os,
+  protocPath: directory = protocPath,
+): file = impl:com.giyeok.bibix.plugins.protobuf.Compile:protoset
+
+def cpp(
+  schema: ProtoSchema,
+  os: OS = env.os,
+  protocPath: directory = protocPath,
+): set<file> = impl:com.giyeok.bibix.plugins.protobuf.Compile:cpp
+
+def csharp(
+  schema: ProtoSchema,
+  os: OS = env.os,
+  protocPath: directory = protocPath,
+): set<file> = impl:com.giyeok.bibix.plugins.protobuf.Compile:csharp
+
+def java(
+  schema: ProtoSchema,
+  os: OS = env.os,
+  protocPath: directory = protocPath,
+): set<file> = impl:com.giyeok.bibix.plugins.protobuf.Compile:java
+
+// --js_out=import_style=commonjs,binary:<dest directory> 식으로 쓰는 경우를 위한 추가 파라메터 필요
+def javascript(
+  schema: ProtoSchema,
+  os: OS = env.os,
+  protocPath: directory = protocPath,
+): set<file> = impl:com.giyeok.bibix.plugins.protobuf.Compile:javascript
+
+def kotlin(
+  schema: ProtoSchema,
+  os: OS = env.os,
+  protocPath: directory = protocPath,
+): set<file> = impl:com.giyeok.bibix.plugins.protobuf.Compile:kotlin
+
+def objc(
+  schema: ProtoSchema,
+  os: OS = env.os,
+  protocPath: directory = protocPath,
+): set<file> = impl:com.giyeok.bibix.plugins.protobuf.Compile:kotlin
+
+def php(
+  schema: ProtoSchema,
+  os: OS = env.os,
+  protocPath: directory = protocPath,
+): set<file> = impl:com.giyeok.bibix.plugins.protobuf.Compile:php
+
+def python(
+  schema: ProtoSchema,
+  os: OS = env.os,
+  protocPath: directory = protocPath,
+): set<file> = impl:com.giyeok.bibix.plugins.protobuf.Compile:python
+
+def ruby(
+  schema: ProtoSchema,
+  os: OS = env.os,
+  protocPath: directory = protocPath,
+): set<file> = impl:com.giyeok.bibix.plugins.protobuf.Compile:ruby
+
+def dart(
+  schema: ProtoSchema,
+  os: OS = env.os,
+  protocPath: directory = protocPath,
+): set<file> = impl:com.giyeok.bibix.plugins.protobuf.Compile:dart
+
+// TODO go
