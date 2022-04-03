@@ -44,7 +44,7 @@ public class Library {
             args.add(destDirectory.getCanonicalPath());
 
             args.add("-no-stdlib");
-            args.add("-no-reflect");
+            // args.add("-no-reflect");
 
             // System.out.println("** ktjvm args: " + args);
             CLITool.doMain(new K2JVMCompiler(), args.toArray(new String[0]));

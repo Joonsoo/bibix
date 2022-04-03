@@ -458,6 +458,7 @@ class BuildRunner(
                       repo,
                     )
 
+                    check(method.trySetAccessible())
                     val result = method.invoke(instance, context) as BibixValue
 
                     coerce(task, task.origin, result, ruleImplInfo.returnType) { coerced ->

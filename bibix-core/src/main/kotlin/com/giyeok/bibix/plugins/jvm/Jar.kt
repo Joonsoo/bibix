@@ -39,7 +39,7 @@ class Jar {
     val destFile = File(context.destDirectory, jarFileName)
 
     ZipOutputStream(destFile.outputStream().buffered()).use { zos ->
-      deps.forEach { dep ->
+      deps.reversed().forEach { dep ->
         if (dep.isFile) {
           // TODO dep is jar file
           ZipInputStream(dep.inputStream().buffered()).use { zis ->
@@ -54,7 +54,7 @@ class Jar {
                   transferFromStreamToStream(zis, zos)
                 } catch (e: ZipException) {
                   // TODO 일단 무시하고 진행하도록
-                  e.printStackTrace()
+                  println(e.message)
                 }
               }
               entry = zis.nextEntry
@@ -72,7 +72,7 @@ class Jar {
                   transferFromStreamToStream(path.toFile().inputStream().buffered(), zos)
                 } catch (e: ZipException) {
                   // TODO 일단 무시하고 진행하도록
-                  e.printStackTrace()
+                  println(e.message)
                 }
               }
             }

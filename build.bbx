@@ -2,9 +2,9 @@ from git("https://github.com/Joonsoo/jparser.git") import jparser
 import maven
 import jvm
 import java
-import git("https://github.com/Joonsoo/bibix.git", path="bibix-plugins/ktjvm") as ktjvm
-import git("https://github.com/Joonsoo/bibix.git", path="bibix-plugins/protobuf") as protobuf
-import git("https://github.com/Joonsoo/bibix.git", path="bibix-plugins/scala") as scala
+import git("https://github.com/Joonsoo/bibix.git", tag="0.0.1", path="bibix-plugins/ktjvm") as ktjvm
+import git("https://github.com/Joonsoo/bibix.git", tag="0.0.1", path="bibix-plugins/protobuf") as protobuf
+import git("https://github.com/Joonsoo/bibix.git", tag="0.0.1", path="bibix-plugins/scala") as scala
 import bibix
 
 jparserVersion = "0.5"
@@ -58,6 +58,8 @@ core = ktjvm.library(
     jvm.lib("lib/bibix-ast-0.0.1-SNAPSHOT.jar"),
 
     maven.dep("org.jetbrains.kotlin", "kotlin-stdlib-jdk8", kotlinVersion),
+    maven.dep("org.jetbrains.kotlin", "kotlin-reflect", kotlinVersion),
+
     maven.dep("org.scala-lang", "scala-library", "2.13.6"),
 
     maven.dep("com.google.protobuf", "protobuf-java-util", "3.19.4"),
