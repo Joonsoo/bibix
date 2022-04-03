@@ -3,3 +3,8 @@ out
 target
 build
 /bibix
+.gradle
+gradle/
+gradlew
+gradlew.bat
+

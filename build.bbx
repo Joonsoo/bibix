@@ -2,9 +2,9 @@ from git("https://github.com/Joonsoo/jparser.git") import jparser
 import maven
 import jvm
 import java
-import "bibix-plugins/ktjvm" as ktjvm
-import "bibix-plugins/protobuf" as protobuf
-import "bibix-plugins/scala" as scala
+import git("https://github.com/Joonsoo/bibix.git", path="bibix-plugins/ktjvm") as ktjvm
+import git("https://github.com/Joonsoo/bibix.git", path="bibix-plugins/protobuf") as protobuf
+import git("https://github.com/Joonsoo/bibix.git", path="bibix-plugins/scala") as scala
 import bibix
 
 jparserVersion = "0.5"

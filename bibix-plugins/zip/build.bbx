@@ -1,5 +1,5 @@
 import bibix
-import "../ktjvm" as ktjvm
+import git("https://github.com/Joonsoo/bibix.git", tag="0.0.1", path="bibix-plugins/ktjvm") as ktjvm
 import maven
 
 impl = ktjvm.library(
