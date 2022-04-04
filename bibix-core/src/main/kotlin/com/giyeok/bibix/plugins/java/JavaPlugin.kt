@@ -16,7 +16,7 @@ val javaPlugin = BibixPlugin.fromScript(
       compilerPath: string = "javac",
       srcVersion: string = srcVersion,
       outVersion: string = outVersion,
-    ): jvm.Classes = native:com.giyeok.bibix.plugins.java.Library
+    ): jvm.ClassPkg = native:com.giyeok.bibix.plugins.java.Library
     
     action def test(
       srcs: set<file>,

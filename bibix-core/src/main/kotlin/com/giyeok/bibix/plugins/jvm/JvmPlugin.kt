@@ -16,7 +16,7 @@ val jvmPlugin = BibixPlugin.fromScript(
     
     class MavenDep = (repo: string, group: string, artifact: string, version: string)
     // TODO LocalBuilt는 뭐가 들어가야되지..?
-    class LocalBuilt = (nothing: string)
+    class LocalBuilt = (desc: string)
     class LocalLib = (path: path)
     
     def flattenClassPkg(

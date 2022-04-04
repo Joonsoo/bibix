@@ -460,16 +460,34 @@ class BuildRunner(
                     )
 
                     check(method.trySetAccessible())
-                    val result = method.invoke(instance, context) as BibixValue
+                    val invokeResult = method.invoke(instance, context)
 
-                    coerce(task, task.origin, result, ruleImplInfo.returnType) { coerced ->
-                      checkNotNull(coerced)
-                      synchronized(this) {
-                        repo.markFinished(objectId)
-                        // task의 objectId 저장
-                        taskObjectIds[task] = objectId
+                    fun onFinalValue(result: BibixValue) {
+                      coerce(task, task.origin, result, ruleImplInfo.returnType) { coerced ->
+                        if (coerced == null) {
+                          println(result)
+                          println(ruleImplInfo.returnType)
+                        }
+                        checkNotNull(coerced)
+                        synchronized(this) {
+                          repo.markFinished(objectId)
+                          // task의 objectId 저장
+                          taskObjectIds[task] = objectId
+                        }
+                        registerTaskResult(task, coerced)
                       }
-                      registerTaskResult(task, coerced)
+                    }
+
+                    when (val result = invokeResult) {
+                      is BibixValue -> onFinalValue(result)
+                      is BuildRuleReturn.ValueReturn -> onFinalValue(result.value)
+                      is BuildRuleReturn.FailedReturn -> notifyTaskFailed(task)
+                      is BuildRuleReturn.EvalAndThen -> {
+                        // TODO on the fly source로 `result.script`를 addDef하고
+                        // `result.ruleName`을 . 단위로 끊어서 rule 이름을 찾은 다음
+                        // 해당 rule에 `result.params`을 줘서 실행한 다음
+                        // 결과를 `result.whenDone`으로 전달해서 반복
+                      }
                     }
                   }
                 }
@@ -803,20 +821,32 @@ class BuildRunner(
                     }
                   } else {
                     // type casting
+                    fun tryCoerceToReality() {
+                      coerce(task, origin, value, actualType.reality) { coerced ->
+                        if (coerced == null) {
+                          onFinished(null)
+                        } else {
+                          onFinished(ClassInstanceValue(actualType.cname, coerced))
+                        }
+                      }
+                    }
                     require(task, BuildTask.ResolveName(value.className)) { valueType, _ ->
                       valueType as CNameValue.ClassType
                       val castExprId = valueType.casts[actualType.cname]
-                      checkNotNull(castExprId)
-                      val castExprGraph = buildGraph.exprGraphs[castExprId]
-                      require(
-                        task,
-                        BuildTask.ExprEval(origin, castExprId, castExprGraph.mainNode, value)
-                      ) { castResult, _ ->
-                        coerce(task, origin, castResult as BibixValue, type) { finalValue ->
-                          if (finalValue == null) {
-                            onFinished(null)
-                          } else {
-                            onFinished(finalValue)
+                      if (castExprId == null) {
+                        tryCoerceToReality()
+                      } else {
+                        val castExprGraph = buildGraph.exprGraphs[castExprId]
+                        require(
+                          task,
+                          BuildTask.ExprEval(origin, castExprId, castExprGraph.mainNode, value)
+                        ) { castResult, _ ->
+                          coerce(task, origin, castResult as BibixValue, type) { finalValue ->
+                            if (finalValue == null) {
+                              tryCoerceToReality()
+                            } else {
+                              onFinished(finalValue)
+                            }
                           }
                         }
                       }
@@ -942,7 +972,20 @@ class BuildRunner(
             check(type.elemTypes.size == value.values.size)
             rec(value.values.map { it.second }, type.elemTypes, 0, mutableListOf())
           }
-          else -> onFinished(null)
+          else -> {
+            if (type.elemTypes.size == 1) {
+              // 길이가 1인 tuple이면 그냥 맞춰서 반환해주기
+              coerce(task, origin, value, type.elemTypes[0]) { coerced ->
+                if (coerced == null) {
+                  onFinished(null)
+                } else {
+                  onFinished(TupleValue(coerced))
+                }
+              }
+            } else {
+              onFinished(null)
+            }
+          }
         }
       }
       is NamedTupleType -> {
@@ -990,7 +1033,20 @@ class BuildRunner(
             }
             rec(0, mutableListOf())
           }
-          else -> onFinished(null)
+          else -> {
+            if (type.elemTypes.size == 1) {
+              // 길이가 1인 named tuple이면 그냥 맞춰서 반환해주기
+              coerce(task, origin, value, type.elemTypes[0].second) { coerced ->
+                if (coerced == null) {
+                  onFinished(null)
+                } else {
+                  onFinished(NamedTupleValue(type.elemTypes[0].first to coerced))
+                }
+              }
+            } else {
+              onFinished(null)
+            }
+          }
         }
       }
       is UnionType -> {

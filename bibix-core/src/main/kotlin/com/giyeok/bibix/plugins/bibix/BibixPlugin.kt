@@ -9,7 +9,7 @@ val bibixPlugin = BibixPlugin.fromScript(
     
     def base(
       ref: string = "HEAD"
-    ): jvm.Classes = native:com.giyeok.bibix.plugins.bibix.Base
+    ): jvm.ClassPkg = native:com.giyeok.bibix.plugins.bibix.Base
   """.trimIndent(),
   Classes(
     Base::class.java

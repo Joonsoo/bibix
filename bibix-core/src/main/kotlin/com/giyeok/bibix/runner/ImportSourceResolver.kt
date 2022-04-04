@@ -9,11 +9,17 @@ import org.eclipse.jgit.transport.CredentialsProvider
 import org.eclipse.jgit.transport.URIish
 import java.io.File
 import java.io.IOException
+import java.util.concurrent.locks.Lock
+import java.util.concurrent.locks.ReentrantLock
+import kotlin.concurrent.withLock
 
 // 지원되는 source 종류:
 // "path/to/source/on/local"
 // git(url: string, branch?: string, tag?: string, commitId?: string, path: string = "/", buildFile: string = "build.bbx")
-class ImportSourceResolver(val repo: Repo) {
+class ImportSourceResolver(
+  val repo: Repo,
+  private val locks: MutableMap<BibixIdProto.SourceId, Lock> = mutableMapOf(),
+) {
   fun resolveImportSourceCall(
     spec: ClassInstanceValue,
     progressIndicator: ProgressIndicator<BuildTaskRoutinesManager.BuildTaskRoutineId>
@@ -32,55 +38,62 @@ class ImportSourceResolver(val repo: Repo) {
             this.sourceSpec = specValue.toProto()
           }
         }
-        val destDirectory = repo.prepareSourceDirectory(sourceId)
 
-        // TODO credentialsProvider
-        val credentialsProvider = CredentialsProvider.getDefault()
-
-        val existingRepo = try {
-          Git.open(destDirectory)
-        } catch (e: IOException) {
-          null
+        val lock = synchronized(this) {
+          locks.getOrPut(sourceId) { ReentrantLock() }
         }
-        val pulledRepo = if (existingRepo == null) null else {
-          progressIndicator.updateProgressDescription("Pulling from the existing repository $url @ $ref")
-          val remotes = existingRepo.remoteList().call()
-          val remoteName = remotes.find { it.urIs.contains(URIish(url)) }
-          if (remoteName == null) null else {
-            existingRepo.checkout()
-              .setName(ref)
-              .call()
-            existingRepo.pull()
-              .setRemote(remoteName.name)
-              .setRemoteBranchName(ref)
+        // 두 곳 이상에서 같은 git repo를 건드리지 않도록
+        lock.withLock {
+          val destDirectory = repo.prepareSourceDirectory(sourceId)
+
+          // TODO credentialsProvider
+          val credentialsProvider = CredentialsProvider.getDefault()
+
+          val existingRepo = try {
+            Git.open(destDirectory)
+          } catch (e: IOException) {
+            null
+          }
+          val pulledRepo = if (existingRepo == null) null else {
+            progressIndicator.updateProgressDescription("Pulling from the existing repository $url @ $ref")
+            val remotes = existingRepo.remoteList().call()
+            val remoteName = remotes.find { it.urIs.contains(URIish(url)) }
+            if (remoteName == null) null else {
+              existingRepo.checkout()
+                .setName(ref)
+                .call()
+              existingRepo.pull()
+                .setRemote(remoteName.name)
+                .setRemoteBranchName(ref)
+                .setCredentialsProvider(credentialsProvider)
+                .call()
+              existingRepo
+            }
+          }
+
+          val gitRepo = if (pulledRepo != null) pulledRepo else {
+            progressIndicator.updateProgressDescription("Cloning git repository from $url @ $ref")
+            Git.cloneRepository()
+              .setURI(url)
+              .setDirectory(destDirectory)
               .setCredentialsProvider(credentialsProvider)
               .call()
-            existingRepo
           }
+
+          gitRepo.checkout().setName(ref).call()
+
+          val baseDirectory = File(destDirectory, path)
+          val scriptSource = File(baseDirectory, "build.bbx").readText()
+          val parsed = BibixAst.parseAst(scriptSource)
+
+          if (parsed.isRight) {
+            throw IllegalStateException(
+              "Invalid build file from git repository $url, ${parsed.right().get()}"
+            )
+          }
+
+          return ImportedSource(sourceId, baseDirectory, parsed.left().get())
         }
-
-        val gitRepo = if (pulledRepo != null) pulledRepo else {
-          progressIndicator.updateProgressDescription("Cloning git repository from $url @ $ref")
-          Git.cloneRepository()
-            .setURI(url)
-            .setDirectory(destDirectory)
-            .setCredentialsProvider(credentialsProvider)
-            .call()
-        }
-
-        gitRepo.checkout().setName(ref).call()
-
-        val baseDirectory = File(destDirectory, path)
-        val scriptSource = File(baseDirectory, "build.bbx").readText()
-        val parsed = BibixAst.parseAst(scriptSource)
-
-        if (parsed.isRight) {
-          throw IllegalStateException(
-            "Invalid build file from git repository $url, ${parsed.right().get()}"
-          )
-        }
-
-        return ImportedSource(sourceId, baseDirectory, parsed.left().get())
       }
       else -> TODO()
     }
