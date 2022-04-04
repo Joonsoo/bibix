@@ -299,6 +299,7 @@ class BuildRunner(
                       task,
                       task.cname.sourceId,
                       implResult0 as BibixValue,
+                      // TODO resolveClassPkgs 호출하도록 수정
                       CustomType(CName(BibixInternalSourceId("jvm"), "ClassPaths"))
                     ) { implResult ->
                       implResult as ClassInstanceValue

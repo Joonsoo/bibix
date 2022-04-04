@@ -111,11 +111,6 @@ testImpl = java.library(
 )
 test5 = "hello! $jparserVersion"
 
-def ktLibrary(
-  deps: set<jvm.ClassPaths>,
-  srcs: set<file>,
-): jvm.Classes = testImpl:com.giyeok.bibix.plugins.ktjvm.Library
-
 action def testAction(
   args: set<string>,
 ) = testImpl:com.giyeok.bibix.plugins.ktjvm.Library
