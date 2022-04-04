@@ -79,15 +79,9 @@ data class NamedTupleValue(val values: List<Pair<String, BibixValue>>) : BibixVa
     "(${values.joinToString() { p -> "${p.first}: ${p.second}" }})"
 }
 
-data class ClassInstanceValue(
-  val className: CName,
-  val typeParams: List<BibixValue>,
-  val value: BibixValue
-) : BibixValue() {
-  constructor(className: CName, value: BibixValue) : this(className, listOf(), value)
-
+data class ClassInstanceValue(val className: CName, val value: BibixValue) : BibixValue() {
   override fun toString(): String =
-    "$className(${typeParams.joinToString()})=$value"
+    "$className($value)"
 }
 
 object NoneValue : BibixValue()

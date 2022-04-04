@@ -22,14 +22,6 @@ class Jar {
     TODO()
   }
 
-  private fun transferFromStreamToStream(input: InputStream, output: OutputStream) {
-    val buffer = ByteArray(1000)
-    var count: Int
-    while (input.read(buffer, 0, 1000).also { count = it } >= 0) {
-      output.write(buffer, 0, count)
-    }
-  }
-
   fun executableUberJar(context: BuildContext): BibixValue {
     val mainClass = (context.arguments.getValue("mainClass") as StringValue).value
     val deps = (context.arguments.getValue("deps") as SetValue).values.flatMap { dep ->
@@ -87,5 +79,13 @@ class Jar {
       zos.closeEntry()
     }
     return FileValue(destFile)
+  }
+
+  private fun transferFromStreamToStream(input: InputStream, output: OutputStream) {
+    val buffer = ByteArray(1000)
+    var count: Int
+    while (input.read(buffer, 0, 1000).also { count = it } >= 0) {
+      output.write(buffer, 0, count)
+    }
   }
 }

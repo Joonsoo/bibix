@@ -12,7 +12,7 @@ val javaPlugin = BibixPlugin.fromScript(
     
     def library(
       srcs: set<file>,
-      deps: set<jvm.ClassPaths> = [],
+      deps: set<jvm.ClassPkg> = [],
       compilerPath: string = "javac",
       srcVersion: string = srcVersion,
       outVersion: string = outVersion,
@@ -20,11 +20,11 @@ val javaPlugin = BibixPlugin.fromScript(
     
     action def test(
       srcs: set<file>,
-      deps: set<jvm.ClassPaths> = [],
+      deps: set<jvm.ClassPkg> = [],
     ) = native:com.giyeok.bibix.plugins.java.Test
     
     action def execute(
-      deps: set<jvm.ClassPaths>,
+      deps: set<jvm.ClassPkg>,
       mainClass: string,
     ) = native:com.giyeok.bibix.plugins.java.Execute
   """.trimIndent(),

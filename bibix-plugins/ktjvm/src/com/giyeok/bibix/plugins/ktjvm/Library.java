@@ -7,18 +7,17 @@ import org.jetbrains.kotlin.cli.jvm.K2JVMCompiler;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class Library {
-    public BibixValue build(BuildContext context) throws IOException {
+    private BibixValue runCompiler(SetValue classPaths, SetValue pkgSet, BuildContext context) throws IOException {
         ArrayList<String> args = new ArrayList<>();
-
-        SetValue deps = (SetValue) context.getArguments().get("deps");
-        ArrayList<File> cps = new ArrayList<>();
-        if (!deps.getValues().isEmpty()) {
+        if (!classPaths.getValues().isEmpty()) {
+            ArrayList<File> cps = new ArrayList<>();
             args.add("-cp");
             // System.out.println(deps);
-            deps.getValues().forEach(v -> {
+            classPaths.getValues().forEach(v -> {
                 ((SetValue) ((ClassInstanceValue) v).getValue()).getValues().forEach(p -> {
                     cps.add(((PathValue) p).getPath());
                 });
@@ -33,7 +32,6 @@ public class Library {
         }
 
         File destDirectory = context.getDestDirectory();
-
         if (context.getHashChanged()) {
             SetValue srcs = (SetValue) context.getArguments().get("srcs");
             for (BibixValue value : srcs.getValues()) {
@@ -51,9 +49,29 @@ public class Library {
         }
 
         return new TupleValue(
+                new StringValue(""),
                 new SetValue(new PathValue(destDirectory)),
-                new SetValue(cps.stream().map(PathValue::new).collect(Collectors.toList()))
+                pkgSet
         );
+    }
+
+    public BuildRuleReturn build(BuildContext context) throws IOException {
+        ArrayList<String> args = new ArrayList<>();
+
+        return BuildRuleReturn.evalAndThen(
+                "import jvm",
+                "jvm.resolveClassPkgs",
+                Map.of("classPkgs", (SetValue) context.getArguments().get("deps")),
+                (resolved) -> {
+                    var pair = (TupleValue) resolved;
+                    var classPaths = (SetValue) ((ClassInstanceValue) pair.getValues().get(0)).getValue();
+                    var pkgSet = (SetValue) pair.getValues().get(1);
+                    try {
+                        return BuildRuleReturn.value(runCompiler(classPaths, pkgSet, context));
+                    } catch (Exception e) {
+                        return BuildRuleReturn.failed(e);
+                    }
+                });
     }
 
     public void run(ActionContext context) {

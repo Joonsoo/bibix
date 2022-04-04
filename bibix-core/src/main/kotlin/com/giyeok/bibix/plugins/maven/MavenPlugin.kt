@@ -10,9 +10,9 @@ val mavenPlugin = BibixPlugin.fromScript(
     enum RepoType {
       local, remote
     }
-    class Resolver = (repoType: RepoType, url: string)
+    class MavenRepo = (repoType: RepoType, url: string)
     
-    arg defaultResolvers: list<Resolver> = [
+    arg defaultRepos: list<MavenRepo> = [
       (RepoType.remote, "http://repo.maven.apache.org/maven2/")
     ]
     
@@ -21,8 +21,8 @@ val mavenPlugin = BibixPlugin.fromScript(
       artifact: string,
       version?: string,
       extension: string = "jar",
-      resolvers: list<Resolver> = defaultResolvers,
-    ): jvm.Classes = native:com.giyeok.bibix.plugins.maven.Dep
+      repos: list<MavenRepo> = defaultRepos,
+    ): jvm.ClassPkg = native:com.giyeok.bibix.plugins.maven.Dep
     
     action def deploy(
       target: jvm.Jar,

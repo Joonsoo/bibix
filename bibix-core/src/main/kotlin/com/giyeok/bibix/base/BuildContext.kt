@@ -27,6 +27,8 @@ data class BuildContext(
   // TODO 전체 그래프 정보
   // TODO 현재까지의 실행 결과
   private val repo: Repo,
+  // TODO bibix 플러그인 실행하기
+  // e.g. context.call("mvn.resolveClassSets", mapOf("classSets", deps))
 ) {
   val destDirectory: File
     get() {

@@ -57,7 +57,6 @@ fun BibixValue.toProto(): BibixValueProto.BibixValue = when (val value = this) {
   is ClassInstanceValue -> bibixValue {
     this.classInstanceValue = classInstanceValue {
       this.classCname = value.className.toString()
-      this.params.addAll(value.typeParams.map { it.toProto() })
       this.value = value.value.toProto()
     }
   }

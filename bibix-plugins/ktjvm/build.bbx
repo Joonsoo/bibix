@@ -17,6 +17,6 @@ impl = java.library(
 
 def library(
   srcs: set<file>,
-  deps: set<jvm.ClassPaths> = [],
+  deps: set<jvm.ClassPkg> = [],
   outVersion: string = outVersion,
-): jvm.Classes = impl:com.giyeok.bibix.plugins.ktjvm.Library
+): jvm.ClassPkg = impl:com.giyeok.bibix.plugins.ktjvm.Library

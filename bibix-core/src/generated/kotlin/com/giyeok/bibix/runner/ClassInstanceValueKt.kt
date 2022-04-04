@@ -40,72 +40,7 @@ public object ClassInstanceValueKt {
     }
 
     /**
-     * An uninstantiable, behaviorless type to represent the field in
-     * generics.
-     */
-    @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
-    public class ParamsProxy private constructor() : com.google.protobuf.kotlin.DslProxy()
-    /**
-     * <code>repeated .com.giyeok.bibix.runner.BibixValue params = 2;</code>
-     */
-     public val params: com.google.protobuf.kotlin.DslList<com.giyeok.bibix.runner.BibixValueProto.BibixValue, ParamsProxy>
-      @kotlin.jvm.JvmSynthetic
-      get() = com.google.protobuf.kotlin.DslList(
-        _builder.getParamsList()
-      )
-    /**
-     * <code>repeated .com.giyeok.bibix.runner.BibixValue params = 2;</code>
-     * @param value The params to add.
-     */
-    @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("addParams")
-    public fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.runner.BibixValueProto.BibixValue, ParamsProxy>.add(value: com.giyeok.bibix.runner.BibixValueProto.BibixValue) {
-      _builder.addParams(value)
-    }/**
-     * <code>repeated .com.giyeok.bibix.runner.BibixValue params = 2;</code>
-     * @param value The params to add.
-     */
-    @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("plusAssignParams")
-    @Suppress("NOTHING_TO_INLINE")
-    public inline operator fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.runner.BibixValueProto.BibixValue, ParamsProxy>.plusAssign(value: com.giyeok.bibix.runner.BibixValueProto.BibixValue) {
-      add(value)
-    }/**
-     * <code>repeated .com.giyeok.bibix.runner.BibixValue params = 2;</code>
-     * @param values The params to add.
-     */
-    @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("addAllParams")
-    public fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.runner.BibixValueProto.BibixValue, ParamsProxy>.addAll(values: kotlin.collections.Iterable<com.giyeok.bibix.runner.BibixValueProto.BibixValue>) {
-      _builder.addAllParams(values)
-    }/**
-     * <code>repeated .com.giyeok.bibix.runner.BibixValue params = 2;</code>
-     * @param values The params to add.
-     */
-    @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("plusAssignAllParams")
-    @Suppress("NOTHING_TO_INLINE")
-    public inline operator fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.runner.BibixValueProto.BibixValue, ParamsProxy>.plusAssign(values: kotlin.collections.Iterable<com.giyeok.bibix.runner.BibixValueProto.BibixValue>) {
-      addAll(values)
-    }/**
-     * <code>repeated .com.giyeok.bibix.runner.BibixValue params = 2;</code>
-     * @param index The index to set the value at.
-     * @param value The params to set.
-     */
-    @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("setParams")
-    public operator fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.runner.BibixValueProto.BibixValue, ParamsProxy>.set(index: kotlin.Int, value: com.giyeok.bibix.runner.BibixValueProto.BibixValue) {
-      _builder.setParams(index, value)
-    }/**
-     * <code>repeated .com.giyeok.bibix.runner.BibixValue params = 2;</code>
-     */
-    @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("clearParams")
-    public fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.runner.BibixValueProto.BibixValue, ParamsProxy>.clear() {
-      _builder.clearParams()
-    }
-    /**
-     * <code>.com.giyeok.bibix.runner.BibixValue value = 3;</code>
+     * <code>.com.giyeok.bibix.runner.BibixValue value = 2;</code>
      */
     public var value: com.giyeok.bibix.runner.BibixValueProto.BibixValue
       @JvmName("getValue")
@@ -115,13 +50,13 @@ public object ClassInstanceValueKt {
         _builder.setValue(value)
       }
     /**
-     * <code>.com.giyeok.bibix.runner.BibixValue value = 3;</code>
+     * <code>.com.giyeok.bibix.runner.BibixValue value = 2;</code>
      */
     public fun clearValue() {
       _builder.clearValue()
     }
     /**
-     * <code>.com.giyeok.bibix.runner.BibixValue value = 3;</code>
+     * <code>.com.giyeok.bibix.runner.BibixValue value = 2;</code>
      * @return Whether the value field is set.
      */
     public fun hasValue(): kotlin.Boolean {

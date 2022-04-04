@@ -7448,41 +7448,17 @@ public final class BibixValueProto {
         getClassCnameBytes();
 
     /**
-     * <code>repeated .com.giyeok.bibix.runner.BibixValue params = 2;</code>
-     */
-    java.util.List<com.giyeok.bibix.runner.BibixValueProto.BibixValue> 
-        getParamsList();
-    /**
-     * <code>repeated .com.giyeok.bibix.runner.BibixValue params = 2;</code>
-     */
-    com.giyeok.bibix.runner.BibixValueProto.BibixValue getParams(int index);
-    /**
-     * <code>repeated .com.giyeok.bibix.runner.BibixValue params = 2;</code>
-     */
-    int getParamsCount();
-    /**
-     * <code>repeated .com.giyeok.bibix.runner.BibixValue params = 2;</code>
-     */
-    java.util.List<? extends com.giyeok.bibix.runner.BibixValueProto.BibixValueOrBuilder> 
-        getParamsOrBuilderList();
-    /**
-     * <code>repeated .com.giyeok.bibix.runner.BibixValue params = 2;</code>
-     */
-    com.giyeok.bibix.runner.BibixValueProto.BibixValueOrBuilder getParamsOrBuilder(
-        int index);
-
-    /**
-     * <code>.com.giyeok.bibix.runner.BibixValue value = 3;</code>
+     * <code>.com.giyeok.bibix.runner.BibixValue value = 2;</code>
      * @return Whether the value field is set.
      */
     boolean hasValue();
     /**
-     * <code>.com.giyeok.bibix.runner.BibixValue value = 3;</code>
+     * <code>.com.giyeok.bibix.runner.BibixValue value = 2;</code>
      * @return The value.
      */
     com.giyeok.bibix.runner.BibixValueProto.BibixValue getValue();
     /**
-     * <code>.com.giyeok.bibix.runner.BibixValue value = 3;</code>
+     * <code>.com.giyeok.bibix.runner.BibixValue value = 2;</code>
      */
     com.giyeok.bibix.runner.BibixValueProto.BibixValueOrBuilder getValueOrBuilder();
   }
@@ -7500,7 +7476,6 @@ public final class BibixValueProto {
     }
     private ClassInstanceValue() {
       classCname_ = "";
-      params_ = java.util.Collections.emptyList();
     }
 
     @java.lang.Override
@@ -7523,7 +7498,6 @@ public final class BibixValueProto {
       if (extensionRegistry == null) {
         throw new java.lang.NullPointerException();
       }
-      int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
       try {
@@ -7541,15 +7515,6 @@ public final class BibixValueProto {
               break;
             }
             case 18: {
-              if (!((mutable_bitField0_ & 0x00000001) != 0)) {
-                params_ = new java.util.ArrayList<com.giyeok.bibix.runner.BibixValueProto.BibixValue>();
-                mutable_bitField0_ |= 0x00000001;
-              }
-              params_.add(
-                  input.readMessage(com.giyeok.bibix.runner.BibixValueProto.BibixValue.parser(), extensionRegistry));
-              break;
-            }
-            case 26: {
               com.giyeok.bibix.runner.BibixValueProto.BibixValue.Builder subBuilder = null;
               if (value_ != null) {
                 subBuilder = value_.toBuilder();
@@ -7577,9 +7542,6 @@ public final class BibixValueProto {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e).setUnfinishedMessage(this);
       } finally {
-        if (((mutable_bitField0_ & 0x00000001) != 0)) {
-          params_ = java.util.Collections.unmodifiableList(params_);
-        }
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
       }
@@ -7635,50 +7597,10 @@ public final class BibixValueProto {
       }
     }
 
-    public static final int PARAMS_FIELD_NUMBER = 2;
-    private java.util.List<com.giyeok.bibix.runner.BibixValueProto.BibixValue> params_;
-    /**
-     * <code>repeated .com.giyeok.bibix.runner.BibixValue params = 2;</code>
-     */
-    @java.lang.Override
-    public java.util.List<com.giyeok.bibix.runner.BibixValueProto.BibixValue> getParamsList() {
-      return params_;
-    }
-    /**
-     * <code>repeated .com.giyeok.bibix.runner.BibixValue params = 2;</code>
-     */
-    @java.lang.Override
-    public java.util.List<? extends com.giyeok.bibix.runner.BibixValueProto.BibixValueOrBuilder> 
-        getParamsOrBuilderList() {
-      return params_;
-    }
-    /**
-     * <code>repeated .com.giyeok.bibix.runner.BibixValue params = 2;</code>
-     */
-    @java.lang.Override
-    public int getParamsCount() {
-      return params_.size();
-    }
-    /**
-     * <code>repeated .com.giyeok.bibix.runner.BibixValue params = 2;</code>
-     */
-    @java.lang.Override
-    public com.giyeok.bibix.runner.BibixValueProto.BibixValue getParams(int index) {
-      return params_.get(index);
-    }
-    /**
-     * <code>repeated .com.giyeok.bibix.runner.BibixValue params = 2;</code>
-     */
-    @java.lang.Override
-    public com.giyeok.bibix.runner.BibixValueProto.BibixValueOrBuilder getParamsOrBuilder(
-        int index) {
-      return params_.get(index);
-    }
-
-    public static final int VALUE_FIELD_NUMBER = 3;
+    public static final int VALUE_FIELD_NUMBER = 2;
     private com.giyeok.bibix.runner.BibixValueProto.BibixValue value_;
     /**
-     * <code>.com.giyeok.bibix.runner.BibixValue value = 3;</code>
+     * <code>.com.giyeok.bibix.runner.BibixValue value = 2;</code>
      * @return Whether the value field is set.
      */
     @java.lang.Override
@@ -7686,7 +7608,7 @@ public final class BibixValueProto {
       return value_ != null;
     }
     /**
-     * <code>.com.giyeok.bibix.runner.BibixValue value = 3;</code>
+     * <code>.com.giyeok.bibix.runner.BibixValue value = 2;</code>
      * @return The value.
      */
     @java.lang.Override
@@ -7694,7 +7616,7 @@ public final class BibixValueProto {
       return value_ == null ? com.giyeok.bibix.runner.BibixValueProto.BibixValue.getDefaultInstance() : value_;
     }
     /**
-     * <code>.com.giyeok.bibix.runner.BibixValue value = 3;</code>
+     * <code>.com.giyeok.bibix.runner.BibixValue value = 2;</code>
      */
     @java.lang.Override
     public com.giyeok.bibix.runner.BibixValueProto.BibixValueOrBuilder getValueOrBuilder() {
@@ -7718,11 +7640,8 @@ public final class BibixValueProto {
       if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(classCname_)) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 1, classCname_);
       }
-      for (int i = 0; i < params_.size(); i++) {
-        output.writeMessage(2, params_.get(i));
-      }
       if (value_ != null) {
-        output.writeMessage(3, getValue());
+        output.writeMessage(2, getValue());
       }
       unknownFields.writeTo(output);
     }
@@ -7736,13 +7655,9 @@ public final class BibixValueProto {
       if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(classCname_)) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, classCname_);
       }
-      for (int i = 0; i < params_.size(); i++) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(2, params_.get(i));
-      }
       if (value_ != null) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(3, getValue());
+          .computeMessageSize(2, getValue());
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -7761,8 +7676,6 @@ public final class BibixValueProto {
 
       if (!getClassCname()
           .equals(other.getClassCname())) return false;
-      if (!getParamsList()
-          .equals(other.getParamsList())) return false;
       if (hasValue() != other.hasValue()) return false;
       if (hasValue()) {
         if (!getValue()
@@ -7781,10 +7694,6 @@ public final class BibixValueProto {
       hash = (19 * hash) + getDescriptor().hashCode();
       hash = (37 * hash) + CLASS_CNAME_FIELD_NUMBER;
       hash = (53 * hash) + getClassCname().hashCode();
-      if (getParamsCount() > 0) {
-        hash = (37 * hash) + PARAMS_FIELD_NUMBER;
-        hash = (53 * hash) + getParamsList().hashCode();
-      }
       if (hasValue()) {
         hash = (37 * hash) + VALUE_FIELD_NUMBER;
         hash = (53 * hash) + getValue().hashCode();
@@ -7917,7 +7826,6 @@ public final class BibixValueProto {
       private void maybeForceBuilderInitialization() {
         if (com.google.protobuf.GeneratedMessageV3
                 .alwaysUseFieldBuilders) {
-          getParamsFieldBuilder();
         }
       }
       @java.lang.Override
@@ -7925,12 +7833,6 @@ public final class BibixValueProto {
         super.clear();
         classCname_ = "";
 
-        if (paramsBuilder_ == null) {
-          params_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000001);
-        } else {
-          paramsBuilder_.clear();
-        }
         if (valueBuilder_ == null) {
           value_ = null;
         } else {
@@ -7963,17 +7865,7 @@ public final class BibixValueProto {
       @java.lang.Override
       public com.giyeok.bibix.runner.BibixValueProto.ClassInstanceValue buildPartial() {
         com.giyeok.bibix.runner.BibixValueProto.ClassInstanceValue result = new com.giyeok.bibix.runner.BibixValueProto.ClassInstanceValue(this);
-        int from_bitField0_ = bitField0_;
         result.classCname_ = classCname_;
-        if (paramsBuilder_ == null) {
-          if (((bitField0_ & 0x00000001) != 0)) {
-            params_ = java.util.Collections.unmodifiableList(params_);
-            bitField0_ = (bitField0_ & ~0x00000001);
-          }
-          result.params_ = params_;
-        } else {
-          result.params_ = paramsBuilder_.build();
-        }
         if (valueBuilder_ == null) {
           result.value_ = value_;
         } else {
@@ -8031,32 +7923,6 @@ public final class BibixValueProto {
           classCname_ = other.classCname_;
           onChanged();
         }
-        if (paramsBuilder_ == null) {
-          if (!other.params_.isEmpty()) {
-            if (params_.isEmpty()) {
-              params_ = other.params_;
-              bitField0_ = (bitField0_ & ~0x00000001);
-            } else {
-              ensureParamsIsMutable();
-              params_.addAll(other.params_);
-            }
-            onChanged();
-          }
-        } else {
-          if (!other.params_.isEmpty()) {
-            if (paramsBuilder_.isEmpty()) {
-              paramsBuilder_.dispose();
-              paramsBuilder_ = null;
-              params_ = other.params_;
-              bitField0_ = (bitField0_ & ~0x00000001);
-              paramsBuilder_ = 
-                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
-                   getParamsFieldBuilder() : null;
-            } else {
-              paramsBuilder_.addAllMessages(other.params_);
-            }
-          }
-        }
         if (other.hasValue()) {
           mergeValue(other.getValue());
         }
@@ -8088,7 +7954,6 @@ public final class BibixValueProto {
         }
         return this;
       }
-      private int bitField0_;
 
       private java.lang.Object classCname_ = "";
       /**
@@ -8166,258 +8031,18 @@ public final class BibixValueProto {
         return this;
       }
 
-      private java.util.List<com.giyeok.bibix.runner.BibixValueProto.BibixValue> params_ =
-        java.util.Collections.emptyList();
-      private void ensureParamsIsMutable() {
-        if (!((bitField0_ & 0x00000001) != 0)) {
-          params_ = new java.util.ArrayList<com.giyeok.bibix.runner.BibixValueProto.BibixValue>(params_);
-          bitField0_ |= 0x00000001;
-         }
-      }
-
-      private com.google.protobuf.RepeatedFieldBuilderV3<
-          com.giyeok.bibix.runner.BibixValueProto.BibixValue, com.giyeok.bibix.runner.BibixValueProto.BibixValue.Builder, com.giyeok.bibix.runner.BibixValueProto.BibixValueOrBuilder> paramsBuilder_;
-
-      /**
-       * <code>repeated .com.giyeok.bibix.runner.BibixValue params = 2;</code>
-       */
-      public java.util.List<com.giyeok.bibix.runner.BibixValueProto.BibixValue> getParamsList() {
-        if (paramsBuilder_ == null) {
-          return java.util.Collections.unmodifiableList(params_);
-        } else {
-          return paramsBuilder_.getMessageList();
-        }
-      }
-      /**
-       * <code>repeated .com.giyeok.bibix.runner.BibixValue params = 2;</code>
-       */
-      public int getParamsCount() {
-        if (paramsBuilder_ == null) {
-          return params_.size();
-        } else {
-          return paramsBuilder_.getCount();
-        }
-      }
-      /**
-       * <code>repeated .com.giyeok.bibix.runner.BibixValue params = 2;</code>
-       */
-      public com.giyeok.bibix.runner.BibixValueProto.BibixValue getParams(int index) {
-        if (paramsBuilder_ == null) {
-          return params_.get(index);
-        } else {
-          return paramsBuilder_.getMessage(index);
-        }
-      }
-      /**
-       * <code>repeated .com.giyeok.bibix.runner.BibixValue params = 2;</code>
-       */
-      public Builder setParams(
-          int index, com.giyeok.bibix.runner.BibixValueProto.BibixValue value) {
-        if (paramsBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ensureParamsIsMutable();
-          params_.set(index, value);
-          onChanged();
-        } else {
-          paramsBuilder_.setMessage(index, value);
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .com.giyeok.bibix.runner.BibixValue params = 2;</code>
-       */
-      public Builder setParams(
-          int index, com.giyeok.bibix.runner.BibixValueProto.BibixValue.Builder builderForValue) {
-        if (paramsBuilder_ == null) {
-          ensureParamsIsMutable();
-          params_.set(index, builderForValue.build());
-          onChanged();
-        } else {
-          paramsBuilder_.setMessage(index, builderForValue.build());
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .com.giyeok.bibix.runner.BibixValue params = 2;</code>
-       */
-      public Builder addParams(com.giyeok.bibix.runner.BibixValueProto.BibixValue value) {
-        if (paramsBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ensureParamsIsMutable();
-          params_.add(value);
-          onChanged();
-        } else {
-          paramsBuilder_.addMessage(value);
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .com.giyeok.bibix.runner.BibixValue params = 2;</code>
-       */
-      public Builder addParams(
-          int index, com.giyeok.bibix.runner.BibixValueProto.BibixValue value) {
-        if (paramsBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ensureParamsIsMutable();
-          params_.add(index, value);
-          onChanged();
-        } else {
-          paramsBuilder_.addMessage(index, value);
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .com.giyeok.bibix.runner.BibixValue params = 2;</code>
-       */
-      public Builder addParams(
-          com.giyeok.bibix.runner.BibixValueProto.BibixValue.Builder builderForValue) {
-        if (paramsBuilder_ == null) {
-          ensureParamsIsMutable();
-          params_.add(builderForValue.build());
-          onChanged();
-        } else {
-          paramsBuilder_.addMessage(builderForValue.build());
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .com.giyeok.bibix.runner.BibixValue params = 2;</code>
-       */
-      public Builder addParams(
-          int index, com.giyeok.bibix.runner.BibixValueProto.BibixValue.Builder builderForValue) {
-        if (paramsBuilder_ == null) {
-          ensureParamsIsMutable();
-          params_.add(index, builderForValue.build());
-          onChanged();
-        } else {
-          paramsBuilder_.addMessage(index, builderForValue.build());
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .com.giyeok.bibix.runner.BibixValue params = 2;</code>
-       */
-      public Builder addAllParams(
-          java.lang.Iterable<? extends com.giyeok.bibix.runner.BibixValueProto.BibixValue> values) {
-        if (paramsBuilder_ == null) {
-          ensureParamsIsMutable();
-          com.google.protobuf.AbstractMessageLite.Builder.addAll(
-              values, params_);
-          onChanged();
-        } else {
-          paramsBuilder_.addAllMessages(values);
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .com.giyeok.bibix.runner.BibixValue params = 2;</code>
-       */
-      public Builder clearParams() {
-        if (paramsBuilder_ == null) {
-          params_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000001);
-          onChanged();
-        } else {
-          paramsBuilder_.clear();
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .com.giyeok.bibix.runner.BibixValue params = 2;</code>
-       */
-      public Builder removeParams(int index) {
-        if (paramsBuilder_ == null) {
-          ensureParamsIsMutable();
-          params_.remove(index);
-          onChanged();
-        } else {
-          paramsBuilder_.remove(index);
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .com.giyeok.bibix.runner.BibixValue params = 2;</code>
-       */
-      public com.giyeok.bibix.runner.BibixValueProto.BibixValue.Builder getParamsBuilder(
-          int index) {
-        return getParamsFieldBuilder().getBuilder(index);
-      }
-      /**
-       * <code>repeated .com.giyeok.bibix.runner.BibixValue params = 2;</code>
-       */
-      public com.giyeok.bibix.runner.BibixValueProto.BibixValueOrBuilder getParamsOrBuilder(
-          int index) {
-        if (paramsBuilder_ == null) {
-          return params_.get(index);  } else {
-          return paramsBuilder_.getMessageOrBuilder(index);
-        }
-      }
-      /**
-       * <code>repeated .com.giyeok.bibix.runner.BibixValue params = 2;</code>
-       */
-      public java.util.List<? extends com.giyeok.bibix.runner.BibixValueProto.BibixValueOrBuilder> 
-           getParamsOrBuilderList() {
-        if (paramsBuilder_ != null) {
-          return paramsBuilder_.getMessageOrBuilderList();
-        } else {
-          return java.util.Collections.unmodifiableList(params_);
-        }
-      }
-      /**
-       * <code>repeated .com.giyeok.bibix.runner.BibixValue params = 2;</code>
-       */
-      public com.giyeok.bibix.runner.BibixValueProto.BibixValue.Builder addParamsBuilder() {
-        return getParamsFieldBuilder().addBuilder(
-            com.giyeok.bibix.runner.BibixValueProto.BibixValue.getDefaultInstance());
-      }
-      /**
-       * <code>repeated .com.giyeok.bibix.runner.BibixValue params = 2;</code>
-       */
-      public com.giyeok.bibix.runner.BibixValueProto.BibixValue.Builder addParamsBuilder(
-          int index) {
-        return getParamsFieldBuilder().addBuilder(
-            index, com.giyeok.bibix.runner.BibixValueProto.BibixValue.getDefaultInstance());
-      }
-      /**
-       * <code>repeated .com.giyeok.bibix.runner.BibixValue params = 2;</code>
-       */
-      public java.util.List<com.giyeok.bibix.runner.BibixValueProto.BibixValue.Builder> 
-           getParamsBuilderList() {
-        return getParamsFieldBuilder().getBuilderList();
-      }
-      private com.google.protobuf.RepeatedFieldBuilderV3<
-          com.giyeok.bibix.runner.BibixValueProto.BibixValue, com.giyeok.bibix.runner.BibixValueProto.BibixValue.Builder, com.giyeok.bibix.runner.BibixValueProto.BibixValueOrBuilder> 
-          getParamsFieldBuilder() {
-        if (paramsBuilder_ == null) {
-          paramsBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
-              com.giyeok.bibix.runner.BibixValueProto.BibixValue, com.giyeok.bibix.runner.BibixValueProto.BibixValue.Builder, com.giyeok.bibix.runner.BibixValueProto.BibixValueOrBuilder>(
-                  params_,
-                  ((bitField0_ & 0x00000001) != 0),
-                  getParentForChildren(),
-                  isClean());
-          params_ = null;
-        }
-        return paramsBuilder_;
-      }
-
       private com.giyeok.bibix.runner.BibixValueProto.BibixValue value_;
       private com.google.protobuf.SingleFieldBuilderV3<
           com.giyeok.bibix.runner.BibixValueProto.BibixValue, com.giyeok.bibix.runner.BibixValueProto.BibixValue.Builder, com.giyeok.bibix.runner.BibixValueProto.BibixValueOrBuilder> valueBuilder_;
       /**
-       * <code>.com.giyeok.bibix.runner.BibixValue value = 3;</code>
+       * <code>.com.giyeok.bibix.runner.BibixValue value = 2;</code>
        * @return Whether the value field is set.
        */
       public boolean hasValue() {
         return valueBuilder_ != null || value_ != null;
       }
       /**
-       * <code>.com.giyeok.bibix.runner.BibixValue value = 3;</code>
+       * <code>.com.giyeok.bibix.runner.BibixValue value = 2;</code>
        * @return The value.
        */
       public com.giyeok.bibix.runner.BibixValueProto.BibixValue getValue() {
@@ -8428,7 +8053,7 @@ public final class BibixValueProto {
         }
       }
       /**
-       * <code>.com.giyeok.bibix.runner.BibixValue value = 3;</code>
+       * <code>.com.giyeok.bibix.runner.BibixValue value = 2;</code>
        */
       public Builder setValue(com.giyeok.bibix.runner.BibixValueProto.BibixValue value) {
         if (valueBuilder_ == null) {
@@ -8444,7 +8069,7 @@ public final class BibixValueProto {
         return this;
       }
       /**
-       * <code>.com.giyeok.bibix.runner.BibixValue value = 3;</code>
+       * <code>.com.giyeok.bibix.runner.BibixValue value = 2;</code>
        */
       public Builder setValue(
           com.giyeok.bibix.runner.BibixValueProto.BibixValue.Builder builderForValue) {
@@ -8458,7 +8083,7 @@ public final class BibixValueProto {
         return this;
       }
       /**
-       * <code>.com.giyeok.bibix.runner.BibixValue value = 3;</code>
+       * <code>.com.giyeok.bibix.runner.BibixValue value = 2;</code>
        */
       public Builder mergeValue(com.giyeok.bibix.runner.BibixValueProto.BibixValue value) {
         if (valueBuilder_ == null) {
@@ -8476,7 +8101,7 @@ public final class BibixValueProto {
         return this;
       }
       /**
-       * <code>.com.giyeok.bibix.runner.BibixValue value = 3;</code>
+       * <code>.com.giyeok.bibix.runner.BibixValue value = 2;</code>
        */
       public Builder clearValue() {
         if (valueBuilder_ == null) {
@@ -8490,7 +8115,7 @@ public final class BibixValueProto {
         return this;
       }
       /**
-       * <code>.com.giyeok.bibix.runner.BibixValue value = 3;</code>
+       * <code>.com.giyeok.bibix.runner.BibixValue value = 2;</code>
        */
       public com.giyeok.bibix.runner.BibixValueProto.BibixValue.Builder getValueBuilder() {
         
@@ -8498,7 +8123,7 @@ public final class BibixValueProto {
         return getValueFieldBuilder().getBuilder();
       }
       /**
-       * <code>.com.giyeok.bibix.runner.BibixValue value = 3;</code>
+       * <code>.com.giyeok.bibix.runner.BibixValue value = 2;</code>
        */
       public com.giyeok.bibix.runner.BibixValueProto.BibixValueOrBuilder getValueOrBuilder() {
         if (valueBuilder_ != null) {
@@ -8509,7 +8134,7 @@ public final class BibixValueProto {
         }
       }
       /**
-       * <code>.com.giyeok.bibix.runner.BibixValue value = 3;</code>
+       * <code>.com.giyeok.bibix.runner.BibixValue value = 2;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
           com.giyeok.bibix.runner.BibixValueProto.BibixValue, com.giyeok.bibix.runner.BibixValueProto.BibixValue.Builder, com.giyeok.bibix.runner.BibixValueProto.BibixValueOrBuilder> 
@@ -8650,11 +8275,10 @@ public final class BibixValueProto {
       "\003(\0132#.com.giyeok.bibix.runner.NamedValue" +
       "\"N\n\nNamedValue\022\014\n\004name\030\001 \001(\t\0222\n\005value\030\002 " +
       "\001(\0132#.com.giyeok.bibix.runner.BibixValue" +
-      "\"\222\001\n\022ClassInstanceValue\022\023\n\013class_cname\030\001" +
-      " \001(\t\0223\n\006params\030\002 \003(\0132#.com.giyeok.bibix." +
-      "runner.BibixValue\0222\n\005value\030\003 \001(\0132#.com.g" +
-      "iyeok.bibix.runner.BibixValueB\021B\017BibixVa" +
-      "lueProtob\006proto3"
+      "\"]\n\022ClassInstanceValue\022\023\n\013class_cname\030\001 " +
+      "\001(\t\0222\n\005value\030\002 \001(\0132#.com.giyeok.bibix.ru" +
+      "nner.BibixValueB\021B\017BibixValueProtob\006prot" +
+      "o3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -8707,7 +8331,7 @@ public final class BibixValueProto {
     internal_static_com_giyeok_bibix_runner_ClassInstanceValue_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_giyeok_bibix_runner_ClassInstanceValue_descriptor,
-        new java.lang.String[] { "ClassCname", "Params", "Value", });
+        new java.lang.String[] { "ClassCname", "Value", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

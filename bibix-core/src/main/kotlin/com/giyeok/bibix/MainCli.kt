@@ -40,7 +40,7 @@ object MainCli {
       exitProcess(1)
     }
 
-    val targets = buildTargetNames.map { CName(MainSourceId, it) }
+    val targets = buildTargetNames.map { CName(MainSourceId, it.split('.').toList()) }
 
     val repo = Repo.load(File("."), debuggingMode = true)
 

@@ -1,5 +1,5 @@
 import jvm
-import git("https://github.com/Joonsoo/bibix.git", tag="0.0.1", path="bibix-plugins/ktjvm") as ktjvm
+import git("https://github.com/Joonsoo/bibix.git", branch="main", path="bibix-plugins/ktjvm") as ktjvm
 import maven
 import bibix
 
@@ -16,6 +16,6 @@ impl = java.library(
 
 def library(
   srcs: set<file>,
-  deps: set<jvm.ClassPaths>,
+  deps: set<jvm.ClassPkg>,
   outVersion: string = outVersion,
-): jvm.Classes = impl:com.giyeok.bibix.plugins.scala.Library
+): jvm.ClassPkg = impl:com.giyeok.bibix.plugins.scala.Library

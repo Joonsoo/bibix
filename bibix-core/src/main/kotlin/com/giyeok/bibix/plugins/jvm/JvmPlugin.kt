@@ -6,40 +6,45 @@ import com.giyeok.bibix.runner.BibixPlugin
 val jvmPlugin = BibixPlugin.fromScript(
   """
     class ClassPaths = set<path>
-    class Classes extends ClassPaths = (classes: set<path>, deps: set<path>) {
-      as ClassPaths = this.classes + this.deps
+    
+    class ClassPkg extends ClassPaths =
+      (origin: ClassOrigin, cps: set<path>, deps: set<ClassPkg>) {
+      as ClassPaths = flattenClassPkg(this)
     }
-    class ExecutableClasses extends ClassPaths = (cps: ClassPaths, mainClass: string) {
-      // action run(fork: boolean, args: list<string>) =
-      //   native:com.giyeok.bibix.plugins.jvm.RunExecutableClasses
-      as ClassPaths = this.cps
-    }
-    class Jar extends ClassPaths = file {
-      as ClassPaths = [this]
-    }
-    class ExecutableJar extends Jar = file {
-      // action run(fork: boolean, args: list<string>) =
-      //   native:com.giyeok.bibix.plugins.jvm.RunExecutableJar
-    }
-
-    def lib(path: path): ClassPaths = native:com.giyeok.bibix.plugins.jvm.Lib
-
+    
+    class ClassOrigin = {MavenDep, LocalBuilt, LocalLib}
+    
+    class MavenDep = (repo: string, group: string, artifact: string, version: string)
+    // TODO LocalBuilt는 뭐가 들어가야되지..?
+    class LocalBuilt = (nothing: string)
+    class LocalLib = (path: path)
+    
+    def flattenClassPkg(
+      classPkg: ClassPkg
+    ): ClassPaths = native:com.giyeok.bibix.plugins.jvm.FlattenClassPkg
+    
+    def resolveClassPkgs(
+      classPkgs: set<ClassPkg>
+    ): (ClassPaths, set<ClassPkg>) = native:com.giyeok.bibix.plugins.jvm.ResolveClassPkgs
+    
+    def lib(path: path): ClassPkg = native:com.giyeok.bibix.plugins.jvm.Lib
+    
     def jar(
-      deps: set<Classes>,
+      deps: set<ClassPkg>,
       jarFileName: string = "bundle.jar",
-    ): Jar = native:com.giyeok.bibix.plugins.jvm.Jar:jar
-
+    ): file = native:com.giyeok.bibix.plugins.jvm.Jar:jar
+    
     def uberJar(
-      deps: set<ClassPaths>,
+      deps: set<ClassPkg>,
       jarFileName: string = "bundle.jar",
-    ): Jar = native:com.giyeok.bibix.plugins.jvm.UberJar:uberJar
-
+    ): file = native:com.giyeok.bibix.plugins.jvm.UberJar:uberJar
+    
     def executableUberJar(
-      deps: set<ClassPaths>,
+      deps: set<ClassPkg>,
       mainClass: string,
       jarFileName: string = "bundle.jar",
-    ): ExecutableJar = native:com.giyeok.bibix.plugins.jvm.Jar:executableUberJar
-
+    ): file = native:com.giyeok.bibix.plugins.jvm.Jar:executableUberJar
+    
     action def run(
       deps: set<ClassPaths>,
       mainClass: string,
@@ -51,5 +56,7 @@ val jvmPlugin = BibixPlugin.fromScript(
     Lib::class.java,
     Jar::class.java,
     Run::class.java,
+    FlattenClassPkg::class.java,
+    ResolveClassPkgs::class.java,
   ),
 )

@@ -14,7 +14,7 @@ sealed class CNameValue {
   data class ClassType(
     val cname: CName,
     val typeParams: List<Pair<String, BibixType>>,
-    val extendings: List<ClassExtending>,
+    val extendings: List<CName>,
     val reality: BibixType,
     val casts: Map<CName, Int>,
   ) : CNameValue()
@@ -62,8 +62,6 @@ data class SetType(val elemType: BibixType) : BibixType()
 data class TupleType(val elemTypes: List<BibixType>) : BibixType()
 data class NamedTupleType(val elemTypes: List<Pair<String, BibixType>>) : BibixType()
 data class UnionType(val types: List<BibixType>) : BibixType()
-
-data class ClassExtending(val className: CName, val typeParams: List<ExprGraph>)
 
 data class Param(
   val name: String,

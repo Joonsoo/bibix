@@ -48,6 +48,5 @@ message NamedValue {
 
 message ClassInstanceValue {
   string class_cname = 1;
-  repeated BibixValue params = 2;
-  BibixValue value = 3;
+  BibixValue value = 2;
 }

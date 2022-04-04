@@ -3,10 +3,12 @@ package com.giyeok.bibix.plugins.maven
 import com.giyeok.bibix.base.*
 import org.apache.maven.repository.internal.MavenRepositorySystemUtils
 import org.eclipse.aether.*
+import org.eclipse.aether.artifact.Artifact
 import org.eclipse.aether.artifact.DefaultArtifact
 import org.eclipse.aether.collection.CollectRequest
 import org.eclipse.aether.connector.basic.BasicRepositoryConnectorFactory
 import org.eclipse.aether.graph.Dependency
+import org.eclipse.aether.graph.DependencyNode
 import org.eclipse.aether.impl.DefaultServiceLocator
 import org.eclipse.aether.repository.LocalRepository
 import org.eclipse.aether.repository.RemoteRepository
@@ -36,7 +38,7 @@ class Dep {
     val artifactId = (context.arguments.getValue("artifact") as StringValue).value
     val extension = (context.arguments.getValue("extension") as StringValue).value
     val version = (context.arguments["version"] as? StringValue)?.value
-    val resolvers = (context.arguments.getValue("resolvers") as ListValue).values.map { resolver ->
+    val repos = (context.arguments.getValue("repos") as ListValue).values.map { resolver ->
       val tuple = ((resolver as ClassInstanceValue).value as NamedTupleValue)
       Pair(
         (tuple.values[0].second as EnumValue).value,
@@ -59,25 +61,55 @@ class Dep {
     artifactRequest.artifact = artifact
     artifactRequest.repositories = repositories
 
-    val artifactResult = system.resolveArtifact(session, artifactRequest)
-    println("Maven dep $artifactResult")
-
     val collectRequest = CollectRequest()
     collectRequest.root = Dependency(artifact, JavaScopes.COMPILE)
     collectRequest.repositories = repositories
     val classpathFilter = DependencyFilterUtils.classpathFilter(JavaScopes.COMPILE)
     val dependencyRequest = DependencyRequest(collectRequest, classpathFilter)
     val dependencyResult = system.resolveDependencies(session, dependencyRequest)
-    println("dependencies: $dependencyResult")
-    println(dependencyResult.artifactResults)
+//    println("dependencies: $dependencyResult")
+//    println(dependencyResult.artifactResults)
 
-    // TODO direct/transitive dependency 구분
-    val directDep = PathValue(dependencyResult.artifactResults[0].artifact.file)
-    val transitiveDeps =
-      dependencyResult.artifactResults.drop(1).map { PathValue(it.artifact.file) }
-    return TupleValue(
-      SetValue(directDep),
-      SetValue(transitiveDeps),
+    // TODO jvm 플러그인은 internal source id라 SourceId를 직접 만드는게 가능한데 다른 플러그인은 어쩌지?
+    val jvmSourceId = BibixInternalSourceId("jvm")
+
+    val artifactsMap = dependencyResult.artifactResults.associateBy { it.artifact }
+
+    fun traverse(node: DependencyNode): TupleValue {
+      val artifactResult = artifactsMap.getValue(node.artifact)
+      return TupleValue(
+        mavenDep(jvmSourceId, "central", artifactResult.artifact),
+        SetValue(PathValue(artifactResult.artifact.file)),
+        SetValue(node.children.map { traverse(it) }),
+      )
+    }
+
+    val dep = traverse(dependencyResult.root)
+    return dep
+  }
+
+  private fun mavenDep(
+    sourceId: SourceId,
+    repo: String,
+    artifact: Artifact,
+  ): ClassInstanceValue =
+    mavenDep(sourceId, repo, artifact.groupId, artifact.artifactId, artifact.version)
+
+  private fun mavenDep(
+    sourceId: SourceId,
+    repo: String,
+    group: String,
+    artifact: String,
+    version: String
+  ): ClassInstanceValue {
+    return ClassInstanceValue(
+      CName(sourceId, "MavenDep"),
+      NamedTupleValue(
+        "repo" to StringValue(repo),
+        "group" to StringValue(group),
+        "artifact" to StringValue(artifact),
+        "version" to StringValue(version),
+      )
     )
   }
 

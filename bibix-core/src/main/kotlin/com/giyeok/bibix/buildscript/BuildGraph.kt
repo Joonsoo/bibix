@@ -113,11 +113,7 @@ class BuildGraph(
           val typeParams = def.typeParams().toKtList().map { tp ->
             tp.name()!! to traverseTypeExpr(tp.typ(), lookup)
           }
-          val extendings = def.extendings().toKtList().map { ex ->
-            ClassExtending(
-              lookup.findName(ex.name()),
-              ex.typeParams().toKtList().map { traverseExpr(it, lookup) })
-          }
+          val extendings = def.extendings().toKtList().map { ex -> lookup.findName(ex.name()) }
           val reality = traverseTypeExpr(def.reality(), lookup)
           val casts = def.body().toKtList().filterIsInstance<BibixAst.ClassCastDef>()
             .associate { cast ->
@@ -227,11 +223,6 @@ class BuildGraph(
           listOf("path") -> PathType
           else -> CustomType(lookup.findName(name))
         }
-      }
-      is BibixAst.ParameterizedClassType -> {
-        ClassType(lookup.findName(typeExpr.name()), typeExpr.typeParams().toKtList().map {
-          exprGraphs.register(traverseExpr(it, lookup))
-        })
       }
       is BibixAst.CollectionType ->
         when (typeExpr.name()) {
