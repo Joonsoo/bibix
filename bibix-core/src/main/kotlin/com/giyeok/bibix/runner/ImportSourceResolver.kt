@@ -47,6 +47,9 @@ class ImportSourceResolver(val repo: Repo) {
           val remotes = existingRepo.remoteList().call()
           val remoteName = remotes.find { it.urIs.contains(URIish(url)) }
           if (remoteName == null) null else {
+            existingRepo.checkout()
+              .setName(ref)
+              .call()
             existingRepo.pull()
               .setRemote(remoteName.name)
               .setRemoteBranchName(ref)
