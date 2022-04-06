@@ -40,7 +40,8 @@ public class Library {
             args.add(destDirectory.getCanonicalPath());
 
             if (optIns != null && !optIns.getValues().isEmpty()) {
-                optIns.getValues().forEach(optIn -> args.add("-opt-in=" + optIn));
+                optIns.getValues().forEach(optIn ->
+                        args.add("-opt-in=" + ((StringValue) optIn).getValue()));
             }
 
             args.add("-no-stdlib");
