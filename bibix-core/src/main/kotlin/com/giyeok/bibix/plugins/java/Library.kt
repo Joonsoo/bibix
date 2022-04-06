@@ -35,7 +35,7 @@ class Library {
       // ClassPkg = (origin: ClassOrigin, cps: set<path>, deps: set<ClassPkg>)
       BuildRuleReturn.value(
         TupleValue(
-          StringValue("local build by java.library: ${context.objectIdHash}"),
+          StringValue("built by java.library: ${context.objectIdHash}"),
           SetValue(listOf(DirectoryValue(dest))),
           deps,
         )

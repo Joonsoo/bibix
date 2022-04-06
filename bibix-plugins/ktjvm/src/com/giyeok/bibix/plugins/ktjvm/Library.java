@@ -18,9 +18,7 @@ public class Library {
             args.add("-cp");
             // System.out.println(deps);
             classPaths.getValues().forEach(v -> {
-                ((SetValue) ((ClassInstanceValue) v).getValue()).getValues().forEach(p -> {
-                    cps.add(((PathValue) p).getPath());
-                });
+                cps.add(((PathValue) v).getPath());
             });
             args.add(cps.stream().map(p -> {
                 try {
@@ -48,8 +46,9 @@ public class Library {
             CLITool.doMain(new K2JVMCompiler(), args.toArray(new String[0]));
         }
 
+        // ClassPkg = (origin: ClassOrigin, cps: set<path>, deps: set<ClassPkg>)
         return new TupleValue(
-                new StringValue(""),
+                new StringValue("built by ktjvm.library: " + context.getObjectIdHash()),
                 new SetValue(new PathValue(destDirectory)),
                 pkgSet
         );

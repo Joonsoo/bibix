@@ -29,10 +29,10 @@ class BuildRunner(
     runTasks(targets.map { BuildTask.ResolveName(it) })
   }
 
-  fun notifyTaskFailed(task: BuildTask) {
+  fun markTaskFailed(task: BuildTask, exception: Exception) {
     // TODO
+    exception.printStackTrace()
     exitProcess(1)
-    TODO()
   }
 
   fun registerTaskResult(task: BuildTask, value: Any) {
@@ -129,8 +129,7 @@ class BuildRunner(
         val next = defaults.first()
         val exprGraph = buildGraph.exprGraphs[next.second]
         require(
-          task,
-          BuildTask.ExprEval(origin, next.second, exprGraph.mainNode, null)
+          task, BuildTask.ExprEval(origin, next.second, exprGraph.mainNode, null)
         ) { defaultValue, _ ->
           cc[next.first] = defaultValue as BibixValue
           recDefaults(defaults.drop(1), cc, onFinished)
@@ -139,9 +138,7 @@ class BuildRunner(
     }
 
     fun recCoerce(
-      params: Map<String, BibixValue>,
-      queue: List<String>,
-      cc: MutableMap<String, BibixValue>
+      params: Map<String, BibixValue>, queue: List<String>, cc: MutableMap<String, BibixValue>
     ) {
       if (queue.isEmpty()) {
         onFinished(cc)
@@ -180,8 +177,7 @@ class BuildRunner(
           // TODO parentValue가 이미 로드된 스크립트인 경우 처리
           check(parentValue is CNameValue.DeferredImport)
           require(
-            task,
-            BuildTask.ResolveImport(task.cname.sourceId, parentValue.deferredImportId)
+            task, BuildTask.ResolveImport(task.cname.sourceId, parentValue.deferredImportId)
           ) { importedSourceId, _ ->
             // import가 정상적으로 완료됐으면 import된 스크립트의 모든 element들은 buildGraph에 들어가 있어야 함
             importedSourceId as SourceId
@@ -189,8 +185,7 @@ class BuildRunner(
               buildGraph.replaceValue(task.cname, CNameValue.LoadedImport(importedSourceId))
             }
             require(
-              task,
-              BuildTask.ResolveName(CName(importedSourceId, task.cname.tokens.drop(1)))
+              task, BuildTask.ResolveName(CName(importedSourceId, task.cname.tokens.drop(1)))
             ) { taskResult, _ ->
               registerTaskResult(task, taskResult)
             }
@@ -200,8 +195,7 @@ class BuildRunner(
             is CNameValue.LoadedImport -> registerTaskResult(task, value)
             is CNameValue.DeferredImport -> {
               require(
-                task,
-                BuildTask.ResolveImport(task.cname.sourceId, value.deferredImportId)
+                task, BuildTask.ResolveImport(task.cname.sourceId, value.deferredImportId)
               ) { importResult, _ ->
                 // TODO buildGraph.replaceValue(task.cname, importResult)
                 registerTaskResult(task, importResult)
@@ -216,8 +210,7 @@ class BuildRunner(
               )
               require(task, evalTask) { evalResult, _ ->
                 buildGraph.replaceValue(
-                  task.cname,
-                  CNameValue.EvaluatedValue(evalResult as BibixValue)
+                  task.cname, CNameValue.EvaluatedValue(evalResult as BibixValue)
                 )
                 // CallExpr 실행시 evalTask -> target id 저장해두기
                 taskObjectIds[evalTask]?.let { objectId ->
@@ -246,12 +239,8 @@ class BuildRunner(
                 }
                 val exprGraph = buildGraph.exprGraphs[value.defaultValueId]
                 require(
-                  task,
-                  BuildTask.ExprEval(
-                    task.cname.sourceId,
-                    value.defaultValueId,
-                    exprGraph.mainNode,
-                    null
+                  task, BuildTask.ExprEval(
+                    task.cname.sourceId, value.defaultValueId, exprGraph.mainNode, null
                   )
                 ) { argValue, _ ->
                   registerTaskResult(task, argValue)
@@ -275,8 +264,9 @@ class BuildRunner(
                   )
                   registerTaskResult(task, ruleImplInfo)
                 }
-                value.implName.sourceId is BibixInternalSourceId &&
-                  value.implName.tokens == listOf("$$") -> {
+                value.implName.sourceId is BibixInternalSourceId && value.implName.tokens == listOf(
+                  "$$"
+                ) -> {
                   // native impls
                   val plugin = bibixPlugins.getValue(value.implName.sourceId.name)
                   val ruleImplInfo = BuildRuleImplInfo(
@@ -296,9 +286,7 @@ class BuildRunner(
                   val implResolveTask = BuildTask.ResolveName(value.implName)
                   require(task, implResolveTask) { implResult0, _ ->
                     coerce(
-                      task,
-                      task.cname.sourceId,
-                      implResult0 as BibixValue,
+                      task, task.cname.sourceId, implResult0 as BibixValue,
                       // TODO resolveClassPkgs 호출하도록 수정
                       CustomType(CName(BibixInternalSourceId("jvm"), "ClassPaths"))
                     ) { implResult ->
@@ -313,15 +301,14 @@ class BuildRunner(
                         realm
                       }
                       val implObjectId = taskObjectIds.getValue(implResolveTask)
-                      val ruleImplInfo =
-                        BuildRuleImplInfo(
-                          value.implName.sourceId,
-                          objectIdHash { this.objectIdHashString = implObjectId.hashString() },
-                          realm.loadClass(value.className),
-                          value.methodName,
-                          value.params,
-                          value.returnType
-                        )
+                      val ruleImplInfo = BuildRuleImplInfo(
+                        value.implName.sourceId,
+                        objectIdHash { this.objectIdHashString = implObjectId.hashString() },
+                        realm.loadClass(value.className),
+                        value.methodName,
+                        value.params,
+                        value.returnType
+                      )
                       // TODO buildGraph.replaceValue(task.cname, implResult)
                       registerTaskResult(task, ruleImplInfo)
                     }
@@ -357,21 +344,28 @@ class BuildRunner(
                 }
               }
             }
-            is CNameValue.ActionCallValue ->
-              require(task, BuildTask.CallAction(task.cname.sourceId, value.exprGraphId)) { _, _ ->
-                registerTaskResult(task, NoneValue)
-              }
+            is CNameValue.ActionCallValue -> require(
+              task,
+              BuildTask.CallAction(task.cname.sourceId, value.exprGraphId)
+            ) { _, _ ->
+              registerTaskResult(task, NoneValue)
+            }
           }
         }
       }
       is BuildTask.CallAction -> {
         val exprGraph = buildGraph.exprGraphs[task.exprGraphId]
-        val callExpr =
-          exprGraph.callExprs[(exprGraph.mainNode as ExprNode.CallExprNode).callExprId]
+        val callExpr = exprGraph.callExprs[(exprGraph.mainNode as ExprNode.CallExprNode).callExprId]
         val targetTask = BuildTask.ExprEval(task.origin, task.exprGraphId, callExpr.target, null)
         val namedParams = callExpr.params.namedParams.entries.toList().sortedBy { it.key }
-        val paramTasks = (callExpr.params.posParams + namedParams.map { it.value })
-          .map { BuildTask.ExprEval(task.origin, task.exprGraphId, it, null) }
+        val paramTasks = (callExpr.params.posParams + namedParams.map { it.value }).map {
+          BuildTask.ExprEval(
+            task.origin,
+            task.exprGraphId,
+            it,
+            null
+          )
+        }
         require(task, listOf(targetTask) + paramTasks) { prerequisites, _ ->
           val ruleImplInfo = prerequisites[0] as ActionRuleImplInfo
 
@@ -381,18 +375,13 @@ class BuildRunner(
 
           val paramValues = prerequisites.drop(1).map { it as BibixValue }
           val posParams = paramValues.take(callExpr.params.posParams.size)
-          val namedParamsMap = namedParams.map { it.key }
-            .zip(paramValues.drop(callExpr.params.posParams.size))
-            .toMap()
+          val namedParamsMap =
+            namedParams.map { it.key }.zip(paramValues.drop(callExpr.params.posParams.size)).toMap()
           organizeParams(
-            task,
-            task.origin,
-            ruleImplInfo.params,
-            posParams,
-            namedParamsMap
+            task, task.origin, ruleImplInfo.params, posParams, namedParamsMap
           ) { args ->
             if (args == null) {
-              notifyTaskFailed(task)
+              markTaskFailed(task, Exception("Failed to get organize"))
             } else {
               val context = ActionContext(ruleImplInfo.origin, args)
 
@@ -413,21 +402,22 @@ class BuildRunner(
             require(task, implTask) { ruleImplInfo, progressIndicator ->
               ruleImplInfo as BuildRuleImplInfo
               val namedParams = callExpr.params.namedParams.entries.toList().sortedBy { it.key }
-              val paramTasks = (callExpr.params.posParams + namedParams.map { it.value })
-                .map { BuildTask.ExprEval(task.origin, task.exprGraphId, it, task.thisValue) }
+              val paramTasks = (callExpr.params.posParams + namedParams.map { it.value }).map {
+                BuildTask.ExprEval(
+                  task.origin,
+                  task.exprGraphId,
+                  it,
+                  task.thisValue
+                )
+              }
               require(task, paramTasks) { params, _ ->
                 val paramValues = params.map { it as BibixValue }
                 val posParams = paramValues.take(callExpr.params.posParams.size)
-                val namedParamsMap = namedParams.map { it.key }
-                  .zip(paramValues.drop(callExpr.params.posParams.size))
-                  .toMap()
+                val namedParamsMap =
+                  namedParams.map { it.key }.zip(paramValues.drop(callExpr.params.posParams.size))
+                    .toMap()
                 callBuildRule(
-                  task,
-                  task.origin,
-                  ruleImplInfo,
-                  posParams,
-                  namedParamsMap,
-                  progressIndicator
+                  task, task.origin, ruleImplInfo, posParams, namedParamsMap, progressIndicator
                 ) { buildResult ->
                   registerTaskResult(task, buildResult)
                 }
@@ -435,101 +425,83 @@ class BuildRunner(
             }
           }
 
-          is ExprNode.NameNode ->
-            require(task, BuildTask.ResolveName(exprNode.name)) { result, _ ->
-              registerTaskResult(task, result)
-            }
-          is ExprNode.MergeOpNode ->
-            require(
-              task,
-              listOf(
-                BuildTask.ExprEval(task.origin, task.exprGraphId, exprNode.lhs, task.thisValue),
-                BuildTask.ExprEval(task.origin, task.exprGraphId, exprNode.rhs, task.thisValue)
-              )
-            ) { results, _ ->
-              val lhs = results[0] as BibixValue
-              val rhs = results[1] as BibixValue
-              // lhs와 rhs를 각각 list로 coerce
-              coerce(task, task.origin, lhs, ListType(AnyType)) { lhsList ->
-                lhsList as ListValue
-                coerce(task, task.origin, rhs, ListType(AnyType)) { rhsList ->
-                  rhsList as ListValue
-                  registerTaskResult(task, ListValue(lhsList.values + rhsList.values))
-                }
+          is ExprNode.NameNode -> require(task, BuildTask.ResolveName(exprNode.name)) { result, _ ->
+            registerTaskResult(task, result)
+          }
+          is ExprNode.MergeOpNode -> require(
+            task, listOf(
+              BuildTask.ExprEval(task.origin, task.exprGraphId, exprNode.lhs, task.thisValue),
+              BuildTask.ExprEval(task.origin, task.exprGraphId, exprNode.rhs, task.thisValue)
+            )
+          ) { results, _ ->
+            val lhs = results[0] as BibixValue
+            val rhs = results[1] as BibixValue
+            // lhs와 rhs를 각각 list로 coerce
+            coerce(task, task.origin, lhs, ListType(AnyType)) { lhsList ->
+              lhsList as ListValue
+              coerce(task, task.origin, rhs, ListType(AnyType)) { rhsList ->
+                rhsList as ListValue
+                registerTaskResult(task, ListValue(lhsList.values + rhsList.values))
               }
             }
-          is ExprNode.MemberAccessNode ->
-            require(
-              task,
-              BuildTask.ExprEval(task.origin, task.exprGraphId, exprNode.target, task.thisValue)
-            ) { result, _ ->
-              when (result) {
-                is CNameValue.EnumType -> {
-                  check(result.values.contains(exprNode.name))
-                  registerTaskResult(task, EnumValue(result.cname, exprNode.name))
-                }
-                is CNameValue.NamespaceValue -> {
-                  check(result.names.contains(exprNode.name))
-                  require(
-                    task,
-                    BuildTask.ResolveName(result.cname.append(exprNode.name))
-                  ) { resolved, _ ->
-                    registerTaskResult(task, resolved)
-                  }
-                }
-                is BibixValue -> {
-                  fun access(value: BibixValue, name: String): BibixValue = when (value) {
-                    is NamedTupleValue -> value.getValue(name)
-                    is ClassInstanceValue -> access(value.value, name)
-                    else -> throw IllegalStateException("Cannot access $value $name")
-                  }
-                  registerTaskResult(task, access(result, exprNode.name))
-                }
-                else -> throw IllegalStateException("Invalid access: ${exprNode}")
+          }
+          is ExprNode.MemberAccessNode -> require(
+            task, BuildTask.ExprEval(task.origin, task.exprGraphId, exprNode.target, task.thisValue)
+          ) { result, _ ->
+            when (result) {
+              is CNameValue.EnumType -> {
+                check(result.values.contains(exprNode.name))
+                registerTaskResult(task, EnumValue(result.cname, exprNode.name))
               }
+              is CNameValue.NamespaceValue -> {
+                check(result.names.contains(exprNode.name))
+                require(
+                  task, BuildTask.ResolveName(result.cname.append(exprNode.name))
+                ) { resolved, _ ->
+                  registerTaskResult(task, resolved)
+                }
+              }
+              is BibixValue -> {
+                fun access(value: BibixValue, name: String): BibixValue = when (value) {
+                  is NamedTupleValue -> value.getValue(name)
+                  is ClassInstanceValue -> access(value.value, name)
+                  else -> throw IllegalStateException("Cannot access $value $name")
+                }
+                registerTaskResult(task, access(result, exprNode.name))
+              }
+              else -> throw IllegalStateException("Invalid access: ${exprNode}")
             }
+          }
 
           is ExprNode.ListNode -> {
-            require(
-              task,
-              exprNode.elems.map {
-                BuildTask.ExprEval(task.origin, task.exprGraphId, it, task.thisValue)
-              }
-            ) { elemResults, _ ->
+            require(task, exprNode.elems.map {
+              BuildTask.ExprEval(task.origin, task.exprGraphId, it, task.thisValue)
+            }) { elemResults, _ ->
               registerTaskResult(task, ListValue(elemResults.map { it as BibixValue }))
             }
           }
           is ExprNode.TupleNode -> {
-            require(
-              task,
-              exprNode.elems.map {
-                BuildTask.ExprEval(task.origin, task.exprGraphId, it, task.thisValue)
-              }
-            ) { elemResults, _ ->
+            require(task, exprNode.elems.map {
+              BuildTask.ExprEval(task.origin, task.exprGraphId, it, task.thisValue)
+            }) { elemResults, _ ->
               registerTaskResult(task, TupleValue(elemResults.map { it as BibixValue }))
             }
           }
           is ExprNode.NamedTupleNode -> {
-            require(
-              task,
-              exprNode.elems.map {
-                BuildTask.ExprEval(task.origin, task.exprGraphId, it.second, task.thisValue)
-              }
-            ) { elemResults, _ ->
+            require(task, exprNode.elems.map {
+              BuildTask.ExprEval(task.origin, task.exprGraphId, it.second, task.thisValue)
+            }) { elemResults, _ ->
               registerTaskResult(
                 task,
-                NamedTupleValue(
-                  exprNode.elems.zip(elemResults)
-                    .map { it.first.first to it.second as BibixValue })
+                NamedTupleValue(exprNode.elems.zip(elemResults)
+                  .map { it.first.first to it.second as BibixValue })
               )
             }
           }
           is ExprNode.StringLiteralNode -> {
-            require(task,
-              exprNode.stringElems.filterIsInstance<ExprChunk>().map {
-                BuildTask.ExprEval(task.origin, task.exprGraphId, it.expr, task.thisValue)
-              }
-            ) { results, _ ->
+            require(task, exprNode.stringElems.filterIsInstance<ExprChunk>().map {
+              BuildTask.ExprEval(task.origin, task.exprGraphId, it.expr, task.thisValue)
+            }) { results, _ ->
               val stringBuilder = StringBuilder()
               var i = 0
               exprNode.stringElems.forEach { elem ->
@@ -544,8 +516,7 @@ class BuildRunner(
               registerTaskResult(task, StringValue(stringBuilder.toString()))
             }
           }
-          is ExprNode.BooleanLiteralNode ->
-            registerTaskResult(task, BooleanValue(exprNode.value))
+          is ExprNode.BooleanLiteralNode -> registerTaskResult(task, BooleanValue(exprNode.value))
 
           is ExprNode.ClassThisRef -> {
             registerTaskResult(task, checkNotNull(task.thisValue))
@@ -558,14 +529,12 @@ class BuildRunner(
           is ImportSource.ImportSourceCall -> {
             val exprGraph = buildGraph.exprGraphs[source.sourceExprId]
             require(
-              task,
-              BuildTask.ExprEval(source.origin, source.sourceExprId, exprGraph.mainNode, null)
+              task, BuildTask.ExprEval(source.origin, source.sourceExprId, exprGraph.mainNode, null)
             ) { result, progressIndicator ->
               // git과 같은 "root" source에 있는 함수들은 named tuple로 소스에 대한 정보를 반환하고 여기서는 그 값을 받아서 사용
 
               val importedSource = importSourceResolver.resolveImportSourceCall(
-                result as ClassInstanceValue,
-                progressIndicator
+                result as ClassInstanceValue, progressIndicator
               )
               registerTaskResult(task, importedSource)
             }
@@ -573,19 +542,13 @@ class BuildRunner(
           is ImportSource.ImportSourceString -> {
             val exprGraph = buildGraph.exprGraphs[source.stringLiteralExprId]
             require(
-              task,
-              BuildTask.ExprEval(
-                source.origin,
-                source.stringLiteralExprId,
-                exprGraph.mainNode,
-                null
+              task, BuildTask.ExprEval(
+                source.origin, source.stringLiteralExprId, exprGraph.mainNode, null
               )
             ) { result, progressIndicator ->
               coerce(task, task.origin, result as StringValue, DirectoryType) { importDirectory ->
                 val importedSource = importSourceResolver.resolveImportSourcePath(
-                  repo.mainDirectory,
-                  importDirectory as DirectoryValue,
-                  progressIndicator
+                  repo.mainDirectory, importDirectory as DirectoryValue, progressIndicator
                 )
                 registerTaskResult(task, importedSource)
               }
@@ -597,8 +560,7 @@ class BuildRunner(
         when (val importDef = buildGraph.deferredImports[task.importDefId]) {
           is DeferredImportDef.ImportAll -> {
             require(
-              task,
-              BuildTask.ResolveImportSource(task.origin, importDef.importSource)
+              task, BuildTask.ResolveImportSource(task.origin, importDef.importSource)
             ) { importedSource, _ ->
               importedSource as ImportedSource
               synchronized(this) {
@@ -632,8 +594,7 @@ class BuildRunner(
           }
           is DeferredImportDef.ImportFrom -> {
             require(
-              task,
-              BuildTask.ResolveImportSource(task.origin, importDef.importSource)
+              task, BuildTask.ResolveImportSource(task.origin, importDef.importSource)
             ) { importedSource, _ ->
               importedSource as ImportedSource
               synchronized(this) {
@@ -650,8 +611,7 @@ class BuildRunner(
           }
           is DeferredImportDef.ImportMainSub -> {
             require(
-              task,
-              BuildTask.ResolveName(CName(MainSourceId, importDef.nameTokens))
+              task, BuildTask.ResolveName(CName(MainSourceId, importDef.nameTokens))
             ) { resolved, _ ->
               registerTaskResult(task, resolved)
             }
@@ -671,14 +631,10 @@ class BuildRunner(
     whenDone: (BibixValue) -> Unit
   ) {
     organizeParams(
-      task,
-      origin,
-      ruleImplInfo.params,
-      posParams,
-      namedParamsMap
+      task, origin, ruleImplInfo.params, posParams, namedParamsMap
     ) { args ->
       if (args == null) {
-        notifyTaskFailed(task)
+        markTaskFailed(task, Exception("Failed to get arguments"))
       } else {
         val argsMap = args.toArgsMap()
         val inputHash = argsMap.extractInputHashes()
@@ -733,7 +689,7 @@ class BuildRunner(
           when (result) {
             is BibixValue -> onFinalValue(result)
             is BuildRuleReturn.ValueReturn -> onFinalValue(result.value)
-            is BuildRuleReturn.FailedReturn -> notifyTaskFailed(task)
+            is BuildRuleReturn.FailedReturn -> markTaskFailed(task, result.exception)
             is BuildRuleReturn.EvalAndThen -> {
               // `result.ruleName`을 . 단위로 끊어서 rule 이름을 찾은 다음
               val nameTokens = result.ruleName.split('.')
@@ -750,7 +706,11 @@ class BuildRunner(
                   progressIndicator,
                 ) { buildResult ->
                   // 결과를 `result.whenDone`으로 전달해서 반복
-                  doNext(result.whenDone(buildResult))
+                  try {
+                    doNext(result.whenDone(buildResult))
+                  } catch (e: Exception) {
+                    markTaskFailed(task, e)
+                  }
                 }
               }
             }
@@ -761,18 +721,17 @@ class BuildRunner(
     }
   }
 
-  private fun addSourceId(sourceId: BibixIdProto.SourceId): SourceId =
-    when (sourceId.sourceCase) {
-      BibixIdProto.SourceId.SourceCase.ROOT_SOURCE -> BibixRootSourceId
-      BibixIdProto.SourceId.SourceCase.MAIN_SOURCE -> MainSourceId
-      BibixIdProto.SourceId.SourceCase.BIBIX_INTERNAL_SOURCE -> BibixInternalSourceId(sourceId.bibixInternalSource)
-      BibixIdProto.SourceId.SourceCase.LOCAL_SOURCE -> LocalSourceId(sourceId.localSource)
-      BibixIdProto.SourceId.SourceCase.REMOTE_SOURCE -> {
-        val remoteSourceId = buildGraph.addRemoteSource(sourceId.remoteSource)
-        RemoteSourceId(remoteSourceId)
-      }
-      else -> TODO()
+  private fun addSourceId(sourceId: BibixIdProto.SourceId): SourceId = when (sourceId.sourceCase) {
+    BibixIdProto.SourceId.SourceCase.ROOT_SOURCE -> BibixRootSourceId
+    BibixIdProto.SourceId.SourceCase.MAIN_SOURCE -> MainSourceId
+    BibixIdProto.SourceId.SourceCase.BIBIX_INTERNAL_SOURCE -> BibixInternalSourceId(sourceId.bibixInternalSource)
+    BibixIdProto.SourceId.SourceCase.LOCAL_SOURCE -> LocalSourceId(sourceId.localSource)
+    BibixIdProto.SourceId.SourceCase.REMOTE_SOURCE -> {
+      val remoteSourceId = buildGraph.addRemoteSource(sourceId.remoteSource)
+      RemoteSourceId(remoteSourceId)
     }
+    else -> TODO()
+  }
 
   private fun fileFromString(origin: SourceId, path: String): File {
     val base = buildGraph.baseDirectories.getValue(origin)
@@ -790,61 +749,56 @@ class BuildRunner(
     // -> class의 cast 함수 시도 -> value.reality를 coerce
     when (type) {
       AnyType -> onFinished(value)
-      BooleanType ->
-        when (value) {
-          is BooleanValue -> onFinished(value)
-          else -> onFinished(null)
+      BooleanType -> when (value) {
+        is BooleanValue -> onFinished(value)
+        else -> onFinished(null)
+      }
+      StringType -> when (value) {
+        is StringValue -> onFinished(value)
+        else -> onFinished(StringValue(value.stringify()))
+      }
+      PathType -> when (value) {
+        is PathValue -> onFinished(value)
+        is FileValue -> onFinished(PathValue(value.file))
+        is DirectoryValue -> onFinished(PathValue(value.directory))
+        is StringValue -> {
+          // TODO 이 value의 root 디렉토리를 베이스로
+          onFinished(PathValue(fileFromString(origin, value.value)))
         }
-      StringType ->
-        when (value) {
-          is StringValue -> onFinished(value)
-          else -> onFinished(StringValue(value.stringify()))
+        is ClassInstanceValue -> {
+          // TODO cast 규칙이 있으면 먼저 시도해야할듯? -> 그런데 지금은 문법에서 class to class cast만 되는것같은데?
+          coerce(task, origin, value.value, type, onFinished)
         }
-      PathType ->
-        when (value) {
-          is PathValue -> onFinished(value)
-          is FileValue -> onFinished(PathValue(value.file))
-          is DirectoryValue -> onFinished(PathValue(value.directory))
-          is StringValue -> {
-            // TODO 이 value의 root 디렉토리를 베이스로
-            onFinished(PathValue(fileFromString(origin, value.value)))
-          }
-          is ClassInstanceValue -> {
-            // TODO cast 규칙이 있으면 먼저 시도해야할듯? -> 그런데 지금은 문법에서 class to class cast만 되는것같은데?
-            coerce(task, origin, value.value, type, onFinished)
-          }
-          else -> onFinished(null)
+        else -> onFinished(null)
+      }
+      FileType -> when (value) {
+        is FileValue -> onFinished(value)
+        is PathValue -> {
+          check(value.path.exists() && value.path.isFile)
+          onFinished(FileValue(value.path))
         }
-      FileType ->
-        when (value) {
-          is FileValue -> onFinished(value)
-          is PathValue -> {
-            check(value.path.exists() && value.path.isFile)
-            onFinished(FileValue(value.path))
-          }
-          is StringValue -> {
-            // TODO 이 value의 origin의 root 디렉토리를 베이스로
-            val file = fileFromString(origin, value.value)
-            check(file.exists() && file.isFile)
-            onFinished(FileValue(file))
-          }
-          else -> onFinished(null)
+        is StringValue -> {
+          // TODO 이 value의 origin의 root 디렉토리를 베이스로
+          val file = fileFromString(origin, value.value)
+          check(file.exists() && file.isFile)
+          onFinished(FileValue(file))
         }
-      DirectoryType ->
-        when (value) {
-          is DirectoryValue -> onFinished(value)
-          is PathValue -> {
-            check(value.path.exists() && value.path.isDirectory)
-            onFinished(DirectoryValue(value.path))
-          }
-          is StringValue -> {
-            // TODO 이 value의 origin의 root 디렉토리를 베이스로
-            val file = fileFromString(origin, value.value)
-            check(file.exists() && file.isDirectory)
-            onFinished(DirectoryValue(file))
-          }
-          else -> onFinished(null)
+        else -> onFinished(null)
+      }
+      DirectoryType -> when (value) {
+        is DirectoryValue -> onFinished(value)
+        is PathValue -> {
+          check(value.path.exists() && value.path.isDirectory)
+          onFinished(DirectoryValue(value.path))
         }
+        is StringValue -> {
+          // TODO 이 value의 origin의 root 디렉토리를 베이스로
+          val file = fileFromString(origin, value.value)
+          check(file.exists() && file.isDirectory)
+          onFinished(DirectoryValue(file))
+        }
+        else -> onFinished(null)
+      }
       is CustomType -> {
         require(task, BuildTask.ResolveName(type.name)) { actualType, _ ->
           when (actualType) {
@@ -893,34 +847,32 @@ class BuildRunner(
                     }
                   }
                 }
-                else ->
-                  coerce(task, origin, value, actualType.reality) { coerced ->
-                    if (coerced == null) {
-                      onFinished(null)
-                    } else {
-                      onFinished(ClassInstanceValue(actualType.cname, coerced))
-                    }
+                else -> coerce(task, origin, value, actualType.reality) { coerced ->
+                  if (coerced == null) {
+                    onFinished(null)
+                  } else {
+                    onFinished(ClassInstanceValue(actualType.cname, coerced))
                   }
+                }
               }
             }
-            is CNameValue.EnumType ->
-              when (value) {
-                is EnumValue -> {
-                  if (actualType.cname != value.enumTypeName) {
-                    onFinished(null)
-                  } else {
-                    onFinished(value)
-                  }
+            is CNameValue.EnumType -> when (value) {
+              is EnumValue -> {
+                if (actualType.cname != value.enumTypeName) {
+                  onFinished(null)
+                } else {
+                  onFinished(value)
                 }
-                is StringValue -> {
-                  if (!actualType.values.contains(value.value)) {
-                    onFinished(null)
-                  } else {
-                    onFinished(EnumValue(actualType.cname, value.value))
-                  }
-                }
-                else -> onFinished(null)
               }
+              is StringValue -> {
+                if (!actualType.values.contains(value.value)) {
+                  onFinished(null)
+                } else {
+                  onFinished(EnumValue(actualType.cname, value.value))
+                }
+              }
+              else -> onFinished(null)
+            }
             else -> onFinished(null)
           }
         }
@@ -930,10 +882,7 @@ class BuildRunner(
       }
       is ListType -> {
         fun rec(
-          values: List<BibixValue>,
-          elemType: BibixType,
-          idx: Int,
-          cc: MutableList<BibixValue>
+          values: List<BibixValue>, elemType: BibixType, idx: Int, cc: MutableList<BibixValue>
         ) {
           if (idx == values.size) {
             check(cc.size == values.size)
@@ -957,10 +906,7 @@ class BuildRunner(
       }
       is SetType -> {
         fun rec(
-          values: List<BibixValue>,
-          elemType: BibixType,
-          idx: Int,
-          cc: MutableList<BibixValue>
+          values: List<BibixValue>, elemType: BibixType, idx: Int, cc: MutableList<BibixValue>
         ) {
           if (idx == values.size) {
             check(cc.size == values.size)

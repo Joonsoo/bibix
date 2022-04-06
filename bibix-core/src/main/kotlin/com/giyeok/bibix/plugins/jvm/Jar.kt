@@ -22,63 +22,70 @@ class Jar {
     TODO()
   }
 
-  fun executableUberJar(context: BuildContext): BibixValue {
+  fun executableUberJar(context: BuildContext): BuildRuleReturn {
     val mainClass = (context.arguments.getValue("mainClass") as StringValue).value
-    val deps = (context.arguments.getValue("deps") as SetValue).values.flatMap { dep ->
-      ((dep as ClassInstanceValue).value as SetValue).values.map { (it as PathValue).path }
-    }
+    val deps = (context.arguments.getValue("deps") as SetValue)
     val jarFileName = (context.arguments.getValue("jarFileName") as StringValue).value
     val destFile = File(context.destDirectory, jarFileName)
 
-    ZipOutputStream(destFile.outputStream().buffered()).use { zos ->
-      deps.reversed().forEach { dep ->
-        if (dep.isFile) {
-          // TODO dep is jar file
-          ZipInputStream(dep.inputStream().buffered()).use { zis ->
-            var entry = zis.nextEntry
-            while (entry != null) {
-              if (!entry.isDirectory &&
-                !entry.name.startsWith("META-INF/") &&
-                entry.name != "module-info.class"
-              ) {
-                try {
-                  zos.putNextEntry(ZipEntry(entry.name))
-                  transferFromStreamToStream(zis, zos)
-                } catch (e: ZipException) {
-                  // TODO 일단 무시하고 진행하도록
-                  println(e.message)
+    return BuildRuleReturn.evalAndThen(
+      "resolveClassPkgs",
+      mapOf("classPkgs" to deps)
+    ) { classPaths ->
+      val cps = (classPaths as ClassInstanceValue).value as SetValue // set<path>
+      ZipOutputStream(destFile.outputStream().buffered()).use { zos ->
+        cps.values.forEach { cp ->
+          cp as PathValue
+          val dep = cp.path
+
+          if (dep.isFile) {
+            // TODO dep is jar file
+            ZipInputStream(dep.inputStream().buffered()).use { zis ->
+              var entry = zis.nextEntry
+              while (entry != null) {
+                if (!entry.isDirectory &&
+                  !entry.name.startsWith("META-INF/") &&
+                  entry.name != "module-info.class"
+                ) {
+                  try {
+                    zos.putNextEntry(ZipEntry(entry.name))
+                    transferFromStreamToStream(zis, zos)
+                  } catch (e: ZipException) {
+                    // TODO 일단 무시하고 진행하도록
+                    println(e.message)
+                  }
                 }
+                entry = zis.nextEntry
               }
-              entry = zis.nextEntry
+              zis.closeEntry()
             }
-            zis.closeEntry()
-          }
-        } else {
-          check(dep.isDirectory)
-          Files.walk(Path.of(dep.canonicalPath)).toList().forEach { path ->
-            if (path.isRegularFile()) {
-              val filePath = path.toFile().relativeTo(dep.canonicalFile)
-              if (!filePath.startsWith("META-INF") && filePath.path != "module-info.class") {
-                try {
-                  zos.putNextEntry(ZipEntry(filePath.path))
-                  transferFromStreamToStream(path.toFile().inputStream().buffered(), zos)
-                } catch (e: ZipException) {
-                  // TODO 일단 무시하고 진행하도록
-                  println(e.message)
+          } else {
+            check(dep.isDirectory)
+            Files.walk(Path.of(dep.canonicalPath)).toList().forEach { path ->
+              if (path.isRegularFile()) {
+                val filePath = path.toFile().relativeTo(dep.canonicalFile)
+                if (!filePath.startsWith("META-INF") && filePath.path != "module-info.class") {
+                  try {
+                    zos.putNextEntry(ZipEntry(filePath.path))
+                    transferFromStreamToStream(path.toFile().inputStream().buffered(), zos)
+                  } catch (e: ZipException) {
+                    // TODO 일단 무시하고 진행하도록
+                    println(e.message)
+                  }
                 }
               }
             }
           }
         }
+        zos.putNextEntry(ZipEntry("META-INF/MANIFEST.MF"))
+        transferFromStreamToStream(
+          ByteArrayInputStream("Manifest-Version: 1.0\nMain-Class: $mainClass\n".encodeToByteArray()),
+          zos
+        )
+        zos.closeEntry()
       }
-      zos.putNextEntry(ZipEntry("META-INF/MANIFEST.MF"))
-      transferFromStreamToStream(
-        ByteArrayInputStream("Manifest-Version: 1.0\nMain-Class: $mainClass\n".encodeToByteArray()),
-        zos
-      )
-      zos.closeEntry()
+      BuildRuleReturn.value(FileValue(destFile))
     }
-    return FileValue(destFile)
   }
 
   private fun transferFromStreamToStream(input: InputStream, output: OutputStream) {
