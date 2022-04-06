@@ -80,7 +80,8 @@ class Dep {
       return TupleValue(
         mavenDep(jvmSourceId, "central", artifactResult.artifact),
         SetValue(PathValue(artifactResult.artifact.file)),
-        SetValue(node.children.map { traverse(it) }),
+        SetValue(
+          node.children.filter { artifactsMap.containsKey(it.artifact) }.map { traverse(it) }),
       )
     }
 

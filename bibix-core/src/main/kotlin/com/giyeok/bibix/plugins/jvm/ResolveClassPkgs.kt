@@ -89,12 +89,16 @@ class ResolveClassPkgs {
 
     val pkgToPaths = mutableMapOf<MavenArtifact, MutableList<List<ClassOrigin>>>()
     val mavenDepsMap = mutableMapOf<ClassOrigin.MavenDep, ClassPkg>()
+    val cps = mutableSetOf<File>()
+
     fun traversePkg(pkg: ClassPkg, path: List<ClassOrigin>) {
       if (pkg.origin is ClassOrigin.MavenDep) {
         mavenDepsMap[pkg.origin] = pkg
         val mavenArtifact = pkg.origin.toMavenArtifact()
         pkgToPaths.putIfAbsent(mavenArtifact, mutableListOf())
         pkgToPaths.getValue(mavenArtifact).add(path)
+      } else {
+        cps.addAll(pkg.cps)
       }
       pkg.deps.forEach { dep ->
         traversePkg(dep, path + dep.origin)
@@ -104,12 +108,6 @@ class ResolveClassPkgs {
       traversePkg(it, listOf(it.origin))
     }
 
-    val cps = mutableSetOf<File>()
-    classPkgs.forEach { pkg ->
-      if (pkg.origin !is ClassOrigin.MavenDep) {
-        cps.addAll(pkg.cps)
-      }
-    }
     pkgToPaths.keys.forEach { mavenArtifact ->
       val paths = pkgToPaths.getValue(mavenArtifact)
       val shortestPath = paths.minByOrNull { it.size }!!

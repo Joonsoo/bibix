@@ -668,7 +668,11 @@ class BuildRunner(
         val method = ruleImplInfo.cls.getMethod(methodName, BuildContext::class.java)
 
         check(method.trySetAccessible())
-        val invokeResult = method.invoke(instance, context)
+        val invokeResult = try {
+          method.invoke(instance, context)
+        } catch (e: Exception) {
+          markTaskFailed(task, e)
+        }
 
         fun onFinalValue(result: BibixValue) {
           coerce(task, origin, result, ruleImplInfo.returnType) { coerced ->
