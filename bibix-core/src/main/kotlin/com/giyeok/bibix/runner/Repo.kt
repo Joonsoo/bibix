@@ -43,17 +43,19 @@ class Repo(
     val inputsHash = inputHashes.hashString()
     // objectIdHash -> objectId, inputsHash 정보 저장
     val hashChanged = synchronized(this) {
-      val hashChanged = repoMeta.objectsMap[objectIdHashHex]?.inputsHash != inputsHash
-      repoMeta.putObjects(objectIdHashHex, objectInfo {
-        this.inputsHash = inputsHash
-        this.startTime = now()
-      })
-      repoMeta.putBuildingTargets(objectIdHashHex, true)
-      if (debuggingMode) {
-        // object id detail은 디버깅모드에서만 저장
-        repoMeta.putObjectIds(objectIdHashHex, objectId)
+      if (repoMeta.buildingTargetsMap.containsKey(objectIdHashHex)) true else {
+        val hashChanged = repoMeta.objectsMap[objectIdHashHex]?.inputsHash != inputsHash
+        repoMeta.putObjects(objectIdHashHex, objectInfo {
+          this.inputsHash = inputsHash
+          this.startTime = now()
+        })
+        repoMeta.putBuildingTargets(objectIdHashHex, true)
+        if (debuggingMode) {
+          // object id detail은 디버깅모드에서만 저장
+          repoMeta.putObjectIds(objectIdHashHex, objectId)
+        }
+        hashChanged
       }
-      hashChanged
     }
     commitRepoMeta()
     // object 디렉토리는 destDirectory를 가져갈때 생성하자. 아예 파일 output이 나오지 않는 빌드 룰도 꽤 많아서

@@ -636,6 +636,8 @@ class BuildRunner(
       if (args == null) {
         markTaskFailed(task, Exception("Failed to get arguments"))
       } else {
+        val methodName = ruleImplInfo.methodName ?: "build"
+
         val argsMap = args.toArgsMap()
         val inputHash = argsMap.extractInputHashes()
         val objectId = objectId {
@@ -663,7 +665,6 @@ class BuildRunner(
 
         // TODO instance 재활용이 필요할까?
         val instance = ruleImplInfo.cls.getDeclaredConstructor().newInstance()
-        val methodName = ruleImplInfo.methodName ?: "build"
         val method = ruleImplInfo.cls.getMethod(methodName, BuildContext::class.java)
 
         check(method.trySetAccessible())

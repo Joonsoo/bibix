@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class Library {
-    private BibixValue runCompiler(SetValue classPaths, SetValue pkgSet, BuildContext context) throws IOException {
+    private BibixValue runCompiler(SetValue classPaths, SetValue pkgSet, BuildContext context, ListValue optIns) throws IOException {
         ArrayList<String> args = new ArrayList<>();
         if (!classPaths.getValues().isEmpty()) {
             ArrayList<File> cps = new ArrayList<>();
@@ -39,6 +39,10 @@ public class Library {
             args.add("-d");
             args.add(destDirectory.getCanonicalPath());
 
+            if (optIns != null && !optIns.getValues().isEmpty()) {
+                optIns.getValues().forEach(optIn -> args.add("-opt-in=" + optIn));
+            }
+
             args.add("-no-stdlib");
             // args.add("-no-reflect");
 
@@ -55,16 +59,15 @@ public class Library {
     }
 
     public BuildRuleReturn build(BuildContext context) throws IOException {
-        ArrayList<String> args = new ArrayList<>();
-
         SetValue deps = (SetValue) context.getArguments().get("deps");
+        ListValue optIns = (ListValue) context.getArguments().get("optIns");
         return BuildRuleReturn.evalAndThen(
                 "jvm.resolveClassPkgs",
                 Map.of("classPkgs", deps),
                 (classPaths) -> {
                     SetValue cps = (SetValue) ((ClassInstanceValue) classPaths).getValue();
                     try {
-                        return BuildRuleReturn.value(runCompiler(cps, deps, context));
+                        return BuildRuleReturn.value(runCompiler(cps, deps, context, optIns));
                     } catch (Exception e) {
                         return BuildRuleReturn.failed(e);
                     }

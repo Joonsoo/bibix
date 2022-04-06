@@ -9,7 +9,7 @@ val jvmPlugin = BibixPlugin.fromScript(
     
     class ClassPkg extends ClassPaths =
       (origin: ClassOrigin, cps: set<path>, deps: set<ClassPkg>) {
-      as ClassPaths = flattenClassPkg(this)
+      as ClassPaths = resolveClassPkgs([this])
     }
     
     class ClassOrigin = {MavenDep, LocalBuilt, LocalLib}
@@ -18,10 +18,6 @@ val jvmPlugin = BibixPlugin.fromScript(
     // TODO LocalBuilt는 뭐가 들어가야되지..?
     class LocalBuilt = (desc: string)
     class LocalLib = (path: path)
-    
-    def flattenClassPkg(
-      classPkg: ClassPkg
-    ): ClassPaths = native:com.giyeok.bibix.plugins.jvm.FlattenClassPkg
     
     def resolveClassPkgs(
       classPkgs: set<ClassPkg>
@@ -56,7 +52,6 @@ val jvmPlugin = BibixPlugin.fromScript(
     Lib::class.java,
     Jar::class.java,
     Run::class.java,
-    FlattenClassPkg::class.java,
     ResolveClassPkgs::class.java,
   ),
 )

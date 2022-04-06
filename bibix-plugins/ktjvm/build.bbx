@@ -19,4 +19,5 @@ def library(
   srcs: set<file>,
   deps: set<jvm.ClassPkg> = [],
   outVersion: string = outVersion,
+  optIns?: list<string>,
 ): jvm.ClassPkg = impl:com.giyeok.bibix.plugins.ktjvm.Library

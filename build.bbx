@@ -39,12 +39,13 @@ namespace proto {
     deps=[maven.dep("com.google.protobuf", "protobuf-java", "3.19.4")],
   )
   kotlinlib = ktjvm.library(
-    srcs=protobuf.kotlin(schema=schema),
-    deps=[
+    srcs = protobuf.kotlin(schema=schema),
+    deps = [
       maven.dep("com.google.protobuf", "protobuf-kotlin", "3.19.4"),
       maven.dep("org.jetbrains.kotlin", "kotlin-stdlib-jdk8", kotlinVersion),
       javalib,
     ],
+    optIns = ["kotlin.RequiresOptIn"]
   )
 }
 
