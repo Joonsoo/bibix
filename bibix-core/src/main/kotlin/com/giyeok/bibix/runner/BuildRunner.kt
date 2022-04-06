@@ -416,80 +416,20 @@ class BuildRunner(
               val paramTasks = (callExpr.params.posParams + namedParams.map { it.value })
                 .map { BuildTask.ExprEval(task.origin, task.exprGraphId, it, task.thisValue) }
               require(task, paramTasks) { params, _ ->
-                // TODO instance 재활용이 필요할까?
-                val instance = ruleImplInfo.cls.getDeclaredConstructor().newInstance()
-                val methodName = ruleImplInfo.methodName ?: "build"
-                val method = ruleImplInfo.cls.getMethod(methodName, BuildContext::class.java)
                 val paramValues = params.map { it as BibixValue }
                 val posParams = paramValues.take(callExpr.params.posParams.size)
                 val namedParamsMap = namedParams.map { it.key }
                   .zip(paramValues.drop(callExpr.params.posParams.size))
                   .toMap()
-                organizeParams(
+                callBuildRule(
                   task,
                   task.origin,
-                  ruleImplInfo.params,
+                  ruleImplInfo,
                   posParams,
-                  namedParamsMap
-                ) { args ->
-                  if (args == null) {
-                    notifyTaskFailed(task)
-                  } else {
-                    val argsMap = args.toArgsMap()
-                    val inputHash = argsMap.extractInputHashes()
-                    val objectId = objectId {
-                      this.sourceId = task.origin.toProto(buildGraph)
-                      // TODO source_hash가 필요할까?
-                      // rule_impl에 대한 해시
-                      this.ruleImplIdHash = ruleImplInfo.implObjectIdHash
-                      this.methodName = methodName
-                      this.argsMap = argsMap
-                    }
-                    val (destDirectory, hashChanged) =
-                      repo.prepareObjectDirectory(objectId, inputHash)
-                    val context = BuildContext(
-                      ruleImplInfo.origin,
-                      buildGraph.baseDirectories.getValue(ruleImplInfo.origin),
-                      buildGraph.baseDirectories.getValue(task.origin),
-                      repo.mainDirectory,
-                      args,
-                      hashChanged,
-                      destDirectory,
-                      progressIndicator,
-                      repo,
-                    )
-
-                    check(method.trySetAccessible())
-                    val invokeResult = method.invoke(instance, context)
-
-                    fun onFinalValue(result: BibixValue) {
-                      coerce(task, task.origin, result, ruleImplInfo.returnType) { coerced ->
-                        if (coerced == null) {
-                          println(result)
-                          println(ruleImplInfo.returnType)
-                        }
-                        checkNotNull(coerced)
-                        synchronized(this) {
-                          repo.markFinished(objectId)
-                          // task의 objectId 저장
-                          taskObjectIds[task] = objectId
-                        }
-                        registerTaskResult(task, coerced)
-                      }
-                    }
-
-                    when (val result = invokeResult) {
-                      is BibixValue -> onFinalValue(result)
-                      is BuildRuleReturn.ValueReturn -> onFinalValue(result.value)
-                      is BuildRuleReturn.FailedReturn -> notifyTaskFailed(task)
-                      is BuildRuleReturn.EvalAndThen -> {
-                        // TODO on the fly source로 `result.script`를 addDef하고
-                        // `result.ruleName`을 . 단위로 끊어서 rule 이름을 찾은 다음
-                        // 해당 rule에 `result.params`을 줘서 실행한 다음
-                        // 결과를 `result.whenDone`으로 전달해서 반복
-                      }
-                    }
-                  }
+                  namedParamsMap,
+                  progressIndicator
+                ) { buildResult ->
+                  registerTaskResult(task, buildResult)
                 }
               }
             }
@@ -717,6 +657,106 @@ class BuildRunner(
             }
           }
         }
+      }
+    }
+  }
+
+  private fun callBuildRule(
+    task: BuildTask,
+    origin: SourceId,
+    ruleImplInfo: BuildRuleImplInfo,
+    posParams: List<BibixValue>,
+    namedParamsMap: Map<String, BibixValue>,
+    progressIndicator: ProgressIndicator<BuildTaskRoutinesManager.BuildTaskRoutineId>,
+    whenDone: (BibixValue) -> Unit
+  ) {
+    organizeParams(
+      task,
+      origin,
+      ruleImplInfo.params,
+      posParams,
+      namedParamsMap
+    ) { args ->
+      if (args == null) {
+        notifyTaskFailed(task)
+      } else {
+        val argsMap = args.toArgsMap()
+        val inputHash = argsMap.extractInputHashes()
+        val objectId = objectId {
+          this.sourceId = origin.toProto(buildGraph)
+          // TODO source_hash가 필요할까?
+          // rule_impl에 대한 해시
+          this.ruleImplIdHash = ruleImplInfo.implObjectIdHash
+          this.methodName = methodName
+          this.argsMap = argsMap
+        }
+        val objectDirectory = repo.prepareObjectDirectory(objectId, inputHash)
+        val context = BuildContext(
+          ruleImplInfo.origin,
+          buildGraph.baseDirectories.getValue(ruleImplInfo.origin),
+          buildGraph.baseDirectories.getValue(origin),
+          repo.mainDirectory,
+          args,
+          objectDirectory.hashChanged,
+          objectId,
+          objectDirectory.objectIdHashHex,
+          objectDirectory.directory,
+          progressIndicator,
+          repo,
+        )
+
+        // TODO instance 재활용이 필요할까?
+        val instance = ruleImplInfo.cls.getDeclaredConstructor().newInstance()
+        val methodName = ruleImplInfo.methodName ?: "build"
+        val method = ruleImplInfo.cls.getMethod(methodName, BuildContext::class.java)
+
+        check(method.trySetAccessible())
+        val invokeResult = method.invoke(instance, context)
+
+        fun onFinalValue(result: BibixValue) {
+          coerce(task, origin, result, ruleImplInfo.returnType) { coerced ->
+            if (coerced == null) {
+              println(result)
+              println(ruleImplInfo.returnType)
+            }
+            checkNotNull(coerced)
+            synchronized(this) {
+              repo.markFinished(objectId)
+              // task의 objectId 저장
+              taskObjectIds[task] = objectId
+            }
+            whenDone(coerced)
+          }
+        }
+
+        fun doNext(result: Any) {
+          when (result) {
+            is BibixValue -> onFinalValue(result)
+            is BuildRuleReturn.ValueReturn -> onFinalValue(result.value)
+            is BuildRuleReturn.FailedReturn -> notifyTaskFailed(task)
+            is BuildRuleReturn.EvalAndThen -> {
+              // `result.ruleName`을 . 단위로 끊어서 rule 이름을 찾은 다음
+              val nameTokens = result.ruleName.split('.')
+              val callingName = CName(ruleImplInfo.origin, nameTokens)
+              // 해당 rule에 `result.params`을 줘서 실행하고
+              require(task, BuildTask.ResolveName(callingName)) { calling, _ ->
+                calling as BuildRuleImplInfo
+                callBuildRule(
+                  task,
+                  calling.origin,
+                  calling,
+                  listOf(),
+                  result.params,
+                  progressIndicator,
+                ) { buildResult ->
+                  // 결과를 `result.whenDone`으로 전달해서 반복
+                  doNext(result.whenDone(buildResult))
+                }
+              }
+            }
+          }
+        }
+        doNext(invokeResult)
       }
     }
   }

@@ -35,7 +35,7 @@ data class ListValue(val values: List<BibixValue>) : BibixValue() {
 }
 
 class SetValue(elems: List<BibixValue>) : BibixValue() {
-  val values = elems.distinct().sortedWith(BibixValueComparator)
+  val values = elems.distinct()
 
   constructor(vararg values: BibixValue) : this(values.toList())
 
@@ -54,13 +54,6 @@ class SetValue(elems: List<BibixValue>) : BibixValue() {
 
   override fun hashCode(): Int {
     return values.hashCode()
-  }
-}
-
-object BibixValueComparator : Comparator<BibixValue> {
-  override fun compare(p0: BibixValue, p1: BibixValue): Int {
-    // TODO 제대로 다시 구현
-    return p0.stringify().compareTo(p1.stringify())
   }
 }
 

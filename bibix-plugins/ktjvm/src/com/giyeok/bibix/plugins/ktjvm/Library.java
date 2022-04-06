@@ -58,16 +58,14 @@ public class Library {
     public BuildRuleReturn build(BuildContext context) throws IOException {
         ArrayList<String> args = new ArrayList<>();
 
+        SetValue deps = (SetValue) context.getArguments().get("deps");
         return BuildRuleReturn.evalAndThen(
-                "import jvm",
                 "jvm.resolveClassPkgs",
-                Map.of("classPkgs", (SetValue) context.getArguments().get("deps")),
-                (resolved) -> {
-                    var pair = (TupleValue) resolved;
-                    var classPaths = (SetValue) ((ClassInstanceValue) pair.getValues().get(0)).getValue();
-                    var pkgSet = (SetValue) pair.getValues().get(1);
+                Map.of("classPkgs", deps),
+                (classPaths) -> {
+                    SetValue cps = (SetValue) ((ClassInstanceValue) classPaths).getValue();
                     try {
-                        return BuildRuleReturn.value(runCompiler(classPaths, pkgSet, context));
+                        return BuildRuleReturn.value(runCompiler(cps, deps, context));
                     } catch (Exception e) {
                         return BuildRuleReturn.failed(e);
                     }

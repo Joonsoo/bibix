@@ -1,5 +1,6 @@
 package com.giyeok.bibix.base
 
+import com.giyeok.bibix.runner.BibixIdProto
 import com.giyeok.bibix.runner.BuildTaskRoutinesManager
 import com.giyeok.bibix.runner.Repo
 import com.giyeok.bibix.utils.ProgressIndicator
@@ -20,6 +21,10 @@ data class BuildContext(
   // 첫 빌드이거나 지난번 빌드때와 다르면 false.
   // 일반적으로는 hashPreserved==true이면 실제 빌드는 하지 않고 값만 반환해도 됨.
   val hashChanged: Boolean,
+  // object id
+  val objectId: BibixIdProto.ObjectId,
+  // object id hash string
+  val objectIdHash: String,
   // 빌드된 결과를 저장할 디렉토리
   private val destDirectoryPath: File,
   // 로깅/진행 상황 표시

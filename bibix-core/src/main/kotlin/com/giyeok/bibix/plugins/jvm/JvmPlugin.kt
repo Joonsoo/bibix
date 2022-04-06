@@ -25,7 +25,7 @@ val jvmPlugin = BibixPlugin.fromScript(
     
     def resolveClassPkgs(
       classPkgs: set<ClassPkg>
-    ): (ClassPaths, set<ClassPkg>) = native:com.giyeok.bibix.plugins.jvm.ResolveClassPkgs
+    ): ClassPaths = native:com.giyeok.bibix.plugins.jvm.ResolveClassPkgs
     
     def lib(path: path): ClassPkg = native:com.giyeok.bibix.plugins.jvm.Lib
     

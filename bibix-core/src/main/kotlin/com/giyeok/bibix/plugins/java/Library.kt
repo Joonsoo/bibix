@@ -4,15 +4,12 @@ import com.giyeok.bibix.base.*
 
 class Library {
   fun build(context: BuildContext): BuildRuleReturn {
+    val deps = context.arguments.getValue("deps")
     return BuildRuleReturn.evalAndThen(
-      "import jvm",
       "jvm.resolveClassPkgs",
-      mapOf("classPkgs" to context.arguments.getValue("deps"))
-    ) { pair ->
-      val (cps, pkgSet) = (pair as TupleValue).values
-
-      cps as SetValue // set<path>
-      pkgSet as SetValue // set<ClassPkg>
+      mapOf("classPkgs" to deps)
+    ) { classPaths ->
+      val cps = (classPaths as ClassInstanceValue).value as SetValue // set<path>
 
       val dest = context.destDirectory
       if (context.hashChanged) {
@@ -38,9 +35,9 @@ class Library {
       // ClassPkg = (origin: ClassOrigin, cps: set<path>, deps: set<ClassPkg>)
       BuildRuleReturn.value(
         TupleValue(
-          StringValue("local build by java.library"),
+          StringValue("local build by java.library: ${context.objectIdHash}"),
           SetValue(listOf(DirectoryValue(dest))),
-          pkgSet,
+          deps,
         )
       )
     }

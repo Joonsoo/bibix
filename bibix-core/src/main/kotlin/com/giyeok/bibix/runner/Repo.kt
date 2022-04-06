@@ -1,7 +1,7 @@
 package com.giyeok.bibix.runner
 
 import com.giyeok.bibix.utils.toHexString
-import com.google.protobuf.util.Durations
+import com.google.protobuf.ByteString
 import com.google.protobuf.util.JsonFormat
 import com.google.protobuf.util.Timestamps
 import java.io.File
@@ -27,29 +27,42 @@ class Repo(
 ) {
   private fun now() = Timestamps.fromMillis(System.currentTimeMillis())
 
+  data class ObjectDirectory(
+    val objectIdHash: ByteString,
+    val objectIdHashHex: String,
+    val directory: File,
+    val hashChanged: Boolean,
+  )
+
   fun prepareObjectDirectory(
     objectId: BibixIdProto.ObjectId,
     inputHashes: BibixIdProto.InputHashes
-  ): Pair<File, Boolean> {
-    val objectIdHash = objectId.hashString().toHexString()
+  ): ObjectDirectory {
+    val objectIdHash = objectId.hashString()
+    val objectIdHashHex = objectIdHash.toHexString()
     val inputsHash = inputHashes.hashString()
     // objectIdHash -> objectId, inputsHash 정보 저장
     val hashChanged = synchronized(this) {
-      val hashChanged = repoMeta.objectsMap[objectIdHash]?.inputsHash != inputsHash
-      repoMeta.putObjects(objectIdHash, objectInfo {
+      val hashChanged = repoMeta.objectsMap[objectIdHashHex]?.inputsHash != inputsHash
+      repoMeta.putObjects(objectIdHashHex, objectInfo {
         this.inputsHash = inputsHash
         this.startTime = now()
       })
-      repoMeta.putBuildingTargets(objectIdHash, true)
+      repoMeta.putBuildingTargets(objectIdHashHex, true)
       if (debuggingMode) {
         // object id detail은 디버깅모드에서만 저장
-        repoMeta.putObjectIds(objectIdHash, objectId)
+        repoMeta.putObjectIds(objectIdHashHex, objectId)
       }
       hashChanged
     }
     commitRepoMeta()
     // object 디렉토리는 destDirectory를 가져갈때 생성하자. 아예 파일 output이 나오지 않는 빌드 룰도 꽤 많아서
-    return Pair(File(objectsDirectory, objectIdHash), hashChanged)
+    return ObjectDirectory(
+      objectIdHash,
+      objectIdHashHex,
+      File(objectsDirectory, objectIdHashHex),
+      hashChanged
+    )
   }
 
   fun prepareSourceDirectory(
