@@ -23,11 +23,14 @@ class Jar {
   }
 
   fun executableUberJar(context: BuildContext): BuildRuleReturn {
-    val mainClass = (context.arguments.getValue("mainClass") as StringValue).value
-    val deps = (context.arguments.getValue("deps") as SetValue)
     val jarFileName = (context.arguments.getValue("jarFileName") as StringValue).value
     val destFile = File(context.destDirectory, jarFileName)
 
+    if (!context.hashChanged) {
+      return BuildRuleReturn.value(FileValue(destFile))
+    }
+    val mainClass = (context.arguments.getValue("mainClass") as StringValue).value
+    val deps = (context.arguments.getValue("deps") as SetValue)
     return BuildRuleReturn.evalAndThen(
       "resolveClassPkgs",
       mapOf("classPkgs" to deps)
