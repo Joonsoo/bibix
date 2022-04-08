@@ -12,25 +12,26 @@ import java.util.stream.Collectors;
 
 public class Library {
     private BibixValue runCompiler(SetValue classPaths, SetValue pkgSet, BuildContext context, ListValue optIns) throws IOException {
-        ArrayList<String> args = new ArrayList<>();
-        if (!classPaths.getValues().isEmpty()) {
-            ArrayList<File> cps = new ArrayList<>();
-            args.add("-cp");
-            // System.out.println(deps);
-            classPaths.getValues().forEach(v -> {
-                cps.add(((PathValue) v).getPath());
-            });
-            args.add(cps.stream().map(p -> {
-                try {
-                    return p.getCanonicalPath();
-                } catch (IOException e) {
-                    return "";
-                }
-            }).collect(Collectors.joining(":")));
-        }
-
         File destDirectory = context.getDestDirectory();
+
         if (context.getHashChanged()) {
+            ArrayList<String> args = new ArrayList<>();
+            if (!classPaths.getValues().isEmpty()) {
+                ArrayList<File> cps = new ArrayList<>();
+                args.add("-cp");
+                // System.out.println(deps);
+                classPaths.getValues().forEach(v -> {
+                    cps.add(((PathValue) v).getPath());
+                });
+                args.add(cps.stream().map(p -> {
+                    try {
+                        return p.getCanonicalPath();
+                    } catch (IOException e) {
+                        return "";
+                    }
+                }).collect(Collectors.joining(":")));
+            }
+
             SetValue srcs = (SetValue) context.getArguments().get("srcs");
             for (BibixValue value : srcs.getValues()) {
                 args.add(((FileValue) value).getFile().getCanonicalPath());
