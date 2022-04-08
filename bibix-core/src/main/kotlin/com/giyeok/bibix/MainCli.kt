@@ -11,17 +11,21 @@ import com.giyeok.bibix.plugins.jvm.jvmPlugin
 import com.giyeok.bibix.plugins.maven.mavenPlugin
 import com.giyeok.bibix.plugins.root.rootScript
 import com.giyeok.bibix.runner.BuildRunner
+import com.giyeok.bibix.runner.BuildTaskRoutineLoggerImpl
 import com.giyeok.bibix.runner.BuildTaskRoutinesManager
 import com.giyeok.bibix.runner.Repo
 import com.giyeok.bibix.utils.ThreadPool
 import com.giyeok.bibix.utils.toKtList
 import java.io.File
+import java.time.Duration
+import java.time.Instant
 import java.util.concurrent.TimeUnit
 import kotlin.system.exitProcess
 
 object MainCli {
   @JvmStatic
   fun main(args: Array<String>) {
+    val startTime = Instant.now()
     val splitterIdx = args.indexOf("--")
     val bibixArgs = if (splitterIdx < 0) args.toList() else args.slice(0 until splitterIdx)
     val (buildArgs, buildTargetNames) = bibixArgs.partition { it.startsWith('-') }
@@ -102,46 +106,11 @@ object MainCli {
     targets.forEach { target ->
       println("$target = ${buildGraph.names.getValue(target)}")
     }
+
+    (buildRunner.routinesLogger as? BuildTaskRoutineLoggerImpl)?.printLogs(buildGraph)
+
+    val endTime = Instant.now()
+    println("Build finished in ${Duration.between(startTime, endTime)}")
     exitProcess(0)
-
-//    val buildArgsMap: Map<CName, BibixValue> = buildArgs.associate { arg ->
-//      val argContent = if (arg.startsWith("--")) {
-//        arg.substring(2)
-//      } else {
-//        arg.substring(1)
-//      }
-//      check(!argContent.startsWith('-')) { "Argument must start with - or --" }
-//      val splitterIdx = argContent.indexOf('=')
-//      val (argName, argValue) = if (splitterIdx < 0) Pair(argContent, BooleanValue(true))
-//      else Pair(
-//        argContent.substring(0, splitterIdx),
-//        StringValue(argContent.substring(splitterIdx + 1))
-//      )
-//      CName(MainSourceId, argName.split('.')) to argValue
-//    }
-//
-//    val repo = Repo.load(File("."))
-//    val runner = GraphRunner(
-//      repo.runConfig,
-//      repo,
-//      buildTargets.toSet(),
-//      buildGraph,
-//      buildArgsMap,
-//      actionArgs,
-//      mapOf(
-//        "jvm" to LoadedBibixPlugin(jvmPlugin),
-//        "java" to LoadedBibixPlugin(javaPlugin),
-//        "maven" to LoadedBibixPlugin(mavenPlugin),
-//      )
-//    )
-
-//    runner.start()
-//
-//    check(runner.isFinished())
-//    buildTargets.forEach { buildTarget ->
-//      println(runner.getResult(buildTarget))
-//    }
-//
-//    exitProcess(0)
   }
 }

@@ -3,7 +3,10 @@ package com.giyeok.bibix.runner
 import com.giyeok.bibix.utils.ProgressIndicator
 import java.util.concurrent.LinkedBlockingQueue
 
-class BuildTaskRoutinesManager(private val runTasks: (Collection<BuildTask>) -> Unit) {
+class BuildTaskRoutinesManager(
+  private val runTasks: (Collection<BuildTask>) -> Unit,
+  private val logger: BuildTaskRoutineLogger,
+) {
   data class BuildTaskRoutineId(val buildTask: BuildTask, val id: Int)
   data class BuildTaskRoutineBody(
     val requires: List<BuildTask>,
@@ -52,8 +55,10 @@ class BuildTaskRoutinesManager(private val runTasks: (Collection<BuildTask>) -> 
 
       val requiredTasks = requires.toSet() - taskResults.keys
       if (requiredTasks.isEmpty()) {
+        logger.logRequires(routineId, requires, requiredTasks)
         startTaskRoutine(routineId)
       } else {
+        logger.logRequires(routineId, requires, requiredTasks)
         requiredTasks.forEach { requiring ->
           requiredBy.getOrPut(requiring) { mutableSetOf() }.add(routineId)
         }
@@ -90,8 +95,11 @@ class BuildTaskRoutinesManager(private val runTasks: (Collection<BuildTask>) -> 
     checkNotNull(routineBody)
     startedRoutines.add(routineId.id)
     val args = routineBody.requires.map { taskResults.getValue(it) }
+    logger.logRoutineAdded(routineId)
     routinesQueue.add(NextRoutine.BuildTaskRoutine(routineId) { progressIndicator ->
+      logger.logRoutineStarted(routineId)
       routineBody.routine(args, progressIndicator)
+      logger.logRoutineEnded(routineId)
     })
   }
 }

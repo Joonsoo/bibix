@@ -5,8 +5,10 @@ import com.giyeok.bibix.buildscript.*
 import com.giyeok.bibix.runner.Constants.BIBIX_VERSION
 import com.giyeok.bibix.utils.ProgressIndicator
 import com.giyeok.bibix.utils.toArgsMap
+import com.giyeok.bibix.utils.toHexString
 import com.giyeok.bibix.utils.toKtList
 import org.codehaus.plexus.classworlds.ClassWorld
+import org.codehaus.plexus.classworlds.realm.NoSuchRealmException
 import java.io.File
 import kotlin.system.exitProcess
 
@@ -18,12 +20,13 @@ class BuildRunner(
   val bibixArgs: Map<CName, BibixValue> = mapOf(),
   val actionArgs: ListValue? = null,
   val classWorld: ClassWorld = ClassWorld(),
+  val routinesLogger: BuildTaskRoutineLogger = BuildTaskRoutineLoggerImpl(),
 ) {
   private val importSourceResolver = ImportSourceResolver(repo)
 
   private val taskObjectIds = mutableMapOf<BuildTask, BibixIdProto.ObjectId>()
 
-  val routinesManager = BuildTaskRoutinesManager(this::runTasks)
+  val routinesManager = BuildTaskRoutinesManager(this::runTasks, routinesLogger)
 
   fun runTargets(targets: Collection<CName>) {
     runTasks(targets.map { BuildTask.ResolveName(it) })
@@ -213,11 +216,13 @@ class BuildRunner(
                   task.cname, CNameValue.EvaluatedValue(evalResult as BibixValue)
                 )
                 // CallExpr 실행시 evalTask -> target id 저장해두기
-                taskObjectIds[evalTask]?.let { objectId ->
-                  taskObjectIds[task] = objectId
-                  // main source에서 정의한 이름이면 링크 만들기
-                  if (task.cname.sourceId == MainSourceId) {
-                    repo.linkNameTo(task.cname.tokens.joinToString("."), objectId)
+                synchronized(this) {
+                  taskObjectIds[evalTask]?.let { objectId ->
+                    taskObjectIds[task] = objectId
+                    // main source에서 정의한 이름이면 링크 만들기
+                    if (task.cname.sourceId == MainSourceId) {
+                      repo.linkNameTo(task.cname.tokens.joinToString("."), objectId)
+                    }
                   }
                 }
                 registerTaskResult(task, evalResult)
@@ -291,24 +296,32 @@ class BuildRunner(
                       CustomType(CName(BibixInternalSourceId("jvm"), "ClassPaths"))
                     ) { implResult ->
                       implResult as ClassInstanceValue
-                      val cps =
-                        ((implResult.value) as SetValue).values.map { (it as PathValue).path }
-                      val realm = synchronized(this) {
-                        val realm = classWorld.newRealm(nextRealmId())
-                        cps.forEach {
-                          realm.addURL(it.canonicalFile.toURI().toURL())
+                      val ruleImplInfo = synchronized(this) {
+                        val implObjectId = taskObjectIds.getValue(implResolveTask)
+                        val implObjectIdHash = implObjectId.hashString()
+                        val implObjectIdHashHex = implObjectIdHash.toHexString()
+                        // implResult의 objectId가 같으면 realm 재사용
+                        val realm = try {
+                          classWorld.getRealm(implObjectIdHashHex)
+                        } catch (e: NoSuchRealmException) {
+                          val newRealm = classWorld.newRealm(implObjectIdHashHex)
+                          val cps =
+                            ((implResult.value) as SetValue).values.map { (it as PathValue).path }
+                          cps.forEach {
+                            newRealm.addURL(it.canonicalFile.toURI().toURL())
+                          }
+                          newRealm
                         }
-                        realm
+
+                        BuildRuleImplInfo(
+                          value.implName.sourceId,
+                          objectIdHash { this.objectIdHashString = implObjectIdHash },
+                          realm.loadClass(value.className),
+                          value.methodName,
+                          value.params,
+                          value.returnType
+                        )
                       }
-                      val implObjectId = taskObjectIds.getValue(implResolveTask)
-                      val ruleImplInfo = BuildRuleImplInfo(
-                        value.implName.sourceId,
-                        objectIdHash { this.objectIdHashString = implObjectId.hashString() },
-                        realm.loadClass(value.className),
-                        value.methodName,
-                        value.params,
-                        value.returnType
-                      )
                       // TODO buildGraph.replaceValue(task.cname, implResult)
                       registerTaskResult(task, ruleImplInfo)
                     }

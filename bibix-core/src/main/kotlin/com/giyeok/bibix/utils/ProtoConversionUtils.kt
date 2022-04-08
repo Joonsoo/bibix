@@ -5,6 +5,7 @@ import com.giyeok.bibix.runner.*
 import com.giyeok.bibix.runner.BibixIdProto.ArgsMap
 import com.google.protobuf.ByteString
 import com.google.protobuf.kotlin.get
+import java.io.File
 
 fun ByteString.toHexString(): String {
   val chars = "0123456789abcdef"

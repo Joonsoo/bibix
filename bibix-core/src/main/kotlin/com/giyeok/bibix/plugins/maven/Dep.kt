@@ -34,6 +34,9 @@ import java.util.concurrent.ConcurrentHashMap
 
 class Dep {
   fun build(context: BuildContext): BibixValue {
+    // TODO resolve 결과 캐시해놨다 그대로 사용
+    // TODO -> bibix value proto로 저장/로드할 때 CName sourceId 복구 문제
+    // TODO -> 프로젝트 전체 디렉토리를 옮겼을 때 문제가 없을지 확인
     val groupId = (context.arguments.getValue("group") as StringValue).value
     val artifactId = (context.arguments.getValue("artifact") as StringValue).value
     val extension = (context.arguments.getValue("extension") as StringValue).value
@@ -172,19 +175,18 @@ class Dep {
 
     override fun transferInitiated(event: TransferEvent) {
       val message =
-        if (event.getRequestType() === TransferEvent.RequestType.PUT) "Uploading" else "Downloading"
+        if (event.requestType === TransferEvent.RequestType.PUT) "Uploading" else "Downloading"
       out.println(
-        message + ": " + event.getResource().getRepositoryUrl() + event.getResource()
-          .getResourceName()
+        message + ": " + event.resource.repositoryUrl + event.resource.resourceName
       )
     }
 
     override fun transferProgressed(event: TransferEvent) {
-      val resource: TransferResource = event.getResource()
-      downloads[resource] = java.lang.Long.valueOf(event.getTransferredBytes())
+      val resource: TransferResource = event.resource
+      downloads[resource] = java.lang.Long.valueOf(event.transferredBytes)
       val buffer = StringBuilder(64)
       for ((key, complete) in downloads) {
-        val total: Long = key.getContentLength()
+        val total: Long = key.contentLength
         buffer.append(getStatus(complete, total)).append("  ")
       }
       val pad = lastLength - buffer.length
