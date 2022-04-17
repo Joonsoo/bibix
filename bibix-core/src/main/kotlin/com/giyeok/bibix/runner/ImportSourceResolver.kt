@@ -22,7 +22,7 @@ class ImportSourceResolver(
 ) {
   fun resolveImportSourceCall(
     spec: ClassInstanceValue,
-    progressIndicator: ProgressIndicator<BuildTaskRoutinesManager.BuildTaskRoutineId>
+    progressIndicator: ProgressIndicator<BuildTaskRoutineId>
   ): ImportedSource {
     when (spec.className) {
       CName(BibixRootSourceId, "GitSource") -> {
@@ -102,7 +102,7 @@ class ImportSourceResolver(
   fun resolveImportSourcePath(
     mainBaseDirectory: File,
     path: DirectoryValue,
-    progressIndicator: ProgressIndicator<BuildTaskRoutinesManager.BuildTaskRoutineId>
+    progressIndicator: ProgressIndicator<BuildTaskRoutineId>
   ): ImportedSource {
     val baseDirectory = path.directory
     val scriptSource = File(baseDirectory, "build.bbx").readText()

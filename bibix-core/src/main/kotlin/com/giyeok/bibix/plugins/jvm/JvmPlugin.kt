@@ -33,7 +33,7 @@ val jvmPlugin = BibixPlugin.fromScript(
     def uberJar(
       deps: set<ClassPkg>,
       jarFileName: string = "bundle.jar",
-    ): file = native:com.giyeok.bibix.plugins.jvm.UberJar:uberJar
+    ): file = native:com.giyeok.bibix.plugins.jvm.Jar:uberJar
     
     def executableUberJar(
       deps: set<ClassPkg>,

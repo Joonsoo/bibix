@@ -6,11 +6,11 @@ import java.time.Duration
 import java.time.Instant
 
 interface BuildTaskRoutineLogger {
-  fun logRoutineAdded(routineId: BuildTaskRoutinesManager.BuildTaskRoutineId)
-  fun logRoutineStarted(routineId: BuildTaskRoutinesManager.BuildTaskRoutineId)
-  fun logRoutineEnded(routineId: BuildTaskRoutinesManager.BuildTaskRoutineId)
+  fun logRoutineAdded(routineId: BuildTaskRoutineId)
+  fun logRoutineStarted(routineId: BuildTaskRoutineId)
+  fun logRoutineEnded(routineId: BuildTaskRoutineId)
   fun logRequires(
-    routineId: BuildTaskRoutinesManager.BuildTaskRoutineId,
+    routineId: BuildTaskRoutineId,
     requirings: List<BuildTask>,
     newRequirings: Set<BuildTask>,
   )
@@ -18,12 +18,12 @@ interface BuildTaskRoutineLogger {
 
 class BuildTaskRoutineLoggerImpl(
   private val tasks: MutableList<BuildTask> = mutableListOf(),
-  private val added: MutableMap<BuildTaskRoutinesManager.BuildTaskRoutineId, Instant> = mutableMapOf(),
-  private val started: MutableMap<BuildTaskRoutinesManager.BuildTaskRoutineId, Instant> = mutableMapOf(),
-  private val ended: MutableMap<BuildTaskRoutinesManager.BuildTaskRoutineId, Instant> = mutableMapOf(),
-  private val requires: MutableMap<BuildTaskRoutinesManager.BuildTaskRoutineId, List<BuildTask>> = mutableMapOf(),
+  private val added: MutableMap<BuildTaskRoutineId, Instant> = mutableMapOf(),
+  private val started: MutableMap<BuildTaskRoutineId, Instant> = mutableMapOf(),
+  private val ended: MutableMap<BuildTaskRoutineId, Instant> = mutableMapOf(),
+  private val requires: MutableMap<BuildTaskRoutineId, List<BuildTask>> = mutableMapOf(),
 ) : BuildTaskRoutineLogger {
-  override fun logRoutineAdded(routineId: BuildTaskRoutinesManager.BuildTaskRoutineId) {
+  override fun logRoutineAdded(routineId: BuildTaskRoutineId) {
     synchronized(this) {
       if (!tasks.contains(routineId.buildTask)) {
         tasks.add(routineId.buildTask)
@@ -32,20 +32,20 @@ class BuildTaskRoutineLoggerImpl(
     }
   }
 
-  override fun logRoutineStarted(routineId: BuildTaskRoutinesManager.BuildTaskRoutineId) {
+  override fun logRoutineStarted(routineId: BuildTaskRoutineId) {
     synchronized(this) {
       started[routineId] = Instant.now()
     }
   }
 
-  override fun logRoutineEnded(routineId: BuildTaskRoutinesManager.BuildTaskRoutineId) {
+  override fun logRoutineEnded(routineId: BuildTaskRoutineId) {
     synchronized(this) {
       ended[routineId] = Instant.now()
     }
   }
 
   override fun logRequires(
-    routineId: BuildTaskRoutinesManager.BuildTaskRoutineId,
+    routineId: BuildTaskRoutineId,
     requirings: List<BuildTask>,
     newRequirings: Set<BuildTask>,
   ) {
@@ -61,8 +61,7 @@ class BuildTaskRoutineLoggerImpl(
       check(added.keys.map { it.buildTask }.containsAll(tasks))
 
       val routineIdsByTask = added.keys.groupBy { it.buildTask }
-      val routinesByDurations =
-        mutableMapOf<BuildTaskRoutinesManager.BuildTaskRoutineId, Duration>()
+      val routinesByDurations = mutableMapOf<BuildTaskRoutineId, Duration>()
 
       tasks.forEach { task ->
         val routineIds = routineIdsByTask.getValue(task)

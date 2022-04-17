@@ -1,12 +1,14 @@
 package com.giyeok.bibix.utils
 
+import com.giyeok.bibix.base.ProgressLogger
 import java.time.Instant
 
 interface ProgressIndicatorContainer<T> {
   fun notifyUpdated(progressIndicator: ProgressIndicator<T>)
 }
 
-class ProgressIndicator<T>(val container: ProgressIndicatorContainer<T>, val index: Int) {
+class ProgressIndicator<T>(val container: ProgressIndicatorContainer<T>, val index: Int) :
+  ProgressLogger {
   private var task: T? = null
   private var startTime: Instant? = null
   private var endTime: Instant? = null
@@ -24,13 +26,13 @@ class ProgressIndicator<T>(val container: ProgressIndicatorContainer<T>, val ind
     container.notifyUpdated(this)
   }
 
-  fun infoLog(log: String) {
+  override fun logInfo(message: String) {
     // TODO
   }
 
-  fun errorLog(log: String) {
+  override fun logError(message: String) {
     synchronized(this) {
-      this.description = log
+      this.description = message
     }
     container.notifyUpdated(this)
   }

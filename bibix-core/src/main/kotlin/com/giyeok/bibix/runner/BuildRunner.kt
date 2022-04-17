@@ -47,7 +47,7 @@ class BuildRunner(
   fun require(
     task: BuildTask,
     requiring: BuildTask,
-    onReady: (Any, ProgressIndicator<BuildTaskRoutinesManager.BuildTaskRoutineId>) -> Unit
+    onReady: (Any, ProgressIndicator<BuildTaskRoutineId>) -> Unit
   ) {
     require(task, listOf(requiring)) { results, pi ->
       onReady(results.first(), pi)
@@ -57,7 +57,7 @@ class BuildRunner(
   fun require(
     task: BuildTask,
     requirings: List<BuildTask>,
-    onReady: (List<Any>, ProgressIndicator<BuildTaskRoutinesManager.BuildTaskRoutineId>) -> Unit
+    onReady: (List<Any>, ProgressIndicator<BuildTaskRoutineId>) -> Unit
   ) {
     // requirings 중 이미 완료되었거나 돌고있는 태스크는 실행하지 않기
     routinesManager.require(task, requirings, onReady)
@@ -652,7 +652,7 @@ class BuildRunner(
     ruleImplInfo: BuildRuleImplInfo,
     posParams: List<BibixValue>,
     namedParamsMap: Map<String, BibixValue>,
-    progressIndicator: ProgressIndicator<BuildTaskRoutinesManager.BuildTaskRoutineId>,
+    progressIndicator: ProgressIndicator<BuildTaskRoutineId>,
     whenDone: (BibixValue) -> Unit
   ) {
     organizeParams(

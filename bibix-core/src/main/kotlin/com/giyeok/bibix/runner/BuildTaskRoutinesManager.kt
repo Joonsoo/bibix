@@ -7,7 +7,6 @@ class BuildTaskRoutinesManager(
   private val runTasks: (Collection<BuildTask>) -> Unit,
   private val logger: BuildTaskRoutineLogger,
 ) {
-  data class BuildTaskRoutineId(val buildTask: BuildTask, val id: Int)
   data class BuildTaskRoutineBody(
     val requires: List<BuildTask>,
     val routine: (List<Any>, ProgressIndicator<BuildTaskRoutineId>) -> Unit

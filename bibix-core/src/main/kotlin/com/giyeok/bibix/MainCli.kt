@@ -6,14 +6,12 @@ import com.giyeok.bibix.buildscript.BuildGraph
 import com.giyeok.bibix.buildscript.CNameValue
 import com.giyeok.bibix.buildscript.NameLookupContext
 import com.giyeok.bibix.plugins.bibix.bibixPlugin
+import com.giyeok.bibix.plugins.curl.curlPlugin
 import com.giyeok.bibix.plugins.java.javaPlugin
 import com.giyeok.bibix.plugins.jvm.jvmPlugin
 import com.giyeok.bibix.plugins.maven.mavenPlugin
 import com.giyeok.bibix.plugins.root.rootScript
-import com.giyeok.bibix.runner.BuildRunner
-import com.giyeok.bibix.runner.BuildTaskRoutineLoggerImpl
-import com.giyeok.bibix.runner.BuildTaskRoutinesManager
-import com.giyeok.bibix.runner.Repo
+import com.giyeok.bibix.runner.*
 import com.giyeok.bibix.utils.ThreadPool
 import com.giyeok.bibix.utils.toKtList
 import java.io.File
@@ -77,6 +75,7 @@ object MainCli {
       buildGraph,
       rootScript,
       mapOf(
+        "curl" to curlPlugin,
         "jvm" to jvmPlugin,
         "java" to javaPlugin,
         "maven" to mavenPlugin,
@@ -88,8 +87,7 @@ object MainCli {
     )
     buildRunner.runTargets(targets)
 
-    val threadPool =
-      ThreadPool<BuildTaskRoutinesManager.BuildTaskRoutineId>(repo.runConfig.maxThreads)
+    val threadPool = ThreadPool<BuildTaskRoutineId>(repo.runConfig.maxThreads)
 
     while (true) {
       val nextTask = buildRunner.routinesManager.routinesQueue.poll(10, TimeUnit.SECONDS)

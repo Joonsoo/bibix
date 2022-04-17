@@ -43,8 +43,8 @@ class Compile {
     val process = Runtime.getRuntime()
       .exec(runArgs.toTypedArray(), arrayOf(), File(protocPath, "bin").canonicalFile)
 
-    context.progressIndicator.infoLog(String(process.inputStream.readAllBytes()))
-    context.progressIndicator.errorLog(String(process.errorStream.readAllBytes()))
+    context.progressLogger.logInfo(String(process.inputStream.readAllBytes()))
+    context.progressLogger.logError(String(process.errorStream.readAllBytes()))
     process.waitFor()
 
     check(process.exitValue() == 0)

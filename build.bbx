@@ -52,6 +52,19 @@ namespace proto {
   )
 }
 
+base = ktjvm.library(
+  srcs = glob("bibix-core/src/main/kotlin/com/giyeok/bibix/base/*.kt"),
+  deps = [
+    maven.dep("org.jetbrains.kotlin", "kotlin-stdlib-jdk8", kotlinVersion),
+    proto.javalib,
+    proto.kotlinlib,
+  ]
+)
+
+baseJar = jvm.uberJar(
+  deps = [base],
+)
+
 core = ktjvm.library(
   srcs = glob("bibix-core/src/main/kotlin/**/*.kt"),
   deps = [

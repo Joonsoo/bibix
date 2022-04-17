@@ -1,9 +1,7 @@
 package com.giyeok.bibix.base
 
 import com.giyeok.bibix.runner.BibixIdProto
-import com.giyeok.bibix.runner.BuildTaskRoutinesManager
 import com.giyeok.bibix.runner.Repo
-import com.giyeok.bibix.utils.ProgressIndicator
 import java.io.File
 
 data class BuildContext(
@@ -28,7 +26,7 @@ data class BuildContext(
   // 빌드된 결과를 저장할 디렉토리
   private val destDirectoryPath: File,
   // 로깅/진행 상황 표시
-  val progressIndicator: ProgressIndicator<BuildTaskRoutinesManager.BuildTaskRoutineId>,
+  val progressLogger: ProgressLogger,
   // TODO 전체 그래프 정보
   // TODO 현재까지의 실행 결과
   private val repo: Repo,

@@ -18,8 +18,66 @@ class Jar {
     TODO()
   }
 
-  fun uberJar(context: BuildContext): BibixValue {
-    TODO()
+  fun uberJar(context: BuildContext): BuildRuleReturn {
+    val jarFileName = (context.arguments.getValue("jarFileName") as StringValue).value
+    val destFile = File(context.destDirectory, jarFileName)
+
+    if (!context.hashChanged) {
+      return BuildRuleReturn.value(FileValue(destFile))
+    }
+    val deps = (context.arguments.getValue("deps") as SetValue)
+    return BuildRuleReturn.evalAndThen(
+      "resolveClassPkgs",
+      mapOf("classPkgs" to deps)
+    ) { classPaths ->
+      val cps = (classPaths as ClassInstanceValue).value as SetValue // set<path>
+      ZipOutputStream(destFile.outputStream().buffered()).use { zos ->
+        cps.values.forEach { cp ->
+          cp as PathValue
+          val dep = cp.path
+
+          if (dep.isFile) {
+            // TODO dep is jar file
+            ZipInputStream(dep.inputStream().buffered()).use { zis ->
+              var entry = zis.nextEntry
+              while (entry != null) {
+                if (!entry.isDirectory &&
+                  !entry.name.startsWith("META-INF/") &&
+                  entry.name != "module-info.class"
+                ) {
+                  try {
+                    zos.putNextEntry(ZipEntry(entry.name))
+                    transferFromStreamToStream(zis, zos)
+                  } catch (e: ZipException) {
+                    // TODO 일단 무시하고 진행하도록
+                    println(e.message)
+                  }
+                }
+                entry = zis.nextEntry
+              }
+              zis.closeEntry()
+            }
+          } else {
+            check(dep.isDirectory)
+            Files.walk(Path.of(dep.canonicalPath)).toList().forEach { path ->
+              if (path.isRegularFile()) {
+                val filePath = path.toFile().relativeTo(dep.canonicalFile)
+                if (!filePath.startsWith("META-INF") && filePath.path != "module-info.class") {
+                  try {
+                    zos.putNextEntry(ZipEntry(filePath.path))
+                    transferFromStreamToStream(path.toFile().inputStream().buffered(), zos)
+                  } catch (e: ZipException) {
+                    // TODO 일단 무시하고 진행하도록
+                    println(e.message)
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+      BuildRuleReturn.value(FileValue(destFile))
+    }
   }
 
   fun executableUberJar(context: BuildContext): BuildRuleReturn {
