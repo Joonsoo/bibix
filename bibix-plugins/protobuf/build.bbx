@@ -1,7 +1,7 @@
 import bibix
-import git("https://github.com/Joonsoo/bibix.git", branch="main", path="bibix-plugins/ktjvm") as ktjvm
-import git("https://github.com/Joonsoo/bibix.git", branch="main", path="bibix-plugins/curl") as curl
-import git("https://github.com/Joonsoo/bibix.git", branch="main", path="bibix-plugins/zip") as zip
+from git("https://github.com/Joonsoo/bibix.git", branch="main", path="bibix-plugins") import ktjvm
+from git("https://github.com/Joonsoo/bibix.git", branch="main", path="bibix-plugins") import curl
+from git("https://github.com/Joonsoo/bibix.git", branch="main", path="bibix-plugins") import zip
 import maven
 import jvm
 
