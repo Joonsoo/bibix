@@ -7,6 +7,8 @@ from git("https://github.com/Joonsoo/bibix.git", branch="main", path="bibix-plug
 from git("https://github.com/Joonsoo/bibix.git", branch="main", path="bibix-plugins") import protobuf
 import bibix
 
+bibixVersion = "0.0.2"
+
 jparserVersion = "0.5"
 arg ktjvm.kotlinVersion as kotlinVersion: string = "1.6.10"
 
@@ -63,6 +65,7 @@ base = ktjvm.library(
 
 baseJar = jvm.uberJar(
   deps = [base],
+  jarFileName = "bibix-base-$bibixVersion.jar",
 )
 
 core = ktjvm.library(
@@ -102,6 +105,7 @@ core = ktjvm.library(
 uberJar = jvm.executableUberJar(
   deps = [core],
   mainClass = "com.giyeok.bibix.MainCli",
+  jarFileName = "bibix-$bibixVersion.jar"
 )
 
 action run(args) = jvm.execute(

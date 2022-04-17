@@ -102,11 +102,10 @@ object MainCli {
       threadPool.printProgresses()
     }
 
+    targets.forEach { target ->
+      println("$target = ${buildGraph.names.getValue(target)}")
+    }
     if (useDebuggingMode) {
-      targets.forEach { target ->
-        println("$target = ${buildGraph.names.getValue(target)}")
-      }
-
       (buildRunner.routinesLogger as? BuildTaskRoutineLoggerImpl)?.printLogs(buildGraph)
 
       val endTime = Instant.now()

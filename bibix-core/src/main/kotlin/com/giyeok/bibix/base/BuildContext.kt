@@ -1,7 +1,6 @@
 package com.giyeok.bibix.base
 
 import com.giyeok.bibix.runner.BibixIdProto
-import com.giyeok.bibix.runner.Repo
 import java.io.File
 
 data class BuildContext(
@@ -29,7 +28,7 @@ data class BuildContext(
   val progressLogger: ProgressLogger,
   // TODO 전체 그래프 정보
   // TODO 현재까지의 실행 결과
-  private val repo: Repo,
+  private val repo: BaseRepo,
   // TODO bibix 플러그인 실행하기
   // e.g. context.call("mvn.resolveClassSets", mapOf("classSets", deps))
 ) {

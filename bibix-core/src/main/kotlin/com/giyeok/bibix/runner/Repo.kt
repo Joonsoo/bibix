@@ -1,5 +1,6 @@
 package com.giyeok.bibix.runner
 
+import com.giyeok.bibix.base.BaseRepo
 import com.giyeok.bibix.utils.toHexString
 import com.google.protobuf.ByteString
 import com.google.protobuf.util.JsonFormat
@@ -24,7 +25,7 @@ class Repo(
   val sharedRootDirectory: File,
   val sharedDirectoriesMap: MutableMap<String, File>,
   val debuggingMode: Boolean = false,
-) {
+) : BaseRepo {
   private fun now() = Timestamps.fromMillis(System.currentTimeMillis())
 
   data class ObjectDirectory(
@@ -77,7 +78,7 @@ class Repo(
     return directory
   }
 
-  fun prepareSharedDirectory(
+  override fun prepareSharedDirectory(
     sharedRepoName: String
   ): File = synchronized(this) {
     val directory = sharedDirectoriesMap[sharedRepoName]

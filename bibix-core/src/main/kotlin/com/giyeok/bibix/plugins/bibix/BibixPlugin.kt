@@ -12,7 +12,7 @@ val bibixPlugin = BibixPlugin.fromScript(
     arg bibixVersion: string = "0.0.2"
     
     def base(
-      ref: string = curl.download("https://github.com/Joonsoo/bibix/releases/download/${dollar}bibixVersion/bibix-${dollar}bibixVersion.jar")
+      jar: file = curl.download("https://github.com/Joonsoo/bibix/releases/download/${dollar}bibixVersion/bibix-${dollar}bibixVersion.jar")
     ): jvm.ClassPkg = native:com.giyeok.bibix.plugins.bibix.Base
   """.trimIndent(),
   Classes(
