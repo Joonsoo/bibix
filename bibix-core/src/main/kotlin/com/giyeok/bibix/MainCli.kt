@@ -45,8 +45,9 @@ object MainCli {
     }
 
     val targets = buildTargetNames.map { CName(MainSourceId, it.split('.').toList()) }
+    val useDebuggingMode = buildArgs.contains("--debug")
 
-    val repo = Repo.load(File("."), debuggingMode = true)
+    val repo = Repo.load(File("."), debuggingMode = useDebuggingMode)
 
     val buildGraph = BuildGraph()
     buildGraph.addDefs(
@@ -103,14 +104,16 @@ object MainCli {
       threadPool.printProgresses()
     }
 
-    targets.forEach { target ->
-      println("$target = ${buildGraph.names.getValue(target)}")
+    if (useDebuggingMode) {
+      targets.forEach { target ->
+        println("$target = ${buildGraph.names.getValue(target)}")
+      }
+
+      (buildRunner.routinesLogger as? BuildTaskRoutineLoggerImpl)?.printLogs(buildGraph)
+
+      val endTime = Instant.now()
+      println("Build finished in ${Duration.between(startTime, endTime)}")
     }
-
-    (buildRunner.routinesLogger as? BuildTaskRoutineLoggerImpl)?.printLogs(buildGraph)
-
-    val endTime = Instant.now()
-    println("Build finished in ${Duration.between(startTime, endTime)}")
     exitProcess(0)
   }
 }

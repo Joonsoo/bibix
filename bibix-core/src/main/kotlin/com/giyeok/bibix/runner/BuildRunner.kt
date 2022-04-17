@@ -617,8 +617,13 @@ class BuildRunner(
                   importedSource.buildScript.defs().toKtList(),
                   importedSource.baseDirectory
                 )
-                println(importedSource)
-                registerTaskResult(task, sourceId)
+                // println(importedSource)
+                require(
+                  task,
+                  BuildTask.ResolveName(CName(sourceId, importDef.nameTokens))
+                ) { importing, _ ->
+                  registerTaskResult(task, importing)
+                }
               }
             }
           }

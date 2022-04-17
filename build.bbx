@@ -2,14 +2,13 @@ from git("https://github.com/Joonsoo/jparser.git") import jparser
 import maven
 import jvm
 import java
-import git("https://github.com/Joonsoo/bibix.git", branch="main", path="bibix-plugins/ktjvm") as ktjvm
-import git("https://github.com/Joonsoo/bibix.git", branch="main", path="bibix-plugins/protobuf") as protobuf
-import git("https://github.com/Joonsoo/bibix.git", branch="main", path="bibix-plugins/scala") as scala
+from git("https://github.com/Joonsoo/bibix.git", branch="main", path="bibix-plugins") import ktjvm
+from git("https://github.com/Joonsoo/bibix.git", branch="main", path="bibix-plugins") import protobuf
+from git("https://github.com/Joonsoo/bibix.git", branch="main", path="bibix-plugins") import scala
 import bibix
 
 jparserVersion = "0.5"
 arg ktjvm.kotlinVersion as kotlinVersion: string = "1.6.10"
-// arg protobuf.protobufVersion as protobufVersion: string = "3.19.4"
 
 parserData = jparser.parsergen(
   src = "bibix.cdg",
@@ -48,8 +47,6 @@ namespace proto {
     optIns = ["kotlin.RequiresOptIn"]
   )
 }
-
-ttt = proto.javalib
 
 core = ktjvm.library(
   srcs = glob("bibix-core/src/main/kotlin/**/*.kt"),
@@ -93,40 +90,3 @@ action run(args) = jvm.execute(
   mainClass = "com.giyeok.bibix.MainCli",
   args = args,
 )
-
-protobufVersion = "3.19.4"
-
-testImpl = java.library(
-  srcs=[
-    "bibix-plugins/ktjvm/src/com/giyeok/bibix/plugins/ktjvm/Library.java",
-  ],
-  deps=[
-    bibix.base(),
-    maven.dep("org.jetbrains.kotlin", "kotlin-compiler", "1.6.10"),
-    maven.dep("org.jetbrains.kotlin", "kotlin-stdlib-jdk8", "1.6.10"),
-    maven.dep("com.google.protobuf", "protobuf-java", protobufVersion),
-    maven.dep("com.google.protobuf", "protobuf-java-util", protobufVersion),
-  ],
-)
-test5 = "hello! $jparserVersion"
-
-action def testAction(
-  args: set<string>,
-) = testImpl:com.giyeok.bibix.plugins.ktjvm.Library
-
-test2 = ktjvm.library(
-  srcs=[
-    "test/Test.kt"
-  ],
-  deps=[
-    maven.dep("org.jetbrains.kotlin", "kotlin-stdlib-jdk8", "1.6.10"),
-    testImpl
-  ],
-)
-
-protoJs = protobuf.javascript(schema=proto.schema)
-
-test3 = [proto.kotlinlib, protoJs]
-
-// action test = testAction(["hello", "joonsoo"])
-// test = parserData
