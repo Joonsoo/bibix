@@ -3,8 +3,8 @@ import maven
 import jvm
 import java
 from git("https://github.com/Joonsoo/bibix.git", branch="main", path="bibix-plugins") import ktjvm
-from git("https://github.com/Joonsoo/bibix.git", branch="main", path="bibix-plugins") import protobuf
 from git("https://github.com/Joonsoo/bibix.git", branch="main", path="bibix-plugins") import scala
+from git("https://github.com/Joonsoo/bibix.git", branch="main", path="bibix-plugins") import protobuf
 import bibix
 
 jparserVersion = "0.5"
@@ -18,7 +18,11 @@ parserData = jparser.parsergen(
 
 ast = scala.library(
   srcs = [parserData.astCode],
-  deps = [jparser.base, jparser.fast],
+  deps = [
+    jparser.base,
+    jparser.fast,
+    maven.dep("org.scala-lang", "scala-library", "2.13.8"),
+  ],
   resources = [parserData.parserData]
 )
 

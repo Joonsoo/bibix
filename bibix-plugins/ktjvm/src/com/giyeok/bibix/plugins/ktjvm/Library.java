@@ -33,6 +33,9 @@ public class Library {
             }
 
             SetValue srcs = (SetValue) context.getArguments().get("srcs");
+            if (srcs.getValues().isEmpty()) {
+                throw new IllegalArgumentException("srcs must not be empty");
+            }
             for (BibixValue value : srcs.getValues()) {
                 args.add(((FileValue) value).getFile().getCanonicalPath());
             }

@@ -1,21 +1,22 @@
 import jvm
-import git("https://github.com/Joonsoo/bibix.git", branch="main", path="bibix-plugins/ktjvm") as ktjvm
+from git("https://github.com/Joonsoo/bibix.git", branch="main", path="bibix-plugins") import ktjvm
 import maven
 import bibix
 
 arg compilerVersion: string = "2.13.8"
 arg outVersion: string = "16"
 
-impl = java.library(
+impl = ktjvm.library(
   deps = [
-    maven.dep("org.scala-lang", "scala-compiler", compilerVersion),
     bibix.base(),
+    maven.dep("org.jetbrains.kotlin", "kotlin-stdlib-jdk8", "1.6.20"),
+    maven.dep("org.scala-lang", "scala-compiler", compilerVersion),
   ],
-  srcs = glob("src/**/*.java"),
+  srcs = glob("src/**/*.kt"),
 )
 
 def library(
   srcs: set<file>,
-  deps: set<jvm.ClassPkg>,
+  deps: set<jvm.ClassPkg> = [],
   outVersion: string = outVersion,
 ): jvm.ClassPkg = impl:com.giyeok.bibix.plugins.scala.Library

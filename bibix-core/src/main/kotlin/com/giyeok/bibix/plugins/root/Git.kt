@@ -22,7 +22,7 @@ class Git {
       tag != null -> {
         "refs/tags/$tag"
       }
-      else -> "HEAD"
+      else -> "refs/heads/main"
     }
     return ClassInstanceValue(
       CName(context.sourceId, "GitSource"),

@@ -1,8 +1,8 @@
 import bibix
 import maven
 import jvm
-import git("https://github.com/Joonsoo/bibix.git", branch="main", path="bibix-plugins/ktjvm") as ktjvm
-import git("https://github.com/Joonsoo/bibix.git", branch="main", path="bibix-plugins/curl") as curl
+from git("https://github.com/Joonsoo/bibix.git", branch="main", path="bibix-plugins") import ktjvm
+from git("https://github.com/Joonsoo/bibix.git", branch="main", path="bibix-plugins") import curl
 
 impl = ktjvm.library(
   srcs = glob("src/**/*.kt"),

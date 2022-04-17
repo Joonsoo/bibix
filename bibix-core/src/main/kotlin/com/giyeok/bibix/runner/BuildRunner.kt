@@ -177,18 +177,25 @@ class BuildRunner(
             parent = parent.parent()
           }
           val parentValue = buildGraph.names.getValue(parent)
-          // TODO parentValue가 이미 로드된 스크립트인 경우 처리
-          check(parentValue is CNameValue.DeferredImport)
-          require(
-            task, BuildTask.ResolveImport(task.cname.sourceId, parentValue.deferredImportId)
-          ) { importedSourceId, _ ->
-            // import가 정상적으로 완료됐으면 import된 스크립트의 모든 element들은 buildGraph에 들어가 있어야 함
-            importedSourceId as SourceId
-            synchronized(this) {
-              buildGraph.replaceValue(task.cname, CNameValue.LoadedImport(importedSourceId))
-            }
+          if (parentValue is CNameValue.DeferredImport) {
             require(
-              task, BuildTask.ResolveName(CName(importedSourceId, task.cname.tokens.drop(1)))
+              task, BuildTask.ResolveImport(task.cname.sourceId, parentValue.deferredImportId)
+            ) { importedSourceId, _ ->
+              // import가 정상적으로 완료됐으면 import된 스크립트의 모든 element들은 buildGraph에 들어가 있어야 함
+              importedSourceId as SourceId
+              synchronized(this) {
+                buildGraph.replaceValue(parent, CNameValue.LoadedImport(importedSourceId))
+              }
+              require(
+                task, BuildTask.ResolveName(CName(importedSourceId, task.cname.tokens.drop(1)))
+              ) { taskResult, _ ->
+                registerTaskResult(task, taskResult)
+              }
+            }
+          } else {
+            parentValue as CNameValue.LoadedImport
+            require(
+              task, BuildTask.ResolveName(CName(parentValue.sourceId, task.cname.tokens.drop(1)))
             ) { taskResult, _ ->
               registerTaskResult(task, taskResult)
             }

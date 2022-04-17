@@ -8,7 +8,7 @@ val bibixPlugin = BibixPlugin.fromScript(
     import jvm
     
     def base(
-      ref: string = "HEAD"
+      ref: string = "refs/heads/main"
     ): jvm.ClassPkg = native:com.giyeok.bibix.plugins.bibix.Base
   """.trimIndent(),
   Classes(
