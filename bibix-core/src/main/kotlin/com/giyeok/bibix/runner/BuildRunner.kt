@@ -401,7 +401,7 @@ class BuildRunner(
             null
           )
         }
-        require(task, listOf(targetTask) + paramTasks) { prerequisites, _ ->
+        require(task, listOf(targetTask) + paramTasks) { prerequisites, progressIndicator ->
           val ruleImplInfo = prerequisites[0] as ActionRuleImplInfo
 
           val instance = ruleImplInfo.cls.getDeclaredConstructor().newInstance()
@@ -416,13 +416,53 @@ class BuildRunner(
             task, task.origin, ruleImplInfo.params, posParams, namedParamsMap
           ) { args ->
             if (args == null) {
-              markTaskFailed(task, Exception("Failed to get organize"))
+              markTaskFailed(task, Exception("Failed to get arguments"))
             } else {
               val context = ActionContext(ruleImplInfo.origin, args)
 
-              method.invoke(instance, context)
+              val invokeResult = try {
+                method.invoke(instance, context)
+              } catch (e: Exception) {
+                markTaskFailed(task, e)
+              }
 
-              registerTaskResult(task, NoneValue)
+              fun doNext(result: Any?) {
+                when (result) {
+                  null -> registerTaskResult(task, NoneValue)
+                  is BuildRuleReturn.ValueReturn ->
+                    markTaskFailed(
+                      task,
+                      IllegalStateException("action rule must not return a value")
+                    )
+                  is BuildRuleReturn.FailedReturn -> markTaskFailed(task, result.exception)
+                  is BuildRuleReturn.DoneReturn -> registerTaskResult(task, NoneValue)
+                  is BuildRuleReturn.EvalAndThen -> {
+                    // `result.ruleName`을 . 단위로 끊어서 rule 이름을 찾은 다음
+                    val nameTokens = result.ruleName.split('.')
+                    val callingName = CName(ruleImplInfo.origin, nameTokens)
+                    // 해당 rule에 `result.params`을 줘서 실행하고
+                    require(task, BuildTask.ResolveName(callingName)) { calling, _ ->
+                      calling as BuildRuleImplInfo
+                      callBuildRule(
+                        task,
+                        calling.origin,
+                        calling,
+                        listOf(),
+                        result.params,
+                        progressIndicator,
+                      ) { buildResult ->
+                        // 결과를 `result.whenDone`으로 전달해서 반복
+                        try {
+                          doNext(result.whenDone(buildResult))
+                        } catch (e: Exception) {
+                          markTaskFailed(task, e)
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+              doNext(invokeResult)
             }
           }
         }
@@ -504,7 +544,7 @@ class BuildRunner(
                 }
                 registerTaskResult(task, access(result, exprNode.name))
               }
-              else -> throw IllegalStateException("Invalid access: ${exprNode}")
+              else -> throw IllegalStateException("Invalid access: $exprNode")
             }
           }
 
@@ -735,6 +775,8 @@ class BuildRunner(
             is BibixValue -> onFinalValue(result)
             is BuildRuleReturn.ValueReturn -> onFinalValue(result.value)
             is BuildRuleReturn.FailedReturn -> markTaskFailed(task, result.exception)
+            is BuildRuleReturn.DoneReturn ->
+              markTaskFailed(task, IllegalStateException("build rule must not return Done value"))
             is BuildRuleReturn.EvalAndThen -> {
               // `result.ruleName`을 . 단위로 끊어서 rule 이름을 찾은 다음
               val nameTokens = result.ruleName.split('.')

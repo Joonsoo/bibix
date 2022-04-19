@@ -42,7 +42,7 @@ val jvmPlugin = BibixPlugin.fromScript(
     ): file = native:com.giyeok.bibix.plugins.jvm.Jar:executableUberJar
     
     action def run(
-      deps: set<ClassPaths>,
+      deps: set<ClassPkg>,
       mainClass: string,
       jvmPath: string = "java",
       args: list<string> = [],
