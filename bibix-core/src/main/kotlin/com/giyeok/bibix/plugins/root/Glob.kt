@@ -13,8 +13,10 @@ class Glob {
           "glob:" + context.callerBaseDirectory.canonicalPath + "/" + pattern.value
         fileSystem.getPathMatcher(matcherPattern)
       }
-      is ListValue ->
+      is SetValue -> {
+        val patterns = pattern.values.map { (it as StringValue).value }
         TODO()
+      }
       else -> throw AssertionError()
     }
 

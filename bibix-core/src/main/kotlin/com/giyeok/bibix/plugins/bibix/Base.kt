@@ -1,7 +1,6 @@
 package com.giyeok.bibix.plugins.bibix
 
 import com.giyeok.bibix.base.*
-import java.io.File
 
 class Base {
   fun build(context: BuildContext): BibixValue {
