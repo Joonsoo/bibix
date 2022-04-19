@@ -27,6 +27,7 @@ protocPath = zip.unzip(curl.download(protocDownloadUrl()))
 
 def schema(
   srcs: set<file>,
+  deps: set<ProtoSchema>,
   protocPath: directory = protocPath,
   outputFileName?: string,
 ): ProtoSchema = impl:com.giyeok.bibix.plugins.protobuf.Compile:schema

@@ -6,15 +6,52 @@ import java.nio.file.Files
 import java.nio.file.Path
 
 class Compile {
+  data class ProtoSchema(
+    val schemaFiles: List<File>,
+    val includes: List<File>,
+  ) {
+    // TODO CName 대신 이 rule이 정의된 bbx 스크립트 한정의 Name
+    companion object {
+      fun fromBibix(value: BibixValue): ProtoSchema {
+        value as ClassInstanceValue
+        check(value.className.tokens == listOf("ProtoSchema"))
+        val body = value.value as NamedTupleValue
+        val schemaFiles =
+          (body.getValue("schemaFiles") as SetValue).values.map { (it as FileValue).file }
+        val includes =
+          (body.getValue("includes") as SetValue).values.map { (it as PathValue).path }
+        return ProtoSchema(schemaFiles, includes)
+      }
+    }
+
+    fun toBibix(sourceId: SourceId) = ClassInstanceValue(
+      CName(sourceId, "ProtoSchema"),
+      NamedTupleValue(
+        "schemaFiles" to SetValue(schemaFiles.map { FileValue(it) }),
+        "includes" to SetValue(includes.map { PathValue(it) }),
+      )
+    )
+  }
+
   fun schema(context: BuildContext): BibixValue {
     val srcs = context.arguments.getValue("srcs") as SetValue
+    val deps = (context.arguments.getValue("deps") as SetValue).values.map {
+      ProtoSchema.fromBibix(it)
+    }
     val protocPath = (context.arguments.getValue("protocPath") as DirectoryValue).directory
+
+    val mergedIncludes = listOf(PathValue(File(protocPath, "include"))) +
+      deps.flatMap { dep ->
+        // schema 파일의 parent를 사용함. protoc가 include는 디렉토리를 받기 때문에..
+        // 파일 이름이 충돌하면 문제가 생길텐데 일단은 그냥 이렇게 해둬야지..
+        dep.schemaFiles.map { PathValue(it.parentFile) } + dep.includes.map { PathValue(it) }
+      }
 
     return ClassInstanceValue(
       CName(context.sourceId, "ProtoSchema"),
       NamedTupleValue(
         "schemaFiles" to srcs,
-        "includes" to SetValue(PathValue(File(protocPath, "include")))
+        "includes" to SetValue(mergedIncludes)
       )
     )
   }
