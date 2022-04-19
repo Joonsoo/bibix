@@ -276,9 +276,8 @@ class BuildRunner(
                   )
                   registerTaskResult(task, ruleImplInfo)
                 }
-                value.implName.sourceId is BibixInternalSourceId && value.implName.tokens == listOf(
-                  "$$"
-                ) -> {
+                value.implName.sourceId is BibixInternalSourceId &&
+                  value.implName.tokens == listOf("$$") -> {
                   // native impls
                   val plugin = bibixPlugins.getValue(value.implName.sourceId.name)
                   val ruleImplInfo = BuildRuleImplInfo(
@@ -337,30 +336,46 @@ class BuildRunner(
               }
             }
             is CNameValue.ActionRuleValue -> {
-              require(task, BuildTask.ResolveName(value.implName)) { implResult0, _ ->
-                coerce(
-                  task,
-                  task.cname.sourceId,
-                  implResult0 as BibixValue,
-                  CustomType(CName(BibixInternalSourceId("jvm"), "ClassPaths"))
-                ) { implResult ->
-                  implResult as ClassInstanceValue
-                  val cps = ((implResult.value) as SetValue).values.map { (it as PathValue).path }
-                  val realm = synchronized(this) {
-                    val realm = classWorld.newRealm(nextRealmId())
-                    cps.forEach {
-                      realm.addURL(it.canonicalFile.toURI().toURL())
-                    }
-                    realm
-                  }
-                  val ruleImplInfo = ActionRuleImplInfo(
+              when {
+                value.implName.sourceId is BibixInternalSourceId &&
+                  value.implName.tokens == listOf("$$") -> {
+                  val plugin = bibixPlugins.getValue(value.implName.sourceId.name)
+                  val actionImplInfo = ActionRuleImplInfo(
                     value.implName.sourceId,
-                    realm.loadClass(value.className),
+                    plugin.classes.getClass(value.className),
                     value.methodName,
-                    value.params,
+                    value.params
                   )
-                  // TODO buildGraph.replaceValue(task.cname, implResult)
-                  registerTaskResult(task, ruleImplInfo)
+                  registerTaskResult(task, actionImplInfo)
+                }
+                else -> {
+                  require(task, BuildTask.ResolveName(value.implName)) { implResult0, _ ->
+                    coerce(
+                      task,
+                      task.cname.sourceId,
+                      implResult0 as BibixValue,
+                      CustomType(CName(BibixInternalSourceId("jvm"), "ClassPaths"))
+                    ) { implResult ->
+                      implResult as ClassInstanceValue
+                      val cps =
+                        ((implResult.value) as SetValue).values.map { (it as PathValue).path }
+                      val realm = synchronized(this) {
+                        val realm = classWorld.newRealm(nextRealmId())
+                        cps.forEach {
+                          realm.addURL(it.canonicalFile.toURI().toURL())
+                        }
+                        realm
+                      }
+                      val actionImplInfo = ActionRuleImplInfo(
+                        value.implName.sourceId,
+                        realm.loadClass(value.className),
+                        value.methodName,
+                        value.params,
+                      )
+                      // TODO buildGraph.replaceValue(task.cname, implResult)
+                      registerTaskResult(task, actionImplInfo)
+                    }
+                  }
                 }
               }
             }

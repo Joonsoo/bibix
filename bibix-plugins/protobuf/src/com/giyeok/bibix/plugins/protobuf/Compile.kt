@@ -57,6 +57,7 @@ class Compile {
   }
 
   private fun callCompiler(context: BuildContext, outArgs: List<String>) {
+    // TODO Skip compiling if !hashChanged
     val os = (context.arguments.getValue("os") as EnumValue).value
     val protocPath = (context.arguments.getValue("protocPath") as DirectoryValue).directory
 

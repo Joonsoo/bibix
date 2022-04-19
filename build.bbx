@@ -108,7 +108,7 @@ uberJar = jvm.executableUberJar(
   jarFileName = "bibix-$bibixVersion.jar"
 )
 
-action run(args) = jvm.execute(
+action run(args) = jvm.run(
   deps = [core],
   mainClass = "com.giyeok.bibix.MainCli",
   args = args,

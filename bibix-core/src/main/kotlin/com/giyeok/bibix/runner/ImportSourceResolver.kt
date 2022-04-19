@@ -26,6 +26,7 @@ class ImportSourceResolver(
   ): ImportedSource {
     when (spec.className) {
       CName(BibixRootSourceId, "GitSource") -> {
+        // TODO remote의 ref를 pull해오도록 수정
         val specValue = spec.value as NamedTupleValue
         val url = (specValue.getValue("url") as StringValue).value
         val ref = (specValue.getValue("ref") as StringValue).value
