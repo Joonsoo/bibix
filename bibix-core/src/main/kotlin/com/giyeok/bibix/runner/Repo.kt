@@ -130,7 +130,7 @@ class Repo(
 
   companion object {
     fun load(mainDirectory: File, debuggingMode: Boolean = false): Repo {
-      val bibixDirectory = File(mainDirectory, "bibix")
+      val bibixDirectory = File(mainDirectory, "bbxbuild")
       bibixDirectory.mkdir()
       val runConfigFile = File(bibixDirectory, "config.json")
       val runConfig = RunConfigProto.RunConfig.newBuilder()

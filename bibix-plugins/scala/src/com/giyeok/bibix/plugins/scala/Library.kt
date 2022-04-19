@@ -7,11 +7,20 @@ import scala.tools.nsc.Settings
 
 class Library {
   fun build(context: BuildContext): BuildRuleReturn {
+    val deps = context.arguments.getValue("deps") as SetValue
+    if (!context.hashChanged) {
+      return BuildRuleReturn.value(
+        TupleValue(
+          StringValue("built by scala.library: " + context.objectIdHash),
+          SetValue(PathValue(context.destDirectory)),
+          deps
+        )
+      )
+    }
+
     val srcs =
       (context.arguments.getValue("srcs") as SetValue).values.map { (it as FileValue).file }
     check(srcs.isNotEmpty()) { "srcs must not be empty" }
-    val deps = context.arguments.getValue("deps") as SetValue
-    // TODO context.hashChanged
     return BuildRuleReturn.evalAndThen(
       "jvm.resolveClassPkgs",
       mapOf("classPkgs" to deps)
@@ -33,7 +42,9 @@ class Library {
       run.compile(srcScala)
 
       if (global.reporter().hasErrors()) {
-        throw IllegalStateException("Errors from scala compiler")
+        throw IllegalStateException(
+          "${global.reporter().errorCount()} errors reported from scala compiler"
+        )
       }
 
       BuildRuleReturn.value(
