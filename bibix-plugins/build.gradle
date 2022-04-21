@@ -15,11 +15,14 @@ sourceSets {
             srcDir 'ktjvm/src'
         }
         kotlin {
+            srcDir 'cputils/src'
             srcDir 'curl/src'
             srcDir 'zip/src'
             srcDir 'protobuf/src'
             srcDir 'grpc/src'
             srcDir 'scala/src'
+            srcDir 'junit5/src'
+            srcDir 'scalatest/src'
         }
     }
 }
@@ -27,9 +30,16 @@ sourceSets {
 dependencies {
     implementation project(':bibix-core')
 
-    implementation "org.jetbrains.kotlin:kotlin-compiler:1.6.10"
+    implementation "org.jetbrains.kotlin:kotlin-compiler:1.6.20"
 
     // https://mvnrepository.com/artifact/org.scala-lang/scala-compiler
     implementation "org.scala-lang:scala-compiler:2.13.8"
     implementation "org.scala-lang:scala-library:2.13.8"
+
+    implementation 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
+    implementation 'org.junit.platform:junit-platform-launcher:1.8.2'
+
+    // https://mvnrepository.com/artifact/org.scalatest/scalatest
+    implementation "org.scalatest:scalatest_2.13:3.2.11"
+    implementation "org.codehaus.plexus:plexus-classworlds:2.6.0"
 }

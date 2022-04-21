@@ -4,7 +4,7 @@ import java.util.*
 import java.util.concurrent.Executors
 
 class ThreadPool<T>(val maxThreads: Int) : ProgressIndicatorContainer<T> {
-  val runningNodes: MutableList<T?> = MutableList(maxThreads) { null }
+  val runningTasks: MutableList<T?> = MutableList(maxThreads) { null }
   val executors = List(maxThreads) { Executors.newSingleThreadExecutor() }
   val progressIndicators = List(maxThreads) { ProgressIndicator(this, it) }
   val tasksQueue = LinkedList<Pair<T, (ProgressIndicator<T>) -> Unit>>()
@@ -34,9 +34,9 @@ class ThreadPool<T>(val maxThreads: Int) : ProgressIndicatorContainer<T> {
   }
 
   private fun findAndMarkSlot(task: T): Int? = synchronized(this) {
-    val idx = runningNodes.indexOf(null)
+    val idx = runningTasks.indexOf(null)
     if (idx < 0) null else {
-      runningNodes[idx] = task
+      runningTasks[idx] = task
       idx
     }
   }
@@ -47,7 +47,8 @@ class ThreadPool<T>(val maxThreads: Int) : ProgressIndicatorContainer<T> {
     executors[threadIndex].execute {
       block(progressIndicator)
       synchronized(this) {
-        runningNodes[threadIndex] = null
+        runningTasks[threadIndex] = null
+        progressIndicator.markFinished()
         // 큐에 있는 태스크 빼서 실행하기
         startNextQueue()
       }
