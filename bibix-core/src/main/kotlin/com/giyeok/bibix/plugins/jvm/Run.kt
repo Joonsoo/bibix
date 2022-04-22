@@ -27,8 +27,12 @@ class Run {
       args.addAll(runArgs)
 
       val process = Runtime.getRuntime().exec(args.toTypedArray())
-      println(String(process.inputStream.readAllBytes()))
-      println(String(process.errorStream.readAllBytes()))
+      process.inputStream.bufferedReader().lines().forEach {
+        println(it)
+      }
+      process.errorStream.bufferedReader().lines().forEach {
+        System.err.println(it)
+      }
       process.waitFor()
 
       check(process.exitValue() == 0)

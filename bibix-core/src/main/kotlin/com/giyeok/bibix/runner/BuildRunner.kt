@@ -166,7 +166,13 @@ class BuildRunner(
         onFinished(cc)
       } else {
         val next = queue.first()
-        coerce(task, origin, params.getValue(next), paramDefsMap.getValue(next).type) { coerced ->
+        coerce(
+          task,
+          origin,
+          params.getValue(next),
+          paramDefsMap.getValue(next).type,
+          null
+        ) { coerced ->
           if (coerced == null) {
             onFinished(null)
           } else {
@@ -334,7 +340,8 @@ class BuildRunner(
                     coerce(
                       task, task.cname.sourceId, implResult0 as BibixValue,
                       // TODO resolveClassPkgs 호출하도록 수정
-                      CustomType(CName(BibixInternalSourceId("jvm"), "ClassPaths"))
+                      CustomType(CName(BibixInternalSourceId("jvm"), "ClassPaths")),
+                      null
                     ) { implResult ->
                       implResult as ClassInstanceValue
                       val ruleImplInfo = synchronized(this) {
@@ -389,7 +396,8 @@ class BuildRunner(
                       task,
                       task.cname.sourceId,
                       implResult0 as BibixValue,
-                      CustomType(CName(BibixInternalSourceId("jvm"), "ClassPaths"))
+                      CustomType(CName(BibixInternalSourceId("jvm"), "ClassPaths")),
+                      null
                     ) { implResult ->
                       implResult as ClassInstanceValue
                       val cps =
@@ -546,9 +554,9 @@ class BuildRunner(
             val lhs = results[0] as BibixValue
             val rhs = results[1] as BibixValue
             // lhs와 rhs를 각각 list로 coerce
-            coerce(task, task.origin, lhs, ListType(AnyType)) { lhsList ->
+            coerce(task, task.origin, lhs, ListType(AnyType), null) { lhsList ->
               lhsList as ListValue
-              coerce(task, task.origin, rhs, ListType(AnyType)) { rhsList ->
+              coerce(task, task.origin, rhs, ListType(AnyType), null) { rhsList ->
                 rhsList as ListValue
                 registerTaskResult(task, ListValue(lhsList.values + rhsList.values))
               }
@@ -661,7 +669,13 @@ class BuildRunner(
                 source.origin, source.stringLiteralExprId, exprGraph.mainNode, null
               )
             ) { result, progressIndicator ->
-              coerce(task, task.origin, result as StringValue, DirectoryType) { importDirectory ->
+              coerce(
+                task,
+                task.origin,
+                result as StringValue,
+                DirectoryType,
+                null
+              ) { importDirectory ->
                 val importedSource = importSourceResolver.resolveImportSourcePath(
                   repo.mainDirectory, importDirectory as DirectoryValue, progressIndicator
                 )
@@ -795,7 +809,7 @@ class BuildRunner(
       }
 
       fun onFinalValue(result: BibixValue) {
-        coerce(task, origin, result, ruleImplInfo.returnType) { coerced ->
+        coerce(task, origin, result, ruleImplInfo.returnType, ruleImplInfo.origin) { coerced ->
           if (coerced == null) {
             println(result)
             println(ruleImplInfo.returnType)
@@ -872,313 +886,352 @@ class BuildRunner(
     origin: SourceId,
     value: BibixValue,
     type: BibixType,
-    onFinished: (BibixValue?) -> Unit
+    dclassOrigin: SourceId?,
+    onFinished: (BibixValue?) -> Unit,
   ) {
-    // TODO value is ClassInstanceValue 인데 type은 ClassType이 아닌 경우
-    // -> class의 cast 함수 시도 -> value.reality를 coerce
-    when (type) {
-      AnyType -> onFinished(value)
-      BooleanType -> when (value) {
-        is BooleanValue -> onFinished(value)
-        else -> onFinished(null)
+    if (value is DClassInstanceValue) {
+      // ClassInstanceValue로 변환
+      checkNotNull(dclassOrigin)
+      require(task, BuildTask.ResolveName(CName(dclassOrigin, value.nameTokens))) { resolved, _ ->
+        resolved as CNameValue.ClassType
+        coerce(
+          task,
+          origin,
+          ClassInstanceValue(resolved.cname, value.value),
+          type,
+          dclassOrigin,
+          onFinished,
+        )
       }
-      StringType -> when (value) {
-        is StringValue -> onFinished(value)
-        else -> onFinished(StringValue(value.stringify()))
-      }
-      PathType -> when (value) {
-        is PathValue -> onFinished(value)
-        is FileValue -> onFinished(PathValue(value.file))
-        is DirectoryValue -> onFinished(PathValue(value.directory))
-        is StringValue -> {
-          // TODO 이 value의 root 디렉토리를 베이스로
-          onFinished(PathValue(fileFromString(origin, value.value)))
+    } else {
+      // TODO value is ClassInstanceValue 인데 type은 ClassType이 아닌 경우
+      // -> class의 cast 함수 시도 -> value.reality를 coerce
+      when (type) {
+        AnyType -> onFinished(value)
+        BooleanType -> when (value) {
+          is BooleanValue -> onFinished(value)
+          else -> onFinished(null)
         }
-        is ClassInstanceValue -> {
-          // TODO cast 규칙이 있으면 먼저 시도해야할듯? -> 그런데 지금은 문법에서 class to class cast만 되는것같은데?
-          coerce(task, origin, value.value, type, onFinished)
+        StringType -> when (value) {
+          is StringValue -> onFinished(value)
+          else -> onFinished(StringValue(value.stringify()))
         }
-        else -> onFinished(null)
-      }
-      FileType -> when (value) {
-        is FileValue -> onFinished(value)
-        is PathValue -> {
-          check(value.path.exists() && value.path.isFile)
-          onFinished(FileValue(value.path))
+        PathType -> when (value) {
+          is PathValue -> onFinished(value)
+          is FileValue -> onFinished(PathValue(value.file))
+          is DirectoryValue -> onFinished(PathValue(value.directory))
+          is StringValue -> {
+            // TODO 이 value의 root 디렉토리를 베이스로
+            onFinished(PathValue(fileFromString(origin, value.value)))
+          }
+          is ClassInstanceValue -> {
+            // TODO cast 규칙이 있으면 먼저 시도해야할듯? -> 그런데 지금은 문법에서 class to class cast만 되는것같은데?
+            coerce(task, origin, value.value, type, dclassOrigin, onFinished)
+          }
+          else -> onFinished(null)
         }
-        is StringValue -> {
-          // TODO 이 value의 origin의 root 디렉토리를 베이스로
-          val file = fileFromString(origin, value.value)
-          check(file.exists() && file.isFile)
-          onFinished(FileValue(file))
+        FileType -> when (value) {
+          is FileValue -> onFinished(value)
+          is PathValue -> {
+            check(value.path.exists() && value.path.isFile)
+            onFinished(FileValue(value.path))
+          }
+          is StringValue -> {
+            // TODO 이 value의 origin의 root 디렉토리를 베이스로
+            val file = fileFromString(origin, value.value)
+            check(file.exists() && file.isFile)
+            onFinished(FileValue(file))
+          }
+          else -> onFinished(null)
         }
-        else -> onFinished(null)
-      }
-      DirectoryType -> when (value) {
-        is DirectoryValue -> onFinished(value)
-        is PathValue -> {
-          check(value.path.exists() && value.path.isDirectory)
-          onFinished(DirectoryValue(value.path))
+        DirectoryType -> when (value) {
+          is DirectoryValue -> onFinished(value)
+          is PathValue -> {
+            check(value.path.exists() && value.path.isDirectory)
+            onFinished(DirectoryValue(value.path))
+          }
+          is StringValue -> {
+            // TODO 이 value의 origin의 root 디렉토리를 베이스로
+            val file = fileFromString(origin, value.value)
+            check(file.exists() && file.isDirectory)
+            onFinished(DirectoryValue(file))
+          }
+          else -> onFinished(null)
         }
-        is StringValue -> {
-          // TODO 이 value의 origin의 root 디렉토리를 베이스로
-          val file = fileFromString(origin, value.value)
-          check(file.exists() && file.isDirectory)
-          onFinished(DirectoryValue(file))
-        }
-        else -> onFinished(null)
-      }
-      is CustomType -> {
-        require(task, BuildTask.ResolveName(type.name)) { actualType, _ ->
-          when (actualType) {
-            is CNameValue.ClassType -> {
-              when (value) {
-                is ClassInstanceValue -> {
-                  if (actualType.cname == value.className) {
-                    coerce(task, origin, value.value, actualType.reality) { coerced ->
-                      if (coerced == null) {
-                        onFinished(null)
-                      } else {
-                        onFinished(ClassInstanceValue(actualType.cname, coerced))
-                      }
-                    }
-                  } else {
-                    // type casting
-                    fun tryCoerceToReality() {
-                      coerce(task, origin, value, actualType.reality) { coerced ->
+        is CustomType -> {
+          require(task, BuildTask.ResolveName(type.name)) { actualType, _ ->
+            when (actualType) {
+              is CNameValue.ClassType -> {
+                when (value) {
+                  is ClassInstanceValue -> {
+                    if (actualType.cname == value.className) {
+                      coerce(
+                        task,
+                        origin,
+                        value.value,
+                        actualType.reality,
+                        dclassOrigin
+                      ) { coerced ->
                         if (coerced == null) {
                           onFinished(null)
                         } else {
                           onFinished(ClassInstanceValue(actualType.cname, coerced))
                         }
                       }
-                    }
-                    require(task, BuildTask.ResolveName(value.className)) { valueType, _ ->
-                      valueType as CNameValue.ClassType
-                      val castExprId = valueType.casts[actualType.cname]
-                      if (castExprId == null) {
-                        tryCoerceToReality()
-                      } else {
-                        val castExprGraph = buildGraph.exprGraphs[castExprId]
-                        require(
-                          task,
-                          BuildTask.ExprEval(origin, castExprId, castExprGraph.mainNode, value)
-                        ) { castResult, _ ->
-                          coerce(task, origin, castResult as BibixValue, type) { finalValue ->
-                            if (finalValue == null) {
-                              tryCoerceToReality()
-                            } else {
-                              onFinished(finalValue)
+                    } else {
+                      // type casting
+                      fun tryCoerceToReality() {
+                        coerce(task, origin, value, actualType.reality, dclassOrigin) { coerced ->
+                          if (coerced == null) {
+                            onFinished(null)
+                          } else {
+                            onFinished(ClassInstanceValue(actualType.cname, coerced))
+                          }
+                        }
+                      }
+                      require(task, BuildTask.ResolveName(value.className)) { valueType, _ ->
+                        valueType as CNameValue.ClassType
+                        val castExprId = valueType.casts[actualType.cname]
+                        if (castExprId == null) {
+                          tryCoerceToReality()
+                        } else {
+                          val castExprGraph = buildGraph.exprGraphs[castExprId]
+                          require(
+                            task,
+                            BuildTask.ExprEval(origin, castExprId, castExprGraph.mainNode, value)
+                          ) { castResult, _ ->
+                            coerce(
+                              task,
+                              origin,
+                              castResult as BibixValue,
+                              type,
+                              dclassOrigin
+                            ) { finalValue ->
+                              if (finalValue == null) {
+                                tryCoerceToReality()
+                              } else {
+                                onFinished(finalValue)
+                              }
                             }
                           }
                         }
                       }
                     }
                   }
-                }
-                else -> coerce(task, origin, value, actualType.reality) { coerced ->
-                  if (coerced == null) {
-                    onFinished(null)
-                  } else {
-                    onFinished(ClassInstanceValue(actualType.cname, coerced))
+                  else -> coerce(task, origin, value, actualType.reality, dclassOrigin) { coerced ->
+                    if (coerced == null) {
+                      onFinished(null)
+                    } else {
+                      onFinished(ClassInstanceValue(actualType.cname, coerced))
+                    }
                   }
                 }
               }
-            }
-            is CNameValue.EnumType -> when (value) {
-              is EnumValue -> {
-                if (actualType.cname != value.enumTypeName) {
-                  onFinished(null)
-                } else {
-                  onFinished(value)
+              is CNameValue.EnumType -> when (value) {
+                is EnumValue -> {
+                  if (actualType.cname != value.enumTypeName) {
+                    onFinished(null)
+                  } else {
+                    onFinished(value)
+                  }
                 }
-              }
-              is StringValue -> {
-                if (!actualType.values.contains(value.value)) {
-                  onFinished(null)
-                } else {
-                  onFinished(EnumValue(actualType.cname, value.value))
+                is StringValue -> {
+                  if (!actualType.values.contains(value.value)) {
+                    onFinished(null)
+                  } else {
+                    onFinished(EnumValue(actualType.cname, value.value))
+                  }
                 }
+                else -> onFinished(null)
               }
               else -> onFinished(null)
             }
+          }
+        }
+        is ListType -> {
+          fun rec(
+            values: List<BibixValue>, elemType: BibixType, idx: Int, cc: MutableList<BibixValue>
+          ) {
+            if (idx == values.size) {
+              check(cc.size == values.size)
+              onFinished(ListValue(cc))
+            } else {
+              coerce(task, origin, values[idx], elemType, dclassOrigin) { elemValue ->
+                if (elemValue == null) {
+                  onFinished(null)
+                } else {
+                  cc.add(elemValue)
+                  rec(values, elemType, idx + 1, cc)
+                }
+              }
+            }
+          }
+          when (value) {
+            is ListValue -> rec(value.values, type.elemType, 0, mutableListOf())
+            is SetValue -> rec(value.values, type.elemType, 0, mutableListOf())
+            else -> throw markTaskFailed(
+              task,
+              IllegalStateException("Cannot coerce $value to $type")
+            )
+          }
+        }
+        is SetType -> {
+          fun rec(
+            values: List<BibixValue>, elemType: BibixType, idx: Int, cc: MutableList<BibixValue>
+          ) {
+            if (idx == values.size) {
+              check(cc.size == values.size)
+              onFinished(SetValue(cc))
+            } else {
+              coerce(task, origin, values[idx], elemType, dclassOrigin) { elemValue ->
+                if (elemValue == null) {
+                  onFinished(null)
+                } else {
+                  cc.add(elemValue)
+                  rec(values, elemType, idx + 1, cc)
+                }
+              }
+            }
+          }
+          when (value) {
+            is ListValue -> rec(value.values, type.elemType, 0, mutableListOf())
+            is SetValue -> rec(value.values, type.elemType, 0, mutableListOf())
             else -> onFinished(null)
           }
         }
-      }
-      is ClassType -> {
-        TODO()
-      }
-      is ListType -> {
-        fun rec(
-          values: List<BibixValue>, elemType: BibixType, idx: Int, cc: MutableList<BibixValue>
-        ) {
-          if (idx == values.size) {
-            check(cc.size == values.size)
-            onFinished(ListValue(cc))
-          } else {
-            coerce(task, origin, values[idx], elemType) { elemValue ->
-              if (elemValue == null) {
-                onFinished(null)
-              } else {
-                cc.add(elemValue)
-                rec(values, elemType, idx + 1, cc)
-              }
-            }
-          }
-        }
-        when (value) {
-          is ListValue -> rec(value.values, type.elemType, 0, mutableListOf())
-          is SetValue -> rec(value.values, type.elemType, 0, mutableListOf())
-          else -> throw markTaskFailed(task, IllegalStateException("Cannot coerce $value to $type"))
-        }
-      }
-      is SetType -> {
-        fun rec(
-          values: List<BibixValue>, elemType: BibixType, idx: Int, cc: MutableList<BibixValue>
-        ) {
-          if (idx == values.size) {
-            check(cc.size == values.size)
-            onFinished(SetValue(cc))
-          } else {
-            coerce(task, origin, values[idx], elemType) { elemValue ->
-              if (elemValue == null) {
-                onFinished(null)
-              } else {
-                cc.add(elemValue)
-                rec(values, elemType, idx + 1, cc)
-              }
-            }
-          }
-        }
-        when (value) {
-          is ListValue -> rec(value.values, type.elemType, 0, mutableListOf())
-          is SetValue -> rec(value.values, type.elemType, 0, mutableListOf())
-          else -> onFinished(null)
-        }
-      }
-      is TupleType -> {
-        fun rec(
-          values: List<BibixValue>,
-          elemTypes: List<BibixType>,
-          idx: Int,
-          cc: MutableList<BibixValue>
-        ) {
-          if (idx == values.size) {
-            check(cc.size == values.size)
-            onFinished(TupleValue(cc))
-          } else {
-            coerce(task, origin, values[idx], elemTypes[idx]) { elemValue ->
-              if (elemValue == null) {
-                onFinished(null)
-              } else {
-                cc.add(elemValue)
-                rec(values, elemTypes, idx + 1, cc)
-              }
-            }
-          }
-        }
-        when (value) {
-          is TupleValue -> {
-            check(type.elemTypes.size == value.values.size)
-            rec(value.values, type.elemTypes, 0, mutableListOf())
-          }
-          is NamedTupleValue -> {
-            check(type.elemTypes.size == value.values.size)
-            rec(value.values.map { it.second }, type.elemTypes, 0, mutableListOf())
-          }
-          else -> {
-            if (type.elemTypes.size == 1) {
-              // 길이가 1인 tuple이면 그냥 맞춰서 반환해주기
-              coerce(task, origin, value, type.elemTypes[0]) { coerced ->
-                if (coerced == null) {
+        is TupleType -> {
+          fun rec(
+            values: List<BibixValue>,
+            elemTypes: List<BibixType>,
+            idx: Int,
+            cc: MutableList<BibixValue>
+          ) {
+            if (idx == values.size) {
+              check(cc.size == values.size)
+              onFinished(TupleValue(cc))
+            } else {
+              coerce(task, origin, values[idx], elemTypes[idx], dclassOrigin) { elemValue ->
+                if (elemValue == null) {
                   onFinished(null)
                 } else {
-                  onFinished(TupleValue(coerced))
+                  cc.add(elemValue)
+                  rec(values, elemTypes, idx + 1, cc)
                 }
               }
-            } else {
-              onFinished(null)
+            }
+          }
+          when (value) {
+            is TupleValue -> {
+              check(type.elemTypes.size == value.values.size)
+              rec(value.values, type.elemTypes, 0, mutableListOf())
+            }
+            is NamedTupleValue -> {
+              check(type.elemTypes.size == value.values.size)
+              rec(value.values.map { it.second }, type.elemTypes, 0, mutableListOf())
+            }
+            else -> {
+              if (type.elemTypes.size == 1) {
+                // 길이가 1인 tuple이면 그냥 맞춰서 반환해주기
+                coerce(task, origin, value, type.elemTypes[0], dclassOrigin) { coerced ->
+                  if (coerced == null) {
+                    onFinished(null)
+                  } else {
+                    onFinished(TupleValue(coerced))
+                  }
+                }
+              } else {
+                onFinished(null)
+              }
             }
           }
         }
-      }
-      is NamedTupleType -> {
-        when (value) {
-          is NamedTupleValue -> {
-            check(type.elemTypes.size == value.values.size)
-            check(type.elemTypes.map { it.first } == value.values.map { it.first })
-            fun rec(idx: Int, cc: MutableList<Pair<String, BibixValue>>) {
-              if (idx == value.values.size) {
-                check(cc.size == value.values.size)
-                onFinished(NamedTupleValue(cc))
-              } else {
-                val fieldName = value.values[idx].first
-                coerce(
-                  task, origin, value.values[idx].second, type.elemTypes[idx].second
-                ) { elemValue ->
-                  if (elemValue == null) {
-                    onFinished(null)
-                  } else {
-                    cc.add(fieldName to elemValue)
-                    rec(idx + 1, cc)
+        is NamedTupleType -> {
+          when (value) {
+            is NamedTupleValue -> {
+              check(type.elemTypes.size == value.values.size)
+              check(type.elemTypes.map { it.first } == value.values.map { it.first })
+              fun rec(idx: Int, cc: MutableList<Pair<String, BibixValue>>) {
+                if (idx == value.values.size) {
+                  check(cc.size == value.values.size)
+                  onFinished(NamedTupleValue(cc))
+                } else {
+                  val fieldName = value.values[idx].first
+                  coerce(
+                    task,
+                    origin,
+                    value.values[idx].second,
+                    type.elemTypes[idx].second,
+                    dclassOrigin
+                  ) { elemValue ->
+                    if (elemValue == null) {
+                      onFinished(null)
+                    } else {
+                      cc.add(fieldName to elemValue)
+                      rec(idx + 1, cc)
+                    }
                   }
                 }
               }
+              rec(0, mutableListOf())
             }
-            rec(0, mutableListOf())
-          }
-          is TupleValue -> {
-            check(type.elemTypes.size == value.values.size)
-            fun rec(idx: Int, cc: MutableList<Pair<String, BibixValue>>) {
-              if (idx == value.values.size) {
-                check(cc.size == value.values.size)
-                onFinished(NamedTupleValue(cc))
-              } else {
-                val fieldName = type.elemTypes[idx].first
-                coerce(task, origin, value.values[idx], type.elemTypes[idx].second) { elemValue ->
-                  if (elemValue == null) {
-                    onFinished(null)
-                  } else {
-                    cc.add(fieldName to elemValue)
-                    rec(idx + 1, cc)
+            is TupleValue -> {
+              check(type.elemTypes.size == value.values.size)
+              fun rec(idx: Int, cc: MutableList<Pair<String, BibixValue>>) {
+                if (idx == value.values.size) {
+                  check(cc.size == value.values.size)
+                  onFinished(NamedTupleValue(cc))
+                } else {
+                  val fieldName = type.elemTypes[idx].first
+                  coerce(
+                    task,
+                    origin,
+                    value.values[idx],
+                    type.elemTypes[idx].second,
+                    dclassOrigin
+                  ) { elemValue ->
+                    if (elemValue == null) {
+                      onFinished(null)
+                    } else {
+                      cc.add(fieldName to elemValue)
+                      rec(idx + 1, cc)
+                    }
                   }
                 }
               }
+              rec(0, mutableListOf())
             }
-            rec(0, mutableListOf())
+            else -> {
+              if (type.elemTypes.size == 1) {
+                // 길이가 1인 named tuple이면 그냥 맞춰서 반환해주기
+                coerce(task, origin, value, type.elemTypes[0].second, dclassOrigin) { coerced ->
+                  if (coerced == null) {
+                    onFinished(null)
+                  } else {
+                    onFinished(NamedTupleValue(type.elemTypes[0].first to coerced))
+                  }
+                }
+              } else {
+                onFinished(null)
+              }
+            }
           }
-          else -> {
-            if (type.elemTypes.size == 1) {
-              // 길이가 1인 named tuple이면 그냥 맞춰서 반환해주기
-              coerce(task, origin, value, type.elemTypes[0].second) { coerced ->
+        }
+        is UnionType -> {
+          fun rec(idx: Int) {
+            if (idx == type.types.size) {
+              onFinished(null)
+            } else {
+              coerce(task, origin, value, type.types[idx], dclassOrigin) { coerced ->
                 if (coerced == null) {
-                  onFinished(null)
+                  rec(idx + 1)
                 } else {
-                  onFinished(NamedTupleValue(type.elemTypes[0].first to coerced))
+                  onFinished(coerced)
                 }
               }
-            } else {
-              onFinished(null)
             }
           }
+          rec(0)
         }
-      }
-      is UnionType -> {
-        fun rec(idx: Int) {
-          if (idx == type.types.size) {
-            onFinished(null)
-          } else {
-            coerce(task, origin, value, type.types[idx]) { coerced ->
-              if (coerced == null) {
-                rec(idx + 1)
-              } else {
-                onFinished(coerced)
-              }
-            }
-          }
-        }
-        rec(0)
       }
     }
   }
