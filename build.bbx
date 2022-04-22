@@ -1,4 +1,4 @@
-from git("https://github.com/Joonsoo/jparser.git") import jparser
+import git("https://github.com/Joonsoo/jparser.git") as jparser
 import maven
 import jvm
 import java
@@ -112,4 +112,11 @@ action run(args) = jvm.run(
   deps = [core],
   mainClass = "com.giyeok.bibix.MainCli",
   args = args,
+)
+
+import "bibix-plugins/scalatest" as scalatest
+
+from git("https://github.com/Joonsoo/jparser.git") import tests as jparserTests
+action runScalaTests = scalatest.run(
+  deps = [jparserTests.baseTests],
 )

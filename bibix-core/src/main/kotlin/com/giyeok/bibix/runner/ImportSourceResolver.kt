@@ -60,13 +60,13 @@ class ImportSourceResolver(
             val remotes = existingRepo.remoteList().call()
             val remoteName = remotes.find { it.urIs.contains(URIish(url)) }
             if (remoteName == null) null else {
-              existingRepo.checkout()
-                .setName(ref)
-                .call()
               existingRepo.pull()
                 .setRemote(remoteName.name)
                 .setRemoteBranchName(ref)
                 .setCredentialsProvider(credentialsProvider)
+                .call()
+              existingRepo.checkout()
+                .setName(ref)
                 .call()
               existingRepo
             }
@@ -77,6 +77,7 @@ class ImportSourceResolver(
             Git.cloneRepository()
               .setURI(url)
               .setDirectory(destDirectory)
+              .setBranch(ref)
               .setCredentialsProvider(credentialsProvider)
               .call()
           }

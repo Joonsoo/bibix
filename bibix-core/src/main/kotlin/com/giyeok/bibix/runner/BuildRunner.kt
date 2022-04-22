@@ -183,14 +183,27 @@ class BuildRunner(
               task, BuildTask.ResolveImport(task.cname.sourceId, parentValue.deferredImportId)
             ) { importedSourceId, _ ->
               // import가 정상적으로 완료됐으면 import된 스크립트의 모든 element들은 buildGraph에 들어가 있어야 함
-              importedSourceId as SourceId
-              synchronized(this) {
-                buildGraph.replaceValue(parent, CNameValue.LoadedImport(importedSourceId))
-              }
-              require(
-                task, BuildTask.ResolveName(CName(importedSourceId, task.cname.tokens.drop(1)))
-              ) { taskResult, _ ->
-                registerTaskResult(task, taskResult)
+              when (importedSourceId) {
+                is SourceId -> {
+                  synchronized(this) {
+                    buildGraph.replaceValue(parent, CNameValue.LoadedImport(importedSourceId))
+                  }
+                  require(
+                    task, BuildTask.ResolveName(CName(importedSourceId, task.cname.tokens.drop(1)))
+                  ) { taskResult, _ ->
+                    registerTaskResult(task, taskResult)
+                  }
+                }
+                is CNameValue.NamespaceValue -> {
+                  require(
+                    task,
+                    BuildTask.ResolveName(importedSourceId.cname.append(task.cname.tokens.drop(1)))
+                  ) { taskResult, _ ->
+                    registerTaskResult(task, taskResult)
+                  }
+                }
+                // import all일 때는 SourceId, import from일 때는 namespace value.
+                // import from일 때 namespace 외에 다른 거일 수도 있나?
               }
             }
           } else {
@@ -547,6 +560,11 @@ class BuildRunner(
                     throw markTaskFailed(task, IllegalStateException("Cannot access $value $name"))
                 }
                 registerTaskResult(task, access(result, exprNode.name))
+              }
+              is SourceId -> {
+                require(task, BuildTask.ResolveName(CName(result, exprNode.name))) { resolved, _ ->
+                  registerTaskResult(task, resolved)
+                }
               }
               else -> throw markTaskFailed(task, IllegalStateException("Invalid access: $exprNode"))
             }

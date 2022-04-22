@@ -34,16 +34,17 @@ class Run {
         // TODO Suite.nestedSuites도 실행해야되는듯?
 
         // TODO 아마도.. default value 있는 파라메터 전부 써줘야될듯?
-        targetClass.getMethod(
+        val executeMethod = targetClass.getMethod(
           "execute",
-          String::class.java,
-          ConfigMap::class.java,
+          java.lang.String::class.java,
+          classCollector.getClass("org.scalatest.ConfigMap"),
           Boolean::class.java,
           Boolean::class.java,
           Boolean::class.java,
           Boolean::class.java,
           Boolean::class.java,
-        ).invoke(
+        )
+        executeMethod.invoke(
           instance,
           null, `ConfigMap$`.`MODULE$`.empty(), true, false, false, false, false
         )

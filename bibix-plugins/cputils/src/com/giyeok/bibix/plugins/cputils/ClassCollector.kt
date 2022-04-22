@@ -130,6 +130,8 @@ class ClassCollector(val classpaths: List<File>, allDeps: List<File>) {
           annot.annotationClass.qualifiedName == annotationName
         }
       }
+
+  fun getClass(className: String) = loader.loadClass(className)
 }
 
 class ClassGraph {
