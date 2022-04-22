@@ -34,6 +34,23 @@ class BuildRunner(
 
   fun markTaskFailed(task: BuildTask, exception: Exception): Exception {
     // TODO
+    when (task) {
+      is BuildTask.ExprEval -> {
+        val exprGraph = buildGraph.exprGraphs[task.exprGraphId]
+        val (sourceId, parseNode) = exprGraph.exprLocation
+        println("@ $sourceId, ${parseNode.range()}")
+        println(parseNode.sourceText())
+      }
+      is BuildTask.CallAction -> {
+        val exprGraph = buildGraph.exprGraphs[task.exprGraphId]
+        val (sourceId, parseNode) = exprGraph.exprLocation
+        println("@ $sourceId, ${parseNode.range()}")
+        println(parseNode.sourceText())
+      }
+      else -> {
+        // do nothing
+      }
+    }
     exception.printStackTrace()
     exitProcess(1)
     return exception
@@ -100,8 +117,9 @@ class BuildRunner(
   ) {
     val posParamsZipped = paramDefs.zip(posParams)
     val remainingParams = paramDefs.drop(posParams.size)
-    if (!remainingParams.map { it.name }.containsAll(namedParams.keys)) {
-      throw markTaskFailed(task, Exception("Invalid parameter name"))
+    val invalidParams = namedParams.keys - remainingParams.map { it.name }.toSet()
+    if (invalidParams.isNotEmpty()) {
+      throw markTaskFailed(task, Exception("Invalid parameter name: $invalidParams"))
     }
 
     val paramDefsMap = paramDefs.associateBy { it.name }

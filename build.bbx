@@ -118,5 +118,5 @@ import "bibix-plugins/scalatest" as scalatest
 
 from git("https://github.com/Joonsoo/jparser.git") import tests as jparserTests
 action runScalaTests = scalatest.run(
-  deps = [jparserTests.baseTests],
+  deps = [jparserTests.baseTests, jparserTests.naiveTests, jparserTests.metalangTests],
 )

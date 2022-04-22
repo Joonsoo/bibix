@@ -57,12 +57,12 @@ class ProgressIndicator<T>(val container: ProgressIndicatorContainer<T>, val ind
       "..."
     } else {
       val taskString = task.toString()
-      val maxLength = 80
+      val maxLength = 60
       val shortString = if (taskString.length <= maxLength) taskString else {
         taskString.substring(0, maxLength / 2 - 1) + ".." +
           taskString.substring(taskString.length - maxLength / 2 - 1)
       }
-      "$taskString: $description"
+      "$shortString: $description"
     }
   }
 }
