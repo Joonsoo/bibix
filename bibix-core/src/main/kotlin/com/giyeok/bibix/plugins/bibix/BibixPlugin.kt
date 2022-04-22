@@ -12,8 +12,10 @@ val bibixPlugin = BibixPlugin.fromScript(
     arg bibixVersion: string = "0.0.2"
     
     def base(
-      classpath: path = curl.download("https://github.com/Joonsoo/bibix/releases/download/${dollar}bibixVersion/bibix-${dollar}bibixVersion.jar")
+      classpath: path = curl.download("https://github.com/Joonsoo/bibix/releases/download/${dollar}bibixVersion/bibix-base-${dollar}bibixVersion.jar")
     ): jvm.ClassPkg = native:com.giyeok.bibix.plugins.bibix.Base
+    
+    // TODO bibix.plugins(tag="1.2.0") => GitSource 반환
   """.trimIndent(),
   Classes(
     Base::class.java

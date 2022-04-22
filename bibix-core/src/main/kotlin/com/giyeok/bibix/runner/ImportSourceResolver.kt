@@ -26,6 +26,7 @@ class ImportSourceResolver(
   ): ImportedSource {
     when (spec.className) {
       CName(BibixRootSourceId, "GitSource") -> {
+        // TODO remote의 ref를 pull해오도록 수정
         val specValue = spec.value as NamedTupleValue
         val url = (specValue.getValue("url") as StringValue).value
         val ref = (specValue.getValue("ref") as StringValue).value
@@ -59,13 +60,13 @@ class ImportSourceResolver(
             val remotes = existingRepo.remoteList().call()
             val remoteName = remotes.find { it.urIs.contains(URIish(url)) }
             if (remoteName == null) null else {
-              existingRepo.checkout()
-                .setName(ref)
-                .call()
               existingRepo.pull()
                 .setRemote(remoteName.name)
                 .setRemoteBranchName(ref)
                 .setCredentialsProvider(credentialsProvider)
+                .call()
+              existingRepo.checkout()
+                .setName(ref)
                 .call()
               existingRepo
             }
@@ -76,6 +77,7 @@ class ImportSourceResolver(
             Git.cloneRepository()
               .setURI(url)
               .setDirectory(destDirectory)
+              .setBranch(ref)
               .setCredentialsProvider(credentialsProvider)
               .call()
           }

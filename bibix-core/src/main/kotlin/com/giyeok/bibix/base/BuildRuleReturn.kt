@@ -14,10 +14,16 @@ sealed class BuildRuleReturn {
 
     @JvmStatic
     fun failed(exception: Exception) = FailedReturn(exception)
+
+    @JvmStatic
+    fun done() = DoneReturn
   }
 
   data class ValueReturn(val value: BibixValue) : BuildRuleReturn()
   data class FailedReturn(val exception: Exception) : BuildRuleReturn()
+
+  // DoneReturn은 액션에서만 반환해야 함
+  object DoneReturn : BuildRuleReturn()
   data class EvalAndThen(
     val ruleName: String,
     val params: Map<String, BibixValue>,

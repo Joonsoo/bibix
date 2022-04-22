@@ -32,10 +32,28 @@ class BuildRunner(
     runTasks(targets.map { BuildTask.ResolveName(it) })
   }
 
-  fun markTaskFailed(task: BuildTask, exception: Exception) {
+  fun markTaskFailed(task: BuildTask, exception: Exception): Exception {
     // TODO
+    when (task) {
+      is BuildTask.ExprEval -> {
+        val exprGraph = buildGraph.exprGraphs[task.exprGraphId]
+        val (sourceId, parseNode) = exprGraph.exprLocation
+        println("@ $sourceId, ${parseNode.range()}")
+        println(parseNode.sourceText())
+      }
+      is BuildTask.CallAction -> {
+        val exprGraph = buildGraph.exprGraphs[task.exprGraphId]
+        val (sourceId, parseNode) = exprGraph.exprLocation
+        println("@ $sourceId, ${parseNode.range()}")
+        println(parseNode.sourceText())
+      }
+      else -> {
+        // do nothing
+      }
+    }
     exception.printStackTrace()
     exitProcess(1)
+    return exception
   }
 
   fun registerTaskResult(task: BuildTask, value: Any) {
@@ -99,8 +117,9 @@ class BuildRunner(
   ) {
     val posParamsZipped = paramDefs.zip(posParams)
     val remainingParams = paramDefs.drop(posParams.size)
-    if (!remainingParams.map { it.name }.containsAll(namedParams.keys)) {
-      throw Exception("Invalid parameter name")
+    val invalidParams = namedParams.keys - remainingParams.map { it.name }.toSet()
+    if (invalidParams.isNotEmpty()) {
+      throw markTaskFailed(task, Exception("Invalid parameter name: $invalidParams"))
     }
 
     val paramDefsMap = paramDefs.associateBy { it.name }
@@ -113,7 +132,7 @@ class BuildRunner(
       !paramDef.optional && paramDef.defaultValueId == null
     }
     if (missingParams.isNotEmpty()) {
-      throw IllegalArgumentException("Missing parameters: $missingParams")
+      throw markTaskFailed(task, IllegalArgumentException("Missing parameters: $missingParams"))
     }
 
     val defaults = unspecifiedParams.mapNotNull {
@@ -172,7 +191,7 @@ class BuildRunner(
           var parent = task.cname.parent()
           while (!buildGraph.names.containsKey(parent)) {
             if (parent.tokens.isEmpty()) {
-              throw IllegalStateException("Cannot find name ${task.cname}")
+              throw markTaskFailed(task, IllegalStateException("Cannot find name ${task.cname}"))
             }
             parent = parent.parent()
           }
@@ -182,14 +201,27 @@ class BuildRunner(
               task, BuildTask.ResolveImport(task.cname.sourceId, parentValue.deferredImportId)
             ) { importedSourceId, _ ->
               // import가 정상적으로 완료됐으면 import된 스크립트의 모든 element들은 buildGraph에 들어가 있어야 함
-              importedSourceId as SourceId
-              synchronized(this) {
-                buildGraph.replaceValue(parent, CNameValue.LoadedImport(importedSourceId))
-              }
-              require(
-                task, BuildTask.ResolveName(CName(importedSourceId, task.cname.tokens.drop(1)))
-              ) { taskResult, _ ->
-                registerTaskResult(task, taskResult)
+              when (importedSourceId) {
+                is SourceId -> {
+                  synchronized(this) {
+                    buildGraph.replaceValue(parent, CNameValue.LoadedImport(importedSourceId))
+                  }
+                  require(
+                    task, BuildTask.ResolveName(CName(importedSourceId, task.cname.tokens.drop(1)))
+                  ) { taskResult, _ ->
+                    registerTaskResult(task, taskResult)
+                  }
+                }
+                is CNameValue.NamespaceValue -> {
+                  require(
+                    task,
+                    BuildTask.ResolveName(importedSourceId.cname.append(task.cname.tokens.drop(1)))
+                  ) { taskResult, _ ->
+                    registerTaskResult(task, taskResult)
+                  }
+                }
+                // import all일 때는 SourceId, import from일 때는 namespace value.
+                // import from일 때 namespace 외에 다른 거일 수도 있나?
               }
             }
           } else {
@@ -247,7 +279,10 @@ class BuildRunner(
                 registerTaskResult(task, userArg)
               } else {
                 if (value.defaultValueId == null) {
-                  throw IllegalStateException("argument not specified: ${task.cname}")
+                  throw markTaskFailed(
+                    task,
+                    IllegalStateException("argument not specified: ${task.cname}")
+                  )
                 }
                 val exprGraph = buildGraph.exprGraphs[value.defaultValueId]
                 require(
@@ -276,9 +311,8 @@ class BuildRunner(
                   )
                   registerTaskResult(task, ruleImplInfo)
                 }
-                value.implName.sourceId is BibixInternalSourceId && value.implName.tokens == listOf(
-                  "$$"
-                ) -> {
+                value.implName.sourceId is BibixInternalSourceId &&
+                  value.implName.tokens == listOf("$$") -> {
                   // native impls
                   val plugin = bibixPlugins.getValue(value.implName.sourceId.name)
                   val ruleImplInfo = BuildRuleImplInfo(
@@ -337,30 +371,46 @@ class BuildRunner(
               }
             }
             is CNameValue.ActionRuleValue -> {
-              require(task, BuildTask.ResolveName(value.implName)) { implResult0, _ ->
-                coerce(
-                  task,
-                  task.cname.sourceId,
-                  implResult0 as BibixValue,
-                  CustomType(CName(BibixInternalSourceId("jvm"), "ClassPaths"))
-                ) { implResult ->
-                  implResult as ClassInstanceValue
-                  val cps = ((implResult.value) as SetValue).values.map { (it as PathValue).path }
-                  val realm = synchronized(this) {
-                    val realm = classWorld.newRealm(nextRealmId())
-                    cps.forEach {
-                      realm.addURL(it.canonicalFile.toURI().toURL())
-                    }
-                    realm
-                  }
-                  val ruleImplInfo = ActionRuleImplInfo(
+              when {
+                value.implName.sourceId is BibixInternalSourceId &&
+                  value.implName.tokens == listOf("$$") -> {
+                  val plugin = bibixPlugins.getValue(value.implName.sourceId.name)
+                  val actionImplInfo = ActionRuleImplInfo(
                     value.implName.sourceId,
-                    realm.loadClass(value.className),
+                    plugin.classes.getClass(value.className),
                     value.methodName,
-                    value.params,
+                    value.params
                   )
-                  // TODO buildGraph.replaceValue(task.cname, implResult)
-                  registerTaskResult(task, ruleImplInfo)
+                  registerTaskResult(task, actionImplInfo)
+                }
+                else -> {
+                  require(task, BuildTask.ResolveName(value.implName)) { implResult0, _ ->
+                    coerce(
+                      task,
+                      task.cname.sourceId,
+                      implResult0 as BibixValue,
+                      CustomType(CName(BibixInternalSourceId("jvm"), "ClassPaths"))
+                    ) { implResult ->
+                      implResult as ClassInstanceValue
+                      val cps =
+                        ((implResult.value) as SetValue).values.map { (it as PathValue).path }
+                      val realm = synchronized(this) {
+                        val realm = classWorld.newRealm(nextRealmId())
+                        cps.forEach {
+                          realm.addURL(it.canonicalFile.toURI().toURL())
+                        }
+                        realm
+                      }
+                      val actionImplInfo = ActionRuleImplInfo(
+                        value.implName.sourceId,
+                        realm.loadClass(value.className),
+                        value.methodName,
+                        value.params,
+                      )
+                      // TODO buildGraph.replaceValue(task.cname, implResult)
+                      registerTaskResult(task, actionImplInfo)
+                    }
+                  }
                 }
               }
             }
@@ -386,7 +436,7 @@ class BuildRunner(
             null
           )
         }
-        require(task, listOf(targetTask) + paramTasks) { prerequisites, _ ->
+        require(task, listOf(targetTask) + paramTasks) { prerequisites, progressIndicator ->
           val ruleImplInfo = prerequisites[0] as ActionRuleImplInfo
 
           val instance = ruleImplInfo.cls.getDeclaredConstructor().newInstance()
@@ -401,14 +451,53 @@ class BuildRunner(
             task, task.origin, ruleImplInfo.params, posParams, namedParamsMap
           ) { args ->
             if (args == null) {
-              markTaskFailed(task, Exception("Failed to get organize"))
-            } else {
-              val context = ActionContext(ruleImplInfo.origin, args)
-
-              method.invoke(instance, context)
-
-              registerTaskResult(task, NoneValue)
+              throw markTaskFailed(task, Exception("Failed to get arguments"))
             }
+            val context = ActionContext(ruleImplInfo.origin, args)
+
+            val invokeResult = try {
+              method.invoke(instance, context)
+            } catch (e: Exception) {
+              throw markTaskFailed(task, e)
+            }
+
+            fun doNext(result: Any?) {
+              when (result) {
+                null -> registerTaskResult(task, NoneValue)
+                is BuildRuleReturn.ValueReturn ->
+                  throw markTaskFailed(
+                    task,
+                    IllegalStateException("action rule must not return a value")
+                  )
+                is BuildRuleReturn.FailedReturn -> throw markTaskFailed(task, result.exception)
+                is BuildRuleReturn.DoneReturn -> registerTaskResult(task, NoneValue)
+                is BuildRuleReturn.EvalAndThen -> {
+                  // `result.ruleName`을 . 단위로 끊어서 rule 이름을 찾은 다음
+                  val nameTokens = result.ruleName.split('.')
+                  val callingName = CName(ruleImplInfo.origin, nameTokens)
+                  // 해당 rule에 `result.params`을 줘서 실행하고
+                  require(task, BuildTask.ResolveName(callingName)) { calling, _ ->
+                    calling as BuildRuleImplInfo
+                    callBuildRule(
+                      task,
+                      calling.origin,
+                      calling,
+                      listOf(),
+                      result.params,
+                      progressIndicator,
+                    ) { buildResult ->
+                      // 결과를 `result.whenDone`으로 전달해서 반복
+                      try {
+                        doNext(result.whenDone(buildResult))
+                      } catch (e: Exception) {
+                        throw markTaskFailed(task, e)
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            doNext(invokeResult)
           }
         }
       }
@@ -485,11 +574,17 @@ class BuildRunner(
                 fun access(value: BibixValue, name: String): BibixValue = when (value) {
                   is NamedTupleValue -> value.getValue(name)
                   is ClassInstanceValue -> access(value.value, name)
-                  else -> throw IllegalStateException("Cannot access $value $name")
+                  else ->
+                    throw markTaskFailed(task, IllegalStateException("Cannot access $value $name"))
                 }
                 registerTaskResult(task, access(result, exprNode.name))
               }
-              else -> throw IllegalStateException("Invalid access: ${exprNode}")
+              is SourceId -> {
+                require(task, BuildTask.ResolveName(CName(result, exprNode.name))) { resolved, _ ->
+                  registerTaskResult(task, resolved)
+                }
+              }
+              else -> throw markTaskFailed(task, IllegalStateException("Invalid access: $exprNode"))
             }
           }
 
@@ -659,95 +754,99 @@ class BuildRunner(
       task, origin, ruleImplInfo.params, posParams, namedParamsMap
     ) { args ->
       if (args == null) {
-        markTaskFailed(task, Exception("Failed to get arguments"))
-      } else {
-        val methodName = ruleImplInfo.methodName ?: "build"
+        throw markTaskFailed(task, Exception("Failed to get arguments"))
+      }
+      val methodName = ruleImplInfo.methodName ?: "build"
 
-        val argsMap = args.toArgsMap()
-        val inputHash = argsMap.extractInputHashes()
-        val objectId = objectId {
-          this.sourceId = origin.toProto(buildGraph)
-          // TODO source_hash가 필요할까?
-          // rule_impl에 대한 해시
-          this.ruleImplIdHash = ruleImplInfo.implObjectIdHash
-          this.methodName = methodName
-          this.argsMap = argsMap
-        }
-        val objectDirectory = repo.prepareObjectDirectory(objectId, inputHash)
-        val context = BuildContext(
-          ruleImplInfo.origin,
-          buildGraph.baseDirectories.getValue(ruleImplInfo.origin),
-          buildGraph.baseDirectories.getValue(origin),
-          repo.mainDirectory,
-          args,
-          objectDirectory.hashChanged,
-          objectId,
-          objectDirectory.objectIdHashHex,
-          objectDirectory.directory,
-          progressIndicator,
-          repo,
-        )
+      val argsMap = args.toArgsMap()
+      val inputHash = argsMap.extractInputHashes()
+      val objectId = objectId {
+        this.sourceId = origin.toProto(buildGraph)
+        // TODO source_hash가 필요할까?
+        // rule_impl에 대한 해시
+        this.ruleImplIdHash = ruleImplInfo.implObjectIdHash
+        this.methodName = methodName
+        this.argsMap = argsMap
+      }
+      val objectDirectory = repo.prepareObjectDirectory(objectId, inputHash)
+      val context = BuildContext(
+        ruleImplInfo.origin,
+        buildGraph.baseDirectories.getValue(ruleImplInfo.origin),
+        buildGraph.baseDirectories.getValue(origin),
+        repo.mainDirectory,
+        args,
+        objectDirectory.hashChanged,
+        objectId,
+        objectDirectory.objectIdHashHex,
+        objectDirectory.directory,
+        progressIndicator,
+        repo,
+      )
 
-        // TODO instance 재활용이 필요할까?
-        val instance = ruleImplInfo.cls.getDeclaredConstructor().newInstance()
-        val method = ruleImplInfo.cls.getMethod(methodName, BuildContext::class.java)
+      // TODO instance 재활용이 필요할까?
+      val instance = ruleImplInfo.cls.getDeclaredConstructor().newInstance()
+      val method = ruleImplInfo.cls.getMethod(methodName, BuildContext::class.java)
 
-        check(method.trySetAccessible())
-        val invokeResult = try {
-          method.invoke(instance, context)
-        } catch (e: Exception) {
-          markTaskFailed(task, e)
-        }
+      check(method.trySetAccessible())
+      val invokeResult = try {
+        method.invoke(instance, context)
+      } catch (e: Exception) {
+        throw markTaskFailed(task, e)
+      }
 
-        fun onFinalValue(result: BibixValue) {
-          coerce(task, origin, result, ruleImplInfo.returnType) { coerced ->
-            if (coerced == null) {
-              println(result)
-              println(ruleImplInfo.returnType)
-            }
-            checkNotNull(coerced)
-            synchronized(this) {
-              repo.markFinished(objectId)
-              // task의 objectId 저장
-              taskObjectIds[task] = objectId
-            }
-            whenDone(coerced)
+      fun onFinalValue(result: BibixValue) {
+        coerce(task, origin, result, ruleImplInfo.returnType) { coerced ->
+          if (coerced == null) {
+            println(result)
+            println(ruleImplInfo.returnType)
           }
+          checkNotNull(coerced)
+          synchronized(this) {
+            repo.markFinished(objectId)
+            // task의 objectId 저장
+            taskObjectIds[task] = objectId
+          }
+          whenDone(coerced)
         }
+      }
 
-        fun doNext(result: Any) {
-          when (result) {
-            is BibixValue -> onFinalValue(result)
-            is BuildRuleReturn.ValueReturn -> onFinalValue(result.value)
-            is BuildRuleReturn.FailedReturn -> markTaskFailed(task, result.exception)
-            is BuildRuleReturn.EvalAndThen -> {
-              // `result.ruleName`을 . 단위로 끊어서 rule 이름을 찾은 다음
-              val nameTokens = result.ruleName.split('.')
-              val callingName = CName(ruleImplInfo.origin, nameTokens)
-              // 해당 rule에 `result.params`을 줘서 실행하고
-              require(task, BuildTask.ResolveName(callingName)) { calling, _ ->
-                calling as BuildRuleImplInfo
-                callBuildRule(
-                  task,
-                  calling.origin,
-                  calling,
-                  listOf(),
-                  result.params,
-                  progressIndicator,
-                ) { buildResult ->
-                  // 결과를 `result.whenDone`으로 전달해서 반복
-                  try {
-                    doNext(result.whenDone(buildResult))
-                  } catch (e: Exception) {
-                    markTaskFailed(task, e)
-                  }
+      fun doNext(result: Any) {
+        when (result) {
+          is BibixValue -> onFinalValue(result)
+          is BuildRuleReturn.ValueReturn -> onFinalValue(result.value)
+          is BuildRuleReturn.FailedReturn -> throw markTaskFailed(task, result.exception)
+          is BuildRuleReturn.DoneReturn ->
+            throw markTaskFailed(
+              task,
+              IllegalStateException("build rule must not return Done value")
+            )
+          is BuildRuleReturn.EvalAndThen -> {
+            // `result.ruleName`을 . 단위로 끊어서 rule 이름을 찾은 다음
+            val nameTokens = result.ruleName.split('.')
+            val callingName = CName(ruleImplInfo.origin, nameTokens)
+            // 해당 rule에 `result.params`을 줘서 실행하고
+            require(task, BuildTask.ResolveName(callingName)) { calling, _ ->
+              calling as BuildRuleImplInfo
+              callBuildRule(
+                task,
+                calling.origin,
+                calling,
+                listOf(),
+                result.params,
+                progressIndicator,
+              ) { buildResult ->
+                // 결과를 `result.whenDone`으로 전달해서 반복
+                try {
+                  doNext(result.whenDone(buildResult))
+                } catch (e: Exception) {
+                  throw markTaskFailed(task, e)
                 }
               }
             }
           }
         }
-        doNext(invokeResult)
       }
+      doNext(invokeResult)
     }
   }
 
@@ -931,7 +1030,7 @@ class BuildRunner(
         when (value) {
           is ListValue -> rec(value.values, type.elemType, 0, mutableListOf())
           is SetValue -> rec(value.values, type.elemType, 0, mutableListOf())
-          else -> throw IllegalStateException("Cannot coerce $value to $type")
+          else -> throw markTaskFailed(task, IllegalStateException("Cannot coerce $value to $type"))
         }
       }
       is SetType -> {

@@ -2,7 +2,7 @@ out
 .idea
 target
 build
-/bibix/
+/bbxbuild/
 .gradle
 gradle/
 gradlew

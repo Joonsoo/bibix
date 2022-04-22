@@ -2,13 +2,17 @@ package com.giyeok.bibix.buildscript
 
 import com.giyeok.bibix.ast.BibixAst
 import com.giyeok.bibix.base.CName
+import com.giyeok.bibix.base.SourceId
 import com.giyeok.bibix.utils.toKtList
+import com.giyeok.jparser.ParseResultTree
 
 data class ExprGraph(
   val mainNode: ExprNode,
   val nodes: Set<ExprNode>,
   val edges: Set<ExprEdge>,
   val callExprs: Registry<CallExprDef>,
+  // 이 식이 나오는 소스코드/위치
+  val exprLocation: ExprLocation,
 ) {
   // TODO ExprNode 객체의 크기가 너무 커지지 않도록 callExpr처럼 registry를 더 많이 활용하도록 수정
   class Builder(
@@ -146,6 +150,7 @@ data class ExprGraph(
         builder.nodes,
         builder.edges,
         builder.callExprs.build(),
+        ExprLocation(lookup.chain.scope.cname.sourceId, expr.parseNode())
       )
     }
   }
@@ -179,4 +184,9 @@ data class ParamNodes(
 data class CallExprDef(
   val target: ExprNode,
   val params: ParamNodes,
+)
+
+data class ExprLocation(
+  val sourceId: SourceId,
+  val parseNode: ParseResultTree.Node,
 )

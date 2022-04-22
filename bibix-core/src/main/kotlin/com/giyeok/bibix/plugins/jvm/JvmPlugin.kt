@@ -8,6 +8,7 @@ val jvmPlugin = BibixPlugin.fromScript(
     class ClassPaths = set<path>
     
     class ClassPkg extends ClassPaths =
+      // TODO resources 추가해서 (origin, classes: set<path>, resources: set<path>, deps: set<ClassPkg>)로 고치기
       (origin: ClassOrigin, cps: set<path>, deps: set<ClassPkg>) {
       as ClassPaths = resolveClassPkgs([this])
     }
@@ -42,7 +43,7 @@ val jvmPlugin = BibixPlugin.fromScript(
     ): file = native:com.giyeok.bibix.plugins.jvm.Jar:executableUberJar
     
     action def run(
-      deps: set<ClassPaths>,
+      deps: set<ClassPkg>,
       mainClass: string,
       jvmPath: string = "java",
       args: list<string> = [],
