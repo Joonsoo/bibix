@@ -61,6 +61,7 @@ fun BibixValue.toProto(): BibixValueProto.BibixValue = when (val value = this) {
       this.value = value.value.toProto()
     }
   }
+  is DClassInstanceValue -> throw AssertionError("DClassInstnaceValue")
   is NoneValue -> bibixValue { }
 }
 

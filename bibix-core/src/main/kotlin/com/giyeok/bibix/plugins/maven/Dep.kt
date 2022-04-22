@@ -73,15 +73,12 @@ class Dep {
 //    println("dependencies: $dependencyResult")
 //    println(dependencyResult.artifactResults)
 
-    // TODO jvm 플러그인은 internal source id라 SourceId를 직접 만드는게 가능한데 다른 플러그인은 어쩌지?
-    val jvmSourceId = BibixInternalSourceId("jvm")
-
     val artifactsMap = dependencyResult.artifactResults.associateBy { it.artifact }
 
     fun traverse(node: DependencyNode): TupleValue {
       val artifactResult = artifactsMap.getValue(node.artifact)
       return TupleValue(
-        mavenDep(jvmSourceId, "central", artifactResult.artifact),
+        mavenDep("central", artifactResult.artifact),
         SetValue(PathValue(artifactResult.artifact.file)),
         SetValue(
           node.children.filter { artifactsMap.containsKey(it.artifact) }.map { traverse(it) }),
@@ -92,30 +89,23 @@ class Dep {
     return dep
   }
 
-  private fun mavenDep(
-    sourceId: SourceId,
-    repo: String,
-    artifact: Artifact,
-  ): ClassInstanceValue =
-    mavenDep(sourceId, repo, artifact.groupId, artifact.artifactId, artifact.version)
+  private fun mavenDep(repo: String, artifact: Artifact): BibixValue =
+    mavenDep(repo, artifact.groupId, artifact.artifactId, artifact.version)
 
   private fun mavenDep(
-    sourceId: SourceId,
     repo: String,
     group: String,
     artifact: String,
     version: String
-  ): ClassInstanceValue {
-    return ClassInstanceValue(
-      CName(sourceId, "MavenDep"),
-      NamedTupleValue(
-        "repo" to StringValue(repo),
-        "group" to StringValue(group),
-        "artifact" to StringValue(artifact),
-        "version" to StringValue(version),
-      )
+  ): BibixValue = DClassInstanceValue(
+    "jvm.MavenDep",
+    NamedTupleValue(
+      "repo" to StringValue(repo),
+      "group" to StringValue(group),
+      "artifact" to StringValue(artifact),
+      "version" to StringValue(version),
     )
-  }
+  )
 
   private fun newRepositorySystem(): RepositorySystem {
     // from https://github.com/snyk/aether-demo/blob/master/aether-demo-snippets/src/main/java/org/eclipse/aether/examples/manual/ManualRepositorySystemFactory.java

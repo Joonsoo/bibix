@@ -1,8 +1,7 @@
 package com.giyeok.bibix.buildscript
 
 import com.giyeok.bibix.ast.BibixAst
-import com.giyeok.bibix.base.CName
-import com.giyeok.bibix.base.SourceId
+import com.giyeok.bibix.base.*
 import com.giyeok.bibix.runner.BibixIdProto
 import com.giyeok.bibix.utils.getOrNull
 import com.giyeok.bibix.utils.toKtList

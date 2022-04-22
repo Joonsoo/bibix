@@ -73,13 +73,21 @@ data class NamedTupleValue(val values: List<Pair<String, BibixValue>>) : BibixVa
 }
 
 data class ClassInstanceValue(val className: CName, val value: BibixValue) : BibixValue() {
-  override fun toString(): String =
-    "$className($value)"
+  override fun toString(): String = "$className($value)"
+}
+
+data class DClassInstanceValue(val nameTokens: List<String>, val value: BibixValue) : BibixValue() {
+  constructor(name: String, value: BibixValue) : this(name.split('.'), value)
+
+  override fun toString(): String = "${nameTokens.joinToString(".")}($value)"
 }
 
 object NoneValue : BibixValue()
 
+// TODO rule def value, type value
+
 fun BibixValue.stringify(): String = when (this) {
+  is DClassInstanceValue -> this.toString()
   is ClassInstanceValue -> this.toString()
   is BooleanValue -> value.toString()
   is DirectoryValue -> directory.path
