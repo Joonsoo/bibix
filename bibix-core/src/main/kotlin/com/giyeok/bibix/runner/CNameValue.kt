@@ -1,6 +1,5 @@
-package com.giyeok.bibix.buildscript
+package com.giyeok.bibix.runner
 
-import com.giyeok.bibix.base.BibixType
 import com.giyeok.bibix.base.BibixValue
 import com.giyeok.bibix.base.CName
 import com.giyeok.bibix.base.SourceId
@@ -29,6 +28,7 @@ sealed class CNameValue {
   ) : CNameValue()
 
   data class BuildRuleValue(
+    val cname: CName,
     val params: List<Param>,
     val implName: CName,
     val className: String,
@@ -37,6 +37,7 @@ sealed class CNameValue {
   ) : CNameValue()
 
   data class ActionRuleValue(
+    val cname: CName,
     val params: List<Param>,
     val implName: CName,
     val className: String,

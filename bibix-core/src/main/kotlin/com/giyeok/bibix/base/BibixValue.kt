@@ -84,6 +84,106 @@ data class NClassInstanceValue(val nameTokens: List<String>, val value: BibixVal
 
 object NoneValue : BibixValue()
 
+data class BuildRuleDefValue(
+  val name: CName,
+  val params: List<RuleParam>,
+  val impl: CName,
+  val implClass: String,
+  val implMethodName: String,
+) : BibixValue() {
+  override fun toString(): String = "def $name"
+}
+
+data class ActionRuleDefValue(
+  val name: CName,
+  val params: List<RuleParam>,
+  val impl: CName,
+  val implClass: String,
+  val implMethodName: String,
+) : BibixValue() {
+  override fun toString(): String = "action def $name"
+}
+
+data class RuleParam(
+  val name: String,
+  val type: TypeValue,
+  val optional: Boolean,
+)
+
+sealed class TypeValue : BibixValue() {
+  object AnyTypeValue : TypeValue() {
+    override fun toString(): String = "any"
+  }
+
+  object BooleanTypeValue : TypeValue() {
+    override fun toString(): String = "boolean"
+  }
+
+  object StringTypeValue : TypeValue() {
+    override fun toString(): String = "string"
+  }
+
+  object PathTypeValue : TypeValue() {
+    override fun toString(): String = "path"
+  }
+
+  object FileTypeValue : TypeValue() {
+    override fun toString(): String = "file"
+  }
+
+  object DirectoryTypeValue : TypeValue() {
+    override fun toString(): String = "directory"
+  }
+
+  data class ClassTypeValue(val className: CName) : TypeValue() {
+    override fun toString(): String = "class $className"
+  }
+
+  data class ClassTypeDetail(
+    val className: CName,
+    val extendings: List<CName>,
+    val bodyType: TypeValue
+  ) {
+    override fun toString(): String = "class $className"
+  }
+
+  data class EnumTypeValue(val enumTypeName: CName, val enumValues: List<String>) : TypeValue() {
+    override fun toString(): String = "enum $enumTypeName"
+  }
+
+  data class ListTypeValue(val elemType: TypeValue) : TypeValue() {
+    override fun toString(): String = "list<${elemType}>"
+  }
+
+  data class SetTypeValue(val elemType: TypeValue) : TypeValue() {
+    override fun toString(): String = "set<${elemType}>"
+  }
+
+  data class TupleTypeValue(val elemTypes: List<TypeValue>) : TypeValue() {
+    override fun toString(): String = "(${elemTypes.joinToString()})"
+  }
+
+  data class NamedTupleTypeValue(val elemTypes: List<Pair<String, TypeValue>>) : TypeValue() {
+    override fun toString(): String = "(${elemTypes.joinToString { "${it.first}: ${it.second}" }})"
+  }
+
+  data class UnionTypeValue(val types: List<TypeValue>) : TypeValue() {
+    override fun toString(): String = "{${types.joinToString()}}"
+  }
+
+  object BuildRuleDefTypeValue : TypeValue() {
+    override fun toString(): String = "buildrule"
+  }
+
+  object ActionRuleDefTypeValue : TypeValue() {
+    override fun toString(): String = "actionrule"
+  }
+
+  object TypeTypeValue : TypeValue() {
+    override fun toString(): String = "type"
+  }
+}
+
 fun BibixValue.stringify(): String = when (this) {
   is NClassInstanceValue -> this.toString()
   is ClassInstanceValue -> this.toString()
@@ -98,4 +198,7 @@ fun BibixValue.stringify(): String = when (this) {
   is StringValue -> value
   is TupleValue -> "(${values.joinToString { it.stringify() }})"
   NoneValue -> "none"
+  is BuildRuleDefValue -> this.toString()
+  is ActionRuleDefValue -> this.toString()
+  is TypeValue -> this.toString()
 }

@@ -10,6 +10,13 @@ sealed class BuildRuleReturn {
     ) = EvalAndThen(ruleName, params, whenDone)
 
     @JvmStatic
+    fun getClassInfos(
+      cnames: List<CName>,
+      unames: List<String> = listOf(),
+      whenDone: (List<TypeValue.ClassTypeDetail>) -> BuildRuleReturn,
+    ) = GetClassInfos(cnames, unames.map { it.split('.') }, whenDone)
+
+    @JvmStatic
     fun value(value: BibixValue) = ValueReturn(value)
 
     @JvmStatic
@@ -24,9 +31,16 @@ sealed class BuildRuleReturn {
 
   // DoneReturn은 액션에서만 반환해야 함
   object DoneReturn : BuildRuleReturn()
+
   data class EvalAndThen(
     val ruleName: String,
     val params: Map<String, BibixValue>,
     val whenDone: (BibixValue) -> BuildRuleReturn
+  ) : BuildRuleReturn()
+
+  data class GetClassInfos(
+    val cnames: List<CName>,
+    val unames: List<List<String>>,
+    val whenDone: (List<TypeValue.ClassTypeDetail>) -> BuildRuleReturn,
   ) : BuildRuleReturn()
 }

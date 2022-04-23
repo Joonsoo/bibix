@@ -1,4 +1,6 @@
-package com.giyeok.bibix.base
+package com.giyeok.bibix.runner
+
+import com.giyeok.bibix.base.CName
 
 // CustomType은 실제로 클래스인지 enum인지 알 수 없는 경우
 sealed class BibixType
@@ -14,3 +16,6 @@ data class SetType(val elemType: BibixType) : BibixType()
 data class TupleType(val elemTypes: List<BibixType>) : BibixType()
 data class NamedTupleType(val elemTypes: List<Pair<String, BibixType>>) : BibixType()
 data class UnionType(val types: List<BibixType>) : BibixType()
+object BuildRuleDefType : BibixType()
+object ActionRuleDefType : BibixType()
+object TypeType : BibixType()

@@ -118,5 +118,16 @@ import "bibix-plugins/scalatest" as scalatest
 
 from git("https://github.com/Joonsoo/jparser.git") import tests as jparserTests
 action runScalaTests = scalatest.run(
-  deps = [jparserTests.baseTests, jparserTests.naiveTests, jparserTests.metalangTests],
+  deps = [
+    jparserTests.baseTests,
+    jparserTests.naiveTests,
+    jparserTests.metalangTests,
+  ],
+)
+
+xxxx = bibix.genRuleImplTemplateKt(
+  rule = scala.library,
+  types = [jvm.ClassPkg],
+  implName = "com.giyeok.bibix.plugins.scala.LibraryImpl",
+  implInterfaceName = "com.giyeok.bibix.plugins.scala.LibraryImplInterface",
 )

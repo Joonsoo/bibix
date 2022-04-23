@@ -86,6 +86,7 @@ class BuildRunner(
   }
 
   data class BuildRuleImplInfo(
+    val buildRuleValue: CNameValue.BuildRuleValue,
     val origin: SourceId,
     val implObjectIdHash: BibixIdProto.ObjectIdHash,
     val cls: Class<*>,
@@ -95,6 +96,7 @@ class BuildRunner(
   )
 
   data class ActionRuleImplInfo(
+    val actionRuleValue: CNameValue.ActionRuleValue,
     val origin: SourceId,
     val cls: Class<*>,
     val methodName: String?,
@@ -186,6 +188,127 @@ class BuildRunner(
     recDefaults(defaults, (posParamsMap + namedParams).toMutableMap()) { params ->
       recCoerce(params, params.keys.toList(), mutableMapOf())
     }
+  }
+
+  private fun toBibixValue(task: BuildTask, value: Any, callback: (BibixValue) -> Unit) {
+    when (value) {
+      is BibixValue -> callback(value)
+      is CNameValue.ClassType -> callback(TypeValue.ClassTypeValue(value.cname))
+      is CNameValue.EnumType -> callback(TypeValue.EnumTypeValue(value.cname, value.values))
+      is CNameValue.BuildRuleValue -> {
+        toTypeValues(task, value.params.map { it.type }) { paramTypes ->
+          val params = value.params.zip(paramTypes).map { (param, paramType) ->
+            RuleParam(param.name, paramType, param.optional)
+          }
+          callback(
+            BuildRuleDefValue(
+              value.cname,
+              params,
+              value.implName,
+              value.className,
+              value.methodName ?: "build"
+            )
+          )
+        }
+      }
+      is BuildRuleImplInfo -> toBibixValue(task, value.buildRuleValue, callback)
+      is CNameValue.ActionRuleValue -> {
+        toTypeValues(task, value.params.map { it.type }) { paramTypes ->
+          val params = value.params.zip(paramTypes).map { (param, paramType) ->
+            RuleParam(param.name, paramType, param.optional)
+          }
+          callback(
+            ActionRuleDefValue(
+              value.cname,
+              params,
+              value.implName,
+              value.className,
+              value.methodName ?: "build"
+            )
+          )
+        }
+      }
+      is ActionRuleImplInfo -> toBibixValue(task, value.actionRuleValue, callback)
+      else -> TODO()
+    }
+  }
+
+  private fun toBibixValues(
+    task: BuildTask,
+    values: List<Any>,
+    callback: (List<BibixValue>) -> Unit
+  ) {
+    val cc = mutableListOf<BibixValue>()
+    fun run(idx: Int) {
+      if (idx >= values.size) {
+        callback(cc)
+      } else {
+        toBibixValue(task, values[idx]) {
+          cc.add(it)
+          run(idx + 1)
+        }
+      }
+    }
+    run(0)
+  }
+
+  private fun toTypeValue(task: BuildTask, type: BibixType, callback: (TypeValue) -> Unit) {
+    when (type) {
+      AnyType -> callback(TypeValue.AnyTypeValue)
+      BooleanType -> callback(TypeValue.BooleanTypeValue)
+      StringType -> callback(TypeValue.StringTypeValue)
+      PathType -> callback(TypeValue.PathTypeValue)
+      FileType -> callback(TypeValue.FileTypeValue)
+      DirectoryType -> callback(TypeValue.DirectoryTypeValue)
+      is CustomType -> require(task, BuildTask.ResolveName(type.name)) { resolved, _ ->
+        when (resolved) {
+          is CNameValue.ClassType ->
+            callback(TypeValue.ClassTypeValue(resolved.cname))
+          is CNameValue.EnumType ->
+            callback(TypeValue.EnumTypeValue(resolved.cname, resolved.values))
+          else -> TODO()
+        }
+      }
+      is ListType -> toTypeValue(task, type.elemType) { elemType ->
+        callback(TypeValue.ListTypeValue(elemType))
+      }
+      is SetType -> toTypeValue(task, type.elemType) { elemType ->
+        callback(TypeValue.SetTypeValue(elemType))
+      }
+      is TupleType -> toTypeValues(task, type.elemTypes) { elemTypes ->
+        callback(TypeValue.TupleTypeValue(elemTypes))
+      }
+      is NamedTupleType -> toTypeValues(task, type.elemTypes.map { it.second }) { elemTypes ->
+        callback(TypeValue.NamedTupleTypeValue(type.elemTypes.zip(elemTypes).map {
+          it.first.first to it.second
+        }))
+      }
+      is UnionType -> toTypeValues(task, type.types) { types ->
+        callback(TypeValue.UnionTypeValue(types))
+      }
+      BuildRuleDefType -> callback(TypeValue.BuildRuleDefTypeValue)
+      ActionRuleDefType -> callback(TypeValue.ActionRuleDefTypeValue)
+      TypeType -> callback(TypeValue.TypeTypeValue)
+    }
+  }
+
+  private fun toTypeValues(
+    task: BuildTask,
+    types: List<BibixType>,
+    callback: (List<TypeValue>) -> Unit
+  ) {
+    val cc = mutableListOf<TypeValue>()
+    fun run(idx: Int) {
+      if (idx >= types.size) {
+        callback(cc)
+      } else {
+        toTypeValue(task, types[idx]) {
+          cc.add(it)
+          run(idx + 1)
+        }
+      }
+    }
+    run(0)
   }
 
   private fun runTask(task: BuildTask) {
@@ -306,6 +429,7 @@ class BuildRunner(
                 value.implName.sourceId == BibixRootSourceId -> {
                   check(value.implName.tokens == listOf("$$"))
                   val ruleImplInfo = BuildRuleImplInfo(
+                    value,
                     value.implName.sourceId,
                     objectIdHash {
                       this.rootSource = "$BIBIX_VERSION:root:${value.className}"
@@ -322,6 +446,7 @@ class BuildRunner(
                   // native impls
                   val plugin = bibixPlugins.getValue(value.implName.sourceId.name)
                   val ruleImplInfo = BuildRuleImplInfo(
+                    value,
                     value.implName.sourceId,
                     objectIdHash {
                       this.bibixInternalSource =
@@ -362,6 +487,7 @@ class BuildRunner(
                         }
 
                         BuildRuleImplInfo(
+                          value,
                           value.implName.sourceId,
                           objectIdHash { this.objectIdHashString = implObjectIdHash },
                           realm.loadClass(value.className),
@@ -383,6 +509,7 @@ class BuildRunner(
                   value.implName.tokens == listOf("$$") -> {
                   val plugin = bibixPlugins.getValue(value.implName.sourceId.name)
                   val actionImplInfo = ActionRuleImplInfo(
+                    value,
                     value.implName.sourceId,
                     plugin.classes.getClass(value.className),
                     value.methodName,
@@ -410,6 +537,7 @@ class BuildRunner(
                         realm
                       }
                       val actionImplInfo = ActionRuleImplInfo(
+                        value,
                         value.implName.sourceId,
                         realm.loadClass(value.className),
                         value.methodName,
@@ -528,15 +656,16 @@ class BuildRunner(
                 )
               }
               require(task, paramTasks) { params, _ ->
-                val paramValues = params.map { it as BibixValue }
-                val posParams = paramValues.take(callExpr.params.posParams.size)
-                val namedParamsMap =
-                  namedParams.map { it.key }.zip(paramValues.drop(callExpr.params.posParams.size))
-                    .toMap()
-                callBuildRule(
-                  task, task.origin, ruleImplInfo, posParams, namedParamsMap, progressIndicator
-                ) { buildResult ->
-                  registerTaskResult(task, buildResult)
+                toBibixValues(task, params) { paramValues ->
+                  val posParams = paramValues.take(callExpr.params.posParams.size)
+                  val namedParamsMap =
+                    namedParams.map { it.key }.zip(paramValues.drop(callExpr.params.posParams.size))
+                      .toMap()
+                  callBuildRule(
+                    task, task.origin, ruleImplInfo, posParams, namedParamsMap, progressIndicator
+                  ) { buildResult ->
+                    registerTaskResult(task, buildResult)
+                  }
                 }
               }
             }
@@ -600,50 +729,57 @@ class BuildRunner(
             require(task, exprNode.elems.map {
               BuildTask.ExprEval(task.origin, task.exprGraphId, it, task.thisValue)
             }) { elemResults, _ ->
-              registerTaskResult(task, ListValue(elemResults.map { it as BibixValue }))
+              toBibixValues(task, elemResults) { elemResultValues ->
+                registerTaskResult(task, ListValue(elemResultValues))
+              }
             }
           }
           is ExprNode.TupleNode -> {
             require(task, exprNode.elems.map {
               BuildTask.ExprEval(task.origin, task.exprGraphId, it, task.thisValue)
             }) { elemResults, _ ->
-              registerTaskResult(task, TupleValue(elemResults.map { it as BibixValue }))
+              toBibixValues(task, elemResults) { elemResultValues ->
+                registerTaskResult(task, TupleValue(elemResultValues))
+              }
             }
           }
           is ExprNode.NamedTupleNode -> {
             require(task, exprNode.elems.map {
               BuildTask.ExprEval(task.origin, task.exprGraphId, it.second, task.thisValue)
             }) { elemResults, _ ->
-              registerTaskResult(
-                task,
-                NamedTupleValue(exprNode.elems.zip(elemResults)
-                  .map { it.first.first to it.second as BibixValue })
-              )
+              toBibixValues(task, elemResults) { elemResultValues ->
+                registerTaskResult(
+                  task,
+                  NamedTupleValue(
+                    exprNode.elems.zip(elemResultValues).map { it.first.first to it.second })
+                )
+              }
             }
           }
           is ExprNode.StringLiteralNode -> {
             require(task, exprNode.stringElems.filterIsInstance<ExprChunk>().map {
               BuildTask.ExprEval(task.origin, task.exprGraphId, it.expr, task.thisValue)
             }) { results, _ ->
-              val stringBuilder = StringBuilder()
-              var i = 0
-              exprNode.stringElems.forEach { elem ->
-                when (elem) {
-                  is ExprChunk -> {
-                    stringBuilder.append((results[i] as BibixValue).stringify())
-                    i += 1
+              toBibixValues(task, results) { resultValues ->
+                val stringBuilder = StringBuilder()
+                var i = 0
+                exprNode.stringElems.forEach { elem ->
+                  when (elem) {
+                    is ExprChunk -> {
+                      stringBuilder.append(resultValues[i].stringify())
+                      i += 1
+                    }
+                    is StringChunk -> stringBuilder.append(elem.value)
                   }
-                  is StringChunk -> stringBuilder.append(elem.value)
                 }
+                registerTaskResult(task, StringValue(stringBuilder.toString()))
               }
-              registerTaskResult(task, StringValue(stringBuilder.toString()))
             }
           }
-          is ExprNode.BooleanLiteralNode -> registerTaskResult(task, BooleanValue(exprNode.value))
-
-          is ExprNode.ClassThisRef -> {
+          is ExprNode.BooleanLiteralNode ->
+            registerTaskResult(task, BooleanValue(exprNode.value))
+          is ExprNode.ClassThisRef ->
             registerTaskResult(task, checkNotNull(task.thisValue))
-          }
           ExprNode.ActionArgsRef -> registerTaskResult(task, actionArgs!!)
         }
       }
@@ -852,6 +988,22 @@ class BuildRunner(
                 // 결과를 `result.whenDone`으로 전달해서 반복
                 try {
                   doNext(result.whenDone(buildResult))
+                } catch (e: Exception) {
+                  throw markTaskFailed(task, e)
+                }
+              }
+            }
+          }
+          is BuildRuleReturn.GetClassInfos -> {
+            val cnames = result.cnames + (result.unames.map { CName(origin, it) })
+            require(task, cnames.map { BuildTask.ResolveName(it) }) { classes, _ ->
+              val resolvedClasses = classes.map { it as CNameValue.ClassType }
+              toTypeValues(task, resolvedClasses.map { it.reality }) { realities ->
+                val zip = resolvedClasses.zip(realities)
+                try {
+                  doNext(result.whenDone(zip.map { (cls, realityType) ->
+                    TypeValue.ClassTypeDetail(cls.cname, cls.extendings, realityType)
+                  }))
                 } catch (e: Exception) {
                   throw markTaskFailed(task, e)
                 }
@@ -1232,6 +1384,24 @@ class BuildRunner(
           }
           rec(0)
         }
+        ActionRuleDefType ->
+          if (value is ActionRuleDefValue) {
+            onFinished(value)
+          } else {
+            onFinished(null)
+          }
+        BuildRuleDefType ->
+          if (value is BuildRuleDefValue) {
+            onFinished(value)
+          } else {
+            onFinished(null)
+          }
+        TypeType ->
+          if (value is TypeValue) {
+            onFinished(value)
+          } else {
+            onFinished(null)
+          }
       }
     }
   }

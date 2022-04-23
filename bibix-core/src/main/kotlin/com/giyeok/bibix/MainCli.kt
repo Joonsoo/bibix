@@ -3,7 +3,6 @@ package com.giyeok.bibix
 import com.giyeok.bibix.ast.BibixAst
 import com.giyeok.bibix.base.*
 import com.giyeok.bibix.buildscript.BuildGraph
-import com.giyeok.bibix.buildscript.CNameValue
 import com.giyeok.bibix.buildscript.NameLookupContext
 import com.giyeok.bibix.plugins.bibix.bibixPlugin
 import com.giyeok.bibix.plugins.curl.curlPlugin
