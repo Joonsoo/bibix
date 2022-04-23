@@ -76,7 +76,7 @@ data class ClassInstanceValue(val className: CName, val value: BibixValue) : Bib
   override fun toString(): String = "$className($value)"
 }
 
-data class DClassInstanceValue(val nameTokens: List<String>, val value: BibixValue) : BibixValue() {
+data class NClassInstanceValue(val nameTokens: List<String>, val value: BibixValue) : BibixValue() {
   constructor(name: String, value: BibixValue) : this(name.split('.'), value)
 
   override fun toString(): String = "${nameTokens.joinToString(".")}($value)"
@@ -84,10 +84,8 @@ data class DClassInstanceValue(val nameTokens: List<String>, val value: BibixVal
 
 object NoneValue : BibixValue()
 
-// TODO rule def value, type value
-
 fun BibixValue.stringify(): String = when (this) {
-  is DClassInstanceValue -> this.toString()
+  is NClassInstanceValue -> this.toString()
   is ClassInstanceValue -> this.toString()
   is BooleanValue -> value.toString()
   is DirectoryValue -> directory.path

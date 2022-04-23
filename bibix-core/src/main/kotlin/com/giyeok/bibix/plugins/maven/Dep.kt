@@ -97,7 +97,7 @@ class Dep {
     group: String,
     artifact: String,
     version: String
-  ): BibixValue = DClassInstanceValue(
+  ): BibixValue = NClassInstanceValue(
     "jvm.MavenDep",
     NamedTupleValue(
       "repo" to StringValue(repo),

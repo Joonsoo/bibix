@@ -889,7 +889,7 @@ class BuildRunner(
     dclassOrigin: SourceId?,
     onFinished: (BibixValue?) -> Unit,
   ) {
-    if (value is DClassInstanceValue) {
+    if (value is NClassInstanceValue) {
       // ClassInstanceValue로 변환
       checkNotNull(dclassOrigin)
       require(task, BuildTask.ResolveName(CName(dclassOrigin, value.nameTokens))) { resolved, _ ->
