@@ -1,8 +1,9 @@
 package com.giyeok.bibix.buildscript
 
 import com.giyeok.bibix.ast.BibixAst
-import com.giyeok.bibix.base.*
-import com.giyeok.bibix.runner.BibixIdProto
+import com.giyeok.bibix.base.CName
+import com.giyeok.bibix.base.SourceId
+import com.giyeok.bibix.runner.*
 import com.giyeok.bibix.utils.getOrNull
 import com.giyeok.bibix.utils.toKtList
 import java.io.File
@@ -147,6 +148,7 @@ class BuildGraph(
           registerName(
             cname.append(def.name()),
             CNameValue.BuildRuleValue(
+              cname.append(def.name()),
               def.params().toKtList().map { reifyParam(it, lookup) },
               lookup.findName(def.impl().targetName()),
               def.impl().className().tokens().mkString("."),
@@ -159,6 +161,7 @@ class BuildGraph(
           registerName(
             cname.append(def.name()),
             CNameValue.ActionRuleValue(
+              cname.append(def.name()),
               def.params().toKtList().map { reifyParam(it, lookup) },
               lookup.findName(def.impl().targetName()),
               def.impl().className().tokens().mkString("."),
@@ -220,6 +223,9 @@ class BuildGraph(
           listOf("file") -> FileType
           listOf("directory") -> DirectoryType
           listOf("path") -> PathType
+          listOf("buildrule") -> BuildRuleDefType
+          listOf("actionrule") -> ActionRuleDefType
+          listOf("type") -> TypeType
           else -> CustomType(lookup.findName(name))
         }
       }

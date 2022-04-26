@@ -5,7 +5,6 @@ import com.giyeok.bibix.runner.*
 import com.giyeok.bibix.runner.BibixIdProto.ArgsMap
 import com.google.protobuf.ByteString
 import com.google.protobuf.kotlin.get
-import java.io.File
 
 fun ByteString.toHexString(): String {
   val chars = "0123456789abcdef"
@@ -47,7 +46,7 @@ fun BibixValue.toProto(): BibixValueProto.BibixValue = when (val value = this) {
   }
   is NamedTupleValue -> bibixValue {
     this.namedTupleValue = namedTupleValue {
-      this.values.addAll(value.values.map {
+      this.values.addAll(value.pairs.map {
         namedValue {
           this.name = it.first
           this.value = it.second.toProto()
@@ -61,8 +60,17 @@ fun BibixValue.toProto(): BibixValueProto.BibixValue = when (val value = this) {
       this.value = value.value.toProto()
     }
   }
-  is DClassInstanceValue -> throw AssertionError("DClassInstnaceValue")
+  is NClassInstanceValue -> throw AssertionError("N(ame)ClassInstnaceValue cannot be marshalled")
   is NoneValue -> bibixValue { }
+  is ActionRuleDefValue ->
+    // TODO
+    bibixValue {}
+  is BuildRuleDefValue ->
+    // TODO
+    bibixValue {}
+  is TypeValue ->
+    // TODO
+    bibixValue {}
 }
 
 fun Map<String, BibixValue>.toArgsMap(): ArgsMap {

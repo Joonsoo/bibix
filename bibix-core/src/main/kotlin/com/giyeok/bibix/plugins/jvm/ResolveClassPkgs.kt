@@ -26,7 +26,7 @@ class ResolveClassPkgs {
 
         return when (value.value.className.tokens) {
           listOf("MavenDep") -> {
-            val (repo, group, artifact, version) = (value.value.value as NamedTupleValue).values
+            val (repo, group, artifact, version) = (value.value.value as NamedTupleValue).pairs
             MavenDep(
               (repo.second as StringValue).value,
               (group.second as StringValue).value,
@@ -35,10 +35,10 @@ class ResolveClassPkgs {
             )
           }
           listOf("LocalBuilt") -> {
-            LocalBuilt(((value.value.value as NamedTupleValue).values[0].second as StringValue).value)
+            LocalBuilt(((value.value.value as NamedTupleValue).pairs[0].second as StringValue).value)
           }
           listOf("LocalLib") -> {
-            LocalLib(((value.value.value as NamedTupleValue).values[0].second as PathValue).path)
+            LocalLib(((value.value.value as NamedTupleValue).pairs[0].second as PathValue).path)
           }
           else -> TODO()
         }
@@ -61,17 +61,13 @@ class ResolveClassPkgs {
   fun bibixToKt(value: BibixValue): ClassPkg {
     value as ClassInstanceValue
     check(value.className.tokens == listOf("ClassPkg"))
-    val (origin, cps, deps) = (value.value as NamedTupleValue).values
+    val (origin, cps, deps) = (value.value as NamedTupleValue).pairs
 
     return ClassPkg(
       ClassOrigin.fromBibix(origin.second),
       (cps.second as SetValue).values.map { (it as PathValue).path },
       (deps.second as SetValue).values.map { bibixToKt(it) }
     )
-  }
-
-  fun ktToBibix(value: ClassPkg): ClassInstanceValue {
-    TODO()
   }
 
   fun build(context: BuildContext): BibixValue {

@@ -3,7 +3,6 @@ package com.giyeok.bibix
 import com.giyeok.bibix.ast.BibixAst
 import com.giyeok.bibix.base.*
 import com.giyeok.bibix.buildscript.BuildGraph
-import com.giyeok.bibix.buildscript.CNameValue
 import com.giyeok.bibix.buildscript.NameLookupContext
 import com.giyeok.bibix.plugins.bibix.bibixPlugin
 import com.giyeok.bibix.plugins.curl.curlPlugin
@@ -12,7 +11,10 @@ import com.giyeok.bibix.plugins.jvm.jvmPlugin
 import com.giyeok.bibix.plugins.maven.mavenPlugin
 import com.giyeok.bibix.plugins.root.rootScript
 import com.giyeok.bibix.runner.*
-import com.giyeok.bibix.utils.ThreadPool
+import com.giyeok.bibix.runner.BuildRunner
+import com.giyeok.bibix.runner.RoutinesQueueCoroutineDispatcher
+import com.giyeok.bibix.runner.RoutineManager
+import com.giyeok.bibix.runner.ThreadPool
 import com.giyeok.bibix.utils.toKtList
 import java.io.File
 import java.time.Duration
@@ -71,6 +73,10 @@ object MainCli {
     val defs = ast.defs().toKtList()
     buildGraph.addDefs(MainSourceId, defs, repo.mainDirectory)
 
+    val queueDispatcher = RoutinesQueueCoroutineDispatcher()
+    val routineManager = RoutineManager(buildGraph, queueDispatcher)
+    val threadPool = ThreadPool(buildGraph, routineManager, repo.runConfig.maxThreads)
+
     val buildRunner = BuildRunner(
       buildGraph,
       rootScript,
@@ -82,20 +88,20 @@ object MainCli {
         "bibix" to bibixPlugin,
       ),
       repo,
+      routineManager,
+      threadPool,
       buildArgsMap,
       ListValue(actionArgs.map { StringValue(it) }),
     )
-    buildRunner.runTargets(targets)
-
-    val threadPool = ThreadPool<BuildTaskRoutineId>(repo.runConfig.maxThreads)
+    buildRunner.runTargets("build", targets)
 
     while (true) {
-      val nextTask = buildRunner.routinesManager.routinesQueue.poll(10, TimeUnit.SECONDS)
+      val nextTask = queueDispatcher.routinesQueue.poll(10, TimeUnit.SECONDS)
       if (nextTask != null) {
         when (nextTask) {
-          is BuildTaskRoutinesManager.NextRoutine.BuildTaskRoutine ->
+          is RoutinesQueueCoroutineDispatcher.NextRoutine.BuildTaskRoutine ->
             threadPool.execute(nextTask.routineId, nextTask.block)
-          BuildTaskRoutinesManager.NextRoutine.BuildFinished ->
+          is RoutinesQueueCoroutineDispatcher.NextRoutine.BuildFinished ->
             break
         }
       }
@@ -106,7 +112,7 @@ object MainCli {
       println("$target = ${buildGraph.names.getValue(target)}")
     }
     if (useDebuggingMode) {
-      (buildRunner.routinesLogger as? BuildTaskRoutineLoggerImpl)?.printLogs(buildGraph)
+      (buildRunner.routineLogger as? BuildTaskRoutineLoggerImpl)?.printLogs(buildGraph)
 
       val endTime = Instant.now()
       println("Build finished in ${Duration.between(startTime, endTime)}")
