@@ -42,10 +42,14 @@ class Coercer(val buildGraph: BuildGraph, val runner: BuildRunner) {
       AnyType -> value
       BooleanType -> when (value) {
         is BooleanValue -> value
+        is ClassInstanceValue -> tryCastClassInstance(task, origin, value, type, dclassOrigin)
         else -> null
       }
       StringType -> when (value) {
         is StringValue -> value
+        is ClassInstanceValue ->
+          tryCastClassInstance(task, origin, value, type, dclassOrigin)
+            ?: StringValue(value.stringify())
         else -> StringValue(value.stringify())
       }
       PathType -> when (value) {
@@ -53,9 +57,7 @@ class Coercer(val buildGraph: BuildGraph, val runner: BuildRunner) {
         is FileValue -> PathValue(value.file)
         is DirectoryValue -> PathValue(value.directory)
         is StringValue -> PathValue(fileFromString(origin, value.value))
-        is ClassInstanceValue ->
-          // TODO cast 규칙이 있으면 먼저 시도해야할듯? -> 그런데 지금은 문법에서 class to class cast만 되는것같은데?
-          coerce(task, origin, value.value, type, dclassOrigin)
+        is ClassInstanceValue -> tryCastClassInstance(task, origin, value, type, dclassOrigin)
         else -> null
       }
       FileType -> when (value) {
@@ -70,6 +72,7 @@ class Coercer(val buildGraph: BuildGraph, val runner: BuildRunner) {
           check(file.exists() && file.isFile)
           FileValue(file)
         }
+        is ClassInstanceValue -> tryCastClassInstance(task, origin, value, type, dclassOrigin)
         else -> null
       }
       DirectoryType -> when (value) {
@@ -84,45 +87,54 @@ class Coercer(val buildGraph: BuildGraph, val runner: BuildRunner) {
           check(file.exists() && file.isDirectory)
           DirectoryValue(file)
         }
+        is ClassInstanceValue -> tryCastClassInstance(task, origin, value, type, dclassOrigin)
         else -> null
       }
       is CustomType -> {
         when (val actualType = runner.runTask(task, BuildTask.ResolveName(type.name))) {
-          is CNameValue.ClassType -> when (value) {
-            is ClassInstanceValue -> if (actualType.cname == value.className) {
-              coerce(task, origin, value.value, actualType.reality, dclassOrigin)?.let {
+          is CNameValue.ClassType ->
+            when (value) {
+              is ClassInstanceValue ->
+                if (actualType.cname == value.className) {
+                  coerce(task, origin, value.value, actualType.reality, dclassOrigin)?.let {
+                    ClassInstanceValue(actualType.cname, it)
+                  }
+                } else {
+                  val tryCast = tryCastClassInstance(task, origin, value, type, dclassOrigin)
+                  if (tryCast != null) tryCast else {
+                    val valueClassType = runner.runTask(
+                      task,
+                      BuildTask.ResolveName(value.className)
+                    ) as CNameValue.ClassType
+                    val castExprId = valueClassType.casts[CustomType(actualType.cname)]
+                    suspend fun tryCoerceToReality() =
+                      coerce(task, origin, value, actualType.reality, dclassOrigin)?.let {
+                        ClassInstanceValue(actualType.cname, it)
+                      }
+                    if (castExprId != null) {
+                      val castExprGraph = buildGraph.exprGraphs[castExprId]
+                      val castResult = runner.runTask(
+                        task,
+                        BuildTask.EvalExpr(origin, castExprId, castExprGraph.mainNode, value)
+                      )
+                      coerce(task, origin, castResult as BibixValue, type, dclassOrigin)
+                        ?: tryCoerceToReality()
+                    } else {
+                      tryCoerceToReality()
+                    }
+                  }
+                }
+              else -> coerce(task, origin, value, actualType.reality, dclassOrigin)?.let {
                 ClassInstanceValue(actualType.cname, it)
               }
-            } else {
-              val valueClassType =
-                runner.runTask(task, BuildTask.ResolveName(value.className)) as CNameValue.ClassType
-              val castExprId = valueClassType.casts[CustomType(actualType.cname)]
-              suspend fun tryCoerceToReality() =
-                coerce(task, origin, value, actualType.reality, dclassOrigin)?.let {
-                  ClassInstanceValue(actualType.cname, it)
-                }
-              if (castExprId != null) {
-                val castExprGraph = buildGraph.exprGraphs[castExprId]
-                val castResult = runner.runTask(
-                  task,
-                  BuildTask.EvalExpr(origin, castExprId, castExprGraph.mainNode, value)
-                )
-                coerce(task, origin, castResult as BibixValue, type, dclassOrigin)
-                  ?: tryCoerceToReality()
-              } else {
-                tryCoerceToReality()
-              }
             }
-            else -> coerce(task, origin, value, actualType.reality, dclassOrigin)?.let {
-              ClassInstanceValue(actualType.cname, it)
-            }
-          }
           is CNameValue.EnumType -> when (value) {
             is EnumValue -> if (actualType.cname == value.enumTypeName) value else null
             is StringValue ->
               if (actualType.values.contains(value.value)) {
                 EnumValue(actualType.cname, value.value)
               } else null
+            is ClassInstanceValue -> tryCastClassInstance(task, origin, value, type, dclassOrigin)
             else -> null
           }
           else -> null
@@ -136,6 +148,7 @@ class Coercer(val buildGraph: BuildGraph, val runner: BuildRunner) {
           is SetValue -> withNoNull(value.values.map {
             coerce(task, origin, it, type.elemType, dclassOrigin)
           }) { ListValue(it) }
+          is ClassInstanceValue -> tryCastClassInstance(task, origin, value, type, dclassOrigin)
           else -> null
         }
       }
@@ -147,10 +160,15 @@ class Coercer(val buildGraph: BuildGraph, val runner: BuildRunner) {
           is SetValue -> withNoNull(value.values.map {
             coerce(task, origin, it, type.elemType, dclassOrigin)
           }) { SetValue(it) }
+          is ClassInstanceValue -> tryCastClassInstance(task, origin, value, type, dclassOrigin)
           else -> null
         }
       }
       is TupleType -> {
+        suspend fun ifElse() = if (type.elemTypes.size != 1) null else {
+          // 길이가 1인 tuple이면 그냥 맞춰서 반환해주기
+          coerce(task, origin, value, type.elemTypes[0], dclassOrigin)?.let { TupleValue(it) }
+        }
         when (value) {
           is TupleValue -> {
             check(type.elemTypes.size == value.values.size)
@@ -163,15 +181,19 @@ class Coercer(val buildGraph: BuildGraph, val runner: BuildRunner) {
             withNoNull(value.values().zip(type.elemTypes)
               .map { coerce(task, origin, it.first, it.second, dclassOrigin) }) { TupleValue(it) }
           }
-          else -> {
-            if (type.elemTypes.size != 1) null else {
-              // 길이가 1인 tuple이면 그냥 맞춰서 반환해주기
-              coerce(task, origin, value, type.elemTypes[0], dclassOrigin)?.let { TupleValue(it) }
-            }
-          }
+          is ClassInstanceValue ->
+            tryCastClassInstance(task, origin, value, type, dclassOrigin) ?: ifElse()
+          else -> ifElse()
         }
       }
       is NamedTupleType -> {
+        suspend fun ifElse() = if (type.pairs.size != 1) null else {
+          // 길이가 1인 named tuple이면 그냥 맞춰서 반환해주기
+          coerce(task, origin, value, type.pairs[0].second, dclassOrigin)?.let {
+            NamedTupleValue(type.pairs[0].first to it)
+          }
+        }
+
         when (value) {
           is NamedTupleValue -> {
             check(type.pairs.size == value.pairs.size)
@@ -187,14 +209,9 @@ class Coercer(val buildGraph: BuildGraph, val runner: BuildRunner) {
               NamedTupleValue(type.names().zip(it))
             }
           }
-          else -> {
-            if (type.pairs.size != 1) null else {
-              // 길이가 1인 named tuple이면 그냥 맞춰서 반환해주기
-              coerce(task, origin, value, type.pairs[0].second, dclassOrigin)?.let {
-                NamedTupleValue(type.pairs[0].first to it)
-              }
-            }
-          }
+          is ClassInstanceValue ->
+            tryCastClassInstance(task, origin, value, type, dclassOrigin) ?: ifElse()
+          else -> ifElse()
         }
       }
       is UnionType -> type.types.firstNotNullOf { coerce(task, origin, value, it, dclassOrigin) }
@@ -202,6 +219,24 @@ class Coercer(val buildGraph: BuildGraph, val runner: BuildRunner) {
       BuildRuleDefType -> if (value is BuildRuleDefValue) value else null
       TypeType -> if (value is TypeValue) value else null
     }
+  }
+
+  private suspend fun tryCastClassInstance(
+    task: BuildTask,
+    origin: SourceId,
+    value: ClassInstanceValue,
+    type: BibixType,
+    dclassOrigin: SourceId?
+  ): BibixValue? {
+    val classType =
+      runner.runTask(task, BuildTask.ResolveName(value.className)) as CNameValue.ClassType
+    val castExprId = classType.casts[type] ?: return null
+    val castExprGraph = buildGraph.exprGraphs[castExprId]
+    val castResult = runner.runTask(
+      task,
+      BuildTask.EvalExpr(origin, castExprId, castExprGraph.mainNode, value)
+    )
+    return coerce(task, origin, castResult as BibixValue, type, dclassOrigin)
   }
 
   suspend fun toBibixValue(task: BuildTask, value: Any): BibixValue = when (value) {

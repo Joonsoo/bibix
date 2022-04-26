@@ -51,9 +51,9 @@ class GenRuleImplTemplateKt {
     TypeValue.AnyTypeValue -> expr
     TypeValue.BooleanTypeValue -> "BooleanValue($expr)"
     TypeValue.StringTypeValue -> "StringValue($expr)"
-    TypeValue.PathTypeValue -> "PathValue(File($expr))"
-    TypeValue.FileTypeValue -> "FileValue(File($expr))"
-    TypeValue.DirectoryTypeValue -> "DirectoryValue(File($expr))"
+    TypeValue.PathTypeValue -> "PathValue($expr)"
+    TypeValue.FileTypeValue -> "FileValue($expr)"
+    TypeValue.DirectoryTypeValue -> "DirectoryValue($expr)"
     is TypeValue.ClassTypeValue -> "$expr.toBibix()"
     is TypeValue.EnumTypeValue -> TODO()
     is TypeValue.ListTypeValue ->
@@ -82,7 +82,7 @@ class GenRuleImplTemplateKt {
     p.println("    companion object {")
     p.println("      fun fromBibix(value: BibixValue): $clsName {")
     p.println("        value as ClassInstanceValue")
-    p.println("        check(value.className.tokens == listOf(\"${cls.className.tokens.joinToString { "\"$it\"" }}\"))")
+    p.println("        check(value.className.tokens == listOf(${cls.className.tokens.joinToString { "\"$it\"" }}))")
     when (cls.bodyType) {
       is TypeValue.NamedTupleTypeValue -> {
         p.println("        val body = value.value as NamedTupleValue")
@@ -182,9 +182,11 @@ class GenRuleImplTemplateKt {
           implClassPrinter.println("package ${ruleClassPkg.joinToString(".")}")
         }
         implClassPrinter.println()
-        // TODO imports
+        implClassPrinter.println("import com.giyeok.bibix.base.*")
+        implClassPrinter.println("import java.io.File")
+        implClassPrinter.println()
         implClassPrinter.println("class $ruleClassName(val impl: $implInterfaceClassName) {")
-        implClassPrinter.println("  constructor() : this($implClassName)")
+        implClassPrinter.println("  constructor() : this($implClassName())")
         types.forEach { type ->
           implClassPrinter.println()
           when (type) {
@@ -207,6 +209,10 @@ class GenRuleImplTemplateKt {
         if (implInterfaceClassPkg.isNotEmpty()) {
           implInterfacePrinter.println("package ${implInterfaceClassPkg.joinToString(".")}")
         }
+        implInterfacePrinter.println()
+        implInterfacePrinter.println("import com.giyeok.bibix.base.*")
+        implInterfacePrinter.println("import java.io.File")
+        implInterfacePrinter.println("import ${ruleName.joinToString(".")}.*")
         implInterfacePrinter.println()
         implInterfacePrinter.println("interface $implInterfaceClassName {")
         rules.forEach { rule ->

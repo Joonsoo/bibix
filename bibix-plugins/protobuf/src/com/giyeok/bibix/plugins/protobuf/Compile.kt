@@ -20,7 +20,6 @@ class Compile(val impl: CompileInterface) {
         return ProtoSchema(schemaFiles, includes)
       }
     }
-
     fun toBibix() = NClassInstanceValue(
       "protobuf.ProtoSchema",
       NamedTupleValue(
@@ -37,21 +36,18 @@ class Compile(val impl: CompileInterface) {
   }
 
   fun schema(context: BuildContext): BuildRuleReturn {
-    val srcs =
-      (context.arguments.getValue("srcs") as SetValue).values.map { (it as FileValue).file }
-    val deps =
-      (context.arguments.getValue("deps") as SetValue).values.map { ProtoSchema.fromBibix(it) }
+    val srcs = (context.arguments.getValue("srcs") as SetValue).values.map { (it as FileValue).file }
+    val deps = (context.arguments.getValue("deps") as SetValue).values.map { ProtoSchema.fromBibix(it) }
     val protocPath = (context.arguments.getValue("protocPath") as DirectoryValue).directory
-    return impl.schema(context, srcs, deps, protocPath)
+    val outputFileName = context.arguments["outputFileName"]?.let { arg -> (arg as StringValue).value }
+    return impl.schema(context, srcs, deps, protocPath, outputFileName)
   }
 
   fun protoset(context: BuildContext): BuildRuleReturn {
     val schema = ProtoSchema.fromBibix(context.arguments.getValue("schema"))
     val os = OS.valueOf((context.arguments.getValue("os") as StringValue).value)
     val protocPath = (context.arguments.getValue("protocPath") as DirectoryValue).directory
-    val outputFileName =
-      context.arguments["outputFileName"]?.let { arg -> (arg as StringValue).value }
-    return impl.protoset(context, schema, os, protocPath, outputFileName)
+    return impl.protoset(context, schema, os, protocPath)
   }
 
   fun cpp(context: BuildContext): BuildRuleReturn {
@@ -87,6 +83,13 @@ class Compile(val impl: CompileInterface) {
     val os = OS.valueOf((context.arguments.getValue("os") as StringValue).value)
     val protocPath = (context.arguments.getValue("protocPath") as DirectoryValue).directory
     return impl.kotlin(context, schema, os, protocPath)
+  }
+
+  fun objc(context: BuildContext): BuildRuleReturn {
+    val schema = ProtoSchema.fromBibix(context.arguments.getValue("schema"))
+    val os = OS.valueOf((context.arguments.getValue("os") as StringValue).value)
+    val protocPath = (context.arguments.getValue("protocPath") as DirectoryValue).directory
+    return impl.objc(context, schema, os, protocPath)
   }
 
   fun php(context: BuildContext): BuildRuleReturn {

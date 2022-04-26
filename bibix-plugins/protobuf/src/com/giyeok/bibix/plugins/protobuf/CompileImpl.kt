@@ -136,8 +136,13 @@ class CompileImpl : CompileInterface {
     return BuildRuleReturn.value(getFiles(destDirectory))
   }
 
-  fun objc(context: BuildContext): BibixValue {
-    TODO()
+  override fun objc(
+    context: BuildContext,
+    schema: ProtoSchema,
+    os: Compile.OS,
+    protocPath: File
+  ): BuildRuleReturn {
+    TODO("Not yet implemented")
   }
 
   override fun php(

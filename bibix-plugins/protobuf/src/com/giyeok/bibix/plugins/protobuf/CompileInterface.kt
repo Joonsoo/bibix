@@ -1,10 +1,8 @@
 package com.giyeok.bibix.plugins.protobuf
 
-import com.giyeok.bibix.base.BuildContext
-import com.giyeok.bibix.base.BuildRuleReturn
-import com.giyeok.bibix.plugins.protobuf.Compile.OS
-import com.giyeok.bibix.plugins.protobuf.Compile.ProtoSchema
+import com.giyeok.bibix.base.*
 import java.io.File
+import com.giyeok.bibix.plugins.protobuf.Compile.*
 
 interface CompileInterface {
 
@@ -52,6 +50,13 @@ interface CompileInterface {
   ): BuildRuleReturn
 
   fun kotlin(
+    context: BuildContext,
+    schema: ProtoSchema,
+    os: OS,
+    protocPath: File,
+  ): BuildRuleReturn
+
+  fun objc(
     context: BuildContext,
     schema: ProtoSchema,
     os: OS,
