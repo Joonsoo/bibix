@@ -5,7 +5,6 @@ import com.giyeok.bibix.base.CName
 import com.giyeok.bibix.base.SourceId
 
 sealed class CNameValue {
-  data class LoadedImport(val sourceId: SourceId) : CNameValue() // not by BuildGraph
   data class DeferredImport(val deferredImportId: Int) : CNameValue()
   data class ExprValue(val exprGraphId: Int) : CNameValue()
   data class EvaluatedValue(val value: BibixValue) : CNameValue() // not by BuildGraph
@@ -13,10 +12,9 @@ sealed class CNameValue {
 
   data class ClassType(
     val cname: CName,
-    val typeParams: List<Pair<String, BibixType>>,
     val extendings: List<CName>,
     val reality: BibixType,
-    val casts: Map<CName, Int>,
+    val casts: Map<BibixType, Int>,
   ) : CNameValue()
 
   data class EnumType(val cname: CName, val values: List<String>) : CNameValue()

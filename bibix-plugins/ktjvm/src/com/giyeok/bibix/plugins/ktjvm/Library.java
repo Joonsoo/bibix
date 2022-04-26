@@ -2,6 +2,7 @@ package com.giyeok.bibix.plugins.ktjvm;
 
 import com.giyeok.bibix.base.*;
 import org.jetbrains.kotlin.cli.common.CLITool;
+import org.jetbrains.kotlin.cli.common.ExitCode;
 import org.jetbrains.kotlin.cli.jvm.K2JVMCompiler;
 
 import java.io.File;
@@ -52,7 +53,10 @@ public class Library {
             // args.add("-no-reflect");
 
             // System.out.println("** ktjvm args: " + args);
-            CLITool.doMain(new K2JVMCompiler(), args.toArray(new String[0]));
+            ExitCode exitCode = CLITool.doMainNoExit(new K2JVMCompiler(), args.toArray(new String[0]));
+            if (exitCode != ExitCode.OK) {
+                throw new IllegalStateException("Failed to compile kotlin sources");
+            }
         }
 
         // ClassPkg = (origin: ClassOrigin, cps: set<path>, deps: set<ClassPkg>)

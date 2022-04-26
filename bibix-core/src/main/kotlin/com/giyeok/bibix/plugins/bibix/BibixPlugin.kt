@@ -20,12 +20,16 @@ val bibixPlugin = BibixPlugin.fromScript(
       tag: string = bibixVersion
     ): jvm.ClassPkg = native:com.giyeok.bibix.plugins.bibix.Plugins
     
+    class RuleImplTemplate = (implClass: file, interfaceClass: file) {
+      as list<file> = [this.implClass, this.interfaceClass]
+    }
+    
     def genRuleImplTemplateKt(
       rules: set<buildrule>,
       types: set<{type, (type, string)}>,
       implName: string,
       implInterfaceName: string,
-    ): file = native:com.giyeok.bibix.plugins.bibix.GenRuleImplTemplateKt
+    ): RuleImplTemplate = native:com.giyeok.bibix.plugins.bibix.GenRuleImplTemplateKt
   """.trimIndent(),
   Classes(
     Base::class.java,

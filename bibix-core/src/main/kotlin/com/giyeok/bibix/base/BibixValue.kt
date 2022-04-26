@@ -144,6 +144,7 @@ sealed class TypeValue : BibixValue() {
 
   data class ClassTypeDetail(
     val className: CName,
+    val relativeName: List<String>,
     val extendings: List<CName>,
     val bodyType: TypeValue
   ) {

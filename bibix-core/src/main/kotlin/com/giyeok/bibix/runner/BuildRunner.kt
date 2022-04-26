@@ -35,6 +35,9 @@ class BuildRunner(
   private fun getProgressIndicator(): ProgressIndicator =
     progressIndicatorContainer.ofCurrentThread()
 
+  private val imported = mutableMapOf<CNameValue.DeferredImport, SourceId>()
+  private val resolvedNames = mutableMapOf<CName, BibixValue>()
+
   private fun addSourceId(sourceId: BibixIdProto.SourceId): SourceId = when (sourceId.sourceCase) {
     BibixIdProto.SourceId.SourceCase.ROOT_SOURCE -> BibixRootSourceId
     BibixIdProto.SourceId.SourceCase.MAIN_SOURCE -> MainSourceId
@@ -46,6 +49,8 @@ class BuildRunner(
     }
     else -> TODO()
   }
+
+  fun getResolvedNameValue(name: CName) = synchronized(this) { resolvedNames.getValue(name) }
 
   fun runTargets(buildRequestName: String, targets: Collection<CName>) {
     val rootTask = BuildTask.BuildRequest(buildRequestName)
@@ -97,37 +102,20 @@ class BuildRunner(
         }
         parent = parent.parent()
       }
-      val parentValue = buildGraph.names.getValue(parent)
-      if (parentValue is CNameValue.DeferredImport) {
-        val importedSourceId =
-          runTask(task, BuildTask.ResolveImport(task.cname.sourceId, parentValue.deferredImportId))
-        // import가 정상적으로 완료됐으면 import된 스크립트의 모든 element들은 buildGraph에 들어가 있어야 함
-        when (importedSourceId) {
-          is SourceId -> {
-            synchronized(this) {
-              buildGraph.replaceValue(parent, CNameValue.LoadedImport(importedSourceId))
-            }
-            runTask(task, BuildTask.ResolveName(CName(importedSourceId, task.cname.tokens.drop(1))))
-          }
-          is CNameValue.NamespaceValue -> {
-            runTask(
-              task,
-              BuildTask.ResolveName(importedSourceId.cname.append(task.cname.tokens.drop(1)))
-            )
-          }
-          // import all일 때는 SourceId, import from일 때는 namespace value.
-          // import from일 때 namespace 외에 다른 거일 수도 있나?
-          else -> TODO()
-        }
-      } else {
-        parentValue as CNameValue.LoadedImport
-        runTask(task, BuildTask.ResolveName(CName(parentValue.sourceId, task.cname.tokens.drop(1))))
+      val parentValue = buildGraph.names.getValue(parent) as CNameValue.DeferredImport
+      // import가 정상적으로 완료됐으면 import된 스크립트의 모든 element들은 buildGraph에 들어가 있어야 함
+      when (val imported = loadImport(task, parentValue)) {
+        is SourceId ->
+          runTask(task, BuildTask.ResolveName(CName(imported, task.cname.tokens.drop(1))))
+        is CNameValue.NamespaceValue ->
+          runTask(task, BuildTask.ResolveName(imported.cname.append(task.cname.tokens.drop(1))))
+        // import all일 때는 SourceId, import from일 때는 namespace value.
+        // import from일 때 namespace 외에 다른 거일 수도 있나?
+        else -> TODO()
       }
     } else {
       when (value) {
-        is CNameValue.LoadedImport -> value
-        is CNameValue.DeferredImport ->
-          runTask(task, BuildTask.ResolveImport(task.cname.sourceId, value.deferredImportId))
+        is CNameValue.DeferredImport -> loadImport(task, value)
         is CNameValue.ExprValue -> {
           val evalTask = BuildTask.EvalExpr(
             task.cname.sourceId,
@@ -135,10 +123,10 @@ class BuildRunner(
             buildGraph.exprGraphs[value.exprGraphId].mainNode,
             null
           )
-          val evalResult = runTask(task, evalTask)
-          buildGraph.replaceValue(task.cname, CNameValue.EvaluatedValue(evalResult as BibixValue))
+          val evalResult = runTask(task, evalTask) as BibixValue
           // CallExpr 실행시 evalTask -> target id 저장해두기
           synchronized(this) {
+            resolvedNames[task.cname] = evalResult
             taskObjectIds[evalTask]?.let { objectId ->
               taskObjectIds[task] = objectId
               // main source에서 정의한 이름이면 링크 만들기
@@ -299,6 +287,25 @@ class BuildRunner(
           runTask(task, BuildTask.CallAction(task.cname.sourceId, value.exprGraphId))
       }
     }
+  }
+
+  private suspend fun loadImport(
+    task: BuildTask.ResolveName,
+    value: CNameValue.DeferredImport
+  ): Any {
+    val resolvedImport = synchronized(this) { imported[value] } ?: runTask(
+      task,
+      BuildTask.ResolveImport(task.cname.sourceId, value.deferredImportId)
+    )
+    when (resolvedImport) {
+      is SourceId -> synchronized(this) {
+        imported[value] = resolvedImport
+      }
+      is CNameValue.NamespaceValue -> synchronized(this) {
+        imported[value] = resolvedImport.cname.sourceId
+      }
+    }
+    return resolvedImport
   }
 
   private suspend fun callAction(task: BuildTask.CallAction): Any {
@@ -505,6 +512,15 @@ class BuildRunner(
       is ExprNode.BooleanLiteralNode -> BooleanValue(exprNode.value)
       is ExprNode.ClassThisRef -> checkNotNull(task.thisValue)
       ExprNode.ActionArgsRef -> actionArgs!!
+      is ExprNode.TypeCastNode -> {
+        val targetResult = runTask(
+          task,
+          BuildTask.EvalExpr(task.origin, task.exprGraphId, exprNode.value, task.thisValue)
+        )
+        val targetValue = coercer.toBibixValue(task, targetResult)
+        coercer.coerce(task, task.origin, targetValue, exprNode.type, null)
+          ?: throw BibixBuildException(task, "Failed to cast")
+      }
     }
   }
 
@@ -760,8 +776,12 @@ class BuildRunner(
               resolvedClasses.zip(realities)
             }) { zip ->
               val classDetails = zip.map { (cls, realityType) ->
-                // TODO origin 입장에서 cls를 가리킬 때 어떻게 가리키면 되는지 넣어줘야 함
-                TypeValue.ClassTypeDetail(cls.cname, cls.extendings, realityType)
+                // relativeName에 origin 입장에서 cls를 어떻게 가리킬 수 있는지 지정
+                // TODO from ** import ** 를 했을 경우에도 잘 동작하나? 확인 필요
+                val importSource = imported.entries.find { it.value == cls.cname.sourceId }!!
+                val importer = buildGraph.names.entries.find { it.value == importSource.key }!!
+                val relativeName = listOf(importer.key.tokens.first()) + cls.cname.tokens
+                TypeValue.ClassTypeDetail(cls.cname, relativeName, cls.extendings, realityType)
               }
               nextCall(result.whenDone, classDetails)
             }

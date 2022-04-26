@@ -110,22 +110,16 @@ class BuildGraph(
         }
         is BibixAst.ClassDef -> {
           val className = cname.append(def.name())
-          val typeParams = def.typeParams().toKtList().map { tp ->
-            tp.name()!! to traverseTypeExpr(tp.typ(), lookup)
-          }
           val extendings = def.extendings().toKtList().map { ex -> lookup.findName(ex.name()) }
           val reality = traverseTypeExpr(def.reality(), lookup)
           val casts = def.body().toKtList().filterIsInstance<BibixAst.ClassCastDef>()
             .associate { cast ->
-              lookup.findName(cast.castTo()) to
+              traverseTypeExpr(cast.castTo(), lookup) to
                 exprGraphs.register(
                   traverseExpr(cast.expr(), lookup, className)
                 )
             }
-          registerName(
-            className,
-            CNameValue.ClassType(className, typeParams, extendings, reality, casts)
-          )
+          registerName(className, CNameValue.ClassType(className, extendings, reality, casts))
         }
         is BibixAst.EnumDef -> {
           val enumName = cname.append(def.name())
@@ -212,7 +206,7 @@ class BuildGraph(
     expr: BibixAst.Expr,
     lookup: NameLookupContext,
     thisClassTypeName: CName? = null
-  ): ExprGraph = ExprGraph.fromExpr(expr, lookup, thisClassTypeName)
+  ): ExprGraph = ExprGraph.fromExpr(expr, lookup, thisClassTypeName, this::traverseTypeExpr)
 
   private fun traverseTypeExpr(typeExpr: BibixAst.TypeExpr, lookup: NameLookupContext): BibixType =
     when (typeExpr) {
@@ -260,10 +254,6 @@ class BuildGraph(
     param.optional(),
     traverseTypeExpr(param.typ().getOrNull()!!, lookup),
     param.defaultValue().getOrNull()?.let { exprGraphs.register(traverseExpr(it, lookup)) })
-
-  fun replaceValue(cname: CName, result: CNameValue) {
-    names[cname] = result
-  }
 }
 
 sealed class DeferredImportDef {

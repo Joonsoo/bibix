@@ -24,6 +24,7 @@ class Coercer(val buildGraph: BuildGraph, val runner: BuildRunner) {
     origin: SourceId,
     value: BibixValue,
     type: BibixType,
+    // value가 NClassInstanceValue일 수 있을 때 그 이름을 어디서 찾아야되는지
     dclassOrigin: SourceId?,
   ): BibixValue? = if (value is NClassInstanceValue) {
     // ClassInstanceValue로 변환
@@ -95,7 +96,7 @@ class Coercer(val buildGraph: BuildGraph, val runner: BuildRunner) {
             } else {
               val valueClassType =
                 runner.runTask(task, BuildTask.ResolveName(value.className)) as CNameValue.ClassType
-              val castExprId = valueClassType.casts[actualType.cname]
+              val castExprId = valueClassType.casts[CustomType(actualType.cname)]
               suspend fun tryCoerceToReality() =
                 coerce(task, origin, value, actualType.reality, dclassOrigin)?.let {
                   ClassInstanceValue(actualType.cname, it)

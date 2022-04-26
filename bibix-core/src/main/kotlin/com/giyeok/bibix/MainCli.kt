@@ -109,7 +109,7 @@ object MainCli {
     }
 
     targets.forEach { target ->
-      println("$target = ${buildGraph.names.getValue(target)}")
+      println("$target = ${buildRunner.getResolvedNameValue(target)}")
     }
     if (useDebuggingMode) {
       (buildRunner.routineLogger as? BuildTaskRoutineLoggerImpl)?.printLogs(buildGraph)
