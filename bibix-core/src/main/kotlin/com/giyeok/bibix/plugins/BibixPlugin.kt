@@ -1,7 +1,6 @@
-package com.giyeok.bibix.runner
+package com.giyeok.bibix.plugins
 
 import com.giyeok.bibix.ast.BibixAst
-import com.giyeok.bibix.plugins.Classes
 import com.giyeok.bibix.utils.toKtList
 
 data class BibixPlugin(

@@ -7,11 +7,13 @@ import com.giyeok.bibix.buildscript.ExprNode
 import com.giyeok.bibix.buildscript.ImportSource
 
 sealed class BuildTask {
+  data class BuildRequest(val buildRequestName: String) : BuildTask()
+
   data class ResolveName(val cname: CName) : BuildTask()
 
   data class CallAction(val origin: SourceId, val exprGraphId: Int) : BuildTask()
 
-  data class ExprEval(
+  data class EvalExpr(
     val origin: SourceId,
     val exprGraphId: Int,
     val exprNode: ExprNode,

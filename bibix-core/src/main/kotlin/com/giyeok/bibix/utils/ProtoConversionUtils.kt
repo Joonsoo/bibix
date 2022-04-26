@@ -46,7 +46,7 @@ fun BibixValue.toProto(): BibixValueProto.BibixValue = when (val value = this) {
   }
   is NamedTupleValue -> bibixValue {
     this.namedTupleValue = namedTupleValue {
-      this.values.addAll(value.values.map {
+      this.values.addAll(value.pairs.map {
         namedValue {
           this.name = it.first
           this.value = it.second.toProto()

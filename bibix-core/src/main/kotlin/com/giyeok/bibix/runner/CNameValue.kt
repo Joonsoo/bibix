@@ -5,10 +5,10 @@ import com.giyeok.bibix.base.CName
 import com.giyeok.bibix.base.SourceId
 
 sealed class CNameValue {
-  data class LoadedImport(val sourceId: SourceId) : CNameValue()
+  data class LoadedImport(val sourceId: SourceId) : CNameValue() // not by BuildGraph
   data class DeferredImport(val deferredImportId: Int) : CNameValue()
   data class ExprValue(val exprGraphId: Int) : CNameValue()
-  data class EvaluatedValue(val value: BibixValue) : CNameValue()
+  data class EvaluatedValue(val value: BibixValue) : CNameValue() // not by BuildGraph
   data class NamespaceValue(val cname: CName, val names: Set<String>) : CNameValue()
 
   data class ClassType(

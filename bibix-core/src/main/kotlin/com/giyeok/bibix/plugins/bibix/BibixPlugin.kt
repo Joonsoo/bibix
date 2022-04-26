@@ -1,7 +1,7 @@
 package com.giyeok.bibix.plugins.bibix
 
 import com.giyeok.bibix.plugins.Classes
-import com.giyeok.bibix.runner.BibixPlugin
+import com.giyeok.bibix.plugins.BibixPlugin
 
 val dollar = "\$"
 val bibixPlugin = BibixPlugin.fromScript(
@@ -21,7 +21,7 @@ val bibixPlugin = BibixPlugin.fromScript(
     ): jvm.ClassPkg = native:com.giyeok.bibix.plugins.bibix.Plugins
     
     def genRuleImplTemplateKt(
-      rule: buildrule,
+      rules: set<buildrule>,
       types: set<{type, (type, string)}>,
       implName: string,
       implInterfaceName: string,

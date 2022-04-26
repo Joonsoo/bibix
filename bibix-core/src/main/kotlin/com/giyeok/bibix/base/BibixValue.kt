@@ -63,13 +63,16 @@ data class TupleValue(val values: List<BibixValue>) : BibixValue() {
   override fun toString(): String = "(${values.joinToString()})"
 }
 
-data class NamedTupleValue(val values: List<Pair<String, BibixValue>>) : BibixValue() {
+data class NamedTupleValue(val pairs: List<Pair<String, BibixValue>>) : BibixValue() {
   constructor(vararg values: Pair<String, BibixValue>) : this(values.toList())
 
-  fun getValue(name: String) = values.find { it.first == name }!!.second
+  fun getValue(name: String) = pairs.find { it.first == name }!!.second
+
+  fun names() = pairs.map { it.first }
+  fun values() = pairs.map { it.second }
 
   override fun toString(): String =
-    "(${values.joinToString() { p -> "${p.first}: ${p.second}" }})"
+    "(${pairs.joinToString() { p -> "${p.first}: ${p.second}" }})"
 }
 
 data class ClassInstanceValue(val className: CName, val value: BibixValue) : BibixValue() {
@@ -192,7 +195,7 @@ fun BibixValue.stringify(): String = when (this) {
   is EnumValue -> value
   is FileValue -> file.path
   is ListValue -> "[${values.joinToString { it.stringify() }}]"
-  is NamedTupleValue -> "(${values.joinToString { "${it.first}=${it.second.stringify()}" }})"
+  is NamedTupleValue -> "(${pairs.joinToString { "${it.first}=${it.second.stringify()}" }})"
   is PathValue -> path.path
   is SetValue -> "[${values.joinToString { it.stringify() }}]"
   is StringValue -> value

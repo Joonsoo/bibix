@@ -2,7 +2,6 @@ package com.giyeok.bibix.runner
 
 import com.giyeok.bibix.ast.BibixAst
 import com.giyeok.bibix.base.*
-import com.giyeok.bibix.utils.ProgressIndicator
 import com.giyeok.bibix.utils.toProto
 import org.eclipse.jgit.api.Git
 import org.eclipse.jgit.transport.CredentialsProvider
@@ -22,7 +21,7 @@ class ImportSourceResolver(
 ) {
   fun resolveImportSourceCall(
     spec: ClassInstanceValue,
-    progressIndicator: ProgressIndicator<BuildTaskRoutineId>
+    progressIndicator: ProgressIndicator
   ): ImportedSource {
     when (spec.className) {
       CName(BibixRootSourceId, "GitSource") -> {
@@ -104,7 +103,7 @@ class ImportSourceResolver(
   fun resolveImportSourcePath(
     mainBaseDirectory: File,
     path: DirectoryValue,
-    progressIndicator: ProgressIndicator<BuildTaskRoutineId>
+    progressIndicator: ProgressIndicator
   ): ImportedSource {
     val baseDirectory = path.directory
     val scriptSource = File(baseDirectory, "build.bbx").readText()

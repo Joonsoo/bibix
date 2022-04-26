@@ -67,7 +67,7 @@ class BuildTaskRoutineLoggerImpl(
         val routineIds = routineIdsByTask.getValue(task)
         println(task)
         when (task) {
-          is BuildTask.ExprEval -> {
+          is BuildTask.EvalExpr -> {
             val exprGraph = buildGraph.exprGraphs[task.exprGraphId]
             // TODO
             when (val exprNode = task.exprNode) {

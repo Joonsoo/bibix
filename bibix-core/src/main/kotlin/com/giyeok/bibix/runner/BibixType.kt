@@ -14,7 +14,10 @@ data class CustomType(val name: CName) : BibixType()
 data class ListType(val elemType: BibixType) : BibixType()
 data class SetType(val elemType: BibixType) : BibixType()
 data class TupleType(val elemTypes: List<BibixType>) : BibixType()
-data class NamedTupleType(val elemTypes: List<Pair<String, BibixType>>) : BibixType()
+data class NamedTupleType(val pairs: List<Pair<String, BibixType>>) : BibixType() {
+  fun names() = pairs.map { it.first }
+  fun valueTypes() = pairs.map { it.second }
+}
 data class UnionType(val types: List<BibixType>) : BibixType()
 object BuildRuleDefType : BibixType()
 object ActionRuleDefType : BibixType()

@@ -32,11 +32,15 @@ data class BuildContext(
   // TODO bibix 플러그인 실행하기
   // e.g. context.call("mvn.resolveClassSets", mapOf("classSets", deps))
 ) {
-  val destDirectory: File
-    get() {
-      destDirectoryPath.mkdir()
-      return destDirectoryPath
-    }
+  val destDirectory: File by lazy {
+    destDirectoryPath.mkdir()
+    destDirectoryPath
+  }
+
+  fun clearDestDirectory(): File {
+    // TODO()
+    return destDirectory
+  }
 
   fun getSharedDirectory(sharedRepoName: String) =
     repo.prepareSharedDirectory(sharedRepoName)

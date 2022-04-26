@@ -1,7 +1,7 @@
 package com.giyeok.bibix.plugins.java
 
 import com.giyeok.bibix.plugins.Classes
-import com.giyeok.bibix.runner.BibixPlugin
+import com.giyeok.bibix.plugins.BibixPlugin
 
 val javaPlugin = BibixPlugin.fromScript(
   """

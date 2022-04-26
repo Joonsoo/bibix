@@ -44,8 +44,8 @@ class Dep {
     val repos = (context.arguments.getValue("repos") as ListValue).values.map { resolver ->
       val tuple = ((resolver as ClassInstanceValue).value as NamedTupleValue)
       Pair(
-        (tuple.values[0].second as EnumValue).value,
-        (tuple.values[1].second as StringValue).value
+        (tuple.pairs[0].second as EnumValue).value,
+        (tuple.pairs[1].second as StringValue).value
       )
     }
 
