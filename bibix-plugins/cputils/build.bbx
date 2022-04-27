@@ -1,4 +1,5 @@
-from git("https://github.com/Joonsoo/bibix.git", branch="main", path="bibix-plugins") import ktjvm
+import bibix
+from bibix.plugins() import ktjvm
 import maven
 
 // class path를 줬을 때, 거기 속한 클래스 이름의 목록, 그 클래스들 중에서 특정 클래스나 인터페이스를 상속 혹은 구현한 클래스들 찾기 기능 제공

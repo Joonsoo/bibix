@@ -1,7 +1,7 @@
 import jvm
-from git("https://github.com/Joonsoo/bibix.git", branch="main", path="bibix-plugins") import ktjvm
 import maven
 import bibix
+from bibix.plugins() import ktjvm
 
 arg compilerVersion: string = "2.13.8"
 arg outVersion: string = "16"
