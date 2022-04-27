@@ -2,7 +2,7 @@ import bibix
 import maven
 import jvm
 import curl
-from git("https://github.com/Joonsoo/bibix.git", branch="main", path="bibix-plugins") import ktjvm
+from bibix.plugins() import ktjvm
 
 impl = ktjvm.library(
   srcs = glob("src/**/*.kt"),

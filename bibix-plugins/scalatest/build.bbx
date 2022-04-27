@@ -1,7 +1,7 @@
 import bibix
 import jvm
-from git("https://github.com/Joonsoo/bibix.git", branch="main", path="bibix-plugins") import ktjvm
-from git("https://github.com/Joonsoo/bibix.git", branch="develop", path="bibix-plugins") import cputils
+from bibix.plugins() import ktjvm
+from bibix.plugins() import cputils
 import maven
 
 impl = ktjvm.library(

@@ -1,8 +1,7 @@
 import bibix
 import jvm
-from git("https://github.com/Joonsoo/bibix.git", branch="main", path="bibix-plugins") import ktjvm
+from bibix.plugins() import ktjvm
 import maven
-from defaultPlugins()
 
 arg junitVersion: string = "5.8.2"
 arg junitPlatformVersion: string = "1.8.2"

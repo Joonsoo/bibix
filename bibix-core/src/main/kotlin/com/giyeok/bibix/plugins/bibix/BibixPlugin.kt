@@ -1,6 +1,6 @@
 package com.giyeok.bibix.plugins.bibix
 
-import com.giyeok.bibix.Constants
+import com.giyeok.bibix.base.Constants
 import com.giyeok.bibix.plugins.Classes
 import com.giyeok.bibix.plugins.BibixPlugin
 
@@ -10,16 +10,20 @@ val bibixPlugin = BibixPlugin.fromScript(
     import jvm
     import curl
     
+    arg buildingBibixVersion: string = "${Constants.BUILDING_BIBIX_VERSION}"
     arg bibixVersion: string = "${Constants.BIBIX_VERSION}"
     
     def base(
-      classpath: path = curl.download("https://github.com/Joonsoo/bibix/releases/download/${dollar}bibixVersion/bibix-base-${dollar}bibixVersion.jar")
+      classpath: path = curl.download("https://github.com/Joonsoo/bibix/releases/download/${dollar}buildingBibixVersion/bibix-base-${dollar}buildingBibixVersion.jar")
     ): jvm.ClassPkg = native:com.giyeok.bibix.plugins.bibix.Base
     
-    // TODO bibix.plugins(tag="1.2.0") => GitSource 반환
     def plugins(
       tag: string = bibixVersion
-    ): jvm.ClassPkg = native:com.giyeok.bibix.plugins.bibix.Plugins
+    ): GitSource = native:com.giyeok.bibix.plugins.bibix.Plugins
+    
+    def devPlugins(
+      branch: string = "main"
+    ): GitSource = native:com.giyeok.bibix.plugins.bibix.Plugins:dev
     
     class RuleImplTemplate = (implClass: file, interfaceClass: file) {
       as list<file> = [this.implClass, this.interfaceClass]

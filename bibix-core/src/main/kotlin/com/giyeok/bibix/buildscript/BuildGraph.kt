@@ -193,7 +193,6 @@ class BuildGraph(
           exprGraphs.register(traverseExpr(importSource, lookup))
         )
       is BibixAst.CallExpr -> {
-        check(importSource.name().tokens().size() == 1)
         ImportSource.ImportSourceCall(
           sourceId,
           exprGraphs.register(traverseExpr(importSource, lookup))
