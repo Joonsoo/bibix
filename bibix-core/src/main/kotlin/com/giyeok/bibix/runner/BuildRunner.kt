@@ -3,7 +3,7 @@ package com.giyeok.bibix.runner
 import com.giyeok.bibix.base.*
 import com.giyeok.bibix.buildscript.*
 import com.giyeok.bibix.plugins.BibixPlugin
-import com.giyeok.bibix.Constants.BIBIX_VERSION
+import com.giyeok.bibix.base.Constants.BIBIX_VERSION
 import com.giyeok.bibix.utils.*
 import kotlinx.coroutines.*
 import org.codehaus.plexus.classworlds.ClassWorld
@@ -38,6 +38,8 @@ class BuildRunner(
   private val imported = mutableMapOf<CNameValue.DeferredImport, SourceId>()
   private val resolvedNames = mutableMapOf<CName, BibixValue>()
 
+  private val buildTaskRelGraph = BuildTaskRelGraph()
+
   private fun addSourceId(sourceId: BibixIdProto.SourceId): SourceId = when (sourceId.sourceCase) {
     BibixIdProto.SourceId.SourceCase.ROOT_SOURCE -> BibixRootSourceId
     BibixIdProto.SourceId.SourceCase.MAIN_SOURCE -> MainSourceId
@@ -70,9 +72,14 @@ class BuildRunner(
       }
     }.awaitAll()
 
-  suspend fun runTask(requestTask: BuildTask?, task: BuildTask): Any {
+  suspend fun runTask(requestTask: BuildTask, task: BuildTask): Any {
     // requestTask가 실행되려면 task의 결과가 필요하다는 의미.
     // TODO 싸이클이 생기면 오류 발생하고 종료
+    buildTaskRelGraph.addDependency(requestTask, task)
+    val cycle = buildTaskRelGraph.findCycleBetween(requestTask, task)
+    if (cycle != null) {
+      throw BibixBuildException(task, "Cyclic dependency found: $cycle")
+    }
     return coroutineScope {
       routineManager.asyncInvoke(task) {
         when (task) {
@@ -307,7 +314,10 @@ class BuildRunner(
           buildGraph.addDefs(
             sourceId,
             defs,
-            NameLookupContext(CName(sourceId), defs).withNative(),
+            // NameLookupContext(CName(sourceId), defs).withNative(),
+            NameLookupContext(CName(BibixRootSourceId), rootScript.defs)
+              .append(CName(sourceId), defs)
+              .withNative(),
             File(".") // default plugin은 base directory가 없음
           )
           sourceId
@@ -703,15 +713,13 @@ class BuildRunner(
               val classDetails = zip.map { (cls, realityType) ->
                 // relativeName에 origin 입장에서 cls를 어떻게 가리킬 수 있는지 지정
                 // TODO from ** import ** 를 했을 경우에도 잘 동작하나? 확인 필요
-                val relativeName = when (cls.cname.sourceId) {
-                  MainSourceId -> {
-                    cls.cname.tokens
-                  }
-                  else -> {
-                    val importSource = imported.entries.find { it.value == cls.cname.sourceId }!!
-                    val importer = buildGraph.names.entries.find { it.value == importSource.key }!!
-                    listOf(importer.key.tokens.first()) + cls.cname.tokens
-                  }
+                val relativeName = if (cls.cname.sourceId == origin) {
+                  cls.cname.tokens
+                } else {
+                  // TODO 이거 제대로 안될거같은데?
+                  val importSource = imported.entries.find { it.value == cls.cname.sourceId }!!
+                  val importer = buildGraph.names.entries.find { it.value == importSource.key }!!
+                  listOf(importer.key.tokens.first()) + cls.cname.tokens
                 }
                 TypeValue.ClassTypeDetail(cls.cname, relativeName, cls.extendings, realityType)
               }

@@ -32,8 +32,7 @@ class GenRuleImplTemplateKt {
     TypeValue.DirectoryTypeValue -> "($expr as DirectoryValue).directory"
     is TypeValue.ClassTypeValue -> "${bibixType.className.tokens.last()}.fromBibix($expr)"
     is TypeValue.EnumTypeValue -> {
-      val enumString = bibixValueToKt(expr, TypeValue.StringTypeValue)
-      "${bibixType.enumTypeName.tokens.last()}.valueOf($enumString)"
+      "${bibixType.enumTypeName.tokens.last()}.valueOf((($expr) as EnumValue).value)"
     }
     is TypeValue.ListTypeValue ->
       "($expr as ListValue).values.map { ${bibixValueToKt("it", bibixType.elemType)} }"

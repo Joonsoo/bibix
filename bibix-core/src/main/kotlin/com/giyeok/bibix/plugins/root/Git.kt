@@ -25,7 +25,7 @@ class Git {
       else -> "refs/heads/main"
     }
     return ClassInstanceValue(
-      CName(context.sourceId, "GitSource"),
+      CName(BibixRootSourceId, "GitSource"),
       NamedTupleValue(
         listOf(
           "url" to context.arguments.getValue("url"),
