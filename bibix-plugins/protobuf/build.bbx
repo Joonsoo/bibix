@@ -9,26 +9,26 @@ arg protobufVersion: string = "3.20.0"
 
 implTemplate = bibix.genRuleImplTemplateKt(
   rules = [
-    protobuf.schema,
-    protobuf.protoset,
-    protobuf.cpp,
-    protobuf.csharp,
-    protobuf.java,
-    protobuf.javascript,
-    protobuf.kotlin,
-    protobuf.objc,
-    protobuf.php,
-    protobuf.python,
-    protobuf.ruby,
-    protobuf.dart
+    schema,
+    protoset,
+    cpp,
+    csharp,
+    java,
+    javascript,
+    kotlin,
+    objc,
+    php,
+    python,
+    ruby,
+    dart
   ],
-  types = [protobuf.ProtoSchema],
+  types = [OS, ProtoSchema],
   implName = "com.giyeok.bibix.plugins.protobuf.CompileImpl",
   implInterfaceName = "com.giyeok.bibix.plugins.protobuf.CompileInterface",
 )
 
 impl = ktjvm.library(
-  srcs = glob("src/**/*.kt") + (implTemplate as list<file>),
+  srcs = (implTemplate as list<file>) + glob("src/**/*.kt"),
   deps = [
     bibix.base(),
     maven.dep("org.jetbrains.kotlin", "kotlin-stdlib-jdk8", "1.6.20"),

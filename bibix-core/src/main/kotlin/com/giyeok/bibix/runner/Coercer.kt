@@ -256,7 +256,7 @@ class Coercer(val buildGraph: BuildGraph, val runner: BuildRunner) {
         value.methodName ?: "build"
       )
     }
-    is BuildRuleImplInfo -> toBibixValue(task, value.buildRuleValue)
+    is BuildRuleImplInfo.UserBuildRuleImplInfo -> toBibixValue(task, value.buildRuleValue)
     is CNameValue.ActionRuleValue -> {
       val paramTypes = toTypeValues(task, value.params.map { it.type })
       val params = value.params.zip(paramTypes).map { (param, paramType) ->
@@ -267,7 +267,7 @@ class Coercer(val buildGraph: BuildGraph, val runner: BuildRunner) {
         params,
         value.implName,
         value.className,
-        value.methodName ?: "build"
+        value.methodName ?: "run"
       )
     }
     is ActionRuleImplInfo -> toBibixValue(task, value.actionRuleValue)

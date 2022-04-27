@@ -64,6 +64,7 @@ object MainCli {
           listOf(
             "os" to EnumValue(CName(BibixRootSourceId, "OS"), "linux"),
             "arch" to EnumValue(CName(BibixRootSourceId, "Arch"), "x86_64"),
+            "bibixVersion" to StringValue(Constants.BIBIX_VERSION),
           )
         )
       )
