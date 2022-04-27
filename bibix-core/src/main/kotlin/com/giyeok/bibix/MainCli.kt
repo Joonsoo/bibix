@@ -64,6 +64,7 @@ object MainCli {
           listOf(
             "os" to EnumValue(CName(BibixRootSourceId, "OS"), "linux"),
             "arch" to EnumValue(CName(BibixRootSourceId, "Arch"), "x86_64"),
+            "bibixVersion" to StringValue(Constants.BIBIX_VERSION),
           )
         )
       )
@@ -109,7 +110,7 @@ object MainCli {
     }
 
     targets.forEach { target ->
-      println("$target = ${buildGraph.names.getValue(target)}")
+      println("$target = ${buildRunner.getResolvedNameValue(target)}")
     }
     if (useDebuggingMode) {
       (buildRunner.routineLogger as? BuildTaskRoutineLoggerImpl)?.printLogs(buildGraph)

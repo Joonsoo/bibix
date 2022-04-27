@@ -3,6 +3,7 @@ package com.giyeok.bibix.buildscript
 import com.giyeok.bibix.ast.BibixAst
 import com.giyeok.bibix.base.CName
 import com.giyeok.bibix.base.SourceId
+import com.giyeok.bibix.runner.BibixType
 import com.giyeok.bibix.utils.toKtList
 import com.giyeok.jparser.ParseResultTree
 
@@ -31,10 +32,11 @@ data class ExprGraph(
       expr: BibixAst.Expr,
       lookup: NameLookupContext,
       thisClassTypeName: CName?,
+      typeTraverser: (BibixAst.TypeExpr, NameLookupContext) -> BibixType,
     ): ExprNode = when (expr) {
       is BibixAst.MergeOp -> {
-        val lhs = traverse(expr.lhs(), lookup, thisClassTypeName)
-        val rhs = traverse(expr.rhs(), lookup, thisClassTypeName)
+        val lhs = traverse(expr.lhs(), lookup, thisClassTypeName, typeTraverser)
+        val rhs = traverse(expr.rhs(), lookup, thisClassTypeName, typeTraverser)
         val node = addNode(ExprNode.MergeOpNode(lhs, rhs))
         edges.add(ExprEdge(node, lhs))
         edges.add(ExprEdge(node, rhs))
@@ -43,9 +45,10 @@ data class ExprGraph(
       is BibixAst.CallExpr -> {
         val target = addNode(ExprNode.NameNode(lookup.findName(expr.name())))
         val posParams =
-          expr.params().posParams().toKtList().map { traverse(it, lookup, thisClassTypeName) }
+          expr.params().posParams().toKtList()
+            .map { traverse(it, lookup, thisClassTypeName, typeTraverser) }
         val namedParams = expr.params().namedParams().toKtList()
-          .associate { it.name() to traverse(it.value(), lookup, thisClassTypeName) }
+          .associate { it.name() to traverse(it.value(), lookup, thisClassTypeName, typeTraverser) }
         val callExprNode = addNode(
           ExprNode.CallExprNode(
             callExprs.register(CallExprDef(target, ParamNodes(posParams, namedParams)))
@@ -57,7 +60,7 @@ data class ExprGraph(
         callExprNode
       }
       is BibixAst.MemberAccess -> {
-        val target = traverse(expr.target(), lookup, thisClassTypeName)
+        val target = traverse(expr.target(), lookup, thisClassTypeName, typeTraverser)
         val node = addNode(ExprNode.MemberAccessNode(target, expr.name()))
         edges.add(ExprEdge(node, target))
         node
@@ -75,20 +78,22 @@ data class ExprGraph(
         }
       }
       is BibixAst.ListExpr -> {
-        val elems = expr.elems().toKtList().map { traverse(it, lookup, thisClassTypeName) }
+        val elems =
+          expr.elems().toKtList().map { traverse(it, lookup, thisClassTypeName, typeTraverser) }
         val node = addNode(ExprNode.ListNode(elems))
         elems.forEach { edges.add(ExprEdge(node, it)) }
         node
       }
       is BibixAst.TupleExpr -> {
-        val elems = expr.elems().toKtList().map { traverse(it, lookup, thisClassTypeName) }
+        val elems =
+          expr.elems().toKtList().map { traverse(it, lookup, thisClassTypeName, typeTraverser) }
         val node = addNode(ExprNode.TupleNode(elems))
         elems.forEach { edges.add(ExprEdge(node, it)) }
         node
       }
       is BibixAst.NamedTupleExpr -> {
         val elems = expr.elems().toKtList()
-          .map { it.name() to traverse(it.expr(), lookup, thisClassTypeName) }
+          .map { it.name() to traverse(it.expr(), lookup, thisClassTypeName, typeTraverser) }
         val node = addNode(ExprNode.NamedTupleNode(elems))
         elems.forEach { edges.add(ExprEdge(node, it.second)) }
         node
@@ -115,12 +120,13 @@ data class ExprGraph(
                 traverse(
                   BibixAst.NameRef(elem.name(), elem.parseNode()),
                   lookup,
-                  thisClassTypeName
+                  thisClassTypeName,
+                  typeTraverser
                 )
               )
             }
             is BibixAst.ComplexExpr -> {
-              builder.addExpr(traverse(elem.expr(), lookup, thisClassTypeName))
+              builder.addExpr(traverse(elem.expr(), lookup, thisClassTypeName, typeTraverser))
             }
             else -> throw AssertionError()
           }
@@ -133,6 +139,12 @@ data class ExprGraph(
         node
       }
       is BibixAst.BooleanLiteral -> addNode(ExprNode.BooleanLiteralNode(expr.value()))
+      is BibixAst.Paren -> traverse(expr.expr(), lookup, thisClassTypeName, typeTraverser)
+      is BibixAst.CastExpr -> {
+        val exprBody = traverse(expr.expr(), lookup, thisClassTypeName, typeTraverser)
+        val targetType = typeTraverser(expr.castTo(), lookup)
+        addNode(ExprNode.TypeCastNode(exprBody, targetType))
+      }
       else -> throw AssertionError()
     }
   }
@@ -142,9 +154,10 @@ data class ExprGraph(
       expr: BibixAst.Expr,
       lookup: NameLookupContext,
       thisClassTypeName: CName?,
+      typeTraverser: (BibixAst.TypeExpr, NameLookupContext) -> BibixType
     ): ExprGraph {
       val builder = Builder()
-      val mainNode = builder.traverse(expr, lookup, thisClassTypeName)
+      val mainNode = builder.traverse(expr, lookup, thisClassTypeName, typeTraverser)
       return ExprGraph(
         mainNode,
         builder.nodes,
@@ -168,6 +181,7 @@ sealed class ExprNode {
   data class NamedTupleNode(val elems: List<Pair<String, ExprNode>>) : ExprNode()
   data class StringLiteralNode(val stringElems: List<StringElem>) : ExprNode()
   data class BooleanLiteralNode(val value: Boolean) : ExprNode()
+  data class TypeCastNode(val value: ExprNode, val type: BibixType) : ExprNode()
 
   data class ClassThisRef(val className: CName) : ExprNode()
   object ActionArgsRef : ExprNode()

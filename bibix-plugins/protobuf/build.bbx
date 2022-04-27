@@ -7,8 +7,28 @@ import jvm
 
 arg protobufVersion: string = "3.20.0"
 
+implTemplate = bibix.genRuleImplTemplateKt(
+  rules = [
+    schema,
+    protoset,
+    cpp,
+    csharp,
+    java,
+    javascript,
+    kotlin,
+    objc,
+    php,
+    python,
+    ruby,
+    dart
+  ],
+  types = [OS, ProtoSchema],
+  implName = "com.giyeok.bibix.plugins.protobuf.CompileImpl",
+  implInterfaceName = "com.giyeok.bibix.plugins.protobuf.CompileInterface",
+)
+
 impl = ktjvm.library(
-  srcs = glob("src/**/*.kt"),
+  srcs = (implTemplate as list<file>) + glob("src/**/*.kt"),
   deps = [
     bibix.base(),
     maven.dep("org.jetbrains.kotlin", "kotlin-stdlib-jdk8", "1.6.20"),
@@ -29,13 +49,13 @@ def schema(
   srcs: set<file>,
   deps: set<ProtoSchema> = [],
   protocPath: directory = protocPath,
-  outputFileName?: string,
 ): ProtoSchema = impl:com.giyeok.bibix.plugins.protobuf.Compile:schema
 
 def protoset(
   schema: ProtoSchema,
   os: OS = env.os,
   protocPath: directory = protocPath,
+  outputFileName?: string,
 ): file = impl:com.giyeok.bibix.plugins.protobuf.Compile:protoset
 
 def cpp(
@@ -73,7 +93,7 @@ def objc(
   schema: ProtoSchema,
   os: OS = env.os,
   protocPath: directory = protocPath,
-): set<file> = impl:com.giyeok.bibix.plugins.protobuf.Compile:kotlin
+): set<file> = impl:com.giyeok.bibix.plugins.protobuf.Compile:objc
 
 def php(
   schema: ProtoSchema,

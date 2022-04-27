@@ -1,5 +1,6 @@
 package com.giyeok.bibix.plugins.bibix
 
+import com.giyeok.bibix.Constants
 import com.giyeok.bibix.plugins.Classes
 import com.giyeok.bibix.plugins.BibixPlugin
 
@@ -9,7 +10,7 @@ val bibixPlugin = BibixPlugin.fromScript(
     import jvm
     import curl
     
-    arg bibixVersion: string = "0.0.2"
+    arg bibixVersion: string = "${Constants.BIBIX_VERSION}"
     
     def base(
       classpath: path = curl.download("https://github.com/Joonsoo/bibix/releases/download/${dollar}bibixVersion/bibix-base-${dollar}bibixVersion.jar")
@@ -20,12 +21,16 @@ val bibixPlugin = BibixPlugin.fromScript(
       tag: string = bibixVersion
     ): jvm.ClassPkg = native:com.giyeok.bibix.plugins.bibix.Plugins
     
+    class RuleImplTemplate = (implClass: file, interfaceClass: file) {
+      as list<file> = [this.implClass, this.interfaceClass]
+    }
+    
     def genRuleImplTemplateKt(
       rules: set<buildrule>,
       types: set<{type, (type, string)}>,
       implName: string,
       implInterfaceName: string,
-    ): file = native:com.giyeok.bibix.plugins.bibix.GenRuleImplTemplateKt
+    ): RuleImplTemplate = native:com.giyeok.bibix.plugins.bibix.GenRuleImplTemplateKt
   """.trimIndent(),
   Classes(
     Base::class.java,

@@ -11,7 +11,9 @@ sealed class BuildTask {
 
   data class ResolveName(val cname: CName) : BuildTask()
 
-  data class CallAction(val origin: SourceId, val exprGraphId: Int) : BuildTask()
+  data class ResolveImport(val origin: SourceId, val importDefId: Int) : BuildTask()
+
+  data class ResolveImportSource(val origin: SourceId, val importSource: ImportSource) : BuildTask()
 
   data class EvalExpr(
     val origin: SourceId,
@@ -20,7 +22,5 @@ sealed class BuildTask {
     val thisValue: BibixValue?,
   ) : BuildTask()
 
-  data class ResolveImportSource(val origin: SourceId, val importSource: ImportSource) : BuildTask()
-
-  data class ResolveImport(val origin: SourceId, val importDefId: Int) : BuildTask()
+  data class CallAction(val origin: SourceId, val exprGraphId: Int) : BuildTask()
 }
