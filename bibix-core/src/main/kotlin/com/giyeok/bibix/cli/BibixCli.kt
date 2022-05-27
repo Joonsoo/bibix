@@ -1,4 +1,4 @@
-package com.giyeok.bibix.frontend
+package com.giyeok.bibix.cli
 
 import com.giyeok.bibix.ast.BibixAst
 import com.giyeok.bibix.base.*

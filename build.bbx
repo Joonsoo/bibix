@@ -5,10 +5,12 @@ import java
 from bibix.plugins() import ktjvm
 from bibix.plugins() import scala
 from bibix.plugins() import protobuf
+from bibix.devPlugins() import grpc
 import bibix
 
 jparserVersion = "0.5"
 arg ktjvm.kotlinVersion as kotlinVersion: string = "1.6.10"
+floggerVersion = "0.7.4"
 
 parserData = jparser.parsergen(
   src = "bibix.cdg",
@@ -39,15 +41,22 @@ namespace proto {
 
   protoset = protobuf.protoset(schema=schema)
   javalib = java.library(
-    srcs=protobuf.java(schema=schema),
-    deps=[maven.dep("com.google.protobuf", "protobuf-java", "3.19.4")],
+    srcs = protobuf.java(schema) + grpc.java(schema),
+    deps = [
+      maven.dep("com.google.protobuf", "protobuf-java", "3.19.4"),
+      maven.dep("io.grpc", "grpc-all", "1.46.0"),
+      maven.dep("javax.annotation", "javax.annotation-api", "1.3.2"),
+    ],
   )
   kotlinlib = ktjvm.library(
-    srcs = protobuf.kotlin(schema=schema),
+    srcs = protobuf.kotlin(schema) + grpc.kotlin(schema),
     deps = [
+      javalib,
       maven.dep("com.google.protobuf", "protobuf-kotlin", "3.19.4"),
       maven.dep("org.jetbrains.kotlin", "kotlin-stdlib-jdk8", kotlinVersion),
-      javalib,
+      maven.dep("org.jetbrains.kotlinx", "kotlinx-coroutines-core", "1.6.1"),
+      maven.dep("org.jetbrains.kotlinx", "kotlinx-coroutines-jdk8", "1.6.1"),
+      maven.dep("io.grpc", "grpc-kotlin-stub", "1.2.1"),
     ],
     optIns = ["kotlin.RequiresOptIn"]
   )
@@ -85,6 +94,10 @@ core = ktjvm.library(
     maven.dep("com.fasterxml.jackson.core", "jackson-databind", "2.13.1"),
     maven.dep("com.fasterxml.jackson.module", "jackson-module-kotlin", "2.13.1"),
 
+    maven.dep("io.grpc", "grpc-netty-shaded", "1.41.0"),
+    maven.dep("io.grpc", "grpc-services", "1.41.0"),
+    maven.dep("io.grpc", "grpc-kotlin-stub", "1.2.1"),
+
     maven.dep("org.codehaus.plexus", "plexus-classworlds", "2.6.0"),
     maven.dep("org.eclipse.jgit", "org.eclipse.jgit", "6.1.0.202203080745-r"),
     maven.dep("org.apache.maven", "maven-resolver-provider", "3.8.5"),
@@ -97,19 +110,21 @@ core = ktjvm.library(
     jvm.lib("lib/jparser-naive-0.2.3.jar"),
     jvm.lib("lib/jparser-utils-0.2.3.jar"),
 
+    maven.dep("com.google.flogger", "flogger", floggerVersion),
+    maven.dep("com.google.flogger", "flogger-system-backend", floggerVersion),
     maven.dep("commons-logging", "commons-logging", "1.2"),
   ],
 )
 
 uberJar = jvm.executableUberJar(
   deps = [core],
-  mainClass = "com.giyeok.bibix.frontend.BibixCli",
+  mainClass = "com.giyeok.bibix.cli.BibixCli",
   jarFileName = "bibix-${env.bibixVersion}.jar"
 )
 
 action run(args) = jvm.run(
   deps = [core],
-  mainClass = "com.giyeok.bibix.frontend.BibixCli",
+  mainClass = "com.giyeok.bibix.cli.BibixCli",
   args = args,
 )
 

@@ -2,6 +2,7 @@ buildscript {
     ext {
         kotlinVersion = '1.6.20'
         jparserVersion = '0.2.3'
+        floggerVersion = '0.7.4'
     }
 }
 
@@ -34,6 +35,8 @@ dependencies {
     implementation group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk8', version: kotlinVersion
     implementation group: 'org.jetbrains.kotlin', name: 'kotlin-compiler', version: kotlinVersion
 
+    implementation group: 'io.grpc', name: 'grpc-netty-shaded', version: '1.41.0'
+
     implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.13.1'
     implementation group: 'com.fasterxml.jackson.module', name: 'jackson-module-kotlin', version: '2.13.1'
 
@@ -43,6 +46,9 @@ dependencies {
     implementation group: 'org.apache.maven.resolver', name: 'maven-resolver-connector-basic', version: '1.7.3'
     implementation group: 'org.apache.maven.resolver', name: 'maven-resolver-transport-file', version: '1.7.3'
     implementation group: 'org.apache.maven.resolver', name: 'maven-resolver-transport-http', version: '1.7.3'
+
+    implementation group: 'com.google.flogger', name: 'flogger', version: floggerVersion
+    implementation group: 'com.google.flogger', name: 'flogger-system-backend', version: floggerVersion
 
     implementation group: 'com.giyeok', name: 'jparser-base', version: jparserVersion
     implementation group: 'com.giyeok', name: 'jparser-fast', version: jparserVersion
