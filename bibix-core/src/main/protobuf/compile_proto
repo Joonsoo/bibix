@@ -1,5 +1,15 @@
-./protoc run_config.proto values.proto ids.proto repo.proto \
+echo $PWD
+
+./protoc run_config.proto values.proto ids.proto repo.proto api.proto \
   --proto_path=. \
   --proto_path=./include \
   --java_out=../../generated/java \
-  --kotlin_out=../../generated/kotlin
+  --kotlin_out=../../generated/kotlin \
+
+./protoc run_config.proto values.proto ids.proto repo.proto api.proto \
+  --proto_path=. \
+  --proto_path=./include \
+  --plugin=/home/joonsoo/Documents/workspace/bibix/bibix-core/src/main/protobuf/protoc-gen-grpc-java \
+  --grpc-java_out=../../generated/java-grpc \
+  --plugin=/home/joonsoo/Documents/workspace/bibix/bibix-core/src/main/protobuf/protoc-gen-grpc-kotlin \
+  --grpc-kotlin_out=../../generated/kotlin-grpc

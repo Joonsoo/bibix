@@ -33,6 +33,7 @@ namespace proto {
       "bibix-core/src/main/protobuf/repo.proto",
       "bibix-core/src/main/protobuf/run_config.proto",
       "bibix-core/src/main/protobuf/values.proto",
+      "bibix-core/src/main/protobuf/api.proto",
     ]
   )
 
@@ -102,13 +103,13 @@ core = ktjvm.library(
 
 uberJar = jvm.executableUberJar(
   deps = [core],
-  mainClass = "com.giyeok.bibix.MainCli",
+  mainClass = "com.giyeok.bibix.frontend.BibixCli",
   jarFileName = "bibix-${env.bibixVersion}.jar"
 )
 
 action run(args) = jvm.run(
   deps = [core],
-  mainClass = "com.giyeok.bibix.MainCli",
+  mainClass = "com.giyeok.bibix.frontend.BibixCli",
   args = args,
 )
 

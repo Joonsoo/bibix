@@ -192,12 +192,12 @@ fun BibixValue.stringify(): String = when (this) {
   is NClassInstanceValue -> this.toString()
   is ClassInstanceValue -> this.toString()
   is BooleanValue -> value.toString()
-  is DirectoryValue -> directory.path
+  is DirectoryValue -> directory.canonicalPath
   is EnumValue -> value
-  is FileValue -> file.path
+  is FileValue -> file.canonicalPath
   is ListValue -> "[${values.joinToString { it.stringify() }}]"
   is NamedTupleValue -> "(${pairs.joinToString { "${it.first}=${it.second.stringify()}" }})"
-  is PathValue -> path.path
+  is PathValue -> path.canonicalPath
   is SetValue -> "[${values.joinToString { it.stringify() }}]"
   is StringValue -> value
   is TupleValue -> "(${values.joinToString { it.stringify() }})"

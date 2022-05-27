@@ -692,7 +692,7 @@ class BuildRunner(
               calling as BuildRuleImplInfo
               callBuildRule(
                 task,
-                calling.origin,
+                ruleImplInfo.origin,
                 calling,
                 listOf(),
                 result.params,

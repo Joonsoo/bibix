@@ -1,4 +1,4 @@
-package com.giyeok.bibix
+package com.giyeok.bibix.frontend
 
 import com.giyeok.bibix.ast.BibixAst
 import com.giyeok.bibix.base.*
@@ -22,7 +22,7 @@ import java.time.Instant
 import java.util.concurrent.TimeUnit
 import kotlin.system.exitProcess
 
-object MainCli {
+object BibixCli {
   @JvmStatic
   fun main(args: Array<String>) {
     val startTime = Instant.now()

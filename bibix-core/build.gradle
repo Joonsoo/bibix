@@ -26,10 +26,12 @@ sourceSets {
     main {
         java {
             srcDir 'src/generated/java'
+            srcDir 'src/generated/java-grpc'
         }
         kotlin {
             srcDir 'src/main/kotlin'
             srcDir 'src/generated/kotlin'
+            srcDir 'src/generated/kotlin-grpc'
         }
     }
 }

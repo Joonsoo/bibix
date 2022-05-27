@@ -10,8 +10,12 @@ import java.io.File
 
 class Coercer(val buildGraph: BuildGraph, val runner: BuildRunner) {
   private fun fileFromString(origin: SourceId, path: String): File {
-    val base = buildGraph.baseDirectories.getValue(origin)
-    return File(base, path)
+    val pathFile = File(path)
+    if (pathFile.isAbsolute) {
+      return pathFile
+    }
+    val baseDirectory = buildGraph.baseDirectories.getValue(origin)
+    return File(baseDirectory, path)
   }
 
   private fun withNoNull(
@@ -62,31 +66,16 @@ class Coercer(val buildGraph: BuildGraph, val runner: BuildRunner) {
       }
       FileType -> when (value) {
         is FileValue -> value
-        is PathValue -> {
-          check(value.path.exists() && value.path.isFile)
-          FileValue(value.path)
-        }
-        is StringValue -> {
-          // TODO 이 value의 origin의 root 디렉토리를 베이스로
-          val file = fileFromString(origin, value.value)
-          check(file.exists() && file.isFile)
-          FileValue(file)
-        }
+        // TODO file value, directory value는 build rule에 주기 직전에 존재하는지/타입 확인하기
+        is PathValue -> FileValue(value.path)
+        is StringValue -> FileValue(fileFromString(origin, value.value))
         is ClassInstanceValue -> tryCastClassInstance(task, origin, value, type, dclassOrigin)
         else -> null
       }
       DirectoryType -> when (value) {
         is DirectoryValue -> value
-        is PathValue -> {
-          check(value.path.exists() && value.path.isDirectory)
-          DirectoryValue(value.path)
-        }
-        is StringValue -> {
-          // TODO 이 value의 origin의 root 디렉토리를 베이스로
-          val file = fileFromString(origin, value.value)
-          check(file.exists() && file.isDirectory)
-          DirectoryValue(file)
-        }
+        is PathValue -> DirectoryValue(value.path)
+        is StringValue -> DirectoryValue(fileFromString(origin, value.value))
         is ClassInstanceValue -> tryCastClassInstance(task, origin, value, type, dclassOrigin)
         else -> null
       }
