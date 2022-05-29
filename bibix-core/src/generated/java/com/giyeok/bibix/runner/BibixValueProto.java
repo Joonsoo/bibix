@@ -358,6 +358,8 @@ public final class BibixValueProto {
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
         throw e.setUnfinishedMessage(this);
+      } catch (com.google.protobuf.UninitializedMessageException e) {
+        throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
       } catch (java.io.IOException e) {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e).setUnfinishedMessage(this);
@@ -1946,8 +1948,9 @@ public final class BibixValueProto {
         } else {
           if (valueCase_ == 6) {
             enumValueBuilder_.mergeFrom(value);
+          } else {
+            enumValueBuilder_.setMessage(value);
           }
-          enumValueBuilder_.setMessage(value);
         }
         valueCase_ = 6;
         return this;
@@ -2087,8 +2090,9 @@ public final class BibixValueProto {
         } else {
           if (valueCase_ == 7) {
             listValueBuilder_.mergeFrom(value);
+          } else {
+            listValueBuilder_.setMessage(value);
           }
-          listValueBuilder_.setMessage(value);
         }
         valueCase_ = 7;
         return this;
@@ -2228,8 +2232,9 @@ public final class BibixValueProto {
         } else {
           if (valueCase_ == 8) {
             setValueBuilder_.mergeFrom(value);
+          } else {
+            setValueBuilder_.setMessage(value);
           }
-          setValueBuilder_.setMessage(value);
         }
         valueCase_ = 8;
         return this;
@@ -2369,8 +2374,9 @@ public final class BibixValueProto {
         } else {
           if (valueCase_ == 9) {
             tupleValueBuilder_.mergeFrom(value);
+          } else {
+            tupleValueBuilder_.setMessage(value);
           }
-          tupleValueBuilder_.setMessage(value);
         }
         valueCase_ = 9;
         return this;
@@ -2510,8 +2516,9 @@ public final class BibixValueProto {
         } else {
           if (valueCase_ == 10) {
             namedTupleValueBuilder_.mergeFrom(value);
+          } else {
+            namedTupleValueBuilder_.setMessage(value);
           }
-          namedTupleValueBuilder_.setMessage(value);
         }
         valueCase_ = 10;
         return this;
@@ -2651,8 +2658,9 @@ public final class BibixValueProto {
         } else {
           if (valueCase_ == 11) {
             classInstanceValueBuilder_.mergeFrom(value);
+          } else {
+            classInstanceValueBuilder_.setMessage(value);
           }
-          classInstanceValueBuilder_.setMessage(value);
         }
         valueCase_ = 11;
         return this;
@@ -2868,6 +2876,8 @@ public final class BibixValueProto {
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
         throw e.setUnfinishedMessage(this);
+      } catch (com.google.protobuf.UninitializedMessageException e) {
+        throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
       } catch (java.io.IOException e) {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e).setUnfinishedMessage(this);
@@ -3583,6 +3593,8 @@ public final class BibixValueProto {
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
         throw e.setUnfinishedMessage(this);
+      } catch (com.google.protobuf.UninitializedMessageException e) {
+        throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
       } catch (java.io.IOException e) {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e).setUnfinishedMessage(this);
@@ -4376,6 +4388,8 @@ public final class BibixValueProto {
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
         throw e.setUnfinishedMessage(this);
+      } catch (com.google.protobuf.UninitializedMessageException e) {
+        throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
       } catch (java.io.IOException e) {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e).setUnfinishedMessage(this);
@@ -5169,6 +5183,8 @@ public final class BibixValueProto {
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
         throw e.setUnfinishedMessage(this);
+      } catch (com.google.protobuf.UninitializedMessageException e) {
+        throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
       } catch (java.io.IOException e) {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e).setUnfinishedMessage(this);
@@ -5962,6 +5978,8 @@ public final class BibixValueProto {
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
         throw e.setUnfinishedMessage(this);
+      } catch (com.google.protobuf.UninitializedMessageException e) {
+        throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
       } catch (java.io.IOException e) {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e).setUnfinishedMessage(this);
@@ -6767,6 +6785,8 @@ public final class BibixValueProto {
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
         throw e.setUnfinishedMessage(this);
+      } catch (com.google.protobuf.UninitializedMessageException e) {
+        throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
       } catch (java.io.IOException e) {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e).setUnfinishedMessage(this);
@@ -7538,6 +7558,8 @@ public final class BibixValueProto {
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
         throw e.setUnfinishedMessage(this);
+      } catch (com.google.protobuf.UninitializedMessageException e) {
+        throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
       } catch (java.io.IOException e) {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e).setUnfinishedMessage(this);

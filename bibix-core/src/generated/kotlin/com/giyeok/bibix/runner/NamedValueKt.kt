@@ -3,7 +3,7 @@
 
 package com.giyeok.bibix.runner;
 
-@kotlin.jvm.JvmSynthetic
+@kotlin.jvm.JvmName("-initializenamedValue")
 public inline fun namedValue(block: com.giyeok.bibix.runner.NamedValueKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.runner.BibixValueProto.NamedValue =
   com.giyeok.bibix.runner.NamedValueKt.Dsl._create(com.giyeok.bibix.runner.BibixValueProto.NamedValue.newBuilder()).apply { block() }._build()
 public object NamedValueKt {
@@ -67,3 +67,7 @@ public object NamedValueKt {
 @kotlin.jvm.JvmSynthetic
 public inline fun com.giyeok.bibix.runner.BibixValueProto.NamedValue.copy(block: com.giyeok.bibix.runner.NamedValueKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.runner.BibixValueProto.NamedValue =
   com.giyeok.bibix.runner.NamedValueKt.Dsl._create(this.toBuilder()).apply { block() }._build()
+
+val com.giyeok.bibix.runner.BibixValueProto.NamedValueOrBuilder.valueOrNull: com.giyeok.bibix.runner.BibixValueProto.BibixValue?
+  get() = if (hasValue()) getValue() else null
+

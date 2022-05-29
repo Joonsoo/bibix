@@ -3,7 +3,7 @@
 
 package com.giyeok.bibix.daemon;
 
-@kotlin.jvm.JvmSynthetic
+@kotlin.jvm.JvmName("-initializegetRepoInfoReq")
 public inline fun getRepoInfoReq(block: com.giyeok.bibix.daemon.GetRepoInfoReqKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.daemon.BibixDaemonApiProto.GetRepoInfoReq =
   com.giyeok.bibix.daemon.GetRepoInfoReqKt.Dsl._create(com.giyeok.bibix.daemon.BibixDaemonApiProto.GetRepoInfoReq.newBuilder()).apply { block() }._build()
 public object GetRepoInfoReqKt {
@@ -26,3 +26,4 @@ public object GetRepoInfoReqKt {
 @kotlin.jvm.JvmSynthetic
 public inline fun com.giyeok.bibix.daemon.BibixDaemonApiProto.GetRepoInfoReq.copy(block: com.giyeok.bibix.daemon.GetRepoInfoReqKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.daemon.BibixDaemonApiProto.GetRepoInfoReq =
   com.giyeok.bibix.daemon.GetRepoInfoReqKt.Dsl._create(this.toBuilder()).apply { block() }._build()
+

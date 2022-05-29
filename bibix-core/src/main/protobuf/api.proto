@@ -13,6 +13,8 @@ service BibixDaemonApi {
   rpc BuildTarget(BuildTargetReq) returns (BuiltTargetInfo);
   rpc InvokeAction(InvokeActionReq) returns (ActionResult);
   rpc StreamingInvokeAction(InvokeActionReq) returns (stream StreamingActionEvent);
+
+  rpc GetIntellijProjectStructure(GetIntellijProjectStructureReq) returns (IntellijProjectStructure);
 }
 
 message GetRepoInfoReq {
@@ -111,4 +113,35 @@ message ActionResult {
 message StreamingActionEvent {
   string stdout = 1;
   string stderr = 2;
+}
+
+message GetIntellijProjectStructureReq {
+}
+
+message IntellijProjectStructure {
+  IntellijProjectNode project = 1;
+}
+
+message IntellijProjectNode {
+  string name = 1;
+  string path = 2;
+  string sdk_name = 3;
+  repeated IntellijModuleNode modules = 4;
+}
+
+message IntellijModuleNode {
+  string name = 1;
+  string path = 2;
+  string sdk_name = 3;
+  repeated IntellijModuleNode modules = 4;
+  repeated IntellijContentRootNode content_roots = 5;
+  repeated IntellijTaskNode tasks = 6;
+}
+
+message IntellijContentRootNode {
+  string path = 1;
+}
+
+message IntellijTaskNode {
+  string name = 1;
 }

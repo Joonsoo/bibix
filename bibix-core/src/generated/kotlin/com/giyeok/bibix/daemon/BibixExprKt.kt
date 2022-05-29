@@ -3,7 +3,7 @@
 
 package com.giyeok.bibix.daemon;
 
-@kotlin.jvm.JvmSynthetic
+@kotlin.jvm.JvmName("-initializebibixExpr")
 public inline fun bibixExpr(block: com.giyeok.bibix.daemon.BibixExprKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.daemon.BibixDaemonApiProto.BibixExpr =
   com.giyeok.bibix.daemon.BibixExprKt.Dsl._create(com.giyeok.bibix.daemon.BibixDaemonApiProto.BibixExpr.newBuilder()).apply { block() }._build()
 public object BibixExprKt {
@@ -188,7 +188,7 @@ public object BibixExprKt {
       return _builder.hasTarget()
     }
   }
-  @kotlin.jvm.JvmSynthetic
+  @kotlin.jvm.JvmName("-initializeseqExpr")
   public inline fun seqExpr(block: com.giyeok.bibix.daemon.BibixExprKt.SeqExprKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.daemon.BibixDaemonApiProto.BibixExpr.SeqExpr =
     com.giyeok.bibix.daemon.BibixExprKt.SeqExprKt.Dsl._create(com.giyeok.bibix.daemon.BibixDaemonApiProto.BibixExpr.SeqExpr.newBuilder()).apply { block() }._build()
   public object SeqExprKt {
@@ -229,7 +229,8 @@ public object BibixExprKt {
       @kotlin.jvm.JvmName("addElems")
       public fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.daemon.BibixDaemonApiProto.BibixExpr, ElemsProxy>.add(value: com.giyeok.bibix.daemon.BibixDaemonApiProto.BibixExpr) {
         _builder.addElems(value)
-      }/**
+      }
+      /**
        * <code>repeated .com.giyeok.bibix.daemon.BibixExpr elems = 1;</code>
        * @param value The elems to add.
        */
@@ -238,7 +239,8 @@ public object BibixExprKt {
       @Suppress("NOTHING_TO_INLINE")
       public inline operator fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.daemon.BibixDaemonApiProto.BibixExpr, ElemsProxy>.plusAssign(value: com.giyeok.bibix.daemon.BibixDaemonApiProto.BibixExpr) {
         add(value)
-      }/**
+      }
+      /**
        * <code>repeated .com.giyeok.bibix.daemon.BibixExpr elems = 1;</code>
        * @param values The elems to add.
        */
@@ -246,7 +248,8 @@ public object BibixExprKt {
       @kotlin.jvm.JvmName("addAllElems")
       public fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.daemon.BibixDaemonApiProto.BibixExpr, ElemsProxy>.addAll(values: kotlin.collections.Iterable<com.giyeok.bibix.daemon.BibixDaemonApiProto.BibixExpr>) {
         _builder.addAllElems(values)
-      }/**
+      }
+      /**
        * <code>repeated .com.giyeok.bibix.daemon.BibixExpr elems = 1;</code>
        * @param values The elems to add.
        */
@@ -255,7 +258,8 @@ public object BibixExprKt {
       @Suppress("NOTHING_TO_INLINE")
       public inline operator fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.daemon.BibixDaemonApiProto.BibixExpr, ElemsProxy>.plusAssign(values: kotlin.collections.Iterable<com.giyeok.bibix.daemon.BibixDaemonApiProto.BibixExpr>) {
         addAll(values)
-      }/**
+      }
+      /**
        * <code>repeated .com.giyeok.bibix.daemon.BibixExpr elems = 1;</code>
        * @param index The index to set the value at.
        * @param value The elems to set.
@@ -264,16 +268,19 @@ public object BibixExprKt {
       @kotlin.jvm.JvmName("setElems")
       public operator fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.daemon.BibixDaemonApiProto.BibixExpr, ElemsProxy>.set(index: kotlin.Int, value: com.giyeok.bibix.daemon.BibixDaemonApiProto.BibixExpr) {
         _builder.setElems(index, value)
-      }/**
+      }
+      /**
        * <code>repeated .com.giyeok.bibix.daemon.BibixExpr elems = 1;</code>
        */
       @kotlin.jvm.JvmSynthetic
       @kotlin.jvm.JvmName("clearElems")
       public fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.daemon.BibixDaemonApiProto.BibixExpr, ElemsProxy>.clear() {
         _builder.clearElems()
-      }}
+      }
+
+    }
   }
-  @kotlin.jvm.JvmSynthetic
+  @kotlin.jvm.JvmName("-initializeglob")
   public inline fun glob(block: com.giyeok.bibix.daemon.BibixExprKt.GlobKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.daemon.BibixDaemonApiProto.BibixExpr.Glob =
     com.giyeok.bibix.daemon.BibixExprKt.GlobKt.Dsl._create(com.giyeok.bibix.daemon.BibixDaemonApiProto.BibixExpr.Glob.newBuilder()).apply { block() }._build()
   public object GlobKt {
@@ -433,7 +440,7 @@ public object BibixExprKt {
         _builder.clearFiles()
       }}
   }
-  @kotlin.jvm.JvmSynthetic
+  @kotlin.jvm.JvmName("-initializemavenDep")
   public inline fun mavenDep(block: com.giyeok.bibix.daemon.BibixExprKt.MavenDepKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.daemon.BibixDaemonApiProto.BibixExpr.MavenDep =
     com.giyeok.bibix.daemon.BibixExprKt.MavenDepKt.Dsl._create(com.giyeok.bibix.daemon.BibixDaemonApiProto.BibixExpr.MavenDep.newBuilder()).apply { block() }._build()
   public object MavenDepKt {
@@ -508,12 +515,31 @@ public object BibixExprKt {
 @kotlin.jvm.JvmSynthetic
 public inline fun com.giyeok.bibix.daemon.BibixDaemonApiProto.BibixExpr.copy(block: com.giyeok.bibix.daemon.BibixExprKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.daemon.BibixDaemonApiProto.BibixExpr =
   com.giyeok.bibix.daemon.BibixExprKt.Dsl._create(this.toBuilder()).apply { block() }._build()
+
 @kotlin.jvm.JvmSynthetic
 public inline fun com.giyeok.bibix.daemon.BibixDaemonApiProto.BibixExpr.SeqExpr.copy(block: com.giyeok.bibix.daemon.BibixExprKt.SeqExprKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.daemon.BibixDaemonApiProto.BibixExpr.SeqExpr =
   com.giyeok.bibix.daemon.BibixExprKt.SeqExprKt.Dsl._create(this.toBuilder()).apply { block() }._build()
+
 @kotlin.jvm.JvmSynthetic
 public inline fun com.giyeok.bibix.daemon.BibixDaemonApiProto.BibixExpr.Glob.copy(block: com.giyeok.bibix.daemon.BibixExprKt.GlobKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.daemon.BibixDaemonApiProto.BibixExpr.Glob =
   com.giyeok.bibix.daemon.BibixExprKt.GlobKt.Dsl._create(this.toBuilder()).apply { block() }._build()
+
 @kotlin.jvm.JvmSynthetic
 public inline fun com.giyeok.bibix.daemon.BibixDaemonApiProto.BibixExpr.MavenDep.copy(block: com.giyeok.bibix.daemon.BibixExprKt.MavenDepKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.daemon.BibixDaemonApiProto.BibixExpr.MavenDep =
   com.giyeok.bibix.daemon.BibixExprKt.MavenDepKt.Dsl._create(this.toBuilder()).apply { block() }._build()
+
+val com.giyeok.bibix.daemon.BibixDaemonApiProto.BibixExprOrBuilder.valueOrNull: com.giyeok.bibix.runner.BibixValueProto.BibixValue?
+  get() = if (hasValue()) getValue() else null
+
+val com.giyeok.bibix.daemon.BibixDaemonApiProto.BibixExprOrBuilder.seqOrNull: com.giyeok.bibix.daemon.BibixDaemonApiProto.BibixExpr.SeqExpr?
+  get() = if (hasSeq()) getSeq() else null
+
+val com.giyeok.bibix.daemon.BibixDaemonApiProto.BibixExprOrBuilder.globOrNull: com.giyeok.bibix.daemon.BibixDaemonApiProto.BibixExpr.Glob?
+  get() = if (hasGlob()) getGlob() else null
+
+val com.giyeok.bibix.daemon.BibixDaemonApiProto.BibixExprOrBuilder.mavenDepOrNull: com.giyeok.bibix.daemon.BibixDaemonApiProto.BibixExpr.MavenDep?
+  get() = if (hasMavenDep()) getMavenDep() else null
+
+val com.giyeok.bibix.daemon.BibixDaemonApiProto.BibixExprOrBuilder.targetOrNull: com.giyeok.bibix.daemon.BibixDaemonApiProto.TargetInfo?
+  get() = if (hasTarget()) getTarget() else null
+

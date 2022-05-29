@@ -3,7 +3,7 @@
 
 package com.giyeok.bibix.daemon;
 
-@kotlin.jvm.JvmSynthetic
+@kotlin.jvm.JvmName("-initializeactionResult")
 public inline fun actionResult(block: com.giyeok.bibix.daemon.ActionResultKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.daemon.BibixDaemonApiProto.ActionResult =
   com.giyeok.bibix.daemon.ActionResultKt.Dsl._create(com.giyeok.bibix.daemon.BibixDaemonApiProto.ActionResult.newBuilder()).apply { block() }._build()
 public object ActionResultKt {
@@ -60,3 +60,4 @@ public object ActionResultKt {
 @kotlin.jvm.JvmSynthetic
 public inline fun com.giyeok.bibix.daemon.BibixDaemonApiProto.ActionResult.copy(block: com.giyeok.bibix.daemon.ActionResultKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.daemon.BibixDaemonApiProto.ActionResult =
   com.giyeok.bibix.daemon.ActionResultKt.Dsl._create(this.toBuilder()).apply { block() }._build()
+

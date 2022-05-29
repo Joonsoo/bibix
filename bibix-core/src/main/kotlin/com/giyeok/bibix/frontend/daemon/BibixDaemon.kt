@@ -1,8 +1,9 @@
-package com.giyeok.bibix.daemon
+package com.giyeok.bibix.frontend.daemon
 
 import com.google.common.flogger.FluentLogger
 import io.grpc.Server
 import io.grpc.netty.shaded.io.grpc.netty.NettyServerBuilder
+import java.io.File
 import java.util.concurrent.Executors
 
 class BibixDaemon {
@@ -11,7 +12,8 @@ class BibixDaemon {
   companion object {
     @JvmStatic
     fun main(args: Array<String>) {
-      val server = BibixDaemon().startServer()
+      val projectDir = File(".").absoluteFile
+      val server = BibixDaemon().startServer(projectDir)
 
       try {
         server.awaitTermination()
@@ -21,11 +23,11 @@ class BibixDaemon {
     }
   }
 
-  fun startServer(): Server {
+  fun startServer(projectDir: File): Server {
     val grpcPort = 61617
 
     val server = NettyServerBuilder.forPort(grpcPort)
-      .addService(BibixDaemonApiImpl())
+      .addService(BibixDaemonApiImpl(projectDir))
 //      .intercept(UnexpectedExceptionsInterceptor())
 //      .intercept(ReceivedRequestLogInterceptor(Level.INFO))
       .executor(Executors.newFixedThreadPool(4))

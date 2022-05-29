@@ -3,7 +3,7 @@
 
 package com.giyeok.bibix.runner;
 
-@kotlin.jvm.JvmSynthetic
+@kotlin.jvm.JvmName("-initializeruleImplId")
 public inline fun ruleImplId(block: com.giyeok.bibix.runner.RuleImplIdKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.runner.BibixIdProto.RuleImplId =
   com.giyeok.bibix.runner.RuleImplIdKt.Dsl._create(com.giyeok.bibix.runner.BibixIdProto.RuleImplId.newBuilder()).apply { block() }._build()
 public object RuleImplIdKt {
@@ -93,3 +93,7 @@ public object RuleImplIdKt {
 @kotlin.jvm.JvmSynthetic
 public inline fun com.giyeok.bibix.runner.BibixIdProto.RuleImplId.copy(block: com.giyeok.bibix.runner.RuleImplIdKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.runner.BibixIdProto.RuleImplId =
   com.giyeok.bibix.runner.RuleImplIdKt.Dsl._create(this.toBuilder()).apply { block() }._build()
+
+val com.giyeok.bibix.runner.BibixIdProto.RuleImplIdOrBuilder.ruleImplObjectIdOrNull: com.giyeok.bibix.runner.BibixIdProto.ObjectId?
+  get() = if (hasRuleImplObjectId()) getRuleImplObjectId() else null
+

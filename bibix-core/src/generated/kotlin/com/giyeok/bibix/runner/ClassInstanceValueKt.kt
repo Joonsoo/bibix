@@ -3,7 +3,7 @@
 
 package com.giyeok.bibix.runner;
 
-@kotlin.jvm.JvmSynthetic
+@kotlin.jvm.JvmName("-initializeclassInstanceValue")
 public inline fun classInstanceValue(block: com.giyeok.bibix.runner.ClassInstanceValueKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.runner.BibixValueProto.ClassInstanceValue =
   com.giyeok.bibix.runner.ClassInstanceValueKt.Dsl._create(com.giyeok.bibix.runner.BibixValueProto.ClassInstanceValue.newBuilder()).apply { block() }._build()
 public object ClassInstanceValueKt {
@@ -67,3 +67,7 @@ public object ClassInstanceValueKt {
 @kotlin.jvm.JvmSynthetic
 public inline fun com.giyeok.bibix.runner.BibixValueProto.ClassInstanceValue.copy(block: com.giyeok.bibix.runner.ClassInstanceValueKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.runner.BibixValueProto.ClassInstanceValue =
   com.giyeok.bibix.runner.ClassInstanceValueKt.Dsl._create(this.toBuilder()).apply { block() }._build()
+
+val com.giyeok.bibix.runner.BibixValueProto.ClassInstanceValueOrBuilder.valueOrNull: com.giyeok.bibix.runner.BibixValueProto.BibixValue?
+  get() = if (hasValue()) getValue() else null
+

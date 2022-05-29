@@ -3,7 +3,7 @@
 
 package com.giyeok.bibix.runner;
 
-@kotlin.jvm.JvmSynthetic
+@kotlin.jvm.JvmName("-initializefileHash")
 public inline fun fileHash(block: com.giyeok.bibix.runner.FileHashKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.runner.BibixIdProto.FileHash =
   com.giyeok.bibix.runner.FileHashKt.Dsl._create(com.giyeok.bibix.runner.BibixIdProto.FileHash.newBuilder()).apply { block() }._build()
 public object FileHashKt {
@@ -101,3 +101,7 @@ public object FileHashKt {
 @kotlin.jvm.JvmSynthetic
 public inline fun com.giyeok.bibix.runner.BibixIdProto.FileHash.copy(block: com.giyeok.bibix.runner.FileHashKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.runner.BibixIdProto.FileHash =
   com.giyeok.bibix.runner.FileHashKt.Dsl._create(this.toBuilder()).apply { block() }._build()
+
+val com.giyeok.bibix.runner.BibixIdProto.FileHashOrBuilder.lastModifiedTimeOrNull: com.google.protobuf.Timestamp?
+  get() = if (hasLastModifiedTime()) getLastModifiedTime() else null
+

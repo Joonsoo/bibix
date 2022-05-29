@@ -3,7 +3,7 @@
 
 package com.giyeok.bibix.runner;
 
-@kotlin.jvm.JvmSynthetic
+@kotlin.jvm.JvmName("-initializebibixValue")
 public inline fun bibixValue(block: com.giyeok.bibix.runner.BibixValueKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.runner.BibixValueProto.BibixValue =
   com.giyeok.bibix.runner.BibixValueKt.Dsl._create(com.giyeok.bibix.runner.BibixValueProto.BibixValue.newBuilder()).apply { block() }._build()
 public object BibixValueKt {
@@ -297,3 +297,22 @@ public object BibixValueKt {
 @kotlin.jvm.JvmSynthetic
 public inline fun com.giyeok.bibix.runner.BibixValueProto.BibixValue.copy(block: com.giyeok.bibix.runner.BibixValueKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.runner.BibixValueProto.BibixValue =
   com.giyeok.bibix.runner.BibixValueKt.Dsl._create(this.toBuilder()).apply { block() }._build()
+
+val com.giyeok.bibix.runner.BibixValueProto.BibixValueOrBuilder.enumValueOrNull: com.giyeok.bibix.runner.BibixValueProto.EnumValue?
+  get() = if (hasEnumValue()) getEnumValue() else null
+
+val com.giyeok.bibix.runner.BibixValueProto.BibixValueOrBuilder.listValueOrNull: com.giyeok.bibix.runner.BibixValueProto.ListValue?
+  get() = if (hasListValue()) getListValue() else null
+
+val com.giyeok.bibix.runner.BibixValueProto.BibixValueOrBuilder.setValueOrNull: com.giyeok.bibix.runner.BibixValueProto.SetValue?
+  get() = if (hasSetValue()) getSetValue() else null
+
+val com.giyeok.bibix.runner.BibixValueProto.BibixValueOrBuilder.tupleValueOrNull: com.giyeok.bibix.runner.BibixValueProto.TupleValue?
+  get() = if (hasTupleValue()) getTupleValue() else null
+
+val com.giyeok.bibix.runner.BibixValueProto.BibixValueOrBuilder.namedTupleValueOrNull: com.giyeok.bibix.runner.BibixValueProto.NamedTupleValue?
+  get() = if (hasNamedTupleValue()) getNamedTupleValue() else null
+
+val com.giyeok.bibix.runner.BibixValueProto.BibixValueOrBuilder.classInstanceValueOrNull: com.giyeok.bibix.runner.BibixValueProto.ClassInstanceValue?
+  get() = if (hasClassInstanceValue()) getClassInstanceValue() else null
+

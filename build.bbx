@@ -40,16 +40,20 @@ namespace proto {
   )
 
   protoset = protobuf.protoset(schema=schema)
+  javaprotosrc = protobuf.java(schema)
+  javagrpcsrc = grpc.java(schema)
   javalib = java.library(
-    srcs = protobuf.java(schema) + grpc.java(schema),
+    srcs = javaprotosrc + javagrpcsrc,
     deps = [
       maven.dep("com.google.protobuf", "protobuf-java", "3.19.4"),
       maven.dep("io.grpc", "grpc-all", "1.46.0"),
       maven.dep("javax.annotation", "javax.annotation-api", "1.3.2"),
     ],
   )
+  kotlinprotosrc = protobuf.kotlin(schema)
+  kotlingrpcsrc = grpc.kotlin(schema)
   kotlinlib = ktjvm.library(
-    srcs = protobuf.kotlin(schema) + grpc.kotlin(schema),
+    srcs = kotlinprotosrc + kotlingrpcsrc,
     deps = [
       javalib,
       maven.dep("com.google.protobuf", "protobuf-kotlin", "3.19.4"),
@@ -118,13 +122,13 @@ core = ktjvm.library(
 
 uberJar = jvm.executableUberJar(
   deps = [core],
-  mainClass = "com.giyeok.bibix.cli.BibixCli",
+  mainClass = "com.giyeok.bibix.frontend.cli.BibixCli",
   jarFileName = "bibix-${env.bibixVersion}.jar"
 )
 
 action run(args) = jvm.run(
   deps = [core],
-  mainClass = "com.giyeok.bibix.cli.BibixCli",
+  mainClass = "com.giyeok.bibix.frontend.cli.BibixCli",
   args = args,
 )
 

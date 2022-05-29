@@ -170,6 +170,37 @@ public final class BibixDaemonApiGrpc {
     return getStreamingInvokeActionMethod;
   }
 
+  private static volatile io.grpc.MethodDescriptor<com.giyeok.bibix.daemon.BibixDaemonApiProto.GetIntellijProjectStructureReq,
+      com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijProjectStructure> getGetIntellijProjectStructureMethod;
+
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = SERVICE_NAME + '/' + "GetIntellijProjectStructure",
+      requestType = com.giyeok.bibix.daemon.BibixDaemonApiProto.GetIntellijProjectStructureReq.class,
+      responseType = com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijProjectStructure.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
+  public static io.grpc.MethodDescriptor<com.giyeok.bibix.daemon.BibixDaemonApiProto.GetIntellijProjectStructureReq,
+      com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijProjectStructure> getGetIntellijProjectStructureMethod() {
+    io.grpc.MethodDescriptor<com.giyeok.bibix.daemon.BibixDaemonApiProto.GetIntellijProjectStructureReq, com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijProjectStructure> getGetIntellijProjectStructureMethod;
+    if ((getGetIntellijProjectStructureMethod = BibixDaemonApiGrpc.getGetIntellijProjectStructureMethod) == null) {
+      synchronized (BibixDaemonApiGrpc.class) {
+        if ((getGetIntellijProjectStructureMethod = BibixDaemonApiGrpc.getGetIntellijProjectStructureMethod) == null) {
+          BibixDaemonApiGrpc.getGetIntellijProjectStructureMethod = getGetIntellijProjectStructureMethod =
+              io.grpc.MethodDescriptor.<com.giyeok.bibix.daemon.BibixDaemonApiProto.GetIntellijProjectStructureReq, com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijProjectStructure>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "GetIntellijProjectStructure"))
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.giyeok.bibix.daemon.BibixDaemonApiProto.GetIntellijProjectStructureReq.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijProjectStructure.getDefaultInstance()))
+              .setSchemaDescriptor(new BibixDaemonApiMethodDescriptorSupplier("GetIntellijProjectStructure"))
+              .build();
+        }
+      }
+    }
+    return getGetIntellijProjectStructureMethod;
+  }
+
   /**
    * Creates a new async stub that supports all call types for the service
    */
@@ -253,6 +284,13 @@ public final class BibixDaemonApiGrpc {
       io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getStreamingInvokeActionMethod(), responseObserver);
     }
 
+    /**
+     */
+    public void getIntellijProjectStructure(com.giyeok.bibix.daemon.BibixDaemonApiProto.GetIntellijProjectStructureReq request,
+        io.grpc.stub.StreamObserver<com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijProjectStructure> responseObserver) {
+      io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getGetIntellijProjectStructureMethod(), responseObserver);
+    }
+
     @java.lang.Override public final io.grpc.ServerServiceDefinition bindService() {
       return io.grpc.ServerServiceDefinition.builder(getServiceDescriptor())
           .addMethod(
@@ -290,6 +328,13 @@ public final class BibixDaemonApiGrpc {
                 com.giyeok.bibix.daemon.BibixDaemonApiProto.InvokeActionReq,
                 com.giyeok.bibix.daemon.BibixDaemonApiProto.StreamingActionEvent>(
                   this, METHODID_STREAMING_INVOKE_ACTION)))
+          .addMethod(
+            getGetIntellijProjectStructureMethod(),
+            io.grpc.stub.ServerCalls.asyncUnaryCall(
+              new MethodHandlers<
+                com.giyeok.bibix.daemon.BibixDaemonApiProto.GetIntellijProjectStructureReq,
+                com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijProjectStructure>(
+                  this, METHODID_GET_INTELLIJ_PROJECT_STRUCTURE)))
           .build();
     }
   }
@@ -347,6 +392,14 @@ public final class BibixDaemonApiGrpc {
       io.grpc.stub.ClientCalls.asyncServerStreamingCall(
           getChannel().newCall(getStreamingInvokeActionMethod(), getCallOptions()), request, responseObserver);
     }
+
+    /**
+     */
+    public void getIntellijProjectStructure(com.giyeok.bibix.daemon.BibixDaemonApiProto.GetIntellijProjectStructureReq request,
+        io.grpc.stub.StreamObserver<com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijProjectStructure> responseObserver) {
+      io.grpc.stub.ClientCalls.asyncUnaryCall(
+          getChannel().newCall(getGetIntellijProjectStructureMethod(), getCallOptions()), request, responseObserver);
+    }
   }
 
   /**
@@ -398,6 +451,13 @@ public final class BibixDaemonApiGrpc {
       return io.grpc.stub.ClientCalls.blockingServerStreamingCall(
           getChannel(), getStreamingInvokeActionMethod(), getCallOptions(), request);
     }
+
+    /**
+     */
+    public com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijProjectStructure getIntellijProjectStructure(com.giyeok.bibix.daemon.BibixDaemonApiProto.GetIntellijProjectStructureReq request) {
+      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+          getChannel(), getGetIntellijProjectStructureMethod(), getCallOptions(), request);
+    }
   }
 
   /**
@@ -445,6 +505,14 @@ public final class BibixDaemonApiGrpc {
       return io.grpc.stub.ClientCalls.futureUnaryCall(
           getChannel().newCall(getInvokeActionMethod(), getCallOptions()), request);
     }
+
+    /**
+     */
+    public com.google.common.util.concurrent.ListenableFuture<com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijProjectStructure> getIntellijProjectStructure(
+        com.giyeok.bibix.daemon.BibixDaemonApiProto.GetIntellijProjectStructureReq request) {
+      return io.grpc.stub.ClientCalls.futureUnaryCall(
+          getChannel().newCall(getGetIntellijProjectStructureMethod(), getCallOptions()), request);
+    }
   }
 
   private static final int METHODID_GET_REPO_INFO = 0;
@@ -452,6 +520,7 @@ public final class BibixDaemonApiGrpc {
   private static final int METHODID_BUILD_TARGET = 2;
   private static final int METHODID_INVOKE_ACTION = 3;
   private static final int METHODID_STREAMING_INVOKE_ACTION = 4;
+  private static final int METHODID_GET_INTELLIJ_PROJECT_STRUCTURE = 5;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -489,6 +558,10 @@ public final class BibixDaemonApiGrpc {
         case METHODID_STREAMING_INVOKE_ACTION:
           serviceImpl.streamingInvokeAction((com.giyeok.bibix.daemon.BibixDaemonApiProto.InvokeActionReq) request,
               (io.grpc.stub.StreamObserver<com.giyeok.bibix.daemon.BibixDaemonApiProto.StreamingActionEvent>) responseObserver);
+          break;
+        case METHODID_GET_INTELLIJ_PROJECT_STRUCTURE:
+          serviceImpl.getIntellijProjectStructure((com.giyeok.bibix.daemon.BibixDaemonApiProto.GetIntellijProjectStructureReq) request,
+              (io.grpc.stub.StreamObserver<com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijProjectStructure>) responseObserver);
           break;
         default:
           throw new AssertionError();
@@ -556,6 +629,7 @@ public final class BibixDaemonApiGrpc {
               .addMethod(getBuildTargetMethod())
               .addMethod(getInvokeActionMethod())
               .addMethod(getStreamingInvokeActionMethod())
+              .addMethod(getGetIntellijProjectStructureMethod())
               .build();
         }
       }

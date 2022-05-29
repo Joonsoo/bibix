@@ -3,7 +3,7 @@
 
 package com.giyeok.bibix.runner;
 
-@kotlin.jvm.JvmSynthetic
+@kotlin.jvm.JvmName("-initializesourceHashId")
 public inline fun sourceHashId(block: com.giyeok.bibix.runner.SourceHashIdKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.runner.BibixIdProto.SourceHashId =
   com.giyeok.bibix.runner.SourceHashIdKt.Dsl._create(com.giyeok.bibix.runner.BibixIdProto.SourceHashId.newBuilder()).apply { block() }._build()
 public object SourceHashIdKt {
@@ -51,3 +51,4 @@ public object SourceHashIdKt {
 @kotlin.jvm.JvmSynthetic
 public inline fun com.giyeok.bibix.runner.BibixIdProto.SourceHashId.copy(block: com.giyeok.bibix.runner.SourceHashIdKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.runner.BibixIdProto.SourceHashId =
   com.giyeok.bibix.runner.SourceHashIdKt.Dsl._create(this.toBuilder()).apply { block() }._build()
+

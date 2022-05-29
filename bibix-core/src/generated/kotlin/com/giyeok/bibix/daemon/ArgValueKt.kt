@@ -3,7 +3,7 @@
 
 package com.giyeok.bibix.daemon;
 
-@kotlin.jvm.JvmSynthetic
+@kotlin.jvm.JvmName("-initializeargValue")
 public inline fun argValue(block: com.giyeok.bibix.daemon.ArgValueKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.daemon.BibixDaemonApiProto.ArgValue =
   com.giyeok.bibix.daemon.ArgValueKt.Dsl._create(com.giyeok.bibix.daemon.BibixDaemonApiProto.ArgValue.newBuilder()).apply { block() }._build()
 public object ArgValueKt {
@@ -98,3 +98,7 @@ public object ArgValueKt {
 @kotlin.jvm.JvmSynthetic
 public inline fun com.giyeok.bibix.daemon.BibixDaemonApiProto.ArgValue.copy(block: com.giyeok.bibix.daemon.ArgValueKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.daemon.BibixDaemonApiProto.ArgValue =
   com.giyeok.bibix.daemon.ArgValueKt.Dsl._create(this.toBuilder()).apply { block() }._build()
+
+val com.giyeok.bibix.daemon.BibixDaemonApiProto.ArgValueOrBuilder.valueInstOrNull: com.giyeok.bibix.runner.BibixValueProto.BibixValue?
+  get() = if (hasValueInst()) getValueInst() else null
+

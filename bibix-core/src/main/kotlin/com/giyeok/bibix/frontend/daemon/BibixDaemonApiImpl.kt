@@ -1,11 +1,25 @@
-package com.giyeok.bibix.daemon
+package com.giyeok.bibix.frontend.daemon
 
-import kotlinx.coroutines.flow.Flow
+import com.giyeok.bibix.daemon.BibixDaemonApiGrpcKt
 import com.giyeok.bibix.daemon.BibixDaemonApiProto.*
+import com.giyeok.bibix.daemon.streamingActionEvent
+import com.giyeok.bibix.frontend.BuildFrontend
+import io.grpc.Status
+import io.grpc.StatusException
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import java.io.File
 
-class BibixDaemonApiImpl : BibixDaemonApiGrpcKt.BibixDaemonApiCoroutineImplBase() {
+class BibixDaemonApiImpl(val projectDir: File) :
+  BibixDaemonApiGrpcKt.BibixDaemonApiCoroutineImplBase() {
+
+  lateinit var frontend: BuildFrontend
+
+  init {
+    frontend = BuildFrontend(projectDir)
+  }
+
   override suspend fun getRepoInfo(request: GetRepoInfoReq): RepoInfo {
     return super.getRepoInfo(request)
   }
@@ -32,5 +46,13 @@ class BibixDaemonApiImpl : BibixDaemonApiGrpcKt.BibixDaemonApiCoroutineImplBase(
         this.stdout = "done"
       })
     }
+  }
+
+  override suspend fun getIntellijProjectStructure(request: GetIntellijProjectStructureReq): IntellijProjectStructure {
+    val frontend = this.frontend
+    if (frontend.parseError != null) {
+      throw StatusException(Status.ABORTED.withDescription(frontend.parseError.msg()))
+    }
+    return IntellijProjectExtractor(frontend).extractIntellijProjectStructure()
   }
 }

@@ -64,9 +64,11 @@ public final class BibixRepoProto {
      * <code>map&lt;string, .com.giyeok.bibix.runner.ObjectInfo&gt; objects = 2;</code>
      */
 
-    com.giyeok.bibix.runner.BibixRepoProto.ObjectInfo getObjectsOrDefault(
+    /* nullable */
+com.giyeok.bibix.runner.BibixRepoProto.ObjectInfo getObjectsOrDefault(
         java.lang.String key,
-        com.giyeok.bibix.runner.BibixRepoProto.ObjectInfo defaultValue);
+        /* nullable */
+com.giyeok.bibix.runner.BibixRepoProto.ObjectInfo defaultValue);
     /**
      * <code>map&lt;string, .com.giyeok.bibix.runner.ObjectInfo&gt; objects = 2;</code>
      */
@@ -132,9 +134,11 @@ public final class BibixRepoProto {
      * <code>map&lt;string, string&gt; object_names = 4;</code>
      */
 
-    java.lang.String getObjectNamesOrDefault(
+    /* nullable */
+java.lang.String getObjectNamesOrDefault(
         java.lang.String key,
-        java.lang.String defaultValue);
+        /* nullable */
+java.lang.String defaultValue);
     /**
      * <code>map&lt;string, string&gt; object_names = 4;</code>
      */
@@ -166,9 +170,11 @@ public final class BibixRepoProto {
      * <code>map&lt;string, .com.giyeok.bibix.runner.SourceId&gt; sources = 5;</code>
      */
 
-    com.giyeok.bibix.runner.BibixIdProto.SourceId getSourcesOrDefault(
+    /* nullable */
+com.giyeok.bibix.runner.BibixIdProto.SourceId getSourcesOrDefault(
         java.lang.String key,
-        com.giyeok.bibix.runner.BibixIdProto.SourceId defaultValue);
+        /* nullable */
+com.giyeok.bibix.runner.BibixIdProto.SourceId defaultValue);
     /**
      * <code>map&lt;string, .com.giyeok.bibix.runner.SourceId&gt; sources = 5;</code>
      */
@@ -200,9 +206,11 @@ public final class BibixRepoProto {
      * <code>map&lt;string, .com.giyeok.bibix.runner.ObjectId&gt; object_ids = 6;</code>
      */
 
-    com.giyeok.bibix.runner.BibixIdProto.ObjectId getObjectIdsOrDefault(
+    /* nullable */
+com.giyeok.bibix.runner.BibixIdProto.ObjectId getObjectIdsOrDefault(
         java.lang.String key,
-        com.giyeok.bibix.runner.BibixIdProto.ObjectId defaultValue);
+        /* nullable */
+com.giyeok.bibix.runner.BibixIdProto.ObjectId defaultValue);
     /**
      * <code>map&lt;string, .com.giyeok.bibix.runner.ObjectId&gt; object_ids = 6;</code>
      */
@@ -339,6 +347,8 @@ public final class BibixRepoProto {
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
         throw e.setUnfinishedMessage(this);
+      } catch (com.google.protobuf.UninitializedMessageException e) {
+        throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
       } catch (java.io.IOException e) {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e).setUnfinishedMessage(this);
@@ -2275,6 +2285,8 @@ public final class BibixRepoProto {
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
         throw e.setUnfinishedMessage(this);
+      } catch (com.google.protobuf.UninitializedMessageException e) {
+        throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
       } catch (java.io.IOException e) {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e).setUnfinishedMessage(this);

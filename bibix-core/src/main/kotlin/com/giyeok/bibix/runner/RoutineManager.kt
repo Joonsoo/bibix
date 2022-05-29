@@ -78,4 +78,6 @@ class RoutineManager(
 
   suspend fun waitForTaskResult(task: BuildTask): Any =
     taskStates.getValue(task).filterNotNull().first()
+
+  fun getTaskResult(task: BuildTask): Any? = taskStates.getValue(task).value
 }

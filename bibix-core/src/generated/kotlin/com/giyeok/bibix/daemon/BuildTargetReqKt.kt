@@ -3,7 +3,7 @@
 
 package com.giyeok.bibix.daemon;
 
-@kotlin.jvm.JvmSynthetic
+@kotlin.jvm.JvmName("-initializebuildTargetReq")
 public inline fun buildTargetReq(block: com.giyeok.bibix.daemon.BuildTargetReqKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.daemon.BibixDaemonApiProto.BuildTargetReq =
   com.giyeok.bibix.daemon.BuildTargetReqKt.Dsl._create(com.giyeok.bibix.daemon.BibixDaemonApiProto.BuildTargetReq.newBuilder()).apply { block() }._build()
 public object BuildTargetReqKt {
@@ -61,7 +61,8 @@ public object BuildTargetReqKt {
     @kotlin.jvm.JvmName("addArgs")
     public fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.daemon.BibixDaemonApiProto.ArgValue, ArgsProxy>.add(value: com.giyeok.bibix.daemon.BibixDaemonApiProto.ArgValue) {
       _builder.addArgs(value)
-    }/**
+    }
+    /**
      * <code>repeated .com.giyeok.bibix.daemon.ArgValue args = 2;</code>
      * @param value The args to add.
      */
@@ -70,7 +71,8 @@ public object BuildTargetReqKt {
     @Suppress("NOTHING_TO_INLINE")
     public inline operator fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.daemon.BibixDaemonApiProto.ArgValue, ArgsProxy>.plusAssign(value: com.giyeok.bibix.daemon.BibixDaemonApiProto.ArgValue) {
       add(value)
-    }/**
+    }
+    /**
      * <code>repeated .com.giyeok.bibix.daemon.ArgValue args = 2;</code>
      * @param values The args to add.
      */
@@ -78,7 +80,8 @@ public object BuildTargetReqKt {
     @kotlin.jvm.JvmName("addAllArgs")
     public fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.daemon.BibixDaemonApiProto.ArgValue, ArgsProxy>.addAll(values: kotlin.collections.Iterable<com.giyeok.bibix.daemon.BibixDaemonApiProto.ArgValue>) {
       _builder.addAllArgs(values)
-    }/**
+    }
+    /**
      * <code>repeated .com.giyeok.bibix.daemon.ArgValue args = 2;</code>
      * @param values The args to add.
      */
@@ -87,7 +90,8 @@ public object BuildTargetReqKt {
     @Suppress("NOTHING_TO_INLINE")
     public inline operator fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.daemon.BibixDaemonApiProto.ArgValue, ArgsProxy>.plusAssign(values: kotlin.collections.Iterable<com.giyeok.bibix.daemon.BibixDaemonApiProto.ArgValue>) {
       addAll(values)
-    }/**
+    }
+    /**
      * <code>repeated .com.giyeok.bibix.daemon.ArgValue args = 2;</code>
      * @param index The index to set the value at.
      * @param value The args to set.
@@ -96,15 +100,19 @@ public object BuildTargetReqKt {
     @kotlin.jvm.JvmName("setArgs")
     public operator fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.daemon.BibixDaemonApiProto.ArgValue, ArgsProxy>.set(index: kotlin.Int, value: com.giyeok.bibix.daemon.BibixDaemonApiProto.ArgValue) {
       _builder.setArgs(index, value)
-    }/**
+    }
+    /**
      * <code>repeated .com.giyeok.bibix.daemon.ArgValue args = 2;</code>
      */
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("clearArgs")
     public fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.daemon.BibixDaemonApiProto.ArgValue, ArgsProxy>.clear() {
       _builder.clearArgs()
-    }}
+    }
+
+  }
 }
 @kotlin.jvm.JvmSynthetic
 public inline fun com.giyeok.bibix.daemon.BibixDaemonApiProto.BuildTargetReq.copy(block: com.giyeok.bibix.daemon.BuildTargetReqKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.daemon.BibixDaemonApiProto.BuildTargetReq =
   com.giyeok.bibix.daemon.BuildTargetReqKt.Dsl._create(this.toBuilder()).apply { block() }._build()
+

@@ -3,7 +3,7 @@
 
 package com.giyeok.bibix.daemon;
 
-@kotlin.jvm.JvmSynthetic
+@kotlin.jvm.JvmName("-initializeargInfo")
 public inline fun argInfo(block: com.giyeok.bibix.daemon.ArgInfoKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.daemon.BibixDaemonApiProto.ArgInfo =
   com.giyeok.bibix.daemon.ArgInfoKt.Dsl._create(com.giyeok.bibix.daemon.BibixDaemonApiProto.ArgInfo.newBuilder()).apply { block() }._build()
 public object ArgInfoKt {
@@ -26,3 +26,4 @@ public object ArgInfoKt {
 @kotlin.jvm.JvmSynthetic
 public inline fun com.giyeok.bibix.daemon.BibixDaemonApiProto.ArgInfo.copy(block: com.giyeok.bibix.daemon.ArgInfoKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.daemon.BibixDaemonApiProto.ArgInfo =
   com.giyeok.bibix.daemon.ArgInfoKt.Dsl._create(this.toBuilder()).apply { block() }._build()
+

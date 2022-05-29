@@ -3,7 +3,7 @@
 
 package com.giyeok.bibix.runner;
 
-@kotlin.jvm.JvmSynthetic
+@kotlin.jvm.JvmName("-initializerunConfig")
 public inline fun runConfig(block: com.giyeok.bibix.runner.RunConfigKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.runner.RunConfigProto.RunConfig =
   com.giyeok.bibix.runner.RunConfigKt.Dsl._create(com.giyeok.bibix.runner.RunConfigProto.RunConfig.newBuilder()).apply { block() }._build()
 public object RunConfigKt {
@@ -43,3 +43,4 @@ public object RunConfigKt {
 @kotlin.jvm.JvmSynthetic
 public inline fun com.giyeok.bibix.runner.RunConfigProto.RunConfig.copy(block: com.giyeok.bibix.runner.RunConfigKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.runner.RunConfigProto.RunConfig =
   com.giyeok.bibix.runner.RunConfigKt.Dsl._create(this.toBuilder()).apply { block() }._build()
+

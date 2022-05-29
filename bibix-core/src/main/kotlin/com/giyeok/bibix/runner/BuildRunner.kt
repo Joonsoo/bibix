@@ -52,18 +52,9 @@ class BuildRunner(
     else -> TODO()
   }
 
-  fun getResolvedNameValue(name: CName) = synchronized(this) { resolvedNames.getValue(name) }
+  fun getResolvedNameValue(name: CName) = synchronized(this) { resolvedNames[name] }
 
-  fun runTargets(buildRequestName: String, targets: Collection<CName>) {
-    val rootTask = BuildTask.BuildRequest(buildRequestName)
-    val coroutineContext = routineManager.coroutineDispatcher + BuildTaskElement(rootTask)
-    CoroutineScope(coroutineContext).launch(coroutineContext) {
-      runTasks(rootTask, targets.map { BuildTask.ResolveName(it) })
-      routineManager.buildFinished(buildRequestName)
-    }
-  }
-
-  private suspend fun runTasks(requestTask: BuildTask, tasks: List<BuildTask>) =
+  suspend fun runTasks(requestTask: BuildTask, tasks: List<BuildTask>) =
     coroutineScope {
       tasks.map { task ->
         async(currentCoroutineContext() + BuildTaskElement(task)) {

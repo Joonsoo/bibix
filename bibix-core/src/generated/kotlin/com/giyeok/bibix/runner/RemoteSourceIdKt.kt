@@ -3,7 +3,7 @@
 
 package com.giyeok.bibix.runner;
 
-@kotlin.jvm.JvmSynthetic
+@kotlin.jvm.JvmName("-initializeremoteSourceId")
 public inline fun remoteSourceId(block: com.giyeok.bibix.runner.RemoteSourceIdKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.runner.BibixIdProto.RemoteSourceId =
   com.giyeok.bibix.runner.RemoteSourceIdKt.Dsl._create(com.giyeok.bibix.runner.BibixIdProto.RemoteSourceId.newBuilder()).apply { block() }._build()
 public object RemoteSourceIdKt {
@@ -67,3 +67,7 @@ public object RemoteSourceIdKt {
 @kotlin.jvm.JvmSynthetic
 public inline fun com.giyeok.bibix.runner.BibixIdProto.RemoteSourceId.copy(block: com.giyeok.bibix.runner.RemoteSourceIdKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.runner.BibixIdProto.RemoteSourceId =
   com.giyeok.bibix.runner.RemoteSourceIdKt.Dsl._create(this.toBuilder()).apply { block() }._build()
+
+val com.giyeok.bibix.runner.BibixIdProto.RemoteSourceIdOrBuilder.sourceSpecOrNull: com.giyeok.bibix.runner.BibixValueProto.BibixValue?
+  get() = if (hasSourceSpec()) getSourceSpec() else null
+

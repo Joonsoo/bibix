@@ -3,7 +3,7 @@
 
 package com.giyeok.bibix.daemon;
 
-@kotlin.jvm.JvmSynthetic
+@kotlin.jvm.JvmName("-initializebuiltTargetInfo")
 public inline fun builtTargetInfo(block: com.giyeok.bibix.daemon.BuiltTargetInfoKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.daemon.BibixDaemonApiProto.BuiltTargetInfo =
   com.giyeok.bibix.daemon.BuiltTargetInfoKt.Dsl._create(com.giyeok.bibix.daemon.BibixDaemonApiProto.BuiltTargetInfo.newBuilder()).apply { block() }._build()
 public object BuiltTargetInfoKt {
@@ -124,3 +124,10 @@ public object BuiltTargetInfoKt {
 @kotlin.jvm.JvmSynthetic
 public inline fun com.giyeok.bibix.daemon.BibixDaemonApiProto.BuiltTargetInfo.copy(block: com.giyeok.bibix.daemon.BuiltTargetInfoKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.daemon.BibixDaemonApiProto.BuiltTargetInfo =
   com.giyeok.bibix.daemon.BuiltTargetInfoKt.Dsl._create(this.toBuilder()).apply { block() }._build()
+
+val com.giyeok.bibix.daemon.BibixDaemonApiProto.BuiltTargetInfoOrBuilder.valueOrNull: com.giyeok.bibix.runner.BibixValueProto.BibixValue?
+  get() = if (hasValue()) getValue() else null
+
+val com.giyeok.bibix.daemon.BibixDaemonApiProto.BuiltTargetInfoOrBuilder.objectIdOrNull: com.giyeok.bibix.runner.BibixIdProto.ObjectIdHash?
+  get() = if (hasObjectId()) getObjectId() else null
+
