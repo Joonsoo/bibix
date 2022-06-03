@@ -29,7 +29,7 @@ class Library {
       mapOf("classPkgs" to deps)
     ) { classPaths ->
       val settings = Settings()
-      val cps = (classPaths as ClassInstanceValue).value as SetValue // set<path>
+      val cps = (classPaths as DataClassInstanceValue).value as SetValue // set<path>
       cps.values.forEach { cp ->
         val cpPath = (cp as PathValue).path
         settings.classpath().append(cpPath.absolutePathString())

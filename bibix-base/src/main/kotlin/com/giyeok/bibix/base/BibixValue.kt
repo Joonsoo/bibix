@@ -75,14 +75,27 @@ data class NamedTupleValue(val pairs: List<Pair<String, BibixValue>>) : BibixVal
     "(${pairs.joinToString() { p -> "${p.first}: ${p.second}" }})"
 }
 
-data class ClassInstanceValue(val className: CName, val value: BibixValue) : BibixValue() {
+data class DataClassInstanceValue(
+  val className: CName,
+  val fieldValues: Map<String, BibixValue>
+) : BibixValue() {
+  override fun toString(): String = "$className($fieldValues)"
+}
+
+// value는 DataClassInstanceValue이거나 SuperClassInstanceValue일 것
+data class SuperClassInstanceValue(val className: CName, val value: BibixValue) : BibixValue() {
   override fun toString(): String = "$className($value)"
 }
 
-data class NClassInstanceValue(val nameTokens: List<String>, val value: BibixValue) : BibixValue() {
-  constructor(name: String, value: BibixValue) : this(name.split('.'), value)
+// 사용자가 super class instance value를 만들 일은 없을듯
+data class NDataClassInstanceValue(
+  val nameTokens: List<String>,
+  val fieldValues: Map<String, BibixValue>
+) : BibixValue() {
+  constructor(name: String, fieldValues: Map<String, BibixValue>) :
+    this(name.split('.'), fieldValues)
 
-  override fun toString(): String = "${nameTokens.joinToString(".")}($value)"
+  override fun toString(): String = "${nameTokens.joinToString(".")}($fieldValues)"
 }
 
 object NoneValue : BibixValue()
@@ -145,11 +158,12 @@ sealed class TypeValue : BibixValue() {
   data class ClassTypeDetail(
     val className: CName,
     val relativeName: List<String>,
-    val extendings: List<CName>,
-    val bodyType: TypeValue
+    val fields: List<ClassFieldValue>
   ) {
     override fun toString(): String = "class $className"
   }
+
+  data class ClassFieldValue(val name: String, val type: TypeValue, val optional: Boolean)
 
   data class EnumTypeValue(val enumTypeName: CName, val enumValues: List<String>) : TypeValue() {
     override fun toString(): String = "enum $enumTypeName"
@@ -193,8 +207,9 @@ sealed class TypeValue : BibixValue() {
 }
 
 fun BibixValue.stringify(): String = when (this) {
-  is NClassInstanceValue -> this.toString()
-  is ClassInstanceValue -> this.toString()
+  is NDataClassInstanceValue -> this.toString()
+  is DataClassInstanceValue -> this.toString()
+  is SuperClassInstanceValue -> this.toString()
   is BooleanValue -> value.toString()
   is DirectoryValue -> directory.normalize().toString()
   is EnumValue -> value

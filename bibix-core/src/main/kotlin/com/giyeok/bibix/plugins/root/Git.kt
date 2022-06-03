@@ -24,7 +24,7 @@ class Git {
       }
       else -> "refs/heads/main"
     }
-    return ClassInstanceValue(
+    return DataClassInstanceValue(
       CName(BibixRootSourceId, "GitSource"),
       NamedTupleValue(
         listOf(

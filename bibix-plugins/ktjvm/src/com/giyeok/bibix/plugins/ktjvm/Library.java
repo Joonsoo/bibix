@@ -57,9 +57,9 @@ public class Library {
         // ClassPkg = (origin: ClassOrigin, cpinfo: CpInfo, deps: set<ClassPkg>)
         // CpInfo = {JarInfo, ClassesInfo}
         // ClassesInfo = (classDirs: set<directory>, resDirs: set<directory>, srcs: {set<file>, none})
-        return new NClassInstanceValue("jvm.ClassPkg", new TupleValue(
+        return new NDataClassInstanceValue("jvm.ClassPkg", new TupleValue(
                 /* origin: */ new StringValue(context.getObjectIdHash() /* TODO "built by ktjvm.library: " */),
-                new NClassInstanceValue("jvm.ClassesInfo", new TupleValue(
+                new NDataClassInstanceValue("jvm.ClassesInfo", new TupleValue(
                         /* classDirs: */ new SetValue(new PathValue(destDirectory)),
                         // TODO resDirs
                         /* resDirs: */ new SetValue(),
@@ -76,7 +76,7 @@ public class Library {
                 "jvm.resolveClassPkgs",
                 Map.of("classPkgs", deps),
                 (classPaths) -> {
-                    SetValue cps = (SetValue) ((ClassInstanceValue) classPaths).getValue();
+                    SetValue cps = (SetValue) ((DataClassInstanceValue) classPaths).getValue();
                     try {
                         return BuildRuleReturn.value(runCompiler(cps, deps, context, optIns));
                     } catch (Exception e) {

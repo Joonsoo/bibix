@@ -2,16 +2,13 @@ package com.giyeok.bibix.plugins.scalatest
 
 import com.giyeok.bibix.base.*
 import com.giyeok.bibix.plugins.cputils.ClassCollector
-import org.scalatest.ConfigMap
-import org.scalatest.`ConfigMap$`
-import java.net.URLClassLoader
 
 class Run {
   fun run(context: ActionContext): BuildRuleReturn {
     val deps = context.arguments.getValue("deps") as SetValue
     val targetCps = deps.values.flatMap { dep ->
       val depCps =
-        (((dep as ClassInstanceValue).value as NamedTupleValue).getValue("cps") as SetValue)
+        (((dep as DataClassInstanceValue).value as NamedTupleValue).getValue("cps") as SetValue)
       depCps.values.map { (it as PathValue).path }
     }
 
@@ -19,7 +16,7 @@ class Run {
       "jvm.resolveClassPkgs",
       mapOf("classPkgs" to deps)
     ) { classPaths ->
-      val classPathsValue = (classPaths as ClassInstanceValue).value as NamedTupleValue
+      val classPathsValue = (classPaths as DataClassInstanceValue).value as NamedTupleValue
       val cps = (classPathsValue.getValue("cps") as SetValue).values.map {
         (it as PathValue).path
       }

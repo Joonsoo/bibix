@@ -12,7 +12,7 @@ class Run {
       "resolveClassPkgs",
       mapOf("classPkgs" to deps)
     ) { classPaths ->
-      val classPathsValue = (classPaths as ClassInstanceValue).value as NamedTupleValue
+      val classPathsValue = (classPaths as DataClassInstanceValue).value as NamedTupleValue
       val cps = (classPathsValue.getValue("cps") as SetValue).values.map {
         (it as PathValue).path
       }

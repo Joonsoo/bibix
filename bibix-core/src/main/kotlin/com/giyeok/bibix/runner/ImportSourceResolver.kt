@@ -21,7 +21,7 @@ class ImportSourceResolver(
   private val locks: MutableMap<BibixIdProto.SourceId, Lock> = mutableMapOf(),
 ) {
   fun resolveImportSourceCall(
-    spec: ClassInstanceValue,
+    spec: DataClassInstanceValue,
     progressIndicator: ProgressIndicator
   ): ImportedSource {
     when (spec.className) {

@@ -2,7 +2,6 @@ package com.giyeok.bibix.runner
 
 import com.giyeok.bibix.base.BibixValue
 import com.giyeok.bibix.base.CName
-import com.giyeok.bibix.base.SourceId
 
 sealed class CNameValue {
   data class DeferredImport(val deferredImportId: Int) : CNameValue()
@@ -10,12 +9,13 @@ sealed class CNameValue {
   data class EvaluatedValue(val value: BibixValue) : CNameValue() // not by BuildGraph
   data class NamespaceValue(val cname: CName, val names: Set<String>) : CNameValue()
 
-  data class ClassType(
+  data class DataClassType(
     val cname: CName,
-    val extendings: List<CName>,
-    val reality: BibixType,
+    val fields: List<ClassField>,
     val casts: Map<BibixType, Int>,
   ) : CNameValue()
+
+  data class ClassField(val name: String, val type: BibixType, val optional: Boolean)
 
   data class EnumType(val cname: CName, val values: List<String>) : CNameValue()
 

@@ -147,7 +147,7 @@ class BuildRunner(
         }
         is CNameValue.EvaluatedValue -> value.value
         is CNameValue.NamespaceValue -> value
-        is CNameValue.ClassType -> value
+        is CNameValue.DataClassType -> value
         is CNameValue.EnumType -> value
         is CNameValue.ArgVar -> {
           // 사용자가 지정한 arg가 있으면 그 값을 반환하고
@@ -242,7 +242,7 @@ class BuildRunner(
                 CustomType(CName(BibixInternalSourceId("jvm"), "ClassPaths")),
                 null
               )
-              implResult as ClassInstanceValue
+              implResult as DataClassInstanceValue
               val cps =
                 ((implResult.value) as SetValue).values.map { (it as PathValue).path }
               val realm = synchronized(this) {
@@ -354,7 +354,7 @@ class BuildRunner(
         val result = runTask(
           task,
           BuildTask.EvalExpr(source.origin, source.sourceExprId, exprGraph.mainNode, null)
-        ) as ClassInstanceValue
+        ) as DataClassInstanceValue
 
         // git과 같은 "root" source에 있는 함수들은 named tuple로 소스에 대한 정보를 반환하고 여기서는 그 값을 받아서 사용
         importSourceResolver.resolveImportSourceCall(result, getProgressIndicator())
@@ -503,7 +503,7 @@ class BuildRunner(
   private fun accessMember(task: BuildTask, value: BibixValue, name: String): BibixValue =
     when (value) {
       is NamedTupleValue -> value.getValue(name)
-      is ClassInstanceValue -> accessMember(task, value.value, name)
+      is DataClassInstanceValue -> accessMember(task, value.value, name)
       else -> throw BibixBuildException(task, "Cannot access $value $name")
     }
 
@@ -579,7 +579,7 @@ class BuildRunner(
           CustomType(CName(BibixInternalSourceId("jvm"), "ClassPaths")),
           null
         )
-        implResult as ClassInstanceValue
+        implResult as DataClassInstanceValue
         synchronized(this) {
           val implObjectId = taskObjectIds.getValue(implResolveTask)
           val implObjectIdHash = implObjectId.hashString()
@@ -709,9 +709,10 @@ class BuildRunner(
           }
           is BuildRuleReturn.GetClassInfos -> {
             val cnames = result.cnames + (result.unames.map { CName(origin, it) })
+            TODO()
             routineManager.executeSuspend(task, {
               val resolvedClasses =
-                cnames.map { runTask(task, BuildTask.ResolveName(it)) as CNameValue.ClassType }
+                cnames.map { runTask(task, BuildTask.ResolveName(it)) as CNameValue.DataClassType }
               val realities = coercer.toTypeValues(task, resolvedClasses.map { it.reality })
               resolvedClasses.zip(realities)
             }) { zip ->

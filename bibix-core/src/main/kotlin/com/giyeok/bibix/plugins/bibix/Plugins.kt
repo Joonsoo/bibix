@@ -8,7 +8,7 @@ class Plugins {
     val tag = (context.arguments.getValue("tag") as StringValue).value
     val ref = "refs/tags/$tag"
 //    val ref = "HEAD"
-    return ClassInstanceValue(
+    return DataClassInstanceValue(
       CName(BibixRootSourceId, "GitSource"),
       NamedTupleValue(
         listOf(
@@ -24,7 +24,7 @@ class Plugins {
     val branch = (context.arguments.getValue("branch") as StringValue).value
     val ref = "refs/heads/$branch"
 //    val ref = "HEAD"
-    return ClassInstanceValue(
+    return DataClassInstanceValue(
       CName(BibixRootSourceId, "GitSource"),
       NamedTupleValue(
         listOf(

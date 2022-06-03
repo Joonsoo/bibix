@@ -2,11 +2,9 @@ package com.giyeok.bibix.plugins.jvm
 
 import com.giyeok.bibix.base.*
 import java.io.ByteArrayInputStream
-import java.io.File
 import java.io.InputStream
 import java.io.OutputStream
 import java.nio.file.Files
-import java.nio.file.Path
 import java.util.zip.ZipEntry
 import java.util.zip.ZipException
 import java.util.zip.ZipInputStream
@@ -30,7 +28,7 @@ class Jar {
       "resolveClassPkgs",
       mapOf("classPkgs" to deps)
     ) { classPaths ->
-      val cps = (classPaths as ClassInstanceValue).value as SetValue // set<path>
+      val cps = (classPaths as DataClassInstanceValue).value as SetValue // set<path>
       ZipOutputStream(destFile.outputStream().buffered()).use { zos ->
         cps.values.forEach { cp ->
           cp as PathValue
@@ -93,7 +91,7 @@ class Jar {
       "resolveClassPkgs",
       mapOf("classPkgs" to deps)
     ) { classPaths ->
-      val cps = (classPaths as ClassInstanceValue).value as SetValue // set<path>
+      val cps = (classPaths as DataClassInstanceValue).value as SetValue // set<path>
       ZipOutputStream(destFile.outputStream().buffered()).use { zos ->
         cps.values.forEach { cp ->
           cp as PathValue

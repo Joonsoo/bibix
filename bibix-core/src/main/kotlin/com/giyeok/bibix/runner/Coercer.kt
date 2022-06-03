@@ -6,7 +6,6 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.currentCoroutineContext
-import java.io.File
 import java.nio.file.Path
 
 class Coercer(val buildGraph: BuildGraph, val runner: BuildRunner) {
@@ -31,14 +30,14 @@ class Coercer(val buildGraph: BuildGraph, val runner: BuildRunner) {
     type: BibixType,
     // value가 NClassInstanceValue일 수 있을 때 그 이름을 어디서 찾아야되는지
     dclassOrigin: SourceId?,
-  ): BibixValue? = if (value is NClassInstanceValue) {
+  ): BibixValue? = if (value is NDataClassInstanceValue) {
     // ClassInstanceValue로 변환
     checkNotNull(dclassOrigin)
     val resolved = runner.runTask(
       task,
       BuildTask.ResolveName(CName(dclassOrigin, value.nameTokens))
-    ) as CNameValue.ClassType
-    val instanceValue = ClassInstanceValue(resolved.cname, value.value)
+    ) as CNameValue.DataClassType
+    val instanceValue = DataClassInstanceValue(resolved.cname, value.value)
     coerce(task, origin, instanceValue, type, dclassOrigin)
   } else {
     // TODO value is ClassInstanceValue 인데 type은 ClassType이 아닌 경우
@@ -47,12 +46,12 @@ class Coercer(val buildGraph: BuildGraph, val runner: BuildRunner) {
       AnyType -> value
       BooleanType -> when (value) {
         is BooleanValue -> value
-        is ClassInstanceValue -> tryCastClassInstance(task, origin, value, type, dclassOrigin)
+        is DataClassInstanceValue -> tryCastClassInstance(task, origin, value, type, dclassOrigin)
         else -> null
       }
       StringType -> when (value) {
         is StringValue -> value
-        is ClassInstanceValue ->
+        is DataClassInstanceValue ->
           tryCastClassInstance(task, origin, value, type, dclassOrigin)
             ?: StringValue(value.stringify())
         else -> StringValue(value.stringify())
@@ -62,7 +61,7 @@ class Coercer(val buildGraph: BuildGraph, val runner: BuildRunner) {
         is FileValue -> PathValue(value.file)
         is DirectoryValue -> PathValue(value.directory)
         is StringValue -> PathValue(fileFromString(origin, value.value))
-        is ClassInstanceValue -> tryCastClassInstance(task, origin, value, type, dclassOrigin)
+        is DataClassInstanceValue -> tryCastClassInstance(task, origin, value, type, dclassOrigin)
         else -> null
       }
       FileType -> when (value) {
@@ -70,24 +69,24 @@ class Coercer(val buildGraph: BuildGraph, val runner: BuildRunner) {
         // TODO file value, directory value는 build rule에 주기 직전에 존재하는지/타입 확인하기
         is PathValue -> FileValue(value.path)
         is StringValue -> FileValue(fileFromString(origin, value.value))
-        is ClassInstanceValue -> tryCastClassInstance(task, origin, value, type, dclassOrigin)
+        is DataClassInstanceValue -> tryCastClassInstance(task, origin, value, type, dclassOrigin)
         else -> null
       }
       DirectoryType -> when (value) {
         is DirectoryValue -> value
         is PathValue -> DirectoryValue(value.path)
         is StringValue -> DirectoryValue(fileFromString(origin, value.value))
-        is ClassInstanceValue -> tryCastClassInstance(task, origin, value, type, dclassOrigin)
+        is DataClassInstanceValue -> tryCastClassInstance(task, origin, value, type, dclassOrigin)
         else -> null
       }
       is CustomType -> {
         when (val actualType = runner.runTask(task, BuildTask.ResolveName(type.name))) {
-          is CNameValue.ClassType ->
+          is CNameValue.DataClassType ->
             when (value) {
-              is ClassInstanceValue ->
+              is DataClassInstanceValue ->
                 if (actualType.cname == value.className) {
                   coerce(task, origin, value.value, actualType.reality, dclassOrigin)?.let {
-                    ClassInstanceValue(actualType.cname, it)
+                    DataClassInstanceValue(actualType.cname, it)
                   }
                 } else {
                   val tryCast = tryCastClassInstance(task, origin, value, type, dclassOrigin)
@@ -95,11 +94,11 @@ class Coercer(val buildGraph: BuildGraph, val runner: BuildRunner) {
                     val valueClassType = runner.runTask(
                       task,
                       BuildTask.ResolveName(value.className)
-                    ) as CNameValue.ClassType
+                    ) as CNameValue.DataClassType
                     val castExprId = valueClassType.casts[CustomType(actualType.cname)]
                     suspend fun tryCoerceToReality() =
                       coerce(task, origin, value, actualType.reality, dclassOrigin)?.let {
-                        ClassInstanceValue(actualType.cname, it)
+                        DataClassInstanceValue(actualType.cname, it)
                       }
                     if (castExprId != null) {
                       val castExprGraph = buildGraph.exprGraphs[castExprId]
@@ -115,7 +114,7 @@ class Coercer(val buildGraph: BuildGraph, val runner: BuildRunner) {
                   }
                 }
               else -> coerce(task, origin, value, actualType.reality, dclassOrigin)?.let {
-                ClassInstanceValue(actualType.cname, it)
+                DataClassInstanceValue(actualType.cname, it)
               }
             }
           is CNameValue.EnumType -> when (value) {
@@ -124,7 +123,7 @@ class Coercer(val buildGraph: BuildGraph, val runner: BuildRunner) {
               if (actualType.values.contains(value.value)) {
                 EnumValue(actualType.cname, value.value)
               } else null
-            is ClassInstanceValue -> tryCastClassInstance(task, origin, value, type, dclassOrigin)
+            is DataClassInstanceValue -> tryCastClassInstance(task, origin, value, type, dclassOrigin)
             else -> null
           }
           else -> null
@@ -138,7 +137,7 @@ class Coercer(val buildGraph: BuildGraph, val runner: BuildRunner) {
           is SetValue -> withNoNull(value.values.map {
             coerce(task, origin, it, type.elemType, dclassOrigin)
           }) { ListValue(it) }
-          is ClassInstanceValue -> tryCastClassInstance(task, origin, value, type, dclassOrigin)
+          is DataClassInstanceValue -> tryCastClassInstance(task, origin, value, type, dclassOrigin)
           else -> null
         }
       }
@@ -150,7 +149,7 @@ class Coercer(val buildGraph: BuildGraph, val runner: BuildRunner) {
           is SetValue -> withNoNull(value.values.map {
             coerce(task, origin, it, type.elemType, dclassOrigin)
           }) { SetValue(it) }
-          is ClassInstanceValue -> tryCastClassInstance(task, origin, value, type, dclassOrigin)
+          is DataClassInstanceValue -> tryCastClassInstance(task, origin, value, type, dclassOrigin)
           else -> null
         }
       }
@@ -171,7 +170,7 @@ class Coercer(val buildGraph: BuildGraph, val runner: BuildRunner) {
             withNoNull(value.values().zip(type.elemTypes)
               .map { coerce(task, origin, it.first, it.second, dclassOrigin) }) { TupleValue(it) }
           }
-          is ClassInstanceValue ->
+          is DataClassInstanceValue ->
             tryCastClassInstance(task, origin, value, type, dclassOrigin) ?: ifElse()
           else -> ifElse()
         }
@@ -199,7 +198,7 @@ class Coercer(val buildGraph: BuildGraph, val runner: BuildRunner) {
               NamedTupleValue(type.names().zip(it))
             }
           }
-          is ClassInstanceValue ->
+          is DataClassInstanceValue ->
             tryCastClassInstance(task, origin, value, type, dclassOrigin) ?: ifElse()
           else -> ifElse()
         }
@@ -223,12 +222,12 @@ class Coercer(val buildGraph: BuildGraph, val runner: BuildRunner) {
   private suspend fun tryCastClassInstance(
     task: BuildTask,
     origin: SourceId,
-    value: ClassInstanceValue,
+    value: DataClassInstanceValue,
     type: BibixType,
     dclassOrigin: SourceId?
   ): BibixValue? {
     val classType =
-      runner.runTask(task, BuildTask.ResolveName(value.className)) as CNameValue.ClassType
+      runner.runTask(task, BuildTask.ResolveName(value.className)) as CNameValue.DataClassType
     val castExprId = classType.casts[type] ?: return null
     val castExprGraph = buildGraph.exprGraphs[castExprId]
     val castResult = runner.runTask(
@@ -240,7 +239,7 @@ class Coercer(val buildGraph: BuildGraph, val runner: BuildRunner) {
 
   suspend fun toBibixValue(task: BuildTask, value: Any): BibixValue = when (value) {
     is BibixValue -> value
-    is CNameValue.ClassType -> TypeValue.ClassTypeValue(value.cname)
+    is CNameValue.DataClassType -> TypeValue.ClassTypeValue(value.cname)
     is CNameValue.EnumType -> TypeValue.EnumTypeValue(value.cname, value.values)
     is CNameValue.BuildRuleValue -> {
       val paramTypes = toTypeValues(task, value.params.map { it.type })
@@ -291,7 +290,7 @@ class Coercer(val buildGraph: BuildGraph, val runner: BuildRunner) {
     DirectoryType -> TypeValue.DirectoryTypeValue
     is CustomType -> {
       when (val resolved = runner.runTask(task, BuildTask.ResolveName(type.name))) {
-        is CNameValue.ClassType -> TypeValue.ClassTypeValue(resolved.cname)
+        is CNameValue.DataClassType -> TypeValue.ClassTypeValue(resolved.cname)
         is CNameValue.EnumType -> TypeValue.EnumTypeValue(resolved.cname, resolved.values)
         else -> throw BibixBuildException(task, "Failed to find class or enum type ${type.name}")
       }

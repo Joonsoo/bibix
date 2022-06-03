@@ -108,10 +108,15 @@ class BuildGraph(
             CNameValue.ExprValue(exprGraphs.register(traverseExpr(def.value(), lookup)))
           )
         }
-        is BibixAst.ClassDef -> {
+        is BibixAst.DataClassDef -> {
           val className = cname.append(def.name())
-          val extendings = def.extendings().toKtList().map { ex -> lookup.findName(ex.name()) }
-          val reality = traverseTypeExpr(def.reality(), lookup)
+          val fields = def.fields().toKtList().map { field ->
+            CNameValue.ClassField(
+              field.name(),
+              traverseTypeExpr(field.typ(), lookup),
+              field.optional()
+            )
+          }
           val casts = def.body().toKtList().filterIsInstance<BibixAst.ClassCastDef>()
             .associate { cast ->
               traverseTypeExpr(cast.castTo(), lookup) to
@@ -119,7 +124,10 @@ class BuildGraph(
                   traverseExpr(cast.expr(), lookup, className)
                 )
             }
-          registerName(className, CNameValue.ClassType(className, extendings, reality, casts))
+          registerName(className, CNameValue.DataClassType(className, fields, casts))
+        }
+        is BibixAst.SuperClassDef -> {
+          TODO()
         }
         is BibixAst.EnumDef -> {
           val enumName = cname.append(def.name())

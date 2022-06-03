@@ -27,7 +27,6 @@ import org.eclipse.aether.transport.file.FileTransporterFactory
 import org.eclipse.aether.transport.http.HttpTransporterFactory
 import org.eclipse.aether.util.artifact.JavaScopes
 import org.eclipse.aether.util.filter.DependencyFilterUtils
-import java.io.File
 import java.io.PrintStream
 import java.nio.file.Path
 import java.text.DecimalFormat
@@ -52,7 +51,7 @@ class Dep {
       else -> TODO()
     }
     val repos = (context.arguments.getValue("repos") as ListValue).values.map { resolver ->
-      val tuple = ((resolver as ClassInstanceValue).value as NamedTupleValue)
+      val tuple = ((resolver as DataClassInstanceValue).value as NamedTupleValue)
       Pair(
         (tuple.pairs[0].second as EnumValue).value,
         (tuple.pairs[1].second as StringValue).value

@@ -5,7 +5,6 @@ import com.giyeok.bibix.runner.*
 import com.giyeok.bibix.runner.BibixIdProto.ArgsMap
 import com.google.protobuf.ByteString
 import com.google.protobuf.kotlin.get
-import java.io.ByteArrayInputStream
 import kotlin.io.path.absolutePathString
 
 fun ByteString.toHexString(): String {
@@ -75,13 +74,13 @@ fun BibixValue.toProto(): BibixValueProto.BibixValue = when (val value = this) {
       })
     }
   }
-  is ClassInstanceValue -> bibixValue {
+  is DataClassInstanceValue -> bibixValue {
     this.classInstanceValue = classInstanceValue {
       this.classCname = value.className.toString()
       this.value = value.value.toProto()
     }
   }
-  is NClassInstanceValue -> throw AssertionError("N(ame)ClassInstnaceValue cannot be marshalled")
+  is NDataClassInstanceValue -> throw AssertionError("N(ame)ClassInstnaceValue cannot be marshalled")
   is NoneValue -> bibixValue { }
   is ActionRuleDefValue ->
     // TODO

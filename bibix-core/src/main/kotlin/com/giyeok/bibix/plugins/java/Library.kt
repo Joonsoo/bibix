@@ -4,7 +4,6 @@ import com.giyeok.bibix.base.*
 import com.giyeok.bibix.plugins.ClassPkg
 import com.giyeok.bibix.plugins.ClassesInfo
 import com.giyeok.bibix.plugins.LocalBuilt
-import java.io.File
 import java.nio.file.Path
 import kotlin.io.path.absolutePathString
 
@@ -31,7 +30,7 @@ class Library {
       "jvm.resolveClassPkgs",
       mapOf("classPkgs" to depsValue)
     ) { classPaths ->
-      val cps = (classPaths as ClassInstanceValue).value as SetValue
+      val cps = (classPaths as DataClassInstanceValue).value as SetValue
 
       val srcs = (context.arguments["srcs"]!! as SetValue).values.map { src ->
         (src as FileValue).file

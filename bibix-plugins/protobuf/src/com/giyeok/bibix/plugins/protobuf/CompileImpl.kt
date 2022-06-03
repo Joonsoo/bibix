@@ -30,7 +30,7 @@ class CompileImpl : CompileInterface {
     val protocPath = (context.arguments.getValue("protocPath") as DirectoryValue).directory
 
     val schema =
-      ((context.arguments.getValue("schema") as ClassInstanceValue).value as NamedTupleValue).pairs
+      ((context.arguments.getValue("schema") as DataClassInstanceValue).value as NamedTupleValue).pairs
     val srcs = (schema[0].second as SetValue).values.map { (it as FileValue).file }
     val includes = (schema[1].second as SetValue).values.map { (it as PathValue).path }
 
