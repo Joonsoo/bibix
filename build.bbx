@@ -93,11 +93,6 @@ base = ktjvm.library(
   ]
 )
 
-baseJar = jvm.uberJar(
-  deps = [base],
-  jarFileName = "bibix-base-${env.bibixVersion}.jar",
-)
-
 core = ktjvm.library(
   srcs = glob("bibix-core/src/main/kotlin/**/*.kt"),
   deps = [

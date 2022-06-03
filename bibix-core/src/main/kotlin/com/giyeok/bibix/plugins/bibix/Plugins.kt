@@ -6,8 +6,8 @@ import com.giyeok.bibix.base.*
 class Plugins {
   fun build(context: BuildContext): BibixValue {
     val tag = (context.arguments.getValue("tag") as StringValue).value
-    val ref = // "refs/tags/$tag"
-      "HEAD"
+    val ref = "refs/tags/$tag"
+//    val ref = "HEAD"
     return ClassInstanceValue(
       CName(BibixRootSourceId, "GitSource"),
       NamedTupleValue(
@@ -22,8 +22,8 @@ class Plugins {
 
   fun dev(context: BuildContext): BibixValue {
     val branch = (context.arguments.getValue("branch") as StringValue).value
-    val ref = // "refs/heads/$branch"
-      "HEAD"
+    val ref = "refs/heads/$branch"
+//    val ref = "HEAD"
     return ClassInstanceValue(
       CName(BibixRootSourceId, "GitSource"),
       NamedTupleValue(
