@@ -14,7 +14,7 @@ class Library {
       return BuildRuleReturn.value(
         TupleValue(
           ClassPkg(
-            LocalBuilt("built by scala.library: ${context.objectIdHash}"),
+            LocalBuilt(context.objectIdHash /* TODO built by scala.library */),
             ClassesInfo(listOf(context.destDirectory), listOf(), null),
             deps.values.map { ClassPkg.fromBibix(it) }
           ).toBibix()
@@ -52,7 +52,7 @@ class Library {
 
       BuildRuleReturn.value(
         ClassPkg(
-          LocalBuilt("built by scala.library: ${context.objectIdHash}"),
+          LocalBuilt(context.objectIdHash /* TODO built by scala.library */),
           ClassesInfo(listOf(context.destDirectory), listOf(), null),
           deps.values.map { ClassPkg.fromBibix(it) }
         ).toBibix()

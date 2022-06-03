@@ -58,7 +58,7 @@ public class Library {
         // CpInfo = {JarInfo, ClassesInfo}
         // ClassesInfo = (classDirs: set<directory>, resDirs: set<directory>, srcs: {set<file>, none})
         return new NClassInstanceValue("jvm.ClassPkg", new TupleValue(
-                /* origin: */ new StringValue("built by ktjvm.library: " + context.getObjectIdHash()),
+                /* origin: */ new StringValue(context.getObjectIdHash() /* TODO "built by ktjvm.library: " */),
                 new NClassInstanceValue("jvm.ClassesInfo", new TupleValue(
                         /* classDirs: */ new SetValue(new PathValue(destDirectory)),
                         // TODO resDirs

@@ -25,7 +25,7 @@ val bibixPlugin = BibixPlugin.fromScript(
       branch: string = "main"
     ): GitSource = native:com.giyeok.bibix.plugins.bibix.Plugins:dev
     
-    class RuleImplTemplate = (implClass: file, interfaceClass: file) {
+    class RuleImplTemplate(implClass: file, interfaceClass: file) {
       as list<file> = [this.implClass, this.interfaceClass]
     }
     

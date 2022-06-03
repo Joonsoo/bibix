@@ -5,6 +5,7 @@ import com.giyeok.bibix.runner.*
 import com.giyeok.bibix.runner.BibixIdProto.ArgsMap
 import com.google.protobuf.ByteString
 import com.google.protobuf.kotlin.get
+import java.io.ByteArrayInputStream
 import kotlin.io.path.absolutePathString
 
 fun ByteString.toHexString(): String {
@@ -16,6 +17,25 @@ fun ByteString.toHexString(): String {
     builder.append(chars[v % 16])
   }
   return builder.toString()
+}
+
+fun String.hexToByteString(): ByteString {
+  fun hexChar(c: Char): Int =
+    when (c) {
+      in '0'..'9' -> c - '0'
+      in 'A'..'F' -> c - 'A' + 10
+      in 'a'..'f' -> c - 'a' + 10
+      else -> throw IllegalArgumentException("Not a hex string: $this")
+    }
+
+  val bytes = this.windowed(2, 2)
+  return ByteString.copyFrom(
+    ByteArray(bytes.size) { idx ->
+      val b = bytes[idx]
+      val f = b[0]
+      val s = b[1]
+      (((hexChar(f) shl 4) and 0xf0) or (hexChar(s) and 0xf)).toByte()
+    })
 }
 
 fun BibixValue.toProto(): BibixValueProto.BibixValue = when (val value = this) {

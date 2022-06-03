@@ -5,9 +5,9 @@ import com.giyeok.bibix.plugins.BibixPlugin
 
 val rootScript = BibixPlugin.fromScript(
   """
-    class GitSource = (url: string, ref: string, path: string)
+    class GitSource(url: string, ref: string, path: string)
     
-    class Env = (os: OS, arch: Arch)
+    class Env(os: OS, arch: Arch)
     
     enum OS {
       linux,

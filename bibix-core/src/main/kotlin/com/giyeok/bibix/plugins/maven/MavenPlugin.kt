@@ -13,7 +13,7 @@ val mavenPlugin = BibixPlugin.fromScript(
     enum ScopeType {
       compile, test
     }
-    class MavenRepo = (repoType: RepoType, url: string)
+    class MavenRepo(repoType: RepoType, url: string)
     
     arg defaultRepos: list<MavenRepo> = [
       (RepoType.remote, "http://repo.maven.apache.org/maven2/")
