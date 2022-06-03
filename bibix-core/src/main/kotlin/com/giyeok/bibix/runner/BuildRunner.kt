@@ -1,16 +1,18 @@
 package com.giyeok.bibix.runner
 
 import com.giyeok.bibix.base.*
+import com.giyeok.bibix.base.Constants.BIBIX_VERSION
 import com.giyeok.bibix.buildscript.*
 import com.giyeok.bibix.plugins.BibixPlugin
-import com.giyeok.bibix.base.Constants.BIBIX_VERSION
-import com.giyeok.bibix.utils.*
-import kotlinx.coroutines.*
+import com.giyeok.bibix.utils.toArgsMap
+import com.giyeok.bibix.utils.toHexString
+import com.giyeok.bibix.utils.toKtList
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.currentCoroutineContext
 import org.codehaus.plexus.classworlds.ClassWorld
 import org.codehaus.plexus.classworlds.realm.NoSuchRealmException
-import java.io.File
-import java.nio.file.Path
-import java.nio.file.Paths
 import java.util.concurrent.atomic.AtomicInteger
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
@@ -185,13 +187,14 @@ class BuildRunner(
             value.implName.sourceId is BibixInternalSourceId &&
               value.implName.tokens == listOf("$$") -> {
               // native impls
-              val plugin = bibixPlugins.getValue(value.implName.sourceId.name)
+              val sourceId = value.implName.sourceId as BibixInternalSourceId
+              val plugin = bibixPlugins.getValue(sourceId.name)
               BuildRuleImplInfo.NativeBuildRuleImplInfo(
                 value,
                 value.implName.sourceId,
                 objectIdHash {
                   this.bibixInternalSource =
-                    "$BIBIX_VERSION:internal ${value.implName.sourceId.name}:${value.className}"
+                    "$BIBIX_VERSION:internal ${sourceId.name}:${value.className}"
                 },
                 plugin.classes.getClass(value.className),
                 methodName,
@@ -215,7 +218,8 @@ class BuildRunner(
           when {
             value.implName.sourceId is BibixInternalSourceId &&
               value.implName.tokens == listOf("$$") -> {
-              val plugin = bibixPlugins.getValue(value.implName.sourceId.name)
+              val sourceId = value.implName.sourceId as BibixInternalSourceId
+              val plugin = bibixPlugins.getValue(sourceId.name)
               ActionRuleImplInfo(
                 value,
                 value.implName.sourceId,

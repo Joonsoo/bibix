@@ -1,11 +1,9 @@
 package com.giyeok.bibix.plugins.ktjvm;
 
-import com.giyeok.bibix.base.*;
 import org.jetbrains.kotlin.cli.common.CLITool;
 import org.jetbrains.kotlin.cli.common.ExitCode;
 import org.jetbrains.kotlin.cli.jvm.K2JVMCompiler;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;

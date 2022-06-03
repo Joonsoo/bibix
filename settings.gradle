@@ -1,2 +1,2 @@
 rootProject.name = "bibix"
-include 'bibix-ast', 'bibix-core', 'bibix-plugins'
+include 'bibix-ast', 'bibix-base', 'bibix-core', 'bibix-plugins'

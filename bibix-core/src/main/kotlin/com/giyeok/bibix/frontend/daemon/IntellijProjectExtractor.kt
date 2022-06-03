@@ -1,32 +1,38 @@
 package com.giyeok.bibix.frontend.daemon
 
 import com.giyeok.bibix.ast.BibixAst
-import com.giyeok.bibix.base.BibixValue
-import com.giyeok.bibix.base.CName
-import com.giyeok.bibix.base.MainSourceId
-import com.giyeok.bibix.base.SourceId
+import com.giyeok.bibix.base.*
 import com.giyeok.bibix.buildscript.ExprNode
 import com.giyeok.bibix.buildscript.ParamNodes
 import com.giyeok.bibix.daemon.BibixDaemonApiProto
 import com.giyeok.bibix.daemon.intellijProjectNode
 import com.giyeok.bibix.daemon.intellijProjectStructure
 import com.giyeok.bibix.frontend.BuildFrontend
+import com.giyeok.bibix.plugins.ClassPkg
 import com.giyeok.bibix.runner.*
 import com.giyeok.bibix.utils.toKtList
-import kotlin.io.path.absolute
+import java.nio.file.Path
 import kotlin.io.path.absolutePathString
 import kotlin.io.path.name
 
 class IntellijProjectExtractor(val frontend: BuildFrontend) {
-  val javaLibPlugin = Pair("com.giyeok.bibix.plugins.java.Library", "build")
-  val kotlinLibPlugin = Pair("com.giyeok.bibix.plugins.ktjvm.Library", "build")
-  val scalaLibPlugin = Pair("com.giyeok.bibix.plugins.scala.Library", "build")
-  val protobufSchemaPlugin = Pair("com.giyeok.bibix.plugins.protobuf.Compile", "schema")
-  val mavenDepPlugin = Pair("com.giyeok.bibix.plugins.maven.Dep", "build")
+  val userBuildRules = listOf(
+    Pair("com.giyeok.bibix.plugins.ktjvm.Library", "build"),
+    Pair("com.giyeok.bibix.plugins.scala.Library", "build"),
+    // Pair("com.giyeok.bibix.plugins.protobuf.Compile", "schema")
+  )
+  val nativeBuildRules = listOf(
+    Pair("com.giyeok.bibix.plugins.java.Library", "build"),
+    Pair("com.giyeok.bibix.plugins.maven.Dep", "build"),
+  )
 
   val jvmRunActionPlugin = Pair("com.giyeok.bibix.plugins.scala.Library", "build")
 
-  suspend fun traverseIntellijNestedNode(
+  private val modules = mutableListOf<CName>()
+  private val srcsMap = mutableMapOf<CName, List<Path>>()
+  private val depsMap = mutableMapOf<CName, List<ClassPkg>>()
+
+  suspend fun traverseDef(
     defs: List<BibixAst.Def>,
     cname: CName
   ): List<BibixDaemonApiProto.IntellijModuleNode> {
@@ -34,13 +40,9 @@ class IntellijProjectExtractor(val frontend: BuildFrontend) {
     defs.forEach { def ->
       when (def) {
         is BibixAst.NameDef ->
-          intellijModuleNode(cname.append(def.name()))?.let { moduleNode ->
-            modules.add(moduleNode)
-          }
-        is BibixAst.NamespaceDef -> {
-          // TODO add parent module node
-          traverseIntellijNestedNode(def.body().defs().toKtList(), cname.append(def.name()))
-        }
+          traverseModuleNode(cname.append(def.name()))
+        is BibixAst.NamespaceDef ->
+          traverseDef(def.body().defs().toKtList(), cname.append(def.name()))
         else -> {
           // do nothing
         }
@@ -58,48 +60,62 @@ class IntellijProjectExtractor(val frontend: BuildFrontend) {
     }
   }
 
-  suspend fun convertNameToModule(
+  private suspend fun evaluateModuleParams(
+    cname: CName,
+    origin: SourceId,
+    exprGraphId: Int,
+    params: List<Param>,
+    paramNodes: ParamNodes
+  ) {
+    val srcsExpr = paramExprFrom("srcs", params, paramNodes)
+    val depsExpr = paramExprFrom("deps", params, paramNodes)
+    println(srcsExpr)
+    println(depsExpr)
+    val srcsTask = BuildTask.EvalExpr(origin, exprGraphId, srcsExpr, null)
+    val depsTask = BuildTask.EvalExpr(origin, exprGraphId, depsExpr, null)
+    val values = frontend.runTasks(frontend.nextBuildId(), listOf(srcsTask, depsTask))
+    val srcs = (frontend.coercer.coerce(
+      srcsTask,
+      origin,
+      values[0] as BibixValue,
+      SetType(FileType),
+      null
+    ) as SetValue).values.map { (it as FileValue).file }
+    val deps = (frontend.coercer.coerce(
+      depsTask,
+      origin,
+      values[1] as BibixValue,
+      SetType(CustomType(CName(BibixInternalSourceId("jvm"), "ClassPkg"))),
+      null
+    ) as SetValue).values.map { ClassPkg.fromBibix(it) }
+    modules.add(cname)
+    srcsMap[cname] = srcs
+    depsMap[cname] = deps
+  }
+
+  suspend fun evaluateModuleNode(
+    cname: CName,
     origin: SourceId,
     exprGraphId: Int,
     callTarget: Any,
     paramNodes: ParamNodes
-  ): BibixDaemonApiProto.IntellijModuleNode? {
+  ) {
     when (callTarget) {
       is BuildRuleImplInfo.UserBuildRuleImplInfo -> {
-        if (callTarget.className == kotlinLibPlugin.first && callTarget.methodName == kotlinLibPlugin.second) {
-          println(callTarget)
-          val srcsExpr = paramExprFrom("srcs", callTarget.params, paramNodes)
-          val depsExpr = paramExprFrom("deps", callTarget.params, paramNodes)
-          println(srcsExpr)
-          println(depsExpr)
-          val srcsTask = BuildTask.EvalExpr(origin, exprGraphId, srcsExpr, null)
-          val depsTask = BuildTask.EvalExpr(origin, exprGraphId, depsExpr, null)
-          val values = frontend.runTasks(frontend.nextBuildId(), listOf(srcsTask, depsTask))
-          println(values)
-          val srcs = frontend.coercer.coerce(
-            srcsTask,
-            origin,
-            values[0] as BibixValue,
-            SetType(FileType),
-            null
-          )
-          println(srcs)
+        if (userBuildRules.contains(Pair(callTarget.className, callTarget.methodName))) {
+          evaluateModuleParams(cname, origin, exprGraphId, callTarget.params, paramNodes)
         }
       }
       is BuildRuleImplInfo.NativeBuildRuleImplInfo -> {
-        if (callTarget.javaClass.canonicalName == mavenDepPlugin.first && callTarget.methodName == mavenDepPlugin.second) {
-          println(callTarget)
-          val srcsExpr = paramExprFrom("srcs", callTarget.params, paramNodes)
-          val depsExpr = paramExprFrom("deps", callTarget.params, paramNodes)
-          println(srcsExpr)
-          println(depsExpr)
+        val pair = Pair(callTarget.cls.canonicalName, callTarget.methodName)
+        if (nativeBuildRules.contains(pair)) {
+          evaluateModuleParams(cname, origin, exprGraphId, callTarget.params, paramNodes)
         }
       }
     }
-    return null
   }
 
-  suspend fun intellijModuleNode(cname: CName): BibixDaemonApiProto.IntellijModuleNode? {
+  suspend fun traverseModuleNode(cname: CName): BibixDaemonApiProto.IntellijModuleNode? {
     val value = frontend.buildRunner.buildGraph.names[cname] ?: return null
     when (value) {
 //      is CNameValue.ActionCallValue -> TODO()
@@ -122,7 +138,8 @@ class IntellijProjectExtractor(val frontend: BuildFrontend) {
                 BuildTask.ResolveName(callExpr.target.name)
               )
               if (callTarget != null) {
-                return convertNameToModule(
+                evaluateModuleNode(
+                  cname,
                   cname.sourceId,
                   value.exprGraphId,
                   callTarget,
@@ -144,15 +161,16 @@ class IntellijProjectExtractor(val frontend: BuildFrontend) {
   suspend fun extractIntellijProjectStructure(): BibixDaemonApiProto.IntellijProjectStructure {
     val projectBaseDir = frontend.projectDir
 
+    traverseDef(frontend.ast.defs().toKtList(), CName(MainSourceId))
+
+    println(modules)
+    println(srcsMap)
+    println(depsMap)
     return intellijProjectStructure {
       this.project = intellijProjectNode {
         this.name = projectBaseDir.name
         this.path = projectBaseDir.absolutePathString()
         this.sdkName = "1.8" // ??
-
-        this.modules.addAll(
-          traverseIntellijNestedNode(frontend.ast.defs().toKtList(), CName(MainSourceId))
-        )
       }
     }
   }

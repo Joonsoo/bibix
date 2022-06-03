@@ -28,7 +28,7 @@ sourceSets {
 }
 
 dependencies {
-    implementation project(':bibix-core')
+    implementation project(':bibix-base')
 
     implementation "org.jetbrains.kotlin:kotlin-compiler:1.6.20"
 

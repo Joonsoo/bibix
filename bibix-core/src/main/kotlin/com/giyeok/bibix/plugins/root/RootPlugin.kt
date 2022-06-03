@@ -26,7 +26,7 @@ val rootScript = BibixPlugin.fromScript(
       tag?: string,
       branch?: string,
       ref?: string,
-      path: string = "/",
+      path: string = "",
     ): GitSource = native:com.giyeok.bibix.plugins.root.Git
     
     def glob(

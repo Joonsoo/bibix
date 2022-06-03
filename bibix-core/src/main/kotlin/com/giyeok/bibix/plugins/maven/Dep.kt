@@ -45,6 +45,12 @@ class Dep {
     val artifactId = (context.arguments.getValue("artifact") as StringValue).value
     val extension = (context.arguments.getValue("extension") as StringValue).value
     val version = (context.arguments["version"] as? StringValue)?.value
+    val scope = (context.arguments.getValue("scope") as EnumValue).value
+    val javaScope = when (scope) {
+      "compile" -> JavaScopes.COMPILE
+      "test" -> JavaScopes.TEST
+      else -> TODO()
+    }
     val repos = (context.arguments.getValue("repos") as ListValue).values.map { resolver ->
       val tuple = ((resolver as ClassInstanceValue).value as NamedTupleValue)
       Pair(
@@ -69,9 +75,9 @@ class Dep {
     artifactRequest.repositories = repositories
 
     val collectRequest = CollectRequest()
-    collectRequest.root = Dependency(artifact, JavaScopes.COMPILE)
+    collectRequest.root = Dependency(artifact, javaScope)
     collectRequest.repositories = repositories
-    val classpathFilter = DependencyFilterUtils.classpathFilter(JavaScopes.COMPILE)
+    val classpathFilter = DependencyFilterUtils.classpathFilter(javaScope)
     val dependencyRequest = DependencyRequest(collectRequest, classpathFilter)
     val dependencyResult = system.resolveDependencies(session, dependencyRequest)
 //    println("dependencies: $dependencyResult")

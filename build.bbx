@@ -12,21 +12,21 @@ jparserVersion = "0.5"
 arg ktjvm.kotlinVersion as kotlinVersion: string = "1.6.10"
 floggerVersion = "0.7.4"
 
-parserData = jparser.parsergen(
-  src = "bibix.cdg",
-  objectName = "BibixAst",
-  parserDataFile = "parserdata.pb"
-)
+// parserData = jparser.parsergen(
+//   src = "bibix.cdg",
+//   objectName = "BibixAst",
+//   parserDataFile = "parserdata.pb"
+// )
 
-ast = scala.library(
-  srcs = [parserData.astCode],
-  deps = [
-    jparser.base,
-    jparser.fast,
-    maven.dep("org.scala-lang", "scala-library", "2.13.8"),
-  ],
-  resources = [parserData.parserData]
-)
+// ast = scala.library(
+//   srcs = [parserData.astCode],
+//   deps = [
+//     jparser.base,
+//     jparser.fast,
+//     maven.dep("org.scala-lang", "scala-library", "2.13.8"),
+//   ],
+//   resources = [parserData.parserData]
+// )
 
 ast0 = scala.library(
   srcs = [
@@ -85,7 +85,7 @@ namespace proto {
 }
 
 base = ktjvm.library(
-  srcs = glob("bibix-core/src/main/kotlin/com/giyeok/bibix/base/*.kt"),
+  srcs = glob("bibix-base/src/main/kotlin/**/*.kt"),
   deps = [
     maven.dep("org.jetbrains.kotlin", "kotlin-stdlib-jdk8", kotlinVersion),
     proto.javalib,
@@ -101,6 +101,7 @@ baseJar = jvm.uberJar(
 core = ktjvm.library(
   srcs = glob("bibix-core/src/main/kotlin/**/*.kt"),
   deps = [
+    base,
     proto.javalib,
     proto.kotlinlib,
     jvm.lib("lib/bibix-ast-0.0.3.jar"),
@@ -145,11 +146,10 @@ coreTest = ktjvm.library(
   deps = [
     core,
     maven.dep("com.google.jimfs", "jimfs", "1.2"),
-    maven.dep("com.junit.jupiter", "junit-jupiter-api", junitVersion),
+    maven.dep("org.junit.jupiter", "junit-jupiter-api", junitVersion, scope=maven.ScopeType.test),
     maven.dep("com.google.truth", "truth", "1.1.3"),
-  ],
-  runtimeDeps = [
-    maven.dep("com.junit.jupiter", "junit-jupiter-engine", junitVersion),
+    // runtime deps?
+    maven.dep("org.junit.jupiter", "junit-jupiter-engine", junitVersion, scope=maven.ScopeType.test),
   ]
 )
 

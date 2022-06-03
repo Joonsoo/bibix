@@ -8,7 +8,7 @@ class BuildTaskRelGraph {
   }
 
   // end를 활용해서 좀더 빠르게 할 수도 있지 않을지?
-  fun findCycleBetween(start: BuildTask, end: BuildTask): List<BuildTask>? {
+  fun findCycleBetween(start: BuildTask, end: BuildTask): List<BuildTask>? = synchronized(this) {
     fun traverse(task: BuildTask, path: List<BuildTask>): List<BuildTask>? {
       if (task == start) {
         return path

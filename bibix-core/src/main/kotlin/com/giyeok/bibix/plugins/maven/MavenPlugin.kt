@@ -10,6 +10,9 @@ val mavenPlugin = BibixPlugin.fromScript(
     enum RepoType {
       local, remote
     }
+    enum ScopeType {
+      compile, test
+    }
     class MavenRepo = (repoType: RepoType, url: string)
     
     arg defaultRepos: list<MavenRepo> = [
@@ -20,6 +23,7 @@ val mavenPlugin = BibixPlugin.fromScript(
       group: string,
       artifact: string,
       version?: string,
+      scope: ScopeType = ScopeType.compile,
       extension: string = "jar",
       repos: list<MavenRepo> = defaultRepos,
     ): jvm.ClassPkg = native:com.giyeok.bibix.plugins.maven.Dep

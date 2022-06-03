@@ -49,8 +49,8 @@ sealed class CpInfo {
   companion object {
     fun fromBibix(value: BibixValue): CpInfo {
       value as ClassInstanceValue
-      value.value as ClassInstanceValue
-      return when (value.value.className.tokens) {
+      val vv = value.value as ClassInstanceValue
+      return when (vv.className.tokens) {
         listOf("JarInfo") -> JarInfo.fromBibix(value.value)
         listOf("ClassesInfo") -> ClassesInfo.fromBibix(value.value)
         else -> TODO()
@@ -120,8 +120,8 @@ sealed class ClassOrigin {
   companion object {
     fun fromBibix(value: BibixValue): ClassOrigin {
       value as ClassInstanceValue
-      value.value as ClassInstanceValue
-      return when (value.value.className.tokens) {
+      val vv = value.value as ClassInstanceValue
+      return when (vv.className.tokens) {
         listOf("MavenDep") -> MavenDep.fromBibix(value.value)
         listOf("LocalBuilt") -> LocalBuilt.fromBibix(value.value)
         listOf("LocalLib") -> LocalLib.fromBibix(value.value)

@@ -20,9 +20,9 @@ class GenClassesKt {
     ) {
       val clsName = cls.className.tokens.last()
       p.println("${indent}data class $clsName(")
-      when (cls.bodyType) {
+      when (val bodyType = cls.bodyType) {
         is TypeValue.NamedTupleTypeValue ->
-          cls.bodyType.elemTypes.forEach { field ->
+          bodyType.elemTypes.forEach { field ->
             p.println("$indent  val ${field.first}: ${bibixTypeToKtType(field.second)},")
           }
         else -> p.println("$indent  val value: ${bibixTypeToKtType(cls.bodyType)}")
@@ -36,17 +36,17 @@ class GenClassesKt {
       p.println("$indent    fun fromBibix(value: BibixValue): $clsName {")
       p.println("$indent      value as ClassInstanceValue")
       p.println("$indent      check(value.className.tokens == listOf(${cls.className.tokens.joinToString { "\"$it\"" }}))")
-      when (cls.bodyType) {
+      when (val bodyType = cls.bodyType) {
         is TypeValue.NamedTupleTypeValue -> {
           p.println("$indent      val body = value.value as NamedTupleValue")
-          cls.bodyType.elemTypes.forEachIndexed { index, field ->
+          bodyType.elemTypes.forEachIndexed { index, field ->
             val convert = bibixValueToKt("body.pairs[$index].second", field.second)
             p.println("$indent      val ${field.first} = $convert")
           }
-          p.println("$indent      return $clsName(${cls.bodyType.elemTypes.joinToString { it.first }})")
+          p.println("$indent      return $clsName(${bodyType.elemTypes.joinToString { it.first }})")
         }
         else -> {
-          val convert = bibixValueToKt("value.value", cls.bodyType)
+          val convert = bibixValueToKt("value.value", bodyType)
           p.println("$indent      val value = $convert")
           p.println("$indent      return $clsName(value)")
         }
@@ -55,10 +55,10 @@ class GenClassesKt {
       p.println("$indent  }")
       p.println("$indent  fun toBibix() = NClassInstanceValue(")
       p.println("$indent    \"${cls.relativeName.joinToString(".")}\",")
-      when (cls.bodyType) {
+      when (val bodyType = cls.bodyType) {
         is TypeValue.NamedTupleTypeValue -> {
           p.println("$indent    NamedTupleValue(")
-          cls.bodyType.elemTypes.forEachIndexed { index, field ->
+          bodyType.elemTypes.forEachIndexed { index, field ->
             val convert = ktValueToBibix(field.first, field.second)
             p.println("$indent      \"${field.first}\" to $convert,")
           }
@@ -66,7 +66,7 @@ class GenClassesKt {
         }
         is TypeValue.UnionTypeValue -> TODO() // must not happen
         else -> {
-          p.println("$indent    ${ktValueToBibix("value", cls.bodyType)}")
+          p.println("$indent    ${ktValueToBibix("value", bodyType)}")
         }
       }
       p.println("$indent  )")
@@ -115,7 +115,7 @@ class GenClassesKt {
           classTypes.forEach { clsType ->
             val detail = classTypeDetailsMap.getValue(clsType.className)
             if (detail.bodyType is TypeValue.UnionTypeValue) {
-              detail.bodyType.types.forEach { subType ->
+              (detail.bodyType as TypeValue.UnionTypeValue).types.forEach { subType ->
                 if (subType is TypeValue.ClassTypeValue) {
                   superclasses[subType.className] = clsType.className
                 }
