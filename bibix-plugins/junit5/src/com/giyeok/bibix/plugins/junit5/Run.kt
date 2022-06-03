@@ -12,9 +12,11 @@ class Run {
       "resolveClassPkgs",
       mapOf("classPkgs" to deps)
     ) { classPaths ->
-      val cps = ((classPaths as ClassInstanceValue).value as SetValue).values.map {
+      val classPathsValue = (classPaths as ClassInstanceValue).value as NamedTupleValue
+      val cps = (classPathsValue.getValue("cps") as SetValue).values.map {
         (it as PathValue).path
       }
+      val res = classPathsValue.getValue("res") as SetValue // set<path>
 
       val launcher = LauncherFactory.create()
       val discoveryRequest = LauncherDiscoveryRequestBuilder.request()

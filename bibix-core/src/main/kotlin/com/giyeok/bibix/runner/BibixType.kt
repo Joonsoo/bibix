@@ -18,7 +18,9 @@ data class NamedTupleType(val pairs: List<Pair<String, BibixType>>) : BibixType(
   fun names() = pairs.map { it.first }
   fun valueTypes() = pairs.map { it.second }
 }
+
 data class UnionType(val types: List<BibixType>) : BibixType()
+object NoneType : BibixType()
 object BuildRuleDefType : BibixType()
 object ActionRuleDefType : BibixType()
 object TypeType : BibixType()

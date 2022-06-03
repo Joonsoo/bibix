@@ -6,11 +6,12 @@ import com.giyeok.bibix.utils.toProto
 import org.eclipse.jgit.api.Git
 import org.eclipse.jgit.transport.CredentialsProvider
 import org.eclipse.jgit.transport.URIish
-import java.io.File
 import java.io.IOException
+import java.nio.file.Path
 import java.util.concurrent.locks.Lock
 import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.withLock
+import kotlin.io.path.readText
 
 // 지원되는 source 종류:
 // "path/to/source/on/local"
@@ -44,13 +45,14 @@ class ImportSourceResolver(
         }
         // 두 곳 이상에서 같은 git repo를 건드리지 않도록
         lock.withLock {
-          val destDirectory = repo.prepareSourceDirectory(sourceId)
+          val srcDirectory = repo.prepareSourceDirectory(sourceId)
+          val srcDirectoryFile = srcDirectory.toFile()
 
           // TODO credentialsProvider
           val credentialsProvider = CredentialsProvider.getDefault()
 
           val existingRepo = try {
-            Git.open(destDirectory)
+            Git.open(srcDirectoryFile)
           } catch (e: IOException) {
             null
           }
@@ -75,7 +77,7 @@ class ImportSourceResolver(
             progressIndicator.updateProgressDescription("Cloning git repository from $url @ $ref")
             Git.cloneRepository()
               .setURI(url)
-              .setDirectory(destDirectory)
+              .setDirectory(srcDirectoryFile)
               .setBranch(ref)
               .setCredentialsProvider(credentialsProvider)
               .call()
@@ -83,8 +85,8 @@ class ImportSourceResolver(
 
           gitRepo.checkout().setName(ref).call()
 
-          val baseDirectory = File(destDirectory, path)
-          val scriptSource = File(baseDirectory, "build.bbx").readText()
+          val baseDirectory = srcDirectory.resolve(path)
+          val scriptSource = baseDirectory.resolve("build.bbx").readText()
           val parsed = BibixAst.parseAst(scriptSource)
 
           if (parsed.isRight) {
@@ -101,12 +103,12 @@ class ImportSourceResolver(
   }
 
   fun resolveImportSourcePath(
-    mainBaseDirectory: File,
+    mainBaseDirectory: Path,
     path: DirectoryValue,
     progressIndicator: ProgressIndicator
   ): ImportedSource {
     val baseDirectory = path.directory
-    val scriptSource = File(baseDirectory, "build.bbx").readText()
+    val scriptSource = baseDirectory.resolve("build.bbx").readText()
     val parsed = BibixAst.parseAst(scriptSource)
 
     if (parsed.isRight) {
@@ -117,7 +119,7 @@ class ImportSourceResolver(
 
     val sourceId = sourceId {
       // TODO mainBaseDirectory에 대한 상대 경로로 저장
-      this.localSource = path.directory.path
+      this.localSource = path.directory.normalize().toString()
     }
 
     return ImportedSource(sourceId, baseDirectory, parsed.left().get())
@@ -126,6 +128,6 @@ class ImportSourceResolver(
 
 data class ImportedSource(
   val sourceId: BibixIdProto.SourceId,
-  val baseDirectory: File,
+  val baseDirectory: Path,
   val buildScript: BibixAst.BuildScript,
 )

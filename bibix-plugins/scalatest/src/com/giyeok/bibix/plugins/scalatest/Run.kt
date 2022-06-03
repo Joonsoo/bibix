@@ -19,9 +19,11 @@ class Run {
       "jvm.resolveClassPkgs",
       mapOf("classPkgs" to deps)
     ) { classPaths ->
-      val cps = ((classPaths as ClassInstanceValue).value as SetValue).values.map {
+      val classPathsValue = (classPaths as ClassInstanceValue).value as NamedTupleValue
+      val cps = (classPathsValue.getValue("cps") as SetValue).values.map {
         (it as PathValue).path
       }
+      val res = classPathsValue.getValue("res") as SetValue // set<path>
       val classCollector = ClassCollector(targetCps, cps)
 
       // allTargetClasses 중에서 org.scalatest.Suite를 extend하는 것들 찾아서

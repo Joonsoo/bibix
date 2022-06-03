@@ -2,9 +2,10 @@ package com.giyeok.bibix.frontend.cli
 
 import com.giyeok.bibix.base.*
 import com.giyeok.bibix.frontend.BuildFrontend
-import java.io.File
+import java.nio.file.Paths
 import java.time.Duration
 import java.time.Instant
+import kotlin.io.path.absolute
 import kotlin.system.exitProcess
 
 object BibixCli {
@@ -25,7 +26,7 @@ object BibixCli {
     val useDebuggingMode = buildArgs.contains("--debug")
 
     val buildFrontend = BuildFrontend(
-      File(".").absoluteFile,
+      Paths.get("").absolute(),
       buildArgsMap,
       ListValue(actionArgs.map { StringValue(it) })
     )

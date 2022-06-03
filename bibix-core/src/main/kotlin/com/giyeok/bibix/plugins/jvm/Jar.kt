@@ -11,7 +11,7 @@ import java.util.zip.ZipEntry
 import java.util.zip.ZipException
 import java.util.zip.ZipInputStream
 import java.util.zip.ZipOutputStream
-import kotlin.io.path.isRegularFile
+import kotlin.io.path.*
 
 class Jar {
   fun jar(context: BuildContext): BibixValue {
@@ -20,7 +20,7 @@ class Jar {
 
   fun uberJar(context: BuildContext): BuildRuleReturn {
     val jarFileName = (context.arguments.getValue("jarFileName") as StringValue).value
-    val destFile = File(context.destDirectory, jarFileName)
+    val destFile = context.destDirectory.resolve(jarFileName)
 
     if (!context.hashChanged) {
       return BuildRuleReturn.value(FileValue(destFile))
@@ -36,7 +36,7 @@ class Jar {
           cp as PathValue
           val dep = cp.path
 
-          if (dep.isFile) {
+          if (dep.isRegularFile()) {
             // TODO dep is jar file
             ZipInputStream(dep.inputStream().buffered()).use { zis ->
               var entry = zis.nextEntry
@@ -58,13 +58,13 @@ class Jar {
               zis.closeEntry()
             }
           } else {
-            check(dep.isDirectory)
-            Files.walk(Path.of(dep.canonicalPath)).toList().forEach { path ->
+            check(dep.isDirectory())
+            Files.walk(dep).toList().forEach { path ->
               if (path.isRegularFile()) {
-                val filePath = path.toFile().relativeTo(dep.canonicalFile)
-                if (!filePath.startsWith("META-INF") && filePath.path != "module-info.class") {
+                val filePath = path.relativeTo(dep).absolutePathString()
+                if (!filePath.startsWith("META-INF") && filePath != "module-info.class") {
                   try {
-                    zos.putNextEntry(ZipEntry(filePath.path))
+                    zos.putNextEntry(ZipEntry(filePath))
                     transferFromStreamToStream(path.toFile().inputStream().buffered(), zos)
                   } catch (e: ZipException) {
                     // TODO 일단 무시하고 진행하도록
@@ -82,7 +82,7 @@ class Jar {
 
   fun executableUberJar(context: BuildContext): BuildRuleReturn {
     val jarFileName = (context.arguments.getValue("jarFileName") as StringValue).value
-    val destFile = File(context.destDirectory, jarFileName)
+    val destFile = context.destDirectory.resolve(jarFileName)
 
     if (!context.hashChanged) {
       return BuildRuleReturn.value(FileValue(destFile))
@@ -99,7 +99,7 @@ class Jar {
           cp as PathValue
           val dep = cp.path
 
-          if (dep.isFile) {
+          if (dep.isRegularFile()) {
             // TODO dep is jar file
             ZipInputStream(dep.inputStream().buffered()).use { zis ->
               var entry = zis.nextEntry
@@ -121,13 +121,13 @@ class Jar {
               zis.closeEntry()
             }
           } else {
-            check(dep.isDirectory)
-            Files.walk(Path.of(dep.canonicalPath)).toList().forEach { path ->
+            check(dep.isDirectory())
+            Files.walk(dep).toList().forEach { path ->
               if (path.isRegularFile()) {
-                val filePath = path.toFile().relativeTo(dep.canonicalFile)
-                if (!filePath.startsWith("META-INF") && filePath.path != "module-info.class") {
+                val filePath = path.relativeTo(dep).absolutePathString()
+                if (!filePath.startsWith("META-INF") && filePath != "module-info.class") {
                   try {
-                    zos.putNextEntry(ZipEntry(filePath.path))
+                    zos.putNextEntry(ZipEntry(filePath))
                     transferFromStreamToStream(path.toFile().inputStream().buffered(), zos)
                   } catch (e: ZipException) {
                     // TODO 일단 무시하고 진행하도록

@@ -4,39 +4,42 @@ import com.giyeok.bibix.base.*
 import scala.jdk.`CollectionConverters$`
 import scala.tools.nsc.Global
 import scala.tools.nsc.Settings
+import kotlin.io.path.absolutePathString
 
 class Library {
   fun build(context: BuildContext): BuildRuleReturn {
     val deps = context.arguments.getValue("deps") as SetValue
+    val srcsValue = context.arguments.getValue("srcs") as SetValue
     if (!context.hashChanged) {
       return BuildRuleReturn.value(
         TupleValue(
-          StringValue("built by scala.library: " + context.objectIdHash),
-          SetValue(PathValue(context.destDirectory)),
-          deps
+          ClassPkg(
+            LocalBuilt("built by scala.library: ${context.objectIdHash}"),
+            ClassesInfo(listOf(context.destDirectory), listOf(), null),
+            deps.values.map { ClassPkg.fromBibix(it) }
+          ).toBibix()
         )
       )
     }
 
-    val srcs =
-      (context.arguments.getValue("srcs") as SetValue).values.map { (it as FileValue).file }
+    val srcs = srcsValue.values.map { (it as FileValue).file }
     check(srcs.isNotEmpty()) { "srcs must not be empty" }
     return BuildRuleReturn.evalAndThen(
       "jvm.resolveClassPkgs",
       mapOf("classPkgs" to deps)
     ) { classPaths ->
       val settings = Settings()
-      val cps = (classPaths as ClassInstanceValue).value as SetValue
+      val cps = (classPaths as ClassInstanceValue).value as SetValue // set<path>
       cps.values.forEach { cp ->
         val cpPath = (cp as PathValue).path
-        settings.classpath().append(cpPath.absolutePath)
+        settings.classpath().append(cpPath.absolutePathString())
       }
-      settings.outputDirs().setSingleOutput(context.destDirectory.absolutePath)
+      settings.outputDirs().setSingleOutput(context.destDirectory.absolutePathString())
       // settings.usejavacp().`value_$eq`(true)
 
       val global = Global(settings)
       val run = global.Run()
-      val srcPaths = srcs.map { it.absolutePath }
+      val srcPaths = srcs.map { it.absolutePathString() }
       val srcScala = `CollectionConverters$`.`MODULE$`.ListHasAsScala(srcPaths).asScala().toList()
       run.compile(srcScala)
 
@@ -48,11 +51,11 @@ class Library {
       }
 
       BuildRuleReturn.value(
-        TupleValue(
-          StringValue("built by scala.library: " + context.objectIdHash),
-          SetValue(PathValue(context.destDirectory)),
-          deps
-        )
+        ClassPkg(
+          LocalBuilt("built by scala.library: ${context.objectIdHash}"),
+          ClassesInfo(listOf(context.destDirectory), listOf(), null),
+          deps.values.map { ClassPkg.fromBibix(it) }
+        ).toBibix()
       )
     }
   }

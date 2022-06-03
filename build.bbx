@@ -28,6 +28,24 @@ ast = scala.library(
   resources = [parserData.parserData]
 )
 
+ast0 = scala.library(
+  srcs = [
+    "bibix-ast/src/generated/scala/com/giyeok/bibix/ast/BibixAst.scala",
+  ],
+  deps = [
+    jvm.lib("lib/jparser-base-0.2.3.jar"),
+    jvm.lib("lib/jparser-fast-0.2.3.jar"),
+    jvm.lib("lib/jparser-naive-0.2.3.jar"),
+    jvm.lib("lib/jparser-utils-0.2.3.jar"),
+    maven.dep("org.scala-lang", "scala-library", "2.13.8"),
+    maven.dep("com.google.protobuf", "protobuf-java", "3.19.4"),
+    maven.dep("com.google.protobuf", "protobuf-java-util", "3.19.4"),
+  ],
+  //resources = ["bibix-ast/src/generated/resources/parserdata.pb"],
+)
+
+ast0Jar = jvm.jar(deps=[ast0], jarFileName="bibix-ast-0.0.3.jar")
+
 namespace proto {
   schema = protobuf.schema(
     srcs = [
@@ -85,7 +103,7 @@ core = ktjvm.library(
   deps = [
     proto.javalib,
     proto.kotlinlib,
-    jvm.lib("lib/bibix-ast-0.0.1-SNAPSHOT.jar"),
+    jvm.lib("lib/bibix-ast-0.0.3.jar"),
 
     maven.dep("org.jetbrains.kotlin", "kotlin-stdlib-jdk8", kotlinVersion),
     maven.dep("org.jetbrains.kotlin", "kotlin-reflect", kotlinVersion),
@@ -120,6 +138,21 @@ core = ktjvm.library(
   ],
 )
 
+junitVersion = "5.8.2"
+
+coreTest = ktjvm.library(
+  srcs = glob("bibix-core/src/test/kotlin/**/*.kt"),
+  deps = [
+    core,
+    maven.dep("com.google.jimfs", "jimfs", "1.2"),
+    maven.dep("com.junit.jupiter", "junit-jupiter-api", junitVersion),
+    maven.dep("com.google.truth", "truth", "1.1.3"),
+  ],
+  runtimeDeps = [
+    maven.dep("com.junit.jupiter", "junit-jupiter-engine", junitVersion),
+  ]
+)
+
 uberJar = jvm.executableUberJar(
   deps = [core],
   mainClass = "com.giyeok.bibix.frontend.cli.BibixCli",
@@ -130,15 +163,4 @@ action run(args) = jvm.run(
   deps = [core],
   mainClass = "com.giyeok.bibix.frontend.cli.BibixCli",
   args = args,
-)
-
-import "bibix-plugins/scalatest" as scalatest
-
-from git("https://github.com/Joonsoo/jparser.git") import tests as jparserTests
-action runScalaTests = scalatest.run(
-  deps = [
-    jparserTests.baseTests,
-    jparserTests.naiveTests,
-    jparserTests.metalangTests,
-  ],
 )

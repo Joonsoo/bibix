@@ -13,7 +13,9 @@ import com.giyeok.bibix.daemon.intellijProjectStructure
 import com.giyeok.bibix.frontend.BuildFrontend
 import com.giyeok.bibix.runner.*
 import com.giyeok.bibix.utils.toKtList
-import com.google.protobuf.ByteString
+import kotlin.io.path.absolute
+import kotlin.io.path.absolutePathString
+import kotlin.io.path.name
 
 class IntellijProjectExtractor(val frontend: BuildFrontend) {
   val javaLibPlugin = Pair("com.giyeok.bibix.plugins.java.Library", "build")
@@ -145,7 +147,7 @@ class IntellijProjectExtractor(val frontend: BuildFrontend) {
     return intellijProjectStructure {
       this.project = intellijProjectNode {
         this.name = projectBaseDir.name
-        this.path = projectBaseDir.absolutePath
+        this.path = projectBaseDir.absolutePathString()
         this.sdkName = "1.8" // ??
 
         this.modules.addAll(

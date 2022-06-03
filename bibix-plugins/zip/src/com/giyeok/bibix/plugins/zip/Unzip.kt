@@ -3,9 +3,11 @@ package com.giyeok.bibix.plugins.zip
 import com.giyeok.bibix.base.BuildContext
 import com.giyeok.bibix.base.DirectoryValue
 import com.giyeok.bibix.base.FileValue
-import java.io.File
-import java.io.FileOutputStream
 import java.util.zip.ZipInputStream
+import kotlin.io.path.createDirectory
+import kotlin.io.path.inputStream
+import kotlin.io.path.notExists
+import kotlin.io.path.outputStream
 
 class Unzip {
   fun build(context: BuildContext): DirectoryValue {
@@ -16,11 +18,13 @@ class Unzip {
       ZipInputStream(zipFile.inputStream().buffered()).use { zis ->
         var entry = zis.nextEntry
         while (entry != null) {
+          val entryPath = destDirectory.resolve(entry.name)
           if (entry.isDirectory) {
-            File(destDirectory, entry.name).mkdir()
+            if (entryPath.notExists()) {
+              entryPath.createDirectory()
+            }
           } else {
-            val destFile = File(destDirectory, entry.name)
-            FileOutputStream(destFile).use { output ->
+            entryPath.outputStream().buffered().use { output ->
               val buffer = ByteArray(1000)
               var count: Int
               while (zis.read(buffer, 0, 1000).also { count = it } >= 0) {

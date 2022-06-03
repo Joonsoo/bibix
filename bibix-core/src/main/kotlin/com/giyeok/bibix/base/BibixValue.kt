@@ -1,6 +1,6 @@
 package com.giyeok.bibix.base
 
-import java.io.File
+import java.nio.file.Path
 
 sealed class BibixValue
 
@@ -12,15 +12,15 @@ data class StringValue(val value: String) : BibixValue() {
   override fun toString(): String = "\"$value\""
 }
 
-data class PathValue(val path: File) : BibixValue() {
+data class PathValue(val path: Path) : BibixValue() {
   override fun toString(): String = "path($path)"
 }
 
-data class FileValue(val file: File) : BibixValue() {
+data class FileValue(val file: Path) : BibixValue() {
   override fun toString(): String = "file($file)"
 }
 
-data class DirectoryValue(val directory: File) : BibixValue() {
+data class DirectoryValue(val directory: Path) : BibixValue() {
   override fun toString(): String = "dir($directory)"
 }
 
@@ -175,6 +175,10 @@ sealed class TypeValue : BibixValue() {
     override fun toString(): String = "{${types.joinToString()}}"
   }
 
+  object NoneTypeValue : TypeValue() {
+    override fun toString(): String = "none"
+  }
+
   object BuildRuleDefTypeValue : TypeValue() {
     override fun toString(): String = "buildrule"
   }
@@ -192,12 +196,12 @@ fun BibixValue.stringify(): String = when (this) {
   is NClassInstanceValue -> this.toString()
   is ClassInstanceValue -> this.toString()
   is BooleanValue -> value.toString()
-  is DirectoryValue -> directory.canonicalPath
+  is DirectoryValue -> directory.normalize().toString()
   is EnumValue -> value
-  is FileValue -> file.canonicalPath
+  is FileValue -> file.normalize().toString()
   is ListValue -> "[${values.joinToString { it.stringify() }}]"
   is NamedTupleValue -> "(${pairs.joinToString { "${it.first}=${it.second.stringify()}" }})"
-  is PathValue -> path.canonicalPath
+  is PathValue -> path.normalize().toString()
   is SetValue -> "[${values.joinToString { it.stringify() }}]"
   is StringValue -> value
   is TupleValue -> "(${values.joinToString { it.stringify() }})"

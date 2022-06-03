@@ -1,6 +1,9 @@
 package com.giyeok.bibix.plugins.maven
 
 import com.giyeok.bibix.base.*
+import com.giyeok.bibix.plugins.ClassPkg
+import com.giyeok.bibix.plugins.JarInfo
+import com.giyeok.bibix.plugins.MavenDep
 import org.apache.maven.repository.internal.MavenRepositorySystemUtils
 import org.eclipse.aether.*
 import org.eclipse.aether.artifact.Artifact
@@ -26,6 +29,7 @@ import org.eclipse.aether.util.artifact.JavaScopes
 import org.eclipse.aether.util.filter.DependencyFilterUtils
 import java.io.File
 import java.io.PrintStream
+import java.nio.file.Path
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
 import java.util.*
@@ -75,37 +79,21 @@ class Dep {
 
     val artifactsMap = dependencyResult.artifactResults.associateBy { it.artifact }
 
-    fun traverse(node: DependencyNode): TupleValue {
+    fun traverse(node: DependencyNode): ClassPkg {
       val artifactResult = artifactsMap.getValue(node.artifact)
-      return TupleValue(
+      return ClassPkg(
         mavenDep("central", artifactResult.artifact),
-        SetValue(PathValue(artifactResult.artifact.file)),
-        SetValue(
-          node.children.filter { artifactsMap.containsKey(it.artifact) }.map { traverse(it) }),
+        JarInfo(artifactResult.artifact.file.toPath(), null),
+        node.children.filter { artifactsMap.containsKey(it.artifact) }.map { traverse(it) },
       )
     }
 
     val dep = traverse(dependencyResult.root)
-    return dep
+    return dep.toBibix()
   }
 
-  private fun mavenDep(repo: String, artifact: Artifact): BibixValue =
-    mavenDep(repo, artifact.groupId, artifact.artifactId, artifact.version)
-
-  private fun mavenDep(
-    repo: String,
-    group: String,
-    artifact: String,
-    version: String
-  ): BibixValue = NClassInstanceValue(
-    "jvm.MavenDep",
-    NamedTupleValue(
-      "repo" to StringValue(repo),
-      "group" to StringValue(group),
-      "artifact" to StringValue(artifact),
-      "version" to StringValue(version),
-    )
-  )
+  private fun mavenDep(repo: String, artifact: Artifact): MavenDep =
+    MavenDep(repo, artifact.groupId, artifact.artifactId, artifact.version)
 
   private fun newRepositorySystem(): RepositorySystem {
     // from https://github.com/snyk/aether-demo/blob/master/aether-demo-snippets/src/main/java/org/eclipse/aether/examples/manual/ManualRepositorySystemFactory.java
@@ -125,12 +113,12 @@ class Dep {
   }
 
   fun newRepositorySystemSession(
-    localRepoBaseDirectory: File,
+    localRepoBaseDirectory: Path,
     system: RepositorySystem
   ): DefaultRepositorySystemSession {
     val session = MavenRepositorySystemUtils.newSession()
     // TODO repo 위치 수정 - build rule 사이에 공유 가능한 위치가 필요하네..
-    val localRepo = LocalRepository(localRepoBaseDirectory)
+    val localRepo = LocalRepository(localRepoBaseDirectory.toFile())
     session.localRepositoryManager = system.newLocalRepositoryManager(session, localRepo)
     session.transferListener = ConsoleTransferListener()
     session.repositoryListener = ConsoleRepositoryListener()

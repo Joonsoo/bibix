@@ -3,14 +3,15 @@ package com.giyeok.bibix.plugins.root
 import com.giyeok.bibix.base.*
 import java.nio.file.FileSystems
 import java.nio.file.Files
+import kotlin.io.path.absolutePathString
 
 class Glob {
   fun build(context: BuildContext): SetValue {
-    val fileSystem = FileSystems.getDefault()
+    val fileSystem = context.fileSystem
     val matcher = when (val pattern = context.arguments.getValue("pattern")) {
       is StringValue -> {
         val matcherPattern =
-          "glob:" + context.callerBaseDirectory.canonicalPath + "/" + pattern.value
+          "glob:" + context.callerBaseDirectory.absolutePathString() + "/" + pattern.value
         fileSystem.getPathMatcher(matcherPattern)
       }
       is SetValue -> {
@@ -20,11 +21,10 @@ class Glob {
       else -> throw AssertionError()
     }
 
-    val matched =
-      Files.walk(fileSystem.getPath(context.callerBaseDirectory.canonicalPath)).filter { path ->
-        matcher.matches(path)
-      }
-    val matchedList = matched.map { PathValue(it.toFile()) }.toList()
+    val matched = Files.walk(context.callerBaseDirectory).filter { path ->
+      matcher.matches(path)
+    }
+    val matchedList = matched.map { PathValue(it) }.toList()
     return SetValue(matchedList)
   }
 }

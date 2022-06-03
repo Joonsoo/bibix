@@ -1,20 +1,26 @@
 package com.giyeok.bibix.plugins.java
 
 import com.giyeok.bibix.base.*
+import com.giyeok.bibix.plugins.ClassPkg
+import com.giyeok.bibix.plugins.ClassesInfo
+import com.giyeok.bibix.plugins.LocalBuilt
 import java.io.File
+import java.nio.file.Path
+import kotlin.io.path.absolutePathString
 
 class Library {
-  private fun built(objectIdHash: String, dest: File, deps: BibixValue): BuildRuleReturn =
+  private fun built(objectIdHash: String, dest: Path, deps: List<ClassPkg>): BuildRuleReturn =
     BuildRuleReturn.value(
-      TupleValue(
-        StringValue("built by java.library: $objectIdHash"),
-        SetValue(listOf(DirectoryValue(dest))),
+      ClassPkg(
+        LocalBuilt("built by java.library: $objectIdHash"),
+        ClassesInfo(listOf(dest), listOf(), null),
         deps,
-      )
+      ).toBibix()
     )
 
   fun build(context: BuildContext): BuildRuleReturn {
-    val deps = context.arguments.getValue("deps")
+    val depsValue = context.arguments.getValue("deps") as SetValue
+    val deps = depsValue.values.map { ClassPkg.fromBibix(it) }
     val dest = context.destDirectory
 
     if (!context.hashChanged) {
@@ -23,9 +29,9 @@ class Library {
 
     return BuildRuleReturn.evalAndThen(
       "jvm.resolveClassPkgs",
-      mapOf("classPkgs" to deps)
+      mapOf("classPkgs" to depsValue)
     ) { classPaths ->
-      val cps = (classPaths as ClassInstanceValue).value as SetValue // set<path>
+      val cps = (classPaths as ClassInstanceValue).value as SetValue
 
       val srcs = (context.arguments["srcs"]!! as SetValue).values.map { src ->
         (src as FileValue).file
@@ -34,11 +40,11 @@ class Library {
       val args = mutableListOf("javac")
       if (cps.values.isNotEmpty()) {
         args.add("-cp")
-        args.add(cps.values.joinToString(":") { (it as PathValue).path.canonicalPath })
+        args.add(cps.values.joinToString(":") { (it as PathValue).path.absolutePathString() })
       }
       args.add("-d")
-      args.add(dest.canonicalPath)
-      args.addAll(srcs.map { it.canonicalPath })
+      args.add(dest.absolutePathString())
+      args.addAll(srcs.map { it.absolutePathString() })
 
       val process = Runtime.getRuntime().exec(args.toTypedArray())
       println(String(process.errorStream.readAllBytes()))

@@ -7,15 +7,16 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.currentCoroutineContext
 import java.io.File
+import java.nio.file.Path
 
 class Coercer(val buildGraph: BuildGraph, val runner: BuildRunner) {
-  private fun fileFromString(origin: SourceId, path: String): File {
-    val pathFile = File(path)
+  private fun fileFromString(origin: SourceId, path: String): Path {
+    val pathFile = runner.repo.fileSystem.getPath(path)
     if (pathFile.isAbsolute) {
       return pathFile
     }
     val baseDirectory = buildGraph.baseDirectories.getValue(origin)
-    return File(baseDirectory, path)
+    return baseDirectory.resolve(path)
   }
 
   private fun withNoNull(
@@ -203,7 +204,16 @@ class Coercer(val buildGraph: BuildGraph, val runner: BuildRunner) {
           else -> ifElse()
         }
       }
-      is UnionType -> type.types.firstNotNullOf { coerce(task, origin, value, it, dclassOrigin) }
+      is UnionType -> {
+        val firstMatch = type.types.firstNotNullOfOrNull {
+          coerce(task, origin, value, it, dclassOrigin)
+        }
+        if (firstMatch == null) {
+          println("${type.types} $value")
+        }
+        firstMatch!!
+      }
+      NoneType -> if (value is NoneValue) value else null
       ActionRuleDefType -> if (value is ActionRuleDefValue) value else null
       BuildRuleDefType -> if (value is BuildRuleDefValue) value else null
       TypeType -> if (value is TypeValue) value else null
@@ -294,6 +304,7 @@ class Coercer(val buildGraph: BuildGraph, val runner: BuildRunner) {
       TypeValue.NamedTupleTypeValue(type.names().zip(elemTypes))
     }
     is UnionType -> TypeValue.UnionTypeValue(toTypeValues(task, type.types))
+    NoneType -> TypeValue.NoneTypeValue
     BuildRuleDefType -> TypeValue.BuildRuleDefTypeValue
     ActionRuleDefType -> TypeValue.ActionRuleDefTypeValue
     TypeType -> TypeValue.TypeTypeValue

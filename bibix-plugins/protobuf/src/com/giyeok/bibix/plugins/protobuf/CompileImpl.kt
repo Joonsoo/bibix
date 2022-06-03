@@ -2,22 +2,23 @@ package com.giyeok.bibix.plugins.protobuf
 
 import com.giyeok.bibix.base.*
 import com.giyeok.bibix.plugins.protobuf.Compile.ProtoSchema
-import java.io.File
 import java.nio.file.Files
 import java.nio.file.Path
+import java.nio.file.attribute.PosixFilePermission
+import kotlin.io.path.*
 
 class CompileImpl : CompileInterface {
   override fun schema(
     context: BuildContext,
-    srcs: List<File>,
+    srcs: List<Path>,
     deps: List<ProtoSchema>,
-    protocPath: File,
+    protocPath: Path,
   ): BuildRuleReturn {
-    val mergedIncludes = listOf(File(protocPath, "include")) +
+    val mergedIncludes = listOf(protocPath.resolve("include")) +
       deps.flatMap { dep ->
         // schema 파일의 parent를 사용함. protoc가 include는 디렉토리를 받기 때문에..
         // 파일 이름이 충돌하면 문제가 생길텐데 일단은 그냥 이렇게 해둬야지..
-        dep.schemaFiles.map { it.parentFile } + dep.includes
+        dep.schemaFiles.map { it.parent } + dep.includes
       }
 
     return BuildRuleReturn.value(ProtoSchema(srcs, mergedIncludes).toBibix())
@@ -34,19 +35,20 @@ class CompileImpl : CompileInterface {
     val includes = (schema[1].second as SetValue).values.map { (it as PathValue).path }
 
     val srcArgs = mutableListOf<String>()
-    srcs.forEach { srcArgs.add(it.canonicalPath) }
+    srcs.forEach { srcArgs.add(it.absolutePathString()) }
 
-    val protoPaths = srcs.map { it.parentFile }.toSet() + includes
-    protoPaths.forEach { srcArgs.add("-I${it.canonicalPath}") }
+    val protoPaths = srcs.map { it.parent }.toSet() + includes
+    protoPaths.forEach { srcArgs.add("-I${it.absolutePathString()}") }
 
     val executableName = if (os == "windows") "protoc.exe" else "protoc"
-    val executableFile = File(File(protocPath, "bin"), executableName)
+    val executableFile = protocPath.resolve("bin").resolve(executableName)
 
-    executableFile.setExecutable(true)
+    val prevPermissions = executableFile.getPosixFilePermissions()
+    executableFile.setPosixFilePermissions(prevPermissions + PosixFilePermission.OWNER_EXECUTE)
 
-    val runArgs = listOf(executableFile.canonicalPath) + srcArgs + outArgs
+    val runArgs = listOf(executableFile.absolutePathString()) + srcArgs + outArgs
     val process = Runtime.getRuntime()
-      .exec(runArgs.toTypedArray(), arrayOf(), File(protocPath, "bin").canonicalFile)
+      .exec(runArgs.toTypedArray(), arrayOf(), protocPath.resolve("bin").toFile())
 
     context.progressLogger.logInfo(String(process.inputStream.readAllBytes()))
     context.progressLogger.logError(String(process.errorStream.readAllBytes()))
@@ -59,13 +61,13 @@ class CompileImpl : CompileInterface {
     context: BuildContext,
     schema: ProtoSchema,
     os: Compile.OS,
-    protocPath: File,
+    protocPath: Path,
     outputFileName: String?
   ): BuildRuleReturn {
-    val destFile = File(context.destDirectory, outputFileName ?: "descriptor.protoset")
+    val destFile = context.destDirectory.resolve(outputFileName ?: "descriptor.protoset")
 
     if (context.hashChanged) {
-      callCompiler(context, listOf("--descriptor_set_out=${destFile.canonicalPath}"))
+      callCompiler(context, listOf("--descriptor_set_out=${destFile.absolutePathString()}"))
     }
 
     return BuildRuleReturn.value(FileValue(destFile))
@@ -75,7 +77,7 @@ class CompileImpl : CompileInterface {
     context: BuildContext,
     schema: ProtoSchema,
     os: Compile.OS,
-    protocPath: File
+    protocPath: Path
   ): BuildRuleReturn {
     TODO("Not yet implemented")
   }
@@ -84,15 +86,14 @@ class CompileImpl : CompileInterface {
     context: BuildContext,
     schema: ProtoSchema,
     os: Compile.OS,
-    protocPath: File
+    protocPath: Path
   ): BuildRuleReturn {
     TODO("Not yet implemented")
   }
 
-  private fun getFiles(directory: File): SetValue {
-    val files = Files.walk(Path.of(directory.toURI()), 1000).toList()
-      .map { it.toFile() }
-      .filter { it.isFile }
+  private fun getFiles(directory: Path): SetValue {
+    val files = Files.walk(directory, 1000).toList()
+      .filter { it.isRegularFile() }
       .map { FileValue(it) }
     return SetValue(files)
   }
@@ -101,11 +102,11 @@ class CompileImpl : CompileInterface {
     context: BuildContext,
     schema: ProtoSchema,
     os: Compile.OS,
-    protocPath: File
+    protocPath: Path
   ): BuildRuleReturn {
     val destDirectory = context.destDirectory
     if (context.hashChanged) {
-      callCompiler(context, listOf("--java_out=${destDirectory.canonicalPath}"))
+      callCompiler(context, listOf("--java_out=${destDirectory.absolutePathString()}"))
     }
     return BuildRuleReturn.value(getFiles(destDirectory))
   }
@@ -114,11 +115,11 @@ class CompileImpl : CompileInterface {
     context: BuildContext,
     schema: ProtoSchema,
     os: Compile.OS,
-    protocPath: File
+    protocPath: Path
   ): BuildRuleReturn {
     val destDirectory = context.destDirectory
     if (context.hashChanged) {
-      callCompiler(context, listOf("--js_out=${destDirectory.canonicalPath}"))
+      callCompiler(context, listOf("--js_out=${destDirectory.absolutePathString()}"))
     }
     return BuildRuleReturn.value(getFiles(destDirectory))
   }
@@ -127,11 +128,11 @@ class CompileImpl : CompileInterface {
     context: BuildContext,
     schema: ProtoSchema,
     os: Compile.OS,
-    protocPath: File
+    protocPath: Path
   ): BuildRuleReturn {
     val destDirectory = context.destDirectory
     if (context.hashChanged) {
-      callCompiler(context, listOf("--kotlin_out=${destDirectory.canonicalPath}"))
+      callCompiler(context, listOf("--kotlin_out=${destDirectory.absolutePathString()}"))
     }
     return BuildRuleReturn.value(getFiles(destDirectory))
   }
@@ -140,7 +141,7 @@ class CompileImpl : CompileInterface {
     context: BuildContext,
     schema: ProtoSchema,
     os: Compile.OS,
-    protocPath: File
+    protocPath: Path
   ): BuildRuleReturn {
     TODO("Not yet implemented")
   }
@@ -149,7 +150,7 @@ class CompileImpl : CompileInterface {
     context: BuildContext,
     schema: ProtoSchema,
     os: Compile.OS,
-    protocPath: File
+    protocPath: Path
   ): BuildRuleReturn {
     TODO("Not yet implemented")
   }
@@ -158,7 +159,7 @@ class CompileImpl : CompileInterface {
     context: BuildContext,
     schema: ProtoSchema,
     os: Compile.OS,
-    protocPath: File
+    protocPath: Path
   ): BuildRuleReturn {
     TODO("Not yet implemented")
   }
@@ -167,7 +168,7 @@ class CompileImpl : CompileInterface {
     context: BuildContext,
     schema: ProtoSchema,
     os: Compile.OS,
-    protocPath: File
+    protocPath: Path
   ): BuildRuleReturn {
     TODO("Not yet implemented")
   }
@@ -176,7 +177,7 @@ class CompileImpl : CompileInterface {
     context: BuildContext,
     schema: ProtoSchema,
     os: Compile.OS,
-    protocPath: File
+    protocPath: Path
   ): BuildRuleReturn {
     TODO("Not yet implemented")
   }

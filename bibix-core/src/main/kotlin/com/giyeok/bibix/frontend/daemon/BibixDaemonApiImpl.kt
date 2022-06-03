@@ -9,9 +9,9 @@ import io.grpc.StatusException
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import java.io.File
+import java.nio.file.Path
 
-class BibixDaemonApiImpl(val projectDir: File) :
+class BibixDaemonApiImpl(val projectDir: Path) :
   BibixDaemonApiGrpcKt.BibixDaemonApiCoroutineImplBase() {
 
   lateinit var frontend: BuildFrontend

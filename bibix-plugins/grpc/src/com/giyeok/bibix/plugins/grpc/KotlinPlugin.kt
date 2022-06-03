@@ -1,7 +1,11 @@
 package com.giyeok.bibix.plugins.grpc
 
 import com.giyeok.bibix.base.*
-import java.io.File
+import java.nio.file.attribute.PosixFilePermission
+import kotlin.io.path.absolutePathString
+import kotlin.io.path.getPosixFilePermissions
+import kotlin.io.path.setPosixFilePermissions
+import kotlin.io.path.writeText
 
 class KotlinPlugin {
   fun url(context: BuildContext): StringValue {
@@ -14,7 +18,7 @@ class KotlinPlugin {
 
   fun createEnv(context: BuildContext): FileValue {
     val envDirectory = context.destDirectory
-    val pluginPath = File(envDirectory, "protoc-gen-grpc-kotlin")
+    val pluginPath = envDirectory.resolve("protoc-gen-grpc-kotlin")
 
     if (context.hashChanged) {
       val pluginJar = (context.arguments.getValue("pluginJar") as FileValue).file
@@ -22,10 +26,11 @@ class KotlinPlugin {
       pluginPath.writeText(
         """
         #!/bin/sh
-        java -jar ${pluginJar.absolutePath}
+        java -jar ${pluginJar.absolutePathString()}
         """.trimIndent()
       )
-      pluginPath.setExecutable(true, true)
+      val prevPermissions = pluginPath.getPosixFilePermissions()
+      pluginPath.setPosixFilePermissions(prevPermissions + PosixFilePermission.OWNER_EXECUTE)
     }
     return FileValue(pluginPath)
   }

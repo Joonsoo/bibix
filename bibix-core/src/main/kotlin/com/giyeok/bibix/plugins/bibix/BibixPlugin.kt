@@ -31,14 +31,23 @@ val bibixPlugin = BibixPlugin.fromScript(
     
     def genRuleImplTemplateKt(
       rules: set<buildrule>,
+      // TODO (type, string)은 뭐하려고 했던거지..? rename인가?
       types: set<{type, (type, string)}>,
       implName: string,
       implInterfaceName: string,
     ): RuleImplTemplate = native:com.giyeok.bibix.plugins.bibix.GenRuleImplTemplateKt
+    
+    def genClassesKt(
+      types: set<type>,
+      packageName: string,
+      fileName: string = "BibixClasses.kt",
+      outerClassName?: string,
+    ): file = native:com.giyeok.bibix.plugins.bibix.GenClassesKt
   """.trimIndent(),
   Classes(
     Base::class.java,
     Plugins::class.java,
     GenRuleImplTemplateKt::class.java,
+    GenClassesKt::class.java,
   )
 )

@@ -1,6 +1,5 @@
 package com.giyeok.bibix.frontend
 
-import com.fasterxml.jackson.databind.deser.std.AtomicLongDeserializer
 import com.giyeok.bibix.ast.BibixAst
 import com.giyeok.bibix.base.*
 import com.giyeok.bibix.buildscript.BuildGraph
@@ -17,14 +16,14 @@ import com.giyeok.bibix.utils.toKtList
 import com.giyeok.jparser.ParsingErrors
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import java.io.File
+import java.nio.file.Path
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicInteger
-import java.util.concurrent.atomic.AtomicLong
+import kotlin.io.path.readText
 
 class BuildFrontend(
-  val projectDir: File,
+  val projectDir: Path,
   val buildArgsMap: Map<CName, BibixValue> = mapOf(),
   val actionArgs: ListValue? = null,
   val scriptFileName: String = "build.bbx",
@@ -37,7 +36,7 @@ class BuildFrontend(
     "bibix" to bibixPlugin,
   )
 ) {
-  val scriptFile = File(projectDir, scriptFileName)
+  val scriptFile = projectDir.resolve(scriptFileName)
 
   val parsed by lazy {
     val scriptSource = scriptFile.readText()

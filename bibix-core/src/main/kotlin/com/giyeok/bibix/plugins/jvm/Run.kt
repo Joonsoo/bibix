@@ -1,6 +1,7 @@
 package com.giyeok.bibix.plugins.jvm
 
 import com.giyeok.bibix.base.*
+import kotlin.io.path.absolutePathString
 
 class Run {
   fun run(context: ActionContext): BuildRuleReturn {
@@ -16,7 +17,7 @@ class Run {
       val args = mutableListOf("java")
       if (cps.isNotEmpty()) {
         args.add("-cp")
-        args.add(cps.joinToString(":") { it.canonicalPath })
+        args.add(cps.joinToString(":") { it.absolutePathString() })
       }
 
       args.add((context.arguments.getValue("mainClass") as StringValue).value)

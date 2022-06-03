@@ -5,6 +5,7 @@ import com.giyeok.bibix.runner.*
 import com.giyeok.bibix.runner.BibixIdProto.ArgsMap
 import com.google.protobuf.ByteString
 import com.google.protobuf.kotlin.get
+import kotlin.io.path.absolutePathString
 
 fun ByteString.toHexString(): String {
   val chars = "0123456789abcdef"
@@ -20,9 +21,9 @@ fun ByteString.toHexString(): String {
 fun BibixValue.toProto(): BibixValueProto.BibixValue = when (val value = this) {
   is BooleanValue -> bibixValue { this.booleanValue = value.value }
   is StringValue -> bibixValue { this.stringValue = value.value }
-  is PathValue -> bibixValue { this.pathValue = value.path.path }
-  is FileValue -> bibixValue { this.fileValue = value.file.path }
-  is DirectoryValue -> bibixValue { this.directoryValue = value.directory.path }
+  is PathValue -> bibixValue { this.pathValue = value.path.absolutePathString() }
+  is FileValue -> bibixValue { this.fileValue = value.file.absolutePathString() }
+  is DirectoryValue -> bibixValue { this.directoryValue = value.directory.absolutePathString() }
   is EnumValue -> bibixValue {
     this.enumValue = enumValue {
       this.enumType = value.enumTypeName.toString()

@@ -4,8 +4,11 @@ import com.giyeok.bibix.base.BuildContext
 import com.giyeok.bibix.base.EnumValue
 import com.giyeok.bibix.base.FileValue
 import com.giyeok.bibix.base.StringValue
-import java.io.File
 import java.nio.file.Files
+import java.nio.file.attribute.PosixFilePermission
+import kotlin.io.path.absolute
+import kotlin.io.path.getPosixFilePermissions
+import kotlin.io.path.setPosixFilePermissions
 
 class JavaPlugin {
   fun url(context: BuildContext): StringValue {
@@ -25,13 +28,14 @@ class JavaPlugin {
 
   fun createEnv(context: BuildContext): FileValue {
     val envDirectory = context.destDirectory
-    val pluginPath = File(envDirectory, "protoc-gen-grpc-java")
+    val pluginPath = envDirectory.resolve("protoc-gen-grpc-java")
 
     if (context.hashChanged) {
       val pluginExe = (context.arguments.getValue("pluginExe") as FileValue).file
-      pluginExe.setExecutable(true, true)
+      val prevPermissions = pluginExe.getPosixFilePermissions()
+      pluginExe.setPosixFilePermissions(prevPermissions + PosixFilePermission.OWNER_EXECUTE)
 
-      Files.createSymbolicLink(pluginPath.toPath(), pluginExe.absoluteFile.toPath())
+      Files.createSymbolicLink(pluginPath, pluginExe.absolute())
     }
     return FileValue(pluginPath)
   }

@@ -6,12 +6,14 @@ import com.giyeok.bibix.base.*
 class Plugins {
   fun build(context: BuildContext): BibixValue {
     val tag = (context.arguments.getValue("tag") as StringValue).value
+    val ref = // "refs/tags/$tag"
+      "HEAD"
     return ClassInstanceValue(
       CName(BibixRootSourceId, "GitSource"),
       NamedTupleValue(
         listOf(
           "url" to StringValue(Constants.BIBIX_GIT_URL),
-          "ref" to StringValue("refs/tags/$tag"),
+          "ref" to StringValue(ref),
           "path" to StringValue("bibix-plugins"),
         )
       )
@@ -20,12 +22,14 @@ class Plugins {
 
   fun dev(context: BuildContext): BibixValue {
     val branch = (context.arguments.getValue("branch") as StringValue).value
+    val ref = // "refs/heads/$branch"
+      "HEAD"
     return ClassInstanceValue(
       CName(BibixRootSourceId, "GitSource"),
       NamedTupleValue(
         listOf(
           "url" to StringValue(Constants.BIBIX_GIT_URL),
-          "ref" to StringValue("refs/heads/$branch"),
+          "ref" to StringValue(ref),
           "path" to StringValue("bibix-plugins"),
         )
       )

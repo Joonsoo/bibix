@@ -9,9 +9,12 @@ import kotlinx.coroutines.*
 import org.codehaus.plexus.classworlds.ClassWorld
 import org.codehaus.plexus.classworlds.realm.NoSuchRealmException
 import java.io.File
+import java.nio.file.Path
+import java.nio.file.Paths
 import java.util.concurrent.atomic.AtomicInteger
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
+import kotlin.io.path.absolute
 
 class BuildRunner(
   val buildGraph: BuildGraph,
@@ -236,7 +239,7 @@ class BuildRunner(
               val realm = synchronized(this) {
                 val realm = classWorld.newRealm(nextRealmId())
                 cps.forEach {
-                  realm.addURL(it.canonicalFile.toURI().toURL())
+                  realm.addURL(it.absolute().toUri().toURL())
                 }
                 realm
               }
@@ -309,7 +312,7 @@ class BuildRunner(
             NameLookupContext(CName(BibixRootSourceId), rootScript.defs)
               .append(CName(sourceId), defs)
               .withNative(),
-            File(".") // default plugin은 base directory가 없음
+            repo.mainDirectory // default plugin은 base directory가 없음
           )
           sourceId
         }
@@ -580,7 +583,7 @@ class BuildRunner(
             val cps =
               ((implResult.value) as SetValue).values.map { (it as PathValue).path }
             cps.forEach {
-              newRealm.addURL(it.canonicalFile.toURI().toURL())
+              newRealm.addURL(it.absolute().toUri().toURL())
             }
             newRealm
           }
@@ -606,6 +609,7 @@ class BuildRunner(
     val progressIndicator = getProgressIndicator()
     val buildContext = BuildContext(
       ruleImplInfo.origin,
+      repo.fileSystem,
       buildGraph.baseDirectories.getValue(ruleImplInfo.origin),
       buildGraph.baseDirectories.getValue(origin),
       repo.mainDirectory,

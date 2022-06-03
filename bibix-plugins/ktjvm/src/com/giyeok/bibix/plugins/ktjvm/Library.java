@@ -7,42 +7,38 @@ import org.jetbrains.kotlin.cli.jvm.K2JVMCompiler;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 public class Library {
     private BibixValue runCompiler(SetValue classPaths, SetValue pkgSet, BuildContext context, ListValue optIns) throws IOException {
-        File destDirectory = context.getDestDirectory();
+        Path destDirectory = context.getDestDirectory();
+
+        SetValue srcs = (SetValue) context.getArguments().get("srcs");
+        if (srcs.getValues().isEmpty()) {
+            throw new IllegalArgumentException("srcs must not be empty");
+        }
 
         if (context.getHashChanged()) {
             ArrayList<String> args = new ArrayList<>();
             if (!classPaths.getValues().isEmpty()) {
-                ArrayList<File> cps = new ArrayList<>();
+                ArrayList<Path> cps = new ArrayList<>();
                 args.add("-cp");
                 // System.out.println(deps);
                 classPaths.getValues().forEach(v -> {
                     cps.add(((PathValue) v).getPath());
                 });
-                args.add(cps.stream().map(p -> {
-                    try {
-                        return p.getCanonicalPath();
-                    } catch (IOException e) {
-                        return "";
-                    }
-                }).collect(Collectors.joining(":")));
+                args.add(cps.stream().map(Path::toAbsolutePath).map(Path::toString).collect(Collectors.joining(":")));
             }
 
-            SetValue srcs = (SetValue) context.getArguments().get("srcs");
-            if (srcs.getValues().isEmpty()) {
-                throw new IllegalArgumentException("srcs must not be empty");
-            }
             for (BibixValue value : srcs.getValues()) {
-                args.add(((FileValue) value).getFile().getCanonicalPath());
+                args.add(((FileValue) value).getFile().toAbsolutePath().toString());
             }
 
             args.add("-d");
-            args.add(destDirectory.getCanonicalPath());
+            args.add(destDirectory.toAbsolutePath().toString());
 
             if (optIns != null && !optIns.getValues().isEmpty()) {
                 optIns.getValues().forEach(optIn ->
@@ -59,12 +55,19 @@ public class Library {
             }
         }
 
-        // ClassPkg = (origin: ClassOrigin, cps: set<path>, deps: set<ClassPkg>)
-        return new TupleValue(
-                new StringValue("built by ktjvm.library: " + context.getObjectIdHash()),
-                new SetValue(new PathValue(destDirectory)),
-                pkgSet
-        );
+        // ClassPkg = (origin: ClassOrigin, cpinfo: CpInfo, deps: set<ClassPkg>)
+        // CpInfo = {JarInfo, ClassesInfo}
+        // ClassesInfo = (classDirs: set<directory>, resDirs: set<directory>, srcs: {set<file>, none})
+        return new NClassInstanceValue("jvm.ClassPkg", new TupleValue(
+                /* origin: */ new StringValue("built by ktjvm.library: " + context.getObjectIdHash()),
+                new NClassInstanceValue("jvm.ClassesInfo", new TupleValue(
+                        /* classDirs: */ new SetValue(new PathValue(destDirectory)),
+                        // TODO resDirs
+                        /* resDirs: */ new SetValue(),
+                        /* srcs: */ srcs
+                )),
+                /* deps: */ pkgSet
+        ));
     }
 
     public BuildRuleReturn build(BuildContext context) throws IOException {

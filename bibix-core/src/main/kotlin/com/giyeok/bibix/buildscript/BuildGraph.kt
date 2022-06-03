@@ -6,7 +6,7 @@ import com.giyeok.bibix.base.SourceId
 import com.giyeok.bibix.runner.*
 import com.giyeok.bibix.utils.getOrNull
 import com.giyeok.bibix.utils.toKtList
-import java.io.File
+import java.nio.file.Path
 
 class BuildGraph(
   val names: MutableMap<CName, CNameValue> = mutableMapOf(),
@@ -14,13 +14,13 @@ class BuildGraph(
   val exprGraphs: Registry.Builder<ExprGraph> = Registry.Builder(),
   val loadedSources: MutableSet<SourceId> = mutableSetOf(),
   val remoteSources: Registry.Builder<BibixIdProto.RemoteSourceId> = Registry.Builder(),
-  val baseDirectories: MutableMap<SourceId, File> = mutableMapOf(),
+  val baseDirectories: MutableMap<SourceId, Path> = mutableMapOf(),
 ) {
   fun addRemoteSource(remoteSourceId: BibixIdProto.RemoteSourceId): Int =
     // TODO 이미 remoteSources에 있으면?
     remoteSources.register(remoteSourceId)
 
-  fun addDefs(sourceId: SourceId, defs: List<BibixAst.Def>, baseDirectory: File) {
+  fun addDefs(sourceId: SourceId, defs: List<BibixAst.Def>, baseDirectory: Path) {
     addDefs(sourceId, defs, NameLookupContext(CName(sourceId), defs), baseDirectory)
   }
 
@@ -28,7 +28,7 @@ class BuildGraph(
     sourceId: SourceId,
     defs: List<BibixAst.Def>,
     lookup: NameLookupContext,
-    baseDirectory: File
+    baseDirectory: Path
   ) {
     synchronized(this) {
       if (!loadedSources.contains(sourceId)) {
@@ -245,6 +245,7 @@ class BuildGraph(
         })
       is BibixAst.UnionType -> UnionType(
         typeExpr.elems().toKtList().map { traverseTypeExpr(it, lookup) })
+      is BibixAst.NoneType -> NoneType
       else -> throw AssertionError()
     }
 

@@ -1,11 +1,12 @@
 package com.giyeok.bibix.plugins.grpc
 
 import com.giyeok.bibix.base.*
-import com.giyeok.bibix.plugins.grpc.Compile.ProtoSchema
 import com.giyeok.bibix.plugins.grpc.Compile.OS
-import java.io.File
+import com.giyeok.bibix.plugins.grpc.Compile.ProtoSchema
 import java.nio.file.Files
 import java.nio.file.Path
+import java.nio.file.attribute.PosixFilePermission
+import kotlin.io.path.*
 
 class CompileImpl : CompileInterface {
   private fun callCompiler(context: BuildContext, pluginArgs: List<String>) {
@@ -19,19 +20,20 @@ class CompileImpl : CompileInterface {
     val includes = (schema[1].second as SetValue).values.map { (it as PathValue).path }
 
     val srcArgs = mutableListOf<String>()
-    srcs.forEach { srcArgs.add(it.canonicalPath) }
+    srcs.forEach { srcArgs.add(it.absolutePathString()) }
 
-    val protoPaths = srcs.map { it.parentFile }.toSet() + includes
-    protoPaths.forEach { srcArgs.add("-I${it.canonicalPath}") }
+    val protoPaths = srcs.map { it.parent }.toSet() + includes
+    protoPaths.forEach { srcArgs.add("-I${it.absolutePathString()}") }
 
     val executableName = if (os == "windows") "protoc.exe" else "protoc"
-    val executableFile = File(File(protocPath, "bin"), executableName)
+    val executableFile = protocPath.resolve("bin").resolve(executableName)
 
-    executableFile.setExecutable(true)
+    val prevPermissions = executableFile.getPosixFilePermissions()
+    executableFile.setPosixFilePermissions(prevPermissions + PosixFilePermission.OWNER_EXECUTE)
 
-    val runArgs = listOf(executableFile.canonicalPath) + srcArgs + pluginArgs
+    val runArgs = listOf(executableFile.absolutePathString()) + srcArgs + pluginArgs
     val process = Runtime.getRuntime()
-      .exec(runArgs.toTypedArray(), arrayOf(), File(protocPath, "bin").canonicalFile)
+      .exec(runArgs.toTypedArray(), arrayOf(), protocPath.resolve("bin").absolute().toFile())
 
     context.progressLogger.logInfo(String(process.inputStream.readAllBytes()))
     context.progressLogger.logError(String(process.errorStream.readAllBytes()))
@@ -40,10 +42,9 @@ class CompileImpl : CompileInterface {
     check(process.exitValue() == 0)
   }
 
-  private fun getFiles(directory: File): SetValue {
-    val files = Files.walk(Path.of(directory.toURI()), 1000).toList()
-      .map { it.toFile() }
-      .filter { it.isFile }
+  private fun getFiles(directory: Path): SetValue {
+    val files = Files.walk(directory, 1000).toList()
+      .filter { it.isRegularFile() }
       .map { FileValue(it) }
     return SetValue(files)
   }
@@ -51,16 +52,16 @@ class CompileImpl : CompileInterface {
   override fun java(
     context: BuildContext,
     schema: ProtoSchema,
-    protocPath: File,
-    pluginPath: File,
+    protocPath: Path,
+    pluginPath: Path,
     os: OS,
   ): BuildRuleReturn {
     val destDirectory = context.destDirectory
     if (context.hashChanged) {
       callCompiler(
         context, listOf(
-          "--plugin=${pluginPath.absolutePath}",
-          "--grpc-java_out=${destDirectory.absolutePath}"
+          "--plugin=${pluginPath.absolutePathString()}",
+          "--grpc-java_out=${destDirectory.absolutePathString()}"
         )
       )
     }
@@ -70,16 +71,16 @@ class CompileImpl : CompileInterface {
   override fun kotlin(
     context: BuildContext,
     schema: ProtoSchema,
-    protocPath: File,
-    pluginPath: File,
+    protocPath: Path,
+    pluginPath: Path,
     os: OS,
   ): BuildRuleReturn {
     val destDirectory = context.destDirectory
     if (context.hashChanged) {
       callCompiler(
         context, listOf(
-          "--plugin=${pluginPath.absolutePath}",
-          "--grpc-kotlin_out=${destDirectory.absolutePath}"
+          "--plugin=${pluginPath.absolutePathString()}",
+          "--grpc-kotlin_out=${destDirectory.absolutePathString()}"
         )
       )
     }
@@ -89,8 +90,8 @@ class CompileImpl : CompileInterface {
   override fun web(
     context: BuildContext,
     schema: ProtoSchema,
-    protocPath: File,
-    pluginPath: File,
+    protocPath: Path,
+    pluginPath: Path,
     os: OS,
   ): BuildRuleReturn {
     TODO()
