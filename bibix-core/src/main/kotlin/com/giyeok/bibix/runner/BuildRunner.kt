@@ -7,6 +7,7 @@ import com.giyeok.bibix.plugins.BibixPlugin
 import com.giyeok.bibix.utils.toArgsMap
 import com.giyeok.bibix.utils.toHexString
 import com.giyeok.bibix.utils.toKtList
+import com.google.protobuf.ByteString
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
@@ -32,6 +33,7 @@ class BuildRunner(
 ) {
   private val importSourceResolver = ImportSourceResolver(repo)
   private val taskObjectIds = mutableMapOf<BuildTask, BibixIdProto.ObjectId>()
+  private val objectIdHashToTask = mutableMapOf<ByteString, BuildTask>()
   private val coercer = Coercer(buildGraph, this)
 
   private val realmIdCounter = AtomicInteger()
@@ -58,6 +60,8 @@ class BuildRunner(
   }
 
   fun getResolvedNameValue(name: CName) = synchronized(this) { resolvedNames[name] }
+
+  fun getTaskByObjectIdHash(hash: ByteString): BuildTask? = objectIdHashToTask[hash]
 
   suspend fun runTasks(requestTask: BuildTask, tasks: List<BuildTask>) =
     coroutineScope {
@@ -132,6 +136,7 @@ class BuildRunner(
             resolvedNames[task.cname] = evalResult
             taskObjectIds[evalTask]?.let { objectId ->
               taskObjectIds[task] = objectId
+              objectIdHashToTask[objectId.hashString()] = task
               // main source에서 정의한 이름이면 링크 만들기
               if (task.cname.sourceId == MainSourceId) {
                 repo.linkNameTo(task.cname.tokens.joinToString("."), objectId)
@@ -658,6 +663,7 @@ class BuildRunner(
             repo.markFinished(objectId)
             // task의 objectId 저장
             taskObjectIds[task] = objectId
+            objectIdHashToTask[objectId.hashString()] = task
           }
           cont.resume(coerced)
         }

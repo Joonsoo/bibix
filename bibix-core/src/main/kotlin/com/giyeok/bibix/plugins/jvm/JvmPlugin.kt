@@ -32,7 +32,7 @@ val jvmPlugin = BibixPlugin.fromScript(
     class ClassOrigin = {MavenDep, LocalBuilt, LocalLib}
     
     class MavenDep = (repo: string, group: string, artifact: string, version: string)
-    // TODO LocalBuilt는 뭐가 들어가야되지..?
+    // TODO LocalBuilt는 뭐가 들어가야되지..? objHash, builder name
     class LocalBuilt = (desc: string)
     class LocalLib = (path: path)
     

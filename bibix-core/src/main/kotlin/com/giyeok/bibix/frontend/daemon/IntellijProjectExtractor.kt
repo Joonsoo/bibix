@@ -11,6 +11,7 @@ import com.giyeok.bibix.frontend.BuildFrontend
 import com.giyeok.bibix.plugins.ClassPkg
 import com.giyeok.bibix.runner.*
 import com.giyeok.bibix.utils.toKtList
+import com.google.protobuf.ByteString
 import java.nio.file.Path
 import kotlin.io.path.absolutePathString
 import kotlin.io.path.name
@@ -166,6 +167,12 @@ class IntellijProjectExtractor(val frontend: BuildFrontend) {
     println(modules)
     println(srcsMap)
     println(depsMap)
+    // val allSrcFiles = srcsMap.values.flatten()
+    // check(allSrcFiles.distinct().size == allSrcFiles.size)
+
+    // depsMap의 ClassPkg 중 maven은 maven대로 resolve, local lib은 그냥 library로 등록, local built는 모듈 디펜던시로
+    // local built는 getTaskByObjectIdHash(objHash)로 얻어와서 어떤 모듈인지 확인
+    // val task = frontend.buildRunner.getTaskByObjectIdHash(ByteString.EMPTY)
     return intellijProjectStructure {
       this.project = intellijProjectNode {
         this.name = projectBaseDir.name
