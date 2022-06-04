@@ -85,12 +85,6 @@ fun BibixValue.toProto(): BibixValueProto.BibixValue = when (val value = this) {
       }
     }
   }
-  is SuperClassInstanceValue -> bibixValue {
-    this.superClassInstanceValue = superClassInstanceValue {
-      this.classCname = value.className.toString()
-      this.value = value.value.toProto()
-    }
-  }
   is NDataClassInstanceValue -> throw AssertionError("N(ame)ClassInstnaceValue cannot be marshalled")
   is NoneValue -> bibixValue { }
   is ActionRuleDefValue ->
