@@ -29,17 +29,37 @@ class Coercer(val buildGraph: BuildGraph, val runner: BuildRunner) {
     value: BibixValue,
     type: BibixType,
     // value가 NClassInstanceValue일 수 있을 때 그 이름을 어디서 찾아야되는지
-    dclassOrigin: SourceId?,
+    nclassOrigin: SourceId?,
   ): BibixValue? {
+    suspend fun coerceClassFields(
+      fields: List<CNameValue.ClassField>,
+      values: Map<String, BibixValue>
+    ): Map<String, BibixValue>? {
+      return fields.mapNotNull { field ->
+        val fieldValue = values[field.name]
+        if (fieldValue == null && !field.optional) {
+          return null
+        }
+        fieldValue?.let {
+          val coercedValue =
+            coerce(task, origin, fieldValue, field.type, nclassOrigin)
+              ?: return null
+          field.name to coercedValue
+        }
+      }.toMap()
+    }
+
     return if (value is NDataClassInstanceValue) {
       // ClassInstanceValue로 변환
-      checkNotNull(dclassOrigin)
+      checkNotNull(nclassOrigin)
       val resolved = runner.runTask(
         task,
-        BuildTask.ResolveName(CName(dclassOrigin, value.nameTokens))
+        BuildTask.ResolveName(CName(nclassOrigin, value.nameTokens))
       ) as CNameValue.DataClassType
-      val instanceValue = DataClassInstanceValue(resolved.cname, value.fieldValues)
-      coerce(task, origin, instanceValue, type, dclassOrigin)
+      val fieldValues: Map<String, BibixValue> =
+        coerceClassFields(resolved.fields, value.fieldValues) ?: return null
+      val instanceValue = DataClassInstanceValue(resolved.cname, fieldValues)
+      coerce(task, origin, instanceValue, type, nclassOrigin)
     } else {
       // TODO value is ClassInstanceValue 인데 type은 ClassType이 아닌 경우
       // -> class의 cast 함수 시도 -> value.reality를 coerce
@@ -48,13 +68,13 @@ class Coercer(val buildGraph: BuildGraph, val runner: BuildRunner) {
         BooleanType -> when (value) {
           is BooleanValue -> value
           is DataClassInstanceValue ->
-            tryCastClassInstance(task, origin, value, type, dclassOrigin)
+            tryCastClassInstance(task, origin, value, type, nclassOrigin)
           else -> null
         }
         StringType -> when (value) {
           is StringValue -> value
           is DataClassInstanceValue ->
-            tryCastClassInstance(task, origin, value, type, dclassOrigin)
+            tryCastClassInstance(task, origin, value, type, nclassOrigin)
               ?: StringValue(value.stringify())
           else -> StringValue(value.stringify())
         }
@@ -64,7 +84,7 @@ class Coercer(val buildGraph: BuildGraph, val runner: BuildRunner) {
           is DirectoryValue -> PathValue(value.directory)
           is StringValue -> PathValue(fileFromString(origin, value.value))
           is DataClassInstanceValue ->
-            tryCastClassInstance(task, origin, value, type, dclassOrigin)
+            tryCastClassInstance(task, origin, value, type, nclassOrigin)
           else -> null
         }
         FileType -> when (value) {
@@ -73,7 +93,7 @@ class Coercer(val buildGraph: BuildGraph, val runner: BuildRunner) {
           is PathValue -> FileValue(value.path)
           is StringValue -> FileValue(fileFromString(origin, value.value))
           is DataClassInstanceValue ->
-            tryCastClassInstance(task, origin, value, type, dclassOrigin)
+            tryCastClassInstance(task, origin, value, type, nclassOrigin)
           else -> null
         }
         DirectoryType -> when (value) {
@@ -81,7 +101,7 @@ class Coercer(val buildGraph: BuildGraph, val runner: BuildRunner) {
           is PathValue -> DirectoryValue(value.path)
           is StringValue -> DirectoryValue(fileFromString(origin, value.value))
           is DataClassInstanceValue ->
-            tryCastClassInstance(task, origin, value, type, dclassOrigin)
+            tryCastClassInstance(task, origin, value, type, nclassOrigin)
           else -> null
         }
         is CustomType -> {
@@ -101,7 +121,7 @@ class Coercer(val buildGraph: BuildGraph, val runner: BuildRunner) {
                       }
                     } else field.type
                     val coerced =
-                      coerce(task, origin, value, fieldType, dclassOrigin) ?: return null
+                      coerce(task, origin, value, fieldType, nclassOrigin) ?: return null
                     if (field.optional && coerced == NoneValue) {
                       null
                     } else {
@@ -113,19 +133,10 @@ class Coercer(val buildGraph: BuildGraph, val runner: BuildRunner) {
               when (value) {
                 is DataClassInstanceValue -> {
                   if (value.className != actualType.cname) {
-                    tryCastClassInstance(task, origin, value, type, dclassOrigin)
+                    tryCastClassInstance(task, origin, value, type, nclassOrigin)
                   } else {
-                    val fieldValues = actualType.fields.mapNotNull { field ->
-                      val fieldValue = value.fieldValues[field.name]
-                      if (fieldValue == null && !field.optional) {
-                        return null
-                      }
-                      fieldValue?.let {
-                        val coercedValue =
-                          coerce(task, origin, fieldValue, field.type, dclassOrigin) ?: return null
-                        field.name to coercedValue
-                      }
-                    }.toMap()
+                    val fieldValues: Map<String, BibixValue> =
+                      coerceClassFields(actualType.fields, value.fieldValues) ?: return null
                     DataClassInstanceValue(value.className, fieldValues)
                   }
                 }
@@ -166,7 +177,7 @@ class Coercer(val buildGraph: BuildGraph, val runner: BuildRunner) {
                   EnumValue(actualType.cname, value.value)
                 } else null
               is DataClassInstanceValue ->
-                tryCastClassInstance(task, origin, value, type, dclassOrigin)
+                tryCastClassInstance(task, origin, value, type, nclassOrigin)
               else -> null
             }
             else -> null
@@ -175,33 +186,33 @@ class Coercer(val buildGraph: BuildGraph, val runner: BuildRunner) {
         is ListType -> {
           when (value) {
             is ListValue -> withNoNull(value.values.map {
-              coerce(task, origin, it, type.elemType, dclassOrigin)
+              coerce(task, origin, it, type.elemType, nclassOrigin)
             }) { ListValue(it) }
             is SetValue -> withNoNull(value.values.map {
-              coerce(task, origin, it, type.elemType, dclassOrigin)
+              coerce(task, origin, it, type.elemType, nclassOrigin)
             }) { ListValue(it) }
             is DataClassInstanceValue ->
-              tryCastClassInstance(task, origin, value, type, dclassOrigin)
+              tryCastClassInstance(task, origin, value, type, nclassOrigin)
             else -> null
           }
         }
         is SetType -> {
           when (value) {
             is ListValue -> withNoNull(value.values.map {
-              coerce(task, origin, it, type.elemType, dclassOrigin)
+              coerce(task, origin, it, type.elemType, nclassOrigin)
             }) { SetValue(it) }
             is SetValue -> withNoNull(value.values.map {
-              coerce(task, origin, it, type.elemType, dclassOrigin)
+              coerce(task, origin, it, type.elemType, nclassOrigin)
             }) { SetValue(it) }
             is DataClassInstanceValue ->
-              tryCastClassInstance(task, origin, value, type, dclassOrigin)
+              tryCastClassInstance(task, origin, value, type, nclassOrigin)
             else -> null
           }
         }
         is TupleType -> {
           suspend fun ifElse() = if (type.elemTypes.size != 1) null else {
             // 길이가 1인 tuple이면 그냥 맞춰서 반환해주기
-            coerce(task, origin, value, type.elemTypes[0], dclassOrigin)?.let { TupleValue(it) }
+            coerce(task, origin, value, type.elemTypes[0], nclassOrigin)?.let { TupleValue(it) }
           }
           when (value) {
             is TupleValue -> {
@@ -209,25 +220,25 @@ class Coercer(val buildGraph: BuildGraph, val runner: BuildRunner) {
               withNoNull(
                 value.values.zip(type.elemTypes)
                   .map {
-                    coerce(task, origin, it.first, it.second, dclassOrigin)
+                    coerce(task, origin, it.first, it.second, nclassOrigin)
                   }) { TupleValue(it) }
             }
             is NamedTupleValue -> {
               check(type.elemTypes.size == value.pairs.size)
               withNoNull(value.values().zip(type.elemTypes)
                 .map {
-                  coerce(task, origin, it.first, it.second, dclassOrigin)
+                  coerce(task, origin, it.first, it.second, nclassOrigin)
                 }) { TupleValue(it) }
             }
             is DataClassInstanceValue ->
-              tryCastClassInstance(task, origin, value, type, dclassOrigin) ?: ifElse()
+              tryCastClassInstance(task, origin, value, type, nclassOrigin) ?: ifElse()
             else -> ifElse()
           }
         }
         is NamedTupleType -> {
           suspend fun ifElse() = if (type.pairs.size != 1) null else {
             // 길이가 1인 named tuple이면 그냥 맞춰서 반환해주기
-            coerce(task, origin, value, type.pairs[0].second, dclassOrigin)?.let {
+            coerce(task, origin, value, type.pairs[0].second, nclassOrigin)?.let {
               NamedTupleValue(type.pairs[0].first to it)
             }
           }
@@ -237,24 +248,24 @@ class Coercer(val buildGraph: BuildGraph, val runner: BuildRunner) {
               check(type.pairs.size == value.pairs.size)
               check(type.names() == value.names())
               withNoNull(value.values().zip(type.valueTypes()).map {
-                coerce(task, origin, it.first, it.second, dclassOrigin)
+                coerce(task, origin, it.first, it.second, nclassOrigin)
               }) { NamedTupleValue(type.names().zip(it)) }
             }
             is TupleValue -> {
               check(type.pairs.size == value.values.size)
               withNoNull(value.values.zip(type.valueTypes())
-                .map { coerce(task, origin, it.first, it.second, dclassOrigin) }) {
+                .map { coerce(task, origin, it.first, it.second, nclassOrigin) }) {
                 NamedTupleValue(type.names().zip(it))
               }
             }
             is DataClassInstanceValue ->
-              tryCastClassInstance(task, origin, value, type, dclassOrigin) ?: ifElse()
+              tryCastClassInstance(task, origin, value, type, nclassOrigin) ?: ifElse()
             else -> ifElse()
           }
         }
         is UnionType -> {
           val firstMatch = type.types.firstNotNullOfOrNull {
-            coerce(task, origin, value, it, dclassOrigin)
+            coerce(task, origin, value, it, nclassOrigin)
           }
           if (firstMatch == null) {
             println("${type.types} $value")

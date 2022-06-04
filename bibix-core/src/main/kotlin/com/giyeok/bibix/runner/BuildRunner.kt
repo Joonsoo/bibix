@@ -648,10 +648,11 @@ class BuildRunner(
           coercer.coerce(task, origin, result, ruleImplInfo.returnType, ruleImplInfo.origin)
         }) { coerced ->
           if (coerced == null) {
-            println(result)
-            println(ruleImplInfo.returnType)
             routineManager.markTaskFailed(
-              BibixBuildException(task, "Failed to coerce return value")
+              BibixBuildException(
+                task,
+                "Failed to coerce return value, value=$result, returnType=${ruleImplInfo.returnType}"
+              )
             )
           }
           checkNotNull(coerced)

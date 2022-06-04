@@ -63,7 +63,7 @@ public class Library {
                         "builderName", new StringValue("ktjvm.library")
                 )),
                 "cpinfo", new NDataClassInstanceValue("jvm.ClassesInfo", Map.of(
-                        "classDirs", new SetValue(new PathValue(destDirectory)),
+                        "classDirs", new SetValue(new DirectoryValue(destDirectory)),
                         "resDirs", new SetValue(),
                         "srcs", srcs
                 ))
