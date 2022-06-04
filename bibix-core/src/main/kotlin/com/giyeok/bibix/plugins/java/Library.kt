@@ -11,7 +11,7 @@ class Library {
   private fun built(objectIdHash: String, dest: Path, deps: List<ClassPkg>): BuildRuleReturn =
     BuildRuleReturn.value(
       ClassPkg(
-        LocalBuilt(objectIdHash /* TODO built by java.library */),
+        LocalBuilt(objectIdHash, "java.library"),
         ClassesInfo(listOf(dest), listOf(), null),
         deps,
       ).toBibix()

@@ -12,6 +12,13 @@ val jvmPlugin = BibixPlugin.fromScript(
       as ClassPaths = resolveClassPkgs([this])
     }
     
+    super class ClassOrigin {MavenDep, LocalLib, LocalBuilt}
+    
+    class MavenDep(repo: string, group: string, artifact: string, version: string)
+    // TODO LocalBuilt는 뭐가 들어가야되지..? objHash, builder name
+    class LocalLib(path: path)
+    class LocalBuilt(objHash: string, builderName: string)
+    
     // bibix.genClassesKt 에서 union type을 body로 갖는 class는 sealed class로 해서 상위 클래스로 생성됨
     // TODO 내장 플러그인에 대해서도 GenRuleImplTemplateKt 기능을 지원하고, 플러그인을 이걸 사용해서 작성하기
     // -> 그래야 그나마 빌드 스크립트나 플러그인이 바뀌었을 때 컴파일 타임에 확인 가능
@@ -24,13 +31,6 @@ val jvmPlugin = BibixPlugin.fromScript(
     // -> 그런데 한 폴더에 한 자바 모듈의 리소스 외에 다른게 같이 있으면 어쩌지? dest directory로 리소스 파일만 복사하든지..
     // srcs는 optional. optional은 typescript에서처럼 union type으로 처리.
     class ClassesInfo(classDirs: set<directory>, resDirs: set<directory>, srcs?: set<file>)
-    
-    super class ClassOrigin {MavenDep, LocalLib, LocalBuilt}
-    
-    class MavenDep(repo: string, group: string, artifact: string, version: string)
-    // TODO LocalBuilt는 뭐가 들어가야되지..? objHash, builder name
-    class LocalLib(path: path)
-    class LocalBuilt(desc: string)
     
     def resolveClassPkgs(
       classPkgs: set<ClassPkg>

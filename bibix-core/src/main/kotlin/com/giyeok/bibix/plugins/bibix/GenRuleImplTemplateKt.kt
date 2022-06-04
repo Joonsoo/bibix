@@ -42,7 +42,7 @@ class GenRuleImplTemplateKt {
     val types = (context.arguments.getValue("types") as SetValue).values.map {
       it as TypeValue
     }
-    val classTypes = types.filterIsInstance<TypeValue.ClassTypeValue>().map { it.className }
+    val classTypes = types.filterIsInstance<TypeValue.ClassTypeValue>()
     val ruleNames = rules.map { it.implClass }.distinct()
     check(ruleNames.size == 1)
     val ruleName = ruleNames[0].split('.')
@@ -62,8 +62,9 @@ class GenRuleImplTemplateKt {
     implClassFile.deleteIfExists()
     implInterfaceFile.deleteIfExists()
 
-    return BuildRuleReturn.getClassInfos(classTypes) { classTypeDetails ->
+    return BuildRuleReturn.getClassInfos(classTypes.map { it.className }) { classTypeDetails ->
       val classTypeDetailsMap = classTypeDetails.associateBy { it.className }
+      val superclasses = GenClassesKt.superClassesMap(classTypes, classTypeDetailsMap)
       PrintWriter(Files.newBufferedWriter(implClassFile)).use { implClassPrinter ->
         if (ruleClassPkg.isNotEmpty()) {
           implClassPrinter.println("package ${ruleClassPkg.joinToString(".")}")
@@ -77,14 +78,10 @@ class GenRuleImplTemplateKt {
         types.forEach { type ->
           implClassPrinter.println()
           when (type) {
-            is TypeValue.ClassTypeValue ->
-              // TODO superclass
-              generateClassType(
-                implClassPrinter,
-                classTypeDetailsMap.getValue(type.className),
-                null,
-                "  "
-              )
+            is TypeValue.ClassTypeValue -> {
+              val detail = classTypeDetailsMap.getValue(type.className)
+              generateClassType(implClassPrinter, detail, superclasses[type.className], "  ")
+            }
             is TypeValue.EnumTypeValue ->
               generateEnumType(implClassPrinter, type, "  ")
             else -> TODO()
@@ -108,16 +105,21 @@ class GenRuleImplTemplateKt {
         implInterfacePrinter.println("import ${ruleName.joinToString(".")}.*")
         implInterfacePrinter.println()
         implInterfacePrinter.println("interface $implInterfaceClassName {")
-        rules.forEach { rule ->
-          implInterfacePrinter.println()
+        rules.forEachIndexed { index, rule ->
+          if (index > 0) {
+            implInterfacePrinter.println()
+          }
           generateImplMethod(implInterfacePrinter, rule)
         }
         implInterfacePrinter.println("}")
       }
       BuildRuleReturn.value(
-        NamedTupleValue(
-          "implClass" to FileValue(implClassFile),
-          "interfaceClass" to FileValue(implInterfaceFile)
+        NDataClassInstanceValue(
+          "RuleImplTemplate",
+          mapOf(
+            "implClass" to FileValue(implClassFile),
+            "interfaceClass" to FileValue(implInterfaceFile),
+          )
         )
       )
     }

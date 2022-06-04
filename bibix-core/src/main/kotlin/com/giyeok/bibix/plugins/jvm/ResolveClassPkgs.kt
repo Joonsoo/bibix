@@ -9,7 +9,7 @@ class ResolveClassPkgs {
   fun MavenDep.toMavenArtifact() = MavenArtifact(repo, group, artifact)
 
   fun CpInfo.toPaths(): List<Path> = when (this) {
-    is ClassesInfo -> this.classDirs + this.resourceDirs
+    is ClassesInfo -> this.classDirs + this.resDirs
     is JarInfo -> listOf(this.jar)
   }
 

@@ -95,7 +95,7 @@ class GenClassesKt {
         val tokens = sub.tokens.joinToString { "\"$it\"" }
         p.println("$indent        listOf($tokens) -> ${sub.tokens.last()}.fromBibix(value)")
       }
-      p.println("$indent        else -> throw IllegalStateException(\"Unknown subclass of ${clsName}: \${value.value.className}\")")
+      p.println("$indent        else -> throw IllegalStateException(\"Unknown subclass of ${clsName}: \${value.className}\")")
       p.println("$indent      }")
       p.println("$indent    }")
       p.println("$indent  }")
@@ -123,6 +123,22 @@ class GenClassesKt {
         p.println("$indent  $enumValue,")
       }
       p.println("$indent}")
+    }
+
+    fun superClassesMap(
+      classTypes: List<TypeValue.ClassTypeValue>,
+      classTypeDetailsMap: Map<CName, TypeValue.ClassTypeDetail>
+    ): Map<CName, CName> {
+      val superclasses = mutableMapOf<CName, CName>()
+      classTypes.forEach { clsType ->
+        val detail = classTypeDetailsMap.getValue(clsType.className)
+        if (detail is TypeValue.SuperClassTypeDetail) {
+          detail.subClasses.forEach { subClass ->
+            superclasses[subClass] = clsType.className
+          }
+        }
+      }
+      return superclasses
     }
   }
 
@@ -157,16 +173,7 @@ class GenClassesKt {
             printer.println("object $outerClassName {")
           }
           val classTypeDetailsMap = classTypeDetails.associateBy { it.className }
-          // TODO classTypes중 union type body를 가진 클래스들은 super class가 되어야하니.. 별도로 추려서 처리할 필요가 있음
-          val superclasses = mutableMapOf<CName, CName>()
-          classTypes.forEach { clsType ->
-            val detail = classTypeDetailsMap.getValue(clsType.className)
-            if (detail is TypeValue.SuperClassTypeDetail) {
-              detail.subClasses.forEach { subClass ->
-                superclasses[subClass] = clsType.className
-              }
-            }
-          }
+          val superclasses = superClassesMap(classTypes, classTypeDetailsMap)
           val indent = if (outerClassName == null) "" else "  "
           types.forEachIndexed { idx, type ->
             if (idx > 0) {
@@ -175,12 +182,7 @@ class GenClassesKt {
             when (type) {
               is TypeValue.ClassTypeValue -> {
                 val detail = classTypeDetailsMap.getValue(type.className)
-                when (detail) {
-                  is TypeValue.DataClassTypeDetail ->
-                    generateDataClassType(printer, detail, superclasses[type.className], indent)
-                  is TypeValue.SuperClassTypeDetail ->
-                    generateSuperClassType(printer, detail, superclasses[type.className], indent)
-                }
+                generateClassType(printer, detail, superclasses[type.className], indent)
               }
               is TypeValue.EnumTypeValue ->
                 generateEnumType(printer, type, indent)
