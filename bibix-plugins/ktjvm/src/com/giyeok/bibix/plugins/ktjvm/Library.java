@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class Library {
-    private BibixValue runCompiler(SetValue classPaths, SetValue pkgSet, BuildContext context, ListValue optIns) throws IOException {
+    private BibixValue runCompiler(SetValue classPaths, SetValue deps, BuildContext context, ListValue optIns) throws IOException {
         Path destDirectory = context.getDestDirectory();
 
         SetValue srcs = (SetValue) context.getArguments().get("srcs");
@@ -66,8 +66,8 @@ public class Library {
                         "classDirs", new SetValue(new DirectoryValue(destDirectory)),
                         "resDirs", new SetValue(),
                         "srcs", srcs
-                ))
-                // TODO srcs
+                )),
+                "deps", deps
         ));
     }
 
