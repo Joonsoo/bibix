@@ -97,16 +97,12 @@ core = ktjvm.library(
   srcs = glob("bibix-core/src/main/kotlin/**/*.kt"),
   deps = [
     base,
-    proto.javalib,
-    proto.kotlinlib,
-    jvm.lib("lib/bibix-ast-0.0.3.jar"),
+    ast0,
 
     maven.dep("org.jetbrains.kotlin", "kotlin-stdlib-jdk8", kotlinVersion),
     maven.dep("org.jetbrains.kotlin", "kotlin-reflect", kotlinVersion),
     maven.dep("org.jetbrains.kotlinx", "kotlinx-coroutines-core", "1.6.1"),
     maven.dep("org.jetbrains.kotlinx", "kotlinx-coroutines-jdk8", "1.6.1"),
-
-    maven.dep("org.scala-lang", "scala-library", "2.13.6"),
 
     maven.dep("com.google.protobuf", "protobuf-java-util", "3.19.4"),
     maven.dep("com.fasterxml.jackson.core", "jackson-databind", "2.13.1"),
@@ -122,11 +118,6 @@ core = ktjvm.library(
     maven.dep("org.apache.maven.resolver", "maven-resolver-connector-basic", "1.7.3"),
     maven.dep("org.apache.maven.resolver", "maven-resolver-transport-file", "1.7.3"),
     maven.dep("org.apache.maven.resolver", "maven-resolver-transport-http", "1.7.3"),
-
-    jvm.lib("lib/jparser-base-0.2.3.jar"),
-    jvm.lib("lib/jparser-fast-0.2.3.jar"),
-    jvm.lib("lib/jparser-naive-0.2.3.jar"),
-    jvm.lib("lib/jparser-utils-0.2.3.jar"),
 
     maven.dep("com.google.flogger", "flogger", floggerVersion),
     maven.dep("com.google.flogger", "flogger-system-backend", floggerVersion),

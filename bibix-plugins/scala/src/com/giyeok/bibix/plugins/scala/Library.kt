@@ -12,13 +12,11 @@ class Library {
     val srcsValue = context.arguments.getValue("srcs") as SetValue
     if (!context.hashChanged) {
       return BuildRuleReturn.value(
-        TupleValue(
-          ClassPkg(
-            LocalBuilt(context.objectIdHash /* TODO built by scala.library */),
-            ClassesInfo(listOf(context.destDirectory), listOf(), null),
-            deps.values.map { ClassPkg.fromBibix(it) }
-          ).toBibix()
-        )
+        ClassPkg(
+          LocalBuilt(context.objectIdHash, "scala.library"),
+          ClassesInfo(listOf(context.destDirectory), listOf(), null),
+          deps.values.map { ClassPkg.fromBibix(it) }
+        ).toBibix()
       )
     }
 
@@ -29,9 +27,8 @@ class Library {
       mapOf("classPkgs" to deps)
     ) { classPaths ->
       val settings = Settings()
-      val cps = (classPaths as DataClassInstanceValue).value as SetValue // set<path>
-      cps.values.forEach { cp ->
-        val cpPath = (cp as PathValue).path
+      val cps = ClassPaths.fromBibix(classPaths)
+      cps.cps.forEach { cpPath ->
         settings.classpath().append(cpPath.absolutePathString())
       }
       settings.outputDirs().setSingleOutput(context.destDirectory.absolutePathString())
@@ -52,7 +49,7 @@ class Library {
 
       BuildRuleReturn.value(
         ClassPkg(
-          LocalBuilt(context.objectIdHash /* TODO built by scala.library */),
+          LocalBuilt(context.objectIdHash, "scala.library"),
           ClassesInfo(listOf(context.destDirectory), listOf(), null),
           deps.values.map { ClassPkg.fromBibix(it) }
         ).toBibix()
