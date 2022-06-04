@@ -86,53 +86,64 @@ class Coercer(val buildGraph: BuildGraph, val runner: BuildRunner) {
         }
         is CustomType -> {
           when (val actualType = runner.runTask(task, BuildTask.ResolveName(type.name))) {
-            is CNameValue.DataClassType ->
-              when (value) {
-                is DataClassInstanceValue -> {
-                  //                if (actualType.cname == value.className) {
-                  //                  coerce(task, origin, value.value, actualType.reality, dclassOrigin)?.let {
-                  //                    DataClassInstanceValue(actualType.cname, it)
-                  //                  }
-                  //                } else {
-                  //                  val tryCast = tryCastClassInstance(task, origin, value, type, dclassOrigin)
-                  //                  if (tryCast != null) tryCast else {
-                  //                    val valueClassType = runner.runTask(
-                  //                      task,
-                  //                      BuildTask.ResolveName(value.className)
-                  //                    ) as CNameValue.DataClassType
-                  //                    val castExprId = valueClassType.casts[CustomType(actualType.cname)]
-                  //                    suspend fun tryCoerceToReality() =
-                  //                      coerce(task, origin, value, actualType.reality, dclassOrigin)?.let {
-                  //                        DataClassInstanceValue(actualType.cname, it)
-                  //                      }
-                  //                    if (castExprId != null) {
-                  //                      val castExprGraph = buildGraph.exprGraphs[castExprId]
-                  //                      val castResult = runner.runTask(
-                  //                        task,
-                  //                        BuildTask.EvalExpr(origin, castExprId, castExprGraph.mainNode, value)
-                  //                      )
-                  //                      coerce(task, origin, castResult as BibixValue, type, dclassOrigin)
-                  //                        ?: tryCoerceToReality()
-                  //                    } else {
-                  //                      tryCoerceToReality()
-                  //                    }
-                  //                  }
-                  //                }
-                  val fieldValues = actualType.fields.mapNotNull { field ->
-                    val fieldValue = value.fieldValues[field.name]
-                    if (fieldValue == null && !field.optional) {
-                      return null
-                    }
-                    fieldValue?.let {
-                      val coercedValue =
-                        coerce(task, origin, fieldValue, field.type, dclassOrigin) ?: return null
-                      field.name to coercedValue
+            is CNameValue.DataClassType -> {
+              suspend fun tupleToClass(
+                values: List<BibixValue>,
+                actualType: CNameValue.DataClassType,
+              ): DataClassInstanceValue? {
+                val fieldValues = actualType.fields.zip(values)
+                  .mapNotNull { (field, value) ->
+                    val fieldType = if (field.optional) {
+                      if (field.type is UnionType) {
+                        UnionType(field.type.types + NoneType)
+                      } else {
+                        UnionType(listOf(field.type, NoneType))
+                      }
+                    } else field.type
+                    val coerced =
+                      coerce(task, origin, value, fieldType, dclassOrigin) ?: return null
+                    if (field.optional && coerced == NoneValue) {
+                      null
+                    } else {
+                      field.name to coerced
                     }
                   }.toMap()
-                  DataClassInstanceValue(value.className, fieldValues)
+                return DataClassInstanceValue(type.name, fieldValues)
+              }
+              when (value) {
+                is DataClassInstanceValue -> {
+                  if (value.className != actualType.cname) {
+                    null
+                  } else {
+                    val fieldValues = actualType.fields.mapNotNull { field ->
+                      val fieldValue = value.fieldValues[field.name]
+                      if (fieldValue == null && !field.optional) {
+                        return null
+                      }
+                      fieldValue?.let {
+                        val coercedValue =
+                          coerce(task, origin, fieldValue, field.type, dclassOrigin) ?: return null
+                        field.name to coercedValue
+                      }
+                    }.toMap()
+                    DataClassInstanceValue(value.className, fieldValues)
+                  }
                 }
+                is NamedTupleValue ->
+                  if (value.pairs.map { it.first } != actualType.fields.map { it.name }) {
+                    null
+                  } else {
+                    tupleToClass(value.pairs.map { it.second }, actualType)
+                  }
+                is TupleValue ->
+                  if (value.values.size != actualType.fields.size) {
+                    null
+                  } else {
+                    tupleToClass(value.values, actualType)
+                  }
                 else -> null
               }
+            }
             is CNameValue.SuperClassType ->
               when (value) {
                 is DataClassInstanceValue -> {
