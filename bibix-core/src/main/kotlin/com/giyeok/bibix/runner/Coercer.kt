@@ -162,11 +162,7 @@ class Coercer(val buildGraph: BuildGraph, val runner: BuildRunner) {
                   val subTypes =
                     runner.runTasks(task, actualType.subs.map { BuildTask.ResolveName(it.name) })
                       .map { it as CNameValue.DataClassType }
-                  if (subTypes.any { it.cname == value.className }) {
-                    value
-                  } else {
-                    null
-                  }
+                  if (subTypes.any { it.cname == value.className }) value else null
                 }
                 else -> null
               }

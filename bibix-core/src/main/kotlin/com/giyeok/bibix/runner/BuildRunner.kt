@@ -73,6 +73,10 @@ class BuildRunner(
     }.awaitAll()
 
   suspend fun runTask(requestTask: BuildTask, task: BuildTask): Any {
+    if (routineManager.isTaskFinished(task)) {
+      // 이미 결과가 나온 task를 다시 실행하면 기존 실행 결과 반환
+      return routineManager.getTaskResult(task)!!
+    }
     // requestTask가 실행되려면 task의 결과가 필요하다는 의미.
     // TODO 싸이클이 생기면 오류 발생하고 종료
     buildTaskRelGraph.addDependency(requestTask, task)
@@ -744,27 +748,6 @@ class BuildRunner(
             }) { resolved ->
               nextCall(result.whenDone, resolved)
             }
-//            routineManager.executeSuspend(task, {
-//              val resolvedClasses =
-//                cnames.map { runTask(task, BuildTask.ResolveName(it)) as CNameValue.ClassType }
-//              val realities = coercer.toTypeValues(task, resolvedClasses.map { it.reality })
-//              resolvedClasses.zip(realities)
-//            }) { zip ->
-//              val classDetails = zip.map { (cls, realityType) ->
-//                // relativeName에 origin 입장에서 cls를 어떻게 가리킬 수 있는지 지정
-//                // TODO from ** import ** 를 했을 경우에도 잘 동작하나? 확인 필요
-//                val relativeName = if (cls.cname.sourceId == origin) {
-//                  cls.cname.tokens
-//                } else {
-//                  // TODO 이거 제대로 안될거같은데?
-//                  val importSource = imported.entries.find { it.value == cls.cname.sourceId }!!
-//                  val importer = buildGraph.names.entries.find { it.value == importSource.key }!!
-//                  listOf(importer.key.tokens.first()) + cls.cname.tokens
-//                }
-//                TypeValue.ClassTypeDetail(cls.cname, relativeName, cls.extendings, realityType)
-//              }
-//              nextCall(result.whenDone, classDetails)
-//            }
           }
         }
       }
