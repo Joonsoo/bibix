@@ -35,7 +35,7 @@ impl = ktjvm.library(
   ],
 )
 
-class ProtoSchema = (schemaFiles: set<file>, includes: set<path>)
+class ProtoSchema(schemaFiles: set<file>, includes: set<path>)
 
 def protocDownloadUrl(
   os: OS = env.os,
