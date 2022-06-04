@@ -1,9 +1,11 @@
 package com.giyeok.bibix.runner
 
-class BuildTaskRelGraph {
-  private val deps = mutableMapOf<BuildTask, MutableSet<BuildTask>>()
+import java.util.concurrent.ConcurrentHashMap
 
-  fun addDependency(requestTask: BuildTask, task: BuildTask) {
+class BuildTaskRelGraph {
+  private val deps = ConcurrentHashMap<BuildTask, MutableSet<BuildTask>>()
+
+  fun addDependency(requestTask: BuildTask, task: BuildTask) = synchronized(this) {
     deps.getOrPut(requestTask) { mutableSetOf() }.add(task)
   }
 

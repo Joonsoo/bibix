@@ -147,8 +147,15 @@ class Coercer(val buildGraph: BuildGraph, val runner: BuildRunner) {
             is CNameValue.SuperClassType ->
               when (value) {
                 is DataClassInstanceValue -> {
-                  // TODO 실제 타입 체크해서 문제 있으면 null
-                  TODO()
+                  // TODO sub class -> sub class 인 경우 처리
+                  val subTypes =
+                    runner.runTasks(task, actualType.subs.map { BuildTask.ResolveName(it.name) })
+                      .map { it as CNameValue.DataClassType }
+                  if (subTypes.any { it.cname == value.className }) {
+                    value
+                  } else {
+                    null
+                  }
                 }
                 else -> null
               }

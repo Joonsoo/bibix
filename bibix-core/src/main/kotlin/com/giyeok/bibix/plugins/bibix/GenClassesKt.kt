@@ -88,7 +88,6 @@ class GenClassesKt {
       p.println("$indent  companion object {")
       p.println("$indent    fun fromBibix(value: BibixValue): $clsName {")
       p.println("$indent      value as DataClassInstanceValue")
-      p.println("$indent      check(value.className.tokens == listOf(${cls.className.tokens.joinToString { "\"$it\"" }}))")
       p.println("$indent      return when (value.className.tokens) {")
       // TODO subClasses 중에서 super class인 것은 다시 풀어서 전부 data class로 바꿔서 처리
       cls.subClasses.forEach { sub ->

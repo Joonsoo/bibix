@@ -104,7 +104,6 @@ class GenRuleImplTemplateKtTest {
             companion object {
               fun fromBibix(value: BibixValue): ClassOrigin {
                 value as DataClassInstanceValue
-                check(value.className.tokens == listOf("ClassOrigin"))
                 return when (value.className.tokens) {
                   listOf("MavenDep") -> MavenDep.fromBibix(value)
                   listOf("LocalLib") -> LocalLib.fromBibix(value)
@@ -192,7 +191,6 @@ class GenRuleImplTemplateKtTest {
             companion object {
               fun fromBibix(value: BibixValue): CpInfo {
                 value as DataClassInstanceValue
-                check(value.className.tokens == listOf("CpInfo"))
                 return when (value.className.tokens) {
                   listOf("JarInfo") -> JarInfo.fromBibix(value)
                   listOf("ClassesInfo") -> ClassesInfo.fromBibix(value)

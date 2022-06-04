@@ -57,15 +57,17 @@ public class Library {
         // ClassPkg = (origin: ClassOrigin, cpinfo: CpInfo, deps: set<ClassPkg>)
         // CpInfo = {JarInfo, ClassesInfo}
         // ClassesInfo = (classDirs: set<directory>, resDirs: set<directory>, srcs: {set<file>, none})
-        return new NDataClassInstanceValue("jvm.ClassPkg", new TupleValue(
-                /* origin: */ new StringValue(context.getObjectIdHash() /* TODO "built by ktjvm.library: " */),
-                new NDataClassInstanceValue("jvm.ClassesInfo", new TupleValue(
-                        /* classDirs: */ new SetValue(new PathValue(destDirectory)),
-                        // TODO resDirs
-                        /* resDirs: */ new SetValue(),
-                        /* srcs: */ srcs
+        return new NDataClassInstanceValue("jvm.ClassPkg", Map.of(
+                "origin", new NDataClassInstanceValue("jvm.LocalBuilt", Map.of(
+                        "objHash", new StringValue(context.getObjectIdHash()),
+                        "builderName", new StringValue("ktjvm.library")
                 )),
-                /* deps: */ pkgSet
+                "cpinfo", new NDataClassInstanceValue("jvm.ClassesInfo", Map.of(
+                        "classDirs", new SetValue(new PathValue(destDirectory)),
+                        "resDirs", new SetValue(),
+                        "srcs", srcs
+                ))
+                // TODO srcs
         ));
     }
 
@@ -76,7 +78,7 @@ public class Library {
                 "jvm.resolveClassPkgs",
                 Map.of("classPkgs", deps),
                 (classPaths) -> {
-                    SetValue cps = (SetValue) ((DataClassInstanceValue) classPaths).getValue();
+                    SetValue cps = (SetValue) ((DataClassInstanceValue) classPaths).get("cps");
                     try {
                         return BuildRuleReturn.value(runCompiler(cps, deps, context, optIns));
                     } catch (Exception e) {
