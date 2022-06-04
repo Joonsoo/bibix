@@ -3,7 +3,7 @@
 
 package com.giyeok.bibix.runner;
 
-@kotlin.jvm.JvmName("-initializebibixRepo")
+@kotlin.jvm.JvmSynthetic
 public inline fun bibixRepo(block: com.giyeok.bibix.runner.BibixRepoKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.runner.BibixRepoProto.BibixRepo =
   com.giyeok.bibix.runner.BibixRepoKt.Dsl._create(com.giyeok.bibix.runner.BibixRepoProto.BibixRepo.newBuilder()).apply { block() }._build()
 public object BibixRepoKt {
@@ -358,4 +358,3 @@ public object BibixRepoKt {
 @kotlin.jvm.JvmSynthetic
 public inline fun com.giyeok.bibix.runner.BibixRepoProto.BibixRepo.copy(block: com.giyeok.bibix.runner.BibixRepoKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.runner.BibixRepoProto.BibixRepo =
   com.giyeok.bibix.runner.BibixRepoKt.Dsl._create(this.toBuilder()).apply { block() }._build()
-

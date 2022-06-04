@@ -3,7 +3,7 @@
 
 package com.giyeok.bibix.daemon;
 
-@kotlin.jvm.JvmName("-initializereloadScriptReq")
+@kotlin.jvm.JvmSynthetic
 public inline fun reloadScriptReq(block: com.giyeok.bibix.daemon.ReloadScriptReqKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.daemon.BibixDaemonApiProto.ReloadScriptReq =
   com.giyeok.bibix.daemon.ReloadScriptReqKt.Dsl._create(com.giyeok.bibix.daemon.BibixDaemonApiProto.ReloadScriptReq.newBuilder()).apply { block() }._build()
 public object ReloadScriptReqKt {
@@ -26,4 +26,3 @@ public object ReloadScriptReqKt {
 @kotlin.jvm.JvmSynthetic
 public inline fun com.giyeok.bibix.daemon.BibixDaemonApiProto.ReloadScriptReq.copy(block: com.giyeok.bibix.daemon.ReloadScriptReqKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.daemon.BibixDaemonApiProto.ReloadScriptReq =
   com.giyeok.bibix.daemon.ReloadScriptReqKt.Dsl._create(this.toBuilder()).apply { block() }._build()
-

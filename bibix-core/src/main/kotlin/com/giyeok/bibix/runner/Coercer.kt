@@ -30,192 +30,224 @@ class Coercer(val buildGraph: BuildGraph, val runner: BuildRunner) {
     type: BibixType,
     // value가 NClassInstanceValue일 수 있을 때 그 이름을 어디서 찾아야되는지
     dclassOrigin: SourceId?,
-  ): BibixValue? = if (value is NDataClassInstanceValue) {
-    // ClassInstanceValue로 변환
-    checkNotNull(dclassOrigin)
-    val resolved = runner.runTask(
-      task,
-      BuildTask.ResolveName(CName(dclassOrigin, value.nameTokens))
-    ) as CNameValue.DataClassType
-    val instanceValue = DataClassInstanceValue(resolved.cname, value.value)
-    coerce(task, origin, instanceValue, type, dclassOrigin)
-  } else {
-    // TODO value is ClassInstanceValue 인데 type은 ClassType이 아닌 경우
-    // -> class의 cast 함수 시도 -> value.reality를 coerce
-    when (type) {
-      AnyType -> value
-      BooleanType -> when (value) {
-        is BooleanValue -> value
-        is DataClassInstanceValue -> tryCastClassInstance(task, origin, value, type, dclassOrigin)
-        else -> null
-      }
-      StringType -> when (value) {
-        is StringValue -> value
-        is DataClassInstanceValue ->
-          tryCastClassInstance(task, origin, value, type, dclassOrigin)
-            ?: StringValue(value.stringify())
-        else -> StringValue(value.stringify())
-      }
-      PathType -> when (value) {
-        is PathValue -> value
-        is FileValue -> PathValue(value.file)
-        is DirectoryValue -> PathValue(value.directory)
-        is StringValue -> PathValue(fileFromString(origin, value.value))
-        is DataClassInstanceValue -> tryCastClassInstance(task, origin, value, type, dclassOrigin)
-        else -> null
-      }
-      FileType -> when (value) {
-        is FileValue -> value
-        // TODO file value, directory value는 build rule에 주기 직전에 존재하는지/타입 확인하기
-        is PathValue -> FileValue(value.path)
-        is StringValue -> FileValue(fileFromString(origin, value.value))
-        is DataClassInstanceValue -> tryCastClassInstance(task, origin, value, type, dclassOrigin)
-        else -> null
-      }
-      DirectoryType -> when (value) {
-        is DirectoryValue -> value
-        is PathValue -> DirectoryValue(value.path)
-        is StringValue -> DirectoryValue(fileFromString(origin, value.value))
-        is DataClassInstanceValue -> tryCastClassInstance(task, origin, value, type, dclassOrigin)
-        else -> null
-      }
-      is CustomType -> {
-        when (val actualType = runner.runTask(task, BuildTask.ResolveName(type.name))) {
-          is CNameValue.DataClassType ->
-            when (value) {
-              is DataClassInstanceValue ->
-                if (actualType.cname == value.className) {
-                  coerce(task, origin, value.value, actualType.reality, dclassOrigin)?.let {
-                    DataClassInstanceValue(actualType.cname, it)
-                  }
-                } else {
-                  val tryCast = tryCastClassInstance(task, origin, value, type, dclassOrigin)
-                  if (tryCast != null) tryCast else {
-                    val valueClassType = runner.runTask(
-                      task,
-                      BuildTask.ResolveName(value.className)
-                    ) as CNameValue.DataClassType
-                    val castExprId = valueClassType.casts[CustomType(actualType.cname)]
-                    suspend fun tryCoerceToReality() =
-                      coerce(task, origin, value, actualType.reality, dclassOrigin)?.let {
-                        DataClassInstanceValue(actualType.cname, it)
-                      }
-                    if (castExprId != null) {
-                      val castExprGraph = buildGraph.exprGraphs[castExprId]
-                      val castResult = runner.runTask(
-                        task,
-                        BuildTask.EvalExpr(origin, castExprId, castExprGraph.mainNode, value)
-                      )
-                      coerce(task, origin, castResult as BibixValue, type, dclassOrigin)
-                        ?: tryCoerceToReality()
-                    } else {
-                      tryCoerceToReality()
+  ): BibixValue? {
+    return if (value is NDataClassInstanceValue) {
+      // ClassInstanceValue로 변환
+      checkNotNull(dclassOrigin)
+      val resolved = runner.runTask(
+        task,
+        BuildTask.ResolveName(CName(dclassOrigin, value.nameTokens))
+      ) as CNameValue.DataClassType
+      val instanceValue = DataClassInstanceValue(resolved.cname, value.fieldValues)
+      coerce(task, origin, instanceValue, type, dclassOrigin)
+    } else {
+      // TODO value is ClassInstanceValue 인데 type은 ClassType이 아닌 경우
+      // -> class의 cast 함수 시도 -> value.reality를 coerce
+      when (type) {
+        AnyType -> value
+        BooleanType -> when (value) {
+          is BooleanValue -> value
+          is DataClassInstanceValue ->
+            tryCastClassInstance(task, origin, value, type, dclassOrigin)
+          else -> null
+        }
+        StringType -> when (value) {
+          is StringValue -> value
+          is DataClassInstanceValue ->
+            tryCastClassInstance(task, origin, value, type, dclassOrigin)
+              ?: StringValue(value.stringify())
+          else -> StringValue(value.stringify())
+        }
+        PathType -> when (value) {
+          is PathValue -> value
+          is FileValue -> PathValue(value.file)
+          is DirectoryValue -> PathValue(value.directory)
+          is StringValue -> PathValue(fileFromString(origin, value.value))
+          is DataClassInstanceValue ->
+            tryCastClassInstance(task, origin, value, type, dclassOrigin)
+          else -> null
+        }
+        FileType -> when (value) {
+          is FileValue -> value
+          // TODO file value, directory value는 build rule에 주기 직전에 존재하는지/타입 확인하기
+          is PathValue -> FileValue(value.path)
+          is StringValue -> FileValue(fileFromString(origin, value.value))
+          is DataClassInstanceValue ->
+            tryCastClassInstance(task, origin, value, type, dclassOrigin)
+          else -> null
+        }
+        DirectoryType -> when (value) {
+          is DirectoryValue -> value
+          is PathValue -> DirectoryValue(value.path)
+          is StringValue -> DirectoryValue(fileFromString(origin, value.value))
+          is DataClassInstanceValue ->
+            tryCastClassInstance(task, origin, value, type, dclassOrigin)
+          else -> null
+        }
+        is CustomType -> {
+          when (val actualType = runner.runTask(task, BuildTask.ResolveName(type.name))) {
+            is CNameValue.DataClassType ->
+              when (value) {
+                is DataClassInstanceValue -> {
+                  //                if (actualType.cname == value.className) {
+                  //                  coerce(task, origin, value.value, actualType.reality, dclassOrigin)?.let {
+                  //                    DataClassInstanceValue(actualType.cname, it)
+                  //                  }
+                  //                } else {
+                  //                  val tryCast = tryCastClassInstance(task, origin, value, type, dclassOrigin)
+                  //                  if (tryCast != null) tryCast else {
+                  //                    val valueClassType = runner.runTask(
+                  //                      task,
+                  //                      BuildTask.ResolveName(value.className)
+                  //                    ) as CNameValue.DataClassType
+                  //                    val castExprId = valueClassType.casts[CustomType(actualType.cname)]
+                  //                    suspend fun tryCoerceToReality() =
+                  //                      coerce(task, origin, value, actualType.reality, dclassOrigin)?.let {
+                  //                        DataClassInstanceValue(actualType.cname, it)
+                  //                      }
+                  //                    if (castExprId != null) {
+                  //                      val castExprGraph = buildGraph.exprGraphs[castExprId]
+                  //                      val castResult = runner.runTask(
+                  //                        task,
+                  //                        BuildTask.EvalExpr(origin, castExprId, castExprGraph.mainNode, value)
+                  //                      )
+                  //                      coerce(task, origin, castResult as BibixValue, type, dclassOrigin)
+                  //                        ?: tryCoerceToReality()
+                  //                    } else {
+                  //                      tryCoerceToReality()
+                  //                    }
+                  //                  }
+                  //                }
+                  val fieldValues = actualType.fields.mapNotNull { field ->
+                    val fieldValue = value.fieldValues[field.name]
+                    if (fieldValue == null && !field.optional) {
+                      return null
                     }
-                  }
+                    fieldValue?.let {
+                      val coercedValue =
+                        coerce(task, origin, fieldValue, field.type, dclassOrigin) ?: return null
+                      field.name to coercedValue
+                    }
+                  }.toMap()
+                  DataClassInstanceValue(value.className, fieldValues)
                 }
-              else -> coerce(task, origin, value, actualType.reality, dclassOrigin)?.let {
-                DataClassInstanceValue(actualType.cname, it)
+                else -> null
               }
+            is CNameValue.SuperClassType ->
+              when (value) {
+                is DataClassInstanceValue -> {
+                  // TODO 실제 타입 체크해서 문제 있으면 null
+                  TODO()
+                }
+                else -> null
+              }
+            is CNameValue.EnumType -> when (value) {
+              is EnumValue -> if (actualType.cname == value.enumTypeName) value else null
+              is StringValue ->
+                if (actualType.values.contains(value.value)) {
+                  EnumValue(actualType.cname, value.value)
+                } else null
+              is DataClassInstanceValue ->
+                tryCastClassInstance(task, origin, value, type, dclassOrigin)
+              else -> null
             }
-          is CNameValue.EnumType -> when (value) {
-            is EnumValue -> if (actualType.cname == value.enumTypeName) value else null
-            is StringValue ->
-              if (actualType.values.contains(value.value)) {
-                EnumValue(actualType.cname, value.value)
-              } else null
-            is DataClassInstanceValue -> tryCastClassInstance(task, origin, value, type, dclassOrigin)
             else -> null
           }
-          else -> null
         }
-      }
-      is ListType -> {
-        when (value) {
-          is ListValue -> withNoNull(value.values.map {
-            coerce(task, origin, it, type.elemType, dclassOrigin)
-          }) { ListValue(it) }
-          is SetValue -> withNoNull(value.values.map {
-            coerce(task, origin, it, type.elemType, dclassOrigin)
-          }) { ListValue(it) }
-          is DataClassInstanceValue -> tryCastClassInstance(task, origin, value, type, dclassOrigin)
-          else -> null
-        }
-      }
-      is SetType -> {
-        when (value) {
-          is ListValue -> withNoNull(value.values.map {
-            coerce(task, origin, it, type.elemType, dclassOrigin)
-          }) { SetValue(it) }
-          is SetValue -> withNoNull(value.values.map {
-            coerce(task, origin, it, type.elemType, dclassOrigin)
-          }) { SetValue(it) }
-          is DataClassInstanceValue -> tryCastClassInstance(task, origin, value, type, dclassOrigin)
-          else -> null
-        }
-      }
-      is TupleType -> {
-        suspend fun ifElse() = if (type.elemTypes.size != 1) null else {
-          // 길이가 1인 tuple이면 그냥 맞춰서 반환해주기
-          coerce(task, origin, value, type.elemTypes[0], dclassOrigin)?.let { TupleValue(it) }
-        }
-        when (value) {
-          is TupleValue -> {
-            check(type.elemTypes.size == value.values.size)
-            withNoNull(
-              value.values.zip(type.elemTypes)
-                .map { coerce(task, origin, it.first, it.second, dclassOrigin) }) { TupleValue(it) }
-          }
-          is NamedTupleValue -> {
-            check(type.elemTypes.size == value.pairs.size)
-            withNoNull(value.values().zip(type.elemTypes)
-              .map { coerce(task, origin, it.first, it.second, dclassOrigin) }) { TupleValue(it) }
-          }
-          is DataClassInstanceValue ->
-            tryCastClassInstance(task, origin, value, type, dclassOrigin) ?: ifElse()
-          else -> ifElse()
-        }
-      }
-      is NamedTupleType -> {
-        suspend fun ifElse() = if (type.pairs.size != 1) null else {
-          // 길이가 1인 named tuple이면 그냥 맞춰서 반환해주기
-          coerce(task, origin, value, type.pairs[0].second, dclassOrigin)?.let {
-            NamedTupleValue(type.pairs[0].first to it)
+        is ListType -> {
+          when (value) {
+            is ListValue -> withNoNull(value.values.map {
+              coerce(task, origin, it, type.elemType, dclassOrigin)
+            }) { ListValue(it) }
+            is SetValue -> withNoNull(value.values.map {
+              coerce(task, origin, it, type.elemType, dclassOrigin)
+            }) { ListValue(it) }
+            is DataClassInstanceValue ->
+              tryCastClassInstance(task, origin, value, type, dclassOrigin)
+            else -> null
           }
         }
-
-        when (value) {
-          is NamedTupleValue -> {
-            check(type.pairs.size == value.pairs.size)
-            check(type.names() == value.names())
-            withNoNull(value.values().zip(type.valueTypes()).map {
-              coerce(task, origin, it.first, it.second, dclassOrigin)
-            }) { NamedTupleValue(type.names().zip(it)) }
+        is SetType -> {
+          when (value) {
+            is ListValue -> withNoNull(value.values.map {
+              coerce(task, origin, it, type.elemType, dclassOrigin)
+            }) { SetValue(it) }
+            is SetValue -> withNoNull(value.values.map {
+              coerce(task, origin, it, type.elemType, dclassOrigin)
+            }) { SetValue(it) }
+            is DataClassInstanceValue ->
+              tryCastClassInstance(task, origin, value, type, dclassOrigin)
+            else -> null
           }
-          is TupleValue -> {
-            check(type.pairs.size == value.values.size)
-            withNoNull(value.values.zip(type.valueTypes())
-              .map { coerce(task, origin, it.first, it.second, dclassOrigin) }) {
-              NamedTupleValue(type.names().zip(it))
+        }
+        is TupleType -> {
+          suspend fun ifElse() = if (type.elemTypes.size != 1) null else {
+            // 길이가 1인 tuple이면 그냥 맞춰서 반환해주기
+            coerce(task, origin, value, type.elemTypes[0], dclassOrigin)?.let { TupleValue(it) }
+          }
+          when (value) {
+            is TupleValue -> {
+              check(type.elemTypes.size == value.values.size)
+              withNoNull(
+                value.values.zip(type.elemTypes)
+                  .map {
+                    coerce(task, origin, it.first, it.second, dclassOrigin)
+                  }) { TupleValue(it) }
+            }
+            is NamedTupleValue -> {
+              check(type.elemTypes.size == value.pairs.size)
+              withNoNull(value.values().zip(type.elemTypes)
+                .map {
+                  coerce(task, origin, it.first, it.second, dclassOrigin)
+                }) { TupleValue(it) }
+            }
+            is DataClassInstanceValue ->
+              tryCastClassInstance(task, origin, value, type, dclassOrigin) ?: ifElse()
+            else -> ifElse()
+          }
+        }
+        is NamedTupleType -> {
+          suspend fun ifElse() = if (type.pairs.size != 1) null else {
+            // 길이가 1인 named tuple이면 그냥 맞춰서 반환해주기
+            coerce(task, origin, value, type.pairs[0].second, dclassOrigin)?.let {
+              NamedTupleValue(type.pairs[0].first to it)
             }
           }
-          is DataClassInstanceValue ->
-            tryCastClassInstance(task, origin, value, type, dclassOrigin) ?: ifElse()
-          else -> ifElse()
+
+          when (value) {
+            is NamedTupleValue -> {
+              check(type.pairs.size == value.pairs.size)
+              check(type.names() == value.names())
+              withNoNull(value.values().zip(type.valueTypes()).map {
+                coerce(task, origin, it.first, it.second, dclassOrigin)
+              }) { NamedTupleValue(type.names().zip(it)) }
+            }
+            is TupleValue -> {
+              check(type.pairs.size == value.values.size)
+              withNoNull(value.values.zip(type.valueTypes())
+                .map { coerce(task, origin, it.first, it.second, dclassOrigin) }) {
+                NamedTupleValue(type.names().zip(it))
+              }
+            }
+            is DataClassInstanceValue ->
+              tryCastClassInstance(task, origin, value, type, dclassOrigin) ?: ifElse()
+            else -> ifElse()
+          }
         }
+        is UnionType -> {
+          val firstMatch = type.types.firstNotNullOfOrNull {
+            coerce(task, origin, value, it, dclassOrigin)
+          }
+          if (firstMatch == null) {
+            println("${type.types} $value")
+          }
+          firstMatch!!
+        }
+        NoneType -> if (value is NoneValue) value else null
+        ActionRuleDefType -> if (value is ActionRuleDefValue) value else null
+        BuildRuleDefType -> if (value is BuildRuleDefValue) value else null
+        TypeType -> if (value is TypeValue) value else null
       }
-      is UnionType -> {
-        val firstMatch = type.types.firstNotNullOfOrNull {
-          coerce(task, origin, value, it, dclassOrigin)
-        }
-        if (firstMatch == null) {
-          println("${type.types} $value")
-        }
-        firstMatch!!
-      }
-      NoneType -> if (value is NoneValue) value else null
-      ActionRuleDefType -> if (value is ActionRuleDefValue) value else null
-      BuildRuleDefType -> if (value is BuildRuleDefValue) value else null
-      TypeType -> if (value is TypeValue) value else null
     }
   }
 
@@ -239,7 +271,7 @@ class Coercer(val buildGraph: BuildGraph, val runner: BuildRunner) {
 
   suspend fun toBibixValue(task: BuildTask, value: Any): BibixValue = when (value) {
     is BibixValue -> value
-    is CNameValue.DataClassType -> TypeValue.ClassTypeValue(value.cname)
+    is CNameValue.ClassType -> TypeValue.ClassTypeValue(value.cname)
     is CNameValue.EnumType -> TypeValue.EnumTypeValue(value.cname, value.values)
     is CNameValue.BuildRuleValue -> {
       val paramTypes = toTypeValues(task, value.params.map { it.type })
@@ -290,7 +322,7 @@ class Coercer(val buildGraph: BuildGraph, val runner: BuildRunner) {
     DirectoryType -> TypeValue.DirectoryTypeValue
     is CustomType -> {
       when (val resolved = runner.runTask(task, BuildTask.ResolveName(type.name))) {
-        is CNameValue.DataClassType -> TypeValue.ClassTypeValue(resolved.cname)
+        is CNameValue.ClassType -> TypeValue.ClassTypeValue(resolved.cname)
         is CNameValue.EnumType -> TypeValue.EnumTypeValue(resolved.cname, resolved.values)
         else -> throw BibixBuildException(task, "Failed to find class or enum type ${type.name}")
       }

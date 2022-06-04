@@ -26,12 +26,10 @@ class Git {
     }
     return DataClassInstanceValue(
       CName(BibixRootSourceId, "GitSource"),
-      NamedTupleValue(
-        listOf(
-          "url" to context.arguments.getValue("url"),
-          "ref" to StringValue(refSpec),
-          "path" to path,
-        )
+      mapOf(
+        "url" to context.arguments.getValue("url"),
+        "ref" to StringValue(refSpec),
+        "path" to path,
       )
     )
   }

@@ -173,19 +173,19 @@ public final class BibixValueProto {
     com.giyeok.bibix.runner.BibixValueProto.NamedTupleValueOrBuilder getNamedTupleValueOrBuilder();
 
     /**
-     * <code>.com.giyeok.bibix.runner.ClassInstanceValue class_instance_value = 11;</code>
-     * @return Whether the classInstanceValue field is set.
+     * <code>.com.giyeok.bibix.runner.DataClassInstanceValue data_class_instance_value = 11;</code>
+     * @return Whether the dataClassInstanceValue field is set.
      */
-    boolean hasClassInstanceValue();
+    boolean hasDataClassInstanceValue();
     /**
-     * <code>.com.giyeok.bibix.runner.ClassInstanceValue class_instance_value = 11;</code>
-     * @return The classInstanceValue.
+     * <code>.com.giyeok.bibix.runner.DataClassInstanceValue data_class_instance_value = 11;</code>
+     * @return The dataClassInstanceValue.
      */
-    com.giyeok.bibix.runner.BibixValueProto.ClassInstanceValue getClassInstanceValue();
+    com.giyeok.bibix.runner.BibixValueProto.DataClassInstanceValue getDataClassInstanceValue();
     /**
-     * <code>.com.giyeok.bibix.runner.ClassInstanceValue class_instance_value = 11;</code>
+     * <code>.com.giyeok.bibix.runner.DataClassInstanceValue data_class_instance_value = 11;</code>
      */
-    com.giyeok.bibix.runner.BibixValueProto.ClassInstanceValueOrBuilder getClassInstanceValueOrBuilder();
+    com.giyeok.bibix.runner.BibixValueProto.DataClassInstanceValueOrBuilder getDataClassInstanceValueOrBuilder();
 
     public com.giyeok.bibix.runner.BibixValueProto.BibixValue.ValueCase getValueCase();
   }
@@ -334,14 +334,14 @@ public final class BibixValueProto {
               break;
             }
             case 90: {
-              com.giyeok.bibix.runner.BibixValueProto.ClassInstanceValue.Builder subBuilder = null;
+              com.giyeok.bibix.runner.BibixValueProto.DataClassInstanceValue.Builder subBuilder = null;
               if (valueCase_ == 11) {
-                subBuilder = ((com.giyeok.bibix.runner.BibixValueProto.ClassInstanceValue) value_).toBuilder();
+                subBuilder = ((com.giyeok.bibix.runner.BibixValueProto.DataClassInstanceValue) value_).toBuilder();
               }
               value_ =
-                  input.readMessage(com.giyeok.bibix.runner.BibixValueProto.ClassInstanceValue.parser(), extensionRegistry);
+                  input.readMessage(com.giyeok.bibix.runner.BibixValueProto.DataClassInstanceValue.parser(), extensionRegistry);
               if (subBuilder != null) {
-                subBuilder.mergeFrom((com.giyeok.bibix.runner.BibixValueProto.ClassInstanceValue) value_);
+                subBuilder.mergeFrom((com.giyeok.bibix.runner.BibixValueProto.DataClassInstanceValue) value_);
                 value_ = subBuilder.buildPartial();
               }
               valueCase_ = 11;
@@ -358,8 +358,6 @@ public final class BibixValueProto {
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
         throw e.setUnfinishedMessage(this);
-      } catch (com.google.protobuf.UninitializedMessageException e) {
-        throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
       } catch (java.io.IOException e) {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e).setUnfinishedMessage(this);
@@ -396,7 +394,7 @@ public final class BibixValueProto {
       SET_VALUE(8),
       TUPLE_VALUE(9),
       NAMED_TUPLE_VALUE(10),
-      CLASS_INSTANCE_VALUE(11),
+      DATA_CLASS_INSTANCE_VALUE(11),
       VALUE_NOT_SET(0);
       private final int value;
       private ValueCase(int value) {
@@ -424,7 +422,7 @@ public final class BibixValueProto {
           case 8: return SET_VALUE;
           case 9: return TUPLE_VALUE;
           case 10: return NAMED_TUPLE_VALUE;
-          case 11: return CLASS_INSTANCE_VALUE;
+          case 11: return DATA_CLASS_INSTANCE_VALUE;
           case 0: return VALUE_NOT_SET;
           default: return null;
         }
@@ -824,35 +822,35 @@ public final class BibixValueProto {
       return com.giyeok.bibix.runner.BibixValueProto.NamedTupleValue.getDefaultInstance();
     }
 
-    public static final int CLASS_INSTANCE_VALUE_FIELD_NUMBER = 11;
+    public static final int DATA_CLASS_INSTANCE_VALUE_FIELD_NUMBER = 11;
     /**
-     * <code>.com.giyeok.bibix.runner.ClassInstanceValue class_instance_value = 11;</code>
-     * @return Whether the classInstanceValue field is set.
+     * <code>.com.giyeok.bibix.runner.DataClassInstanceValue data_class_instance_value = 11;</code>
+     * @return Whether the dataClassInstanceValue field is set.
      */
     @java.lang.Override
-    public boolean hasClassInstanceValue() {
+    public boolean hasDataClassInstanceValue() {
       return valueCase_ == 11;
     }
     /**
-     * <code>.com.giyeok.bibix.runner.ClassInstanceValue class_instance_value = 11;</code>
-     * @return The classInstanceValue.
+     * <code>.com.giyeok.bibix.runner.DataClassInstanceValue data_class_instance_value = 11;</code>
+     * @return The dataClassInstanceValue.
      */
     @java.lang.Override
-    public com.giyeok.bibix.runner.BibixValueProto.ClassInstanceValue getClassInstanceValue() {
+    public com.giyeok.bibix.runner.BibixValueProto.DataClassInstanceValue getDataClassInstanceValue() {
       if (valueCase_ == 11) {
-         return (com.giyeok.bibix.runner.BibixValueProto.ClassInstanceValue) value_;
+         return (com.giyeok.bibix.runner.BibixValueProto.DataClassInstanceValue) value_;
       }
-      return com.giyeok.bibix.runner.BibixValueProto.ClassInstanceValue.getDefaultInstance();
+      return com.giyeok.bibix.runner.BibixValueProto.DataClassInstanceValue.getDefaultInstance();
     }
     /**
-     * <code>.com.giyeok.bibix.runner.ClassInstanceValue class_instance_value = 11;</code>
+     * <code>.com.giyeok.bibix.runner.DataClassInstanceValue data_class_instance_value = 11;</code>
      */
     @java.lang.Override
-    public com.giyeok.bibix.runner.BibixValueProto.ClassInstanceValueOrBuilder getClassInstanceValueOrBuilder() {
+    public com.giyeok.bibix.runner.BibixValueProto.DataClassInstanceValueOrBuilder getDataClassInstanceValueOrBuilder() {
       if (valueCase_ == 11) {
-         return (com.giyeok.bibix.runner.BibixValueProto.ClassInstanceValue) value_;
+         return (com.giyeok.bibix.runner.BibixValueProto.DataClassInstanceValue) value_;
       }
-      return com.giyeok.bibix.runner.BibixValueProto.ClassInstanceValue.getDefaultInstance();
+      return com.giyeok.bibix.runner.BibixValueProto.DataClassInstanceValue.getDefaultInstance();
     }
 
     private byte memoizedIsInitialized = -1;
@@ -901,7 +899,7 @@ public final class BibixValueProto {
         output.writeMessage(10, (com.giyeok.bibix.runner.BibixValueProto.NamedTupleValue) value_);
       }
       if (valueCase_ == 11) {
-        output.writeMessage(11, (com.giyeok.bibix.runner.BibixValueProto.ClassInstanceValue) value_);
+        output.writeMessage(11, (com.giyeok.bibix.runner.BibixValueProto.DataClassInstanceValue) value_);
       }
       unknownFields.writeTo(output);
     }
@@ -951,7 +949,7 @@ public final class BibixValueProto {
       }
       if (valueCase_ == 11) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(11, (com.giyeok.bibix.runner.BibixValueProto.ClassInstanceValue) value_);
+          .computeMessageSize(11, (com.giyeok.bibix.runner.BibixValueProto.DataClassInstanceValue) value_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -1011,8 +1009,8 @@ public final class BibixValueProto {
               .equals(other.getNamedTupleValue())) return false;
           break;
         case 11:
-          if (!getClassInstanceValue()
-              .equals(other.getClassInstanceValue())) return false;
+          if (!getDataClassInstanceValue()
+              .equals(other.getDataClassInstanceValue())) return false;
           break;
         case 0:
         default:
@@ -1071,8 +1069,8 @@ public final class BibixValueProto {
           hash = (53 * hash) + getNamedTupleValue().hashCode();
           break;
         case 11:
-          hash = (37 * hash) + CLASS_INSTANCE_VALUE_FIELD_NUMBER;
-          hash = (53 * hash) + getClassInstanceValue().hashCode();
+          hash = (37 * hash) + DATA_CLASS_INSTANCE_VALUE_FIELD_NUMBER;
+          hash = (53 * hash) + getDataClassInstanceValue().hashCode();
           break;
         case 0:
         default:
@@ -1289,10 +1287,10 @@ public final class BibixValueProto {
           }
         }
         if (valueCase_ == 11) {
-          if (classInstanceValueBuilder_ == null) {
+          if (dataClassInstanceValueBuilder_ == null) {
             result.value_ = value_;
           } else {
-            result.value_ = classInstanceValueBuilder_.build();
+            result.value_ = dataClassInstanceValueBuilder_.build();
           }
         }
         result.valueCase_ = valueCase_;
@@ -1393,8 +1391,8 @@ public final class BibixValueProto {
             mergeNamedTupleValue(other.getNamedTupleValue());
             break;
           }
-          case CLASS_INSTANCE_VALUE: {
-            mergeClassInstanceValue(other.getClassInstanceValue());
+          case DATA_CLASS_INSTANCE_VALUE: {
+            mergeDataClassInstanceValue(other.getDataClassInstanceValue());
             break;
           }
           case VALUE_NOT_SET: {
@@ -1948,9 +1946,8 @@ public final class BibixValueProto {
         } else {
           if (valueCase_ == 6) {
             enumValueBuilder_.mergeFrom(value);
-          } else {
-            enumValueBuilder_.setMessage(value);
           }
+          enumValueBuilder_.setMessage(value);
         }
         valueCase_ = 6;
         return this;
@@ -2090,9 +2087,8 @@ public final class BibixValueProto {
         } else {
           if (valueCase_ == 7) {
             listValueBuilder_.mergeFrom(value);
-          } else {
-            listValueBuilder_.setMessage(value);
           }
+          listValueBuilder_.setMessage(value);
         }
         valueCase_ = 7;
         return this;
@@ -2232,9 +2228,8 @@ public final class BibixValueProto {
         } else {
           if (valueCase_ == 8) {
             setValueBuilder_.mergeFrom(value);
-          } else {
-            setValueBuilder_.setMessage(value);
           }
+          setValueBuilder_.setMessage(value);
         }
         valueCase_ = 8;
         return this;
@@ -2374,9 +2369,8 @@ public final class BibixValueProto {
         } else {
           if (valueCase_ == 9) {
             tupleValueBuilder_.mergeFrom(value);
-          } else {
-            tupleValueBuilder_.setMessage(value);
           }
+          tupleValueBuilder_.setMessage(value);
         }
         valueCase_ = 9;
         return this;
@@ -2516,9 +2510,8 @@ public final class BibixValueProto {
         } else {
           if (valueCase_ == 10) {
             namedTupleValueBuilder_.mergeFrom(value);
-          } else {
-            namedTupleValueBuilder_.setMessage(value);
           }
+          namedTupleValueBuilder_.setMessage(value);
         }
         valueCase_ = 10;
         return this;
@@ -2585,71 +2578,71 @@ public final class BibixValueProto {
       }
 
       private com.google.protobuf.SingleFieldBuilderV3<
-          com.giyeok.bibix.runner.BibixValueProto.ClassInstanceValue, com.giyeok.bibix.runner.BibixValueProto.ClassInstanceValue.Builder, com.giyeok.bibix.runner.BibixValueProto.ClassInstanceValueOrBuilder> classInstanceValueBuilder_;
+          com.giyeok.bibix.runner.BibixValueProto.DataClassInstanceValue, com.giyeok.bibix.runner.BibixValueProto.DataClassInstanceValue.Builder, com.giyeok.bibix.runner.BibixValueProto.DataClassInstanceValueOrBuilder> dataClassInstanceValueBuilder_;
       /**
-       * <code>.com.giyeok.bibix.runner.ClassInstanceValue class_instance_value = 11;</code>
-       * @return Whether the classInstanceValue field is set.
+       * <code>.com.giyeok.bibix.runner.DataClassInstanceValue data_class_instance_value = 11;</code>
+       * @return Whether the dataClassInstanceValue field is set.
        */
       @java.lang.Override
-      public boolean hasClassInstanceValue() {
+      public boolean hasDataClassInstanceValue() {
         return valueCase_ == 11;
       }
       /**
-       * <code>.com.giyeok.bibix.runner.ClassInstanceValue class_instance_value = 11;</code>
-       * @return The classInstanceValue.
+       * <code>.com.giyeok.bibix.runner.DataClassInstanceValue data_class_instance_value = 11;</code>
+       * @return The dataClassInstanceValue.
        */
       @java.lang.Override
-      public com.giyeok.bibix.runner.BibixValueProto.ClassInstanceValue getClassInstanceValue() {
-        if (classInstanceValueBuilder_ == null) {
+      public com.giyeok.bibix.runner.BibixValueProto.DataClassInstanceValue getDataClassInstanceValue() {
+        if (dataClassInstanceValueBuilder_ == null) {
           if (valueCase_ == 11) {
-            return (com.giyeok.bibix.runner.BibixValueProto.ClassInstanceValue) value_;
+            return (com.giyeok.bibix.runner.BibixValueProto.DataClassInstanceValue) value_;
           }
-          return com.giyeok.bibix.runner.BibixValueProto.ClassInstanceValue.getDefaultInstance();
+          return com.giyeok.bibix.runner.BibixValueProto.DataClassInstanceValue.getDefaultInstance();
         } else {
           if (valueCase_ == 11) {
-            return classInstanceValueBuilder_.getMessage();
+            return dataClassInstanceValueBuilder_.getMessage();
           }
-          return com.giyeok.bibix.runner.BibixValueProto.ClassInstanceValue.getDefaultInstance();
+          return com.giyeok.bibix.runner.BibixValueProto.DataClassInstanceValue.getDefaultInstance();
         }
       }
       /**
-       * <code>.com.giyeok.bibix.runner.ClassInstanceValue class_instance_value = 11;</code>
+       * <code>.com.giyeok.bibix.runner.DataClassInstanceValue data_class_instance_value = 11;</code>
        */
-      public Builder setClassInstanceValue(com.giyeok.bibix.runner.BibixValueProto.ClassInstanceValue value) {
-        if (classInstanceValueBuilder_ == null) {
+      public Builder setDataClassInstanceValue(com.giyeok.bibix.runner.BibixValueProto.DataClassInstanceValue value) {
+        if (dataClassInstanceValueBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
           }
           value_ = value;
           onChanged();
         } else {
-          classInstanceValueBuilder_.setMessage(value);
+          dataClassInstanceValueBuilder_.setMessage(value);
         }
         valueCase_ = 11;
         return this;
       }
       /**
-       * <code>.com.giyeok.bibix.runner.ClassInstanceValue class_instance_value = 11;</code>
+       * <code>.com.giyeok.bibix.runner.DataClassInstanceValue data_class_instance_value = 11;</code>
        */
-      public Builder setClassInstanceValue(
-          com.giyeok.bibix.runner.BibixValueProto.ClassInstanceValue.Builder builderForValue) {
-        if (classInstanceValueBuilder_ == null) {
+      public Builder setDataClassInstanceValue(
+          com.giyeok.bibix.runner.BibixValueProto.DataClassInstanceValue.Builder builderForValue) {
+        if (dataClassInstanceValueBuilder_ == null) {
           value_ = builderForValue.build();
           onChanged();
         } else {
-          classInstanceValueBuilder_.setMessage(builderForValue.build());
+          dataClassInstanceValueBuilder_.setMessage(builderForValue.build());
         }
         valueCase_ = 11;
         return this;
       }
       /**
-       * <code>.com.giyeok.bibix.runner.ClassInstanceValue class_instance_value = 11;</code>
+       * <code>.com.giyeok.bibix.runner.DataClassInstanceValue data_class_instance_value = 11;</code>
        */
-      public Builder mergeClassInstanceValue(com.giyeok.bibix.runner.BibixValueProto.ClassInstanceValue value) {
-        if (classInstanceValueBuilder_ == null) {
+      public Builder mergeDataClassInstanceValue(com.giyeok.bibix.runner.BibixValueProto.DataClassInstanceValue value) {
+        if (dataClassInstanceValueBuilder_ == null) {
           if (valueCase_ == 11 &&
-              value_ != com.giyeok.bibix.runner.BibixValueProto.ClassInstanceValue.getDefaultInstance()) {
-            value_ = com.giyeok.bibix.runner.BibixValueProto.ClassInstanceValue.newBuilder((com.giyeok.bibix.runner.BibixValueProto.ClassInstanceValue) value_)
+              value_ != com.giyeok.bibix.runner.BibixValueProto.DataClassInstanceValue.getDefaultInstance()) {
+            value_ = com.giyeok.bibix.runner.BibixValueProto.DataClassInstanceValue.newBuilder((com.giyeok.bibix.runner.BibixValueProto.DataClassInstanceValue) value_)
                 .mergeFrom(value).buildPartial();
           } else {
             value_ = value;
@@ -2657,19 +2650,18 @@ public final class BibixValueProto {
           onChanged();
         } else {
           if (valueCase_ == 11) {
-            classInstanceValueBuilder_.mergeFrom(value);
-          } else {
-            classInstanceValueBuilder_.setMessage(value);
+            dataClassInstanceValueBuilder_.mergeFrom(value);
           }
+          dataClassInstanceValueBuilder_.setMessage(value);
         }
         valueCase_ = 11;
         return this;
       }
       /**
-       * <code>.com.giyeok.bibix.runner.ClassInstanceValue class_instance_value = 11;</code>
+       * <code>.com.giyeok.bibix.runner.DataClassInstanceValue data_class_instance_value = 11;</code>
        */
-      public Builder clearClassInstanceValue() {
-        if (classInstanceValueBuilder_ == null) {
+      public Builder clearDataClassInstanceValue() {
+        if (dataClassInstanceValueBuilder_ == null) {
           if (valueCase_ == 11) {
             valueCase_ = 0;
             value_ = null;
@@ -2680,50 +2672,50 @@ public final class BibixValueProto {
             valueCase_ = 0;
             value_ = null;
           }
-          classInstanceValueBuilder_.clear();
+          dataClassInstanceValueBuilder_.clear();
         }
         return this;
       }
       /**
-       * <code>.com.giyeok.bibix.runner.ClassInstanceValue class_instance_value = 11;</code>
+       * <code>.com.giyeok.bibix.runner.DataClassInstanceValue data_class_instance_value = 11;</code>
        */
-      public com.giyeok.bibix.runner.BibixValueProto.ClassInstanceValue.Builder getClassInstanceValueBuilder() {
-        return getClassInstanceValueFieldBuilder().getBuilder();
+      public com.giyeok.bibix.runner.BibixValueProto.DataClassInstanceValue.Builder getDataClassInstanceValueBuilder() {
+        return getDataClassInstanceValueFieldBuilder().getBuilder();
       }
       /**
-       * <code>.com.giyeok.bibix.runner.ClassInstanceValue class_instance_value = 11;</code>
+       * <code>.com.giyeok.bibix.runner.DataClassInstanceValue data_class_instance_value = 11;</code>
        */
       @java.lang.Override
-      public com.giyeok.bibix.runner.BibixValueProto.ClassInstanceValueOrBuilder getClassInstanceValueOrBuilder() {
-        if ((valueCase_ == 11) && (classInstanceValueBuilder_ != null)) {
-          return classInstanceValueBuilder_.getMessageOrBuilder();
+      public com.giyeok.bibix.runner.BibixValueProto.DataClassInstanceValueOrBuilder getDataClassInstanceValueOrBuilder() {
+        if ((valueCase_ == 11) && (dataClassInstanceValueBuilder_ != null)) {
+          return dataClassInstanceValueBuilder_.getMessageOrBuilder();
         } else {
           if (valueCase_ == 11) {
-            return (com.giyeok.bibix.runner.BibixValueProto.ClassInstanceValue) value_;
+            return (com.giyeok.bibix.runner.BibixValueProto.DataClassInstanceValue) value_;
           }
-          return com.giyeok.bibix.runner.BibixValueProto.ClassInstanceValue.getDefaultInstance();
+          return com.giyeok.bibix.runner.BibixValueProto.DataClassInstanceValue.getDefaultInstance();
         }
       }
       /**
-       * <code>.com.giyeok.bibix.runner.ClassInstanceValue class_instance_value = 11;</code>
+       * <code>.com.giyeok.bibix.runner.DataClassInstanceValue data_class_instance_value = 11;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
-          com.giyeok.bibix.runner.BibixValueProto.ClassInstanceValue, com.giyeok.bibix.runner.BibixValueProto.ClassInstanceValue.Builder, com.giyeok.bibix.runner.BibixValueProto.ClassInstanceValueOrBuilder> 
-          getClassInstanceValueFieldBuilder() {
-        if (classInstanceValueBuilder_ == null) {
+          com.giyeok.bibix.runner.BibixValueProto.DataClassInstanceValue, com.giyeok.bibix.runner.BibixValueProto.DataClassInstanceValue.Builder, com.giyeok.bibix.runner.BibixValueProto.DataClassInstanceValueOrBuilder> 
+          getDataClassInstanceValueFieldBuilder() {
+        if (dataClassInstanceValueBuilder_ == null) {
           if (!(valueCase_ == 11)) {
-            value_ = com.giyeok.bibix.runner.BibixValueProto.ClassInstanceValue.getDefaultInstance();
+            value_ = com.giyeok.bibix.runner.BibixValueProto.DataClassInstanceValue.getDefaultInstance();
           }
-          classInstanceValueBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-              com.giyeok.bibix.runner.BibixValueProto.ClassInstanceValue, com.giyeok.bibix.runner.BibixValueProto.ClassInstanceValue.Builder, com.giyeok.bibix.runner.BibixValueProto.ClassInstanceValueOrBuilder>(
-                  (com.giyeok.bibix.runner.BibixValueProto.ClassInstanceValue) value_,
+          dataClassInstanceValueBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              com.giyeok.bibix.runner.BibixValueProto.DataClassInstanceValue, com.giyeok.bibix.runner.BibixValueProto.DataClassInstanceValue.Builder, com.giyeok.bibix.runner.BibixValueProto.DataClassInstanceValueOrBuilder>(
+                  (com.giyeok.bibix.runner.BibixValueProto.DataClassInstanceValue) value_,
                   getParentForChildren(),
                   isClean());
           value_ = null;
         }
         valueCase_ = 11;
         onChanged();;
-        return classInstanceValueBuilder_;
+        return dataClassInstanceValueBuilder_;
       }
       @java.lang.Override
       public final Builder setUnknownFields(
@@ -2876,8 +2868,6 @@ public final class BibixValueProto {
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
         throw e.setUnfinishedMessage(this);
-      } catch (com.google.protobuf.UninitializedMessageException e) {
-        throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
       } catch (java.io.IOException e) {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e).setUnfinishedMessage(this);
@@ -3593,8 +3583,6 @@ public final class BibixValueProto {
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
         throw e.setUnfinishedMessage(this);
-      } catch (com.google.protobuf.UninitializedMessageException e) {
-        throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
       } catch (java.io.IOException e) {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e).setUnfinishedMessage(this);
@@ -4388,8 +4376,6 @@ public final class BibixValueProto {
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
         throw e.setUnfinishedMessage(this);
-      } catch (com.google.protobuf.UninitializedMessageException e) {
-        throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
       } catch (java.io.IOException e) {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e).setUnfinishedMessage(this);
@@ -5183,8 +5169,6 @@ public final class BibixValueProto {
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
         throw e.setUnfinishedMessage(this);
-      } catch (com.google.protobuf.UninitializedMessageException e) {
-        throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
       } catch (java.io.IOException e) {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e).setUnfinishedMessage(this);
@@ -5978,8 +5962,6 @@ public final class BibixValueProto {
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
         throw e.setUnfinishedMessage(this);
-      } catch (com.google.protobuf.UninitializedMessageException e) {
-        throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
       } catch (java.io.IOException e) {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e).setUnfinishedMessage(this);
@@ -6785,8 +6767,6 @@ public final class BibixValueProto {
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
         throw e.setUnfinishedMessage(this);
-      } catch (com.google.protobuf.UninitializedMessageException e) {
-        throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
       } catch (java.io.IOException e) {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e).setUnfinishedMessage(this);
@@ -7451,8 +7431,8 @@ public final class BibixValueProto {
 
   }
 
-  public interface ClassInstanceValueOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:com.giyeok.bibix.runner.ClassInstanceValue)
+  public interface DataClassInstanceValueOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:com.giyeok.bibix.runner.DataClassInstanceValue)
       com.google.protobuf.MessageOrBuilder {
 
     /**
@@ -7468,41 +7448,51 @@ public final class BibixValueProto {
         getClassCnameBytes();
 
     /**
-     * <code>.com.giyeok.bibix.runner.BibixValue value = 2;</code>
-     * @return Whether the value field is set.
+     * <code>repeated .com.giyeok.bibix.runner.DataClassField fields = 2;</code>
      */
-    boolean hasValue();
+    java.util.List<com.giyeok.bibix.runner.BibixValueProto.DataClassField> 
+        getFieldsList();
     /**
-     * <code>.com.giyeok.bibix.runner.BibixValue value = 2;</code>
-     * @return The value.
+     * <code>repeated .com.giyeok.bibix.runner.DataClassField fields = 2;</code>
      */
-    com.giyeok.bibix.runner.BibixValueProto.BibixValue getValue();
+    com.giyeok.bibix.runner.BibixValueProto.DataClassField getFields(int index);
     /**
-     * <code>.com.giyeok.bibix.runner.BibixValue value = 2;</code>
+     * <code>repeated .com.giyeok.bibix.runner.DataClassField fields = 2;</code>
      */
-    com.giyeok.bibix.runner.BibixValueProto.BibixValueOrBuilder getValueOrBuilder();
+    int getFieldsCount();
+    /**
+     * <code>repeated .com.giyeok.bibix.runner.DataClassField fields = 2;</code>
+     */
+    java.util.List<? extends com.giyeok.bibix.runner.BibixValueProto.DataClassFieldOrBuilder> 
+        getFieldsOrBuilderList();
+    /**
+     * <code>repeated .com.giyeok.bibix.runner.DataClassField fields = 2;</code>
+     */
+    com.giyeok.bibix.runner.BibixValueProto.DataClassFieldOrBuilder getFieldsOrBuilder(
+        int index);
   }
   /**
-   * Protobuf type {@code com.giyeok.bibix.runner.ClassInstanceValue}
+   * Protobuf type {@code com.giyeok.bibix.runner.DataClassInstanceValue}
    */
-  public static final class ClassInstanceValue extends
+  public static final class DataClassInstanceValue extends
       com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:com.giyeok.bibix.runner.ClassInstanceValue)
-      ClassInstanceValueOrBuilder {
+      // @@protoc_insertion_point(message_implements:com.giyeok.bibix.runner.DataClassInstanceValue)
+      DataClassInstanceValueOrBuilder {
   private static final long serialVersionUID = 0L;
-    // Use ClassInstanceValue.newBuilder() to construct.
-    private ClassInstanceValue(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+    // Use DataClassInstanceValue.newBuilder() to construct.
+    private DataClassInstanceValue(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
       super(builder);
     }
-    private ClassInstanceValue() {
+    private DataClassInstanceValue() {
       classCname_ = "";
+      fields_ = java.util.Collections.emptyList();
     }
 
     @java.lang.Override
     @SuppressWarnings({"unused"})
     protected java.lang.Object newInstance(
         UnusedPrivateParameter unused) {
-      return new ClassInstanceValue();
+      return new DataClassInstanceValue();
     }
 
     @java.lang.Override
@@ -7510,7 +7500,7 @@ public final class BibixValueProto {
     getUnknownFields() {
       return this.unknownFields;
     }
-    private ClassInstanceValue(
+    private DataClassInstanceValue(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
@@ -7518,6 +7508,7 @@ public final class BibixValueProto {
       if (extensionRegistry == null) {
         throw new java.lang.NullPointerException();
       }
+      int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
       try {
@@ -7535,16 +7526,12 @@ public final class BibixValueProto {
               break;
             }
             case 18: {
-              com.giyeok.bibix.runner.BibixValueProto.BibixValue.Builder subBuilder = null;
-              if (value_ != null) {
-                subBuilder = value_.toBuilder();
+              if (!((mutable_bitField0_ & 0x00000001) != 0)) {
+                fields_ = new java.util.ArrayList<com.giyeok.bibix.runner.BibixValueProto.DataClassField>();
+                mutable_bitField0_ |= 0x00000001;
               }
-              value_ = input.readMessage(com.giyeok.bibix.runner.BibixValueProto.BibixValue.parser(), extensionRegistry);
-              if (subBuilder != null) {
-                subBuilder.mergeFrom(value_);
-                value_ = subBuilder.buildPartial();
-              }
-
+              fields_.add(
+                  input.readMessage(com.giyeok.bibix.runner.BibixValueProto.DataClassField.parser(), extensionRegistry));
               break;
             }
             default: {
@@ -7558,27 +7545,28 @@ public final class BibixValueProto {
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
         throw e.setUnfinishedMessage(this);
-      } catch (com.google.protobuf.UninitializedMessageException e) {
-        throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
       } catch (java.io.IOException e) {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e).setUnfinishedMessage(this);
       } finally {
+        if (((mutable_bitField0_ & 0x00000001) != 0)) {
+          fields_ = java.util.Collections.unmodifiableList(fields_);
+        }
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
       }
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return com.giyeok.bibix.runner.BibixValueProto.internal_static_com_giyeok_bibix_runner_ClassInstanceValue_descriptor;
+      return com.giyeok.bibix.runner.BibixValueProto.internal_static_com_giyeok_bibix_runner_DataClassInstanceValue_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return com.giyeok.bibix.runner.BibixValueProto.internal_static_com_giyeok_bibix_runner_ClassInstanceValue_fieldAccessorTable
+      return com.giyeok.bibix.runner.BibixValueProto.internal_static_com_giyeok_bibix_runner_DataClassInstanceValue_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              com.giyeok.bibix.runner.BibixValueProto.ClassInstanceValue.class, com.giyeok.bibix.runner.BibixValueProto.ClassInstanceValue.Builder.class);
+              com.giyeok.bibix.runner.BibixValueProto.DataClassInstanceValue.class, com.giyeok.bibix.runner.BibixValueProto.DataClassInstanceValue.Builder.class);
     }
 
     public static final int CLASS_CNAME_FIELD_NUMBER = 1;
@@ -7619,30 +7607,44 @@ public final class BibixValueProto {
       }
     }
 
-    public static final int VALUE_FIELD_NUMBER = 2;
-    private com.giyeok.bibix.runner.BibixValueProto.BibixValue value_;
+    public static final int FIELDS_FIELD_NUMBER = 2;
+    private java.util.List<com.giyeok.bibix.runner.BibixValueProto.DataClassField> fields_;
     /**
-     * <code>.com.giyeok.bibix.runner.BibixValue value = 2;</code>
-     * @return Whether the value field is set.
+     * <code>repeated .com.giyeok.bibix.runner.DataClassField fields = 2;</code>
      */
     @java.lang.Override
-    public boolean hasValue() {
-      return value_ != null;
+    public java.util.List<com.giyeok.bibix.runner.BibixValueProto.DataClassField> getFieldsList() {
+      return fields_;
     }
     /**
-     * <code>.com.giyeok.bibix.runner.BibixValue value = 2;</code>
-     * @return The value.
+     * <code>repeated .com.giyeok.bibix.runner.DataClassField fields = 2;</code>
      */
     @java.lang.Override
-    public com.giyeok.bibix.runner.BibixValueProto.BibixValue getValue() {
-      return value_ == null ? com.giyeok.bibix.runner.BibixValueProto.BibixValue.getDefaultInstance() : value_;
+    public java.util.List<? extends com.giyeok.bibix.runner.BibixValueProto.DataClassFieldOrBuilder> 
+        getFieldsOrBuilderList() {
+      return fields_;
     }
     /**
-     * <code>.com.giyeok.bibix.runner.BibixValue value = 2;</code>
+     * <code>repeated .com.giyeok.bibix.runner.DataClassField fields = 2;</code>
      */
     @java.lang.Override
-    public com.giyeok.bibix.runner.BibixValueProto.BibixValueOrBuilder getValueOrBuilder() {
-      return getValue();
+    public int getFieldsCount() {
+      return fields_.size();
+    }
+    /**
+     * <code>repeated .com.giyeok.bibix.runner.DataClassField fields = 2;</code>
+     */
+    @java.lang.Override
+    public com.giyeok.bibix.runner.BibixValueProto.DataClassField getFields(int index) {
+      return fields_.get(index);
+    }
+    /**
+     * <code>repeated .com.giyeok.bibix.runner.DataClassField fields = 2;</code>
+     */
+    @java.lang.Override
+    public com.giyeok.bibix.runner.BibixValueProto.DataClassFieldOrBuilder getFieldsOrBuilder(
+        int index) {
+      return fields_.get(index);
     }
 
     private byte memoizedIsInitialized = -1;
@@ -7662,8 +7664,8 @@ public final class BibixValueProto {
       if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(classCname_)) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 1, classCname_);
       }
-      if (value_ != null) {
-        output.writeMessage(2, getValue());
+      for (int i = 0; i < fields_.size(); i++) {
+        output.writeMessage(2, fields_.get(i));
       }
       unknownFields.writeTo(output);
     }
@@ -7677,9 +7679,9 @@ public final class BibixValueProto {
       if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(classCname_)) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, classCname_);
       }
-      if (value_ != null) {
+      for (int i = 0; i < fields_.size(); i++) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(2, getValue());
+          .computeMessageSize(2, fields_.get(i));
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -7691,18 +7693,15 @@ public final class BibixValueProto {
       if (obj == this) {
        return true;
       }
-      if (!(obj instanceof com.giyeok.bibix.runner.BibixValueProto.ClassInstanceValue)) {
+      if (!(obj instanceof com.giyeok.bibix.runner.BibixValueProto.DataClassInstanceValue)) {
         return super.equals(obj);
       }
-      com.giyeok.bibix.runner.BibixValueProto.ClassInstanceValue other = (com.giyeok.bibix.runner.BibixValueProto.ClassInstanceValue) obj;
+      com.giyeok.bibix.runner.BibixValueProto.DataClassInstanceValue other = (com.giyeok.bibix.runner.BibixValueProto.DataClassInstanceValue) obj;
 
       if (!getClassCname()
           .equals(other.getClassCname())) return false;
-      if (hasValue() != other.hasValue()) return false;
-      if (hasValue()) {
-        if (!getValue()
-            .equals(other.getValue())) return false;
-      }
+      if (!getFieldsList()
+          .equals(other.getFieldsList())) return false;
       if (!unknownFields.equals(other.unknownFields)) return false;
       return true;
     }
@@ -7716,78 +7715,78 @@ public final class BibixValueProto {
       hash = (19 * hash) + getDescriptor().hashCode();
       hash = (37 * hash) + CLASS_CNAME_FIELD_NUMBER;
       hash = (53 * hash) + getClassCname().hashCode();
-      if (hasValue()) {
-        hash = (37 * hash) + VALUE_FIELD_NUMBER;
-        hash = (53 * hash) + getValue().hashCode();
+      if (getFieldsCount() > 0) {
+        hash = (37 * hash) + FIELDS_FIELD_NUMBER;
+        hash = (53 * hash) + getFieldsList().hashCode();
       }
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
     }
 
-    public static com.giyeok.bibix.runner.BibixValueProto.ClassInstanceValue parseFrom(
+    public static com.giyeok.bibix.runner.BibixValueProto.DataClassInstanceValue parseFrom(
         java.nio.ByteBuffer data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static com.giyeok.bibix.runner.BibixValueProto.ClassInstanceValue parseFrom(
+    public static com.giyeok.bibix.runner.BibixValueProto.DataClassInstanceValue parseFrom(
         java.nio.ByteBuffer data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static com.giyeok.bibix.runner.BibixValueProto.ClassInstanceValue parseFrom(
+    public static com.giyeok.bibix.runner.BibixValueProto.DataClassInstanceValue parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static com.giyeok.bibix.runner.BibixValueProto.ClassInstanceValue parseFrom(
+    public static com.giyeok.bibix.runner.BibixValueProto.DataClassInstanceValue parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static com.giyeok.bibix.runner.BibixValueProto.ClassInstanceValue parseFrom(byte[] data)
+    public static com.giyeok.bibix.runner.BibixValueProto.DataClassInstanceValue parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static com.giyeok.bibix.runner.BibixValueProto.ClassInstanceValue parseFrom(
+    public static com.giyeok.bibix.runner.BibixValueProto.DataClassInstanceValue parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static com.giyeok.bibix.runner.BibixValueProto.ClassInstanceValue parseFrom(java.io.InputStream input)
+    public static com.giyeok.bibix.runner.BibixValueProto.DataClassInstanceValue parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static com.giyeok.bibix.runner.BibixValueProto.ClassInstanceValue parseFrom(
+    public static com.giyeok.bibix.runner.BibixValueProto.DataClassInstanceValue parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
-    public static com.giyeok.bibix.runner.BibixValueProto.ClassInstanceValue parseDelimitedFrom(java.io.InputStream input)
+    public static com.giyeok.bibix.runner.BibixValueProto.DataClassInstanceValue parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input);
     }
-    public static com.giyeok.bibix.runner.BibixValueProto.ClassInstanceValue parseDelimitedFrom(
+    public static com.giyeok.bibix.runner.BibixValueProto.DataClassInstanceValue parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
-    public static com.giyeok.bibix.runner.BibixValueProto.ClassInstanceValue parseFrom(
+    public static com.giyeok.bibix.runner.BibixValueProto.DataClassInstanceValue parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static com.giyeok.bibix.runner.BibixValueProto.ClassInstanceValue parseFrom(
+    public static com.giyeok.bibix.runner.BibixValueProto.DataClassInstanceValue parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -7800,7 +7799,7 @@ public final class BibixValueProto {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(com.giyeok.bibix.runner.BibixValueProto.ClassInstanceValue prototype) {
+    public static Builder newBuilder(com.giyeok.bibix.runner.BibixValueProto.DataClassInstanceValue prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     @java.lang.Override
@@ -7816,26 +7815,26 @@ public final class BibixValueProto {
       return builder;
     }
     /**
-     * Protobuf type {@code com.giyeok.bibix.runner.ClassInstanceValue}
+     * Protobuf type {@code com.giyeok.bibix.runner.DataClassInstanceValue}
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:com.giyeok.bibix.runner.ClassInstanceValue)
-        com.giyeok.bibix.runner.BibixValueProto.ClassInstanceValueOrBuilder {
+        // @@protoc_insertion_point(builder_implements:com.giyeok.bibix.runner.DataClassInstanceValue)
+        com.giyeok.bibix.runner.BibixValueProto.DataClassInstanceValueOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return com.giyeok.bibix.runner.BibixValueProto.internal_static_com_giyeok_bibix_runner_ClassInstanceValue_descriptor;
+        return com.giyeok.bibix.runner.BibixValueProto.internal_static_com_giyeok_bibix_runner_DataClassInstanceValue_descriptor;
       }
 
       @java.lang.Override
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return com.giyeok.bibix.runner.BibixValueProto.internal_static_com_giyeok_bibix_runner_ClassInstanceValue_fieldAccessorTable
+        return com.giyeok.bibix.runner.BibixValueProto.internal_static_com_giyeok_bibix_runner_DataClassInstanceValue_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                com.giyeok.bibix.runner.BibixValueProto.ClassInstanceValue.class, com.giyeok.bibix.runner.BibixValueProto.ClassInstanceValue.Builder.class);
+                com.giyeok.bibix.runner.BibixValueProto.DataClassInstanceValue.class, com.giyeok.bibix.runner.BibixValueProto.DataClassInstanceValue.Builder.class);
       }
 
-      // Construct using com.giyeok.bibix.runner.BibixValueProto.ClassInstanceValue.newBuilder()
+      // Construct using com.giyeok.bibix.runner.BibixValueProto.DataClassInstanceValue.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -7848,6 +7847,7 @@ public final class BibixValueProto {
       private void maybeForceBuilderInitialization() {
         if (com.google.protobuf.GeneratedMessageV3
                 .alwaysUseFieldBuilders) {
+          getFieldsFieldBuilder();
         }
       }
       @java.lang.Override
@@ -7855,11 +7855,11 @@ public final class BibixValueProto {
         super.clear();
         classCname_ = "";
 
-        if (valueBuilder_ == null) {
-          value_ = null;
+        if (fieldsBuilder_ == null) {
+          fields_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000001);
         } else {
-          value_ = null;
-          valueBuilder_ = null;
+          fieldsBuilder_.clear();
         }
         return this;
       }
@@ -7867,17 +7867,17 @@ public final class BibixValueProto {
       @java.lang.Override
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return com.giyeok.bibix.runner.BibixValueProto.internal_static_com_giyeok_bibix_runner_ClassInstanceValue_descriptor;
+        return com.giyeok.bibix.runner.BibixValueProto.internal_static_com_giyeok_bibix_runner_DataClassInstanceValue_descriptor;
       }
 
       @java.lang.Override
-      public com.giyeok.bibix.runner.BibixValueProto.ClassInstanceValue getDefaultInstanceForType() {
-        return com.giyeok.bibix.runner.BibixValueProto.ClassInstanceValue.getDefaultInstance();
+      public com.giyeok.bibix.runner.BibixValueProto.DataClassInstanceValue getDefaultInstanceForType() {
+        return com.giyeok.bibix.runner.BibixValueProto.DataClassInstanceValue.getDefaultInstance();
       }
 
       @java.lang.Override
-      public com.giyeok.bibix.runner.BibixValueProto.ClassInstanceValue build() {
-        com.giyeok.bibix.runner.BibixValueProto.ClassInstanceValue result = buildPartial();
+      public com.giyeok.bibix.runner.BibixValueProto.DataClassInstanceValue build() {
+        com.giyeok.bibix.runner.BibixValueProto.DataClassInstanceValue result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
@@ -7885,13 +7885,18 @@ public final class BibixValueProto {
       }
 
       @java.lang.Override
-      public com.giyeok.bibix.runner.BibixValueProto.ClassInstanceValue buildPartial() {
-        com.giyeok.bibix.runner.BibixValueProto.ClassInstanceValue result = new com.giyeok.bibix.runner.BibixValueProto.ClassInstanceValue(this);
+      public com.giyeok.bibix.runner.BibixValueProto.DataClassInstanceValue buildPartial() {
+        com.giyeok.bibix.runner.BibixValueProto.DataClassInstanceValue result = new com.giyeok.bibix.runner.BibixValueProto.DataClassInstanceValue(this);
+        int from_bitField0_ = bitField0_;
         result.classCname_ = classCname_;
-        if (valueBuilder_ == null) {
-          result.value_ = value_;
+        if (fieldsBuilder_ == null) {
+          if (((bitField0_ & 0x00000001) != 0)) {
+            fields_ = java.util.Collections.unmodifiableList(fields_);
+            bitField0_ = (bitField0_ & ~0x00000001);
+          }
+          result.fields_ = fields_;
         } else {
-          result.value_ = valueBuilder_.build();
+          result.fields_ = fieldsBuilder_.build();
         }
         onBuilt();
         return result;
@@ -7931,22 +7936,45 @@ public final class BibixValueProto {
       }
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof com.giyeok.bibix.runner.BibixValueProto.ClassInstanceValue) {
-          return mergeFrom((com.giyeok.bibix.runner.BibixValueProto.ClassInstanceValue)other);
+        if (other instanceof com.giyeok.bibix.runner.BibixValueProto.DataClassInstanceValue) {
+          return mergeFrom((com.giyeok.bibix.runner.BibixValueProto.DataClassInstanceValue)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(com.giyeok.bibix.runner.BibixValueProto.ClassInstanceValue other) {
-        if (other == com.giyeok.bibix.runner.BibixValueProto.ClassInstanceValue.getDefaultInstance()) return this;
+      public Builder mergeFrom(com.giyeok.bibix.runner.BibixValueProto.DataClassInstanceValue other) {
+        if (other == com.giyeok.bibix.runner.BibixValueProto.DataClassInstanceValue.getDefaultInstance()) return this;
         if (!other.getClassCname().isEmpty()) {
           classCname_ = other.classCname_;
           onChanged();
         }
-        if (other.hasValue()) {
-          mergeValue(other.getValue());
+        if (fieldsBuilder_ == null) {
+          if (!other.fields_.isEmpty()) {
+            if (fields_.isEmpty()) {
+              fields_ = other.fields_;
+              bitField0_ = (bitField0_ & ~0x00000001);
+            } else {
+              ensureFieldsIsMutable();
+              fields_.addAll(other.fields_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.fields_.isEmpty()) {
+            if (fieldsBuilder_.isEmpty()) {
+              fieldsBuilder_.dispose();
+              fieldsBuilder_ = null;
+              fields_ = other.fields_;
+              bitField0_ = (bitField0_ & ~0x00000001);
+              fieldsBuilder_ = 
+                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                   getFieldsFieldBuilder() : null;
+            } else {
+              fieldsBuilder_.addAllMessages(other.fields_);
+            }
+          }
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -7963,11 +7991,11 @@ public final class BibixValueProto {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        com.giyeok.bibix.runner.BibixValueProto.ClassInstanceValue parsedMessage = null;
+        com.giyeok.bibix.runner.BibixValueProto.DataClassInstanceValue parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (com.giyeok.bibix.runner.BibixValueProto.ClassInstanceValue) e.getUnfinishedMessage();
+          parsedMessage = (com.giyeok.bibix.runner.BibixValueProto.DataClassInstanceValue) e.getUnfinishedMessage();
           throw e.unwrapIOException();
         } finally {
           if (parsedMessage != null) {
@@ -7976,6 +8004,7 @@ public final class BibixValueProto {
         }
         return this;
       }
+      private int bitField0_;
 
       private java.lang.Object classCname_ = "";
       /**
@@ -8049,6 +8078,898 @@ public final class BibixValueProto {
   checkByteStringIsUtf8(value);
         
         classCname_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.util.List<com.giyeok.bibix.runner.BibixValueProto.DataClassField> fields_ =
+        java.util.Collections.emptyList();
+      private void ensureFieldsIsMutable() {
+        if (!((bitField0_ & 0x00000001) != 0)) {
+          fields_ = new java.util.ArrayList<com.giyeok.bibix.runner.BibixValueProto.DataClassField>(fields_);
+          bitField0_ |= 0x00000001;
+         }
+      }
+
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          com.giyeok.bibix.runner.BibixValueProto.DataClassField, com.giyeok.bibix.runner.BibixValueProto.DataClassField.Builder, com.giyeok.bibix.runner.BibixValueProto.DataClassFieldOrBuilder> fieldsBuilder_;
+
+      /**
+       * <code>repeated .com.giyeok.bibix.runner.DataClassField fields = 2;</code>
+       */
+      public java.util.List<com.giyeok.bibix.runner.BibixValueProto.DataClassField> getFieldsList() {
+        if (fieldsBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(fields_);
+        } else {
+          return fieldsBuilder_.getMessageList();
+        }
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.runner.DataClassField fields = 2;</code>
+       */
+      public int getFieldsCount() {
+        if (fieldsBuilder_ == null) {
+          return fields_.size();
+        } else {
+          return fieldsBuilder_.getCount();
+        }
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.runner.DataClassField fields = 2;</code>
+       */
+      public com.giyeok.bibix.runner.BibixValueProto.DataClassField getFields(int index) {
+        if (fieldsBuilder_ == null) {
+          return fields_.get(index);
+        } else {
+          return fieldsBuilder_.getMessage(index);
+        }
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.runner.DataClassField fields = 2;</code>
+       */
+      public Builder setFields(
+          int index, com.giyeok.bibix.runner.BibixValueProto.DataClassField value) {
+        if (fieldsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureFieldsIsMutable();
+          fields_.set(index, value);
+          onChanged();
+        } else {
+          fieldsBuilder_.setMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.runner.DataClassField fields = 2;</code>
+       */
+      public Builder setFields(
+          int index, com.giyeok.bibix.runner.BibixValueProto.DataClassField.Builder builderForValue) {
+        if (fieldsBuilder_ == null) {
+          ensureFieldsIsMutable();
+          fields_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          fieldsBuilder_.setMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.runner.DataClassField fields = 2;</code>
+       */
+      public Builder addFields(com.giyeok.bibix.runner.BibixValueProto.DataClassField value) {
+        if (fieldsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureFieldsIsMutable();
+          fields_.add(value);
+          onChanged();
+        } else {
+          fieldsBuilder_.addMessage(value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.runner.DataClassField fields = 2;</code>
+       */
+      public Builder addFields(
+          int index, com.giyeok.bibix.runner.BibixValueProto.DataClassField value) {
+        if (fieldsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureFieldsIsMutable();
+          fields_.add(index, value);
+          onChanged();
+        } else {
+          fieldsBuilder_.addMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.runner.DataClassField fields = 2;</code>
+       */
+      public Builder addFields(
+          com.giyeok.bibix.runner.BibixValueProto.DataClassField.Builder builderForValue) {
+        if (fieldsBuilder_ == null) {
+          ensureFieldsIsMutable();
+          fields_.add(builderForValue.build());
+          onChanged();
+        } else {
+          fieldsBuilder_.addMessage(builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.runner.DataClassField fields = 2;</code>
+       */
+      public Builder addFields(
+          int index, com.giyeok.bibix.runner.BibixValueProto.DataClassField.Builder builderForValue) {
+        if (fieldsBuilder_ == null) {
+          ensureFieldsIsMutable();
+          fields_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          fieldsBuilder_.addMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.runner.DataClassField fields = 2;</code>
+       */
+      public Builder addAllFields(
+          java.lang.Iterable<? extends com.giyeok.bibix.runner.BibixValueProto.DataClassField> values) {
+        if (fieldsBuilder_ == null) {
+          ensureFieldsIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, fields_);
+          onChanged();
+        } else {
+          fieldsBuilder_.addAllMessages(values);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.runner.DataClassField fields = 2;</code>
+       */
+      public Builder clearFields() {
+        if (fieldsBuilder_ == null) {
+          fields_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000001);
+          onChanged();
+        } else {
+          fieldsBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.runner.DataClassField fields = 2;</code>
+       */
+      public Builder removeFields(int index) {
+        if (fieldsBuilder_ == null) {
+          ensureFieldsIsMutable();
+          fields_.remove(index);
+          onChanged();
+        } else {
+          fieldsBuilder_.remove(index);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.runner.DataClassField fields = 2;</code>
+       */
+      public com.giyeok.bibix.runner.BibixValueProto.DataClassField.Builder getFieldsBuilder(
+          int index) {
+        return getFieldsFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.runner.DataClassField fields = 2;</code>
+       */
+      public com.giyeok.bibix.runner.BibixValueProto.DataClassFieldOrBuilder getFieldsOrBuilder(
+          int index) {
+        if (fieldsBuilder_ == null) {
+          return fields_.get(index);  } else {
+          return fieldsBuilder_.getMessageOrBuilder(index);
+        }
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.runner.DataClassField fields = 2;</code>
+       */
+      public java.util.List<? extends com.giyeok.bibix.runner.BibixValueProto.DataClassFieldOrBuilder> 
+           getFieldsOrBuilderList() {
+        if (fieldsBuilder_ != null) {
+          return fieldsBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(fields_);
+        }
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.runner.DataClassField fields = 2;</code>
+       */
+      public com.giyeok.bibix.runner.BibixValueProto.DataClassField.Builder addFieldsBuilder() {
+        return getFieldsFieldBuilder().addBuilder(
+            com.giyeok.bibix.runner.BibixValueProto.DataClassField.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.runner.DataClassField fields = 2;</code>
+       */
+      public com.giyeok.bibix.runner.BibixValueProto.DataClassField.Builder addFieldsBuilder(
+          int index) {
+        return getFieldsFieldBuilder().addBuilder(
+            index, com.giyeok.bibix.runner.BibixValueProto.DataClassField.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.runner.DataClassField fields = 2;</code>
+       */
+      public java.util.List<com.giyeok.bibix.runner.BibixValueProto.DataClassField.Builder> 
+           getFieldsBuilderList() {
+        return getFieldsFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          com.giyeok.bibix.runner.BibixValueProto.DataClassField, com.giyeok.bibix.runner.BibixValueProto.DataClassField.Builder, com.giyeok.bibix.runner.BibixValueProto.DataClassFieldOrBuilder> 
+          getFieldsFieldBuilder() {
+        if (fieldsBuilder_ == null) {
+          fieldsBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+              com.giyeok.bibix.runner.BibixValueProto.DataClassField, com.giyeok.bibix.runner.BibixValueProto.DataClassField.Builder, com.giyeok.bibix.runner.BibixValueProto.DataClassFieldOrBuilder>(
+                  fields_,
+                  ((bitField0_ & 0x00000001) != 0),
+                  getParentForChildren(),
+                  isClean());
+          fields_ = null;
+        }
+        return fieldsBuilder_;
+      }
+      @java.lang.Override
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFields(unknownFields);
+      }
+
+      @java.lang.Override
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:com.giyeok.bibix.runner.DataClassInstanceValue)
+    }
+
+    // @@protoc_insertion_point(class_scope:com.giyeok.bibix.runner.DataClassInstanceValue)
+    private static final com.giyeok.bibix.runner.BibixValueProto.DataClassInstanceValue DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new com.giyeok.bibix.runner.BibixValueProto.DataClassInstanceValue();
+    }
+
+    public static com.giyeok.bibix.runner.BibixValueProto.DataClassInstanceValue getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<DataClassInstanceValue>
+        PARSER = new com.google.protobuf.AbstractParser<DataClassInstanceValue>() {
+      @java.lang.Override
+      public DataClassInstanceValue parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new DataClassInstanceValue(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<DataClassInstanceValue> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<DataClassInstanceValue> getParserForType() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.giyeok.bibix.runner.BibixValueProto.DataClassInstanceValue getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
+  public interface DataClassFieldOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:com.giyeok.bibix.runner.DataClassField)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>string name = 1;</code>
+     * @return The name.
+     */
+    java.lang.String getName();
+    /**
+     * <code>string name = 1;</code>
+     * @return The bytes for name.
+     */
+    com.google.protobuf.ByteString
+        getNameBytes();
+
+    /**
+     * <code>.com.giyeok.bibix.runner.BibixValue value = 2;</code>
+     * @return Whether the value field is set.
+     */
+    boolean hasValue();
+    /**
+     * <code>.com.giyeok.bibix.runner.BibixValue value = 2;</code>
+     * @return The value.
+     */
+    com.giyeok.bibix.runner.BibixValueProto.BibixValue getValue();
+    /**
+     * <code>.com.giyeok.bibix.runner.BibixValue value = 2;</code>
+     */
+    com.giyeok.bibix.runner.BibixValueProto.BibixValueOrBuilder getValueOrBuilder();
+  }
+  /**
+   * Protobuf type {@code com.giyeok.bibix.runner.DataClassField}
+   */
+  public static final class DataClassField extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:com.giyeok.bibix.runner.DataClassField)
+      DataClassFieldOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use DataClassField.newBuilder() to construct.
+    private DataClassField(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private DataClassField() {
+      name_ = "";
+    }
+
+    @java.lang.Override
+    @SuppressWarnings({"unused"})
+    protected java.lang.Object newInstance(
+        UnusedPrivateParameter unused) {
+      return new DataClassField();
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private DataClassField(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            case 10: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              name_ = s;
+              break;
+            }
+            case 18: {
+              com.giyeok.bibix.runner.BibixValueProto.BibixValue.Builder subBuilder = null;
+              if (value_ != null) {
+                subBuilder = value_.toBuilder();
+              }
+              value_ = input.readMessage(com.giyeok.bibix.runner.BibixValueProto.BibixValue.parser(), extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(value_);
+                value_ = subBuilder.buildPartial();
+              }
+
+              break;
+            }
+            default: {
+              if (!parseUnknownField(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return com.giyeok.bibix.runner.BibixValueProto.internal_static_com_giyeok_bibix_runner_DataClassField_descriptor;
+    }
+
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return com.giyeok.bibix.runner.BibixValueProto.internal_static_com_giyeok_bibix_runner_DataClassField_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              com.giyeok.bibix.runner.BibixValueProto.DataClassField.class, com.giyeok.bibix.runner.BibixValueProto.DataClassField.Builder.class);
+    }
+
+    public static final int NAME_FIELD_NUMBER = 1;
+    private volatile java.lang.Object name_;
+    /**
+     * <code>string name = 1;</code>
+     * @return The name.
+     */
+    @java.lang.Override
+    public java.lang.String getName() {
+      java.lang.Object ref = name_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        name_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string name = 1;</code>
+     * @return The bytes for name.
+     */
+    @java.lang.Override
+    public com.google.protobuf.ByteString
+        getNameBytes() {
+      java.lang.Object ref = name_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        name_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int VALUE_FIELD_NUMBER = 2;
+    private com.giyeok.bibix.runner.BibixValueProto.BibixValue value_;
+    /**
+     * <code>.com.giyeok.bibix.runner.BibixValue value = 2;</code>
+     * @return Whether the value field is set.
+     */
+    @java.lang.Override
+    public boolean hasValue() {
+      return value_ != null;
+    }
+    /**
+     * <code>.com.giyeok.bibix.runner.BibixValue value = 2;</code>
+     * @return The value.
+     */
+    @java.lang.Override
+    public com.giyeok.bibix.runner.BibixValueProto.BibixValue getValue() {
+      return value_ == null ? com.giyeok.bibix.runner.BibixValueProto.BibixValue.getDefaultInstance() : value_;
+    }
+    /**
+     * <code>.com.giyeok.bibix.runner.BibixValue value = 2;</code>
+     */
+    @java.lang.Override
+    public com.giyeok.bibix.runner.BibixValueProto.BibixValueOrBuilder getValueOrBuilder() {
+      return getValue();
+    }
+
+    private byte memoizedIsInitialized = -1;
+    @java.lang.Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    @java.lang.Override
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(name_)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, name_);
+      }
+      if (value_ != null) {
+        output.writeMessage(2, getValue());
+      }
+      unknownFields.writeTo(output);
+    }
+
+    @java.lang.Override
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(name_)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, name_);
+      }
+      if (value_ != null) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(2, getValue());
+      }
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof com.giyeok.bibix.runner.BibixValueProto.DataClassField)) {
+        return super.equals(obj);
+      }
+      com.giyeok.bibix.runner.BibixValueProto.DataClassField other = (com.giyeok.bibix.runner.BibixValueProto.DataClassField) obj;
+
+      if (!getName()
+          .equals(other.getName())) return false;
+      if (hasValue() != other.hasValue()) return false;
+      if (hasValue()) {
+        if (!getValue()
+            .equals(other.getValue())) return false;
+      }
+      if (!unknownFields.equals(other.unknownFields)) return false;
+      return true;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      hash = (37 * hash) + NAME_FIELD_NUMBER;
+      hash = (53 * hash) + getName().hashCode();
+      if (hasValue()) {
+        hash = (37 * hash) + VALUE_FIELD_NUMBER;
+        hash = (53 * hash) + getValue().hashCode();
+      }
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static com.giyeok.bibix.runner.BibixValueProto.DataClassField parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.giyeok.bibix.runner.BibixValueProto.DataClassField parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.giyeok.bibix.runner.BibixValueProto.DataClassField parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.giyeok.bibix.runner.BibixValueProto.DataClassField parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.giyeok.bibix.runner.BibixValueProto.DataClassField parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.giyeok.bibix.runner.BibixValueProto.DataClassField parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.giyeok.bibix.runner.BibixValueProto.DataClassField parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.giyeok.bibix.runner.BibixValueProto.DataClassField parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.giyeok.bibix.runner.BibixValueProto.DataClassField parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static com.giyeok.bibix.runner.BibixValueProto.DataClassField parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.giyeok.bibix.runner.BibixValueProto.DataClassField parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.giyeok.bibix.runner.BibixValueProto.DataClassField parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    @java.lang.Override
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(com.giyeok.bibix.runner.BibixValueProto.DataClassField prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @java.lang.Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code com.giyeok.bibix.runner.DataClassField}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:com.giyeok.bibix.runner.DataClassField)
+        com.giyeok.bibix.runner.BibixValueProto.DataClassFieldOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return com.giyeok.bibix.runner.BibixValueProto.internal_static_com_giyeok_bibix_runner_DataClassField_descriptor;
+      }
+
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return com.giyeok.bibix.runner.BibixValueProto.internal_static_com_giyeok_bibix_runner_DataClassField_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                com.giyeok.bibix.runner.BibixValueProto.DataClassField.class, com.giyeok.bibix.runner.BibixValueProto.DataClassField.Builder.class);
+      }
+
+      // Construct using com.giyeok.bibix.runner.BibixValueProto.DataClassField.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+        }
+      }
+      @java.lang.Override
+      public Builder clear() {
+        super.clear();
+        name_ = "";
+
+        if (valueBuilder_ == null) {
+          value_ = null;
+        } else {
+          value_ = null;
+          valueBuilder_ = null;
+        }
+        return this;
+      }
+
+      @java.lang.Override
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return com.giyeok.bibix.runner.BibixValueProto.internal_static_com_giyeok_bibix_runner_DataClassField_descriptor;
+      }
+
+      @java.lang.Override
+      public com.giyeok.bibix.runner.BibixValueProto.DataClassField getDefaultInstanceForType() {
+        return com.giyeok.bibix.runner.BibixValueProto.DataClassField.getDefaultInstance();
+      }
+
+      @java.lang.Override
+      public com.giyeok.bibix.runner.BibixValueProto.DataClassField build() {
+        com.giyeok.bibix.runner.BibixValueProto.DataClassField result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      @java.lang.Override
+      public com.giyeok.bibix.runner.BibixValueProto.DataClassField buildPartial() {
+        com.giyeok.bibix.runner.BibixValueProto.DataClassField result = new com.giyeok.bibix.runner.BibixValueProto.DataClassField(this);
+        result.name_ = name_;
+        if (valueBuilder_ == null) {
+          result.value_ = value_;
+        } else {
+          result.value_ = valueBuilder_.build();
+        }
+        onBuilt();
+        return result;
+      }
+
+      @java.lang.Override
+      public Builder clone() {
+        return super.clone();
+      }
+      @java.lang.Override
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.setField(field, value);
+      }
+      @java.lang.Override
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return super.clearField(field);
+      }
+      @java.lang.Override
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return super.clearOneof(oneof);
+      }
+      @java.lang.Override
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return super.setRepeatedField(field, index, value);
+      }
+      @java.lang.Override
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.addRepeatedField(field, value);
+      }
+      @java.lang.Override
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof com.giyeok.bibix.runner.BibixValueProto.DataClassField) {
+          return mergeFrom((com.giyeok.bibix.runner.BibixValueProto.DataClassField)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(com.giyeok.bibix.runner.BibixValueProto.DataClassField other) {
+        if (other == com.giyeok.bibix.runner.BibixValueProto.DataClassField.getDefaultInstance()) return this;
+        if (!other.getName().isEmpty()) {
+          name_ = other.name_;
+          onChanged();
+        }
+        if (other.hasValue()) {
+          mergeValue(other.getValue());
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      @java.lang.Override
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      @java.lang.Override
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.giyeok.bibix.runner.BibixValueProto.DataClassField parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (com.giyeok.bibix.runner.BibixValueProto.DataClassField) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+
+      private java.lang.Object name_ = "";
+      /**
+       * <code>string name = 1;</code>
+       * @return The name.
+       */
+      public java.lang.String getName() {
+        java.lang.Object ref = name_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          name_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string name = 1;</code>
+       * @return The bytes for name.
+       */
+      public com.google.protobuf.ByteString
+          getNameBytes() {
+        java.lang.Object ref = name_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          name_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string name = 1;</code>
+       * @param value The name to set.
+       * @return This builder for chaining.
+       */
+      public Builder setName(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        name_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string name = 1;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearName() {
+        
+        name_ = getDefaultInstance().getName();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string name = 1;</code>
+       * @param value The bytes for name to set.
+       * @return This builder for chaining.
+       */
+      public Builder setNameBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        name_ = value;
         onChanged();
         return this;
       }
@@ -8184,41 +9105,41 @@ public final class BibixValueProto {
       }
 
 
-      // @@protoc_insertion_point(builder_scope:com.giyeok.bibix.runner.ClassInstanceValue)
+      // @@protoc_insertion_point(builder_scope:com.giyeok.bibix.runner.DataClassField)
     }
 
-    // @@protoc_insertion_point(class_scope:com.giyeok.bibix.runner.ClassInstanceValue)
-    private static final com.giyeok.bibix.runner.BibixValueProto.ClassInstanceValue DEFAULT_INSTANCE;
+    // @@protoc_insertion_point(class_scope:com.giyeok.bibix.runner.DataClassField)
+    private static final com.giyeok.bibix.runner.BibixValueProto.DataClassField DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new com.giyeok.bibix.runner.BibixValueProto.ClassInstanceValue();
+      DEFAULT_INSTANCE = new com.giyeok.bibix.runner.BibixValueProto.DataClassField();
     }
 
-    public static com.giyeok.bibix.runner.BibixValueProto.ClassInstanceValue getDefaultInstance() {
+    public static com.giyeok.bibix.runner.BibixValueProto.DataClassField getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
-    private static final com.google.protobuf.Parser<ClassInstanceValue>
-        PARSER = new com.google.protobuf.AbstractParser<ClassInstanceValue>() {
+    private static final com.google.protobuf.Parser<DataClassField>
+        PARSER = new com.google.protobuf.AbstractParser<DataClassField>() {
       @java.lang.Override
-      public ClassInstanceValue parsePartialFrom(
+      public DataClassField parsePartialFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return new ClassInstanceValue(input, extensionRegistry);
+        return new DataClassField(input, extensionRegistry);
       }
     };
 
-    public static com.google.protobuf.Parser<ClassInstanceValue> parser() {
+    public static com.google.protobuf.Parser<DataClassField> parser() {
       return PARSER;
     }
 
     @java.lang.Override
-    public com.google.protobuf.Parser<ClassInstanceValue> getParserForType() {
+    public com.google.protobuf.Parser<DataClassField> getParserForType() {
       return PARSER;
     }
 
     @java.lang.Override
-    public com.giyeok.bibix.runner.BibixValueProto.ClassInstanceValue getDefaultInstanceForType() {
+    public com.giyeok.bibix.runner.BibixValueProto.DataClassField getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -8260,10 +9181,15 @@ public final class BibixValueProto {
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_com_giyeok_bibix_runner_NamedValue_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_com_giyeok_bibix_runner_ClassInstanceValue_descriptor;
+    internal_static_com_giyeok_bibix_runner_DataClassInstanceValue_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_com_giyeok_bibix_runner_ClassInstanceValue_fieldAccessorTable;
+      internal_static_com_giyeok_bibix_runner_DataClassInstanceValue_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_com_giyeok_bibix_runner_DataClassField_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_com_giyeok_bibix_runner_DataClassField_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -8274,7 +9200,7 @@ public final class BibixValueProto {
   static {
     java.lang.String[] descriptorData = {
       "\n\014values.proto\022\027com.giyeok.bibix.runner\"" +
-      "\211\004\n\nBibixValue\022\027\n\rboolean_value\030\001 \001(\010H\000\022" +
+      "\222\004\n\nBibixValue\022\027\n\rboolean_value\030\001 \001(\010H\000\022" +
       "\026\n\014string_value\030\002 \001(\tH\000\022\024\n\npath_value\030\003 " +
       "\001(\tH\000\022\024\n\nfile_value\030\004 \001(\tH\000\022\031\n\017directory" +
       "_value\030\005 \001(\tH\000\0228\n\nenum_value\030\006 \001(\0132\".com" +
@@ -8284,23 +9210,25 @@ public final class BibixValueProto {
       "ok.bibix.runner.SetValueH\000\022:\n\013tuple_valu" +
       "e\030\t \001(\0132#.com.giyeok.bibix.runner.TupleV" +
       "alueH\000\022E\n\021named_tuple_value\030\n \001(\0132(.com." +
-      "giyeok.bibix.runner.NamedTupleValueH\000\022K\n" +
-      "\024class_instance_value\030\013 \001(\0132+.com.giyeok" +
-      ".bibix.runner.ClassInstanceValueH\000B\007\n\005va" +
-      "lue\"-\n\tEnumValue\022\021\n\tenum_type\030\001 \001(\t\022\r\n\005v" +
-      "alue\030\002 \001(\t\"@\n\tListValue\0223\n\006values\030\001 \003(\0132" +
-      "#.com.giyeok.bibix.runner.BibixValue\"?\n\010" +
-      "SetValue\0223\n\006values\030\001 \003(\0132#.com.giyeok.bi" +
-      "bix.runner.BibixValue\"A\n\nTupleValue\0223\n\006v" +
-      "alues\030\001 \003(\0132#.com.giyeok.bibix.runner.Bi" +
-      "bixValue\"F\n\017NamedTupleValue\0223\n\006values\030\001 " +
-      "\003(\0132#.com.giyeok.bibix.runner.NamedValue" +
-      "\"N\n\nNamedValue\022\014\n\004name\030\001 \001(\t\0222\n\005value\030\002 " +
-      "\001(\0132#.com.giyeok.bibix.runner.BibixValue" +
-      "\"]\n\022ClassInstanceValue\022\023\n\013class_cname\030\001 " +
-      "\001(\t\0222\n\005value\030\002 \001(\0132#.com.giyeok.bibix.ru" +
-      "nner.BibixValueB\021B\017BibixValueProtob\006prot" +
-      "o3"
+      "giyeok.bibix.runner.NamedTupleValueH\000\022T\n" +
+      "\031data_class_instance_value\030\013 \001(\0132/.com.g" +
+      "iyeok.bibix.runner.DataClassInstanceValu" +
+      "eH\000B\007\n\005value\"-\n\tEnumValue\022\021\n\tenum_type\030\001" +
+      " \001(\t\022\r\n\005value\030\002 \001(\t\"@\n\tListValue\0223\n\006valu" +
+      "es\030\001 \003(\0132#.com.giyeok.bibix.runner.Bibix" +
+      "Value\"?\n\010SetValue\0223\n\006values\030\001 \003(\0132#.com." +
+      "giyeok.bibix.runner.BibixValue\"A\n\nTupleV" +
+      "alue\0223\n\006values\030\001 \003(\0132#.com.giyeok.bibix." +
+      "runner.BibixValue\"F\n\017NamedTupleValue\0223\n\006" +
+      "values\030\001 \003(\0132#.com.giyeok.bibix.runner.N" +
+      "amedValue\"N\n\nNamedValue\022\014\n\004name\030\001 \001(\t\0222\n" +
+      "\005value\030\002 \001(\0132#.com.giyeok.bibix.runner.B" +
+      "ibixValue\"f\n\026DataClassInstanceValue\022\023\n\013c" +
+      "lass_cname\030\001 \001(\t\0227\n\006fields\030\002 \003(\0132\'.com.g" +
+      "iyeok.bibix.runner.DataClassField\"R\n\016Dat" +
+      "aClassField\022\014\n\004name\030\001 \001(\t\0222\n\005value\030\002 \001(\013" +
+      "2#.com.giyeok.bibix.runner.BibixValueB\021B" +
+      "\017BibixValueProtob\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -8311,7 +9239,7 @@ public final class BibixValueProto {
     internal_static_com_giyeok_bibix_runner_BibixValue_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_giyeok_bibix_runner_BibixValue_descriptor,
-        new java.lang.String[] { "BooleanValue", "StringValue", "PathValue", "FileValue", "DirectoryValue", "EnumValue", "ListValue", "SetValue", "TupleValue", "NamedTupleValue", "ClassInstanceValue", "Value", });
+        new java.lang.String[] { "BooleanValue", "StringValue", "PathValue", "FileValue", "DirectoryValue", "EnumValue", "ListValue", "SetValue", "TupleValue", "NamedTupleValue", "DataClassInstanceValue", "Value", });
     internal_static_com_giyeok_bibix_runner_EnumValue_descriptor =
       getDescriptor().getMessageTypes().get(1);
     internal_static_com_giyeok_bibix_runner_EnumValue_fieldAccessorTable = new
@@ -8348,12 +9276,18 @@ public final class BibixValueProto {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_giyeok_bibix_runner_NamedValue_descriptor,
         new java.lang.String[] { "Name", "Value", });
-    internal_static_com_giyeok_bibix_runner_ClassInstanceValue_descriptor =
+    internal_static_com_giyeok_bibix_runner_DataClassInstanceValue_descriptor =
       getDescriptor().getMessageTypes().get(7);
-    internal_static_com_giyeok_bibix_runner_ClassInstanceValue_fieldAccessorTable = new
+    internal_static_com_giyeok_bibix_runner_DataClassInstanceValue_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_com_giyeok_bibix_runner_ClassInstanceValue_descriptor,
-        new java.lang.String[] { "ClassCname", "Value", });
+        internal_static_com_giyeok_bibix_runner_DataClassInstanceValue_descriptor,
+        new java.lang.String[] { "ClassCname", "Fields", });
+    internal_static_com_giyeok_bibix_runner_DataClassField_descriptor =
+      getDescriptor().getMessageTypes().get(8);
+    internal_static_com_giyeok_bibix_runner_DataClassField_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_com_giyeok_bibix_runner_DataClassField_descriptor,
+        new java.lang.String[] { "Name", "Value", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

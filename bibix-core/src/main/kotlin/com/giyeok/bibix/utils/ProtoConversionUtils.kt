@@ -75,7 +75,18 @@ fun BibixValue.toProto(): BibixValueProto.BibixValue = when (val value = this) {
     }
   }
   is DataClassInstanceValue -> bibixValue {
-    this.classInstanceValue = classInstanceValue {
+    this.dataClassInstanceValue = dataClassInstanceValue {
+      this.classCname = value.className.toString()
+      value.fieldValues.entries.sortedBy { it.key }.forEach { entry ->
+        this.fields.add(dataClassField {
+          this.name = entry.key
+          this.value = entry.value.toProto()
+        })
+      }
+    }
+  }
+  is SuperClassInstanceValue -> bibixValue {
+    this.superClassInstanceValue = superClassInstanceValue {
       this.classCname = value.className.toString()
       this.value = value.value.toProto()
     }

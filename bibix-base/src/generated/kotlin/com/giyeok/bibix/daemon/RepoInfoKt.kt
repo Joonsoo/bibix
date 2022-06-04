@@ -3,7 +3,7 @@
 
 package com.giyeok.bibix.daemon;
 
-@kotlin.jvm.JvmName("-initializerepoInfo")
+@kotlin.jvm.JvmSynthetic
 public inline fun repoInfo(block: com.giyeok.bibix.daemon.RepoInfoKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.daemon.BibixDaemonApiProto.RepoInfo =
   com.giyeok.bibix.daemon.RepoInfoKt.Dsl._create(com.giyeok.bibix.daemon.BibixDaemonApiProto.RepoInfo.newBuilder()).apply { block() }._build()
 public object RepoInfoKt {
@@ -304,4 +304,3 @@ public object RepoInfoKt {
 @kotlin.jvm.JvmSynthetic
 public inline fun com.giyeok.bibix.daemon.BibixDaemonApiProto.RepoInfo.copy(block: com.giyeok.bibix.daemon.RepoInfoKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.daemon.BibixDaemonApiProto.RepoInfo =
   com.giyeok.bibix.daemon.RepoInfoKt.Dsl._create(this.toBuilder()).apply { block() }._build()
-

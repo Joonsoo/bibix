@@ -122,8 +122,8 @@ fun BibixIdProto.ArgsMap.extractInputHashes(): BibixIdProto.InputHashes {
       value.tupleValue.valuesList.flatMap { traverseValue(it) }
     BibixValueProto.BibixValue.ValueCase.NAMED_TUPLE_VALUE ->
       value.namedTupleValue.valuesList.flatMap { traverseValue(it.value) }
-    BibixValueProto.BibixValue.ValueCase.CLASS_INSTANCE_VALUE ->
-      traverseValue(value.classInstanceValue.value)
+    BibixValueProto.BibixValue.ValueCase.DATA_CLASS_INSTANCE_VALUE ->
+      value.dataClassInstanceValue.fieldsList.flatMap { traverseValue(it.value) }
     else -> listOf()
   }
   return inputHashesFromPaths(this.pairsList.flatMap { traverseValue(it.value) })

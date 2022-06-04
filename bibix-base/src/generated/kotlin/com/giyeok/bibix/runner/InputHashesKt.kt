@@ -3,7 +3,7 @@
 
 package com.giyeok.bibix.runner;
 
-@kotlin.jvm.JvmName("-initializeinputHashes")
+@kotlin.jvm.JvmSynthetic
 public inline fun inputHashes(block: com.giyeok.bibix.runner.InputHashesKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.runner.BibixIdProto.InputHashes =
   com.giyeok.bibix.runner.InputHashesKt.Dsl._create(com.giyeok.bibix.runner.BibixIdProto.InputHashes.newBuilder()).apply { block() }._build()
 public object InputHashesKt {
@@ -44,8 +44,7 @@ public object InputHashesKt {
     @kotlin.jvm.JvmName("addDirectories")
     public fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.runner.BibixIdProto.DirectoryHash, DirectoriesProxy>.add(value: com.giyeok.bibix.runner.BibixIdProto.DirectoryHash) {
       _builder.addDirectories(value)
-    }
-    /**
+    }/**
      * <code>repeated .com.giyeok.bibix.runner.DirectoryHash directories = 1;</code>
      * @param value The directories to add.
      */
@@ -54,8 +53,7 @@ public object InputHashesKt {
     @Suppress("NOTHING_TO_INLINE")
     public inline operator fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.runner.BibixIdProto.DirectoryHash, DirectoriesProxy>.plusAssign(value: com.giyeok.bibix.runner.BibixIdProto.DirectoryHash) {
       add(value)
-    }
-    /**
+    }/**
      * <code>repeated .com.giyeok.bibix.runner.DirectoryHash directories = 1;</code>
      * @param values The directories to add.
      */
@@ -63,8 +61,7 @@ public object InputHashesKt {
     @kotlin.jvm.JvmName("addAllDirectories")
     public fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.runner.BibixIdProto.DirectoryHash, DirectoriesProxy>.addAll(values: kotlin.collections.Iterable<com.giyeok.bibix.runner.BibixIdProto.DirectoryHash>) {
       _builder.addAllDirectories(values)
-    }
-    /**
+    }/**
      * <code>repeated .com.giyeok.bibix.runner.DirectoryHash directories = 1;</code>
      * @param values The directories to add.
      */
@@ -73,8 +70,7 @@ public object InputHashesKt {
     @Suppress("NOTHING_TO_INLINE")
     public inline operator fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.runner.BibixIdProto.DirectoryHash, DirectoriesProxy>.plusAssign(values: kotlin.collections.Iterable<com.giyeok.bibix.runner.BibixIdProto.DirectoryHash>) {
       addAll(values)
-    }
-    /**
+    }/**
      * <code>repeated .com.giyeok.bibix.runner.DirectoryHash directories = 1;</code>
      * @param index The index to set the value at.
      * @param value The directories to set.
@@ -83,8 +79,7 @@ public object InputHashesKt {
     @kotlin.jvm.JvmName("setDirectories")
     public operator fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.runner.BibixIdProto.DirectoryHash, DirectoriesProxy>.set(index: kotlin.Int, value: com.giyeok.bibix.runner.BibixIdProto.DirectoryHash) {
       _builder.setDirectories(index, value)
-    }
-    /**
+    }/**
      * <code>repeated .com.giyeok.bibix.runner.DirectoryHash directories = 1;</code>
      */
     @kotlin.jvm.JvmSynthetic
@@ -92,8 +87,6 @@ public object InputHashesKt {
     public fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.runner.BibixIdProto.DirectoryHash, DirectoriesProxy>.clear() {
       _builder.clearDirectories()
     }
-
-
     /**
      * An uninstantiable, behaviorless type to represent the field in
      * generics.
@@ -116,8 +109,7 @@ public object InputHashesKt {
     @kotlin.jvm.JvmName("addFiles")
     public fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.runner.BibixIdProto.FileHash, FilesProxy>.add(value: com.giyeok.bibix.runner.BibixIdProto.FileHash) {
       _builder.addFiles(value)
-    }
-    /**
+    }/**
      * <code>repeated .com.giyeok.bibix.runner.FileHash files = 2;</code>
      * @param value The files to add.
      */
@@ -126,8 +118,7 @@ public object InputHashesKt {
     @Suppress("NOTHING_TO_INLINE")
     public inline operator fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.runner.BibixIdProto.FileHash, FilesProxy>.plusAssign(value: com.giyeok.bibix.runner.BibixIdProto.FileHash) {
       add(value)
-    }
-    /**
+    }/**
      * <code>repeated .com.giyeok.bibix.runner.FileHash files = 2;</code>
      * @param values The files to add.
      */
@@ -135,8 +126,7 @@ public object InputHashesKt {
     @kotlin.jvm.JvmName("addAllFiles")
     public fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.runner.BibixIdProto.FileHash, FilesProxy>.addAll(values: kotlin.collections.Iterable<com.giyeok.bibix.runner.BibixIdProto.FileHash>) {
       _builder.addAllFiles(values)
-    }
-    /**
+    }/**
      * <code>repeated .com.giyeok.bibix.runner.FileHash files = 2;</code>
      * @param values The files to add.
      */
@@ -145,8 +135,7 @@ public object InputHashesKt {
     @Suppress("NOTHING_TO_INLINE")
     public inline operator fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.runner.BibixIdProto.FileHash, FilesProxy>.plusAssign(values: kotlin.collections.Iterable<com.giyeok.bibix.runner.BibixIdProto.FileHash>) {
       addAll(values)
-    }
-    /**
+    }/**
      * <code>repeated .com.giyeok.bibix.runner.FileHash files = 2;</code>
      * @param index The index to set the value at.
      * @param value The files to set.
@@ -155,8 +144,7 @@ public object InputHashesKt {
     @kotlin.jvm.JvmName("setFiles")
     public operator fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.runner.BibixIdProto.FileHash, FilesProxy>.set(index: kotlin.Int, value: com.giyeok.bibix.runner.BibixIdProto.FileHash) {
       _builder.setFiles(index, value)
-    }
-    /**
+    }/**
      * <code>repeated .com.giyeok.bibix.runner.FileHash files = 2;</code>
      */
     @kotlin.jvm.JvmSynthetic
@@ -164,8 +152,6 @@ public object InputHashesKt {
     public fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.runner.BibixIdProto.FileHash, FilesProxy>.clear() {
       _builder.clearFiles()
     }
-
-
     /**
      * An uninstantiable, behaviorless type to represent the field in
      * generics.
@@ -240,4 +226,3 @@ public object InputHashesKt {
 @kotlin.jvm.JvmSynthetic
 public inline fun com.giyeok.bibix.runner.BibixIdProto.InputHashes.copy(block: com.giyeok.bibix.runner.InputHashesKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.runner.BibixIdProto.InputHashes =
   com.giyeok.bibix.runner.InputHashesKt.Dsl._create(this.toBuilder()).apply { block() }._build()
-

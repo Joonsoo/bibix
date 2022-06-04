@@ -3,7 +3,7 @@
 
 package com.giyeok.bibix.daemon;
 
-@kotlin.jvm.JvmName("-initializeintellijContentRootNode")
+@kotlin.jvm.JvmSynthetic
 public inline fun intellijContentRootNode(block: com.giyeok.bibix.daemon.IntellijContentRootNodeKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijContentRootNode =
   com.giyeok.bibix.daemon.IntellijContentRootNodeKt.Dsl._create(com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijContentRootNode.newBuilder()).apply { block() }._build()
 public object IntellijContentRootNodeKt {
@@ -43,4 +43,3 @@ public object IntellijContentRootNodeKt {
 @kotlin.jvm.JvmSynthetic
 public inline fun com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijContentRootNode.copy(block: com.giyeok.bibix.daemon.IntellijContentRootNodeKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijContentRootNode =
   com.giyeok.bibix.daemon.IntellijContentRootNodeKt.Dsl._create(this.toBuilder()).apply { block() }._build()
-

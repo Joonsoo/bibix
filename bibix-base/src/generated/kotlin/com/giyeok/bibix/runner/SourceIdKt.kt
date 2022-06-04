@@ -3,7 +3,7 @@
 
 package com.giyeok.bibix.runner;
 
-@kotlin.jvm.JvmName("-initializesourceId")
+@kotlin.jvm.JvmSynthetic
 public inline fun sourceId(block: com.giyeok.bibix.runner.SourceIdKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.runner.BibixIdProto.SourceId =
   com.giyeok.bibix.runner.SourceIdKt.Dsl._create(com.giyeok.bibix.runner.BibixIdProto.SourceId.newBuilder()).apply { block() }._build()
 public object SourceIdKt {
@@ -153,13 +153,3 @@ public object SourceIdKt {
 @kotlin.jvm.JvmSynthetic
 public inline fun com.giyeok.bibix.runner.BibixIdProto.SourceId.copy(block: com.giyeok.bibix.runner.SourceIdKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.runner.BibixIdProto.SourceId =
   com.giyeok.bibix.runner.SourceIdKt.Dsl._create(this.toBuilder()).apply { block() }._build()
-
-val com.giyeok.bibix.runner.BibixIdProto.SourceIdOrBuilder.rootSourceOrNull: com.google.protobuf.Empty?
-  get() = if (hasRootSource()) getRootSource() else null
-
-val com.giyeok.bibix.runner.BibixIdProto.SourceIdOrBuilder.mainSourceOrNull: com.google.protobuf.Empty?
-  get() = if (hasMainSource()) getMainSource() else null
-
-val com.giyeok.bibix.runner.BibixIdProto.SourceIdOrBuilder.remoteSourceOrNull: com.giyeok.bibix.runner.BibixIdProto.RemoteSourceId?
-  get() = if (hasRemoteSource()) getRemoteSource() else null
-

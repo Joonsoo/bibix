@@ -9,13 +9,22 @@ sealed class CNameValue {
   data class EvaluatedValue(val value: BibixValue) : CNameValue() // not by BuildGraph
   data class NamespaceValue(val cname: CName, val names: Set<String>) : CNameValue()
 
+  sealed class ClassType : CNameValue() {
+    abstract val cname: CName
+  }
+
   data class DataClassType(
-    val cname: CName,
+    override val cname: CName,
     val fields: List<ClassField>,
     val casts: Map<BibixType, Int>,
-  ) : CNameValue()
+  ) : ClassType()
 
   data class ClassField(val name: String, val type: BibixType, val optional: Boolean)
+
+  data class SuperClassType(
+    override val cname: CName,
+    val subs: List<CustomType>,
+  ) : ClassType()
 
   data class EnumType(val cname: CName, val values: List<String>) : CNameValue()
 

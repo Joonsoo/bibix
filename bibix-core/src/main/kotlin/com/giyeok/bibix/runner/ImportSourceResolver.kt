@@ -27,16 +27,15 @@ class ImportSourceResolver(
     when (spec.className) {
       CName(BibixRootSourceId, "GitSource") -> {
         // TODO remote의 ref를 pull해오도록 수정
-        val specValue = spec.value as NamedTupleValue
-        val url = (specValue.getValue("url") as StringValue).value
-        val ref = (specValue.getValue("ref") as StringValue).value
-        val path = (specValue.getValue("path") as StringValue).value
+        val url = (spec["url"] as StringValue).value
+        val ref = (spec["ref"] as StringValue).value
+        val path = (spec["path"] as StringValue).value
         progressIndicator.updateProgressDescription("Resolving git source from $url @ $ref")
 
         val sourceId = sourceId {
           this.remoteSource = remoteSourceId {
             this.sourceType = "git"
-            this.sourceSpec = specValue.toProto()
+            this.sourceSpec = spec.toProto()
           }
         }
 

@@ -75,19 +75,19 @@ data class NamedTupleValue(val pairs: List<Pair<String, BibixValue>>) : BibixVal
     "(${pairs.joinToString() { p -> "${p.first}: ${p.second}" }})"
 }
 
+sealed class ClassInstanceValue : BibixValue() {
+  abstract val className: CName
+}
+
 data class DataClassInstanceValue(
-  val className: CName,
+  override val className: CName,
   val fieldValues: Map<String, BibixValue>
-) : BibixValue() {
+) : ClassInstanceValue() {
+  operator fun get(fieldName: String): BibixValue? = fieldValues[fieldName]
+
   override fun toString(): String = "$className($fieldValues)"
 }
 
-// value는 DataClassInstanceValue이거나 SuperClassInstanceValue일 것
-data class SuperClassInstanceValue(val className: CName, val value: BibixValue) : BibixValue() {
-  override fun toString(): String = "$className($value)"
-}
-
-// 사용자가 super class instance value를 만들 일은 없을듯
 data class NDataClassInstanceValue(
   val nameTokens: List<String>,
   val fieldValues: Map<String, BibixValue>
@@ -155,15 +155,28 @@ sealed class TypeValue : BibixValue() {
     override fun toString(): String = "class $className"
   }
 
-  data class ClassTypeDetail(
-    val className: CName,
-    val relativeName: List<String>,
-    val fields: List<ClassFieldValue>
-  ) {
+  sealed class ClassTypeDetail {
+    abstract val className: CName
+    abstract val relativeName: List<String>
+  }
+
+  data class DataClassTypeDetail(
+    override val className: CName,
+    override val relativeName: List<String>,
+    val fields: List<DataClassFieldValue>
+  ) : ClassTypeDetail() {
     override fun toString(): String = "class $className"
   }
 
-  data class ClassFieldValue(val name: String, val type: TypeValue, val optional: Boolean)
+  data class DataClassFieldValue(val name: String, val type: TypeValue, val optional: Boolean)
+
+  data class SuperClassTypeDetail(
+    override val className: CName,
+    override val relativeName: List<String>,
+    val subClasses: List<CName>
+  ) : ClassTypeDetail() {
+    override fun toString(): String = "super class $className"
+  }
 
   data class EnumTypeValue(val enumTypeName: CName, val enumValues: List<String>) : TypeValue() {
     override fun toString(): String = "enum $enumTypeName"
@@ -209,7 +222,6 @@ sealed class TypeValue : BibixValue() {
 fun BibixValue.stringify(): String = when (this) {
   is NDataClassInstanceValue -> this.toString()
   is DataClassInstanceValue -> this.toString()
-  is SuperClassInstanceValue -> this.toString()
   is BooleanValue -> value.toString()
   is DirectoryValue -> directory.normalize().toString()
   is EnumValue -> value

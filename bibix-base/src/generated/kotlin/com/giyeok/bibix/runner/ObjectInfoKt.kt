@@ -3,7 +3,7 @@
 
 package com.giyeok.bibix.runner;
 
-@kotlin.jvm.JvmName("-initializeobjectInfo")
+@kotlin.jvm.JvmSynthetic
 public inline fun objectInfo(block: com.giyeok.bibix.runner.ObjectInfoKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.runner.BibixRepoProto.ObjectInfo =
   com.giyeok.bibix.runner.ObjectInfoKt.Dsl._create(com.giyeok.bibix.runner.BibixRepoProto.ObjectInfo.newBuilder()).apply { block() }._build()
 public object ObjectInfoKt {
@@ -123,13 +123,3 @@ public object ObjectInfoKt {
 @kotlin.jvm.JvmSynthetic
 public inline fun com.giyeok.bibix.runner.BibixRepoProto.ObjectInfo.copy(block: com.giyeok.bibix.runner.ObjectInfoKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.runner.BibixRepoProto.ObjectInfo =
   com.giyeok.bibix.runner.ObjectInfoKt.Dsl._create(this.toBuilder()).apply { block() }._build()
-
-val com.giyeok.bibix.runner.BibixRepoProto.ObjectInfoOrBuilder.startTimeOrNull: com.google.protobuf.Timestamp?
-  get() = if (hasStartTime()) getStartTime() else null
-
-val com.giyeok.bibix.runner.BibixRepoProto.ObjectInfoOrBuilder.endTimeOrNull: com.google.protobuf.Timestamp?
-  get() = if (hasEndTime()) getEndTime() else null
-
-val com.giyeok.bibix.runner.BibixRepoProto.ObjectInfoOrBuilder.durationOrNull: com.google.protobuf.Duration?
-  get() = if (hasDuration()) getDuration() else null
-

@@ -14,7 +14,7 @@ sealed class BuildRuleReturn {
       cnames: List<CName>,
       unames: List<String> = listOf(),
       whenDone: (List<TypeValue.ClassTypeDetail>) -> BuildRuleReturn,
-    ) = GetClassInfos(cnames, unames.map { it.split('.') }, whenDone)
+    ) = GetClassTypeDetails(cnames, unames.map { it.split('.') }, whenDone)
 
     @JvmStatic
     fun value(value: BibixValue) = ValueReturn(value)
@@ -38,7 +38,7 @@ sealed class BuildRuleReturn {
     val whenDone: (BibixValue) -> BuildRuleReturn
   ) : BuildRuleReturn()
 
-  data class GetClassInfos(
+  data class GetClassTypeDetails(
     val cnames: List<CName>,
     val unames: List<List<String>>,
     val whenDone: (List<TypeValue.ClassTypeDetail>) -> BuildRuleReturn,

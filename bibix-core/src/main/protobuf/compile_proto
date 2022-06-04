@@ -3,13 +3,13 @@ echo $PWD
 ./protoc run_config.proto values.proto ids.proto repo.proto api.proto \
   --proto_path=. \
   --proto_path=./include \
-  --java_out=../../generated/java \
-  --kotlin_out=../../generated/kotlin \
+  --java_out=../../../../bibix-base/src/generated/java \
+  --kotlin_out=../../../../bibix-base/src/generated/kotlin \
 
 ./protoc run_config.proto values.proto ids.proto repo.proto api.proto \
   --proto_path=. \
   --proto_path=./include \
   --plugin=/home/joonsoo/Documents/workspace/bibix/bibix-core/src/main/protobuf/protoc-gen-grpc-java \
-  --grpc-java_out=../../generated/java-grpc \
+  --grpc-java_out=../../../../bibix-base/src/generated/java-grpc \
   --plugin=/home/joonsoo/Documents/workspace/bibix/bibix-core/src/main/protobuf/protoc-gen-grpc-kotlin \
-  --grpc-kotlin_out=../../generated/kotlin-grpc
+  --grpc-kotlin_out=../../../../bibix-base/src/generated/kotlin-grpc

@@ -3,7 +3,7 @@
 
 package com.giyeok.bibix.daemon;
 
-@kotlin.jvm.JvmName("-initializeintellijProjectStructure")
+@kotlin.jvm.JvmSynthetic
 public inline fun intellijProjectStructure(block: com.giyeok.bibix.daemon.IntellijProjectStructureKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijProjectStructure =
   com.giyeok.bibix.daemon.IntellijProjectStructureKt.Dsl._create(com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijProjectStructure.newBuilder()).apply { block() }._build()
 public object IntellijProjectStructureKt {
@@ -50,7 +50,3 @@ public object IntellijProjectStructureKt {
 @kotlin.jvm.JvmSynthetic
 public inline fun com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijProjectStructure.copy(block: com.giyeok.bibix.daemon.IntellijProjectStructureKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijProjectStructure =
   com.giyeok.bibix.daemon.IntellijProjectStructureKt.Dsl._create(this.toBuilder()).apply { block() }._build()
-
-val com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijProjectStructureOrBuilder.projectOrNull: com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijProjectNode?
-  get() = if (hasProject()) getProject() else null
-

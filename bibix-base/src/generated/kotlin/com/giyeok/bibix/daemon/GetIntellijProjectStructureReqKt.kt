@@ -3,7 +3,7 @@
 
 package com.giyeok.bibix.daemon;
 
-@kotlin.jvm.JvmName("-initializegetIntellijProjectStructureReq")
+@kotlin.jvm.JvmSynthetic
 public inline fun getIntellijProjectStructureReq(block: com.giyeok.bibix.daemon.GetIntellijProjectStructureReqKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.daemon.BibixDaemonApiProto.GetIntellijProjectStructureReq =
   com.giyeok.bibix.daemon.GetIntellijProjectStructureReqKt.Dsl._create(com.giyeok.bibix.daemon.BibixDaemonApiProto.GetIntellijProjectStructureReq.newBuilder()).apply { block() }._build()
 public object GetIntellijProjectStructureReqKt {
@@ -26,4 +26,3 @@ public object GetIntellijProjectStructureReqKt {
 @kotlin.jvm.JvmSynthetic
 public inline fun com.giyeok.bibix.daemon.BibixDaemonApiProto.GetIntellijProjectStructureReq.copy(block: com.giyeok.bibix.daemon.GetIntellijProjectStructureReqKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.daemon.BibixDaemonApiProto.GetIntellijProjectStructureReq =
   com.giyeok.bibix.daemon.GetIntellijProjectStructureReqKt.Dsl._create(this.toBuilder()).apply { block() }._build()
-

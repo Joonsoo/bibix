@@ -3,7 +3,7 @@
 
 package com.giyeok.bibix.runner;
 
-@kotlin.jvm.JvmName("-initializeobjectIdHash")
+@kotlin.jvm.JvmSynthetic
 public inline fun objectIdHash(block: com.giyeok.bibix.runner.ObjectIdHashKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.runner.BibixIdProto.ObjectIdHash =
   com.giyeok.bibix.runner.ObjectIdHashKt.Dsl._create(com.giyeok.bibix.runner.BibixIdProto.ObjectIdHash.newBuilder()).apply { block() }._build()
 public object ObjectIdHashKt {
@@ -105,4 +105,3 @@ public object ObjectIdHashKt {
 @kotlin.jvm.JvmSynthetic
 public inline fun com.giyeok.bibix.runner.BibixIdProto.ObjectIdHash.copy(block: com.giyeok.bibix.runner.ObjectIdHashKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.runner.BibixIdProto.ObjectIdHash =
   com.giyeok.bibix.runner.ObjectIdHashKt.Dsl._create(this.toBuilder()).apply { block() }._build()
-

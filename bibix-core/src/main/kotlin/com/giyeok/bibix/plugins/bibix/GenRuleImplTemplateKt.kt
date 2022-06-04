@@ -2,6 +2,7 @@ package com.giyeok.bibix.plugins.bibix
 
 import com.giyeok.bibix.base.*
 import com.giyeok.bibix.plugins.bibix.GenClassesKt.Companion.generateClassType
+import com.giyeok.bibix.plugins.bibix.GenClassesKt.Companion.generateDataClassType
 import com.giyeok.bibix.plugins.bibix.GenClassesKt.Companion.generateEnumType
 import com.giyeok.bibix.plugins.bibix.GenCommon.bibixTypeToKtType
 import com.giyeok.bibix.plugins.bibix.GenCommon.bibixValueToKt

@@ -16,7 +16,7 @@ message BibixValue {
     SetValue set_value = 8;
     TupleValue tuple_value = 9;
     NamedTupleValue named_tuple_value = 10;
-    ClassInstanceValue class_instance_value = 11;
+    DataClassInstanceValue data_class_instance_value = 11;
   }
 }
 
@@ -46,7 +46,12 @@ message NamedValue {
   BibixValue value = 2;
 }
 
-message ClassInstanceValue {
+message DataClassInstanceValue {
   string class_cname = 1;
+  repeated DataClassField fields = 2;
+}
+
+message DataClassField {
+  string name = 1;
   BibixValue value = 2;
 }

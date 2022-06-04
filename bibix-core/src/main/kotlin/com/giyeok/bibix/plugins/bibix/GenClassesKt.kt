@@ -12,20 +12,17 @@ import kotlin.io.path.deleteIfExists
 
 class GenClassesKt {
   companion object {
-    fun generateClassType(
+    fun generateDataClassType(
       p: PrintWriter,
-      cls: TypeValue.ClassTypeDetail,
+      cls: TypeValue.DataClassTypeDetail,
       superClass: CName?,
       indent: String,
     ) {
       val clsName = cls.className.tokens.last()
       p.println("${indent}data class $clsName(")
-      when (val bodyType = cls.bodyType) {
-        is TypeValue.NamedTupleTypeValue ->
-          bodyType.elemTypes.forEach { field ->
-            p.println("$indent  val ${field.first}: ${bibixTypeToKtType(field.second)},")
-          }
-        else -> p.println("$indent  val value: ${bibixTypeToKtType(cls.bodyType)}")
+      cls.fields.forEach { field ->
+        val optional = if (field.optional) "?" else ""
+        p.println("$indent  val ${field.name}: ${bibixTypeToKtType(field.type)}$optional,")
       }
       if (superClass != null) {
         p.println("$indent): ${superClass.tokens.last()}() {")
@@ -34,43 +31,90 @@ class GenClassesKt {
       }
       p.println("$indent  companion object {")
       p.println("$indent    fun fromBibix(value: BibixValue): $clsName {")
-      p.println("$indent      value as ClassInstanceValue")
+      p.println("$indent      value as DataClassInstanceValue")
       p.println("$indent      check(value.className.tokens == listOf(${cls.className.tokens.joinToString { "\"$it\"" }}))")
-      when (val bodyType = cls.bodyType) {
-        is TypeValue.NamedTupleTypeValue -> {
-          p.println("$indent      val body = value.value as NamedTupleValue")
-          bodyType.elemTypes.forEachIndexed { index, field ->
-            val convert = bibixValueToKt("body.pairs[$index].second", field.second)
-            p.println("$indent      val ${field.first} = $convert")
-          }
-          p.println("$indent      return $clsName(${bodyType.elemTypes.joinToString { it.first }})")
+      p.println("$indent      return $clsName(")
+      cls.fields.forEach { field ->
+        val fieldExpr = if (!field.optional) {
+          bibixValueToKt("value[\"${field.name}\"]!!", field.type)
+        } else {
+          "value[\"${field.name}\"]?.let { ${bibixValueToKt("it", field.type)} }"
         }
-        else -> {
-          val convert = bibixValueToKt("value.value", bodyType)
-          p.println("$indent      val value = $convert")
-          p.println("$indent      return $clsName(value)")
-        }
+        p.println("$indent        ${field.name}=$fieldExpr,")
       }
+      p.println("$indent      )")
       p.println("$indent    }")
       p.println("$indent  }")
-      p.println("$indent  fun toBibix() = NClassInstanceValue(")
+      val override = if (superClass != null) "override " else ""
+      p.println("$indent  ${override}fun toBibix(): NDataClassInstanceValue = NDataClassInstanceValue(")
       p.println("$indent    \"${cls.relativeName.joinToString(".")}\",")
-      when (val bodyType = cls.bodyType) {
-        is TypeValue.NamedTupleTypeValue -> {
-          p.println("$indent    NamedTupleValue(")
-          bodyType.elemTypes.forEachIndexed { index, field ->
-            val convert = ktValueToBibix(field.first, field.second)
-            p.println("$indent      \"${field.first}\" to $convert,")
+      val hasOptional = cls.fields.any { it.optional }
+      if (hasOptional) {
+        p.println("$indent    listOfNotNull(")
+        cls.fields.forEach { field ->
+          if (field.optional) {
+            val expr = ktValueToBibix("it", field.type)
+            p.println("$indent      this.${field.name}?.let { \"${field.name}\" to $expr },")
+          } else {
+            val expr = ktValueToBibix("this.${field.name}", field.type)
+            p.println("$indent      \"${field.name}\" to $expr,")
           }
-          p.println("$indent    )")
         }
-        is TypeValue.UnionTypeValue -> TODO() // must not happen
-        else -> {
-          p.println("$indent    ${ktValueToBibix("value", bodyType)}")
+        p.println("$indent    ).toMap()")
+      } else {
+        p.println("$indent    mapOf(")
+        cls.fields.forEach { field ->
+          val expr = ktValueToBibix("this.${field.name}", field.type)
+          p.println("$indent      \"${field.name}\" to $expr,")
         }
+        p.println("$indent    )")
       }
       p.println("$indent  )")
       p.println("$indent}")
+    }
+
+    fun generateSuperClassType(
+      p: PrintWriter,
+      cls: TypeValue.SuperClassTypeDetail,
+      superClass: CName?,
+      indent: String,
+    ) {
+      val clsName = cls.className.tokens.last()
+      if (superClass != null) {
+        p.println("${indent}sealed class $clsName ${superClass.tokens.last()} {")
+      } else {
+        p.println("${indent}sealed class $clsName {")
+      }
+      p.println("$indent  companion object {")
+      p.println("$indent    fun fromBibix(value: BibixValue): $clsName {")
+      p.println("$indent      value as DataClassInstanceValue")
+      p.println("$indent      check(value.className.tokens == listOf(${cls.className.tokens.joinToString { "\"$it\"" }}))")
+      p.println("$indent      return when (value.className.tokens) {")
+      // TODO subClasses 중에서 super class인 것은 다시 풀어서 전부 data class로 바꿔서 처리
+      cls.subClasses.forEach { sub ->
+        val tokens = sub.tokens.joinToString { "\"$it\"" }
+        p.println("$indent        listOf($tokens) -> ${sub.tokens.last()}.fromBibix(value)")
+      }
+      p.println("$indent        else -> throw IllegalStateException(\"Unknown subclass of ${clsName}: \${value.value.className}\")")
+      p.println("$indent      }")
+      p.println("$indent    }")
+      p.println("$indent  }")
+      if (superClass == null) {
+        p.println("$indent  abstract fun toBibix(): NDataClassInstanceValue")
+      }
+      p.println("$indent}")
+    }
+
+    fun generateClassType(
+      p: PrintWriter,
+      cls: TypeValue.ClassTypeDetail,
+      superClass: CName?,
+      indent: String,
+    ) {
+      when (cls) {
+        is TypeValue.DataClassTypeDetail -> generateDataClassType(p, cls, superClass, indent)
+        is TypeValue.SuperClassTypeDetail -> generateSuperClassType(p, cls, superClass, indent)
+      }
     }
 
     fun generateEnumType(p: PrintWriter, type: TypeValue.EnumTypeValue, indent: String) {
@@ -106,6 +150,9 @@ class GenClassesKt {
             printer.println("package $packageName")
             printer.println()
           }
+          printer.println("import com.giyeok.bibix.base.*")
+          printer.println("import java.nio.file.Path")
+          printer.println()
           if (outerClassName != null) {
             printer.println("object $outerClassName {")
           }
@@ -114,11 +161,9 @@ class GenClassesKt {
           val superclasses = mutableMapOf<CName, CName>()
           classTypes.forEach { clsType ->
             val detail = classTypeDetailsMap.getValue(clsType.className)
-            if (detail.bodyType is TypeValue.UnionTypeValue) {
-              (detail.bodyType as TypeValue.UnionTypeValue).types.forEach { subType ->
-                if (subType is TypeValue.ClassTypeValue) {
-                  superclasses[subType.className] = clsType.className
-                }
+            if (detail is TypeValue.SuperClassTypeDetail) {
+              detail.subClasses.forEach { subClass ->
+                superclasses[subClass] = clsType.className
               }
             }
           }
@@ -129,13 +174,12 @@ class GenClassesKt {
             }
             when (type) {
               is TypeValue.ClassTypeValue -> {
-                val className = type.className.tokens.last()
                 val detail = classTypeDetailsMap.getValue(type.className)
-                when (detail.bodyType) {
-                  is TypeValue.UnionTypeValue -> {
-                    printer.println("sealed class $className")
-                  }
-                  else -> generateClassType(printer, detail, superclasses[type.className], indent)
+                when (detail) {
+                  is TypeValue.DataClassTypeDetail ->
+                    generateDataClassType(printer, detail, superclasses[type.className], indent)
+                  is TypeValue.SuperClassTypeDetail ->
+                    generateSuperClassType(printer, detail, superclasses[type.className], indent)
                 }
               }
               is TypeValue.EnumTypeValue ->

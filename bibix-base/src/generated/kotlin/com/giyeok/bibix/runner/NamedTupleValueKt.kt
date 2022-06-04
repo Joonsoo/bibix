@@ -3,7 +3,7 @@
 
 package com.giyeok.bibix.runner;
 
-@kotlin.jvm.JvmName("-initializenamedTupleValue")
+@kotlin.jvm.JvmSynthetic
 public inline fun namedTupleValue(block: com.giyeok.bibix.runner.NamedTupleValueKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.runner.BibixValueProto.NamedTupleValue =
   com.giyeok.bibix.runner.NamedTupleValueKt.Dsl._create(com.giyeok.bibix.runner.BibixValueProto.NamedTupleValue.newBuilder()).apply { block() }._build()
 public object NamedTupleValueKt {
@@ -44,8 +44,7 @@ public object NamedTupleValueKt {
     @kotlin.jvm.JvmName("addValues")
     public fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.runner.BibixValueProto.NamedValue, ValuesProxy>.add(value: com.giyeok.bibix.runner.BibixValueProto.NamedValue) {
       _builder.addValues(value)
-    }
-    /**
+    }/**
      * <code>repeated .com.giyeok.bibix.runner.NamedValue values = 1;</code>
      * @param value The values to add.
      */
@@ -54,8 +53,7 @@ public object NamedTupleValueKt {
     @Suppress("NOTHING_TO_INLINE")
     public inline operator fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.runner.BibixValueProto.NamedValue, ValuesProxy>.plusAssign(value: com.giyeok.bibix.runner.BibixValueProto.NamedValue) {
       add(value)
-    }
-    /**
+    }/**
      * <code>repeated .com.giyeok.bibix.runner.NamedValue values = 1;</code>
      * @param values The values to add.
      */
@@ -63,8 +61,7 @@ public object NamedTupleValueKt {
     @kotlin.jvm.JvmName("addAllValues")
     public fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.runner.BibixValueProto.NamedValue, ValuesProxy>.addAll(values: kotlin.collections.Iterable<com.giyeok.bibix.runner.BibixValueProto.NamedValue>) {
       _builder.addAllValues(values)
-    }
-    /**
+    }/**
      * <code>repeated .com.giyeok.bibix.runner.NamedValue values = 1;</code>
      * @param values The values to add.
      */
@@ -73,8 +70,7 @@ public object NamedTupleValueKt {
     @Suppress("NOTHING_TO_INLINE")
     public inline operator fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.runner.BibixValueProto.NamedValue, ValuesProxy>.plusAssign(values: kotlin.collections.Iterable<com.giyeok.bibix.runner.BibixValueProto.NamedValue>) {
       addAll(values)
-    }
-    /**
+    }/**
      * <code>repeated .com.giyeok.bibix.runner.NamedValue values = 1;</code>
      * @param index The index to set the value at.
      * @param value The values to set.
@@ -83,19 +79,15 @@ public object NamedTupleValueKt {
     @kotlin.jvm.JvmName("setValues")
     public operator fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.runner.BibixValueProto.NamedValue, ValuesProxy>.set(index: kotlin.Int, value: com.giyeok.bibix.runner.BibixValueProto.NamedValue) {
       _builder.setValues(index, value)
-    }
-    /**
+    }/**
      * <code>repeated .com.giyeok.bibix.runner.NamedValue values = 1;</code>
      */
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("clearValues")
     public fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.runner.BibixValueProto.NamedValue, ValuesProxy>.clear() {
       _builder.clearValues()
-    }
-
-  }
+    }}
 }
 @kotlin.jvm.JvmSynthetic
 public inline fun com.giyeok.bibix.runner.BibixValueProto.NamedTupleValue.copy(block: com.giyeok.bibix.runner.NamedTupleValueKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.runner.BibixValueProto.NamedTupleValue =
   com.giyeok.bibix.runner.NamedTupleValueKt.Dsl._create(this.toBuilder()).apply { block() }._build()
-

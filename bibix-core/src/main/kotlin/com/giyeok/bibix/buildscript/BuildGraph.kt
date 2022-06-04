@@ -15,6 +15,7 @@ class BuildGraph(
   val loadedSources: MutableSet<SourceId> = mutableSetOf(),
   val remoteSources: Registry.Builder<BibixIdProto.RemoteSourceId> = Registry.Builder(),
   val baseDirectories: MutableMap<SourceId, Path> = mutableMapOf(),
+  // TODO class hierarchy 정보 추가
 ) {
   fun addRemoteSource(remoteSourceId: BibixIdProto.RemoteSourceId): Int =
     // TODO 이미 remoteSources에 있으면?
@@ -127,7 +128,10 @@ class BuildGraph(
           registerName(className, CNameValue.DataClassType(className, fields, casts))
         }
         is BibixAst.SuperClassDef -> {
-          TODO()
+          val className = cname.append(def.name())
+          val subs = def.subs().toKtList().map { CustomType(lookup.findName(it)) }
+
+          registerName(className, CNameValue.SuperClassType(className, subs))
         }
         is BibixAst.EnumDef -> {
           val enumName = cname.append(def.name())

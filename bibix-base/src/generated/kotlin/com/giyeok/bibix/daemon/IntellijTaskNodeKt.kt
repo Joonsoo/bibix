@@ -3,7 +3,7 @@
 
 package com.giyeok.bibix.daemon;
 
-@kotlin.jvm.JvmName("-initializeintellijTaskNode")
+@kotlin.jvm.JvmSynthetic
 public inline fun intellijTaskNode(block: com.giyeok.bibix.daemon.IntellijTaskNodeKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijTaskNode =
   com.giyeok.bibix.daemon.IntellijTaskNodeKt.Dsl._create(com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijTaskNode.newBuilder()).apply { block() }._build()
 public object IntellijTaskNodeKt {
@@ -43,4 +43,3 @@ public object IntellijTaskNodeKt {
 @kotlin.jvm.JvmSynthetic
 public inline fun com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijTaskNode.copy(block: com.giyeok.bibix.daemon.IntellijTaskNodeKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijTaskNode =
   com.giyeok.bibix.daemon.IntellijTaskNodeKt.Dsl._create(this.toBuilder()).apply { block() }._build()
-

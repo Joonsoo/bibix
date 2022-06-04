@@ -3,7 +3,7 @@
 
 package com.giyeok.bibix.runner;
 
-@kotlin.jvm.JvmName("-initializeargPair")
+@kotlin.jvm.JvmSynthetic
 public inline fun argPair(block: com.giyeok.bibix.runner.ArgPairKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.runner.BibixIdProto.ArgPair =
   com.giyeok.bibix.runner.ArgPairKt.Dsl._create(com.giyeok.bibix.runner.BibixIdProto.ArgPair.newBuilder()).apply { block() }._build()
 public object ArgPairKt {
@@ -67,7 +67,3 @@ public object ArgPairKt {
 @kotlin.jvm.JvmSynthetic
 public inline fun com.giyeok.bibix.runner.BibixIdProto.ArgPair.copy(block: com.giyeok.bibix.runner.ArgPairKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.runner.BibixIdProto.ArgPair =
   com.giyeok.bibix.runner.ArgPairKt.Dsl._create(this.toBuilder()).apply { block() }._build()
-
-val com.giyeok.bibix.runner.BibixIdProto.ArgPairOrBuilder.valueOrNull: com.giyeok.bibix.runner.BibixValueProto.BibixValue?
-  get() = if (hasValue()) getValue() else null
-

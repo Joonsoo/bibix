@@ -3,7 +3,7 @@
 
 package com.giyeok.bibix.daemon;
 
-@kotlin.jvm.JvmName("-initializeintellijProjectNode")
+@kotlin.jvm.JvmSynthetic
 public inline fun intellijProjectNode(block: com.giyeok.bibix.daemon.IntellijProjectNodeKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijProjectNode =
   com.giyeok.bibix.daemon.IntellijProjectNodeKt.Dsl._create(com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijProjectNode.newBuilder()).apply { block() }._build()
 public object IntellijProjectNodeKt {
@@ -95,8 +95,7 @@ public object IntellijProjectNodeKt {
     @kotlin.jvm.JvmName("addModules")
     public fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijModuleNode, ModulesProxy>.add(value: com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijModuleNode) {
       _builder.addModules(value)
-    }
-    /**
+    }/**
      * <code>repeated .com.giyeok.bibix.daemon.IntellijModuleNode modules = 4;</code>
      * @param value The modules to add.
      */
@@ -105,8 +104,7 @@ public object IntellijProjectNodeKt {
     @Suppress("NOTHING_TO_INLINE")
     public inline operator fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijModuleNode, ModulesProxy>.plusAssign(value: com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijModuleNode) {
       add(value)
-    }
-    /**
+    }/**
      * <code>repeated .com.giyeok.bibix.daemon.IntellijModuleNode modules = 4;</code>
      * @param values The modules to add.
      */
@@ -114,8 +112,7 @@ public object IntellijProjectNodeKt {
     @kotlin.jvm.JvmName("addAllModules")
     public fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijModuleNode, ModulesProxy>.addAll(values: kotlin.collections.Iterable<com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijModuleNode>) {
       _builder.addAllModules(values)
-    }
-    /**
+    }/**
      * <code>repeated .com.giyeok.bibix.daemon.IntellijModuleNode modules = 4;</code>
      * @param values The modules to add.
      */
@@ -124,8 +121,7 @@ public object IntellijProjectNodeKt {
     @Suppress("NOTHING_TO_INLINE")
     public inline operator fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijModuleNode, ModulesProxy>.plusAssign(values: kotlin.collections.Iterable<com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijModuleNode>) {
       addAll(values)
-    }
-    /**
+    }/**
      * <code>repeated .com.giyeok.bibix.daemon.IntellijModuleNode modules = 4;</code>
      * @param index The index to set the value at.
      * @param value The modules to set.
@@ -134,19 +130,15 @@ public object IntellijProjectNodeKt {
     @kotlin.jvm.JvmName("setModules")
     public operator fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijModuleNode, ModulesProxy>.set(index: kotlin.Int, value: com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijModuleNode) {
       _builder.setModules(index, value)
-    }
-    /**
+    }/**
      * <code>repeated .com.giyeok.bibix.daemon.IntellijModuleNode modules = 4;</code>
      */
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("clearModules")
     public fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijModuleNode, ModulesProxy>.clear() {
       _builder.clearModules()
-    }
-
-  }
+    }}
 }
 @kotlin.jvm.JvmSynthetic
 public inline fun com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijProjectNode.copy(block: com.giyeok.bibix.daemon.IntellijProjectNodeKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijProjectNode =
   com.giyeok.bibix.daemon.IntellijProjectNodeKt.Dsl._create(this.toBuilder()).apply { block() }._build()
-

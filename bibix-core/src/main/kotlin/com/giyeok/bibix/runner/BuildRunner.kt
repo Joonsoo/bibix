@@ -147,7 +147,7 @@ class BuildRunner(
         }
         is CNameValue.EvaluatedValue -> value.value
         is CNameValue.NamespaceValue -> value
-        is CNameValue.DataClassType -> value
+        is CNameValue.ClassType -> value
         is CNameValue.EnumType -> value
         is CNameValue.ArgVar -> {
           // 사용자가 지정한 arg가 있으면 그 값을 반환하고
@@ -243,8 +243,9 @@ class BuildRunner(
                 null
               )
               implResult as DataClassInstanceValue
-              val cps =
-                ((implResult.value) as SetValue).values.map { (it as PathValue).path }
+              val cps = ((implResult.fieldValues.getValue("cps")) as SetValue).values.map {
+                (it as PathValue).path
+              }
               val realm = synchronized(this) {
                 val realm = classWorld.newRealm(nextRealmId())
                 cps.forEach {
@@ -439,7 +440,8 @@ class BuildRunner(
             check(result.names.contains(exprNode.name))
             runTask(task, BuildTask.ResolveName(result.cname.append(exprNode.name)))
           }
-          is BibixValue -> accessMember(task, result, exprNode.name)
+          is NamedTupleValue -> result.getValue(exprNode.name)
+          is DataClassInstanceValue -> result.fieldValues.getValue(exprNode.name)
           is SourceId -> runTask(task, BuildTask.ResolveName(CName(result, exprNode.name)))
           else -> throw BibixBuildException(task, "Invalid access: $exprNode")
         }
@@ -499,13 +501,6 @@ class BuildRunner(
       }
     }
   }
-
-  private fun accessMember(task: BuildTask, value: BibixValue, name: String): BibixValue =
-    when (value) {
-      is NamedTupleValue -> value.getValue(name)
-      is DataClassInstanceValue -> accessMember(task, value.value, name)
-      else -> throw BibixBuildException(task, "Cannot access $value $name")
-    }
 
   private suspend fun organizeParams(
     task: BuildTask,
@@ -589,8 +584,9 @@ class BuildRunner(
             classWorld.getRealm(implObjectIdHashHex)
           } catch (e: NoSuchRealmException) {
             val newRealm = classWorld.newRealm(implObjectIdHashHex)
-            val cps =
-              ((implResult.value) as SetValue).values.map { (it as PathValue).path }
+            val cps = ((implResult.fieldValues.getValue("cps")) as SetValue).values.map {
+              (it as PathValue).path
+            }
             cps.forEach {
               newRealm.addURL(it.absolute().toUri().toURL())
             }
@@ -707,18 +703,12 @@ class BuildRunner(
               nextCall(result.whenDone, buildResult)
             }
           }
-          is BuildRuleReturn.GetClassInfos -> {
+          is BuildRuleReturn.GetClassTypeDetails -> {
             val cnames = result.cnames + (result.unames.map { CName(origin, it) })
-            TODO()
             routineManager.executeSuspend(task, {
               val resolvedClasses =
-                cnames.map { runTask(task, BuildTask.ResolveName(it)) as CNameValue.DataClassType }
-              val realities = coercer.toTypeValues(task, resolvedClasses.map { it.reality })
-              resolvedClasses.zip(realities)
-            }) { zip ->
-              val classDetails = zip.map { (cls, realityType) ->
-                // relativeName에 origin 입장에서 cls를 어떻게 가리킬 수 있는지 지정
-                // TODO from ** import ** 를 했을 경우에도 잘 동작하나? 확인 필요
+                cnames.map { runTask(task, BuildTask.ResolveName(it)) as CNameValue.ClassType }
+              resolvedClasses.map { cls ->
                 val relativeName = if (cls.cname.sourceId == origin) {
                   cls.cname.tokens
                 } else {
@@ -727,10 +717,53 @@ class BuildRunner(
                   val importer = buildGraph.names.entries.find { it.value == importSource.key }!!
                   listOf(importer.key.tokens.first()) + cls.cname.tokens
                 }
-                TypeValue.ClassTypeDetail(cls.cname, relativeName, cls.extendings, realityType)
+
+                when (cls) {
+                  is CNameValue.DataClassType -> {
+                    val fieldTypeValues = coercer.toTypeValues(task, cls.fields.map { it.type })
+                    TypeValue.DataClassTypeDetail(
+                      cls.cname,
+                      relativeName,
+                      cls.fields.zip(fieldTypeValues).map {
+                        TypeValue.DataClassFieldValue(
+                          it.first.name,
+                          it.second,
+                          it.first.optional
+                        )
+                      })
+                  }
+                  is CNameValue.SuperClassType -> {
+                    val subNames = cls.subs.map { it.name }
+                    val subTypes = runTasks(task, subNames.map { BuildTask.ResolveName(it) })
+                    println(subTypes)
+                    TypeValue.SuperClassTypeDetail(cls.cname, relativeName, subNames)
+                  }
+                }
               }
-              nextCall(result.whenDone, classDetails)
+            }) { resolved ->
+              nextCall(result.whenDone, resolved)
             }
+//            routineManager.executeSuspend(task, {
+//              val resolvedClasses =
+//                cnames.map { runTask(task, BuildTask.ResolveName(it)) as CNameValue.ClassType }
+//              val realities = coercer.toTypeValues(task, resolvedClasses.map { it.reality })
+//              resolvedClasses.zip(realities)
+//            }) { zip ->
+//              val classDetails = zip.map { (cls, realityType) ->
+//                // relativeName에 origin 입장에서 cls를 어떻게 가리킬 수 있는지 지정
+//                // TODO from ** import ** 를 했을 경우에도 잘 동작하나? 확인 필요
+//                val relativeName = if (cls.cname.sourceId == origin) {
+//                  cls.cname.tokens
+//                } else {
+//                  // TODO 이거 제대로 안될거같은데?
+//                  val importSource = imported.entries.find { it.value == cls.cname.sourceId }!!
+//                  val importer = buildGraph.names.entries.find { it.value == importSource.key }!!
+//                  listOf(importer.key.tokens.first()) + cls.cname.tokens
+//                }
+//                TypeValue.ClassTypeDetail(cls.cname, relativeName, cls.extendings, realityType)
+//              }
+//              nextCall(result.whenDone, classDetails)
+//            }
           }
         }
       }

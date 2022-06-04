@@ -3,7 +3,7 @@
 
 package com.giyeok.bibix.runner;
 
-@kotlin.jvm.JvmName("-initializebibixValue")
+@kotlin.jvm.JvmSynthetic
 public inline fun bibixValue(block: com.giyeok.bibix.runner.BibixValueKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.runner.BibixValueProto.BibixValue =
   com.giyeok.bibix.runner.BibixValueKt.Dsl._create(com.giyeok.bibix.runner.BibixValueProto.BibixValue.newBuilder()).apply { block() }._build()
 public object BibixValueKt {
@@ -263,27 +263,27 @@ public object BibixValueKt {
     }
 
     /**
-     * <code>.com.giyeok.bibix.runner.ClassInstanceValue class_instance_value = 11;</code>
+     * <code>.com.giyeok.bibix.runner.DataClassInstanceValue data_class_instance_value = 11;</code>
      */
-    public var classInstanceValue: com.giyeok.bibix.runner.BibixValueProto.ClassInstanceValue
-      @JvmName("getClassInstanceValue")
-      get() = _builder.getClassInstanceValue()
-      @JvmName("setClassInstanceValue")
+    public var dataClassInstanceValue: com.giyeok.bibix.runner.BibixValueProto.DataClassInstanceValue
+      @JvmName("getDataClassInstanceValue")
+      get() = _builder.getDataClassInstanceValue()
+      @JvmName("setDataClassInstanceValue")
       set(value) {
-        _builder.setClassInstanceValue(value)
+        _builder.setDataClassInstanceValue(value)
       }
     /**
-     * <code>.com.giyeok.bibix.runner.ClassInstanceValue class_instance_value = 11;</code>
+     * <code>.com.giyeok.bibix.runner.DataClassInstanceValue data_class_instance_value = 11;</code>
      */
-    public fun clearClassInstanceValue() {
-      _builder.clearClassInstanceValue()
+    public fun clearDataClassInstanceValue() {
+      _builder.clearDataClassInstanceValue()
     }
     /**
-     * <code>.com.giyeok.bibix.runner.ClassInstanceValue class_instance_value = 11;</code>
-     * @return Whether the classInstanceValue field is set.
+     * <code>.com.giyeok.bibix.runner.DataClassInstanceValue data_class_instance_value = 11;</code>
+     * @return Whether the dataClassInstanceValue field is set.
      */
-    public fun hasClassInstanceValue(): kotlin.Boolean {
-      return _builder.hasClassInstanceValue()
+    public fun hasDataClassInstanceValue(): kotlin.Boolean {
+      return _builder.hasDataClassInstanceValue()
     }
     public val valueCase: com.giyeok.bibix.runner.BibixValueProto.BibixValue.ValueCase
       @JvmName("getValueCase")
@@ -297,22 +297,3 @@ public object BibixValueKt {
 @kotlin.jvm.JvmSynthetic
 public inline fun com.giyeok.bibix.runner.BibixValueProto.BibixValue.copy(block: com.giyeok.bibix.runner.BibixValueKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.runner.BibixValueProto.BibixValue =
   com.giyeok.bibix.runner.BibixValueKt.Dsl._create(this.toBuilder()).apply { block() }._build()
-
-val com.giyeok.bibix.runner.BibixValueProto.BibixValueOrBuilder.enumValueOrNull: com.giyeok.bibix.runner.BibixValueProto.EnumValue?
-  get() = if (hasEnumValue()) getEnumValue() else null
-
-val com.giyeok.bibix.runner.BibixValueProto.BibixValueOrBuilder.listValueOrNull: com.giyeok.bibix.runner.BibixValueProto.ListValue?
-  get() = if (hasListValue()) getListValue() else null
-
-val com.giyeok.bibix.runner.BibixValueProto.BibixValueOrBuilder.setValueOrNull: com.giyeok.bibix.runner.BibixValueProto.SetValue?
-  get() = if (hasSetValue()) getSetValue() else null
-
-val com.giyeok.bibix.runner.BibixValueProto.BibixValueOrBuilder.tupleValueOrNull: com.giyeok.bibix.runner.BibixValueProto.TupleValue?
-  get() = if (hasTupleValue()) getTupleValue() else null
-
-val com.giyeok.bibix.runner.BibixValueProto.BibixValueOrBuilder.namedTupleValueOrNull: com.giyeok.bibix.runner.BibixValueProto.NamedTupleValue?
-  get() = if (hasNamedTupleValue()) getNamedTupleValue() else null
-
-val com.giyeok.bibix.runner.BibixValueProto.BibixValueOrBuilder.classInstanceValueOrNull: com.giyeok.bibix.runner.BibixValueProto.ClassInstanceValue?
-  get() = if (hasClassInstanceValue()) getClassInstanceValue() else null
-

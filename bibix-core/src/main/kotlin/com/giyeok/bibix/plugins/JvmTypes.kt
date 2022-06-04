@@ -3,17 +3,24 @@ package com.giyeok.bibix.plugins
 import com.giyeok.bibix.base.*
 import java.nio.file.Path
 
-data class ClassPaths(val cps: List<Path>) {
+data class ClassPaths(
+  val cps: List<Path>,
+) {
   companion object {
     fun fromBibix(value: BibixValue): ClassPaths {
       value as DataClassInstanceValue
       check(value.className.tokens == listOf("ClassPaths"))
-      val body = (value.value as SetValue).values.map { (it as PathValue).path }
-      return ClassPaths(body)
+      return ClassPaths(
+        cps=(value["cps"]!! as SetValue).values.map { (it as PathValue).path },
+      )
     }
   }
-
-  fun toBibix() = NDataClassInstanceValue("jvm.ClassPaths", SetValue(cps.map { PathValue(it) }))
+  fun toBibix(): NDataClassInstanceValue = NDataClassInstanceValue(
+    "jvm.ClassPaths",
+    mapOf(
+      "cps" to SetValue(this.cps.map { PathValue(it) }),
+    )
+  )
 }
 
 data class ClassPkg(
@@ -25,110 +32,101 @@ data class ClassPkg(
     fun fromBibix(value: BibixValue): ClassPkg {
       value as DataClassInstanceValue
       check(value.className.tokens == listOf("ClassPkg"))
-      val body = value.value as NamedTupleValue
-      val origin = ClassOrigin.fromBibix(body.pairs[0].second)
-      val cpinfo = CpInfo.fromBibix(body.pairs[1].second)
-      val deps = (body.pairs[2].second as SetValue).values.map { ClassPkg.fromBibix(it) }
-      return ClassPkg(origin, cpinfo, deps)
+      return ClassPkg(
+        origin=ClassOrigin.fromBibix(value["origin"]!!),
+        cpinfo=CpInfo.fromBibix(value["cpinfo"]!!),
+        deps=(value["deps"]!! as SetValue).values.map { ClassPkg.fromBibix(it) },
+      )
     }
   }
-
   fun toBibix(): NDataClassInstanceValue = NDataClassInstanceValue(
     "jvm.ClassPkg",
-    NamedTupleValue(
-      "origin" to origin.toBibix(),
-      "cpinfo" to cpinfo.toBibix(),
-      "deps" to SetValue(deps.map { it.toBibix() }),
+    mapOf(
+      "origin" to this.origin.toBibix(),
+      "cpinfo" to this.cpinfo.toBibix(),
+      "deps" to SetValue(this.deps.map { it.toBibix() }),
     )
   )
 }
 
 sealed class CpInfo {
-  abstract fun toBibix(): BibixValue
-
   companion object {
     fun fromBibix(value: BibixValue): CpInfo {
       value as DataClassInstanceValue
-      val vv = value.value as DataClassInstanceValue
-      return when (vv.className.tokens) {
-        listOf("JarInfo") -> JarInfo.fromBibix(value.value)
-        listOf("ClassesInfo") -> ClassesInfo.fromBibix(value.value)
-        else -> TODO()
+      check(value.className.tokens == listOf("CpInfo"))
+      return when (value.className.tokens) {
+        listOf("JarInfo") -> JarInfo.fromBibix(value)
+        listOf("ClassesInfo") -> ClassesInfo.fromBibix(value)
+        else -> throw IllegalStateException("Unknown subclass of CpInfo: ${value.className}")
       }
     }
   }
+  abstract fun toBibix(): NDataClassInstanceValue
 }
 
 data class JarInfo(
   val jar: Path,
   val sourceJar: Path?,
-) : CpInfo() {
+): CpInfo() {
   companion object {
     fun fromBibix(value: BibixValue): JarInfo {
       value as DataClassInstanceValue
       check(value.className.tokens == listOf("JarInfo"))
-      val body = value.value as NamedTupleValue
-      val jar = (body.pairs[0].second as FileValue).file
-      val sourceJar =
-        body.pairs[1].second.let { if (it == NoneValue) null else (it as FileValue).file }
-      return JarInfo(jar, sourceJar)
+      return JarInfo(
+        jar=(value["jar"]!! as FileValue).file,
+        sourceJar=value["sourceJar"]?.let { (it as FileValue).file },
+      )
     }
   }
-
-  override fun toBibix() = NDataClassInstanceValue(
+  override fun toBibix(): NDataClassInstanceValue = NDataClassInstanceValue(
     "jvm.JarInfo",
-    NamedTupleValue(
-      "jar" to FileValue(jar),
-      "sourceJar" to (sourceJar?.let { FileValue(it) } ?: NoneValue),
-    )
+    listOfNotNull(
+      "jar" to FileValue(this.jar),
+      this.sourceJar?.let { "sourceJar" to FileValue(it) },
+    ).toMap()
   )
 }
 
 data class ClassesInfo(
   val classDirs: List<Path>,
-  val resourceDirs: List<Path>,
+  val resDirs: List<Path>,
   val srcs: List<Path>?,
-) : CpInfo() {
+): CpInfo() {
   companion object {
     fun fromBibix(value: BibixValue): ClassesInfo {
       value as DataClassInstanceValue
       check(value.className.tokens == listOf("ClassesInfo"))
-      val body = value.value as NamedTupleValue
-      val classDirs =
-        (body.pairs[0].second as SetValue).values.map { (it as DirectoryValue).directory }
-      val resourceDirs =
-        (body.pairs[1].second as SetValue).values.map { (it as DirectoryValue).directory }
-      val srcs =
-        body.pairs[2].second.let { if (it == NoneValue) null else (it as SetValue).values.map { (it as FileValue).file } }
-      return ClassesInfo(classDirs, resourceDirs, srcs)
+      return ClassesInfo(
+        classDirs=(value["classDirs"]!! as SetValue).values.map { (it as DirectoryValue).directory },
+        resDirs=(value["resDirs"]!! as SetValue).values.map { (it as DirectoryValue).directory },
+        srcs=value["srcs"]?.let { (it as SetValue).values.map { (it as FileValue).file } },
+      )
     }
   }
-
-  override fun toBibix() = NDataClassInstanceValue(
+  override fun toBibix(): NDataClassInstanceValue = NDataClassInstanceValue(
     "jvm.ClassesInfo",
-    NamedTupleValue(
-      "classDirs" to SetValue(classDirs.map { DirectoryValue(it) }),
-      "resDirs" to SetValue(resourceDirs.map { DirectoryValue(it) }),
-      "srcs" to (srcs?.let { SetValue(it.map { FileValue(it) }) } ?: NoneValue),
-    )
+    listOfNotNull(
+      "classDirs" to SetValue(this.classDirs.map { DirectoryValue(it) }),
+      "resDirs" to SetValue(this.resDirs.map { DirectoryValue(it) }),
+      this.srcs?.let { "srcs" to SetValue(it.map { FileValue(it) }) },
+    ).toMap()
   )
 }
 
 sealed class ClassOrigin {
-  abstract fun toBibix(): BibixValue
-
   companion object {
     fun fromBibix(value: BibixValue): ClassOrigin {
       value as DataClassInstanceValue
-      val vv = value.value as DataClassInstanceValue
-      return when (vv.className.tokens) {
-        listOf("MavenDep") -> MavenDep.fromBibix(value.value)
-        listOf("LocalBuilt") -> LocalBuilt.fromBibix(value.value)
-        listOf("LocalLib") -> LocalLib.fromBibix(value.value)
-        else -> TODO()
+      check(value.className.tokens == listOf("ClassOrigin"))
+      return when (value.className.tokens) {
+        listOf("MavenDep") -> MavenDep.fromBibix(value)
+        listOf("LocalLib") -> LocalLib.fromBibix(value)
+        listOf("LocalBuilt") -> LocalBuilt.fromBibix(value)
+        else -> throw IllegalStateException("Unknown subclass of ClassOrigin: ${value.className}")
       }
     }
   }
+  abstract fun toBibix(): NDataClassInstanceValue
 }
 
 data class MavenDep(
@@ -136,69 +134,66 @@ data class MavenDep(
   val group: String,
   val artifact: String,
   val version: String,
-) : ClassOrigin() {
+): ClassOrigin() {
   companion object {
     fun fromBibix(value: BibixValue): MavenDep {
       value as DataClassInstanceValue
       check(value.className.tokens == listOf("MavenDep"))
-      val body = value.value as NamedTupleValue
-      val repo = (body.pairs[0].second as StringValue).value
-      val group = (body.pairs[1].second as StringValue).value
-      val artifact = (body.pairs[2].second as StringValue).value
-      val version = (body.pairs[3].second as StringValue).value
-      return MavenDep(repo, group, artifact, version)
+      return MavenDep(
+        repo=(value["repo"]!! as StringValue).value,
+        group=(value["group"]!! as StringValue).value,
+        artifact=(value["artifact"]!! as StringValue).value,
+        version=(value["version"]!! as StringValue).value,
+      )
     }
   }
-
-  override fun toBibix() = NDataClassInstanceValue(
+  override fun toBibix(): NDataClassInstanceValue = NDataClassInstanceValue(
     "jvm.MavenDep",
-    NamedTupleValue(
-      "repo" to StringValue(repo),
-      "group" to StringValue(group),
-      "artifact" to StringValue(artifact),
-      "version" to StringValue(version),
+    mapOf(
+      "repo" to StringValue(this.repo),
+      "group" to StringValue(this.group),
+      "artifact" to StringValue(this.artifact),
+      "version" to StringValue(this.version),
     )
   )
 }
 
 data class LocalBuilt(
   val desc: String,
-) : ClassOrigin() {
+): ClassOrigin() {
   companion object {
     fun fromBibix(value: BibixValue): LocalBuilt {
       value as DataClassInstanceValue
       check(value.className.tokens == listOf("LocalBuilt"))
-      val body = value.value as NamedTupleValue
-      val desc = (body.pairs[0].second as StringValue).value
-      return LocalBuilt(desc)
+      return LocalBuilt(
+        desc=(value["desc"]!! as StringValue).value,
+      )
     }
   }
-
-  override fun toBibix() = NDataClassInstanceValue(
+  override fun toBibix(): NDataClassInstanceValue = NDataClassInstanceValue(
     "jvm.LocalBuilt",
-    NamedTupleValue(
-      "desc" to StringValue(desc),
+    mapOf(
+      "desc" to StringValue(this.desc),
     )
   )
 }
 
 data class LocalLib(
   val path: Path,
-) : ClassOrigin() {
+): ClassOrigin() {
   companion object {
     fun fromBibix(value: BibixValue): LocalLib {
       value as DataClassInstanceValue
       check(value.className.tokens == listOf("LocalLib"))
-      val body = value.value as NamedTupleValue
-      val path = (body.pairs[0].second as PathValue).path
-      return LocalLib(path)
+      return LocalLib(
+        path=(value["path"]!! as PathValue).path,
+      )
     }
   }
-
-  override fun toBibix() = NDataClassInstanceValue(
+  override fun toBibix(): NDataClassInstanceValue = NDataClassInstanceValue(
     "jvm.LocalLib",
-    NamedTupleValue(
-      "path" to PathValue(path),
+    mapOf(
+      "path" to PathValue(this.path),
     )
   )
 }

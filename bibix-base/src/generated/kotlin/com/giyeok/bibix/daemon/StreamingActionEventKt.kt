@@ -3,7 +3,7 @@
 
 package com.giyeok.bibix.daemon;
 
-@kotlin.jvm.JvmName("-initializestreamingActionEvent")
+@kotlin.jvm.JvmSynthetic
 public inline fun streamingActionEvent(block: com.giyeok.bibix.daemon.StreamingActionEventKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.daemon.BibixDaemonApiProto.StreamingActionEvent =
   com.giyeok.bibix.daemon.StreamingActionEventKt.Dsl._create(com.giyeok.bibix.daemon.BibixDaemonApiProto.StreamingActionEvent.newBuilder()).apply { block() }._build()
 public object StreamingActionEventKt {
@@ -60,4 +60,3 @@ public object StreamingActionEventKt {
 @kotlin.jvm.JvmSynthetic
 public inline fun com.giyeok.bibix.daemon.BibixDaemonApiProto.StreamingActionEvent.copy(block: com.giyeok.bibix.daemon.StreamingActionEventKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.daemon.BibixDaemonApiProto.StreamingActionEvent =
   com.giyeok.bibix.daemon.StreamingActionEventKt.Dsl._create(this.toBuilder()).apply { block() }._build()
-

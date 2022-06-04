@@ -10,12 +10,10 @@ class Plugins {
 //    val ref = "HEAD"
     return DataClassInstanceValue(
       CName(BibixRootSourceId, "GitSource"),
-      NamedTupleValue(
-        listOf(
-          "url" to StringValue(Constants.BIBIX_GIT_URL),
-          "ref" to StringValue(ref),
-          "path" to StringValue("bibix-plugins"),
-        )
+      mapOf(
+        "url" to StringValue(Constants.BIBIX_GIT_URL),
+        "ref" to StringValue(ref),
+        "path" to StringValue("bibix-plugins"),
       )
     )
   }
@@ -26,12 +24,10 @@ class Plugins {
 //    val ref = "HEAD"
     return DataClassInstanceValue(
       CName(BibixRootSourceId, "GitSource"),
-      NamedTupleValue(
-        listOf(
-          "url" to StringValue(Constants.BIBIX_GIT_URL),
-          "ref" to StringValue(ref),
-          "path" to StringValue("bibix-plugins"),
-        )
+      mapOf(
+        "url" to StringValue(Constants.BIBIX_GIT_URL),
+        "ref" to StringValue(ref),
+        "path" to StringValue("bibix-plugins"),
       )
     )
   }

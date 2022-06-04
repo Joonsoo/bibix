@@ -3,7 +3,7 @@
 
 package com.giyeok.bibix.runner;
 
-@kotlin.jvm.JvmName("-initializeobjectId")
+@kotlin.jvm.JvmSynthetic
 public inline fun objectId(block: com.giyeok.bibix.runner.ObjectIdKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.runner.BibixIdProto.ObjectId =
   com.giyeok.bibix.runner.ObjectIdKt.Dsl._create(com.giyeok.bibix.runner.BibixIdProto.ObjectId.newBuilder()).apply { block() }._build()
 public object ObjectIdKt {
@@ -151,16 +151,3 @@ public object ObjectIdKt {
 @kotlin.jvm.JvmSynthetic
 public inline fun com.giyeok.bibix.runner.BibixIdProto.ObjectId.copy(block: com.giyeok.bibix.runner.ObjectIdKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.runner.BibixIdProto.ObjectId =
   com.giyeok.bibix.runner.ObjectIdKt.Dsl._create(this.toBuilder()).apply { block() }._build()
-
-val com.giyeok.bibix.runner.BibixIdProto.ObjectIdOrBuilder.sourceIdOrNull: com.giyeok.bibix.runner.BibixIdProto.SourceId?
-  get() = if (hasSourceId()) getSourceId() else null
-
-val com.giyeok.bibix.runner.BibixIdProto.ObjectIdOrBuilder.ruleImplIdHashOrNull: com.giyeok.bibix.runner.BibixIdProto.ObjectIdHash?
-  get() = if (hasRuleImplIdHash()) getRuleImplIdHash() else null
-
-val com.giyeok.bibix.runner.BibixIdProto.ObjectIdOrBuilder.ruleImplSourceHashOrNull: com.giyeok.bibix.runner.BibixIdProto.SourceHashId?
-  get() = if (hasRuleImplSourceHash()) getRuleImplSourceHash() else null
-
-val com.giyeok.bibix.runner.BibixIdProto.ObjectIdOrBuilder.argsMapOrNull: com.giyeok.bibix.runner.BibixIdProto.ArgsMap?
-  get() = if (hasArgsMap()) getArgsMap() else null
-

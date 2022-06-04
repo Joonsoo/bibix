@@ -3,7 +3,7 @@
 
 package com.giyeok.bibix.runner;
 
-@kotlin.jvm.JvmName("-initializeenumValue")
+@kotlin.jvm.JvmSynthetic
 public inline fun enumValue(block: com.giyeok.bibix.runner.EnumValueKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.runner.BibixValueProto.EnumValue =
   com.giyeok.bibix.runner.EnumValueKt.Dsl._create(com.giyeok.bibix.runner.BibixValueProto.EnumValue.newBuilder()).apply { block() }._build()
 public object EnumValueKt {
@@ -60,4 +60,3 @@ public object EnumValueKt {
 @kotlin.jvm.JvmSynthetic
 public inline fun com.giyeok.bibix.runner.BibixValueProto.EnumValue.copy(block: com.giyeok.bibix.runner.EnumValueKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.runner.BibixValueProto.EnumValue =
   com.giyeok.bibix.runner.EnumValueKt.Dsl._create(this.toBuilder()).apply { block() }._build()
-

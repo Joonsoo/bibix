@@ -74,8 +74,6 @@ public final class BibixDaemonApiProto {
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
         throw e.setUnfinishedMessage(this);
-      } catch (com.google.protobuf.UninitializedMessageException e) {
-        throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
       } catch (java.io.IOException e) {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e).setUnfinishedMessage(this);
@@ -486,11 +484,9 @@ public final class BibixDaemonApiProto {
      * <code>map&lt;string, .com.giyeok.bibix.daemon.NamespaceInfo&gt; namespaces = 3;</code>
      */
 
-    /* nullable */
-com.giyeok.bibix.daemon.BibixDaemonApiProto.NamespaceInfo getNamespacesOrDefault(
+    com.giyeok.bibix.daemon.BibixDaemonApiProto.NamespaceInfo getNamespacesOrDefault(
         java.lang.String key,
-        /* nullable */
-com.giyeok.bibix.daemon.BibixDaemonApiProto.NamespaceInfo defaultValue);
+        com.giyeok.bibix.daemon.BibixDaemonApiProto.NamespaceInfo defaultValue);
     /**
      * <code>map&lt;string, .com.giyeok.bibix.daemon.NamespaceInfo&gt; namespaces = 3;</code>
      */
@@ -522,11 +518,9 @@ com.giyeok.bibix.daemon.BibixDaemonApiProto.NamespaceInfo defaultValue);
      * <code>map&lt;string, .com.giyeok.bibix.daemon.TargetInfo&gt; targets = 4;</code>
      */
 
-    /* nullable */
-com.giyeok.bibix.daemon.BibixDaemonApiProto.TargetInfo getTargetsOrDefault(
+    com.giyeok.bibix.daemon.BibixDaemonApiProto.TargetInfo getTargetsOrDefault(
         java.lang.String key,
-        /* nullable */
-com.giyeok.bibix.daemon.BibixDaemonApiProto.TargetInfo defaultValue);
+        com.giyeok.bibix.daemon.BibixDaemonApiProto.TargetInfo defaultValue);
     /**
      * <code>map&lt;string, .com.giyeok.bibix.daemon.TargetInfo&gt; targets = 4;</code>
      */
@@ -558,11 +552,9 @@ com.giyeok.bibix.daemon.BibixDaemonApiProto.TargetInfo defaultValue);
      * <code>map&lt;string, .com.giyeok.bibix.daemon.ActionInfo&gt; actions = 5;</code>
      */
 
-    /* nullable */
-com.giyeok.bibix.daemon.BibixDaemonApiProto.ActionInfo getActionsOrDefault(
+    com.giyeok.bibix.daemon.BibixDaemonApiProto.ActionInfo getActionsOrDefault(
         java.lang.String key,
-        /* nullable */
-com.giyeok.bibix.daemon.BibixDaemonApiProto.ActionInfo defaultValue);
+        com.giyeok.bibix.daemon.BibixDaemonApiProto.ActionInfo defaultValue);
     /**
      * <code>map&lt;string, .com.giyeok.bibix.daemon.ActionInfo&gt; actions = 5;</code>
      */
@@ -594,11 +586,9 @@ com.giyeok.bibix.daemon.BibixDaemonApiProto.ActionInfo defaultValue);
      * <code>map&lt;string, .com.giyeok.bibix.daemon.ArgInfo&gt; args = 6;</code>
      */
 
-    /* nullable */
-com.giyeok.bibix.daemon.BibixDaemonApiProto.ArgInfo getArgsOrDefault(
+    com.giyeok.bibix.daemon.BibixDaemonApiProto.ArgInfo getArgsOrDefault(
         java.lang.String key,
-        /* nullable */
-com.giyeok.bibix.daemon.BibixDaemonApiProto.ArgInfo defaultValue);
+        com.giyeok.bibix.daemon.BibixDaemonApiProto.ArgInfo defaultValue);
     /**
      * <code>map&lt;string, .com.giyeok.bibix.daemon.ArgInfo&gt; args = 6;</code>
      */
@@ -729,8 +719,6 @@ com.giyeok.bibix.daemon.BibixDaemonApiProto.ArgInfo defaultValue);
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
         throw e.setUnfinishedMessage(this);
-      } catch (com.google.protobuf.UninitializedMessageException e) {
-        throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
       } catch (java.io.IOException e) {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e).setUnfinishedMessage(this);
@@ -2524,8 +2512,6 @@ com.giyeok.bibix.daemon.BibixDaemonApiProto.ArgInfo defaultValue);
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
         throw e.setUnfinishedMessage(this);
-      } catch (com.google.protobuf.UninitializedMessageException e) {
-        throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
       } catch (java.io.IOException e) {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e).setUnfinishedMessage(this);
@@ -3963,11 +3949,9 @@ com.giyeok.bibix.daemon.BibixDaemonApiProto.ArgInfo defaultValue);
      * <code>map&lt;string, .com.giyeok.bibix.daemon.BibixExpr&gt; args = 3;</code>
      */
 
-    /* nullable */
-com.giyeok.bibix.daemon.BibixDaemonApiProto.BibixExpr getArgsOrDefault(
+    com.giyeok.bibix.daemon.BibixDaemonApiProto.BibixExpr getArgsOrDefault(
         java.lang.String key,
-        /* nullable */
-com.giyeok.bibix.daemon.BibixDaemonApiProto.BibixExpr defaultValue);
+        com.giyeok.bibix.daemon.BibixDaemonApiProto.BibixExpr defaultValue);
     /**
      * <code>map&lt;string, .com.giyeok.bibix.daemon.BibixExpr&gt; args = 3;</code>
      */
@@ -4065,8 +4049,6 @@ com.giyeok.bibix.daemon.BibixDaemonApiProto.BibixExpr defaultValue);
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
         throw e.setUnfinishedMessage(this);
-      } catch (com.google.protobuf.UninitializedMessageException e) {
-        throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
       } catch (java.io.IOException e) {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e).setUnfinishedMessage(this);
@@ -5284,8 +5266,6 @@ com.giyeok.bibix.daemon.BibixDaemonApiProto.BibixExpr defaultValue);
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
         throw e.setUnfinishedMessage(this);
-      } catch (com.google.protobuf.UninitializedMessageException e) {
-        throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
       } catch (java.io.IOException e) {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e).setUnfinishedMessage(this);
@@ -5402,8 +5382,6 @@ com.giyeok.bibix.daemon.BibixDaemonApiProto.BibixExpr defaultValue);
           }
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
           throw e.setUnfinishedMessage(this);
-        } catch (com.google.protobuf.UninitializedMessageException e) {
-          throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
         } catch (java.io.IOException e) {
           throw new com.google.protobuf.InvalidProtocolBufferException(
               e).setUnfinishedMessage(this);
@@ -6233,8 +6211,6 @@ com.giyeok.bibix.daemon.BibixDaemonApiProto.BibixExpr defaultValue);
           }
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
           throw e.setUnfinishedMessage(this);
-        } catch (com.google.protobuf.UninitializedMessageException e) {
-          throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
         } catch (java.io.IOException e) {
           throw new com.google.protobuf.InvalidProtocolBufferException(
               e).setUnfinishedMessage(this);
@@ -7076,8 +7052,6 @@ com.giyeok.bibix.daemon.BibixDaemonApiProto.BibixExpr defaultValue);
           }
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
           throw e.setUnfinishedMessage(this);
-        } catch (com.google.protobuf.UninitializedMessageException e) {
-          throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
         } catch (java.io.IOException e) {
           throw new com.google.protobuf.InvalidProtocolBufferException(
               e).setUnfinishedMessage(this);
@@ -9406,11 +9380,9 @@ com.giyeok.bibix.daemon.BibixDaemonApiProto.BibixExpr defaultValue);
      * <code>map&lt;string, .com.giyeok.bibix.daemon.BibixExpr&gt; args = 3;</code>
      */
 
-    /* nullable */
-com.giyeok.bibix.daemon.BibixDaemonApiProto.BibixExpr getArgsOrDefault(
+    com.giyeok.bibix.daemon.BibixDaemonApiProto.BibixExpr getArgsOrDefault(
         java.lang.String key,
-        /* nullable */
-com.giyeok.bibix.daemon.BibixDaemonApiProto.BibixExpr defaultValue);
+        com.giyeok.bibix.daemon.BibixDaemonApiProto.BibixExpr defaultValue);
     /**
      * <code>map&lt;string, .com.giyeok.bibix.daemon.BibixExpr&gt; args = 3;</code>
      */
@@ -9508,8 +9480,6 @@ com.giyeok.bibix.daemon.BibixDaemonApiProto.BibixExpr defaultValue);
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
         throw e.setUnfinishedMessage(this);
-      } catch (com.google.protobuf.UninitializedMessageException e) {
-        throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
       } catch (java.io.IOException e) {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e).setUnfinishedMessage(this);
@@ -10509,8 +10479,6 @@ com.giyeok.bibix.daemon.BibixDaemonApiProto.BibixExpr defaultValue);
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
         throw e.setUnfinishedMessage(this);
-      } catch (com.google.protobuf.UninitializedMessageException e) {
-        throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
       } catch (java.io.IOException e) {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e).setUnfinishedMessage(this);
@@ -10929,8 +10897,6 @@ com.giyeok.bibix.daemon.BibixDaemonApiProto.BibixExpr defaultValue);
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
         throw e.setUnfinishedMessage(this);
-      } catch (com.google.protobuf.UninitializedMessageException e) {
-        throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
       } catch (java.io.IOException e) {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e).setUnfinishedMessage(this);
@@ -11403,8 +11369,6 @@ com.giyeok.bibix.daemon.BibixDaemonApiProto.BibixExpr defaultValue);
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
         throw e.setUnfinishedMessage(this);
-      } catch (com.google.protobuf.UninitializedMessageException e) {
-        throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
       } catch (java.io.IOException e) {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e).setUnfinishedMessage(this);
@@ -12367,8 +12331,6 @@ com.giyeok.bibix.daemon.BibixDaemonApiProto.BibixExpr defaultValue);
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
         throw e.setUnfinishedMessage(this);
-      } catch (com.google.protobuf.UninitializedMessageException e) {
-        throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
       } catch (java.io.IOException e) {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e).setUnfinishedMessage(this);
@@ -13085,9 +13047,8 @@ com.giyeok.bibix.daemon.BibixDaemonApiProto.BibixExpr defaultValue);
         } else {
           if (valueCase_ == 2) {
             valueInstBuilder_.mergeFrom(value);
-          } else {
-            valueInstBuilder_.setMessage(value);
           }
+          valueInstBuilder_.setMessage(value);
         }
         valueCase_ = 2;
         return this;
@@ -13472,8 +13433,6 @@ com.giyeok.bibix.daemon.BibixDaemonApiProto.BibixExpr defaultValue);
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
         throw e.setUnfinishedMessage(this);
-      } catch (com.google.protobuf.UninitializedMessageException e) {
-        throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
       } catch (java.io.IOException e) {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e).setUnfinishedMessage(this);
@@ -14614,8 +14573,6 @@ com.giyeok.bibix.daemon.BibixDaemonApiProto.BibixExpr defaultValue);
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
         throw e.setUnfinishedMessage(this);
-      } catch (com.google.protobuf.UninitializedMessageException e) {
-        throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
       } catch (java.io.IOException e) {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e).setUnfinishedMessage(this);
@@ -15543,8 +15500,6 @@ com.giyeok.bibix.daemon.BibixDaemonApiProto.BibixExpr defaultValue);
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
         throw e.setUnfinishedMessage(this);
-      } catch (com.google.protobuf.UninitializedMessageException e) {
-        throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
       } catch (java.io.IOException e) {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e).setUnfinishedMessage(this);
@@ -16263,8 +16218,6 @@ com.giyeok.bibix.daemon.BibixDaemonApiProto.BibixExpr defaultValue);
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
         throw e.setUnfinishedMessage(this);
-      } catch (com.google.protobuf.UninitializedMessageException e) {
-        throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
       } catch (java.io.IOException e) {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e).setUnfinishedMessage(this);
@@ -16945,8 +16898,6 @@ com.giyeok.bibix.daemon.BibixDaemonApiProto.BibixExpr defaultValue);
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
         throw e.setUnfinishedMessage(this);
-      } catch (com.google.protobuf.UninitializedMessageException e) {
-        throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
       } catch (java.io.IOException e) {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e).setUnfinishedMessage(this);
@@ -17393,8 +17344,6 @@ com.giyeok.bibix.daemon.BibixDaemonApiProto.BibixExpr defaultValue);
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
         throw e.setUnfinishedMessage(this);
-      } catch (com.google.protobuf.UninitializedMessageException e) {
-        throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
       } catch (java.io.IOException e) {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e).setUnfinishedMessage(this);
@@ -18080,8 +18029,6 @@ com.giyeok.bibix.daemon.BibixDaemonApiProto.BibixExpr defaultValue);
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
         throw e.setUnfinishedMessage(this);
-      } catch (com.google.protobuf.UninitializedMessageException e) {
-        throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
       } catch (java.io.IOException e) {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e).setUnfinishedMessage(this);
@@ -19393,8 +19340,6 @@ com.giyeok.bibix.daemon.BibixDaemonApiProto.BibixExpr defaultValue);
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
         throw e.setUnfinishedMessage(this);
-      } catch (com.google.protobuf.UninitializedMessageException e) {
-        throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
       } catch (java.io.IOException e) {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e).setUnfinishedMessage(this);
@@ -21241,8 +21186,6 @@ com.giyeok.bibix.daemon.BibixDaemonApiProto.BibixExpr defaultValue);
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
         throw e.setUnfinishedMessage(this);
-      } catch (com.google.protobuf.UninitializedMessageException e) {
-        throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
       } catch (java.io.IOException e) {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e).setUnfinishedMessage(this);
@@ -21811,8 +21754,6 @@ com.giyeok.bibix.daemon.BibixDaemonApiProto.BibixExpr defaultValue);
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
         throw e.setUnfinishedMessage(this);
-      } catch (com.google.protobuf.UninitializedMessageException e) {
-        throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
       } catch (java.io.IOException e) {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e).setUnfinishedMessage(this);

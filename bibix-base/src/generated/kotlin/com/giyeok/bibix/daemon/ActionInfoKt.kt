@@ -3,7 +3,7 @@
 
 package com.giyeok.bibix.daemon;
 
-@kotlin.jvm.JvmName("-initializeactionInfo")
+@kotlin.jvm.JvmSynthetic
 public inline fun actionInfo(block: com.giyeok.bibix.daemon.ActionInfoKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.daemon.BibixDaemonApiProto.ActionInfo =
   com.giyeok.bibix.daemon.ActionInfoKt.Dsl._create(com.giyeok.bibix.daemon.BibixDaemonApiProto.ActionInfo.newBuilder()).apply { block() }._build()
 public object ActionInfoKt {
@@ -128,7 +128,3 @@ public object ActionInfoKt {
 @kotlin.jvm.JvmSynthetic
 public inline fun com.giyeok.bibix.daemon.BibixDaemonApiProto.ActionInfo.copy(block: com.giyeok.bibix.daemon.ActionInfoKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.daemon.BibixDaemonApiProto.ActionInfo =
   com.giyeok.bibix.daemon.ActionInfoKt.Dsl._create(this.toBuilder()).apply { block() }._build()
-
-val com.giyeok.bibix.daemon.BibixDaemonApiProto.ActionInfoOrBuilder.ruleOrNull: com.giyeok.bibix.runner.BibixIdProto.RuleImplId?
-  get() = if (hasRule()) getRule() else null
-
