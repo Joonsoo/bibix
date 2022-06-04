@@ -29,10 +29,9 @@ class CompileImpl : CompileInterface {
     val os = (context.arguments.getValue("os") as EnumValue).value
     val protocPath = (context.arguments.getValue("protocPath") as DirectoryValue).directory
 
-    val schema =
-      ((context.arguments.getValue("schema") as DataClassInstanceValue).value as NamedTupleValue).pairs
-    val srcs = (schema[0].second as SetValue).values.map { (it as FileValue).file }
-    val includes = (schema[1].second as SetValue).values.map { (it as PathValue).path }
+    val schema = ProtoSchema.fromBibix(context.arguments.getValue("schema"))
+    val srcs: List<Path> = schema.schemaFiles
+    val includes: List<Path> = schema.includes
 
     val srcArgs = mutableListOf<String>()
     srcs.forEach { srcArgs.add(it.absolutePathString()) }

@@ -48,6 +48,6 @@ class ResolveClassPkgs {
       check(versionToUse.toMavenArtifact() == mavenArtifact)
       cps.addAll(mavenDepsMap.getValue(versionToUse).cpinfo.toPaths())
     }
-    return SetValue(cps.map { PathValue(it) })
+    return ClassPaths(cps.toList()).toBibix()
   }
 }

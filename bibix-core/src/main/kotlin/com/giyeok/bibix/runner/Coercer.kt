@@ -113,7 +113,7 @@ class Coercer(val buildGraph: BuildGraph, val runner: BuildRunner) {
               when (value) {
                 is DataClassInstanceValue -> {
                   if (value.className != actualType.cname) {
-                    null
+                    tryCastClassInstance(task, origin, value, type, dclassOrigin)
                   } else {
                     val fieldValues = actualType.fields.mapNotNull { field ->
                       val fieldValue = value.fieldValues[field.name]
