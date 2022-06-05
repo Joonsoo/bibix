@@ -10,17 +10,18 @@ class Library {
   fun build(context: BuildContext): BuildRuleReturn {
     val deps = context.arguments.getValue("deps") as SetValue
     val srcsValue = context.arguments.getValue("srcs") as SetValue
+    val srcs = srcsValue.values.map { (it as FileValue).file }
+
     if (!context.hashChanged) {
       return BuildRuleReturn.value(
         ClassPkg(
           LocalBuilt(context.objectIdHash, "scala.library"),
-          ClassesInfo(listOf(context.destDirectory), listOf(), null),
+          ClassesInfo(listOf(context.destDirectory), listOf(), srcs),
           deps.values.map { ClassPkg.fromBibix(it) }
         ).toBibix()
       )
     }
 
-    val srcs = srcsValue.values.map { (it as FileValue).file }
     check(srcs.isNotEmpty()) { "srcs must not be empty" }
     return BuildRuleReturn.evalAndThen(
       "jvm.resolveClassPkgs",
@@ -50,7 +51,7 @@ class Library {
       BuildRuleReturn.value(
         ClassPkg(
           LocalBuilt(context.objectIdHash, "scala.library"),
-          ClassesInfo(listOf(context.destDirectory), listOf(), null),
+          ClassesInfo(listOf(context.destDirectory), listOf(), srcs),
           deps.values.map { ClassPkg.fromBibix(it) }
         ).toBibix()
       )

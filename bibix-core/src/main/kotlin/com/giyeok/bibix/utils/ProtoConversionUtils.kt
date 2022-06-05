@@ -27,6 +27,7 @@ fun String.hexToByteString(): ByteString {
       else -> throw IllegalArgumentException("Not a hex string: $this")
     }
 
+  check(this.length % 2 == 0)
   val bytes = this.windowed(2, 2)
   return ByteString.copyFrom(
     ByteArray(bytes.size) { idx ->

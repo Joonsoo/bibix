@@ -88,7 +88,7 @@ base = ktjvm.library(
   srcs = glob("bibix-base/src/main/kotlin/**/*.kt"),
   deps = [
     maven.dep("org.jetbrains.kotlin", "kotlin-stdlib-jdk8", kotlinVersion),
-    proto.javalib,
+    // proto.javalib,
     proto.kotlinlib,
   ]
 )

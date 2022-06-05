@@ -78,65 +78,130 @@ public object IntellijModuleNodeKt {
      * generics.
      */
     @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
-    public class ModulesProxy private constructor() : com.google.protobuf.kotlin.DslProxy()
+    public class SubModulesProxy private constructor() : com.google.protobuf.kotlin.DslProxy()
     /**
-     * <code>repeated .com.giyeok.bibix.daemon.IntellijModuleNode modules = 4;</code>
+     * <code>repeated .com.giyeok.bibix.daemon.IntellijModuleNode sub_modules = 4;</code>
      */
-     public val modules: com.google.protobuf.kotlin.DslList<com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijModuleNode, ModulesProxy>
+     public val subModules: com.google.protobuf.kotlin.DslList<com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijModuleNode, SubModulesProxy>
       @kotlin.jvm.JvmSynthetic
       get() = com.google.protobuf.kotlin.DslList(
-        _builder.getModulesList()
+        _builder.getSubModulesList()
       )
     /**
-     * <code>repeated .com.giyeok.bibix.daemon.IntellijModuleNode modules = 4;</code>
-     * @param value The modules to add.
+     * <code>repeated .com.giyeok.bibix.daemon.IntellijModuleNode sub_modules = 4;</code>
+     * @param value The subModules to add.
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("addModules")
-    public fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijModuleNode, ModulesProxy>.add(value: com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijModuleNode) {
-      _builder.addModules(value)
+    @kotlin.jvm.JvmName("addSubModules")
+    public fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijModuleNode, SubModulesProxy>.add(value: com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijModuleNode) {
+      _builder.addSubModules(value)
     }/**
-     * <code>repeated .com.giyeok.bibix.daemon.IntellijModuleNode modules = 4;</code>
-     * @param value The modules to add.
+     * <code>repeated .com.giyeok.bibix.daemon.IntellijModuleNode sub_modules = 4;</code>
+     * @param value The subModules to add.
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("plusAssignModules")
+    @kotlin.jvm.JvmName("plusAssignSubModules")
     @Suppress("NOTHING_TO_INLINE")
-    public inline operator fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijModuleNode, ModulesProxy>.plusAssign(value: com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijModuleNode) {
+    public inline operator fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijModuleNode, SubModulesProxy>.plusAssign(value: com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijModuleNode) {
       add(value)
     }/**
-     * <code>repeated .com.giyeok.bibix.daemon.IntellijModuleNode modules = 4;</code>
-     * @param values The modules to add.
+     * <code>repeated .com.giyeok.bibix.daemon.IntellijModuleNode sub_modules = 4;</code>
+     * @param values The subModules to add.
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("addAllModules")
-    public fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijModuleNode, ModulesProxy>.addAll(values: kotlin.collections.Iterable<com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijModuleNode>) {
-      _builder.addAllModules(values)
+    @kotlin.jvm.JvmName("addAllSubModules")
+    public fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijModuleNode, SubModulesProxy>.addAll(values: kotlin.collections.Iterable<com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijModuleNode>) {
+      _builder.addAllSubModules(values)
     }/**
-     * <code>repeated .com.giyeok.bibix.daemon.IntellijModuleNode modules = 4;</code>
-     * @param values The modules to add.
+     * <code>repeated .com.giyeok.bibix.daemon.IntellijModuleNode sub_modules = 4;</code>
+     * @param values The subModules to add.
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("plusAssignAllModules")
+    @kotlin.jvm.JvmName("plusAssignAllSubModules")
     @Suppress("NOTHING_TO_INLINE")
-    public inline operator fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijModuleNode, ModulesProxy>.plusAssign(values: kotlin.collections.Iterable<com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijModuleNode>) {
+    public inline operator fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijModuleNode, SubModulesProxy>.plusAssign(values: kotlin.collections.Iterable<com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijModuleNode>) {
       addAll(values)
     }/**
-     * <code>repeated .com.giyeok.bibix.daemon.IntellijModuleNode modules = 4;</code>
+     * <code>repeated .com.giyeok.bibix.daemon.IntellijModuleNode sub_modules = 4;</code>
      * @param index The index to set the value at.
-     * @param value The modules to set.
+     * @param value The subModules to set.
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("setModules")
-    public operator fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijModuleNode, ModulesProxy>.set(index: kotlin.Int, value: com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijModuleNode) {
-      _builder.setModules(index, value)
+    @kotlin.jvm.JvmName("setSubModules")
+    public operator fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijModuleNode, SubModulesProxy>.set(index: kotlin.Int, value: com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijModuleNode) {
+      _builder.setSubModules(index, value)
     }/**
-     * <code>repeated .com.giyeok.bibix.daemon.IntellijModuleNode modules = 4;</code>
+     * <code>repeated .com.giyeok.bibix.daemon.IntellijModuleNode sub_modules = 4;</code>
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("clearModules")
-    public fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijModuleNode, ModulesProxy>.clear() {
-      _builder.clearModules()
+    @kotlin.jvm.JvmName("clearSubModules")
+    public fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijModuleNode, SubModulesProxy>.clear() {
+      _builder.clearSubModules()
+    }
+    /**
+     * An uninstantiable, behaviorless type to represent the field in
+     * generics.
+     */
+    @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
+    public class DependenciesProxy private constructor() : com.google.protobuf.kotlin.DslProxy()
+    /**
+     * <code>repeated .com.giyeok.bibix.daemon.IntellijDependencyNode dependencies = 5;</code>
+     */
+     public val dependencies: com.google.protobuf.kotlin.DslList<com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijDependencyNode, DependenciesProxy>
+      @kotlin.jvm.JvmSynthetic
+      get() = com.google.protobuf.kotlin.DslList(
+        _builder.getDependenciesList()
+      )
+    /**
+     * <code>repeated .com.giyeok.bibix.daemon.IntellijDependencyNode dependencies = 5;</code>
+     * @param value The dependencies to add.
+     */
+    @kotlin.jvm.JvmSynthetic
+    @kotlin.jvm.JvmName("addDependencies")
+    public fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijDependencyNode, DependenciesProxy>.add(value: com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijDependencyNode) {
+      _builder.addDependencies(value)
+    }/**
+     * <code>repeated .com.giyeok.bibix.daemon.IntellijDependencyNode dependencies = 5;</code>
+     * @param value The dependencies to add.
+     */
+    @kotlin.jvm.JvmSynthetic
+    @kotlin.jvm.JvmName("plusAssignDependencies")
+    @Suppress("NOTHING_TO_INLINE")
+    public inline operator fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijDependencyNode, DependenciesProxy>.plusAssign(value: com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijDependencyNode) {
+      add(value)
+    }/**
+     * <code>repeated .com.giyeok.bibix.daemon.IntellijDependencyNode dependencies = 5;</code>
+     * @param values The dependencies to add.
+     */
+    @kotlin.jvm.JvmSynthetic
+    @kotlin.jvm.JvmName("addAllDependencies")
+    public fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijDependencyNode, DependenciesProxy>.addAll(values: kotlin.collections.Iterable<com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijDependencyNode>) {
+      _builder.addAllDependencies(values)
+    }/**
+     * <code>repeated .com.giyeok.bibix.daemon.IntellijDependencyNode dependencies = 5;</code>
+     * @param values The dependencies to add.
+     */
+    @kotlin.jvm.JvmSynthetic
+    @kotlin.jvm.JvmName("plusAssignAllDependencies")
+    @Suppress("NOTHING_TO_INLINE")
+    public inline operator fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijDependencyNode, DependenciesProxy>.plusAssign(values: kotlin.collections.Iterable<com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijDependencyNode>) {
+      addAll(values)
+    }/**
+     * <code>repeated .com.giyeok.bibix.daemon.IntellijDependencyNode dependencies = 5;</code>
+     * @param index The index to set the value at.
+     * @param value The dependencies to set.
+     */
+    @kotlin.jvm.JvmSynthetic
+    @kotlin.jvm.JvmName("setDependencies")
+    public operator fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijDependencyNode, DependenciesProxy>.set(index: kotlin.Int, value: com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijDependencyNode) {
+      _builder.setDependencies(index, value)
+    }/**
+     * <code>repeated .com.giyeok.bibix.daemon.IntellijDependencyNode dependencies = 5;</code>
+     */
+    @kotlin.jvm.JvmSynthetic
+    @kotlin.jvm.JvmName("clearDependencies")
+    public fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijDependencyNode, DependenciesProxy>.clear() {
+      _builder.clearDependencies()
     }
     /**
      * An uninstantiable, behaviorless type to represent the field in
@@ -145,7 +210,7 @@ public object IntellijModuleNodeKt {
     @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
     public class ContentRootsProxy private constructor() : com.google.protobuf.kotlin.DslProxy()
     /**
-     * <code>repeated .com.giyeok.bibix.daemon.IntellijContentRootNode content_roots = 5;</code>
+     * <code>repeated .com.giyeok.bibix.daemon.IntellijContentRootNode content_roots = 6;</code>
      */
      public val contentRoots: com.google.protobuf.kotlin.DslList<com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijContentRootNode, ContentRootsProxy>
       @kotlin.jvm.JvmSynthetic
@@ -153,7 +218,7 @@ public object IntellijModuleNodeKt {
         _builder.getContentRootsList()
       )
     /**
-     * <code>repeated .com.giyeok.bibix.daemon.IntellijContentRootNode content_roots = 5;</code>
+     * <code>repeated .com.giyeok.bibix.daemon.IntellijContentRootNode content_roots = 6;</code>
      * @param value The contentRoots to add.
      */
     @kotlin.jvm.JvmSynthetic
@@ -161,7 +226,7 @@ public object IntellijModuleNodeKt {
     public fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijContentRootNode, ContentRootsProxy>.add(value: com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijContentRootNode) {
       _builder.addContentRoots(value)
     }/**
-     * <code>repeated .com.giyeok.bibix.daemon.IntellijContentRootNode content_roots = 5;</code>
+     * <code>repeated .com.giyeok.bibix.daemon.IntellijContentRootNode content_roots = 6;</code>
      * @param value The contentRoots to add.
      */
     @kotlin.jvm.JvmSynthetic
@@ -170,7 +235,7 @@ public object IntellijModuleNodeKt {
     public inline operator fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijContentRootNode, ContentRootsProxy>.plusAssign(value: com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijContentRootNode) {
       add(value)
     }/**
-     * <code>repeated .com.giyeok.bibix.daemon.IntellijContentRootNode content_roots = 5;</code>
+     * <code>repeated .com.giyeok.bibix.daemon.IntellijContentRootNode content_roots = 6;</code>
      * @param values The contentRoots to add.
      */
     @kotlin.jvm.JvmSynthetic
@@ -178,7 +243,7 @@ public object IntellijModuleNodeKt {
     public fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijContentRootNode, ContentRootsProxy>.addAll(values: kotlin.collections.Iterable<com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijContentRootNode>) {
       _builder.addAllContentRoots(values)
     }/**
-     * <code>repeated .com.giyeok.bibix.daemon.IntellijContentRootNode content_roots = 5;</code>
+     * <code>repeated .com.giyeok.bibix.daemon.IntellijContentRootNode content_roots = 6;</code>
      * @param values The contentRoots to add.
      */
     @kotlin.jvm.JvmSynthetic
@@ -187,7 +252,7 @@ public object IntellijModuleNodeKt {
     public inline operator fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijContentRootNode, ContentRootsProxy>.plusAssign(values: kotlin.collections.Iterable<com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijContentRootNode>) {
       addAll(values)
     }/**
-     * <code>repeated .com.giyeok.bibix.daemon.IntellijContentRootNode content_roots = 5;</code>
+     * <code>repeated .com.giyeok.bibix.daemon.IntellijContentRootNode content_roots = 6;</code>
      * @param index The index to set the value at.
      * @param value The contentRoots to set.
      */
@@ -196,7 +261,7 @@ public object IntellijModuleNodeKt {
     public operator fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijContentRootNode, ContentRootsProxy>.set(index: kotlin.Int, value: com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijContentRootNode) {
       _builder.setContentRoots(index, value)
     }/**
-     * <code>repeated .com.giyeok.bibix.daemon.IntellijContentRootNode content_roots = 5;</code>
+     * <code>repeated .com.giyeok.bibix.daemon.IntellijContentRootNode content_roots = 6;</code>
      */
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("clearContentRoots")
@@ -210,7 +275,7 @@ public object IntellijModuleNodeKt {
     @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
     public class TasksProxy private constructor() : com.google.protobuf.kotlin.DslProxy()
     /**
-     * <code>repeated .com.giyeok.bibix.daemon.IntellijTaskNode tasks = 6;</code>
+     * <code>repeated .com.giyeok.bibix.daemon.IntellijTaskNode tasks = 7;</code>
      */
      public val tasks: com.google.protobuf.kotlin.DslList<com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijTaskNode, TasksProxy>
       @kotlin.jvm.JvmSynthetic
@@ -218,7 +283,7 @@ public object IntellijModuleNodeKt {
         _builder.getTasksList()
       )
     /**
-     * <code>repeated .com.giyeok.bibix.daemon.IntellijTaskNode tasks = 6;</code>
+     * <code>repeated .com.giyeok.bibix.daemon.IntellijTaskNode tasks = 7;</code>
      * @param value The tasks to add.
      */
     @kotlin.jvm.JvmSynthetic
@@ -226,7 +291,7 @@ public object IntellijModuleNodeKt {
     public fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijTaskNode, TasksProxy>.add(value: com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijTaskNode) {
       _builder.addTasks(value)
     }/**
-     * <code>repeated .com.giyeok.bibix.daemon.IntellijTaskNode tasks = 6;</code>
+     * <code>repeated .com.giyeok.bibix.daemon.IntellijTaskNode tasks = 7;</code>
      * @param value The tasks to add.
      */
     @kotlin.jvm.JvmSynthetic
@@ -235,7 +300,7 @@ public object IntellijModuleNodeKt {
     public inline operator fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijTaskNode, TasksProxy>.plusAssign(value: com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijTaskNode) {
       add(value)
     }/**
-     * <code>repeated .com.giyeok.bibix.daemon.IntellijTaskNode tasks = 6;</code>
+     * <code>repeated .com.giyeok.bibix.daemon.IntellijTaskNode tasks = 7;</code>
      * @param values The tasks to add.
      */
     @kotlin.jvm.JvmSynthetic
@@ -243,7 +308,7 @@ public object IntellijModuleNodeKt {
     public fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijTaskNode, TasksProxy>.addAll(values: kotlin.collections.Iterable<com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijTaskNode>) {
       _builder.addAllTasks(values)
     }/**
-     * <code>repeated .com.giyeok.bibix.daemon.IntellijTaskNode tasks = 6;</code>
+     * <code>repeated .com.giyeok.bibix.daemon.IntellijTaskNode tasks = 7;</code>
      * @param values The tasks to add.
      */
     @kotlin.jvm.JvmSynthetic
@@ -252,7 +317,7 @@ public object IntellijModuleNodeKt {
     public inline operator fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijTaskNode, TasksProxy>.plusAssign(values: kotlin.collections.Iterable<com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijTaskNode>) {
       addAll(values)
     }/**
-     * <code>repeated .com.giyeok.bibix.daemon.IntellijTaskNode tasks = 6;</code>
+     * <code>repeated .com.giyeok.bibix.daemon.IntellijTaskNode tasks = 7;</code>
      * @param index The index to set the value at.
      * @param value The tasks to set.
      */
@@ -261,7 +326,7 @@ public object IntellijModuleNodeKt {
     public operator fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijTaskNode, TasksProxy>.set(index: kotlin.Int, value: com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijTaskNode) {
       _builder.setTasks(index, value)
     }/**
-     * <code>repeated .com.giyeok.bibix.daemon.IntellijTaskNode tasks = 6;</code>
+     * <code>repeated .com.giyeok.bibix.daemon.IntellijTaskNode tasks = 7;</code>
      */
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("clearTasks")

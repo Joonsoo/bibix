@@ -61,6 +61,7 @@ class BuildRunner(
 
   fun getResolvedNameValue(name: CName) = synchronized(this) { resolvedNames[name] }
 
+  fun getObjectIdOfTask(task: BuildTask): BibixIdProto.ObjectId? = taskObjectIds[task]
   fun getTaskByObjectIdHash(hash: ByteString): BuildTask? = objectIdHashToTask[hash]
 
   suspend fun runTasks(requestTask: BuildTask, tasks: List<BuildTask>) =

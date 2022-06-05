@@ -10,7 +10,6 @@ import com.giyeok.bibix.daemon.intellijProjectStructure
 import com.giyeok.bibix.frontend.BuildFrontend
 import com.giyeok.bibix.plugins.ClassPkg
 import com.giyeok.bibix.runner.*
-import com.giyeok.bibix.utils.hexToByteString
 import com.giyeok.bibix.utils.toKtList
 import java.nio.file.Path
 import kotlin.io.path.absolutePathString
@@ -29,27 +28,19 @@ class IntellijProjectExtractor(val frontend: BuildFrontend) {
 
   val jvmRunActionPlugin = Pair("com.giyeok.bibix.plugins.scala.Library", "build")
 
-  private val modules = mutableListOf<CName>()
-  private val srcsMap = mutableMapOf<CName, List<Path>>()
-  private val depsMap = mutableMapOf<CName, List<ClassPkg>>()
+  data class ModuleData(val cname: CName, val srcs: List<Path>, val deps: List<ClassPkg>)
 
   suspend fun traverseDef(
     defs: List<BibixAst.Def>,
     cname: CName
-  ): List<BibixDaemonApiProto.IntellijModuleNode> {
-    val modules = mutableListOf<BibixDaemonApiProto.IntellijModuleNode>()
-    defs.forEach { def ->
-      when (def) {
-        is BibixAst.NameDef ->
-          traverseModuleNode(cname.append(def.name()))
-        is BibixAst.NamespaceDef ->
-          traverseDef(def.body().defs().toKtList(), cname.append(def.name()))
-        else -> {
-          // do nothing
-        }
-      }
+  ): List<ModuleData> = defs.flatMap { def ->
+    when (def) {
+      is BibixAst.NameDef ->
+        listOfNotNull(traverseModuleNode(cname.append(def.name())))
+      is BibixAst.NamespaceDef ->
+        traverseDef(def.body().defs().toKtList(), cname.append(def.name()))
+      else -> listOf()
     }
-    return modules
   }
 
   fun paramExprFrom(paramName: String, params: List<Param>, paramNodes: ParamNodes): ExprNode {
@@ -67,7 +58,7 @@ class IntellijProjectExtractor(val frontend: BuildFrontend) {
     exprGraphId: Int,
     params: List<Param>,
     paramNodes: ParamNodes
-  ) {
+  ): ModuleData {
     val srcsExpr = paramExprFrom("srcs", params, paramNodes)
     val depsExpr = paramExprFrom("deps", params, paramNodes)
     println(srcsExpr)
@@ -89,9 +80,7 @@ class IntellijProjectExtractor(val frontend: BuildFrontend) {
       SetType(CustomType(CName(BibixInternalSourceId("jvm"), "ClassPkg"))),
       null
     ) as SetValue).values.map { ClassPkg.fromBibix(it) }
-    modules.add(cname)
-    srcsMap[cname] = srcs
-    depsMap[cname] = deps
+    return ModuleData(cname, srcs, deps)
   }
 
   suspend fun evaluateModuleNode(
@@ -100,33 +89,26 @@ class IntellijProjectExtractor(val frontend: BuildFrontend) {
     exprGraphId: Int,
     callTarget: Any,
     paramNodes: ParamNodes
-  ) {
+  ): ModuleData? {
     when (callTarget) {
       is BuildRuleImplInfo.UserBuildRuleImplInfo -> {
         if (userBuildRules.contains(Pair(callTarget.className, callTarget.methodName))) {
-          evaluateModuleParams(cname, origin, exprGraphId, callTarget.params, paramNodes)
+          return evaluateModuleParams(cname, origin, exprGraphId, callTarget.params, paramNodes)
         }
       }
       is BuildRuleImplInfo.NativeBuildRuleImplInfo -> {
         val pair = Pair(callTarget.cls.canonicalName, callTarget.methodName)
         if (nativeBuildRules.contains(pair)) {
-          evaluateModuleParams(cname, origin, exprGraphId, callTarget.params, paramNodes)
+          return evaluateModuleParams(cname, origin, exprGraphId, callTarget.params, paramNodes)
         }
       }
     }
+    return null
   }
 
-  suspend fun traverseModuleNode(cname: CName): BibixDaemonApiProto.IntellijModuleNode? {
+  suspend fun traverseModuleNode(cname: CName): ModuleData? {
     val value = frontend.buildRunner.buildGraph.names[cname] ?: return null
     when (value) {
-//      is CNameValue.ActionCallValue -> TODO()
-//      is CNameValue.ActionRuleValue -> TODO()
-//      is CNameValue.ArgVar -> TODO()
-//      is CNameValue.BuildRuleValue -> TODO()
-//      is CNameValue.ClassType -> TODO()
-//      is CNameValue.DeferredImport -> TODO()
-//      is CNameValue.EnumType -> TODO()
-//      is CNameValue.EvaluatedValue -> TODO()
       is CNameValue.ExprValue -> {
         val expr = frontend.buildGraph.exprGraphs[value.exprGraphId]
         when (expr.mainNode) {
@@ -139,7 +121,7 @@ class IntellijProjectExtractor(val frontend: BuildFrontend) {
                 BuildTask.ResolveName(callExpr.target.name)
               )
               if (callTarget != null) {
-                evaluateModuleNode(
+                return evaluateModuleNode(
                   cname,
                   cname.sourceId,
                   value.exprGraphId,
@@ -153,7 +135,6 @@ class IntellijProjectExtractor(val frontend: BuildFrontend) {
           else -> {}
         }
       }
-//      is CNameValue.NamespaceValue -> TODO()
       else -> {}
     }
     return null
@@ -162,23 +143,26 @@ class IntellijProjectExtractor(val frontend: BuildFrontend) {
   suspend fun extractIntellijProjectStructure(): BibixDaemonApiProto.IntellijProjectStructure {
     val projectBaseDir = frontend.projectDir
 
-    traverseDef(frontend.ast.defs().toKtList(), CName(MainSourceId))
+    val modules = traverseDef(frontend.ast.defs().toKtList(), CName(MainSourceId))
 
     println(modules)
-    println(srcsMap)
-    println(depsMap)
     // val allSrcFiles = srcsMap.values.flatten()
     // check(allSrcFiles.distinct().size == allSrcFiles.size)
 
     // depsMap의 ClassPkg 중 maven은 maven대로 resolve, local lib은 그냥 library로 등록, local built는 모듈 디펜던시로
     // local built는 getTaskByObjectIdHash(objHash)로 얻어와서 어떤 모듈인지 확인
-    // val task = frontend.buildRunner.getTaskByObjectIdHash(ByteString.EMPTY)
-    val x = "abb0".hexToByteString()
+    // val task = frontend.buildRunner.getTaskByObjectIdHash("~~~".hexToByteString())
+
+    val modulesExtractor = IntellijModulesExtractor(frontend, modules)
+    val intellijModules = modulesExtractor.extractModules()
+
     return intellijProjectStructure {
       this.project = intellijProjectNode {
         this.name = projectBaseDir.name
         this.path = projectBaseDir.absolutePathString()
         this.sdkName = "1.8" // ??
+
+        this.modules.addAll(intellijModules)
       }
     }
   }

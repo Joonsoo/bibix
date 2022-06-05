@@ -67,23 +67,23 @@ class ThreadPool(
     }
 
   fun printProgresses() = synchronized(this) {
-    progressIndicators.forEach { progressIndicator ->
-      val taskAndProgress = progressIndicator.routineIdAndProgress()
-      val progressDescription = if (taskAndProgress == null) {
-        "..."
-      } else {
-        val (routineId, progressDescripton) = taskAndProgress
-        val taskString = taskDescription(routineId.buildTask)
-        val frontLength = 80
-        val endLength = 20
-        val shortString = if (taskString.length <= frontLength + endLength) taskString else {
-          taskString.substring(0, frontLength - 1) + ".." +
-            taskString.substring(taskString.length - endLength - 1)
-        }
-        "$shortString(${routineId.id}): $progressDescripton"
-      }
-      println("${progressIndicator.index}: $progressDescription")
-    }
+//    progressIndicators.forEach { progressIndicator ->
+//      val taskAndProgress = progressIndicator.routineIdAndProgress()
+//      val progressDescription = if (taskAndProgress == null) {
+//        "..."
+//      } else {
+//        val (routineId, progressDescripton) = taskAndProgress
+//        val taskString = taskDescription(routineId.buildTask)
+//        val frontLength = 80
+//        val endLength = 20
+//        val shortString = if (taskString.length <= frontLength + endLength) taskString else {
+//          taskString.substring(0, frontLength - 1) + ".." +
+//            taskString.substring(taskString.length - endLength - 1)
+//        }
+//        "$shortString(${routineId.id}): $progressDescripton"
+//      }
+//      println("${progressIndicator.index}: $progressDescription")
+//    }
   }
 
   private fun findAndMarkSlot(routineId: BuildTaskRoutineId): Int? = synchronized(this) {
