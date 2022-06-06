@@ -24,10 +24,10 @@ fun String.hexToByteString(): ByteString {
       in '0'..'9' -> c - '0'
       in 'A'..'F' -> c - 'A' + 10
       in 'a'..'f' -> c - 'a' + 10
-      else -> throw IllegalArgumentException("Not a hex string: $this")
+      else -> throw IllegalStateException("Not a hex string: $this")
     }
 
-  check(this.length % 2 == 0)
+  check(this.length % 2 == 0) { "Not a hex string: $this" }
   val bytes = this.windowed(2, 2)
   return ByteString.copyFrom(
     ByteArray(bytes.size) { idx ->
@@ -36,6 +36,12 @@ fun String.hexToByteString(): ByteString {
       val s = b[1]
       (((hexChar(f) shl 4) and 0xf0) or (hexChar(s) and 0xf)).toByte()
     })
+}
+
+fun String.hexToByteStringOrNull(): ByteString? = try {
+  this.hexToByteString()
+} catch (e: IllegalStateException) {
+  null
 }
 
 fun BibixValue.toProto(): BibixValueProto.BibixValue = when (val value = this) {

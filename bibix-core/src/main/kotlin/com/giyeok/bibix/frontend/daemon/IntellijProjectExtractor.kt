@@ -16,19 +16,27 @@ import kotlin.io.path.absolutePathString
 import kotlin.io.path.name
 
 class IntellijProjectExtractor(val frontend: BuildFrontend) {
-  val userBuildRules = listOf(
-    Pair("com.giyeok.bibix.plugins.ktjvm.Library", "build"),
-    Pair("com.giyeok.bibix.plugins.scala.Library", "build"),
+  val userBuildRules = mapOf(
+    Pair("com.giyeok.bibix.plugins.ktjvm.Library", "build") to ModuleLanguage.KOTLIN,
+    Pair("com.giyeok.bibix.plugins.scala.Library", "build") to ModuleLanguage.SCALA,
     // Pair("com.giyeok.bibix.plugins.protobuf.Compile", "schema")
   )
-  val nativeBuildRules = listOf(
-    Pair("com.giyeok.bibix.plugins.java.Library", "build"),
-    Pair("com.giyeok.bibix.plugins.maven.Dep", "build"),
+  val nativeBuildRules = mapOf(
+    Pair("com.giyeok.bibix.plugins.java.Library", "build") to ModuleLanguage.JAVA,
   )
 
   val jvmRunActionPlugin = Pair("com.giyeok.bibix.plugins.scala.Library", "build")
 
-  data class ModuleData(val cname: CName, val srcs: List<Path>, val deps: List<ClassPkg>)
+  enum class ModuleLanguage {
+    JAVA, KOTLIN, SCALA
+  }
+
+  data class ModuleData(
+    val cname: CName,
+    val language: ModuleLanguage,
+    val srcs: List<Path>,
+    val deps: List<ClassPkg>
+  )
 
   suspend fun traverseDef(
     defs: List<BibixAst.Def>,
@@ -55,6 +63,7 @@ class IntellijProjectExtractor(val frontend: BuildFrontend) {
   private suspend fun evaluateModuleParams(
     cname: CName,
     origin: SourceId,
+    moduleLanguage: ModuleLanguage,
     exprGraphId: Int,
     params: List<Param>,
     paramNodes: ParamNodes
@@ -80,7 +89,7 @@ class IntellijProjectExtractor(val frontend: BuildFrontend) {
       SetType(CustomType(CName(BibixInternalSourceId("jvm"), "ClassPkg"))),
       null
     ) as SetValue).values.map { ClassPkg.fromBibix(it) }
-    return ModuleData(cname, srcs, deps)
+    return ModuleData(cname, moduleLanguage, srcs, deps)
   }
 
   suspend fun evaluateModuleNode(
@@ -92,14 +101,30 @@ class IntellijProjectExtractor(val frontend: BuildFrontend) {
   ): ModuleData? {
     when (callTarget) {
       is BuildRuleImplInfo.UserBuildRuleImplInfo -> {
-        if (userBuildRules.contains(Pair(callTarget.className, callTarget.methodName))) {
-          return evaluateModuleParams(cname, origin, exprGraphId, callTarget.params, paramNodes)
+        val moduleLanguage = userBuildRules[Pair(callTarget.className, callTarget.methodName)]
+        if (moduleLanguage != null) {
+          return evaluateModuleParams(
+            cname,
+            origin,
+            moduleLanguage,
+            exprGraphId,
+            callTarget.params,
+            paramNodes
+          )
         }
       }
       is BuildRuleImplInfo.NativeBuildRuleImplInfo -> {
-        val pair = Pair(callTarget.cls.canonicalName, callTarget.methodName)
-        if (nativeBuildRules.contains(pair)) {
-          return evaluateModuleParams(cname, origin, exprGraphId, callTarget.params, paramNodes)
+        val moduleLanguage =
+          nativeBuildRules[Pair(callTarget.cls.canonicalName, callTarget.methodName)]
+        if (moduleLanguage != null) {
+          return evaluateModuleParams(
+            cname,
+            origin,
+            moduleLanguage,
+            exprGraphId,
+            callTarget.params,
+            paramNodes
+          )
         }
       }
     }
