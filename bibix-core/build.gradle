@@ -19,7 +19,9 @@ version '0.0.1-SNAPSHOT'
 
 repositories {
     mavenCentral()
-    mavenLocal()
+    maven {
+        url "https://github.com/Joonsoo/giyeok-maven-repo/raw/main"
+    }
 }
 
 sourceSets {
@@ -43,8 +45,8 @@ test {
 dependencies {
     implementation project(':bibix-ast')
     implementation project(':bibix-base')
-    implementation group: 'com.giyeok', name: 'jparser-base', version: jparserVersion
-    implementation group: 'com.giyeok', name: 'jparser-fast', version: jparserVersion
+    implementation group: 'com.giyeok.jparser', name: 'jparser-base', version: jparserVersion
+    implementation group: 'com.giyeok.jparser', name: 'jparser-fast', version: jparserVersion
 
     implementation group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk8', version: kotlinVersion
     implementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-core', version: '1.6.0'

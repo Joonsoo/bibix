@@ -8,6 +8,7 @@ val jvmPlugin = BibixPlugin.fromScript(
     class ClassPaths(cps: set<path>)
     
     class ClassPkg(origin: ClassOrigin, cpinfo: CpInfo, deps: set<ClassPkg>) {
+      // TODO runtime deps
       // resources는 classpath의 일부로 취급
       as ClassPaths = resolveClassPkgs([this])
     }

@@ -179,14 +179,15 @@ class IntellijProjectExtractor(val frontend: BuildFrontend) {
     // val task = frontend.buildRunner.getTaskByObjectIdHash("~~~".hexToByteString())
 
     val modulesExtractor = IntellijModulesExtractor(frontend, modules)
-    val intellijModules = modulesExtractor.extractModules()
+    val (intellijLibraries, intellijModules) = modulesExtractor.extractModules()
 
     return intellijProjectStructure {
       this.project = intellijProjectNode {
         this.name = projectBaseDir.name
         this.path = projectBaseDir.absolutePathString()
-        this.sdkName = "1.8" // ??
+        this.jdkVersion = "16" // TODO
 
+        this.libraries.addAll(intellijLibraries)
         this.modules.addAll(intellijModules)
       }
     }

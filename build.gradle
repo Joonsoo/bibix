@@ -1,14 +1,14 @@
 buildscript {
     ext {
-        kotlinVersion = '1.6.20'
-        jparserVersion = '0.2.3'
+        kotlinVersion = '1.7.20'
+        jparserVersion = '0.2.4'
         floggerVersion = '0.7.4'
     }
 }
 
 plugins {
     id 'scala'
-    id 'org.jetbrains.kotlin.jvm' version '1.6.20'
+    id 'org.jetbrains.kotlin.jvm' version '1.7.20'
 }
 
 group 'com.giyeok.bibix'
@@ -16,7 +16,9 @@ version '0.0.1-SNAPSHOT'
 
 repositories {
     mavenCentral()
-    mavenLocal()
+    maven {
+        url "https://github.com/Joonsoo/giyeok-maven-repo/raw/main"
+    }
 }
 
 sourceSets {
@@ -50,6 +52,6 @@ dependencies {
     implementation group: 'com.google.flogger', name: 'flogger', version: floggerVersion
     implementation group: 'com.google.flogger', name: 'flogger-system-backend', version: floggerVersion
 
-    implementation group: 'com.giyeok', name: 'jparser-base', version: jparserVersion
-    implementation group: 'com.giyeok', name: 'jparser-fast', version: jparserVersion
+    implementation group: 'com.giyeok.jparser', name: 'jparser-base', version: jparserVersion
+    implementation group: 'com.giyeok.jparser', name: 'jparser-fast', version: jparserVersion
 }

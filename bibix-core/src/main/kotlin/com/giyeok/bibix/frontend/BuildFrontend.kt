@@ -55,6 +55,25 @@ class BuildFrontend(
 
   val repo = Repo.load(projectDir, debuggingMode = useDebuggingMode)
 
+  fun getOsValue(): String {
+    val os = System.getProperty("os.name").lowercase()
+    return when {
+      os.contains("nix") || os.contains("nux") || os.contains("aix") -> "linux"
+      os.contains("mac") -> "osx"
+      os.contains("win") -> "windows"
+      else -> "unknown"
+    }
+  }
+
+  fun getArchValue(): String {
+    return when (System.getProperty("os.arch").lowercase()) {
+      "amd64", "ia64" -> "x86_64"
+      "x86" -> "x86"
+      "aarch64" -> "aarch_64"
+      else -> "unknown"
+    }
+  }
+
   val buildGraph by lazy {
     val buildGraph = BuildGraph()
 
@@ -64,14 +83,16 @@ class BuildFrontend(
       NameLookupContext(CName(BibixRootSourceId), rootScript.defs).withNative(),
       repo.mainDirectory,
     )
+    val os = getOsValue()
+    val arch = getArchValue()
     // TODO 실제 값으로 넣기
     buildGraph.addDef(
       CName(BibixRootSourceId, "env"),
       CNameValue.EvaluatedValue(
         NamedTupleValue(
           listOf(
-            "os" to EnumValue(CName(BibixRootSourceId, "OS"), "linux"),
-            "arch" to EnumValue(CName(BibixRootSourceId, "Arch"), "x86_64"),
+            "os" to EnumValue(CName(BibixRootSourceId, "OS"), os),
+            "arch" to EnumValue(CName(BibixRootSourceId, "Arch"), arch),
             "bibixVersion" to StringValue(Constants.BIBIX_VERSION),
           )
         )
@@ -121,6 +142,7 @@ class BuildFrontend(
         when (nextTask) {
           is RoutinesQueueCoroutineDispatcher.NextRoutine.BuildTaskRoutine ->
             threadPool.execute(nextTask.routineId, nextTask.block)
+
           is RoutinesQueueCoroutineDispatcher.NextRoutine.BuildFinished ->
             break
         }

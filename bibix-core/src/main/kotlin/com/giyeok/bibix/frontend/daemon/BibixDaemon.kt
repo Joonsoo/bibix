@@ -6,6 +6,7 @@ import io.grpc.netty.shaded.io.grpc.netty.NettyServerBuilder
 import java.nio.file.Path
 import java.nio.file.Paths
 import java.util.concurrent.Executors
+import java.util.logging.Level
 import kotlin.io.path.absolute
 import kotlin.io.path.pathString
 
@@ -33,7 +34,7 @@ class BibixDaemon {
     val server = NettyServerBuilder.forPort(grpcPort)
       .addService(BibixDaemonApiImpl(projectDir))
 //      .intercept(UnexpectedExceptionsInterceptor())
-//      .intercept(ReceivedRequestLogInterceptor(Level.INFO))
+      .intercept(ReceivedRequestLogInterceptor(Level.INFO))
       .executor(Executors.newFixedThreadPool(4))
       .build()
     logger.atInfo().log("Starting to listen GRPC at port $grpcPort")

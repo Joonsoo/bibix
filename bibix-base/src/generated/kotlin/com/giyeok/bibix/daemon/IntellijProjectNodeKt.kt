@@ -57,20 +57,20 @@ public object IntellijProjectNodeKt {
     }
 
     /**
-     * <code>string sdk_name = 3;</code>
+     * <code>string jdk_version = 3;</code>
      */
-    public var sdkName: kotlin.String
-      @JvmName("getSdkName")
-      get() = _builder.getSdkName()
-      @JvmName("setSdkName")
+    public var jdkVersion: kotlin.String
+      @JvmName("getJdkVersion")
+      get() = _builder.getJdkVersion()
+      @JvmName("setJdkVersion")
       set(value) {
-        _builder.setSdkName(value)
+        _builder.setJdkVersion(value)
       }
     /**
-     * <code>string sdk_name = 3;</code>
+     * <code>string jdk_version = 3;</code>
      */
-    public fun clearSdkName() {
-      _builder.clearSdkName()
+    public fun clearJdkVersion() {
+      _builder.clearJdkVersion()
     }
 
     /**
@@ -137,6 +137,99 @@ public object IntellijProjectNodeKt {
     @kotlin.jvm.JvmName("clearModules")
     public fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijModuleNode, ModulesProxy>.clear() {
       _builder.clearModules()
+    }
+    /**
+     * An uninstantiable, behaviorless type to represent the field in
+     * generics.
+     */
+    @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
+    public class LibrariesProxy private constructor() : com.google.protobuf.kotlin.DslProxy()
+    /**
+     * <pre>
+     * project level library들
+     * </pre>
+     *
+     * <code>repeated .com.giyeok.bibix.daemon.IntellijLibraryNode libraries = 5;</code>
+     */
+     public val libraries: com.google.protobuf.kotlin.DslList<com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijLibraryNode, LibrariesProxy>
+      @kotlin.jvm.JvmSynthetic
+      get() = com.google.protobuf.kotlin.DslList(
+        _builder.getLibrariesList()
+      )
+    /**
+     * <pre>
+     * project level library들
+     * </pre>
+     *
+     * <code>repeated .com.giyeok.bibix.daemon.IntellijLibraryNode libraries = 5;</code>
+     * @param value The libraries to add.
+     */
+    @kotlin.jvm.JvmSynthetic
+    @kotlin.jvm.JvmName("addLibraries")
+    public fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijLibraryNode, LibrariesProxy>.add(value: com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijLibraryNode) {
+      _builder.addLibraries(value)
+    }/**
+     * <pre>
+     * project level library들
+     * </pre>
+     *
+     * <code>repeated .com.giyeok.bibix.daemon.IntellijLibraryNode libraries = 5;</code>
+     * @param value The libraries to add.
+     */
+    @kotlin.jvm.JvmSynthetic
+    @kotlin.jvm.JvmName("plusAssignLibraries")
+    @Suppress("NOTHING_TO_INLINE")
+    public inline operator fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijLibraryNode, LibrariesProxy>.plusAssign(value: com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijLibraryNode) {
+      add(value)
+    }/**
+     * <pre>
+     * project level library들
+     * </pre>
+     *
+     * <code>repeated .com.giyeok.bibix.daemon.IntellijLibraryNode libraries = 5;</code>
+     * @param values The libraries to add.
+     */
+    @kotlin.jvm.JvmSynthetic
+    @kotlin.jvm.JvmName("addAllLibraries")
+    public fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijLibraryNode, LibrariesProxy>.addAll(values: kotlin.collections.Iterable<com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijLibraryNode>) {
+      _builder.addAllLibraries(values)
+    }/**
+     * <pre>
+     * project level library들
+     * </pre>
+     *
+     * <code>repeated .com.giyeok.bibix.daemon.IntellijLibraryNode libraries = 5;</code>
+     * @param values The libraries to add.
+     */
+    @kotlin.jvm.JvmSynthetic
+    @kotlin.jvm.JvmName("plusAssignAllLibraries")
+    @Suppress("NOTHING_TO_INLINE")
+    public inline operator fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijLibraryNode, LibrariesProxy>.plusAssign(values: kotlin.collections.Iterable<com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijLibraryNode>) {
+      addAll(values)
+    }/**
+     * <pre>
+     * project level library들
+     * </pre>
+     *
+     * <code>repeated .com.giyeok.bibix.daemon.IntellijLibraryNode libraries = 5;</code>
+     * @param index The index to set the value at.
+     * @param value The libraries to set.
+     */
+    @kotlin.jvm.JvmSynthetic
+    @kotlin.jvm.JvmName("setLibraries")
+    public operator fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijLibraryNode, LibrariesProxy>.set(index: kotlin.Int, value: com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijLibraryNode) {
+      _builder.setLibraries(index, value)
+    }/**
+     * <pre>
+     * project level library들
+     * </pre>
+     *
+     * <code>repeated .com.giyeok.bibix.daemon.IntellijLibraryNode libraries = 5;</code>
+     */
+    @kotlin.jvm.JvmSynthetic
+    @kotlin.jvm.JvmName("clearLibraries")
+    public fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijLibraryNode, LibrariesProxy>.clear() {
+      _builder.clearLibraries()
     }}
 }
 @kotlin.jvm.JvmSynthetic

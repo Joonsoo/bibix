@@ -15,6 +15,7 @@ import org.eclipse.aether.graph.DependencyNode
 import org.eclipse.aether.impl.DefaultServiceLocator
 import org.eclipse.aether.repository.LocalRepository
 import org.eclipse.aether.repository.RemoteRepository
+import org.eclipse.aether.repository.RepositoryPolicy
 import org.eclipse.aether.resolution.ArtifactRequest
 import org.eclipse.aether.resolution.DependencyRequest
 import org.eclipse.aether.spi.connector.RepositoryConnectorFactory
@@ -129,6 +130,7 @@ class Dep {
     session.localRepositoryManager = system.newLocalRepositoryManager(session, localRepo)
     session.transferListener = ConsoleTransferListener()
     session.repositoryListener = ConsoleRepositoryListener()
+    session.updatePolicy = RepositoryPolicy.UPDATE_POLICY_DAILY
 
     // uncomment to generate dirty trees
     // session.setDependencyGraphTransformer( null );

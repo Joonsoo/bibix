@@ -60,7 +60,7 @@ class Jar {
             check(dep.isDirectory())
             Files.walk(dep).toList().forEach { path ->
               if (path.isRegularFile()) {
-                val filePath = path.relativeTo(dep).absolutePathString()
+                val filePath = path.absolute().relativeTo(dep.absolute()).pathString
                 if (!filePath.startsWith("META-INF") && filePath != "module-info.class") {
                   try {
                     zos.putNextEntry(ZipEntry(filePath))
@@ -124,7 +124,7 @@ class Jar {
             check(dep.isDirectory())
             Files.walk(dep).toList().forEach { path ->
               if (path.isRegularFile()) {
-                val filePath = path.relativeTo(dep).absolutePathString()
+                val filePath = path.absolute().relativeTo(dep.absolute()).pathString
                 if (!filePath.startsWith("META-INF") && filePath != "module-info.class") {
                   try {
                     zos.putNextEntry(ZipEntry(filePath))

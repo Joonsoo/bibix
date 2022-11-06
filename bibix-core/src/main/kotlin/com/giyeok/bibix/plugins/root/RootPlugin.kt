@@ -10,12 +10,14 @@ val rootScript = BibixPlugin.fromScript(
     class Env(os: OS, arch: Arch)
     
     enum OS {
+      unknown,
       linux,
       osx,
       windows,
     }
     
     enum Arch {
+      unknown,
       x86,
       x86_64,
       aarch_64,

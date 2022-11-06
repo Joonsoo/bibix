@@ -23,75 +23,51 @@ public object IntellijDependencyNodeKt {
     internal fun _build(): com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijDependencyNode = _builder.build()
 
     /**
-     * <code>.com.giyeok.bibix.daemon.IntellijDependencyNode.IntellijMavenDependencyNode maven_dependency = 1;</code>
+     * <code>string library_name = 1;</code>
      */
-    public var mavenDependency: com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijDependencyNode.IntellijMavenDependencyNode
-      @JvmName("getMavenDependency")
-      get() = _builder.getMavenDependency()
-      @JvmName("setMavenDependency")
+    public var libraryName: kotlin.String
+      @JvmName("getLibraryName")
+      get() = _builder.getLibraryName()
+      @JvmName("setLibraryName")
       set(value) {
-        _builder.setMavenDependency(value)
+        _builder.setLibraryName(value)
       }
     /**
-     * <code>.com.giyeok.bibix.daemon.IntellijDependencyNode.IntellijMavenDependencyNode maven_dependency = 1;</code>
+     * <code>string library_name = 1;</code>
      */
-    public fun clearMavenDependency() {
-      _builder.clearMavenDependency()
+    public fun clearLibraryName() {
+      _builder.clearLibraryName()
     }
     /**
-     * <code>.com.giyeok.bibix.daemon.IntellijDependencyNode.IntellijMavenDependencyNode maven_dependency = 1;</code>
-     * @return Whether the mavenDependency field is set.
+     * <code>string library_name = 1;</code>
+     * @return Whether the libraryName field is set.
      */
-    public fun hasMavenDependency(): kotlin.Boolean {
-      return _builder.hasMavenDependency()
+    public fun hasLibraryName(): kotlin.Boolean {
+      return _builder.hasLibraryName()
     }
 
     /**
-     * <code>.com.giyeok.bibix.daemon.IntellijDependencyNode.IntellijLibraryNode library_dependency = 2;</code>
+     * <code>string module_name = 2;</code>
      */
-    public var libraryDependency: com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijDependencyNode.IntellijLibraryNode
-      @JvmName("getLibraryDependency")
-      get() = _builder.getLibraryDependency()
-      @JvmName("setLibraryDependency")
+    public var moduleName: kotlin.String
+      @JvmName("getModuleName")
+      get() = _builder.getModuleName()
+      @JvmName("setModuleName")
       set(value) {
-        _builder.setLibraryDependency(value)
+        _builder.setModuleName(value)
       }
     /**
-     * <code>.com.giyeok.bibix.daemon.IntellijDependencyNode.IntellijLibraryNode library_dependency = 2;</code>
+     * <code>string module_name = 2;</code>
      */
-    public fun clearLibraryDependency() {
-      _builder.clearLibraryDependency()
+    public fun clearModuleName() {
+      _builder.clearModuleName()
     }
     /**
-     * <code>.com.giyeok.bibix.daemon.IntellijDependencyNode.IntellijLibraryNode library_dependency = 2;</code>
-     * @return Whether the libraryDependency field is set.
+     * <code>string module_name = 2;</code>
+     * @return Whether the moduleName field is set.
      */
-    public fun hasLibraryDependency(): kotlin.Boolean {
-      return _builder.hasLibraryDependency()
-    }
-
-    /**
-     * <code>string module_dependency = 3;</code>
-     */
-    public var moduleDependency: kotlin.String
-      @JvmName("getModuleDependency")
-      get() = _builder.getModuleDependency()
-      @JvmName("setModuleDependency")
-      set(value) {
-        _builder.setModuleDependency(value)
-      }
-    /**
-     * <code>string module_dependency = 3;</code>
-     */
-    public fun clearModuleDependency() {
-      _builder.clearModuleDependency()
-    }
-    /**
-     * <code>string module_dependency = 3;</code>
-     * @return Whether the moduleDependency field is set.
-     */
-    public fun hasModuleDependency(): kotlin.Boolean {
-      return _builder.hasModuleDependency()
+    public fun hasModuleName(): kotlin.Boolean {
+      return _builder.hasModuleName()
     }
     public val dependencyCase: com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijDependencyNode.DependencyCase
       @JvmName("getDependencyCase")
@@ -101,172 +77,7 @@ public object IntellijDependencyNodeKt {
       _builder.clearDependency()
     }
   }
-  @kotlin.jvm.JvmSynthetic
-  public inline fun intellijLibraryNode(block: com.giyeok.bibix.daemon.IntellijDependencyNodeKt.IntellijLibraryNodeKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijDependencyNode.IntellijLibraryNode =
-    com.giyeok.bibix.daemon.IntellijDependencyNodeKt.IntellijLibraryNodeKt.Dsl._create(com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijDependencyNode.IntellijLibraryNode.newBuilder()).apply { block() }._build()
-  public object IntellijLibraryNodeKt {
-    @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
-    @com.google.protobuf.kotlin.ProtoDslMarker
-    public class Dsl private constructor(
-      private val _builder: com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijDependencyNode.IntellijLibraryNode.Builder
-    ) {
-      public companion object {
-        @kotlin.jvm.JvmSynthetic
-        @kotlin.PublishedApi
-        internal fun _create(builder: com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijDependencyNode.IntellijLibraryNode.Builder): Dsl = Dsl(builder)
-      }
-
-      @kotlin.jvm.JvmSynthetic
-      @kotlin.PublishedApi
-      internal fun _build(): com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijDependencyNode.IntellijLibraryNode = _builder.build()
-
-      /**
-       * <code>string path = 1;</code>
-       */
-      public var path: kotlin.String
-        @JvmName("getPath")
-        get() = _builder.getPath()
-        @JvmName("setPath")
-        set(value) {
-          _builder.setPath(value)
-        }
-      /**
-       * <code>string path = 1;</code>
-       */
-      public fun clearPath() {
-        _builder.clearPath()
-      }
-
-      /**
-       * <code>string source = 2;</code>
-       */
-      public var source: kotlin.String
-        @JvmName("getSource")
-        get() = _builder.getSource()
-        @JvmName("setSource")
-        set(value) {
-          _builder.setSource(value)
-        }
-      /**
-       * <code>string source = 2;</code>
-       */
-      public fun clearSource() {
-        _builder.clearSource()
-      }
-    }
-  }
-  @kotlin.jvm.JvmSynthetic
-  public inline fun intellijMavenDependencyNode(block: com.giyeok.bibix.daemon.IntellijDependencyNodeKt.IntellijMavenDependencyNodeKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijDependencyNode.IntellijMavenDependencyNode =
-    com.giyeok.bibix.daemon.IntellijDependencyNodeKt.IntellijMavenDependencyNodeKt.Dsl._create(com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijDependencyNode.IntellijMavenDependencyNode.newBuilder()).apply { block() }._build()
-  public object IntellijMavenDependencyNodeKt {
-    @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
-    @com.google.protobuf.kotlin.ProtoDslMarker
-    public class Dsl private constructor(
-      private val _builder: com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijDependencyNode.IntellijMavenDependencyNode.Builder
-    ) {
-      public companion object {
-        @kotlin.jvm.JvmSynthetic
-        @kotlin.PublishedApi
-        internal fun _create(builder: com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijDependencyNode.IntellijMavenDependencyNode.Builder): Dsl = Dsl(builder)
-      }
-
-      @kotlin.jvm.JvmSynthetic
-      @kotlin.PublishedApi
-      internal fun _build(): com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijDependencyNode.IntellijMavenDependencyNode = _builder.build()
-
-      /**
-       * <code>string path = 1;</code>
-       */
-      public var path: kotlin.String
-        @JvmName("getPath")
-        get() = _builder.getPath()
-        @JvmName("setPath")
-        set(value) {
-          _builder.setPath(value)
-        }
-      /**
-       * <code>string path = 1;</code>
-       */
-      public fun clearPath() {
-        _builder.clearPath()
-      }
-
-      /**
-       * <code>string source = 2;</code>
-       */
-      public var source: kotlin.String
-        @JvmName("getSource")
-        get() = _builder.getSource()
-        @JvmName("setSource")
-        set(value) {
-          _builder.setSource(value)
-        }
-      /**
-       * <code>string source = 2;</code>
-       */
-      public fun clearSource() {
-        _builder.clearSource()
-      }
-
-      /**
-       * <code>string group = 3;</code>
-       */
-      public var group: kotlin.String
-        @JvmName("getGroup")
-        get() = _builder.getGroup()
-        @JvmName("setGroup")
-        set(value) {
-          _builder.setGroup(value)
-        }
-      /**
-       * <code>string group = 3;</code>
-       */
-      public fun clearGroup() {
-        _builder.clearGroup()
-      }
-
-      /**
-       * <code>string artifact = 4;</code>
-       */
-      public var artifact: kotlin.String
-        @JvmName("getArtifact")
-        get() = _builder.getArtifact()
-        @JvmName("setArtifact")
-        set(value) {
-          _builder.setArtifact(value)
-        }
-      /**
-       * <code>string artifact = 4;</code>
-       */
-      public fun clearArtifact() {
-        _builder.clearArtifact()
-      }
-
-      /**
-       * <code>string version = 5;</code>
-       */
-      public var version: kotlin.String
-        @JvmName("getVersion")
-        get() = _builder.getVersion()
-        @JvmName("setVersion")
-        set(value) {
-          _builder.setVersion(value)
-        }
-      /**
-       * <code>string version = 5;</code>
-       */
-      public fun clearVersion() {
-        _builder.clearVersion()
-      }
-    }
-  }
 }
 @kotlin.jvm.JvmSynthetic
 public inline fun com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijDependencyNode.copy(block: com.giyeok.bibix.daemon.IntellijDependencyNodeKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijDependencyNode =
   com.giyeok.bibix.daemon.IntellijDependencyNodeKt.Dsl._create(this.toBuilder()).apply { block() }._build()
-@kotlin.jvm.JvmSynthetic
-public inline fun com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijDependencyNode.IntellijLibraryNode.copy(block: com.giyeok.bibix.daemon.IntellijDependencyNodeKt.IntellijLibraryNodeKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijDependencyNode.IntellijLibraryNode =
-  com.giyeok.bibix.daemon.IntellijDependencyNodeKt.IntellijLibraryNodeKt.Dsl._create(this.toBuilder()).apply { block() }._build()
-@kotlin.jvm.JvmSynthetic
-public inline fun com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijDependencyNode.IntellijMavenDependencyNode.copy(block: com.giyeok.bibix.daemon.IntellijDependencyNodeKt.IntellijMavenDependencyNodeKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijDependencyNode.IntellijMavenDependencyNode =
-  com.giyeok.bibix.daemon.IntellijDependencyNodeKt.IntellijMavenDependencyNodeKt.Dsl._create(this.toBuilder()).apply { block() }._build()

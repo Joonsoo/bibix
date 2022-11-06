@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        jparserVersion = '0.2.3'
+        jparserVersion = '0.2.4'
     }
 }
 
@@ -13,7 +13,9 @@ version '0.0.1-SNAPSHOT'
 
 repositories {
     mavenCentral()
-    mavenLocal()
+    maven {
+        url "https://github.com/Joonsoo/giyeok-maven-repo/raw/main"
+    }
 }
 
 sourceSets {
@@ -28,8 +30,8 @@ sourceSets {
 }
 
 dependencies {
-    implementation group: 'com.giyeok', name: 'jparser-base', version: jparserVersion
-    implementation group: 'com.giyeok', name: 'jparser-fast', version: jparserVersion
+    implementation group: 'com.giyeok.jparser', name: 'jparser-base', version: jparserVersion
+    implementation group: 'com.giyeok.jparser', name: 'jparser-fast', version: jparserVersion
 
     // https://mvnrepository.com/artifact/org.scalatest/scalatest
     testImplementation group: 'org.scalatest', name: 'scalatest_2.13', version: '3.2.12'

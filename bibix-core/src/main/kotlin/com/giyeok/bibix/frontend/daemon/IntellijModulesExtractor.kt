@@ -2,16 +2,14 @@ package com.giyeok.bibix.frontend.daemon
 
 import com.giyeok.bibix.base.CName
 import com.giyeok.bibix.base.MainSourceId
-import com.giyeok.bibix.daemon.BibixDaemonApiProto
+import com.giyeok.bibix.daemon.*
+import com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijLibraryNode
 import com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijModuleNode
-import com.giyeok.bibix.daemon.IntellijDependencyNodeKt.intellijLibraryNode
-import com.giyeok.bibix.daemon.IntellijDependencyNodeKt.intellijMavenDependencyNode
-import com.giyeok.bibix.daemon.intellijContentRootNode
-import com.giyeok.bibix.daemon.intellijDependencyNode
-import com.giyeok.bibix.daemon.intellijModuleNode
+import com.giyeok.bibix.daemon.IntellijLibraryNodeKt.intellijLocalLibraryNode
+import com.giyeok.bibix.daemon.IntellijLibraryNodeKt.intellijMavenLibraryNode
+import com.giyeok.bibix.daemon.IntellijLibraryNodeKt.intellijScalaSdkLibraryNode
 import com.giyeok.bibix.frontend.BuildFrontend
 import com.giyeok.bibix.plugins.*
-import com.giyeok.bibix.plugins.jvm.ResolveClassPkgs
 import com.giyeok.bibix.runner.BuildTask
 import com.giyeok.bibix.runner.hashString
 import com.giyeok.bibix.utils.hexToByteString
@@ -69,68 +67,6 @@ class IntellijModulesExtractor(
     return objHash.toHexString()
   }
 
-  fun convertModule(moduleObjHash: ByteString, classPkg: ClassPkg): IntellijModuleNode =
-    moduleDataByObjHash(moduleObjHash)?.let { moduleData ->
-      convertNamedModule(moduleData)
-    } ?: convertUnnamedModule(moduleObjHash, classPkg)
-
-  fun convertNamedModule(moduleData: IntellijProjectExtractor.ModuleData): IntellijModuleNode {
-    val contentRoots = moduleData.srcs
-
-    return intellijModuleNode {
-      this.name = moduleData.cname.tokens.joinToString(".")
-      this.path = contentRoots[0].absolutePathString()
-
-      this.dependencies.addAll(moduleData.deps.map { convertDependency(it) })
-      this.contentRoots.addAll(contentRoots.map { contentRoot ->
-        intellijContentRootNode {
-          this.path = contentRoot.absolutePathString()
-        }
-      })
-    }
-  }
-
-  // TODO maven transitive dependency resolve해서 전부 넣어줘야될듯?
-  private fun convertDependency(dep: ClassPkg): BibixDaemonApiProto.IntellijDependencyNode =
-    intellijDependencyNode {
-      when (val origin = dep.origin) {
-        is LocalBuilt ->
-          this.moduleDependency = moduleNameByObjHash(origin.objHash.hexToByteString())
-        is LocalLib ->
-          this.libraryDependency = intellijLibraryNode {
-            this.path = origin.path.absolutePathString()
-          }
-        is MavenDep ->
-          this.mavenDependency = intellijMavenDependencyNode {
-            this.group = origin.group
-            this.artifact = origin.artifact
-            this.version = origin.version
-            this.path = (dep.cpinfo as JarInfo).jar.absolutePathString()
-          }
-      }
-    }
-
-  fun convertUnnamedModule(moduleObjHash: ByteString, classPkg: ClassPkg): IntellijModuleNode {
-    val srcs: List<Path>? = when (classPkg.origin) {
-      is LocalBuilt -> (classPkg.cpinfo as? ClassesInfo)?.srcs
-      else -> null
-    }
-    val contentRoots = srcs
-
-    return intellijModuleNode {
-      this.name = moduleObjHash.toHexString()
-      srcs?.let { this.path = srcs[0].absolutePathString() }
-
-      this.dependencies.addAll(classPkg.deps.map { convertDependency(it) })
-      contentRoots?.forEach { contentRoot ->
-        this.contentRoots.add(intellijContentRootNode {
-          this.path = contentRoot.absolutePathString()
-        })
-      }
-    }
-  }
-
-
   private fun readPackageDecl(srcPath: Path): List<String>? =
     srcPath.inputStream().bufferedReader().use {
       SourceCodePackageDeclReader.readPackageDecl(it)
@@ -164,12 +100,26 @@ class IntellijModulesExtractor(
     data class BuildModule(val objHash: ByteString) : ModuleName()
   }
 
-  fun flattenDependencies(deps: List<ClassPkg>): List<ClassPkg> {
-    // TODO
-    return deps
+  fun flattenDependencies(
+    queue: List<ClassPkg>,
+    origins: MutableSet<ClassOrigin>,
+    pkgs: MutableList<ClassPkg>
+  ): List<ClassPkg> = if (queue.isEmpty()) {
+    pkgs
+  } else {
+    val head = queue.first()
+    val rest = queue.drop(1)
+    // TODO 중복된 maven dependency 정리
+    if (origins.contains(head.origin)) {
+      flattenDependencies(rest + head.deps, origins, pkgs)
+    } else {
+      origins.add(head.origin)
+      pkgs.add(head)
+      flattenDependencies(rest + head.deps, origins, pkgs)
+    }
   }
 
-  fun extractModules(): List<IntellijModuleNode> {
+  fun extractModules(): Pair<List<IntellijLibraryNode>, List<IntellijModuleNode>> {
     // module name -> (sub modules) or (content root directories)
     // directory -> module name
 
@@ -255,7 +205,60 @@ class IntellijModulesExtractor(
       // 중복된 이름 발생 -> 수정 요
       TODO()
     }
-    return modulesMap.map { (moduleName, moduleContent) ->
+    val allLibraries =
+      modulesMap.values.flatMap { flattenDependencies(it.deps, mutableSetOf(), mutableListOf()) }
+    val libraryMap = allLibraries.mapNotNull { dep ->
+      fun ClassPkg.getPath(): Path = when (this.cpinfo) {
+        is ClassesInfo -> {
+          if (this.cpinfo.classDirs.size != 1) {
+            throw IllegalStateException("???")
+          }
+          this.cpinfo.classDirs.first()
+        }
+        is JarInfo -> this.cpinfo.jar
+      }
+
+      fun ClassPkg.getSourcePath(): Path? = null
+
+      when (dep.origin) {
+        is MavenDep -> {
+          if (dep.origin.group == "org.scala-lang" && dep.origin.artifact == "scala-library") {
+            // scala dependency인 경우 처리
+            val version = dep.origin.version
+            dep.origin to intellijLibraryNode {
+              this.libraryName = "Scala SDK: $version"
+              this.classpath.add(dep.getPath().absolutePathString())
+              dep.getSourcePath()?.let { this.source.add(it.absolutePathString()) }
+              this.scalaSdkLibrary = intellijScalaSdkLibraryNode {
+                this.scalaVersion = version
+              }
+            }
+          } else {
+            dep.origin to intellijLibraryNode {
+              this.libraryName =
+                "Maven: ${dep.origin.group}:${dep.origin.artifact}:${dep.origin.version}"
+              this.classpath.add(dep.getPath().absolutePathString())
+              dep.getSourcePath()?.let { this.source.add(it.absolutePathString()) }
+              this.mavenLibrary = intellijMavenLibraryNode {
+                this.group = dep.origin.group
+                this.artifact = dep.origin.artifact
+                this.version = dep.origin.version
+              }
+            }
+          }
+        }
+        is LocalLib -> dep.origin to intellijLibraryNode {
+          this.libraryName = "Local: ${dep.origin.path.absolutePathString()}"
+          this.classpath.add(dep.getPath().absolutePathString())
+          dep.getSourcePath()?.let { this.source.add(it.absolutePathString()) }
+          this.localLibrary = intellijLocalLibraryNode {
+            this.path = dep.origin.path.absolutePathString()
+          }
+        }
+        is LocalBuilt -> null
+      }
+    }.toMap()
+    val modules = modulesMap.map { (moduleName, moduleContent) ->
       val moduleNameString = moduleNamesMap.getValue(moduleName)
 
       intellijModuleNode {
@@ -271,47 +274,45 @@ class IntellijModulesExtractor(
           is ModuleSource.SubModules -> {
             this.dependencies.addAll(moduleSource.submodules.map { subModule ->
               intellijDependencyNode {
-                this.moduleDependency = moduleNamesMap.getValue(subModule)
+                this.moduleName = moduleNamesMap.getValue(subModule)
               }
             })
           }
         }
-        this.dependencies.addAll(flattenDependencies(moduleContent.deps).map { dep ->
-          fun ClassPkg.getPath(): Path = when (this.cpinfo) {
-            is ClassesInfo -> {
-              if (this.cpinfo.classDirs.size != 1) {
-                throw IllegalStateException("???")
-              }
-              this.cpinfo.classDirs.first()
-            }
-            is JarInfo -> this.cpinfo.jar
+        // TODO this.path
+        when (moduleName) {
+          is ModuleName.BuildModule -> {
+            val objPath =
+              frontend.repo.objectsDirectory.resolve(moduleName.objHash.toHexString() + "-build")
+            this.objectPath = objPath.absolutePathString()
           }
-
-          fun ClassPkg.getSourcePath(): Path? = null
-
+          is ModuleName.SrcModule -> {
+            // TODO 제대로
+            this.objectPath =
+              frontend.repo.objectsDirectory.resolve(moduleName.path.name).absolutePathString()
+          }
+        }
+        this.jdkVersion = "16" // TODO
+        val flattenedDeps = flattenDependencies(moduleContent.deps, mutableSetOf(), mutableListOf())
+        val libraries =
+          flattenedDeps.mapNotNull { dep -> libraryMap[dep.origin]?.let { dep.origin to it } }
+            .toMap()
+        this.libraries.addAll(libraries.values)
+        this.dependencies.addAll(flattenedDeps.map { dep ->
           when (dep.origin) {
-            is MavenDep -> intellijDependencyNode {
-              this.mavenDependency = intellijMavenDependencyNode {
-                this.group = dep.origin.group
-                this.artifact = dep.origin.artifact
-                this.version = dep.origin.version
-                this.path = dep.getPath().absolutePathString()
-                dep.getSourcePath()?.let { this.source = it.absolutePathString() }
-              }
+            is MavenDep, is LocalLib -> intellijDependencyNode {
+              this.libraryName = libraries.getValue(dep.origin).libraryName
             }
-            is LocalLib -> intellijDependencyNode {
-              this.libraryDependency = intellijLibraryNode {
-                this.path = dep.getPath().absolutePathString()
-                dep.getSourcePath()?.let { this.source = it.absolutePathString() }
+            is LocalBuilt -> {
+              intellijDependencyNode {
+                this.moduleName =
+                  moduleNamesMap.getValue(ModuleName.BuildModule(dep.origin.objHash.hexToByteString()))
               }
-            }
-            is LocalBuilt -> intellijDependencyNode {
-              this.moduleDependency =
-                moduleNamesMap.getValue(ModuleName.BuildModule(dep.origin.objHash.hexToByteString()))
             }
           }
         })
       }
     }
+    return Pair(libraryMap.values.toList(), modules)
   }
 }
