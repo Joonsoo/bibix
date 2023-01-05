@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        kotlinVersion = '1.7.20'
+        kotlinVersion = '1.8.0'
         jparserVersion = '0.2.4'
         floggerVersion = '0.7.4'
     }
@@ -39,15 +39,15 @@ dependencies {
 
     implementation group: 'io.grpc', name: 'grpc-netty-shaded', version: '1.41.0'
 
-    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.13.1'
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.13.4.1'
     implementation group: 'com.fasterxml.jackson.module', name: 'jackson-module-kotlin', version: '2.13.1'
 
     implementation group: 'org.codehaus.plexus', name: 'plexus-classworlds', version: '2.6.0'
     implementation group: 'org.eclipse.jgit', name: 'org.eclipse.jgit', version: '6.1.0.202203080745-r'
     implementation group: 'org.apache.maven', name: 'maven-resolver-provider', version: '3.8.5'
-    implementation group: 'org.apache.maven.resolver', name: 'maven-resolver-connector-basic', version: '1.7.3'
-    implementation group: 'org.apache.maven.resolver', name: 'maven-resolver-transport-file', version: '1.7.3'
-    implementation group: 'org.apache.maven.resolver', name: 'maven-resolver-transport-http', version: '1.7.3'
+    implementation group: 'org.apache.maven.resolver', name: 'maven-resolver-connector-basic', version: '1.9.2'
+    implementation group: 'org.apache.maven.resolver', name: 'maven-resolver-transport-file', version: '1.9.2'
+    implementation group: 'org.apache.maven.resolver', name: 'maven-resolver-transport-http', version: '1.9.2'
 
     implementation group: 'com.google.flogger', name: 'flogger', version: floggerVersion
     implementation group: 'com.google.flogger', name: 'flogger-system-backend', version: floggerVersion

@@ -5,11 +5,31 @@ import java
 from bibix.plugins() import ktjvm
 from bibix.plugins() import scala
 from bibix.plugins() import protobuf
+from bibix.plugins() import junit5
 from bibix.devPlugins() import grpc
 import bibix
 
 jparserVersion = "0.5"
-arg ktjvm.kotlinVersion as kotlinVersion: string = "1.6.10"
+
+// arg kotlinVersion: string = "1.6.10"
+// -> kotlinVersion이라는 이름의 arg 정의. 기본값은 "1.6.10"
+
+// let ktjvm.kotlinVersion = "1.6.10"
+// -> ktjvm.kotlinVersion이라는 이름의 arg의 기본값을 변경. 이렇게 해도 여전히 cli에서 값 변경 가능
+// let fix ktjvm.kotlinVersion = "1.6.10"
+// -> 이렇게 "fix"를 추가하면 ktjvm.kotlinVersion은 cli에서 설정이 불가능해짐.
+
+// arg kotlinVersion: string = "1.6.10"
+// let ktjvm.kotlinVersion = kotlinVersion
+// -> kotlinVersion이라는 이름의 arg를 정의하고 ktjvm.kotlinVersion의 값을 kotlinVersion의 값으로 설정.
+
+// let ktjvm.kotlinVersion = arg kotlinVersion: string = "1.6.10"
+// -> 이런 식의 syntactic sugar가 필요할까?
+
+// bibix에서 A = B 는 대체로 A라는 이름의 무언가를 새로 정의/선언하는 의미로 쓰이기 때문에 let 키워드를 쓰게 하는 편이 나을 것 같음.
+// -> 아니면 ktjvm.kotlinVersion := "1.6.10" 처럼 ":=" 같은 연산자를 만들어도 되는데 let이 더 명확해 보임
+// -> 키워드가 let이 제일 나은지는 고민 필요. "let" + "let fix", "set" + "fix", ":=" + "::=", 등등.. 가장 예쁜게 어느쪽인지 고민 필요
+
 floggerVersion = "0.7.4"
 
 // parserData = jparser.parsergen(
@@ -127,15 +147,20 @@ core = ktjvm.library(
 
 junitVersion = "5.8.2"
 
-coreTest = ktjvm.library(
-  srcs = glob("bibix-core/src/test/kotlin/**/*.kt"),
-  deps = [
-    core,
-    maven.dep("com.google.jimfs", "jimfs", "1.2"),
-    maven.dep("org.junit.jupiter", "junit-jupiter-api", junitVersion, scope=maven.ScopeType.test),
-    maven.dep("com.google.truth", "truth", "1.1.3"),
-    // runtime deps?
-    maven.dep("org.junit.jupiter", "junit-jupiter-engine", junitVersion, scope=maven.ScopeType.test),
+testDeps = [
+  maven.dep("com.google.jimfs", "jimfs", "1.2"),
+  maven.dep("org.junit.jupiter", "junit-jupiter-api", junitVersion, scope=maven.ScopeType.test),
+  maven.dep("com.google.truth", "truth", "1.1.3"),
+  // runtime deps?
+  maven.dep("org.junit.jupiter", "junit-jupiter-engine", junitVersion, scope=maven.ScopeType.test),
+]
+
+action coreTest = junit5.runTests(
+  deps=[
+    ktjvm.library(
+      srcs = glob("bibix-core/src/test/kotlin/**/*.kt"),
+      deps = testDeps + [core],
+    ),
   ]
 )
 
