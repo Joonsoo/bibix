@@ -28,7 +28,7 @@ class Jar {
       "resolveClassPkgs",
       mapOf("classPkgs" to deps)
     ) { classPaths ->
-      val cps = (classPaths as DataClassInstanceValue)["cps"] as SetValue
+      val cps = (classPaths as ClassInstanceValue)["cps"] as SetValue
       // cps: set<path>
       ZipOutputStream(destFile.outputStream().buffered()).use { zos ->
         cps.values.forEach { cp ->
@@ -92,7 +92,7 @@ class Jar {
       "resolveClassPkgs",
       mapOf("classPkgs" to deps)
     ) { classPaths ->
-      val cps = (classPaths as DataClassInstanceValue).fieldValues.getValue("cps") as SetValue
+      val cps = (classPaths as ClassInstanceValue).fieldValues.getValue("cps") as SetValue
       // cps: set<path>
       ZipOutputStream(destFile.outputStream().buffered()).use { zos ->
         cps.values.forEach { cp ->

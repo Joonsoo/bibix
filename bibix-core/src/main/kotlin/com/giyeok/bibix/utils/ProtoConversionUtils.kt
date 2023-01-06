@@ -1,8 +1,7 @@
 package com.giyeok.bibix.utils
 
+import com.giyeok.bibix.*
 import com.giyeok.bibix.base.*
-import com.giyeok.bibix.runner.*
-import com.giyeok.bibix.runner.BibixIdProto.ArgsMap
 import com.google.protobuf.ByteString
 import com.google.protobuf.kotlin.get
 import kotlin.io.path.absolutePathString
@@ -56,21 +55,25 @@ fun BibixValue.toProto(): BibixValueProto.BibixValue = when (val value = this) {
       this.value = value.value
     }
   }
+
   is ListValue -> bibixValue {
     this.listValue = listValue {
       this.values.addAll(value.values.map { it.toProto() })
     }
   }
+
   is SetValue -> bibixValue {
     this.setValue = setValue {
       this.values.addAll(value.values.map { it.toProto() })
     }
   }
+
   is TupleValue -> bibixValue {
     this.tupleValue = tupleValue {
       this.values.addAll(value.values.map { it.toProto() })
     }
   }
+
   is NamedTupleValue -> bibixValue {
     this.namedTupleValue = namedTupleValue {
       this.values.addAll(value.pairs.map {
@@ -81,7 +84,8 @@ fun BibixValue.toProto(): BibixValueProto.BibixValue = when (val value = this) {
       })
     }
   }
-  is DataClassInstanceValue -> bibixValue {
+
+  is ClassInstanceValue -> bibixValue {
     this.dataClassInstanceValue = dataClassInstanceValue {
       this.classCname = value.className.toString()
       value.fieldValues.entries.sortedBy { it.key }.forEach { entry ->
@@ -92,20 +96,23 @@ fun BibixValue.toProto(): BibixValueProto.BibixValue = when (val value = this) {
       }
     }
   }
-  is NDataClassInstanceValue -> throw AssertionError("N(ame)ClassInstnaceValue cannot be marshalled")
+
+  is NClassInstanceValue -> throw AssertionError("N(ame)ClassInstnaceValue cannot be marshalled")
   is NoneValue -> bibixValue { }
   is ActionRuleDefValue ->
     // TODO
     bibixValue {}
+
   is BuildRuleDefValue ->
     // TODO
     bibixValue {}
+
   is TypeValue ->
     // TODO
     bibixValue {}
 }
 
-fun Map<String, BibixValue>.toArgsMap(): ArgsMap {
+fun Map<String, BibixValue>.toArgsMap(): BibixIdProto.ArgsMap {
   val value = this
   return argsMap {
     this.pairs.addAll(value.entries.toList()

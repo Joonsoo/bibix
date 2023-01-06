@@ -1,9 +1,10 @@
 package com.giyeok.bibix.plugins.maven
 
 import com.giyeok.bibix.plugins.Classes
-import com.giyeok.bibix.plugins.BibixPlugin
+import com.giyeok.bibix.plugins.PreloadedPlugin
 
-val mavenPlugin = BibixPlugin.fromScript(
+val mavenPlugin = PreloadedPlugin.fromScript(
+  "com.giyeok.bibix.plugins.maven",
   """
     import jvm
     

@@ -1,5 +1,9 @@
 package com.giyeok.bibix.runner
 
+import com.giyeok.bibix.argPair
+import com.giyeok.bibix.argsMap
+import com.giyeok.bibix.bibixValue
+import com.giyeok.bibix.repo.hashString
 import org.junit.jupiter.api.Test
 
 class HashesTests {

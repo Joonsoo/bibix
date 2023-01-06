@@ -4,54 +4,20 @@ buildscript {
         jparserVersion = '0.2.4'
         floggerVersion = '0.7.4'
     }
+    repositories {
+        gradlePluginPortal()
+    }
+    dependencies {
+        classpath "gradle.plugin.com.github.johnrengelman:shadow:7.1.2"
+    }
 }
 
 plugins {
     id 'scala'
-    id 'org.jetbrains.kotlin.jvm' version '1.7.20'
+    id 'java'
+    id 'org.jetbrains.kotlin.jvm' version '1.8.0'
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
 }
 
 group 'com.giyeok.bibix'
-version '0.0.1-SNAPSHOT'
-
-repositories {
-    mavenCentral()
-    maven {
-        url "https://github.com/Joonsoo/giyeok-maven-repo/raw/main"
-    }
-}
-
-sourceSets {
-    main {
-        scala {
-            srcDir 'src/generated/scala'
-            srcDir 'src/main/scala'
-        }
-        kotlin {
-            srcDir 'src/main/kotlin'
-        }
-    }
-}
-
-dependencies {
-    implementation group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk8', version: kotlinVersion
-    implementation group: 'org.jetbrains.kotlin', name: 'kotlin-compiler', version: kotlinVersion
-
-    implementation group: 'io.grpc', name: 'grpc-netty-shaded', version: '1.41.0'
-
-    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.13.4.1'
-    implementation group: 'com.fasterxml.jackson.module', name: 'jackson-module-kotlin', version: '2.13.1'
-
-    implementation group: 'org.codehaus.plexus', name: 'plexus-classworlds', version: '2.6.0'
-    implementation group: 'org.eclipse.jgit', name: 'org.eclipse.jgit', version: '6.1.0.202203080745-r'
-    implementation group: 'org.apache.maven', name: 'maven-resolver-provider', version: '3.8.5'
-    implementation group: 'org.apache.maven.resolver', name: 'maven-resolver-connector-basic', version: '1.9.2'
-    implementation group: 'org.apache.maven.resolver', name: 'maven-resolver-transport-file', version: '1.9.2'
-    implementation group: 'org.apache.maven.resolver', name: 'maven-resolver-transport-http', version: '1.9.2'
-
-    implementation group: 'com.google.flogger', name: 'flogger', version: floggerVersion
-    implementation group: 'com.google.flogger', name: 'flogger-system-backend', version: floggerVersion
-
-    implementation group: 'com.giyeok.jparser', name: 'jparser-base', version: jparserVersion
-    implementation group: 'com.giyeok.jparser', name: 'jparser-fast', version: jparserVersion
-}
+version '0.0.4'

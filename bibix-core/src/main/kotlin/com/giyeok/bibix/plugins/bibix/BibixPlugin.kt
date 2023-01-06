@@ -2,10 +2,11 @@ package com.giyeok.bibix.plugins.bibix
 
 import com.giyeok.bibix.base.Constants
 import com.giyeok.bibix.plugins.Classes
-import com.giyeok.bibix.plugins.BibixPlugin
+import com.giyeok.bibix.plugins.PreloadedPlugin
 
 val dollar = "\$"
-val bibixPlugin = BibixPlugin.fromScript(
+val preloadedPlugin = PreloadedPlugin.fromScript(
+  "com.giyeok.bibix.plugins.bibix",
   """
     import jvm
     import curl

@@ -57,7 +57,7 @@ class GenRuleImplTemplateKtTest {
     val target = CName(MainSourceId, "gen")
     val results = frontend.runTargets("build", listOf(target))
 
-    val targetResult = results.getValue(target) as DataClassInstanceValue
+    val targetResult = results.getValue(target) as ClassInstanceValue
     val implClassFile = (targetResult["implClass"] as FileValue).file
     val interfaceClassFile = (targetResult["interfaceClass"] as FileValue).file
     Truth.assertThat(implClassFile.name).isEqualTo("Test.kt")

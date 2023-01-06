@@ -1,9 +1,23 @@
 package com.giyeok.bibix.runner
 
+import com.giyeok.bibix.BibixIdProto
 import com.giyeok.bibix.base.*
 import com.giyeok.bibix.base.Constants.BIBIX_VERSION
 import com.giyeok.bibix.buildscript.*
-import com.giyeok.bibix.plugins.BibixPlugin
+import com.giyeok.bibix.interpreter.AnyType
+import com.giyeok.bibix.interpreter.CustomType
+import com.giyeok.bibix.interpreter.DirectoryType
+import com.giyeok.bibix.interpreter.ListType
+import com.giyeok.bibix.interpreter.expr.*
+import com.giyeok.bibix.objectId
+import com.giyeok.bibix.objectIdHash
+import com.giyeok.bibix.plugins.PreloadedPlugin
+import com.giyeok.bibix.repo.Repo
+import com.giyeok.bibix.repo.extractInputHashes
+import com.giyeok.bibix.repo.hashString
+import com.giyeok.bibix.repo.toProto
+import com.giyeok.bibix.source.ImportSourceResolver
+import com.giyeok.bibix.source.ImportedSource
 import com.giyeok.bibix.utils.toArgsMap
 import com.giyeok.bibix.utils.toHexString
 import com.giyeok.bibix.utils.toKtList
@@ -20,9 +34,10 @@ import kotlin.coroutines.suspendCoroutine
 import kotlin.io.path.absolute
 
 class BuildRunner(
+  val buildEnv: BuildEnv,
   val buildGraph: BuildGraph,
-  val rootScript: BibixPlugin,
-  val bibixPlugins: Map<String, BibixPlugin>,
+  val rootScript: PreloadedPlugin,
+  val preloadedPlugins: Map<String, PreloadedPlugin>,
   val repo: Repo,
   val routineManager: RoutineManager,
   val progressIndicatorContainer: ProgressIndicatorContainer,
@@ -56,6 +71,7 @@ class BuildRunner(
       val remoteSourceId = buildGraph.addRemoteSource(sourceId.remoteSource)
       RemoteSourceId(remoteSourceId)
     }
+
     else -> TODO()
   }
 
@@ -91,6 +107,7 @@ class BuildRunner(
           is BuildTask.BuildRequest -> {
             // do nothing? 애당초 여기에 올 수가 있나?
           }
+
           is BuildTask.ResolveName -> resolveName(task)
           is BuildTask.ResolveImport -> resolveImport(task)
           is BuildTask.ResolveImportSource -> resolveImportSource(task)
@@ -119,6 +136,7 @@ class BuildRunner(
       when (val imported = loadImport(task, parentValue)) {
         is SourceId ->
           runTask(task, BuildTask.ResolveName(CName(imported, task.cname.tokens.drop(1))))
+
         is CNameValue.NamespaceValue ->
           runTask(task, BuildTask.ResolveName(imported.cname.append(task.cname.tokens.drop(1))))
         // import all일 때는 SourceId, import from일 때는 namespace value.
@@ -150,6 +168,7 @@ class BuildRunner(
           }
           evalResult
         }
+
         is CNameValue.EvaluatedValue -> value.value
         is CNameValue.NamespaceValue -> value
         is CNameValue.ClassType -> value
@@ -176,6 +195,7 @@ class BuildRunner(
             )
           }
         }
+
         is CNameValue.BuildRuleValue -> {
           val methodName = value.methodName ?: "build"
           // value.implName.sourceId is BibixRootSourceId 인 경우도 처리
@@ -194,11 +214,12 @@ class BuildRunner(
                 value.returnType,
               )
             }
+
             value.implName.sourceId is BibixInternalSourceId &&
               value.implName.tokens == listOf("$$") -> {
               // native impls
               val sourceId = value.implName.sourceId as BibixInternalSourceId
-              val plugin = bibixPlugins.getValue(sourceId.name)
+              val plugin = preloadedPlugins.getValue(sourceId.name)
               BuildRuleImplInfo.NativeBuildRuleImplInfo(
                 value,
                 value.implName.sourceId,
@@ -212,6 +233,7 @@ class BuildRunner(
                 value.returnType,
               )
             }
+
             else -> BuildRuleImplInfo.UserBuildRuleImplInfo(
               value,
               value.implName.sourceId,
@@ -224,12 +246,13 @@ class BuildRunner(
             )
           }
         }
+
         is CNameValue.ActionRuleValue -> {
           when {
             value.implName.sourceId is BibixInternalSourceId &&
               value.implName.tokens == listOf("$$") -> {
               val sourceId = value.implName.sourceId as BibixInternalSourceId
-              val plugin = bibixPlugins.getValue(sourceId.name)
+              val plugin = preloadedPlugins.getValue(sourceId.name)
               ActionRuleImplInfo(
                 value,
                 value.implName.sourceId,
@@ -238,6 +261,7 @@ class BuildRunner(
                 value.params
               )
             }
+
             else -> {
               val implResult0 = runTask(task, BuildTask.ResolveName(value.implName))
               val implResult = coercer.coerce(
@@ -247,7 +271,7 @@ class BuildRunner(
                 CustomType(CName(BibixInternalSourceId("jvm"), "ClassPaths")),
                 null
               )
-              implResult as DataClassInstanceValue
+              implResult as ClassInstanceValue
               val cps = ((implResult.fieldValues.getValue("cps")) as SetValue).values.map {
                 (it as PathValue).path
               }
@@ -270,6 +294,7 @@ class BuildRunner(
             }
           }
         }
+
         is CNameValue.ActionCallValue ->
           runTask(task, BuildTask.CallAction(task.cname.sourceId, value.exprGraphId))
       }
@@ -288,6 +313,7 @@ class BuildRunner(
       is SourceId -> synchronized(this) {
         imported[value] = resolvedImport
       }
+
       is CNameValue.NamespaceValue -> synchronized(this) {
         imported[value] = resolvedImport.cname.sourceId
       }
@@ -312,10 +338,11 @@ class BuildRunner(
           sourceId
         }
       }
+
       is DeferredImportDef.ImportDefaultPlugin -> {
         check(importDef.nameTokens.size == 1)
         val pluginName = importDef.nameTokens.first()
-        val bibixPlugin = bibixPlugins[pluginName]
+        val bibixPlugin = preloadedPlugins[pluginName]
         checkNotNull(bibixPlugin) { "Unknown plugin: $pluginName" }
         val sourceId = BibixInternalSourceId(pluginName)
         synchronized(this) {
@@ -332,6 +359,7 @@ class BuildRunner(
           sourceId
         }
       }
+
       is DeferredImportDef.ImportFrom -> {
         val importedSource =
           runTask(task, BuildTask.ResolveImportSource(task.origin, importDef.importSource))
@@ -348,6 +376,7 @@ class BuildRunner(
         }
         runTask(task, BuildTask.ResolveName(CName(sourceId, importDef.nameTokens)))
       }
+
       is DeferredImportDef.ImportMainSub -> {
         runTask(task, BuildTask.ResolveName(CName(MainSourceId, importDef.nameTokens)))
       }
@@ -360,11 +389,12 @@ class BuildRunner(
         val result = runTask(
           task,
           BuildTask.EvalExpr(source.origin, source.sourceExprId, exprGraph.mainNode, null)
-        ) as DataClassInstanceValue
+        ) as ClassInstanceValue
 
         // git과 같은 "root" source에 있는 함수들은 named tuple로 소스에 대한 정보를 반환하고 여기서는 그 값을 받아서 사용
         importSourceResolver.resolveImportSourceCall(result, getProgressIndicator())
       }
+
       is ImportSource.ImportSourceString -> {
         val exprGraph = buildGraph.exprGraphs[source.stringLiteralExprId]
         val result = runTask(
@@ -408,6 +438,7 @@ class BuildRunner(
             .toMap()
         callBuildRule(task, task.origin, ruleImplInfo, posParams, namedParamsMap)
       }
+
       is ExprNode.NameNode -> runTask(task, BuildTask.ResolveName(exprNode.name))
       is ExprNode.MergeOpNode -> {
         coroutineScope {
@@ -431,6 +462,7 @@ class BuildRunner(
           ListValue((checkNotNull(lhs) as ListValue).values + (checkNotNull(rhs) as ListValue).values)
         }
       }
+
       is ExprNode.MemberAccessNode -> {
         val result = runTask(
           task,
@@ -441,16 +473,19 @@ class BuildRunner(
             check(result.values.contains(exprNode.name))
             EnumValue(result.cname, exprNode.name)
           }
+
           is CNameValue.NamespaceValue -> {
             check(result.names.contains(exprNode.name))
             runTask(task, BuildTask.ResolveName(result.cname.append(exprNode.name)))
           }
+
           is NamedTupleValue -> result.getValue(exprNode.name)
-          is DataClassInstanceValue -> result.fieldValues.getValue(exprNode.name)
+          is ClassInstanceValue -> result.fieldValues.getValue(exprNode.name)
           is SourceId -> runTask(task, BuildTask.ResolveName(CName(result, exprNode.name)))
           else -> throw BibixBuildException(task, "Invalid access: $exprNode")
         }
       }
+
       is ExprNode.ListNode -> {
         val elemResults = runTasks(task, exprNode.elems.map {
           BuildTask.EvalExpr(task.origin, task.exprGraphId, it, task.thisValue)
@@ -458,6 +493,7 @@ class BuildRunner(
         val elemResultValues = coercer.toBibixValues(task, elemResults)
         ListValue(elemResultValues)
       }
+
       is ExprNode.TupleNode -> {
         val elemResults = runTasks(task, exprNode.elems.map {
           BuildTask.EvalExpr(task.origin, task.exprGraphId, it, task.thisValue)
@@ -465,6 +501,7 @@ class BuildRunner(
         val elemResultValues = coercer.toBibixValues(task, elemResults)
         TupleValue(elemResultValues)
       }
+
       is ExprNode.NamedTupleNode -> {
         val elemResults = runTasks(task, exprNode.elems.map {
           BuildTask.EvalExpr(task.origin, task.exprGraphId, it.second, task.thisValue)
@@ -473,6 +510,7 @@ class BuildRunner(
         NamedTupleValue(
           exprNode.elems.zip(elemResultValues).map { it.first.first to it.second })
       }
+
       is ExprNode.StringLiteralNode -> {
         val exprChunkResults = runTasks(task,
           exprNode.stringElems.filterIsInstance<ExprChunk>().map {
@@ -487,11 +525,13 @@ class BuildRunner(
               stringBuilder.append(resultValues[i].stringify())
               i += 1
             }
+
             is StringChunk -> stringBuilder.append(elem.value)
           }
         }
         StringValue(stringBuilder.toString())
       }
+
       is ExprNode.BooleanLiteralNode -> BooleanValue(exprNode.value)
       is ExprNode.ClassThisRef -> checkNotNull(task.thisValue)
       ExprNode.ActionArgsRef -> actionArgs!!
@@ -569,6 +609,7 @@ class BuildRunner(
     val (cls: Class<*>, implObjectIdHash: BibixIdProto.ObjectIdHash) = when (ruleImplInfo) {
       is BuildRuleImplInfo.NativeBuildRuleImplInfo ->
         Pair(ruleImplInfo.cls, ruleImplInfo.implObjectIdHash)
+
       is BuildRuleImplInfo.UserBuildRuleImplInfo -> {
         // TODO implName을 여기서 resolve하지 말고 실제 실행하기 직전에 하기. 그래야 genRuleImplTempalte같은거 할때 싸이클이 안생김
         val implResolveTask = BuildTask.ResolveName(ruleImplInfo.implName)
@@ -579,7 +620,7 @@ class BuildRunner(
           CustomType(CName(BibixInternalSourceId("jvm"), "ClassPaths")),
           null
         )
-        implResult as DataClassInstanceValue
+        implResult as ClassInstanceValue
         synchronized(this) {
           val implObjectId = taskObjectIds.getValue(implResolveTask)
           val implObjectIdHash = implObjectId.hashString()
@@ -618,6 +659,7 @@ class BuildRunner(
     val objectDirectory = repo.prepareObjectDirectory(objectId, inputHash)
     val progressIndicator = getProgressIndicator()
     val buildContext = BuildContext(
+      buildEnv,
       ruleImplInfo.origin,
       repo.fileSystem,
       buildGraph.baseDirectories.getValue(ruleImplInfo.origin),
@@ -687,8 +729,10 @@ class BuildRunner(
           is BuildRuleReturn.ValueReturn -> onFinalValue(result.value)
           is BuildRuleReturn.FailedReturn ->
             throw BibixBuildException(task, "Plugin failed", result.exception)
+
           is BuildRuleReturn.DoneReturn ->
             throw BibixBuildException(task, "build rule must not return Done value")
+
           is BuildRuleReturn.EvalAndThen -> {
             // `result.ruleName`을 . 단위로 끊어서 rule 이름을 찾은 다음
             val nameTokens = result.ruleName.split('.')
@@ -709,6 +753,7 @@ class BuildRunner(
               nextCall(result.whenDone, buildResult)
             }
           }
+
           is BuildRuleReturn.GetClassTypeDetails -> {
             val cnames = result.cnames + (result.unames.map { CName(origin, it) })
             routineManager.executeSuspend(task, {
@@ -738,6 +783,7 @@ class BuildRunner(
                         )
                       })
                   }
+
                   is CNameValue.SuperClassType -> {
                     val subNames = cls.subs.map { it.name }
                     val subTypes = runTasks(task, subNames.map { BuildTask.ResolveName(it) })
@@ -782,7 +828,7 @@ class BuildRunner(
 
     val progressIndicator = getProgressIndicator()
 
-    val actionContext = ActionContext(ruleImplInfo.origin, args, progressIndicator)
+    val actionContext = ActionContext(buildEnv, ruleImplInfo.origin, args, progressIndicator)
 
     val callingTarget = "${ruleImplInfo.cls.canonicalName}:$methodName"
 
@@ -800,8 +846,10 @@ class BuildRunner(
           null -> cont.resume(NoneValue)
           is BuildRuleReturn.ValueReturn ->
             throw BibixBuildException(task, "action rule must not return a value")
+
           is BuildRuleReturn.FailedReturn ->
             throw BibixBuildException(task, result.exception.message ?: "", result.exception)
+
           is BuildRuleReturn.DoneReturn -> cont.resume(NoneValue)
           is BuildRuleReturn.EvalAndThen -> {
             // `result.ruleName`을 . 단위로 끊어서 rule 이름을 찾은 다음

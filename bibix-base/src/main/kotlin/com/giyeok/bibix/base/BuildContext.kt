@@ -1,12 +1,13 @@
 package com.giyeok.bibix.base
 
-import com.giyeok.bibix.runner.BibixIdProto
+import com.giyeok.bibix.BibixIdProto
 import java.nio.file.FileSystem
 import java.nio.file.Path
 import kotlin.io.path.createDirectory
 import kotlin.io.path.notExists
 
 data class BuildContext(
+  val env: BuildEnv,
   // 해당 모듈의 definition source id
   val sourceId: SourceId,
   val fileSystem: FileSystem,

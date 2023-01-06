@@ -1,9 +1,10 @@
 package com.giyeok.bibix.plugins.curl
 
 import com.giyeok.bibix.plugins.Classes
-import com.giyeok.bibix.plugins.BibixPlugin
+import com.giyeok.bibix.plugins.PreloadedPlugin
 
-val curlPlugin = BibixPlugin.fromScript(
+val curlPlugin = PreloadedPlugin.fromScript(
+  "com.giyeok.bibix.plugins.curl",
   """
     def download(
       url: string,

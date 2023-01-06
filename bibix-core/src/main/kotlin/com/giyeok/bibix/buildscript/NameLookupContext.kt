@@ -54,7 +54,7 @@ sealed class NameLookupChain {
   data class NameScope(val cname: CName, val names: Set<String>) {
     companion object {
       fun fromDefs(cname: CName, defs: List<BibixAst.Def>): NameScope {
-        val names = defs.map { def ->
+        val names = defs.mapNotNull { def ->
           when (def) {
             is BibixAst.NamespaceDef -> def.name()
             is BibixAst.ImportName -> def.rename().getOrNull() ?: def.name().tokens().last()
@@ -64,6 +64,7 @@ sealed class NameLookupChain {
             is BibixAst.DataClassDef -> def.name()
             is BibixAst.SuperClassDef -> def.name()
             is BibixAst.ArgDef -> def.name()
+            is BibixAst.ArgRedef -> null
             is BibixAst.BuildRuleDef -> def.name()
             is BibixAst.ActionDef -> def.name()
             is BibixAst.ActionRuleDef -> def.name()

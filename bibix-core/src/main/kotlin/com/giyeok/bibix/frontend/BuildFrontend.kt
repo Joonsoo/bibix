@@ -4,19 +4,20 @@ import com.giyeok.bibix.ast.BibixAst
 import com.giyeok.bibix.base.*
 import com.giyeok.bibix.buildscript.BuildGraph
 import com.giyeok.bibix.buildscript.NameLookupContext
-import com.giyeok.bibix.plugins.BibixPlugin
-import com.giyeok.bibix.plugins.bibix.bibixPlugin
+import com.giyeok.bibix.interpreter.expr.Coercer
+import com.giyeok.bibix.plugins.PreloadedPlugin
+import com.giyeok.bibix.plugins.bibix.preloadedPlugin
 import com.giyeok.bibix.plugins.curl.curlPlugin
 import com.giyeok.bibix.plugins.java.javaPlugin
 import com.giyeok.bibix.plugins.jvm.jvmPlugin
 import com.giyeok.bibix.plugins.maven.mavenPlugin
 import com.giyeok.bibix.plugins.root.rootScript
+import com.giyeok.bibix.repo.Repo
 import com.giyeok.bibix.runner.*
 import com.giyeok.bibix.utils.toKtList
 import com.giyeok.jparser.ParsingErrors
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import java.io.File
 import java.nio.file.Path
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicInteger
@@ -28,12 +29,12 @@ class BuildFrontend(
   val actionArgs: ListValue? = null,
   val scriptFileName: String = "build.bbx",
   val useDebuggingMode: Boolean = false,
-  val rootPlugins: Map<String, BibixPlugin> = mapOf(
+  val rootPlugins: Map<String, PreloadedPlugin> = mapOf(
     "curl" to curlPlugin,
     "jvm" to jvmPlugin,
     "java" to javaPlugin,
     "maven" to mavenPlugin,
-    "bibix" to bibixPlugin,
+    "bibix" to preloadedPlugin,
   )
 ) {
   val scriptFile = projectDir.resolve(scriptFileName)
@@ -111,7 +112,10 @@ class BuildFrontend(
 
   val threadPool = ThreadPool(buildGraph, routineManager, repo.runConfig.maxThreads)
 
+  val buildEnv = BuildEnv(OS.Linux("ubuntu", "22.04"), Architecture.X86_64)
+
   val buildRunner = BuildRunner(
+    buildEnv,
     buildGraph,
     rootScript,
     rootPlugins,

@@ -3,7 +3,7 @@ package com.giyeok.bibix.buildscript
 import com.giyeok.bibix.ast.BibixAst
 import com.giyeok.bibix.base.CName
 import com.giyeok.bibix.base.SourceId
-import com.giyeok.bibix.runner.BibixType
+import com.giyeok.bibix.interpreter.BibixType
 import com.giyeok.bibix.utils.toKtList
 import com.giyeok.jparser.ParseResultTree
 
@@ -118,7 +118,7 @@ data class ExprGraph(
             is BibixAst.SimpleExpr -> {
               builder.addExpr(
                 traverse(
-                  BibixAst.NameRef(elem.name(), elem.parseNode()),
+                  BibixAst.NameRef(elem.name(), -1, elem.parseNode()),
                   lookup,
                   thisClassTypeName,
                   typeTraverser

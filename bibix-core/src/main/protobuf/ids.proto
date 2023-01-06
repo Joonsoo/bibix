@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package com.giyeok.bibix.runner;
+package com.giyeok.bibix;
 
 import "values.proto";
 import "google/protobuf/empty.proto";

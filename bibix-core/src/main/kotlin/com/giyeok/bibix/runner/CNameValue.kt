@@ -2,6 +2,8 @@ package com.giyeok.bibix.runner
 
 import com.giyeok.bibix.base.BibixValue
 import com.giyeok.bibix.base.CName
+import com.giyeok.bibix.interpreter.BibixType
+import com.giyeok.bibix.interpreter.CustomType
 
 sealed class CNameValue {
   data class DeferredImport(val deferredImportId: Int) : CNameValue()
@@ -29,7 +31,6 @@ sealed class CNameValue {
   data class EnumType(val cname: CName, val values: List<String>) : CNameValue()
 
   data class ArgVar(
-    val replacing: CName?,
     val type: BibixType,
     val defaultValueId: Int?,
   ) : CNameValue()

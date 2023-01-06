@@ -1,0 +1,25 @@
+// 매크로가 필요할까?
+
+macro myMacro(x, y) {
+	class Class{bigCamel(x)}()
+	def hello_{x}(param_{x}: string, version?: string): jvm.ClassPkgs
+
+	{x}_build = hello_{x}(param_{x} = "123")
+}
+
+
+// cartesian expansion by default
+expand myMacro(x <- RepoType.values, y <- ["123", "456"])
+
+expand myMacro(x, y <- zip(RepoType.values, ["x", "y"]))
+
+expand myMacro(x <- ["123"], y = "hey!")
+
+
+expand {
+    for x in ["123"] {
+        for y in ["hey!"] {
+            myMacro(x, y)
+        }
+    }
+}

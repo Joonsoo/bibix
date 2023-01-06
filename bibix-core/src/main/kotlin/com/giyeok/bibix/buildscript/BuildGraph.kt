@@ -1,9 +1,12 @@
 package com.giyeok.bibix.buildscript
 
+import com.giyeok.bibix.BibixIdProto
 import com.giyeok.bibix.ast.BibixAst
 import com.giyeok.bibix.base.CName
 import com.giyeok.bibix.base.SourceId
-import com.giyeok.bibix.runner.*
+import com.giyeok.bibix.interpreter.*
+import com.giyeok.bibix.runner.CNameValue
+import com.giyeok.bibix.runner.Param
 import com.giyeok.bibix.utils.getOrNull
 import com.giyeok.bibix.utils.toKtList
 import java.nio.file.Path
@@ -56,6 +59,7 @@ class BuildGraph(
           addDefs(subname, elems, sublookup)
           names[subname] = CNameValue.NamespaceValue(subname, sublookup.chain.scope.names)
         }
+
         is BibixAst.ImportDef -> {
           val (importDef: DeferredImportDef, importName) = when (def) {
             is BibixAst.ImportName -> {
@@ -74,6 +78,7 @@ class BuildGraph(
                 )
               }
             }
+
             is BibixAst.ImportAll -> {
               Pair(
                 DeferredImportDef.ImportAll(
@@ -86,6 +91,7 @@ class BuildGraph(
                 def.rename()
               )
             }
+
             is BibixAst.ImportFrom -> {
               val nameTokens = def.importing().tokens().toKtList()
               Pair(
@@ -96,6 +102,7 @@ class BuildGraph(
                 def.rename().getOrNull() ?: nameTokens.last()
               )
             }
+
             else -> throw AssertionError()
           }
           registerName(
@@ -103,12 +110,14 @@ class BuildGraph(
             CNameValue.DeferredImport(deferredImports.register(importDef))
           )
         }
+
         is BibixAst.NameDef -> {
           registerName(
             cname.append(def.name()),
             CNameValue.ExprValue(exprGraphs.register(traverseExpr(def.value(), lookup)))
           )
         }
+
         is BibixAst.DataClassDef -> {
           val className = cname.append(def.name())
           val fields = def.fields().toKtList().map { field ->
@@ -127,12 +136,14 @@ class BuildGraph(
             }
           registerName(className, CNameValue.DataClassType(className, fields, casts))
         }
+
         is BibixAst.SuperClassDef -> {
           val className = cname.append(def.name())
           val subs = def.subs().toKtList().map { CustomType(lookup.findName(it)) }
 
           registerName(className, CNameValue.SuperClassType(className, subs))
         }
+
         is BibixAst.EnumDef -> {
           val enumName = cname.append(def.name())
           registerName(
@@ -140,16 +151,17 @@ class BuildGraph(
             CNameValue.EnumType(enumName, def.values().toKtList())
           )
         }
+
         is BibixAst.ArgDef -> {
           registerName(
             cname.append(def.name()),
             CNameValue.ArgVar(
-              def.replacing().getOrNull()?.let { lookup.findName(it) },
               traverseTypeExpr(def.typ().getOrNull()!!, lookup),
               def.defaultValue().getOrNull()?.let { exprGraphs.register(traverseExpr(it, lookup)) }
             )
           )
         }
+
         is BibixAst.BuildRuleDef -> {
           registerName(
             cname.append(def.name()),
@@ -163,6 +175,7 @@ class BuildGraph(
             )
           )
         }
+
         is BibixAst.ActionRuleDef -> {
           registerName(
             cname.append(def.name()),
@@ -175,6 +188,7 @@ class BuildGraph(
             )
           )
         }
+
         is BibixAst.ActionDef -> {
           val argsName = def.argsName().getOrNull()
           val lookup1 = if (argsName == null) lookup else lookup.withArgs(argsName)
@@ -183,6 +197,7 @@ class BuildGraph(
             CNameValue.ActionCallValue(exprGraphs.register(traverseExpr(def.expr(), lookup1)))
           )
         }
+
         else -> throw AssertionError()
       }
     }
@@ -204,12 +219,14 @@ class BuildGraph(
           sourceId,
           exprGraphs.register(traverseExpr(importSource, lookup))
         )
+
       is BibixAst.CallExpr -> {
         ImportSource.ImportSourceCall(
           sourceId,
           exprGraphs.register(traverseExpr(importSource, lookup))
         )
       }
+
       else -> throw AssertionError()
     }
 
@@ -234,6 +251,7 @@ class BuildGraph(
           else -> CustomType(lookup.findName(name))
         }
       }
+
       is BibixAst.CollectionType ->
         when (typeExpr.name()) {
           "list" -> {
@@ -241,22 +259,28 @@ class BuildGraph(
             val typeParam = typeExpr.typeParams().params().head()
             ListType(traverseTypeExpr(typeParam, lookup))
           }
+
           "set" -> {
             check(typeExpr.typeParams().params().size() == 1)
             val typeParam = typeExpr.typeParams().params().head()
             SetType(traverseTypeExpr(typeParam, lookup))
           }
+
           else ->
             throw IllegalArgumentException("Unknown type: ${typeExpr.parseNode().sourceText()}")
         }
+
       is BibixAst.TupleType ->
         TupleType(typeExpr.elems().toKtList().map { traverseTypeExpr(it, lookup) })
+
       is BibixAst.NamedTupleType ->
         NamedTupleType(typeExpr.elems().toKtList().map {
           it.name() to traverseTypeExpr(it.typ(), lookup)
         })
+
       is BibixAst.UnionType -> UnionType(
         typeExpr.elems().toKtList().map { traverseTypeExpr(it, lookup) })
+
       is BibixAst.NoneType -> NoneType
       else -> throw AssertionError()
     }

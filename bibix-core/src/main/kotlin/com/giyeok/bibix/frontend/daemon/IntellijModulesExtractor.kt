@@ -11,7 +11,7 @@ import com.giyeok.bibix.daemon.IntellijLibraryNodeKt.intellijScalaSdkLibraryNode
 import com.giyeok.bibix.frontend.BuildFrontend
 import com.giyeok.bibix.plugins.*
 import com.giyeok.bibix.runner.BuildTask
-import com.giyeok.bibix.runner.hashString
+import com.giyeok.bibix.repo.hashString
 import com.giyeok.bibix.utils.hexToByteString
 import com.giyeok.bibix.utils.hexToByteStringOrNull
 import com.giyeok.bibix.utils.toHexString

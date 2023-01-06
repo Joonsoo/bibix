@@ -1,0 +1,16 @@
+package com.giyeok.bibix
+
+from bibix.plugins() import license
+from bibix.plugins() import cc
+from git() import nvidia
+
+library = zip.unzip(curl.download(""))
+
+// annotation은 어떻게 설계할까..
+@licenseRequired(url="")
+headers = cc.builtlib(
+  hdrs = glob("$library/include/**/*.h"),
+  libs = [
+    "$library/lib/libcudnn.so",
+  ],
+)

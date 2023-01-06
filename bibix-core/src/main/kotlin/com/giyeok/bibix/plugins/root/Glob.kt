@@ -1,7 +1,6 @@
 package com.giyeok.bibix.plugins.root
 
 import com.giyeok.bibix.base.*
-import java.nio.file.FileSystems
 import java.nio.file.Files
 import kotlin.io.path.absolutePathString
 

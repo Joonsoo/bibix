@@ -1,12 +1,11 @@
 package com.giyeok.bibix.plugins.root
 
 import com.giyeok.bibix.plugins.Classes
-import com.giyeok.bibix.plugins.BibixPlugin
+import com.giyeok.bibix.plugins.PreloadedPlugin
 
-val rootScript = BibixPlugin.fromScript(
+val rootScript = PreloadedPlugin.fromScript(
+  "com.giyeok.bibix.plugins.root",
   """
-    class GitSource(url: string, ref: string, path: string)
-    
     class Env(os: OS, arch: Arch)
     
     enum OS {
@@ -23,13 +22,7 @@ val rootScript = BibixPlugin.fromScript(
       aarch_64,
     }
     
-    def git(
-      url: string,
-      tag?: string,
-      branch?: string,
-      ref?: string,
-      path: string = "",
-    ): GitSource = native:com.giyeok.bibix.plugins.root.Git
+    class BibixPackage(baseDirectory: directory, scriptName?: string)
     
     def glob(
       pattern: {string, set<string>}

@@ -37,13 +37,13 @@ message NamespaceInfo {
 
 message TargetInfo {
   string builtin_plugin = 1; // Optional
-  com.giyeok.bibix.runner.RuleImplId rule = 2;
+  com.giyeok.bibix.RuleImplId rule = 2;
   map<string, BibixExpr> args = 3;
 }
 
 message BibixExpr {
   // Optional. evaluate된 결과가 있으면 반환.
-  com.giyeok.bibix.runner.BibixValue value = 1;
+  com.giyeok.bibix.BibixValue value = 1;
 
   message SeqExpr {
     repeated BibixExpr elems = 1;
@@ -67,7 +67,7 @@ message BibixExpr {
 
 message ActionInfo {
   string builtin_plugin = 1;
-  com.giyeok.bibix.runner.RuleImplId rule = 2;
+  com.giyeok.bibix.RuleImplId rule = 2;
   map<string, BibixExpr> args = 3;
 }
 
@@ -86,14 +86,14 @@ message BuildTargetReq {
 message ArgValue {
   string name = 1;
   oneof value {
-    com.giyeok.bibix.runner.BibixValue value_inst = 2;
+    com.giyeok.bibix.BibixValue value_inst = 2;
     string value_expr = 3;
   }
 }
 
 message BuiltTargetInfo {
-  com.giyeok.bibix.runner.BibixValue value = 1;
-  com.giyeok.bibix.runner.ObjectIdHash object_id = 2;
+  com.giyeok.bibix.BibixValue value = 1;
+  com.giyeok.bibix.ObjectIdHash object_id = 2;
   // Optional. destination directory가 만들어졌을 때만 설정
   string object_path = 3;
   // Optional. output 디렉토리가 만들어졌을 때만 설정
