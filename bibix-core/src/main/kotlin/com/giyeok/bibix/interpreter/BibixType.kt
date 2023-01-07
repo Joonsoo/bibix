@@ -1,8 +1,5 @@
 package com.giyeok.bibix.interpreter
 
-import com.giyeok.bibix.base.CName
-
-// CustomType은 실제로 클래스인지 enum인지 알 수 없는 경우
 sealed class BibixType
 
 object AnyType : BibixType()
@@ -16,8 +13,6 @@ object PathType : BibixType()
 object FileType : BibixType()
 
 object DirectoryType : BibixType()
-
-data class CustomType(val name: CName) : BibixType()
 
 data class ListType(val elemType: BibixType) : BibixType()
 

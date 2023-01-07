@@ -10,6 +10,7 @@ import com.giyeok.bibix.interpreter.name.NameLookupTable
 import com.giyeok.bibix.plugins.Classes
 import com.giyeok.bibix.plugins.PreloadedPlugin
 import com.giyeok.bibix.utils.toKtList
+import com.google.common.annotations.VisibleForTesting
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import java.nio.file.Path
@@ -17,7 +18,9 @@ import kotlin.io.path.readText
 
 class SourceManager {
   private val projectRoots = mutableMapOf<SourceId, Path>()
-  private val sourcePackageName = mutableMapOf<SourceId, String>()
+
+  @VisibleForTesting
+  val sourcePackageName = mutableMapOf<SourceId, String>()
   private val externSources = mutableMapOf<BibixProject, ExternSourceId>()
   private var externSourceIdCounter = 0
   private val mutex = Mutex()
@@ -77,7 +80,9 @@ class SourceManager {
   }
 
   fun registerPreloadedPluginClasses(name: String, plugin: PreloadedPlugin) {
-    preloadedPluginClasses[PreloadedSourceId(name)] = plugin.classes
+    val sourceId = PreloadedSourceId(name)
+    preloadedPluginClasses[sourceId] = plugin.classes
+    sourcePackageName[sourceId] = plugin.packageName
   }
 
   fun getPreloadedPluginClass(sourceId: PreloadedSourceId, className: String): Class<*> =

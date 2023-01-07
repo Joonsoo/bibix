@@ -116,96 +116,96 @@ class Coercer(val buildGraph: BuildGraph, val runner: BuildRunner) {
           else -> null
         }
 
-        is CustomType -> {
-          when (val actualType = runner.runTask(task, BuildTask.ResolveName(type.name))) {
-            is CNameValue.DataClassType -> {
-              suspend fun tupleToClass(
-                values: List<BibixValue>,
-                actualType: CNameValue.DataClassType,
-              ): ClassInstanceValue? {
-                val fieldValues = actualType.fields.zip(values)
-                  .mapNotNull { (field, value) ->
-                    val fieldType = if (field.optional) {
-                      if (field.type is UnionType) {
-                        UnionType(field.type.types + NoneType)
-                      } else {
-                        UnionType(listOf(field.type, NoneType))
-                      }
-                    } else field.type
-                    val coerced =
-                      coerce(task, origin, value, fieldType, nclassOrigin) ?: return null
-                    if (field.optional && coerced == NoneValue) {
-                      null
-                    } else {
-                      field.name to coerced
-                    }
-                  }.toMap()
-                return ClassInstanceValue("", "TODO", fieldValues)
-              }
-              when (value) {
-                is ClassInstanceValue -> {
-                  TODO()
-//                  if (value.className != actualType.cname) {
-//                    tryCastClassInstance(task, origin, value, type, nclassOrigin)
+//        is CustomType -> {
+//          when (val actualType = runner.runTask(task, BuildTask.ResolveName(type.name))) {
+//            is CNameValue.DataClassType -> {
+//              suspend fun tupleToClass(
+//                values: List<BibixValue>,
+//                actualType: CNameValue.DataClassType,
+//              ): ClassInstanceValue? {
+//                val fieldValues = actualType.fields.zip(values)
+//                  .mapNotNull { (field, value) ->
+//                    val fieldType = if (field.optional) {
+//                      if (field.type is UnionType) {
+//                        UnionType(field.type.types + NoneType)
+//                      } else {
+//                        UnionType(listOf(field.type, NoneType))
+//                      }
+//                    } else field.type
+//                    val coerced =
+//                      coerce(task, origin, value, fieldType, nclassOrigin) ?: return null
+//                    if (field.optional && coerced == NoneValue) {
+//                      null
+//                    } else {
+//                      field.name to coerced
+//                    }
+//                  }.toMap()
+//                return ClassInstanceValue("", "TODO", fieldValues)
+//              }
+//              when (value) {
+//                is ClassInstanceValue -> {
+//                  TODO()
+////                  if (value.className != actualType.cname) {
+////                    tryCastClassInstance(task, origin, value, type, nclassOrigin)
+////                  } else {
+////                    val fieldValues: Map<String, BibixValue> =
+////                      coerceClassFields(actualType.fields, value.fieldValues) ?: return null
+////                    ClassInstanceValue(value.className, fieldValues)
+////                  }
+//                }
+//
+//                is NamedTupleValue ->
+//                  if (value.pairs.map { it.first } != actualType.fields.map { it.name }) {
+//                    null
 //                  } else {
-//                    val fieldValues: Map<String, BibixValue> =
-//                      coerceClassFields(actualType.fields, value.fieldValues) ?: return null
-//                    ClassInstanceValue(value.className, fieldValues)
+//                    tupleToClass(value.pairs.map { it.second }, actualType)
 //                  }
-                }
-
-                is NamedTupleValue ->
-                  if (value.pairs.map { it.first } != actualType.fields.map { it.name }) {
-                    null
-                  } else {
-                    tupleToClass(value.pairs.map { it.second }, actualType)
-                  }
-
-                is TupleValue ->
-                  if (value.values.size != actualType.fields.size) {
-                    null
-                  } else {
-                    tupleToClass(value.values, actualType)
-                  }
-
-                else -> null
-              }
-            }
-
-            is CNameValue.SuperClassType ->
-              when (value) {
-                is ClassInstanceValue -> {
-                  // TODO sub class -> sub class 인 경우 처리
-                  val subTypes =
-                    runner.runTasks(task, actualType.subs.map { BuildTask.ResolveName(it.name) })
-                      .map { it as CNameValue.DataClassType }
-                  // if (subTypes.any { it.cname == value.className }) value else null
-                  TODO()
-                }
-
-                else -> null
-              }
-
-            is CNameValue.EnumType -> when (value) {
-              is EnumValue ->
-                // if (actualType.cname == value.enumTypeName) value else null
-                TODO()
-
-              is StringValue ->
-                if (actualType.values.contains(value.value)) {
-                  // EnumValue(actualType.cname, value.value)
-                  TODO()
-                } else null
-
-              is ClassInstanceValue ->
-                tryCastClassInstance(task, origin, value, type, nclassOrigin)
-
-              else -> null
-            }
-
-            else -> null
-          }
-        }
+//
+//                is TupleValue ->
+//                  if (value.values.size != actualType.fields.size) {
+//                    null
+//                  } else {
+//                    tupleToClass(value.values, actualType)
+//                  }
+//
+//                else -> null
+//              }
+//            }
+//
+//            is CNameValue.SuperClassType ->
+//              when (value) {
+//                is ClassInstanceValue -> {
+//                  // TODO sub class -> sub class 인 경우 처리
+//                  val subTypes =
+//                    runner.runTasks(task, actualType.subs.map { BuildTask.ResolveName(it.name) })
+//                      .map { it as CNameValue.DataClassType }
+//                  // if (subTypes.any { it.cname == value.className }) value else null
+//                  TODO()
+//                }
+//
+//                else -> null
+//              }
+//
+//            is CNameValue.EnumType -> when (value) {
+//              is EnumValue ->
+//                // if (actualType.cname == value.enumTypeName) value else null
+//                TODO()
+//
+//              is StringValue ->
+//                if (actualType.values.contains(value.value)) {
+//                  // EnumValue(actualType.cname, value.value)
+//                  TODO()
+//                } else null
+//
+//              is ClassInstanceValue ->
+//                tryCastClassInstance(task, origin, value, type, nclassOrigin)
+//
+//              else -> null
+//            }
+//
+//            else -> null
+//          }
+//        }
 
         is ListType -> {
           when (value) {
@@ -396,13 +396,13 @@ class Coercer(val buildGraph: BuildGraph, val runner: BuildRunner) {
     PathType -> TypeValue.PathTypeValue
     FileType -> TypeValue.FileTypeValue
     DirectoryType -> TypeValue.DirectoryTypeValue
-    is CustomType -> {
-      when (val resolved = runner.runTask(task, BuildTask.ResolveName(type.name))) {
-        is CNameValue.ClassType -> TODO() // TypeValue.ClassTypeValue(resolved.cname)
-        is CNameValue.EnumType -> TODO() // TypeValue.EnumTypeValue(resolved.cname, resolved.values)
-        else -> throw BibixBuildException(task, "Failed to find class or enum type ${type.name}")
-      }
-    }
+//    is CustomType -> {
+//      when (val resolved = runner.runTask(task, BuildTask.ResolveName(type.name))) {
+//        is CNameValue.ClassType -> TODO() // TypeValue.ClassTypeValue(resolved.cname)
+//        is CNameValue.EnumType -> TODO() // TypeValue.EnumTypeValue(resolved.cname, resolved.values)
+//        else -> throw BibixBuildException(task, "Failed to find class or enum type ${type.name}")
+//      }
+//    }
 
     is ListType -> TypeValue.ListTypeValue(toTypeValue(task, type.elemType))
     is SetType -> TypeValue.SetTypeValue(toTypeValue(task, type.elemType))

@@ -86,10 +86,6 @@ class ExprEvaluator(
         else -> TODO()
       }
 
-      is CustomType -> {
-        TODO()
-      }
-
       is ListType -> {
         when (value) {
           is ListValue -> withNoNull(value.values.map {

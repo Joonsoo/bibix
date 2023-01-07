@@ -5,7 +5,7 @@ import com.giyeok.bibix.base.*
 import com.giyeok.bibix.base.Constants.BIBIX_VERSION
 import com.giyeok.bibix.buildscript.*
 import com.giyeok.bibix.interpreter.AnyType
-import com.giyeok.bibix.interpreter.CustomType
+//import com.giyeok.bibix.interpreter.CustomType
 import com.giyeok.bibix.interpreter.DirectoryType
 import com.giyeok.bibix.interpreter.ListType
 import com.giyeok.bibix.interpreter.expr.*
@@ -268,7 +268,7 @@ class BuildRunner(
                 task,
                 task.cname.sourceId,
                 implResult0 as BibixValue,
-                CustomType(CName(PreloadedSourceId("jvm"), "ClassPaths")),
+                TODO(), // CustomType(CName(PreloadedSourceId("jvm"), "ClassPaths")),
                 null
               )
               implResult as ClassInstanceValue
@@ -617,7 +617,7 @@ class BuildRunner(
         val implResult = coercer.coerce(
           task, origin, implResult0 as BibixValue,
           // TODO resolveClassPkgs 호출하도록 수정
-          CustomType(CName(PreloadedSourceId("jvm"), "ClassPaths")),
+          TODO(), // CustomType(CName(PreloadedSourceId("jvm"), "ClassPaths")),
           null
         )
         implResult as ClassInstanceValue
@@ -785,10 +785,11 @@ class BuildRunner(
                   }
 
                   is CNameValue.SuperClassType -> {
-                    val subNames = cls.subs.map { it.name }
-                    val subTypes = runTasks(task, subNames.map { BuildTask.ResolveName(it) })
-                    println(subTypes)
-                    TypeValue.SuperClassTypeDetail("", "${cls.cname}", listOf())
+//                    val subNames = cls.subs.map { it.name }
+//                    val subTypes = runTasks(task, subNames.map { BuildTask.ResolveName(it) })
+//                    println(subTypes)
+//                    TypeValue.SuperClassTypeDetail("", "${cls.cname}", listOf())
+                    TODO()
                   }
                 }
               }

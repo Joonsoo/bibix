@@ -3,7 +3,6 @@ package com.giyeok.bibix.runner
 import com.giyeok.bibix.base.BibixValue
 import com.giyeok.bibix.base.CName
 import com.giyeok.bibix.interpreter.BibixType
-import com.giyeok.bibix.interpreter.CustomType
 
 sealed class CNameValue {
   data class DeferredImport(val deferredImportId: Int) : CNameValue()
@@ -25,7 +24,7 @@ sealed class CNameValue {
 
   data class SuperClassType(
     override val cname: CName,
-    val subs: List<CustomType>,
+//    val subs: List<CustomType>,
   ) : ClassType()
 
   data class EnumType(val cname: CName, val values: List<String>) : CNameValue()

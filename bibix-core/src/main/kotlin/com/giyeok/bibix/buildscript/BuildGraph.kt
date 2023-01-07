@@ -139,9 +139,10 @@ class BuildGraph(
 
         is BibixAst.SuperClassDef -> {
           val className = cname.append(def.name())
-          val subs = def.subs().toKtList().map { CustomType(lookup.findName(it)) }
-
-          registerName(className, CNameValue.SuperClassType(className, subs))
+//          val subs = def.subs().toKtList().map { CustomType(lookup.findName(it)) }
+//
+//          registerName(className, CNameValue.SuperClassType(className, subs))
+          TODO()
         }
 
         is BibixAst.EnumDef -> {
@@ -248,7 +249,7 @@ class BuildGraph(
           listOf("buildrule") -> BuildRuleDefType
           listOf("actionrule") -> ActionRuleDefType
           listOf("type") -> TypeType
-          else -> CustomType(lookup.findName(name))
+          else -> TODO() // CustomType(lookup.findName(name))
         }
       }
 

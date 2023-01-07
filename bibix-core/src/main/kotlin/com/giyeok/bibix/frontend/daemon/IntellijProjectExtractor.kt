@@ -7,7 +7,6 @@ import com.giyeok.bibix.buildscript.ParamNodes
 import com.giyeok.bibix.daemon.BibixDaemonApiProto
 import com.giyeok.bibix.daemon.intellijProjectNode
 import com.giyeok.bibix.daemon.intellijProjectStructure
-import com.giyeok.bibix.interpreter.CustomType
 import com.giyeok.bibix.interpreter.FileType
 import com.giyeok.bibix.interpreter.SetType
 import com.giyeok.bibix.frontend.BuildFrontend
@@ -89,7 +88,8 @@ class IntellijProjectExtractor(val frontend: BuildFrontend) {
       depsTask,
       origin,
       values[1] as BibixValue,
-      SetType(CustomType(CName(PreloadedSourceId("jvm"), "ClassPkg"))),
+      // SetType(CustomType(CName(PreloadedSourceId("jvm"), "ClassPkg"))),
+      TODO(),
       null
     ) as SetValue).values.map { ClassPkg.fromBibix(it) }
     return ModuleData(cname, moduleLanguage, srcs, deps)

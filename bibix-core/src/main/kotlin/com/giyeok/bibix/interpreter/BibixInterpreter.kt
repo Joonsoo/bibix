@@ -26,7 +26,8 @@ class BibixInterpreter(
   @VisibleForTesting
   val nameLookupTable = NameLookupTable()
 
-  private val sourceManager = SourceManager()
+  @VisibleForTesting
+  val sourceManager = SourceManager()
 
   private val exprEvaluator = ExprEvaluator(this, g, sourceManager)
 

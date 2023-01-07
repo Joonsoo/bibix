@@ -37,7 +37,7 @@ class ImportTests {
     val repo = testRepo(fs)
 
     val xyzPlugin = PreloadedPlugin.fromScript(
-      "xyz",
+      "com.abc.xyz",
       """
         import yza
         
@@ -51,7 +51,7 @@ class ImportTests {
     )
 
     val yzaPlugin = PreloadedPlugin.fromScript(
-      "yza",
+      "com.abc.yza",
       """
         package com.giyeok.yza
         
@@ -118,6 +118,10 @@ class ImportTests {
     )
     assertThat(interpreter.nameLookupTable.imports[CName(MainSourceId, "planet")])
       .isInstanceOf(ImportedSource.ImportedDefinition::class.java)
+    assertThat(interpreter.sourceManager.sourcePackageName).containsExactly(
+      PreloadedSourceId("xyz"), "com.abc.xyz",
+      PreloadedSourceId("yza"), "com.abc.yza",
+    )
   }
 }
 
