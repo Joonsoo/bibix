@@ -92,8 +92,8 @@ class BuildFrontend(
       CNameValue.EvaluatedValue(
         NamedTupleValue(
           listOf(
-            "os" to EnumValue(CName(BibixRootSourceId, "OS"), os),
-            "arch" to EnumValue(CName(BibixRootSourceId, "Arch"), arch),
+            "os" to EnumValue("com.giyeok.bibix", "OS", os),
+            "arch" to EnumValue("com.giyeok.bibix", "Arch", arch),
             "bibixVersion" to StringValue(Constants.BIBIX_VERSION),
           )
         )

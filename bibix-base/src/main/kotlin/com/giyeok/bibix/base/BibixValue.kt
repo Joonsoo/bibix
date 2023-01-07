@@ -71,7 +71,9 @@ data class TupleValue(val values: List<BibixValue>) : BibixValue() {
 data class NamedTupleValue(val pairs: List<Pair<String, BibixValue>>) : BibixValue() {
   constructor(vararg values: Pair<String, BibixValue>) : this(values.toList())
 
-  fun getValue(name: String) = pairs.find { it.first == name }!!.second
+  val valuesMap = pairs.toMap()
+
+  fun getValue(name: String) = valuesMap.getValue(name)
 
   fun names() = pairs.map { it.first }
   fun values() = pairs.map { it.second }

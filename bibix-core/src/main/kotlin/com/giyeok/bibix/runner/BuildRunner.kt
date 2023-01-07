@@ -65,11 +65,11 @@ class BuildRunner(
   private fun addSourceId(sourceId: BibixIdProto.SourceId): SourceId = when (sourceId.sourceCase) {
     BibixIdProto.SourceId.SourceCase.ROOT_SOURCE -> BibixRootSourceId
     BibixIdProto.SourceId.SourceCase.MAIN_SOURCE -> MainSourceId
-    BibixIdProto.SourceId.SourceCase.BIBIX_INTERNAL_SOURCE -> BibixInternalSourceId(sourceId.bibixInternalSource)
-    BibixIdProto.SourceId.SourceCase.LOCAL_SOURCE -> LocalSourceId(sourceId.localSource)
+    BibixIdProto.SourceId.SourceCase.BIBIX_INTERNAL_SOURCE -> PreloadedSourceId(sourceId.bibixInternalSource)
+    // BibixIdProto.SourceId.SourceCase.LOCAL_SOURCE -> LocalSourceId(sourceId.localSource)
     BibixIdProto.SourceId.SourceCase.REMOTE_SOURCE -> {
       val remoteSourceId = buildGraph.addRemoteSource(sourceId.remoteSource)
-      RemoteSourceId(remoteSourceId)
+      ExternSourceId(remoteSourceId)
     }
 
     else -> TODO()
@@ -215,10 +215,10 @@ class BuildRunner(
               )
             }
 
-            value.implName.sourceId is BibixInternalSourceId &&
+            value.implName.sourceId is PreloadedSourceId &&
               value.implName.tokens == listOf("$$") -> {
               // native impls
-              val sourceId = value.implName.sourceId as BibixInternalSourceId
+              val sourceId = value.implName.sourceId as PreloadedSourceId
               val plugin = preloadedPlugins.getValue(sourceId.name)
               BuildRuleImplInfo.NativeBuildRuleImplInfo(
                 value,
@@ -249,9 +249,9 @@ class BuildRunner(
 
         is CNameValue.ActionRuleValue -> {
           when {
-            value.implName.sourceId is BibixInternalSourceId &&
+            value.implName.sourceId is PreloadedSourceId &&
               value.implName.tokens == listOf("$$") -> {
-              val sourceId = value.implName.sourceId as BibixInternalSourceId
+              val sourceId = value.implName.sourceId as PreloadedSourceId
               val plugin = preloadedPlugins.getValue(sourceId.name)
               ActionRuleImplInfo(
                 value,
@@ -268,7 +268,7 @@ class BuildRunner(
                 task,
                 task.cname.sourceId,
                 implResult0 as BibixValue,
-                CustomType(CName(BibixInternalSourceId("jvm"), "ClassPaths")),
+                CustomType(CName(PreloadedSourceId("jvm"), "ClassPaths")),
                 null
               )
               implResult as ClassInstanceValue
@@ -344,7 +344,7 @@ class BuildRunner(
         val pluginName = importDef.nameTokens.first()
         val bibixPlugin = preloadedPlugins[pluginName]
         checkNotNull(bibixPlugin) { "Unknown plugin: $pluginName" }
-        val sourceId = BibixInternalSourceId(pluginName)
+        val sourceId = PreloadedSourceId(pluginName)
         synchronized(this) {
           val defs = bibixPlugin.defs
           buildGraph.addDefs(
@@ -471,7 +471,7 @@ class BuildRunner(
         when (result) {
           is CNameValue.EnumType -> {
             check(result.values.contains(exprNode.name))
-            EnumValue(result.cname, exprNode.name)
+            EnumValue("", "${result.cname}", exprNode.name)
           }
 
           is CNameValue.NamespaceValue -> {
@@ -617,7 +617,7 @@ class BuildRunner(
         val implResult = coercer.coerce(
           task, origin, implResult0 as BibixValue,
           // TODO resolveClassPkgs 호출하도록 수정
-          CustomType(CName(BibixInternalSourceId("jvm"), "ClassPaths")),
+          CustomType(CName(PreloadedSourceId("jvm"), "ClassPaths")),
           null
         )
         implResult as ClassInstanceValue
@@ -773,8 +773,8 @@ class BuildRunner(
                   is CNameValue.DataClassType -> {
                     val fieldTypeValues = coercer.toTypeValues(task, cls.fields.map { it.type })
                     TypeValue.DataClassTypeDetail(
-                      cls.cname,
-                      relativeName,
+                      "",
+                      "${cls.cname}",
                       cls.fields.zip(fieldTypeValues).map {
                         TypeValue.DataClassFieldValue(
                           it.first.name,
@@ -788,7 +788,7 @@ class BuildRunner(
                     val subNames = cls.subs.map { it.name }
                     val subTypes = runTasks(task, subNames.map { BuildTask.ResolveName(it) })
                     println(subTypes)
-                    TypeValue.SuperClassTypeDetail(cls.cname, relativeName, subNames)
+                    TypeValue.SuperClassTypeDetail("", "${cls.cname}", listOf())
                   }
                 }
               }

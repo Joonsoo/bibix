@@ -30,6 +30,12 @@ data class NamedTupleType(val pairs: List<Pair<String, BibixType>>) : BibixType(
   fun valueTypes() = pairs.map { it.second }
 }
 
+data class DataClassType(val packageName: String, val className: String) : BibixType()
+
+data class SuperClassType(val packageName: String, val className: String) : BibixType()
+
+data class EnumType(val packageName: String, val enumName: String) : BibixType()
+
 data class UnionType(val types: List<BibixType>) : BibixType()
 
 object NoneType : BibixType()

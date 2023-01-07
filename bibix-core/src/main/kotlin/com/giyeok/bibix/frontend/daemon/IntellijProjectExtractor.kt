@@ -46,7 +46,7 @@ class IntellijProjectExtractor(val frontend: BuildFrontend) {
     cname: CName
   ): List<ModuleData> = defs.flatMap { def ->
     when (def) {
-      is BibixAst.NameDef ->
+      is BibixAst.TargetDef ->
         listOfNotNull(traverseModuleNode(cname.append(def.name())))
       is BibixAst.NamespaceDef ->
         traverseDef(def.body().defs().toKtList(), cname.append(def.name()))
@@ -89,7 +89,7 @@ class IntellijProjectExtractor(val frontend: BuildFrontend) {
       depsTask,
       origin,
       values[1] as BibixValue,
-      SetType(CustomType(CName(BibixInternalSourceId("jvm"), "ClassPkg"))),
+      SetType(CustomType(CName(PreloadedSourceId("jvm"), "ClassPkg"))),
       null
     ) as SetValue).values.map { ClassPkg.fromBibix(it) }
     return ModuleData(cname, moduleLanguage, srcs, deps)

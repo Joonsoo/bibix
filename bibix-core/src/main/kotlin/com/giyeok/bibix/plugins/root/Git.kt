@@ -15,17 +15,21 @@ class Git {
         check(branch == null && tag == null)
         ref
       }
+
       branch != null -> {
         check(tag == null)
         "refs/heads/$branch"
       }
+
       tag != null -> {
         "refs/tags/$tag"
       }
+
       else -> "refs/heads/main"
     }
     return ClassInstanceValue(
-      CName(BibixRootSourceId, "GitSource"),
+      "",
+      "GitSource",
       mapOf(
         "url" to context.arguments.getValue("url"),
         "ref" to StringValue(refSpec),

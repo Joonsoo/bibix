@@ -9,7 +9,8 @@ class Plugins {
     val ref = "refs/tags/$tag"
 //    val ref = "HEAD"
     return ClassInstanceValue(
-      CName(BibixRootSourceId, "GitSource"),
+      "",
+      "GitSource",
       mapOf(
         "url" to StringValue(Constants.BIBIX_GIT_URL),
         "ref" to StringValue(ref),
@@ -23,7 +24,8 @@ class Plugins {
     val ref = "refs/heads/$branch"
 //    val ref = "HEAD"
     return ClassInstanceValue(
-      CName(BibixRootSourceId, "GitSource"),
+      "",
+      "GitSource",
       mapOf(
         "url" to StringValue(Constants.BIBIX_GIT_URL),
         "ref" to StringValue(ref),

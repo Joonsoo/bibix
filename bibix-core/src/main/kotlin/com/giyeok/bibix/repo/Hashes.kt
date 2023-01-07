@@ -18,13 +18,12 @@ import java.security.MessageDigest
 fun SourceId.toProto(buildGraph: BuildGraph): BibixIdProto.SourceId = when (val sourceId = this) {
   BibixRootSourceId -> sourceId { this.rootSource = empty {} }
   MainSourceId -> sourceId { this.mainSource = empty {} }
-  is BibixInternalSourceId -> sourceId {
+  is PreloadedSourceId -> sourceId {
     this.bibixInternalSource = sourceId.name
   }
 
-  is LocalSourceId -> sourceId { this.localSource = sourceId.path }
-  is RemoteSourceId -> {
-    val remoteSource = buildGraph.remoteSources[sourceId.remoteSourceId]
+  is ExternSourceId -> {
+    val remoteSource = buildGraph.remoteSources[sourceId.externSourceId]
     sourceId { this.remoteSource = remoteSource }
   }
 }

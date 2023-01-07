@@ -9,7 +9,7 @@ data class ClassPaths(
   companion object {
     fun fromBibix(value: BibixValue): ClassPaths {
       value as ClassInstanceValue
-      check(value.className.tokens == listOf("ClassPaths"))
+//      check(value.className.tokens == listOf("ClassPaths"))
       return ClassPaths(
         cps = (value["cps"]!! as SetValue).values.map { (it as PathValue).path },
       )
@@ -32,7 +32,7 @@ data class ClassPkg(
   companion object {
     fun fromBibix(value: BibixValue): ClassPkg {
       value as ClassInstanceValue
-      check(value.className.tokens == listOf("ClassPkg"))
+//      check(value.className.tokens == listOf("ClassPkg"))
       return ClassPkg(
         origin = ClassOrigin.fromBibix(value["origin"]!!),
         cpinfo = CpInfo.fromBibix(value["cpinfo"]!!),
@@ -55,9 +55,9 @@ sealed class CpInfo {
   companion object {
     fun fromBibix(value: BibixValue): CpInfo {
       value as ClassInstanceValue
-      return when (value.className.tokens) {
-        listOf("JarInfo") -> JarInfo.fromBibix(value)
-        listOf("ClassesInfo") -> ClassesInfo.fromBibix(value)
+      return when (value.className) {
+        "JarInfo" -> JarInfo.fromBibix(value)
+        "ClassesInfo" -> ClassesInfo.fromBibix(value)
         else -> throw IllegalStateException("Unknown subclass of CpInfo: ${value.className}")
       }
     }
@@ -73,7 +73,7 @@ data class JarInfo(
   companion object {
     fun fromBibix(value: BibixValue): JarInfo {
       value as ClassInstanceValue
-      check(value.className.tokens == listOf("JarInfo"))
+//      check(value.className.tokens == listOf("JarInfo"))
       return JarInfo(
         jar = (value["jar"]!! as FileValue).file,
         sourceJar = value["sourceJar"]?.let { (it as FileValue).file },
@@ -98,7 +98,7 @@ data class ClassesInfo(
   companion object {
     fun fromBibix(value: BibixValue): ClassesInfo {
       value as ClassInstanceValue
-      check(value.className.tokens == listOf("ClassesInfo"))
+//      check(value.className.tokens == listOf("ClassesInfo"))
       return ClassesInfo(
         classDirs = (value["classDirs"]!! as SetValue).values.map { (it as DirectoryValue).directory },
         resDirs = (value["resDirs"]!! as SetValue).values.map { (it as DirectoryValue).directory },
@@ -121,10 +121,10 @@ sealed class ClassOrigin {
   companion object {
     fun fromBibix(value: BibixValue): ClassOrigin {
       value as ClassInstanceValue
-      return when (value.className.tokens) {
-        listOf("MavenDep") -> MavenDep.fromBibix(value)
-        listOf("LocalLib") -> LocalLib.fromBibix(value)
-        listOf("LocalBuilt") -> LocalBuilt.fromBibix(value)
+      return when (value.className) {
+        "MavenDep" -> MavenDep.fromBibix(value)
+        "LocalLib" -> LocalLib.fromBibix(value)
+        "LocalBuilt" -> LocalBuilt.fromBibix(value)
         else -> throw IllegalStateException("Unknown subclass of ClassOrigin: ${value.className}")
       }
     }
@@ -142,7 +142,7 @@ data class MavenDep(
   companion object {
     fun fromBibix(value: BibixValue): MavenDep {
       value as ClassInstanceValue
-      check(value.className.tokens == listOf("MavenDep"))
+//      check(value.className.tokens == listOf("MavenDep"))
       return MavenDep(
         repo = (value["repo"]!! as StringValue).value,
         group = (value["group"]!! as StringValue).value,
@@ -170,7 +170,7 @@ data class LocalBuilt(
   companion object {
     fun fromBibix(value: BibixValue): LocalBuilt {
       value as ClassInstanceValue
-      check(value.className.tokens == listOf("LocalBuilt"))
+//      check(value.className.tokens == listOf("LocalBuilt"))
       return LocalBuilt(
         objHash = (value["objHash"]!! as StringValue).value,
         builderName = (value["builderName"]!! as StringValue).value,
@@ -193,7 +193,7 @@ data class LocalLib(
   companion object {
     fun fromBibix(value: BibixValue): LocalLib {
       value as ClassInstanceValue
-      check(value.className.tokens == listOf("LocalLib"))
+//      check(value.className.tokens == listOf("LocalLib"))
       return LocalLib(
         path = (value["path"]!! as PathValue).path,
       )

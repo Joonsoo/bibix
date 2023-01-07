@@ -51,7 +51,7 @@ fun BibixValue.toProto(): BibixValueProto.BibixValue = when (val value = this) {
   is DirectoryValue -> bibixValue { this.directoryValue = value.directory.absolutePathString() }
   is EnumValue -> bibixValue {
     this.enumValue = enumValue {
-      this.enumType = value.enumTypeName.toString()
+      this.enumType = value.enumName.toString()
       this.value = value.value
     }
   }

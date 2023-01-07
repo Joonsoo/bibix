@@ -14,8 +14,8 @@ object GenCommon {
       TypeValue.BooleanTypeValue -> "Boolean"
       TypeValue.StringTypeValue -> "String"
       TypeValue.PathTypeValue, TypeValue.FileTypeValue, TypeValue.DirectoryTypeValue -> "Path"
-      is TypeValue.ClassTypeValue -> bibixType.className.tokens.last()
-      is TypeValue.EnumTypeValue -> bibixType.enumTypeName.tokens.last()
+      is TypeValue.ClassTypeValue -> TODO() // bibixType.className.tokens.last()
+      is TypeValue.EnumTypeValue -> TODO() // bibixType.enumTypeName.tokens.last()
       is TypeValue.ListTypeValue -> "List<${bibixTypeToKtType(bibixType.elemType)}>"
       is TypeValue.SetTypeValue -> "List<${bibixTypeToKtType(bibixType.elemType)}>"
       is TypeValue.TupleTypeValue -> TODO()
@@ -29,6 +29,7 @@ object GenCommon {
           TODO()
         }
       }
+
       TypeValue.NoneTypeValue -> TODO()
       TypeValue.BuildRuleDefTypeValue -> TODO()
       TypeValue.ActionRuleDefTypeValue -> TODO()
@@ -42,14 +43,17 @@ object GenCommon {
     TypeValue.PathTypeValue -> "($expr as PathValue).path"
     TypeValue.FileTypeValue -> "($expr as FileValue).file"
     TypeValue.DirectoryTypeValue -> "($expr as DirectoryValue).directory"
-    is TypeValue.ClassTypeValue -> "${bibixType.className.tokens.last()}.fromBibix($expr)"
+    is TypeValue.ClassTypeValue -> "${bibixType.className}.fromBibix($expr)"
     is TypeValue.EnumTypeValue -> {
-      "${bibixType.enumTypeName.tokens.last()}.valueOf((($expr) as EnumValue).value)"
+      "${bibixType.enumName}.valueOf((($expr) as EnumValue).value)"
     }
+
     is TypeValue.ListTypeValue ->
       "($expr as ListValue).values.map { ${bibixValueToKt("it", bibixType.elemType)} }"
+
     is TypeValue.SetTypeValue ->
       "($expr as SetValue).values.map { ${bibixValueToKt("it", bibixType.elemType)} }"
+
     is TypeValue.TupleTypeValue -> TODO()
     is TypeValue.NamedTupleTypeValue -> TODO()
     is TypeValue.UnionTypeValue -> {
@@ -60,6 +64,7 @@ object GenCommon {
         TODO()
       }
     }
+
     TypeValue.NoneTypeValue -> TODO()
     TypeValue.BuildRuleDefTypeValue -> TODO()
     TypeValue.ActionRuleDefTypeValue -> TODO()
@@ -77,8 +82,10 @@ object GenCommon {
     is TypeValue.EnumTypeValue -> TODO()
     is TypeValue.ListTypeValue ->
       "ListValue($expr.map { ${ktValueToBibix("it", bibixType.elemType)} })"
+
     is TypeValue.SetTypeValue ->
       "SetValue($expr.map { ${ktValueToBibix("it", bibixType.elemType)} })"
+
     is TypeValue.TupleTypeValue -> TODO()
     is TypeValue.NamedTupleTypeValue -> TODO()
     is TypeValue.UnionTypeValue -> {
@@ -89,6 +96,7 @@ object GenCommon {
         TODO()
       }
     }
+
     TypeValue.NoneTypeValue -> TODO()
     TypeValue.BuildRuleDefTypeValue -> TODO()
     TypeValue.ActionRuleDefTypeValue -> TODO()

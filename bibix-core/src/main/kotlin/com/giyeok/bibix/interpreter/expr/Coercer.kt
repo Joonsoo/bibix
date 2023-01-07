@@ -60,7 +60,7 @@ class Coercer(val buildGraph: BuildGraph, val runner: BuildRunner) {
       ) as CNameValue.DataClassType
       val fieldValues: Map<String, BibixValue> =
         coerceClassFields(resolved.fields, value.fieldValues) ?: return null
-      val instanceValue = ClassInstanceValue(resolved.cname, fieldValues)
+      val instanceValue = ClassInstanceValue("", "TODO", fieldValues)
       coerce(task, origin, instanceValue, type, nclassOrigin)
     } else {
       // TODO value is ClassInstanceValue 인데 type은 ClassType이 아닌 경우
@@ -140,17 +140,18 @@ class Coercer(val buildGraph: BuildGraph, val runner: BuildRunner) {
                       field.name to coerced
                     }
                   }.toMap()
-                return ClassInstanceValue(type.name, fieldValues)
+                return ClassInstanceValue("", "TODO", fieldValues)
               }
               when (value) {
                 is ClassInstanceValue -> {
-                  if (value.className != actualType.cname) {
-                    tryCastClassInstance(task, origin, value, type, nclassOrigin)
-                  } else {
-                    val fieldValues: Map<String, BibixValue> =
-                      coerceClassFields(actualType.fields, value.fieldValues) ?: return null
-                    ClassInstanceValue(value.className, fieldValues)
-                  }
+                  TODO()
+//                  if (value.className != actualType.cname) {
+//                    tryCastClassInstance(task, origin, value, type, nclassOrigin)
+//                  } else {
+//                    val fieldValues: Map<String, BibixValue> =
+//                      coerceClassFields(actualType.fields, value.fieldValues) ?: return null
+//                    ClassInstanceValue(value.className, fieldValues)
+//                  }
                 }
 
                 is NamedTupleValue ->
@@ -178,17 +179,22 @@ class Coercer(val buildGraph: BuildGraph, val runner: BuildRunner) {
                   val subTypes =
                     runner.runTasks(task, actualType.subs.map { BuildTask.ResolveName(it.name) })
                       .map { it as CNameValue.DataClassType }
-                  if (subTypes.any { it.cname == value.className }) value else null
+                  // if (subTypes.any { it.cname == value.className }) value else null
+                  TODO()
                 }
 
                 else -> null
               }
 
             is CNameValue.EnumType -> when (value) {
-              is EnumValue -> if (actualType.cname == value.enumTypeName) value else null
+              is EnumValue ->
+                // if (actualType.cname == value.enumTypeName) value else null
+                TODO()
+
               is StringValue ->
                 if (actualType.values.contains(value.value)) {
-                  EnumValue(actualType.cname, value.value)
+                  // EnumValue(actualType.cname, value.value)
+                  TODO()
                 } else null
 
               is ClassInstanceValue ->
@@ -311,6 +317,9 @@ class Coercer(val buildGraph: BuildGraph, val runner: BuildRunner) {
         ActionRuleDefType -> if (value is ActionRuleDefValue) value else null
         BuildRuleDefType -> if (value is BuildRuleDefValue) value else null
         TypeType -> if (value is TypeValue) value else null
+        is DataClassType -> TODO()
+        is EnumType -> TODO()
+        is SuperClassType -> TODO()
       }
     }
   }
@@ -322,21 +331,22 @@ class Coercer(val buildGraph: BuildGraph, val runner: BuildRunner) {
     type: BibixType,
     dclassOrigin: SourceId?
   ): BibixValue? {
-    val classType =
-      runner.runTask(task, BuildTask.ResolveName(value.className)) as CNameValue.DataClassType
-    val castExprId = classType.casts[type] ?: return null
-    val castExprGraph = buildGraph.exprGraphs[castExprId]
-    val castResult = runner.runTask(
-      task,
-      BuildTask.EvalExpr(origin, castExprId, castExprGraph.mainNode, value)
-    )
-    return coerce(task, origin, castResult as BibixValue, type, dclassOrigin)
+//    val classType =
+//      runner.runTask(task, BuildTask.ResolveName(value.className)) as CNameValue.DataClassType
+//    val castExprId = classType.casts[type] ?: return null
+//    val castExprGraph = buildGraph.exprGraphs[castExprId]
+//    val castResult = runner.runTask(
+//      task,
+//      BuildTask.EvalExpr(origin, castExprId, castExprGraph.mainNode, value)
+//    )
+//    return coerce(task, origin, castResult as BibixValue, type, dclassOrigin)
+    TODO()
   }
 
   suspend fun toBibixValue(task: BuildTask, value: Any): BibixValue = when (value) {
     is BibixValue -> value
-    is CNameValue.ClassType -> TypeValue.ClassTypeValue(value.cname)
-    is CNameValue.EnumType -> TypeValue.EnumTypeValue(value.cname, value.values)
+    is CNameValue.ClassType -> TODO() // TypeValue.ClassTypeValue(value.cname)
+    is CNameValue.EnumType -> TODO() // TypeValue.EnumTypeValue(value.cname, value.values)
     is CNameValue.BuildRuleValue -> {
       val paramTypes = toTypeValues(task, value.params.map { it.type })
       val params = value.params.zip(paramTypes).map { (param, paramType) ->
@@ -388,8 +398,8 @@ class Coercer(val buildGraph: BuildGraph, val runner: BuildRunner) {
     DirectoryType -> TypeValue.DirectoryTypeValue
     is CustomType -> {
       when (val resolved = runner.runTask(task, BuildTask.ResolveName(type.name))) {
-        is CNameValue.ClassType -> TypeValue.ClassTypeValue(resolved.cname)
-        is CNameValue.EnumType -> TypeValue.EnumTypeValue(resolved.cname, resolved.values)
+        is CNameValue.ClassType -> TODO() // TypeValue.ClassTypeValue(resolved.cname)
+        is CNameValue.EnumType -> TODO() // TypeValue.EnumTypeValue(resolved.cname, resolved.values)
         else -> throw BibixBuildException(task, "Failed to find class or enum type ${type.name}")
       }
     }
@@ -407,6 +417,9 @@ class Coercer(val buildGraph: BuildGraph, val runner: BuildRunner) {
     BuildRuleDefType -> TypeValue.BuildRuleDefTypeValue
     ActionRuleDefType -> TypeValue.ActionRuleDefTypeValue
     TypeType -> TypeValue.TypeTypeValue
+    is DataClassType -> TODO()
+    is EnumType -> TODO()
+    is SuperClassType -> TODO()
   }
 
   suspend fun toTypeValues(task: BuildTask, types: List<BibixType>): List<TypeValue> =

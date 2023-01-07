@@ -62,22 +62,22 @@ class BuildGraph(
 
         is BibixAst.ImportDef -> {
           val (importDef: DeferredImportDef, importName) = when (def) {
-            is BibixAst.ImportName -> {
-              val nameTokens = def.name().tokens().toKtList()
-              val rename = def.rename().getOrNull()
-              if (nameTokens.first() == "main") {
-                check(nameTokens.size >= 2)
-                Pair(
-                  DeferredImportDef.ImportMainSub(nameTokens.drop(1)),
-                  rename ?: nameTokens.last()
-                )
-              } else {
-                Pair(
-                  DeferredImportDef.ImportDefaultPlugin(nameTokens),
-                  rename ?: nameTokens.last()
-                )
-              }
-            }
+//            is BibixAst.ImportName -> {
+//              val nameTokens = def.name().tokens().toKtList()
+//              val rename = def.rename().getOrNull()
+//              if (nameTokens.first() == "main") {
+//                check(nameTokens.size >= 2)
+//                Pair(
+//                  DeferredImportDef.ImportMainSub(nameTokens.drop(1)),
+//                  rename ?: nameTokens.last()
+//                )
+//              } else {
+//                Pair(
+//                  DeferredImportDef.ImportDefaultPlugin(nameTokens),
+//                  rename ?: nameTokens.last()
+//                )
+//              }
+//            }
 
             is BibixAst.ImportAll -> {
               Pair(
@@ -88,7 +88,7 @@ class BuildGraph(
                     lookup
                   )
                 ),
-                def.rename()
+                def.rename().getOrNull() ?: "???"
               )
             }
 
@@ -111,7 +111,7 @@ class BuildGraph(
           )
         }
 
-        is BibixAst.NameDef -> {
+        is BibixAst.TargetDef -> {
           registerName(
             cname.append(def.name()),
             CNameValue.ExprValue(exprGraphs.register(traverseExpr(def.value(), lookup)))
@@ -210,7 +210,7 @@ class BuildGraph(
 
   private fun traverseImportSource(
     sourceId: SourceId,
-    importSource: BibixAst.ImportSourceExpr,
+    importSource: BibixAst.Expr,
     lookup: NameLookupContext
   ): ImportSource =
     when (importSource) {

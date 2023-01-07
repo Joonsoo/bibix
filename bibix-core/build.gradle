@@ -41,6 +41,11 @@ sourceSets {
             srcDir 'src/generated/kotlin-grpc'
         }
     }
+    test {
+        kotlin {
+            srcDir 'src/test/kotlin'
+        }
+    }
 }
 
 test {
@@ -80,6 +85,7 @@ dependencies {
     implementation group: 'com.google.flogger', name: 'flogger', version: floggerVersion
     implementation group: 'com.google.flogger', name: 'flogger-system-backend', version: floggerVersion
 
+    testImplementation 'org.jetbrains.kotlin:kotlin-test'
     testImplementation 'com.google.jimfs:jimfs:1.2'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'

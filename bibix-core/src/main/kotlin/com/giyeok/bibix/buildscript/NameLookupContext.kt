@@ -57,10 +57,10 @@ sealed class NameLookupChain {
         val names = defs.mapNotNull { def ->
           when (def) {
             is BibixAst.NamespaceDef -> def.name()
-            is BibixAst.ImportName -> def.rename().getOrNull() ?: def.name().tokens().last()
-            is BibixAst.ImportAll -> def.rename()
+//            is BibixAst.ImportName -> def.rename().getOrNull() ?: def.name().tokens().last()
+            is BibixAst.ImportAll -> def.rename().getOrNull() ?: "???"
             is BibixAst.ImportFrom -> def.rename().getOrNull() ?: def.importing().tokens().last()
-            is BibixAst.NameDef -> def.name()
+            is BibixAst.TargetDef -> def.name()
             is BibixAst.DataClassDef -> def.name()
             is BibixAst.SuperClassDef -> def.name()
             is BibixAst.ArgDef -> def.name()
