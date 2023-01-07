@@ -114,7 +114,7 @@ class BibixInterpreter(
     TODO()
   }
 
-  suspend fun resolveImportAll(
+  private suspend fun resolveImportAll(
     requester: Task,
     context: NameLookupContext,
     lookupResult: LookupResult.ImportRequired,
@@ -130,7 +130,7 @@ class BibixInterpreter(
     nameLookupTable.addImport(lookupResult.import.cname, NameLookupContext(importSource, listOf()))
   }
 
-  suspend fun resolveImportFrom(
+  private suspend fun resolveImportFrom(
     requester: Task,
     context: NameLookupContext,
     lookupResult: LookupResult.ImportRequired,
@@ -158,7 +158,7 @@ class BibixInterpreter(
 
   // nameLookupContext에서 importSource를 resolve하려고 하는 경우
   // 기본적으로는 evaluateExpr을 하고, 그러면 Bibix
-  suspend fun resolveImportSource(
+  private suspend fun resolveImportSource(
     requester: Task,
     context: NameLookupContext,
     lookupResult: LookupResult.ImportRequired,

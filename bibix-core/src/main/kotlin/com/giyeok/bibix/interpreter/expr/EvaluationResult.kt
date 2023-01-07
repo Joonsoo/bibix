@@ -1,8 +1,10 @@
 package com.giyeok.bibix.interpreter.expr
 
+import com.giyeok.bibix.ast.BibixAst
 import com.giyeok.bibix.base.BibixValue
 import com.giyeok.bibix.base.CName
 import com.giyeok.bibix.base.SourceId
+import com.giyeok.bibix.interpreter.BibixType
 import com.giyeok.bibix.interpreter.name.NameLookupContext
 import org.codehaus.plexus.classworlds.realm.ClassRealm
 
@@ -15,13 +17,28 @@ sealed class EvaluationResult {
 
   data class Namespace(val context: NameLookupContext) : EvaluationResult()
 
-  data class PreloadedBuildRuleDef(val cls: Class<*>, val methodName: String) : EvaluationResult()
+  data class Param(
+    val name: String,
+    val optional: Boolean,
+    val type: BibixType,
+    val defaultValue: BibixAst.Expr?,
+  )
+
+  data class PreloadedBuildRuleDef(
+    val context: NameLookupContext,
+    val params: List<Param>,
+    val returnType: BibixType,
+    val cls: Class<*>,
+    val methodName: String
+  ) : EvaluationResult()
 
   data class UserBuildRuleDef(
+    val context: NameLookupContext,
+    val params: List<Param>,
+    val returnType: BibixType,
     val realm: ClassRealm,
     val className: String,
     val methodName: String,
-    // TODO params and return type
   ) : EvaluationResult()
 
   data class PreloadedActionRuleDef(val cname: CName) : EvaluationResult()
@@ -32,10 +49,25 @@ sealed class EvaluationResult {
     val methodName: String
   ) : EvaluationResult()
 
-  data class DataClassDef(val sourceId: SourceId, val packageName: String, val className: String) :
+  data class DataClassDef(
+    val sourceId: SourceId,
+    val packageName: String,
+    val className: String
+    // TODO fields and super classes
+  ) : EvaluationResult()
+
+  data class SuperClassDef(
+    val sourceId: SourceId,
+    val packageName: String,
+    val className: String,
+    // TODO sub classes
+  ) : EvaluationResult()
+
+  data class EnumDef(
+    val sourceId: SourceId,
+    val packageName: String,
+    val enumName: String,
+    // TODO enum values
+  ) :
     EvaluationResult()
-
-  data class SuperClassDef(val cname: CName) : EvaluationResult()
-
-  data class EnumDef(val cname: CName) : EvaluationResult()
 }
