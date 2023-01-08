@@ -5,10 +5,12 @@ import com.giyeok.bibix.interpreter.name.ImportedSource
 import com.giyeok.bibix.interpreter.name.NameLookupContext
 import com.giyeok.bibix.plugins.Classes
 import com.giyeok.bibix.plugins.PreloadedPlugin
+import com.giyeok.bibix.runner.ProgressIndicatorContainer
 import com.google.common.jimfs.Jimfs
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test
+import java.nio.file.Files
 import kotlin.io.path.writeText
 
 class ImportTests {
@@ -33,8 +35,6 @@ class ImportTests {
       zzz = satellite.moon
     """.trimIndent()
     fs.getPath("/build.bbx").writeText(script)
-
-    val repo = testRepo(fs)
 
     val xyzPlugin = PreloadedPlugin.fromScript(
       "com.abc.xyz",
@@ -64,13 +64,7 @@ class ImportTests {
       Classes()
     )
 
-    val interpreter = BibixInterpreter(
-      BuildEnv(OS.Linux("", ""), Architecture.X86_64),
-      mapOf("xyz" to xyzPlugin, "yza" to yzaPlugin),
-      BibixProject(fs.getPath("/"), null),
-      repo,
-      mapOf()
-    )
+    val interpreter = testInterpreter(fs, "/", mapOf("xyz" to xyzPlugin, "yza" to yzaPlugin))
 
     assertThat(interpreter.userBuildRequest(listOf("abc"))).isEqualTo(StringValue("good!"))
     assertThat(interpreter.userBuildRequest(listOf("bcd"))).isEqualTo(StringValue("earth"))
@@ -121,6 +115,92 @@ class ImportTests {
     assertThat(interpreter.sourceManager.sourcePackageName).containsExactly(
       PreloadedSourceId("xyz"), "com.abc.xyz",
       PreloadedSourceId("yza"), "com.abc.yza",
+    )
+  }
+
+  @Test
+  fun testExternalPluginsByPath(): Unit = runBlocking {
+    val fs = Jimfs.newFileSystem()
+
+    val script = """
+      import "subproject1" as xyz
+      from "subproject1" import qqq
+      from "subproject1" import qqq.universe as univ
+      from "subproject1/subproject2" import earth
+
+      xxx = xyz.planet
+      hug = qqq.universe
+      ddd = qqq.ccc
+      uni = univ
+      ear = earth
+    """.trimIndent()
+    fs.getPath("/build.bbx").writeText(script)
+
+    val subproject1 = """
+      package com.abc.xyz
+      
+      import "subproject2" as yyy
+      planet = "earth!"
+      
+      namespace qqq {
+        universe = "huge"
+        ccc = yyy.earth
+      }
+    """.trimIndent()
+    Files.createDirectory(fs.getPath("/subproject1"))
+    fs.getPath("/subproject1/build.bbx").writeText(subproject1)
+
+    val subproject2 = """
+      earth = "has moon"
+    """.trimIndent()
+    Files.createDirectory(fs.getPath("/subproject1/subproject2"))
+    fs.getPath("/subproject1/subproject2/build.bbx").writeText(subproject2)
+
+    val interpreter = testInterpreter(fs, "/", mapOf())
+
+    assertThat(interpreter.userBuildRequest(listOf("xxx"))).isEqualTo(StringValue("earth!"))
+    assertThat(interpreter.userBuildRequest(listOf("hug"))).isEqualTo(StringValue("huge"))
+    assertThat(interpreter.userBuildRequest(listOf("ddd"))).isEqualTo(StringValue("has moon"))
+    assertThat(interpreter.userBuildRequest(listOf("uni"))).isEqualTo(StringValue("huge"))
+    assertThat(interpreter.userBuildRequest(listOf("ear"))).isEqualTo(StringValue("has moon"))
+    assertThat(interpreter.nameLookupTable.definitions.keys).containsExactly(
+      CName(MainSourceId, "xyz"),
+      CName(MainSourceId, "qqq"),
+      CName(MainSourceId, "univ"),
+      CName(MainSourceId, "earth"),
+      CName(MainSourceId, "xxx"),
+      CName(MainSourceId, "hug"),
+      CName(MainSourceId, "ddd"),
+      CName(MainSourceId, "uni"),
+      CName(MainSourceId, "ear"),
+      CName(ExternSourceId(1), "yyy"),
+      CName(ExternSourceId(1), "planet"),
+      CName(ExternSourceId(1), "qqq"),
+      CName(ExternSourceId(1), "qqq", "universe"),
+      CName(ExternSourceId(1), "qqq", "ccc"),
+      CName(ExternSourceId(2), "earth"),
+    )
+    assertThat(interpreter.nameLookupTable.imports.keys).containsExactly(
+      CName(MainSourceId, "xyz"),
+      CName(MainSourceId, "qqq"),
+      CName(MainSourceId, "univ"),
+      CName(MainSourceId, "earth"),
+      CName(ExternSourceId(1), "yyy"),
+    )
+    assertThat(interpreter.nameLookupTable.imports).containsAtLeast(
+      CName(MainSourceId, "xyz"),
+      ImportedSource.ImportedNames(NameLookupContext(ExternSourceId(1), listOf())),
+      CName(MainSourceId, "qqq"),
+      ImportedSource.ImportedNames(NameLookupContext(ExternSourceId(1), listOf("qqq"))),
+      CName(ExternSourceId(1), "yyy"),
+      ImportedSource.ImportedNames(NameLookupContext(ExternSourceId(2), listOf())),
+    )
+    assertThat(interpreter.nameLookupTable.imports[CName(MainSourceId, "univ")])
+      .isInstanceOf(ImportedSource.ImportedDefinition::class.java)
+    assertThat(interpreter.nameLookupTable.imports[CName(MainSourceId, "earth")])
+      .isInstanceOf(ImportedSource.ImportedDefinition::class.java)
+    assertThat(interpreter.sourceManager.sourcePackageName).containsExactly(
+      ExternSourceId(1), "com.abc.xyz",
     )
   }
 }

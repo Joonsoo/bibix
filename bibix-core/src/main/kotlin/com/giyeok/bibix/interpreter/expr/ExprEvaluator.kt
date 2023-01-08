@@ -7,10 +7,7 @@ import com.giyeok.bibix.interpreter.name.Definition
 import com.giyeok.bibix.interpreter.name.NameLookupContext
 import com.giyeok.bibix.interpreter.task.Task
 import com.giyeok.bibix.interpreter.task.TaskRelGraph
-import com.giyeok.bibix.runner.Param
-import com.giyeok.bibix.utils.getOrNull
 import com.giyeok.bibix.utils.toKtList
-import java.lang.reflect.Method
 import java.nio.file.Path
 
 class ExprEvaluator(
@@ -18,7 +15,7 @@ class ExprEvaluator(
   private val g: TaskRelGraph,
   private val sourceManager: SourceManager,
 ) {
-  private val pluginCaller = PluginCaller(g, sourceManager, this)
+  private val callExprEvaluator = CallExprEvaluator(interpreter, g, sourceManager, this)
 
   private suspend fun memoize(
     sourceId: SourceId,
@@ -29,8 +26,8 @@ class ExprEvaluator(
     return eval()
   }
 
-  private fun fileFromString(sourceId: SourceId, path: String): Path {
-    TODO()
+  private suspend fun fileFromString(sourceId: SourceId, path: String): Path {
+    return sourceManager.getProjectRoot(sourceId).resolve(path).normalize()
   }
 
   suspend fun coerce(
@@ -60,7 +57,7 @@ class ExprEvaluator(
 
       StringType -> when (value) {
         is StringValue -> value
-        else -> TODO()
+        else -> throw IllegalStateException("Coercion failed: $value to $type")
       }
 
       PathType -> when (value) {
@@ -174,7 +171,14 @@ class ExprEvaluator(
       }
 
       is DataClassType -> {
-        TODO()
+        when (value) {
+          is ClassInstanceValue -> {
+            check(value.packageName == type.packageName && value.className == type.className)
+            value
+          }
+
+          else -> TODO()
+        }
       }
 
       is UnionType -> {
@@ -213,15 +217,30 @@ class ExprEvaluator(
         listOf("type") -> TypeType
         else -> {
           when (val definition = interpreter.lookupName(task, context, name)) {
-            is Definition.ClassDef -> TODO()
-            is Definition.EnumDef -> TODO()
+            is Definition.ClassDef -> {
+              val packageName = sourceManager.getPackageName(definition.cname.sourceId)
+                ?: throw IllegalStateException("")
+              val className = definition.cname.tokens.joinToString(".")
+              when (definition.classDef) {
+                is BibixAst.DataClassDef -> DataClassType(packageName, className)
+                is BibixAst.SuperClassDef -> SuperClassType(packageName, className)
+                else -> throw AssertionError()
+              }
+            }
+
+            is Definition.EnumDef -> {
+              val packageName = sourceManager.getPackageName(definition.cname.sourceId)
+                ?: throw IllegalStateException("")
+              val className = definition.cname.tokens.joinToString(".")
+              EnumType(packageName, className)
+            }
+
             else -> throw AssertionError()
           }
         }
       }
     }
 
-    is BibixAst.CanonicalName -> TODO()
     is BibixAst.NoneType -> NoneType
     is BibixAst.CollectionType -> TODO()
     is BibixAst.TupleType -> TODO()
@@ -243,21 +262,36 @@ class ExprEvaluator(
     name: List<String>,
     thisValue: BibixValue?,
   ): EvaluationResult =
+    // TODO memoize
     when (val definition = interpreter.lookupName(task, context, name)) {
       is Definition.ImportDef -> TODO()
       is Definition.NamespaceDef -> EvaluationResult.Namespace(NameLookupContext(definition.cname))
       is Definition.TargetDef -> evaluateExpr(task, context, definition.target.value(), thisValue)
       is Definition.ActionDef -> TODO()
-      is Definition.ClassDef -> TODO()
-      is Definition.EnumDef -> TODO()
+      is Definition.ClassDef ->
+        callExprEvaluator.resolveClassDef(task, context, definition)
+
+      is Definition.EnumDef -> {
+        val sourceId = definition.cname.sourceId
+        val packageName = sourceManager.getPackageName(sourceId)
+          ?: throw IllegalStateException("Package name for enum type ${definition.cname} not specified")
+        EvaluationResult.EnumDef(
+          sourceId,
+          packageName,
+          definition.enumDef.name(),
+          definition.enumDef.values().toKtList()
+        )
+      }
+
       is Definition.ArgDef -> TODO()
+
       is Definition.ArgRedef -> TODO()
 
       is Definition.BuildRule ->
-        pluginCaller.resolveBuildRule(task, context, name, thisValue, definition)
+        callExprEvaluator.resolveBuildRule(task, context, thisValue, definition)
 
       is Definition.ActionRule ->
-        pluginCaller.resolveActionRule(task, context, name, thisValue, definition)
+        callExprEvaluator.resolveActionRule(task, context, thisValue, definition)
     }
 
   private fun findMember(targetExpr: BibixAst.Expr, value: BibixValue, name: String): BibixValue =
@@ -290,7 +324,14 @@ class ExprEvaluator(
           }
 
           is BibixAst.CallExpr ->
-            EvaluationResult.Value(pluginCaller.evaluateCallExpr(task, context, expr, thisValue))
+            EvaluationResult.Value(
+              callExprEvaluator.evaluateCallExpr(
+                task,
+                context,
+                expr,
+                thisValue
+              )
+            )
 
           is BibixAst.MemberAccess -> {
             when (val target = evaluateExpr(task, context, expr.target(), thisValue)) {
@@ -299,6 +340,11 @@ class ExprEvaluator(
 
               is EvaluationResult.Value ->
                 EvaluationResult.Value(findMember(expr.target(), target.value, expr.name()))
+
+              is EvaluationResult.EnumDef -> {
+                check(target.enumValues.contains(expr.name())) { "Invalid enum value name" }
+                EvaluationResult.Value(EnumValue(target.packageName, target.enumName, expr.name()))
+              }
 
               else -> throw IllegalStateException("Invalid access to ${expr.name()} on ${expr.target()}")
             }
@@ -370,6 +416,16 @@ class ExprEvaluator(
 
           else -> throw AssertionError()
         }
+      }
+    }
+
+  suspend fun executeAction(requester: Task, context: NameLookupContext, expr: BibixAst.Expr) =
+    g.withTask(requester, Task.ExecuteAction(context.sourceId, expr.id())) { task ->
+      when (expr) {
+        is BibixAst.CallExpr ->
+          callExprEvaluator.executeActionCallExpr(task, context, expr)
+
+        else -> throw IllegalStateException("")
       }
     }
 }

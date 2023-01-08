@@ -28,6 +28,10 @@ fun SourceId.toProto(buildGraph: BuildGraph): BibixIdProto.SourceId = when (val 
   }
 }
 
+fun SourceId.toProto(): BibixIdProto.SourceId = sourceId {
+  // TODO
+}
+
 fun newDigest() = MessageDigest.getInstance("SHA-1")
 
 fun sha1Hash(bytes: ByteString): ByteString {

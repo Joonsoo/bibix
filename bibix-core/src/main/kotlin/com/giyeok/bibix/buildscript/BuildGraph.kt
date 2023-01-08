@@ -121,11 +121,12 @@ class BuildGraph(
         is BibixAst.DataClassDef -> {
           val className = cname.append(def.name())
           val fields = def.fields().toKtList().map { field ->
-            CNameValue.ClassField(
-              field.name(),
-              traverseTypeExpr(field.typ(), lookup),
-              field.optional()
-            )
+//            CNameValue.ClassField(
+//              field.name(),
+//              traverseTypeExpr(field.typ(), lookup),
+//              field.optional()
+//            )
+            TODO()
           }
           val casts = def.body().toKtList().filterIsInstance<BibixAst.ClassCastDef>()
             .associate { cast ->

@@ -1,9 +1,7 @@
 package com.giyeok.bibix.interpreter.expr
 
 import com.giyeok.bibix.base.*
-import com.giyeok.bibix.interpreter.BibixInterpreter
-import com.giyeok.bibix.interpreter.BibixProject
-import com.giyeok.bibix.interpreter.testRepo
+import com.giyeok.bibix.interpreter.*
 import com.google.common.jimfs.Jimfs
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.runBlocking
@@ -12,7 +10,7 @@ import kotlin.io.path.writeText
 
 class ExprEvaluatorTests {
   @Test
-  fun test() = runBlocking {
+  fun test(): Unit = runBlocking {
     val fs = Jimfs.newFileSystem()
 
     val d = "$"
@@ -33,15 +31,7 @@ class ExprEvaluatorTests {
 
     println(script)
 
-    val repo = testRepo(fs)
-
-    val interpreter = BibixInterpreter(
-      BuildEnv(OS.Linux("", ""), Architecture.X86_64),
-      mapOf(),
-      BibixProject(fs.getPath("/"), null),
-      repo,
-      mapOf()
-    )
+    val interpreter = testInterpreter(fs, "/", mapOf())
 
     assertThat(interpreter.userBuildRequest(listOf("aaa"))).isEqualTo(
       ListValue(StringValue("hello"), StringValue("world"))

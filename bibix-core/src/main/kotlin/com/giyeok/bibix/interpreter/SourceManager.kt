@@ -11,6 +11,8 @@ import com.giyeok.bibix.plugins.Classes
 import com.giyeok.bibix.plugins.PreloadedPlugin
 import com.giyeok.bibix.utils.toKtList
 import com.google.common.annotations.VisibleForTesting
+import com.google.common.collect.BiMap
+import com.google.common.collect.HashBiMap
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import java.nio.file.Path
@@ -20,7 +22,7 @@ class SourceManager {
   private val projectRoots = mutableMapOf<SourceId, Path>()
 
   @VisibleForTesting
-  val sourcePackageName = mutableMapOf<SourceId, String>()
+  val sourcePackageName = HashBiMap.create<SourceId, String>()
   private val externSources = mutableMapOf<BibixProject, ExternSourceId>()
   private var externSourceIdCounter = 0
   private val mutex = Mutex()
@@ -79,6 +81,9 @@ class SourceManager {
     }
   }
 
+  suspend fun getProjectRoot(sourceId: SourceId): Path =
+    mutex.withLock { projectRoots.getValue(sourceId) }
+
   fun registerPreloadedPluginClasses(name: String, plugin: PreloadedPlugin) {
     val sourceId = PreloadedSourceId(name)
     preloadedPluginClasses[sourceId] = plugin.classes
@@ -87,4 +92,10 @@ class SourceManager {
 
   fun getPreloadedPluginClass(sourceId: PreloadedSourceId, className: String): Class<*> =
     preloadedPluginClasses.getValue(sourceId).getClass(className)
+
+  suspend fun getPackageName(sourceId: SourceId): String? =
+    mutex.withLock { sourcePackageName[sourceId] }
+
+  suspend fun getSourceIdFromPackageName(packageName: String): SourceId? =
+    mutex.withLock { sourcePackageName.inverse()[packageName] }
 }

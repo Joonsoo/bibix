@@ -1,26 +1,11 @@
 package com.giyeok.bibix.ast
 
-import com.giyeok.jparser.Inputs
-import com.giyeok.jparser.NGrammar
-import com.giyeok.jparser.ParseForest
-import com.giyeok.jparser.ParseResultTree.BindNode
-import com.giyeok.jparser.ParseResultTree.JoinNode
-import com.giyeok.jparser.ParseResultTree.Node
-import com.giyeok.jparser.ParseResultTree.SequenceNode
-import com.giyeok.jparser.ParseResultTree.TerminalNode
-import com.giyeok.jparser.ParsingErrors
+import com.giyeok.bibix.ast.BibixAst._
+import com.giyeok.jparser.ParseResultTree._
+import com.giyeok.jparser.{Inputs, ParseForest, ParsingErrors}
 import com.giyeok.jparser.milestone.MilestoneParser
-import com.giyeok.jparser.milestone.MilestoneParserContext
-import com.giyeok.jparser.nparser.ParseTreeUtil
-import com.giyeok.jparser.nparser.ParseTreeUtil.unrollRepeat0
-import com.giyeok.jparser.nparser.ParseTreeUtil.unrollRepeat1
-import com.giyeok.jparser.proto.GrammarProto
-import com.giyeok.jparser.proto.GrammarProtobufConverter
-import com.giyeok.jparser.proto.MilestoneParserDataProto
-import com.giyeok.jparser.proto.MilestoneParserProtobufConverter
-import com.giyeok.jparser.utils.FileUtil.readFileBytes
-import java.util.Base64
-import BibixAst._
+import com.giyeok.jparser.nparser.ParseTreeUtil.{unrollRepeat0, unrollRepeat1}
+import com.giyeok.jparser.proto.{MilestoneParserDataProto, MilestoneParserProtobufConverter}
 
 object BibixAst {
 
@@ -47,8 +32,6 @@ object BibixAst {
 
   case class CallParams(posParams: List[Expr], namedParams: List[NamedParam])(override val id: Int, override val parseNode: Node) extends WithIdAndParseNode
 
-  case class CanonicalName(packageName: Name, internalName: Name)(override val id: Int, override val parseNode: Node) extends NoUnionType with WithIdAndParseNode
-
   case class CastExpr(expr: Expr, castTo: NoUnionType)(override val id: Int, override val parseNode: Node) extends Expr with WithIdAndParseNode
 
   sealed trait ClassBodyElem extends WithIdAndParseNode
@@ -57,13 +40,11 @@ object BibixAst {
 
   sealed trait ClassDef extends Def with WithIdAndParseNode
 
-  case class ClassField(name: String, optional: Boolean, typ: TypeExpr)(override val id: Int, override val parseNode: Node) extends WithIdAndParseNode
-
   case class CollectionType(name: String, typeParams: TypeParams)(override val id: Int, override val parseNode: Node) extends NoUnionType with WithIdAndParseNode
 
   case class ComplexExpr(expr: Expr)(override val id: Int, override val parseNode: Node) extends StringExpr with WithIdAndParseNode
 
-  case class DataClassDef(name: String, fields: List[ClassField], body: List[ClassBodyElem])(override val id: Int, override val parseNode: Node) extends ClassDef with WithIdAndParseNode
+  case class DataClassDef(name: String, fields: List[ParamDef], body: List[ClassBodyElem])(override val id: Int, override val parseNode: Node) extends ClassDef with WithIdAndParseNode
 
   sealed trait Def extends WithIdAndParseNode
 
@@ -157,8 +138,6 @@ object BibixAst {
       case Left(forest) => Left(new BibixAst().matchStart(forest.trees.head))
       case Right(error) => Right(error)
     }
-
-
 }
 
 class BibixAst {
@@ -178,33 +157,33 @@ class BibixAst {
   def matchActionDef(node: Node): ActionDef = {
     val BindNode(v1, v2) = node
     val v23 = v1.id match {
-      case 316 =>
+      case 313 =>
         val v3 = v2.asInstanceOf[SequenceNode].children(2)
         val BindNode(v4, v5) = v3
         assert(v4.id == 88)
         val v6 = v2.asInstanceOf[SequenceNode].children(3)
         val BindNode(v7, v8) = v6
-        assert(v7.id == 320)
+        assert(v7.id == 317)
         val BindNode(v9, v10) = v8
         val v19 = v9.id match {
           case 126 =>
             None
-          case 321 =>
+          case 318 =>
             val BindNode(v11, v12) = v10
             val v18 = v11.id match {
-              case 322 =>
+              case 319 =>
                 val BindNode(v13, v14) = v12
-                assert(v13.id == 323)
+                assert(v13.id == 320)
                 val v15 = v14.asInstanceOf[SequenceNode].children(1)
                 val BindNode(v16, v17) = v15
-                assert(v16.id == 324)
+                assert(v16.id == 321)
                 matchActionParams(v17)
             }
             Some(v18)
         }
         val v20 = v2.asInstanceOf[SequenceNode].children(7)
         val BindNode(v21, v22) = v20
-        assert(v21.id == 326)
+        assert(v21.id == 323)
         ActionDef(matchSimpleName(v5), v19, matchActionExpr(v22))(nextId(), v2)
     }
     v23
@@ -213,10 +192,10 @@ class BibixAst {
   def matchActionExpr(node: Node): CallExpr = {
     val BindNode(v24, v25) = node
     val v29 = v24.id match {
-      case 206 =>
+      case 203 =>
         val v26 = v25.asInstanceOf[SequenceNode].children.head
         val BindNode(v27, v28) = v26
-        assert(v27.id == 207)
+        assert(v27.id == 204)
         matchCallExpr(v28)
     }
     v29
@@ -225,7 +204,7 @@ class BibixAst {
   def matchActionParams(node: Node): String = {
     val BindNode(v30, v31) = node
     val v35 = v30.id match {
-      case 325 =>
+      case 322 =>
         val v32 = v31.asInstanceOf[SequenceNode].children(2)
         val BindNode(v33, v34) = v32
         assert(v33.id == 88)
@@ -237,16 +216,16 @@ class BibixAst {
   def matchActionRuleDef(node: Node): ActionRuleDef = {
     val BindNode(v36, v37) = node
     val v47 = v36.id match {
-      case 367 =>
+      case 368 =>
         val v38 = v37.asInstanceOf[SequenceNode].children(4)
         val BindNode(v39, v40) = v38
         assert(v39.id == 88)
         val v41 = v37.asInstanceOf[SequenceNode].children(6)
         val BindNode(v42, v43) = v41
-        assert(v42.id == 372)
+        assert(v42.id == 332)
         val v44 = v37.asInstanceOf[SequenceNode].children(10)
         val BindNode(v45, v46) = v44
-        assert(v45.id == 389)
+        assert(v45.id == 373)
         ActionRuleDef(matchSimpleName(v40), matchParamsDef(v43), matchMethodRef(v46))(nextId(), v37)
     }
     v47
@@ -255,43 +234,43 @@ class BibixAst {
   def matchArgDef(node: Node): ArgDef = {
     val BindNode(v48, v49) = node
     val v81 = v48.id match {
-      case 417 =>
+      case 401 =>
         val v50 = v49.asInstanceOf[SequenceNode].children(2)
         val BindNode(v51, v52) = v50
         assert(v51.id == 88)
         val v53 = v49.asInstanceOf[SequenceNode].children(3)
         val BindNode(v54, v55) = v53
-        assert(v54.id == 421)
+        assert(v54.id == 405)
         val BindNode(v56, v57) = v55
         val v66 = v56.id match {
           case 126 =>
             None
-          case 422 =>
+          case 406 =>
             val BindNode(v58, v59) = v57
             val v65 = v58.id match {
-              case 423 =>
+              case 407 =>
                 val BindNode(v60, v61) = v59
-                assert(v60.id == 424)
+                assert(v60.id == 408)
                 val v62 = v61.asInstanceOf[SequenceNode].children(3)
                 val BindNode(v63, v64) = v62
-                assert(v63.id == 167)
+                assert(v63.id == 163)
                 matchTypeExpr(v64)
             }
             Some(v65)
         }
         val v67 = v49.asInstanceOf[SequenceNode].children(4)
         val BindNode(v68, v69) = v67
-        assert(v68.id == 380)
+        assert(v68.id == 345)
         val BindNode(v70, v71) = v69
         val v80 = v70.id match {
           case 126 =>
             None
-          case 381 =>
+          case 346 =>
             val BindNode(v72, v73) = v71
             val v79 = v72.id match {
-              case 382 =>
+              case 347 =>
                 val BindNode(v74, v75) = v73
-                assert(v74.id == 383)
+                assert(v74.id == 348)
                 val v76 = v75.asInstanceOf[SequenceNode].children(3)
                 val BindNode(v77, v78) = v76
                 assert(v77.id == 138)
@@ -307,7 +286,7 @@ class BibixAst {
   def matchArgRedef(node: Node): ArgRedef = {
     val BindNode(v82, v83) = node
     val v102 = v82.id match {
-      case 427 =>
+      case 411 =>
         val v84 = v83.asInstanceOf[SequenceNode].children(2)
         val BindNode(v85, v86) = v84
         assert(v85.id == 88)
@@ -338,20 +317,20 @@ class BibixAst {
   def matchBooleanLiteral(node: Node): BooleanLiteral = {
     val BindNode(v103, v104) = node
     val v118 = v103.id match {
-      case 289 =>
+      case 286 =>
         val v105 = v104.asInstanceOf[SequenceNode].children.head
         val BindNode(v106, v107) = v105
-        assert(v106.id == 290)
+        assert(v106.id == 287)
         val JoinNode(_, v108, _) = v107
         val BindNode(v109, v110) = v108
-        assert(v109.id == 291)
+        assert(v109.id == 288)
         val BindNode(v111, v112) = v110
         val v117 = v111.id match {
-          case 292 =>
+          case 289 =>
             val BindNode(v113, v114) = v112
             assert(v113.id == 103)
             BooleanLiteral(true)(nextId(), v114)
-          case 293 =>
+          case 290 =>
             val BindNode(v115, v116) = v112
             assert(v115.id == 109)
             BooleanLiteral(false)(nextId(), v116)
@@ -364,19 +343,19 @@ class BibixAst {
   def matchBuildRuleDef(node: Node): BuildRuleDef = {
     val BindNode(v119, v120) = node
     val v133 = v119.id match {
-      case 432 =>
+      case 416 =>
         val v121 = v120.asInstanceOf[SequenceNode].children(2)
         val BindNode(v122, v123) = v121
         assert(v122.id == 88)
         val v124 = v120.asInstanceOf[SequenceNode].children(4)
         val BindNode(v125, v126) = v124
-        assert(v125.id == 372)
+        assert(v125.id == 332)
         val v127 = v120.asInstanceOf[SequenceNode].children(8)
         val BindNode(v128, v129) = v127
-        assert(v128.id == 167)
+        assert(v128.id == 163)
         val v130 = v120.asInstanceOf[SequenceNode].children(12)
         val BindNode(v131, v132) = v130
-        assert(v131.id == 389)
+        assert(v131.id == 373)
         BuildRuleDef(matchSimpleName(v123), matchParamsDef(v126), matchTypeExpr(v129), matchMethodRef(v132))(nextId(), v120)
     }
     v133
@@ -417,13 +396,13 @@ class BibixAst {
   def matchCallExpr(node: Node): CallExpr = {
     val BindNode(v154, v155) = node
     val v162 = v154.id match {
-      case 208 =>
+      case 205 =>
         val v156 = v155.asInstanceOf[SequenceNode].children.head
         val BindNode(v157, v158) = v156
         assert(v157.id == 86)
         val v159 = v155.asInstanceOf[SequenceNode].children(2)
         val BindNode(v160, v161) = v159
-        assert(v160.id == 209)
+        assert(v160.id == 206)
         CallExpr(matchName(v158), matchCallParams(v161))(nextId(), v155)
     }
     v162
@@ -432,25 +411,25 @@ class BibixAst {
   def matchCallParams(node: Node): CallParams = {
     val BindNode(v163, v164) = node
     val v177 = v163.id match {
-      case 210 =>
+      case 207 =>
         CallParams(List(), List())(nextId(), v164)
-      case 211 =>
+      case 208 =>
         val v165 = v164.asInstanceOf[SequenceNode].children(2)
         val BindNode(v166, v167) = v165
-        assert(v166.id == 212)
+        assert(v166.id == 209)
         CallParams(matchPositionalParams(v167), List())(nextId(), v164)
-      case 223 =>
+      case 220 =>
         val v168 = v164.asInstanceOf[SequenceNode].children(2)
         val BindNode(v169, v170) = v168
-        assert(v169.id == 224)
+        assert(v169.id == 221)
         CallParams(List(), matchNamedParams(v170))(nextId(), v164)
-      case 234 =>
+      case 231 =>
         val v171 = v164.asInstanceOf[SequenceNode].children(2)
         val BindNode(v172, v173) = v171
-        assert(v172.id == 212)
+        assert(v172.id == 209)
         val v174 = v164.asInstanceOf[SequenceNode].children(6)
         val BindNode(v175, v176) = v174
-        assert(v175.id == 224)
+        assert(v175.id == 221)
         CallParams(matchPositionalParams(v173), matchNamedParams(v176))(nextId(), v164)
     }
     v177
@@ -459,19 +438,19 @@ class BibixAst {
   def matchClassBody(node: Node): List[ClassBodyElem] = {
     val BindNode(v178, v179) = node
     val v192 = v178.id match {
-      case 358 =>
+      case 359 =>
         val v180 = v179.asInstanceOf[SequenceNode].children(1)
         val v181 = unrollRepeat0(v180).map { elem =>
           val BindNode(v182, v183) = elem
-          assert(v182.id == 361)
+          assert(v182.id == 362)
           val BindNode(v184, v185) = v183
           val v191 = v184.id match {
-            case 362 =>
+            case 363 =>
               val BindNode(v186, v187) = v185
-              assert(v186.id == 363)
+              assert(v186.id == 364)
               val v188 = v187.asInstanceOf[SequenceNode].children(1)
               val BindNode(v189, v190) = v188
-              assert(v189.id == 364)
+              assert(v189.id == 365)
               matchClassBodyElem(v190)
           }
           v191
@@ -484,15 +463,15 @@ class BibixAst {
   def matchClassBodyElem(node: Node): ClassBodyElem = {
     val BindNode(v193, v194) = node
     val v201 = v193.id match {
-      case 365 =>
+      case 366 =>
         val v195 = v194.asInstanceOf[SequenceNode].children.head
         val BindNode(v196, v197) = v195
-        assert(v196.id == 366)
+        assert(v196.id == 367)
         matchActionRuleDef(v197)
-      case 395 =>
+      case 379 =>
         val v198 = v194.asInstanceOf[SequenceNode].children.head
         val BindNode(v199, v200) = v198
-        assert(v199.id == 396)
+        assert(v199.id == 380)
         matchClassCastDef(v200)
     }
     v201
@@ -501,10 +480,10 @@ class BibixAst {
   def matchClassCastDef(node: Node): ClassCastDef = {
     val BindNode(v202, v203) = node
     val v210 = v202.id match {
-      case 397 =>
+      case 381 =>
         val v204 = v203.asInstanceOf[SequenceNode].children(2)
         val BindNode(v205, v206) = v204
-        assert(v205.id == 167)
+        assert(v205.id == 163)
         val v207 = v203.asInstanceOf[SequenceNode].children(6)
         val BindNode(v208, v209) = v207
         assert(v208.id == 138)
@@ -516,1207 +495,1118 @@ class BibixAst {
   def matchClassDef(node: Node): ClassDef = {
     val BindNode(v211, v212) = node
     val v219 = v211.id match {
-      case 329 =>
+      case 326 =>
         val v213 = v212.asInstanceOf[SequenceNode].children.head
         val BindNode(v214, v215) = v213
-        assert(v214.id == 330)
+        assert(v214.id == 327)
         matchDataClassDef(v215)
-      case 398 =>
+      case 382 =>
         val v216 = v212.asInstanceOf[SequenceNode].children.head
         val BindNode(v217, v218) = v216
-        assert(v217.id == 399)
+        assert(v217.id == 383)
         matchSuperClassDef(v218)
     }
     v219
   }
 
-  def matchClassFieldDef(node: Node): ClassField = {
+  def matchCollectionType(node: Node): CollectionType = {
     val BindNode(v220, v221) = node
-    val v242 = v220.id match {
-      case 342 =>
+    val v240 = v220.id match {
+      case 149 =>
         val v222 = v221.asInstanceOf[SequenceNode].children.head
         val BindNode(v223, v224) = v222
-        assert(v223.id == 88)
-        val v225 = v221.asInstanceOf[SequenceNode].children(1)
+        assert(v223.id == 150)
+        val JoinNode(_, v225, _) = v224
         val BindNode(v226, v227) = v225
-        assert(v226.id == 343)
+        assert(v226.id == 151)
         val BindNode(v228, v229) = v227
-        val v238 = v228.id match {
-          case 126 =>
-            None
-          case 344 =>
+        val v236 = v228.id match {
+          case 152 =>
             val BindNode(v230, v231) = v229
-            val v237 = v230.id match {
-              case 345 =>
-                val BindNode(v232, v233) = v231
-                assert(v232.id == 346)
-                val v234 = v233.asInstanceOf[SequenceNode].children(1)
-                val BindNode(v235, v236) = v234
-                assert(v235.id == 347)
-                v236.asInstanceOf[TerminalNode].input.asInstanceOf[Inputs.Character].char
-            }
-            Some(v237)
-        }
-        val v239 = v221.asInstanceOf[SequenceNode].children(5)
-        val BindNode(v240, v241) = v239
-        assert(v240.id == 167)
-        ClassField(matchSimpleName(v224), v238.isDefined, matchTypeExpr(v241))(nextId(), v221)
-    }
-    v242
-  }
-
-  def matchClassFields(node: Node): List[ClassField] = {
-    val BindNode(v243, v244) = node
-    val v260 = v243.id match {
-      case 340 =>
-        val v245 = v244.asInstanceOf[SequenceNode].children.head
-        val BindNode(v246, v247) = v245
-        assert(v246.id == 341)
-        val v248 = v244.asInstanceOf[SequenceNode].children(1)
-        val v249 = unrollRepeat0(v248).map { elem =>
-          val BindNode(v250, v251) = elem
-          assert(v250.id == 350)
-          val BindNode(v252, v253) = v251
-          val v259 = v252.id match {
-            case 351 =>
-              val BindNode(v254, v255) = v253
-              assert(v254.id == 352)
-              val v256 = v255.asInstanceOf[SequenceNode].children(3)
-              val BindNode(v257, v258) = v256
-              assert(v257.id == 341)
-              matchClassFieldDef(v258)
-          }
-          v259
-        }
-        List(matchClassFieldDef(v247)) ++ v249
-    }
-    v260
-  }
-
-  def matchCollectionType(node: Node): CollectionType = {
-    val BindNode(v261, v262) = node
-    val v281 = v261.id match {
-      case 153 =>
-        val v263 = v262.asInstanceOf[SequenceNode].children.head
-        val BindNode(v264, v265) = v263
-        assert(v264.id == 154)
-        val JoinNode(_, v266, _) = v265
-        val BindNode(v267, v268) = v266
-        assert(v267.id == 155)
-        val BindNode(v269, v270) = v268
-        val v277 = v269.id match {
-          case 156 =>
-            val BindNode(v271, v272) = v270
-            assert(v271.id == 157)
-            val v273 = v272.asInstanceOf[SequenceNode].children.head
+            assert(v230.id == 153)
+            val v232 = v231.asInstanceOf[SequenceNode].children.head
             "set"
-          case 160 =>
-            val BindNode(v274, v275) = v270
-            assert(v274.id == 161)
-            val v276 = v275.asInstanceOf[SequenceNode].children.head
+          case 156 =>
+            val BindNode(v233, v234) = v229
+            assert(v233.id == 157)
+            val v235 = v234.asInstanceOf[SequenceNode].children.head
             "list"
         }
-        val v278 = v262.asInstanceOf[SequenceNode].children(2)
-        val BindNode(v279, v280) = v278
-        assert(v279.id == 164)
-        CollectionType(v277, matchTypeParams(v280))(nextId(), v262)
+        val v237 = v221.asInstanceOf[SequenceNode].children(2)
+        val BindNode(v238, v239) = v237
+        assert(v238.id == 160)
+        CollectionType(v236, matchTypeParams(v239))(nextId(), v221)
     }
-    v281
+    v240
   }
 
   def matchDataClassDef(node: Node): DataClassDef = {
-    val BindNode(v282, v283) = node
-    val v317 = v282.id match {
-      case 331 =>
-        val v284 = v283.asInstanceOf[SequenceNode].children(2)
-        val BindNode(v285, v286) = v284
-        assert(v285.id == 88)
-        val v288 = v283.asInstanceOf[SequenceNode].children(5)
-        val BindNode(v289, v290) = v288
-        assert(v289.id == 335)
-        val BindNode(v291, v292) = v290
-        val v301 = v291.id match {
+    val BindNode(v241, v242) = node
+    val v264 = v241.id match {
+      case 328 =>
+        val v243 = v242.asInstanceOf[SequenceNode].children(2)
+        val BindNode(v244, v245) = v243
+        assert(v244.id == 88)
+        val v246 = v242.asInstanceOf[SequenceNode].children(4)
+        val BindNode(v247, v248) = v246
+        assert(v247.id == 332)
+        val v250 = v242.asInstanceOf[SequenceNode].children(5)
+        val BindNode(v251, v252) = v250
+        assert(v251.id == 354)
+        val BindNode(v253, v254) = v252
+        val v263 = v253.id match {
           case 126 =>
             None
-          case 336 =>
-            val BindNode(v293, v294) = v292
-            val v300 = v293.id match {
-              case 337 =>
-                val BindNode(v295, v296) = v294
-                assert(v295.id == 338)
-                val v297 = v296.asInstanceOf[SequenceNode].children(1)
-                val BindNode(v298, v299) = v297
-                assert(v298.id == 339)
-                matchClassFields(v299)
+          case 355 =>
+            val BindNode(v255, v256) = v254
+            val v262 = v255.id match {
+              case 356 =>
+                val BindNode(v257, v258) = v256
+                assert(v257.id == 357)
+                val v259 = v258.asInstanceOf[SequenceNode].children(1)
+                val BindNode(v260, v261) = v259
+                assert(v260.id == 358)
+                matchClassBody(v261)
             }
-            Some(v300)
+            Some(v262)
         }
-        val v287 = v301
-        val v303 = v283.asInstanceOf[SequenceNode].children(8)
-        val BindNode(v304, v305) = v303
-        assert(v304.id == 353)
-        val BindNode(v306, v307) = v305
-        val v316 = v306.id match {
-          case 126 =>
-            None
-          case 354 =>
-            val BindNode(v308, v309) = v307
-            val v315 = v308.id match {
-              case 355 =>
-                val BindNode(v310, v311) = v309
-                assert(v310.id == 356)
-                val v312 = v311.asInstanceOf[SequenceNode].children(1)
-                val BindNode(v313, v314) = v312
-                assert(v313.id == 357)
-                matchClassBody(v314)
-            }
-            Some(v315)
-        }
-        val v302 = v316
-        DataClassDef(matchSimpleName(v286), if (v287.isDefined) v287.get else List(), if (v302.isDefined) v302.get else List())(nextId(), v283)
+        val v249 = v263
+        DataClassDef(matchSimpleName(v245), matchParamsDef(v248), if (v249.isDefined) v249.get else List())(nextId(), v242)
     }
-    v317
+    v264
   }
 
   def matchDef(node: Node): Def = {
-    val BindNode(v318, v319) = node
-    val v350 = v318.id match {
-      case 327 =>
-        val v320 = v319.asInstanceOf[SequenceNode].children.head
-        val BindNode(v321, v322) = v320
-        assert(v321.id == 328)
-        matchClassDef(v322)
-      case 430 =>
-        val v323 = v319.asInstanceOf[SequenceNode].children.head
-        val BindNode(v324, v325) = v323
-        assert(v324.id == 431)
-        matchBuildRuleDef(v325)
-      case 415 =>
-        val v326 = v319.asInstanceOf[SequenceNode].children.head
-        val BindNode(v327, v328) = v326
-        assert(v327.id == 416)
-        matchArgDef(v328)
-      case 425 =>
-        val v329 = v319.asInstanceOf[SequenceNode].children.head
-        val BindNode(v330, v331) = v329
-        assert(v330.id == 426)
-        matchArgRedef(v331)
-      case 312 =>
-        val v332 = v319.asInstanceOf[SequenceNode].children.head
-        val BindNode(v333, v334) = v332
-        assert(v333.id == 313)
-        matchTargetDef(v334)
-      case 314 =>
-        val v335 = v319.asInstanceOf[SequenceNode].children.head
-        val BindNode(v336, v337) = v335
-        assert(v336.id == 315)
-        matchActionDef(v337)
+    val BindNode(v265, v266) = node
+    val v297 = v265.id match {
+      case 324 =>
+        val v267 = v266.asInstanceOf[SequenceNode].children.head
+        val BindNode(v268, v269) = v267
+        assert(v268.id == 325)
+        matchClassDef(v269)
+      case 414 =>
+        val v270 = v266.asInstanceOf[SequenceNode].children.head
+        val BindNode(v271, v272) = v270
+        assert(v271.id == 415)
+        matchBuildRuleDef(v272)
+      case 399 =>
+        val v273 = v266.asInstanceOf[SequenceNode].children.head
+        val BindNode(v274, v275) = v273
+        assert(v274.id == 400)
+        matchArgDef(v275)
       case 409 =>
-        val v338 = v319.asInstanceOf[SequenceNode].children.head
-        val BindNode(v339, v340) = v338
-        assert(v339.id == 410)
-        matchEnumDef(v340)
+        val v276 = v266.asInstanceOf[SequenceNode].children.head
+        val BindNode(v277, v278) = v276
+        assert(v277.id == 410)
+        matchArgRedef(v278)
+      case 309 =>
+        val v279 = v266.asInstanceOf[SequenceNode].children.head
+        val BindNode(v280, v281) = v279
+        assert(v280.id == 310)
+        matchTargetDef(v281)
+      case 311 =>
+        val v282 = v266.asInstanceOf[SequenceNode].children.head
+        val BindNode(v283, v284) = v282
+        assert(v283.id == 312)
+        matchActionDef(v284)
+      case 393 =>
+        val v285 = v266.asInstanceOf[SequenceNode].children.head
+        val BindNode(v286, v287) = v285
+        assert(v286.id == 394)
+        matchEnumDef(v287)
       case 130 =>
-        val v341 = v319.asInstanceOf[SequenceNode].children.head
-        val BindNode(v342, v343) = v341
-        assert(v342.id == 131)
-        matchImportDef(v343)
-      case 306 =>
-        val v344 = v319.asInstanceOf[SequenceNode].children.head
-        val BindNode(v345, v346) = v344
-        assert(v345.id == 307)
-        matchNamespaceDef(v346)
-      case 365 =>
-        val v347 = v319.asInstanceOf[SequenceNode].children.head
-        val BindNode(v348, v349) = v347
-        assert(v348.id == 366)
-        matchActionRuleDef(v349)
+        val v288 = v266.asInstanceOf[SequenceNode].children.head
+        val BindNode(v289, v290) = v288
+        assert(v289.id == 131)
+        matchImportDef(v290)
+      case 303 =>
+        val v291 = v266.asInstanceOf[SequenceNode].children.head
+        val BindNode(v292, v293) = v291
+        assert(v292.id == 304)
+        matchNamespaceDef(v293)
+      case 366 =>
+        val v294 = v266.asInstanceOf[SequenceNode].children.head
+        val BindNode(v295, v296) = v294
+        assert(v295.id == 367)
+        matchActionRuleDef(v296)
     }
-    v350
+    v297
   }
 
   def matchDefs(node: Node): List[Def] = {
-    val BindNode(v351, v352) = node
-    val v368 = v351.id match {
+    val BindNode(v298, v299) = node
+    val v315 = v298.id match {
       case 128 =>
-        val v353 = v352.asInstanceOf[SequenceNode].children.head
-        val BindNode(v354, v355) = v353
-        assert(v354.id == 129)
-        val v356 = v352.asInstanceOf[SequenceNode].children(1)
-        val v357 = unrollRepeat0(v356).map { elem =>
-          val BindNode(v358, v359) = elem
-          assert(v358.id == 435)
-          val BindNode(v360, v361) = v359
-          val v367 = v360.id match {
-            case 436 =>
-              val BindNode(v362, v363) = v361
-              assert(v362.id == 437)
-              val v364 = v363.asInstanceOf[SequenceNode].children(1)
-              val BindNode(v365, v366) = v364
-              assert(v365.id == 129)
-              matchDef(v366)
+        val v300 = v299.asInstanceOf[SequenceNode].children.head
+        val BindNode(v301, v302) = v300
+        assert(v301.id == 129)
+        val v303 = v299.asInstanceOf[SequenceNode].children(1)
+        val v304 = unrollRepeat0(v303).map { elem =>
+          val BindNode(v305, v306) = elem
+          assert(v305.id == 419)
+          val BindNode(v307, v308) = v306
+          val v314 = v307.id match {
+            case 420 =>
+              val BindNode(v309, v310) = v308
+              assert(v309.id == 421)
+              val v311 = v310.asInstanceOf[SequenceNode].children(1)
+              val BindNode(v312, v313) = v311
+              assert(v312.id == 129)
+              matchDef(v313)
           }
-          v367
+          v314
         }
-        List(matchDef(v355)) ++ v357
+        List(matchDef(v302)) ++ v304
     }
-    v368
+    v315
   }
 
   def matchEnumDef(node: Node): EnumDef = {
-    val BindNode(v369, v370) = node
-    val v389 = v369.id match {
-      case 411 =>
-        val v371 = v370.asInstanceOf[SequenceNode].children(2)
-        val BindNode(v372, v373) = v371
-        assert(v372.id == 88)
-        val v374 = v370.asInstanceOf[SequenceNode].children(6)
-        val BindNode(v375, v376) = v374
-        assert(v375.id == 88)
-        val v377 = v370.asInstanceOf[SequenceNode].children(7)
-        val v378 = unrollRepeat0(v377).map { elem =>
-          val BindNode(v379, v380) = elem
-          assert(v379.id == 406)
-          val BindNode(v381, v382) = v380
-          val v388 = v381.id match {
-            case 407 =>
-              val BindNode(v383, v384) = v382
-              assert(v383.id == 408)
-              val v385 = v384.asInstanceOf[SequenceNode].children(3)
-              val BindNode(v386, v387) = v385
-              assert(v386.id == 88)
-              matchSimpleName(v387)
+    val BindNode(v316, v317) = node
+    val v336 = v316.id match {
+      case 395 =>
+        val v318 = v317.asInstanceOf[SequenceNode].children(2)
+        val BindNode(v319, v320) = v318
+        assert(v319.id == 88)
+        val v321 = v317.asInstanceOf[SequenceNode].children(6)
+        val BindNode(v322, v323) = v321
+        assert(v322.id == 88)
+        val v324 = v317.asInstanceOf[SequenceNode].children(7)
+        val v325 = unrollRepeat0(v324).map { elem =>
+          val BindNode(v326, v327) = elem
+          assert(v326.id == 390)
+          val BindNode(v328, v329) = v327
+          val v335 = v328.id match {
+            case 391 =>
+              val BindNode(v330, v331) = v329
+              assert(v330.id == 392)
+              val v332 = v331.asInstanceOf[SequenceNode].children(3)
+              val BindNode(v333, v334) = v332
+              assert(v333.id == 88)
+              matchSimpleName(v334)
           }
-          v388
+          v335
         }
-        EnumDef(matchSimpleName(v373), List(matchSimpleName(v376)) ++ v378)(nextId(), v370)
+        EnumDef(matchSimpleName(v320), List(matchSimpleName(v323)) ++ v325)(nextId(), v317)
     }
-    v389
+    v336
   }
 
   def matchEscapeChar(node: Node): EscapeChar = {
-    val BindNode(v390, v391) = node
-    val v395 = v390.id match {
-      case 275 =>
-        val v392 = v391.asInstanceOf[SequenceNode].children(1)
-        val BindNode(v393, v394) = v392
-        assert(v393.id == 277)
-        EscapeChar(v394.asInstanceOf[TerminalNode].input.asInstanceOf[Inputs.Character].char)(nextId(), v391)
+    val BindNode(v337, v338) = node
+    val v342 = v337.id match {
+      case 272 =>
+        val v339 = v338.asInstanceOf[SequenceNode].children(1)
+        val BindNode(v340, v341) = v339
+        assert(v340.id == 274)
+        EscapeChar(v341.asInstanceOf[TerminalNode].input.asInstanceOf[Inputs.Character].char)(nextId(), v338)
     }
-    v395
+    v342
   }
 
   def matchExpr(node: Node): Expr = {
-    val BindNode(v396, v397) = node
-    val v407 = v396.id match {
+    val BindNode(v343, v344) = node
+    val v354 = v343.id match {
       case 139 =>
-        val v398 = v397.asInstanceOf[SequenceNode].children.head
-        val BindNode(v399, v400) = v398
-        assert(v399.id == 138)
-        val v401 = v397.asInstanceOf[SequenceNode].children(4)
-        val BindNode(v402, v403) = v401
-        assert(v402.id == 143)
-        CastExpr(matchExpr(v400), matchNoUnionType(v403))(nextId(), v397)
-      case 201 =>
-        val v404 = v397.asInstanceOf[SequenceNode].children.head
-        val BindNode(v405, v406) = v404
-        assert(v405.id == 202)
-        matchMergeOpOrPrimary(v406)
+        val v345 = v344.asInstanceOf[SequenceNode].children.head
+        val BindNode(v346, v347) = v345
+        assert(v346.id == 138)
+        val v348 = v344.asInstanceOf[SequenceNode].children(4)
+        val BindNode(v349, v350) = v348
+        assert(v349.id == 143)
+        CastExpr(matchExpr(v347), matchNoUnionType(v350))(nextId(), v344)
+      case 198 =>
+        val v351 = v344.asInstanceOf[SequenceNode].children.head
+        val BindNode(v352, v353) = v351
+        assert(v352.id == 199)
+        matchMergeOpOrPrimary(v353)
     }
-    v407
+    v354
   }
 
   def matchImportDef(node: Node): ImportDef = {
-    val BindNode(v408, v409) = node
-    val v447 = v408.id match {
+    val BindNode(v355, v356) = node
+    val v394 = v355.id match {
       case 132 =>
-        val v410 = v409.asInstanceOf[SequenceNode].children(2)
-        val BindNode(v411, v412) = v410
-        assert(v411.id == 138)
-        val v413 = v409.asInstanceOf[SequenceNode].children(3)
-        val BindNode(v414, v415) = v413
-        assert(v414.id == 298)
-        val BindNode(v416, v417) = v415
-        val v426 = v416.id match {
+        val v357 = v356.asInstanceOf[SequenceNode].children(2)
+        val BindNode(v358, v359) = v357
+        assert(v358.id == 138)
+        val v360 = v356.asInstanceOf[SequenceNode].children(3)
+        val BindNode(v361, v362) = v360
+        assert(v361.id == 295)
+        val BindNode(v363, v364) = v362
+        val v373 = v363.id match {
           case 126 =>
             None
-          case 299 =>
-            val BindNode(v418, v419) = v417
-            val v425 = v418.id match {
-              case 300 =>
-                val BindNode(v420, v421) = v419
-                assert(v420.id == 301)
-                val v422 = v421.asInstanceOf[SequenceNode].children(3)
-                val BindNode(v423, v424) = v422
-                assert(v423.id == 88)
-                matchSimpleName(v424)
+          case 296 =>
+            val BindNode(v365, v366) = v364
+            val v372 = v365.id match {
+              case 297 =>
+                val BindNode(v367, v368) = v366
+                assert(v367.id == 298)
+                val v369 = v368.asInstanceOf[SequenceNode].children(3)
+                val BindNode(v370, v371) = v369
+                assert(v370.id == 88)
+                matchSimpleName(v371)
             }
-            Some(v425)
+            Some(v372)
         }
-        ImportAll(matchExpr(v412), v426)(nextId(), v409)
-      case 302 =>
-        val v427 = v409.asInstanceOf[SequenceNode].children(2)
-        val BindNode(v428, v429) = v427
-        assert(v428.id == 138)
-        val v430 = v409.asInstanceOf[SequenceNode].children(6)
-        val BindNode(v431, v432) = v430
-        assert(v431.id == 86)
-        val v433 = v409.asInstanceOf[SequenceNode].children(7)
-        val BindNode(v434, v435) = v433
-        assert(v434.id == 298)
-        val BindNode(v436, v437) = v435
-        val v446 = v436.id match {
+        ImportAll(matchExpr(v359), v373)(nextId(), v356)
+      case 299 =>
+        val v374 = v356.asInstanceOf[SequenceNode].children(2)
+        val BindNode(v375, v376) = v374
+        assert(v375.id == 138)
+        val v377 = v356.asInstanceOf[SequenceNode].children(6)
+        val BindNode(v378, v379) = v377
+        assert(v378.id == 86)
+        val v380 = v356.asInstanceOf[SequenceNode].children(7)
+        val BindNode(v381, v382) = v380
+        assert(v381.id == 295)
+        val BindNode(v383, v384) = v382
+        val v393 = v383.id match {
           case 126 =>
             None
-          case 299 =>
-            val BindNode(v438, v439) = v437
-            val v445 = v438.id match {
-              case 300 =>
-                val BindNode(v440, v441) = v439
-                assert(v440.id == 301)
-                val v442 = v441.asInstanceOf[SequenceNode].children(3)
-                val BindNode(v443, v444) = v442
-                assert(v443.id == 88)
-                matchSimpleName(v444)
+          case 296 =>
+            val BindNode(v385, v386) = v384
+            val v392 = v385.id match {
+              case 297 =>
+                val BindNode(v387, v388) = v386
+                assert(v387.id == 298)
+                val v389 = v388.asInstanceOf[SequenceNode].children(3)
+                val BindNode(v390, v391) = v389
+                assert(v390.id == 88)
+                matchSimpleName(v391)
             }
-            Some(v445)
+            Some(v392)
         }
-        ImportFrom(matchExpr(v429), matchName(v432), v446)(nextId(), v409)
+        ImportFrom(matchExpr(v376), matchName(v379), v393)(nextId(), v356)
     }
-    v447
+    v394
   }
 
   def matchLiteral(node: Node): Literal = {
-    val BindNode(v448, v449) = node
-    val v459 = v448.id match {
-      case 259 =>
-        val v450 = v449.asInstanceOf[SequenceNode].children.head
-        val BindNode(v451, v452) = v450
-        assert(v451.id == 260)
-        matchStringLiteral(v452)
-      case 287 =>
-        val v453 = v449.asInstanceOf[SequenceNode].children.head
-        val BindNode(v454, v455) = v453
-        assert(v454.id == 288)
-        matchBooleanLiteral(v455)
+    val BindNode(v395, v396) = node
+    val v406 = v395.id match {
+      case 256 =>
+        val v397 = v396.asInstanceOf[SequenceNode].children.head
+        val BindNode(v398, v399) = v397
+        assert(v398.id == 257)
+        matchStringLiteral(v399)
+      case 284 =>
+        val v400 = v396.asInstanceOf[SequenceNode].children.head
+        val BindNode(v401, v402) = v400
+        assert(v401.id == 285)
+        matchBooleanLiteral(v402)
+      case 291 =>
+        val v403 = v396.asInstanceOf[SequenceNode].children.head
+        val BindNode(v404, v405) = v403
+        assert(v404.id == 292)
+        matchNoneLiteral(v405)
+    }
+    v406
+  }
+
+  def matchMergeOpOrPrimary(node: Node): MergeOpOrPrimary = {
+    val BindNode(v407, v408) = node
+    val v418 = v407.id match {
+      case 200 =>
+        val v409 = v408.asInstanceOf[SequenceNode].children.head
+        val BindNode(v410, v411) = v409
+        assert(v410.id == 138)
+        val v412 = v408.asInstanceOf[SequenceNode].children(4)
+        val BindNode(v413, v414) = v412
+        assert(v413.id == 202)
+        MergeOp(matchExpr(v411), matchPrimary(v414))(nextId(), v408)
       case 294 =>
-        val v456 = v449.asInstanceOf[SequenceNode].children.head
-        val BindNode(v457, v458) = v456
-        assert(v457.id == 295)
-        matchNoneLiteral(v458)
+        val v415 = v408.asInstanceOf[SequenceNode].children.head
+        val BindNode(v416, v417) = v415
+        assert(v416.id == 202)
+        matchPrimary(v417)
+    }
+    v418
+  }
+
+  def matchMethodRef(node: Node): MethodRef = {
+    val BindNode(v419, v420) = node
+    val v441 = v419.id match {
+      case 374 =>
+        val v421 = v420.asInstanceOf[SequenceNode].children.head
+        val BindNode(v422, v423) = v421
+        assert(v422.id == 86)
+        val v424 = v420.asInstanceOf[SequenceNode].children(4)
+        val BindNode(v425, v426) = v424
+        assert(v425.id == 86)
+        val v427 = v420.asInstanceOf[SequenceNode].children(5)
+        val BindNode(v428, v429) = v427
+        assert(v428.id == 375)
+        val BindNode(v430, v431) = v429
+        val v440 = v430.id match {
+          case 126 =>
+            None
+          case 376 =>
+            val BindNode(v432, v433) = v431
+            val v439 = v432.id match {
+              case 377 =>
+                val BindNode(v434, v435) = v433
+                assert(v434.id == 378)
+                val v436 = v435.asInstanceOf[SequenceNode].children(3)
+                val BindNode(v437, v438) = v436
+                assert(v437.id == 88)
+                matchSimpleName(v438)
+            }
+            Some(v439)
+        }
+        MethodRef(matchName(v423), matchName(v426), v440)(nextId(), v420)
+    }
+    v441
+  }
+
+  def matchName(node: Node): Name = {
+    val BindNode(v442, v443) = node
+    val v459 = v442.id match {
+      case 87 =>
+        val v444 = v443.asInstanceOf[SequenceNode].children.head
+        val BindNode(v445, v446) = v444
+        assert(v445.id == 88)
+        val v447 = v443.asInstanceOf[SequenceNode].children(1)
+        val v448 = unrollRepeat0(v447).map { elem =>
+          val BindNode(v449, v450) = elem
+          assert(v449.id == 122)
+          val BindNode(v451, v452) = v450
+          val v458 = v451.id match {
+            case 123 =>
+              val BindNode(v453, v454) = v452
+              assert(v453.id == 124)
+              val v455 = v454.asInstanceOf[SequenceNode].children(3)
+              val BindNode(v456, v457) = v455
+              assert(v456.id == 88)
+              matchSimpleName(v457)
+          }
+          v458
+        }
+        Name(List(matchSimpleName(v446)) ++ v448)(nextId(), v443)
     }
     v459
   }
 
-  def matchMergeOpOrPrimary(node: Node): MergeOpOrPrimary = {
+  def matchNamedExpr(node: Node): NamedExpr = {
     val BindNode(v460, v461) = node
-    val v471 = v460.id match {
-      case 203 =>
+    val v468 = v460.id match {
+      case 248 =>
         val v462 = v461.asInstanceOf[SequenceNode].children.head
         val BindNode(v463, v464) = v462
-        assert(v463.id == 138)
+        assert(v463.id == 88)
         val v465 = v461.asInstanceOf[SequenceNode].children(4)
         val BindNode(v466, v467) = v465
-        assert(v466.id == 205)
-        MergeOp(matchExpr(v464), matchPrimary(v467))(nextId(), v461)
-      case 297 =>
-        val v468 = v461.asInstanceOf[SequenceNode].children.head
-        val BindNode(v469, v470) = v468
-        assert(v469.id == 205)
-        matchPrimary(v470)
+        assert(v466.id == 138)
+        NamedExpr(matchSimpleName(v464), matchExpr(v467))(nextId(), v461)
     }
-    v471
-  }
-
-  def matchMethodRef(node: Node): MethodRef = {
-    val BindNode(v472, v473) = node
-    val v494 = v472.id match {
-      case 390 =>
-        val v474 = v473.asInstanceOf[SequenceNode].children.head
-        val BindNode(v475, v476) = v474
-        assert(v475.id == 86)
-        val v477 = v473.asInstanceOf[SequenceNode].children(4)
-        val BindNode(v478, v479) = v477
-        assert(v478.id == 86)
-        val v480 = v473.asInstanceOf[SequenceNode].children(5)
-        val BindNode(v481, v482) = v480
-        assert(v481.id == 391)
-        val BindNode(v483, v484) = v482
-        val v493 = v483.id match {
-          case 126 =>
-            None
-          case 392 =>
-            val BindNode(v485, v486) = v484
-            val v492 = v485.id match {
-              case 393 =>
-                val BindNode(v487, v488) = v486
-                assert(v487.id == 394)
-                val v489 = v488.asInstanceOf[SequenceNode].children(3)
-                val BindNode(v490, v491) = v489
-                assert(v490.id == 88)
-                matchSimpleName(v491)
-            }
-            Some(v492)
-        }
-        MethodRef(matchName(v476), matchName(v479), v493)(nextId(), v473)
-    }
-    v494
-  }
-
-  def matchName(node: Node): Name = {
-    val BindNode(v495, v496) = node
-    val v512 = v495.id match {
-      case 87 =>
-        val v497 = v496.asInstanceOf[SequenceNode].children.head
-        val BindNode(v498, v499) = v497
-        assert(v498.id == 88)
-        val v500 = v496.asInstanceOf[SequenceNode].children(1)
-        val v501 = unrollRepeat0(v500).map { elem =>
-          val BindNode(v502, v503) = elem
-          assert(v502.id == 122)
-          val BindNode(v504, v505) = v503
-          val v511 = v504.id match {
-            case 123 =>
-              val BindNode(v506, v507) = v505
-              assert(v506.id == 124)
-              val v508 = v507.asInstanceOf[SequenceNode].children(3)
-              val BindNode(v509, v510) = v508
-              assert(v509.id == 88)
-              matchSimpleName(v510)
-          }
-          v511
-        }
-        Name(List(matchSimpleName(v499)) ++ v501)(nextId(), v496)
-    }
-    v512
-  }
-
-  def matchNamedExpr(node: Node): NamedExpr = {
-    val BindNode(v513, v514) = node
-    val v521 = v513.id match {
-      case 251 =>
-        val v515 = v514.asInstanceOf[SequenceNode].children.head
-        val BindNode(v516, v517) = v515
-        assert(v516.id == 88)
-        val v518 = v514.asInstanceOf[SequenceNode].children(4)
-        val BindNode(v519, v520) = v518
-        assert(v519.id == 138)
-        NamedExpr(matchSimpleName(v517), matchExpr(v520))(nextId(), v514)
-    }
-    v521
+    v468
   }
 
   def matchNamedParam(node: Node): NamedParam = {
-    val BindNode(v522, v523) = node
-    val v530 = v522.id match {
-      case 227 =>
-        val v524 = v523.asInstanceOf[SequenceNode].children.head
-        val BindNode(v525, v526) = v524
-        assert(v525.id == 88)
-        val v527 = v523.asInstanceOf[SequenceNode].children(4)
-        val BindNode(v528, v529) = v527
-        assert(v528.id == 138)
-        NamedParam(matchSimpleName(v526), matchExpr(v529))(nextId(), v523)
+    val BindNode(v469, v470) = node
+    val v477 = v469.id match {
+      case 224 =>
+        val v471 = v470.asInstanceOf[SequenceNode].children.head
+        val BindNode(v472, v473) = v471
+        assert(v472.id == 88)
+        val v474 = v470.asInstanceOf[SequenceNode].children(4)
+        val BindNode(v475, v476) = v474
+        assert(v475.id == 138)
+        NamedParam(matchSimpleName(v473), matchExpr(v476))(nextId(), v470)
     }
-    v530
+    v477
   }
 
   def matchNamedParams(node: Node): List[NamedParam] = {
-    val BindNode(v531, v532) = node
-    val v548 = v531.id match {
-      case 225 =>
-        val v533 = v532.asInstanceOf[SequenceNode].children.head
-        val BindNode(v534, v535) = v533
-        assert(v534.id == 226)
-        val v536 = v532.asInstanceOf[SequenceNode].children(1)
-        val v537 = unrollRepeat0(v536).map { elem =>
-          val BindNode(v538, v539) = elem
-          assert(v538.id == 231)
-          val BindNode(v540, v541) = v539
-          val v547 = v540.id match {
-            case 232 =>
-              val BindNode(v542, v543) = v541
-              assert(v542.id == 233)
-              val v544 = v543.asInstanceOf[SequenceNode].children(3)
-              val BindNode(v545, v546) = v544
-              assert(v545.id == 226)
-              matchNamedParam(v546)
+    val BindNode(v478, v479) = node
+    val v495 = v478.id match {
+      case 222 =>
+        val v480 = v479.asInstanceOf[SequenceNode].children.head
+        val BindNode(v481, v482) = v480
+        assert(v481.id == 223)
+        val v483 = v479.asInstanceOf[SequenceNode].children(1)
+        val v484 = unrollRepeat0(v483).map { elem =>
+          val BindNode(v485, v486) = elem
+          assert(v485.id == 228)
+          val BindNode(v487, v488) = v486
+          val v494 = v487.id match {
+            case 229 =>
+              val BindNode(v489, v490) = v488
+              assert(v489.id == 230)
+              val v491 = v490.asInstanceOf[SequenceNode].children(3)
+              val BindNode(v492, v493) = v491
+              assert(v492.id == 223)
+              matchNamedParam(v493)
           }
-          v547
+          v494
         }
-        List(matchNamedParam(v535)) ++ v537
+        List(matchNamedParam(v482)) ++ v484
     }
-    v548
+    v495
   }
 
   def matchNamedTupleType(node: Node): NamedTupleType = {
-    val BindNode(v549, v550) = node
-    val v566 = v549.id match {
-      case 193 =>
-        val v551 = v550.asInstanceOf[SequenceNode].children(2)
-        val BindNode(v552, v553) = v551
-        assert(v552.id == 194)
-        val v554 = v550.asInstanceOf[SequenceNode].children(3)
-        val v555 = unrollRepeat0(v554).map { elem =>
-          val BindNode(v556, v557) = elem
-          assert(v556.id == 198)
-          val BindNode(v558, v559) = v557
-          val v565 = v558.id match {
-            case 199 =>
-              val BindNode(v560, v561) = v559
-              assert(v560.id == 200)
-              val v562 = v561.asInstanceOf[SequenceNode].children(3)
-              val BindNode(v563, v564) = v562
-              assert(v563.id == 194)
-              matchNamedType(v564)
+    val BindNode(v496, v497) = node
+    val v513 = v496.id match {
+      case 189 =>
+        val v498 = v497.asInstanceOf[SequenceNode].children(2)
+        val BindNode(v499, v500) = v498
+        assert(v499.id == 190)
+        val v501 = v497.asInstanceOf[SequenceNode].children(3)
+        val v502 = unrollRepeat0(v501).map { elem =>
+          val BindNode(v503, v504) = elem
+          assert(v503.id == 195)
+          val BindNode(v505, v506) = v504
+          val v512 = v505.id match {
+            case 196 =>
+              val BindNode(v507, v508) = v506
+              assert(v507.id == 197)
+              val v509 = v508.asInstanceOf[SequenceNode].children(3)
+              val BindNode(v510, v511) = v509
+              assert(v510.id == 190)
+              matchNamedType(v511)
           }
-          v565
+          v512
         }
-        NamedTupleType(List(matchNamedType(v553)) ++ v555)(nextId(), v550)
+        NamedTupleType(List(matchNamedType(v500)) ++ v502)(nextId(), v497)
     }
-    v566
+    v513
   }
 
   def matchNamedType(node: Node): NamedType = {
-    val BindNode(v567, v568) = node
-    val v575 = v567.id match {
-      case 195 =>
-        val v569 = v568.asInstanceOf[SequenceNode].children.head
-        val BindNode(v570, v571) = v569
-        assert(v570.id == 88)
-        val v572 = v568.asInstanceOf[SequenceNode].children(4)
-        val BindNode(v573, v574) = v572
-        assert(v573.id == 167)
-        NamedType(matchSimpleName(v571), matchTypeExpr(v574))(nextId(), v568)
+    val BindNode(v514, v515) = node
+    val v522 = v514.id match {
+      case 191 =>
+        val v516 = v515.asInstanceOf[SequenceNode].children.head
+        val BindNode(v517, v518) = v516
+        assert(v517.id == 88)
+        val v519 = v515.asInstanceOf[SequenceNode].children(4)
+        val BindNode(v520, v521) = v519
+        assert(v520.id == 163)
+        NamedType(matchSimpleName(v518), matchTypeExpr(v521))(nextId(), v515)
     }
-    v575
+    v522
   }
 
   def matchNamespaceDef(node: Node): NamespaceDef = {
-    val BindNode(v576, v577) = node
-    val v584 = v576.id match {
-      case 308 =>
-        val v578 = v577.asInstanceOf[SequenceNode].children(2)
-        val BindNode(v579, v580) = v578
-        assert(v579.id == 88)
-        val v581 = v577.asInstanceOf[SequenceNode].children(5)
-        val BindNode(v582, v583) = v581
-        assert(v582.id == 2)
-        NamespaceDef(matchSimpleName(v580), matchBuildScript(v583))(nextId(), v577)
+    val BindNode(v523, v524) = node
+    val v531 = v523.id match {
+      case 305 =>
+        val v525 = v524.asInstanceOf[SequenceNode].children(2)
+        val BindNode(v526, v527) = v525
+        assert(v526.id == 88)
+        val v528 = v524.asInstanceOf[SequenceNode].children(5)
+        val BindNode(v529, v530) = v528
+        assert(v529.id == 2)
+        NamespaceDef(matchSimpleName(v527), matchBuildScript(v530))(nextId(), v524)
     }
-    v584
+    v531
   }
 
   def matchNoUnionType(node: Node): NoUnionType = {
-    val BindNode(v585, v586) = node
-    val v605 = v585.id match {
-      case 191 =>
-        val v587 = v586.asInstanceOf[SequenceNode].children.head
-        val BindNode(v588, v589) = v587
-        assert(v588.id == 192)
-        matchNamedTupleType(v589)
-      case 149 =>
-        NoneType()(nextId(), v586)
-      case 144 =>
-        val v590 = v586.asInstanceOf[SequenceNode].children.head
-        val BindNode(v591, v592) = v590
-        assert(v591.id == 86)
-        matchName(v592)
-      case 186 =>
-        val v593 = v586.asInstanceOf[SequenceNode].children.head
-        val BindNode(v594, v595) = v593
-        assert(v594.id == 187)
-        matchTupleType(v595)
+    val BindNode(v532, v533) = node
+    val v546 = v532.id match {
+      case 187 =>
+        val v534 = v533.asInstanceOf[SequenceNode].children.head
+        val BindNode(v535, v536) = v534
+        assert(v535.id == 188)
+        matchNamedTupleType(v536)
       case 145 =>
-        val v596 = v586.asInstanceOf[SequenceNode].children.head
-        val BindNode(v597, v598) = v596
-        assert(v597.id == 86)
-        val v599 = v586.asInstanceOf[SequenceNode].children(2)
-        val BindNode(v600, v601) = v599
-        assert(v600.id == 86)
-        CanonicalName(matchName(v598), matchName(v601))(nextId(), v586)
-      case 151 =>
-        val v602 = v586.asInstanceOf[SequenceNode].children.head
-        val BindNode(v603, v604) = v602
-        assert(v603.id == 152)
-        matchCollectionType(v604)
+        NoneType()(nextId(), v533)
+      case 144 =>
+        val v537 = v533.asInstanceOf[SequenceNode].children.head
+        val BindNode(v538, v539) = v537
+        assert(v538.id == 86)
+        matchName(v539)
+      case 182 =>
+        val v540 = v533.asInstanceOf[SequenceNode].children.head
+        val BindNode(v541, v542) = v540
+        assert(v541.id == 183)
+        matchTupleType(v542)
+      case 147 =>
+        val v543 = v533.asInstanceOf[SequenceNode].children.head
+        val BindNode(v544, v545) = v543
+        assert(v544.id == 148)
+        matchCollectionType(v545)
     }
-    v605
+    v546
   }
 
   def matchNoneLiteral(node: Node): NoneLiteral = {
-    val BindNode(v606, v607) = node
-    val v608 = v606.id match {
-      case 149 =>
-        NoneLiteral()(nextId(), v607)
+    val BindNode(v547, v548) = node
+    val v549 = v547.id match {
+      case 145 =>
+        NoneLiteral()(nextId(), v548)
     }
-    v608
+    v549
   }
 
   def matchPackageName(node: Node): Name = {
-    val BindNode(v609, v610) = node
-    val v614 = v609.id match {
+    val BindNode(v550, v551) = node
+    val v555 = v550.id match {
       case 59 =>
-        val v611 = v610.asInstanceOf[SequenceNode].children(2)
-        val BindNode(v612, v613) = v611
-        assert(v612.id == 86)
-        matchName(v613)
+        val v552 = v551.asInstanceOf[SequenceNode].children(2)
+        val BindNode(v553, v554) = v552
+        assert(v553.id == 86)
+        matchName(v554)
     }
-    v614
+    v555
   }
 
   def matchParamDef(node: Node): ParamDef = {
-    val BindNode(v615, v616) = node
-    val v657 = v615.id match {
-      case 379 =>
-        val v617 = v616.asInstanceOf[SequenceNode].children.head
-        val BindNode(v618, v619) = v617
-        assert(v618.id == 88)
-        val v620 = v616.asInstanceOf[SequenceNode].children(1)
-        val BindNode(v621, v622) = v620
-        assert(v621.id == 343)
-        val BindNode(v623, v624) = v622
-        val v633 = v623.id match {
+    val BindNode(v556, v557) = node
+    val v598 = v556.id match {
+      case 339 =>
+        val v558 = v557.asInstanceOf[SequenceNode].children.head
+        val BindNode(v559, v560) = v558
+        assert(v559.id == 88)
+        val v561 = v557.asInstanceOf[SequenceNode].children(1)
+        val BindNode(v562, v563) = v561
+        assert(v562.id == 340)
+        val BindNode(v564, v565) = v563
+        val v574 = v564.id match {
           case 126 =>
             None
-          case 344 =>
-            val BindNode(v625, v626) = v624
-            val v632 = v625.id match {
-              case 345 =>
-                val BindNode(v627, v628) = v626
-                assert(v627.id == 346)
-                val v629 = v628.asInstanceOf[SequenceNode].children(1)
-                val BindNode(v630, v631) = v629
-                assert(v630.id == 347)
-                v631.asInstanceOf[TerminalNode].input.asInstanceOf[Inputs.Character].char
+          case 341 =>
+            val BindNode(v566, v567) = v565
+            val v573 = v566.id match {
+              case 342 =>
+                val BindNode(v568, v569) = v567
+                assert(v568.id == 343)
+                val v570 = v569.asInstanceOf[SequenceNode].children(1)
+                val BindNode(v571, v572) = v570
+                assert(v571.id == 344)
+                v572.asInstanceOf[TerminalNode].input.asInstanceOf[Inputs.Character].char
             }
-            Some(v632)
+            Some(v573)
         }
-        val v634 = v616.asInstanceOf[SequenceNode].children(5)
-        val BindNode(v635, v636) = v634
-        assert(v635.id == 167)
-        val v637 = v616.asInstanceOf[SequenceNode].children(6)
-        val BindNode(v638, v639) = v637
-        assert(v638.id == 380)
-        val BindNode(v640, v641) = v639
-        val v650 = v640.id match {
+        val v575 = v557.asInstanceOf[SequenceNode].children(5)
+        val BindNode(v576, v577) = v575
+        assert(v576.id == 163)
+        val v578 = v557.asInstanceOf[SequenceNode].children(6)
+        val BindNode(v579, v580) = v578
+        assert(v579.id == 345)
+        val BindNode(v581, v582) = v580
+        val v591 = v581.id match {
           case 126 =>
             None
-          case 381 =>
-            val BindNode(v642, v643) = v641
-            val v649 = v642.id match {
-              case 382 =>
-                val BindNode(v644, v645) = v643
-                assert(v644.id == 383)
-                val v646 = v645.asInstanceOf[SequenceNode].children(3)
-                val BindNode(v647, v648) = v646
-                assert(v647.id == 138)
-                matchExpr(v648)
+          case 346 =>
+            val BindNode(v583, v584) = v582
+            val v590 = v583.id match {
+              case 347 =>
+                val BindNode(v585, v586) = v584
+                assert(v585.id == 348)
+                val v587 = v586.asInstanceOf[SequenceNode].children(3)
+                val BindNode(v588, v589) = v587
+                assert(v588.id == 138)
+                matchExpr(v589)
             }
-            Some(v649)
+            Some(v590)
         }
-        ParamDef(matchSimpleName(v619), v633.isDefined, Some(matchTypeExpr(v636)), v650)(nextId(), v616)
-      case 227 =>
-        val v651 = v616.asInstanceOf[SequenceNode].children.head
-        val BindNode(v652, v653) = v651
-        assert(v652.id == 88)
-        val v654 = v616.asInstanceOf[SequenceNode].children(4)
-        val BindNode(v655, v656) = v654
-        assert(v655.id == 138)
-        ParamDef(matchSimpleName(v653), false, None, Some(matchExpr(v656)))(nextId(), v616)
+        ParamDef(matchSimpleName(v560), v574.isDefined, Some(matchTypeExpr(v577)), v591)(nextId(), v557)
+      case 224 =>
+        val v592 = v557.asInstanceOf[SequenceNode].children.head
+        val BindNode(v593, v594) = v592
+        assert(v593.id == 88)
+        val v595 = v557.asInstanceOf[SequenceNode].children(4)
+        val BindNode(v596, v597) = v595
+        assert(v596.id == 138)
+        ParamDef(matchSimpleName(v594), false, None, Some(matchExpr(v597)))(nextId(), v557)
     }
-    v657
+    v598
   }
 
   def matchParamsDef(node: Node): List[ParamDef] = {
-    val BindNode(v658, v659) = node
-    val v686 = v658.id match {
-      case 373 =>
-        val v661 = v659.asInstanceOf[SequenceNode].children(1)
-        val BindNode(v662, v663) = v661
-        assert(v662.id == 374)
-        val BindNode(v664, v665) = v663
-        val v685 = v664.id match {
+    val BindNode(v599, v600) = node
+    val v627 = v599.id match {
+      case 333 =>
+        val v602 = v600.asInstanceOf[SequenceNode].children(1)
+        val BindNode(v603, v604) = v602
+        assert(v603.id == 334)
+        val BindNode(v605, v606) = v604
+        val v626 = v605.id match {
           case 126 =>
             None
-          case 375 =>
-            val BindNode(v666, v667) = v665
-            assert(v666.id == 376)
-            val BindNode(v668, v669) = v667
-            assert(v668.id == 377)
-            val v670 = v669.asInstanceOf[SequenceNode].children(1)
-            val BindNode(v671, v672) = v670
-            assert(v671.id == 378)
-            val v673 = v669.asInstanceOf[SequenceNode].children(2)
-            val v674 = unrollRepeat0(v673).map { elem =>
-              val BindNode(v675, v676) = elem
-              assert(v675.id == 386)
-              val BindNode(v677, v678) = v676
-              val v684 = v677.id match {
-                case 387 =>
-                  val BindNode(v679, v680) = v678
-                  assert(v679.id == 388)
-                  val v681 = v680.asInstanceOf[SequenceNode].children(3)
-                  val BindNode(v682, v683) = v681
-                  assert(v682.id == 378)
-                  matchParamDef(v683)
+          case 335 =>
+            val BindNode(v607, v608) = v606
+            assert(v607.id == 336)
+            val BindNode(v609, v610) = v608
+            assert(v609.id == 337)
+            val v611 = v610.asInstanceOf[SequenceNode].children(1)
+            val BindNode(v612, v613) = v611
+            assert(v612.id == 338)
+            val v614 = v610.asInstanceOf[SequenceNode].children(2)
+            val v615 = unrollRepeat0(v614).map { elem =>
+              val BindNode(v616, v617) = elem
+              assert(v616.id == 351)
+              val BindNode(v618, v619) = v617
+              val v625 = v618.id match {
+                case 352 =>
+                  val BindNode(v620, v621) = v619
+                  assert(v620.id == 353)
+                  val v622 = v621.asInstanceOf[SequenceNode].children(3)
+                  val BindNode(v623, v624) = v622
+                  assert(v623.id == 338)
+                  matchParamDef(v624)
               }
-              v684
+              v625
             }
-            Some(List(matchParamDef(v672)) ++ v674)
+            Some(List(matchParamDef(v613)) ++ v615)
         }
-        val v660 = v685
-        if (v660.isDefined) v660.get else List()
+        val v601 = v626
+        if (v601.isDefined) v601.get else List()
     }
-    v686
+    v627
   }
 
   def matchPositionalParams(node: Node): List[Expr] = {
-    val BindNode(v687, v688) = node
-    val v704 = v687.id match {
-      case 213 =>
-        val v689 = v688.asInstanceOf[SequenceNode].children.head
-        val BindNode(v690, v691) = v689
-        assert(v690.id == 138)
-        val v692 = v688.asInstanceOf[SequenceNode].children(1)
-        val v693 = unrollRepeat0(v692).map { elem =>
-          val BindNode(v694, v695) = elem
-          assert(v694.id == 216)
-          val BindNode(v696, v697) = v695
-          val v703 = v696.id match {
-            case 217 =>
-              val BindNode(v698, v699) = v697
-              assert(v698.id == 218)
-              val v700 = v699.asInstanceOf[SequenceNode].children(3)
-              val BindNode(v701, v702) = v700
-              assert(v701.id == 138)
-              matchExpr(v702)
+    val BindNode(v628, v629) = node
+    val v645 = v628.id match {
+      case 210 =>
+        val v630 = v629.asInstanceOf[SequenceNode].children.head
+        val BindNode(v631, v632) = v630
+        assert(v631.id == 138)
+        val v633 = v629.asInstanceOf[SequenceNode].children(1)
+        val v634 = unrollRepeat0(v633).map { elem =>
+          val BindNode(v635, v636) = elem
+          assert(v635.id == 213)
+          val BindNode(v637, v638) = v636
+          val v644 = v637.id match {
+            case 214 =>
+              val BindNode(v639, v640) = v638
+              assert(v639.id == 215)
+              val v641 = v640.asInstanceOf[SequenceNode].children(3)
+              val BindNode(v642, v643) = v641
+              assert(v642.id == 138)
+              matchExpr(v643)
           }
-          v703
+          v644
         }
-        List(matchExpr(v691)) ++ v693
+        List(matchExpr(v632)) ++ v634
     }
-    v704
+    v645
   }
 
   def matchPrimary(node: Node): Primary = {
-    val BindNode(v705, v706) = node
-    val v807 = v705.id match {
-      case 244 =>
-        val v707 = v706.asInstanceOf[SequenceNode].children(2)
-        val BindNode(v708, v709) = v707
-        assert(v708.id == 138)
-        val v711 = v706.asInstanceOf[SequenceNode].children(5)
-        val BindNode(v712, v713) = v711
-        assert(v712.id == 239)
-        val BindNode(v714, v715) = v713
-        val v736 = v714.id match {
+    val BindNode(v646, v647) = node
+    val v748 = v646.id match {
+      case 232 =>
+        val v648 = v647.asInstanceOf[SequenceNode].children.head
+        val BindNode(v649, v650) = v648
+        assert(v649.id == 202)
+        val v651 = v647.asInstanceOf[SequenceNode].children(4)
+        val BindNode(v652, v653) = v651
+        assert(v652.id == 88)
+        MemberAccess(matchPrimary(v650), matchSimpleName(v653))(nextId(), v647)
+      case 254 =>
+        val v654 = v647.asInstanceOf[SequenceNode].children.head
+        val BindNode(v655, v656) = v654
+        assert(v655.id == 255)
+        matchLiteral(v656)
+      case 293 =>
+        val v657 = v647.asInstanceOf[SequenceNode].children(2)
+        val BindNode(v658, v659) = v657
+        assert(v658.id == 138)
+        Paren(matchExpr(v659))(nextId(), v647)
+      case 241 =>
+        val v660 = v647.asInstanceOf[SequenceNode].children(2)
+        val BindNode(v661, v662) = v660
+        assert(v661.id == 138)
+        val v664 = v647.asInstanceOf[SequenceNode].children(5)
+        val BindNode(v665, v666) = v664
+        assert(v665.id == 236)
+        val BindNode(v667, v668) = v666
+        val v689 = v667.id match {
           case 126 =>
             None
-          case 240 =>
-            val BindNode(v716, v717) = v715
-            val v735 = v716.id match {
-              case 241 =>
-                val BindNode(v718, v719) = v717
-                assert(v718.id == 242)
-                val v720 = v719.asInstanceOf[SequenceNode].children(1)
-                val BindNode(v721, v722) = v720
-                assert(v721.id == 138)
-                val v723 = v719.asInstanceOf[SequenceNode].children(2)
-                val v724 = unrollRepeat0(v723).map { elem =>
-                  val BindNode(v725, v726) = elem
-                  assert(v725.id == 216)
-                  val BindNode(v727, v728) = v726
-                  val v734 = v727.id match {
-                    case 217 =>
-                      val BindNode(v729, v730) = v728
-                      assert(v729.id == 218)
-                      val v731 = v730.asInstanceOf[SequenceNode].children(3)
-                      val BindNode(v732, v733) = v731
-                      assert(v732.id == 138)
-                      matchExpr(v733)
+          case 237 =>
+            val BindNode(v669, v670) = v668
+            val v688 = v669.id match {
+              case 238 =>
+                val BindNode(v671, v672) = v670
+                assert(v671.id == 239)
+                val v673 = v672.asInstanceOf[SequenceNode].children(1)
+                val BindNode(v674, v675) = v673
+                assert(v674.id == 138)
+                val v676 = v672.asInstanceOf[SequenceNode].children(2)
+                val v677 = unrollRepeat0(v676).map { elem =>
+                  val BindNode(v678, v679) = elem
+                  assert(v678.id == 213)
+                  val BindNode(v680, v681) = v679
+                  val v687 = v680.id match {
+                    case 214 =>
+                      val BindNode(v682, v683) = v681
+                      assert(v682.id == 215)
+                      val v684 = v683.asInstanceOf[SequenceNode].children(3)
+                      val BindNode(v685, v686) = v684
+                      assert(v685.id == 138)
+                      matchExpr(v686)
                   }
-                  v734
+                  v687
                 }
-                List(matchExpr(v722)) ++ v724
+                List(matchExpr(v675)) ++ v677
             }
-            Some(v735)
+            Some(v688)
         }
-        val v710 = v736
-        TupleExpr(List(matchExpr(v709)) ++ (if (v710.isDefined) v710.get else List()))(nextId(), v706)
-      case 235 =>
-        val v737 = v706.asInstanceOf[SequenceNode].children.head
-        val BindNode(v738, v739) = v737
-        assert(v738.id == 205)
-        val v740 = v706.asInstanceOf[SequenceNode].children(4)
-        val BindNode(v741, v742) = v740
-        assert(v741.id == 88)
-        MemberAccess(matchPrimary(v739), matchSimpleName(v742))(nextId(), v706)
-      case 296 =>
-        val v743 = v706.asInstanceOf[SequenceNode].children(2)
-        val BindNode(v744, v745) = v743
-        assert(v744.id == 138)
-        Paren(matchExpr(v745))(nextId(), v706)
-      case 206 =>
-        val v746 = v706.asInstanceOf[SequenceNode].children.head
-        val BindNode(v747, v748) = v746
-        assert(v747.id == 207)
-        matchCallExpr(v748)
-      case 236 =>
-        val v749 = v706.asInstanceOf[SequenceNode].children.head
-        val BindNode(v750, v751) = v749
-        assert(v750.id == 88)
-        NameRef(matchSimpleName(v751))(nextId(), v706)
-      case 245 =>
-        val v753 = v706.asInstanceOf[SequenceNode].children(1)
-        val BindNode(v754, v755) = v753
-        assert(v754.id == 246)
-        val BindNode(v756, v757) = v755
-        val v777 = v756.id match {
+        val v663 = v689
+        TupleExpr(List(matchExpr(v662)) ++ (if (v663.isDefined) v663.get else List()))(nextId(), v647)
+      case 234 =>
+        val v691 = v647.asInstanceOf[SequenceNode].children(1)
+        val BindNode(v692, v693) = v691
+        assert(v692.id == 236)
+        val BindNode(v694, v695) = v693
+        val v715 = v694.id match {
           case 126 =>
             None
-          case 247 =>
-            val BindNode(v758, v759) = v757
-            assert(v758.id == 248)
-            val BindNode(v760, v761) = v759
-            assert(v760.id == 249)
-            val v762 = v761.asInstanceOf[SequenceNode].children(1)
-            val BindNode(v763, v764) = v762
-            assert(v763.id == 250)
-            val v765 = v761.asInstanceOf[SequenceNode].children(2)
-            val v766 = unrollRepeat0(v765).map { elem =>
-              val BindNode(v767, v768) = elem
-              assert(v767.id == 254)
-              val BindNode(v769, v770) = v768
-              val v776 = v769.id match {
-                case 255 =>
-                  val BindNode(v771, v772) = v770
-                  assert(v771.id == 256)
-                  val v773 = v772.asInstanceOf[SequenceNode].children(3)
-                  val BindNode(v774, v775) = v773
-                  assert(v774.id == 250)
-                  matchNamedExpr(v775)
+          case 237 =>
+            val BindNode(v696, v697) = v695
+            assert(v696.id == 238)
+            val BindNode(v698, v699) = v697
+            assert(v698.id == 239)
+            val v700 = v699.asInstanceOf[SequenceNode].children(1)
+            val BindNode(v701, v702) = v700
+            assert(v701.id == 138)
+            val v703 = v699.asInstanceOf[SequenceNode].children(2)
+            val v704 = unrollRepeat0(v703).map { elem =>
+              val BindNode(v705, v706) = elem
+              assert(v705.id == 213)
+              val BindNode(v707, v708) = v706
+              val v714 = v707.id match {
+                case 214 =>
+                  val BindNode(v709, v710) = v708
+                  assert(v709.id == 215)
+                  val v711 = v710.asInstanceOf[SequenceNode].children(3)
+                  val BindNode(v712, v713) = v711
+                  assert(v712.id == 138)
+                  matchExpr(v713)
               }
-              v776
+              v714
             }
-            Some(List(matchNamedExpr(v764)) ++ v766)
+            Some(List(matchExpr(v702)) ++ v704)
         }
-        val v752 = v777
-        NamedTupleExpr(if (v752.isDefined) v752.get else List())(nextId(), v706)
-      case 257 =>
-        val v778 = v706.asInstanceOf[SequenceNode].children.head
-        val BindNode(v779, v780) = v778
-        assert(v779.id == 258)
-        matchLiteral(v780)
-      case 237 =>
-        val v782 = v706.asInstanceOf[SequenceNode].children(1)
-        val BindNode(v783, v784) = v782
-        assert(v783.id == 239)
-        val BindNode(v785, v786) = v784
-        val v806 = v785.id match {
+        val v690 = v715
+        ListExpr(if (v690.isDefined) v690.get else List())(nextId(), v647)
+      case 203 =>
+        val v716 = v647.asInstanceOf[SequenceNode].children.head
+        val BindNode(v717, v718) = v716
+        assert(v717.id == 204)
+        matchCallExpr(v718)
+      case 233 =>
+        val v719 = v647.asInstanceOf[SequenceNode].children.head
+        val BindNode(v720, v721) = v719
+        assert(v720.id == 88)
+        NameRef(matchSimpleName(v721))(nextId(), v647)
+      case 242 =>
+        val v723 = v647.asInstanceOf[SequenceNode].children(1)
+        val BindNode(v724, v725) = v723
+        assert(v724.id == 243)
+        val BindNode(v726, v727) = v725
+        val v747 = v726.id match {
           case 126 =>
             None
-          case 240 =>
-            val BindNode(v787, v788) = v786
-            assert(v787.id == 241)
-            val BindNode(v789, v790) = v788
-            assert(v789.id == 242)
-            val v791 = v790.asInstanceOf[SequenceNode].children(1)
-            val BindNode(v792, v793) = v791
-            assert(v792.id == 138)
-            val v794 = v790.asInstanceOf[SequenceNode].children(2)
-            val v795 = unrollRepeat0(v794).map { elem =>
-              val BindNode(v796, v797) = elem
-              assert(v796.id == 216)
-              val BindNode(v798, v799) = v797
-              val v805 = v798.id match {
-                case 217 =>
-                  val BindNode(v800, v801) = v799
-                  assert(v800.id == 218)
-                  val v802 = v801.asInstanceOf[SequenceNode].children(3)
-                  val BindNode(v803, v804) = v802
-                  assert(v803.id == 138)
-                  matchExpr(v804)
+          case 244 =>
+            val BindNode(v728, v729) = v727
+            assert(v728.id == 245)
+            val BindNode(v730, v731) = v729
+            assert(v730.id == 246)
+            val v732 = v731.asInstanceOf[SequenceNode].children(1)
+            val BindNode(v733, v734) = v732
+            assert(v733.id == 247)
+            val v735 = v731.asInstanceOf[SequenceNode].children(2)
+            val v736 = unrollRepeat0(v735).map { elem =>
+              val BindNode(v737, v738) = elem
+              assert(v737.id == 251)
+              val BindNode(v739, v740) = v738
+              val v746 = v739.id match {
+                case 252 =>
+                  val BindNode(v741, v742) = v740
+                  assert(v741.id == 253)
+                  val v743 = v742.asInstanceOf[SequenceNode].children(3)
+                  val BindNode(v744, v745) = v743
+                  assert(v744.id == 247)
+                  matchNamedExpr(v745)
               }
-              v805
+              v746
             }
-            Some(List(matchExpr(v793)) ++ v795)
+            Some(List(matchNamedExpr(v734)) ++ v736)
         }
-        val v781 = v806
-        ListExpr(if (v781.isDefined) v781.get else List())(nextId(), v706)
+        val v722 = v747
+        NamedTupleExpr(if (v722.isDefined) v722.get else List())(nextId(), v647)
     }
-    v807
+    v748
   }
 
   def matchSimpleName(node: Node): String = {
-    val BindNode(v808, v809) = node
-    val v840 = v808.id match {
+    val BindNode(v749, v750) = node
+    val v781 = v749.id match {
       case 89 =>
-        val v810 = v809.asInstanceOf[SequenceNode].children.head
-        val BindNode(v811, v812) = v810
-        assert(v811.id == 90)
-        val BindNode(v813, v814) = v812
-        assert(v813.id == 91)
-        val BindNode(v815, v816) = v814
-        assert(v815.id == 92)
-        val BindNode(v817, v818) = v816
-        val v839 = v817.id match {
+        val v751 = v750.asInstanceOf[SequenceNode].children.head
+        val BindNode(v752, v753) = v751
+        assert(v752.id == 90)
+        val BindNode(v754, v755) = v753
+        assert(v754.id == 91)
+        val BindNode(v756, v757) = v755
+        assert(v756.id == 92)
+        val BindNode(v758, v759) = v757
+        val v780 = v758.id match {
           case 93 =>
-            val BindNode(v819, v820) = v818
-            assert(v819.id == 94)
-            val v821 = v820.asInstanceOf[SequenceNode].children.head
-            val BindNode(v822, v823) = v821
-            assert(v822.id == 95)
-            val JoinNode(_, v824, _) = v823
-            val BindNode(v825, v826) = v824
-            assert(v825.id == 96)
-            val BindNode(v827, v828) = v826
-            val v838 = v827.id match {
+            val BindNode(v760, v761) = v759
+            assert(v760.id == 94)
+            val v762 = v761.asInstanceOf[SequenceNode].children.head
+            val BindNode(v763, v764) = v762
+            assert(v763.id == 95)
+            val JoinNode(_, v765, _) = v764
+            val BindNode(v766, v767) = v765
+            assert(v766.id == 96)
+            val BindNode(v768, v769) = v767
+            val v779 = v768.id match {
               case 97 =>
-                val BindNode(v829, v830) = v828
-                assert(v829.id == 98)
-                val v831 = v830.asInstanceOf[SequenceNode].children.head
-                val BindNode(v832, v833) = v831
-                assert(v832.id == 99)
-                val v834 = v830.asInstanceOf[SequenceNode].children(1)
-                val v835 = unrollRepeat0(v834).map { elem =>
-                  val BindNode(v836, v837) = elem
-                  assert(v836.id == 76)
-                  v837.asInstanceOf[TerminalNode].input.asInstanceOf[Inputs.Character].char
+                val BindNode(v770, v771) = v769
+                assert(v770.id == 98)
+                val v772 = v771.asInstanceOf[SequenceNode].children.head
+                val BindNode(v773, v774) = v772
+                assert(v773.id == 99)
+                val v775 = v771.asInstanceOf[SequenceNode].children(1)
+                val v776 = unrollRepeat0(v775).map { elem =>
+                  val BindNode(v777, v778) = elem
+                  assert(v777.id == 76)
+                  v778.asInstanceOf[TerminalNode].input.asInstanceOf[Inputs.Character].char
                 }
-                v833.asInstanceOf[TerminalNode].input.asInstanceOf[Inputs.Character].char.toString + v835.map(x => x.toString).mkString("")
+                v774.asInstanceOf[TerminalNode].input.asInstanceOf[Inputs.Character].char.toString + v776.map(x => x.toString).mkString("")
             }
-            v838
+            v779
         }
-        v839
+        v780
     }
-    v840
+    v781
   }
 
   def matchStringElem(node: Node): StringElem = {
-    val BindNode(v841, v842) = node
-    val v854 = v841.id match {
+    val BindNode(v782, v783) = node
+    val v795 = v782.id match {
+      case 267 =>
+        val v784 = v783.asInstanceOf[SequenceNode].children.head
+        val BindNode(v785, v786) = v784
+        assert(v785.id == 268)
+        val BindNode(v787, v788) = v786
+        assert(v787.id == 34)
+        JustChar(v788.asInstanceOf[TerminalNode].input.asInstanceOf[Inputs.Character].char)(nextId(), v783)
       case 270 =>
-        val v843 = v842.asInstanceOf[SequenceNode].children.head
-        val BindNode(v844, v845) = v843
-        assert(v844.id == 271)
-        val BindNode(v846, v847) = v845
-        assert(v846.id == 34)
-        JustChar(v847.asInstanceOf[TerminalNode].input.asInstanceOf[Inputs.Character].char)(nextId(), v842)
-      case 273 =>
-        val v848 = v842.asInstanceOf[SequenceNode].children.head
-        val BindNode(v849, v850) = v848
-        assert(v849.id == 274)
-        matchEscapeChar(v850)
-      case 278 =>
-        val v851 = v842.asInstanceOf[SequenceNode].children.head
-        val BindNode(v852, v853) = v851
-        assert(v852.id == 279)
-        matchStringExpr(v853)
+        val v789 = v783.asInstanceOf[SequenceNode].children.head
+        val BindNode(v790, v791) = v789
+        assert(v790.id == 271)
+        matchEscapeChar(v791)
+      case 275 =>
+        val v792 = v783.asInstanceOf[SequenceNode].children.head
+        val BindNode(v793, v794) = v792
+        assert(v793.id == 276)
+        matchStringExpr(v794)
     }
-    v854
+    v795
   }
 
   def matchStringExpr(node: Node): StringExpr = {
-    val BindNode(v855, v856) = node
-    val v873 = v855.id match {
-      case 280 =>
-        val v857 = v856.asInstanceOf[SequenceNode].children.head
-        val BindNode(v858, v859) = v857
-        assert(v858.id == 281)
-        val BindNode(v860, v861) = v859
-        assert(v860.id == 282)
-        val BindNode(v862, v863) = v861
-        val v869 = v862.id match {
-          case 283 =>
-            val BindNode(v864, v865) = v863
-            assert(v864.id == 284)
-            val v866 = v865.asInstanceOf[SequenceNode].children(1)
-            val BindNode(v867, v868) = v866
-            assert(v867.id == 88)
-            matchSimpleName(v868)
+    val BindNode(v796, v797) = node
+    val v814 = v796.id match {
+      case 277 =>
+        val v798 = v797.asInstanceOf[SequenceNode].children.head
+        val BindNode(v799, v800) = v798
+        assert(v799.id == 278)
+        val BindNode(v801, v802) = v800
+        assert(v801.id == 279)
+        val BindNode(v803, v804) = v802
+        val v810 = v803.id match {
+          case 280 =>
+            val BindNode(v805, v806) = v804
+            assert(v805.id == 281)
+            val v807 = v806.asInstanceOf[SequenceNode].children(1)
+            val BindNode(v808, v809) = v807
+            assert(v808.id == 88)
+            matchSimpleName(v809)
         }
-        SimpleExpr(v869)(nextId(), v856)
-      case 286 =>
-        val v870 = v856.asInstanceOf[SequenceNode].children(3)
-        val BindNode(v871, v872) = v870
-        assert(v871.id == 138)
-        ComplexExpr(matchExpr(v872))(nextId(), v856)
+        SimpleExpr(v810)(nextId(), v797)
+      case 283 =>
+        val v811 = v797.asInstanceOf[SequenceNode].children(3)
+        val BindNode(v812, v813) = v811
+        assert(v812.id == 138)
+        ComplexExpr(matchExpr(v813))(nextId(), v797)
     }
-    v873
+    v814
   }
 
   def matchStringLiteral(node: Node): StringLiteral = {
-    val BindNode(v874, v875) = node
-    val v890 = v874.id match {
-      case 261 =>
-        val v876 = v875.asInstanceOf[SequenceNode].children(1)
-        val v877 = unrollRepeat0(v876).map { elem =>
-          val BindNode(v878, v879) = elem
-          assert(v878.id == 265)
-          val BindNode(v880, v881) = v879
-          assert(v880.id == 266)
-          val BindNode(v882, v883) = v881
-          val v889 = v882.id match {
-            case 267 =>
-              val BindNode(v884, v885) = v883
-              assert(v884.id == 268)
-              val v886 = v885.asInstanceOf[SequenceNode].children.head
-              val BindNode(v887, v888) = v886
-              assert(v887.id == 269)
-              matchStringElem(v888)
+    val BindNode(v815, v816) = node
+    val v831 = v815.id match {
+      case 258 =>
+        val v817 = v816.asInstanceOf[SequenceNode].children(1)
+        val v818 = unrollRepeat0(v817).map { elem =>
+          val BindNode(v819, v820) = elem
+          assert(v819.id == 262)
+          val BindNode(v821, v822) = v820
+          assert(v821.id == 263)
+          val BindNode(v823, v824) = v822
+          val v830 = v823.id match {
+            case 264 =>
+              val BindNode(v825, v826) = v824
+              assert(v825.id == 265)
+              val v827 = v826.asInstanceOf[SequenceNode].children.head
+              val BindNode(v828, v829) = v827
+              assert(v828.id == 266)
+              matchStringElem(v829)
           }
-          v889
+          v830
         }
-        StringLiteral(v877)(nextId(), v875)
+        StringLiteral(v818)(nextId(), v816)
     }
-    v890
+    v831
   }
 
   def matchSuperClassDef(node: Node): SuperClassDef = {
-    val BindNode(v891, v892) = node
-    val v911 = v891.id match {
-      case 400 =>
-        val v893 = v892.asInstanceOf[SequenceNode].children(4)
-        val BindNode(v894, v895) = v893
-        assert(v894.id == 88)
-        val v896 = v892.asInstanceOf[SequenceNode].children(8)
-        val BindNode(v897, v898) = v896
-        assert(v897.id == 88)
-        val v899 = v892.asInstanceOf[SequenceNode].children(9)
-        val v900 = unrollRepeat0(v899).map { elem =>
-          val BindNode(v901, v902) = elem
-          assert(v901.id == 406)
-          val BindNode(v903, v904) = v902
-          val v910 = v903.id match {
-            case 407 =>
-              val BindNode(v905, v906) = v904
-              assert(v905.id == 408)
-              val v907 = v906.asInstanceOf[SequenceNode].children(3)
-              val BindNode(v908, v909) = v907
-              assert(v908.id == 88)
-              matchSimpleName(v909)
+    val BindNode(v832, v833) = node
+    val v852 = v832.id match {
+      case 384 =>
+        val v834 = v833.asInstanceOf[SequenceNode].children(4)
+        val BindNode(v835, v836) = v834
+        assert(v835.id == 88)
+        val v837 = v833.asInstanceOf[SequenceNode].children(8)
+        val BindNode(v838, v839) = v837
+        assert(v838.id == 88)
+        val v840 = v833.asInstanceOf[SequenceNode].children(9)
+        val v841 = unrollRepeat0(v840).map { elem =>
+          val BindNode(v842, v843) = elem
+          assert(v842.id == 390)
+          val BindNode(v844, v845) = v843
+          val v851 = v844.id match {
+            case 391 =>
+              val BindNode(v846, v847) = v845
+              assert(v846.id == 392)
+              val v848 = v847.asInstanceOf[SequenceNode].children(3)
+              val BindNode(v849, v850) = v848
+              assert(v849.id == 88)
+              matchSimpleName(v850)
           }
-          v910
+          v851
         }
-        SuperClassDef(matchSimpleName(v895), List(matchSimpleName(v898)) ++ v900)(nextId(), v892)
+        SuperClassDef(matchSimpleName(v836), List(matchSimpleName(v839)) ++ v841)(nextId(), v833)
     }
-    v911
+    v852
   }
 
   def matchTargetDef(node: Node): TargetDef = {
-    val BindNode(v912, v913) = node
-    val v920 = v912.id match {
-      case 227 =>
-        val v914 = v913.asInstanceOf[SequenceNode].children.head
-        val BindNode(v915, v916) = v914
-        assert(v915.id == 88)
-        val v917 = v913.asInstanceOf[SequenceNode].children(4)
-        val BindNode(v918, v919) = v917
-        assert(v918.id == 138)
-        TargetDef(matchSimpleName(v916), matchExpr(v919))(nextId(), v913)
+    val BindNode(v853, v854) = node
+    val v861 = v853.id match {
+      case 224 =>
+        val v855 = v854.asInstanceOf[SequenceNode].children.head
+        val BindNode(v856, v857) = v855
+        assert(v856.id == 88)
+        val v858 = v854.asInstanceOf[SequenceNode].children(4)
+        val BindNode(v859, v860) = v858
+        assert(v859.id == 138)
+        TargetDef(matchSimpleName(v857), matchExpr(v860))(nextId(), v854)
     }
-    v920
+    v861
   }
 
   def matchTupleType(node: Node): TupleType = {
-    val BindNode(v921, v922) = node
-    val v938 = v921.id match {
-      case 188 =>
-        val v923 = v922.asInstanceOf[SequenceNode].children(2)
-        val BindNode(v924, v925) = v923
-        assert(v924.id == 167)
-        val v926 = v922.asInstanceOf[SequenceNode].children(3)
-        val v927 = unrollRepeat0(v926).map { elem =>
-          val BindNode(v928, v929) = elem
-          assert(v928.id == 182)
-          val BindNode(v930, v931) = v929
-          val v937 = v930.id match {
-            case 183 =>
-              val BindNode(v932, v933) = v931
-              assert(v932.id == 184)
-              val v934 = v933.asInstanceOf[SequenceNode].children(3)
-              val BindNode(v935, v936) = v934
-              assert(v935.id == 167)
-              matchTypeExpr(v936)
+    val BindNode(v862, v863) = node
+    val v879 = v862.id match {
+      case 184 =>
+        val v864 = v863.asInstanceOf[SequenceNode].children(2)
+        val BindNode(v865, v866) = v864
+        assert(v865.id == 163)
+        val v867 = v863.asInstanceOf[SequenceNode].children(3)
+        val v868 = unrollRepeat0(v867).map { elem =>
+          val BindNode(v869, v870) = elem
+          assert(v869.id == 178)
+          val BindNode(v871, v872) = v870
+          val v878 = v871.id match {
+            case 179 =>
+              val BindNode(v873, v874) = v872
+              assert(v873.id == 180)
+              val v875 = v874.asInstanceOf[SequenceNode].children(3)
+              val BindNode(v876, v877) = v875
+              assert(v876.id == 163)
+              matchTypeExpr(v877)
           }
-          v937
+          v878
         }
-        TupleType(List(matchTypeExpr(v925)) ++ v927)(nextId(), v922)
+        TupleType(List(matchTypeExpr(v866)) ++ v868)(nextId(), v863)
     }
-    v938
+    v879
   }
 
   def matchTypeExpr(node: Node): TypeExpr = {
-    val BindNode(v939, v940) = node
-    val v947 = v939.id match {
-      case 168 =>
-        val v941 = v940.asInstanceOf[SequenceNode].children.head
-        val BindNode(v942, v943) = v941
-        assert(v942.id == 143)
-        matchNoUnionType(v943)
-      case 169 =>
-        val v944 = v940.asInstanceOf[SequenceNode].children.head
-        val BindNode(v945, v946) = v944
-        assert(v945.id == 170)
-        matchUnionType(v946)
+    val BindNode(v880, v881) = node
+    val v888 = v880.id match {
+      case 164 =>
+        val v882 = v881.asInstanceOf[SequenceNode].children.head
+        val BindNode(v883, v884) = v882
+        assert(v883.id == 143)
+        matchNoUnionType(v884)
+      case 165 =>
+        val v885 = v881.asInstanceOf[SequenceNode].children.head
+        val BindNode(v886, v887) = v885
+        assert(v886.id == 166)
+        matchUnionType(v887)
     }
-    v947
+    v888
   }
 
   def matchTypeParams(node: Node): TypeParams = {
-    val BindNode(v948, v949) = node
-    val v965 = v948.id match {
-      case 165 =>
-        val v950 = v949.asInstanceOf[SequenceNode].children(2)
-        val BindNode(v951, v952) = v950
-        assert(v951.id == 167)
-        val v953 = v949.asInstanceOf[SequenceNode].children(3)
-        val v954 = unrollRepeat0(v953).map { elem =>
-          val BindNode(v955, v956) = elem
-          assert(v955.id == 182)
-          val BindNode(v957, v958) = v956
-          val v964 = v957.id match {
-            case 183 =>
-              val BindNode(v959, v960) = v958
-              assert(v959.id == 184)
-              val v961 = v960.asInstanceOf[SequenceNode].children(3)
-              val BindNode(v962, v963) = v961
-              assert(v962.id == 167)
-              matchTypeExpr(v963)
+    val BindNode(v889, v890) = node
+    val v906 = v889.id match {
+      case 161 =>
+        val v891 = v890.asInstanceOf[SequenceNode].children(2)
+        val BindNode(v892, v893) = v891
+        assert(v892.id == 163)
+        val v894 = v890.asInstanceOf[SequenceNode].children(3)
+        val v895 = unrollRepeat0(v894).map { elem =>
+          val BindNode(v896, v897) = elem
+          assert(v896.id == 178)
+          val BindNode(v898, v899) = v897
+          val v905 = v898.id match {
+            case 179 =>
+              val BindNode(v900, v901) = v899
+              assert(v900.id == 180)
+              val v902 = v901.asInstanceOf[SequenceNode].children(3)
+              val BindNode(v903, v904) = v902
+              assert(v903.id == 163)
+              matchTypeExpr(v904)
           }
-          v964
+          v905
         }
-        TypeParams(List(matchTypeExpr(v952)) ++ v954)(nextId(), v949)
+        TypeParams(List(matchTypeExpr(v893)) ++ v895)(nextId(), v890)
     }
-    v965
+    v906
   }
 
   def matchUnionType(node: Node): UnionType = {
-    val BindNode(v966, v967) = node
-    val v983 = v966.id match {
-      case 171 =>
-        val v968 = v967.asInstanceOf[SequenceNode].children(2)
-        val BindNode(v969, v970) = v968
-        assert(v969.id == 143)
-        val v971 = v967.asInstanceOf[SequenceNode].children(3)
-        val v972 = unrollRepeat0(v971).map { elem =>
-          val BindNode(v973, v974) = elem
-          assert(v973.id == 175)
-          val BindNode(v975, v976) = v974
-          val v982 = v975.id match {
-            case 176 =>
-              val BindNode(v977, v978) = v976
-              assert(v977.id == 177)
-              val v979 = v978.asInstanceOf[SequenceNode].children(3)
-              val BindNode(v980, v981) = v979
-              assert(v980.id == 143)
-              matchNoUnionType(v981)
+    val BindNode(v907, v908) = node
+    val v924 = v907.id match {
+      case 167 =>
+        val v909 = v908.asInstanceOf[SequenceNode].children(2)
+        val BindNode(v910, v911) = v909
+        assert(v910.id == 143)
+        val v912 = v908.asInstanceOf[SequenceNode].children(3)
+        val v913 = unrollRepeat0(v912).map { elem =>
+          val BindNode(v914, v915) = elem
+          assert(v914.id == 171)
+          val BindNode(v916, v917) = v915
+          val v923 = v916.id match {
+            case 172 =>
+              val BindNode(v918, v919) = v917
+              assert(v918.id == 173)
+              val v920 = v919.asInstanceOf[SequenceNode].children(3)
+              val BindNode(v921, v922) = v920
+              assert(v921.id == 143)
+              matchNoUnionType(v922)
           }
-          v982
+          v923
         }
-        UnionType(List(matchNoUnionType(v970)) ++ v972)(nextId(), v967)
+        UnionType(List(matchNoUnionType(v911)) ++ v913)(nextId(), v908)
     }
-    v983
+    v924
   }
 }

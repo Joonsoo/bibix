@@ -58,6 +58,9 @@ dependencies {
     implementation group: 'com.giyeok.jparser', name: 'jparser-base', version: jparserVersion
     implementation group: 'com.giyeok.jparser', name: 'jparser-fast', version: jparserVersion
 
+    // https://mvnrepository.com/artifact/com.google.guava/guava
+    implementation group: 'com.google.guava', name: 'guava', version: '31.1-jre'
+
     implementation group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib', version: kotlinVersion
     implementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-core', version: '1.6.0'
     implementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-jdk8', version: '1.6.0'

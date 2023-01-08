@@ -38,17 +38,7 @@ class NameLookupTests {
     """.trimIndent()
     fs.getPath("/build.bbx").writeText(script)
 
-    println(script)
-
-    val repo = testRepo(fs)
-
-    val interpreter = BibixInterpreter(
-      BuildEnv(OS.Linux("", ""), Architecture.X86_64),
-      mapOf(),
-      BibixProject(fs.getPath("/"), null),
-      repo,
-      mapOf()
-    )
+    val interpreter = testInterpreter(fs, "/", mapOf())
 
     assertThat(interpreter.userBuildRequest(listOf("abc"))).isEqualTo(StringValue("hello!"))
     assertThat(interpreter.userBuildRequest(listOf("xyz"))).isEqualTo(StringValue("hello!"))

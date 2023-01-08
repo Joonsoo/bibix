@@ -8,6 +8,7 @@ import com.giyeok.bibix.interpreter.task.Task
 import com.giyeok.bibix.interpreter.task.TaskRelGraph
 import com.giyeok.bibix.plugins.PreloadedPlugin
 import com.giyeok.bibix.repo.Repo
+import com.giyeok.bibix.runner.ProgressIndicatorContainer
 import com.giyeok.bibix.utils.toKtList
 import com.google.common.annotations.VisibleForTesting
 import kotlinx.coroutines.runBlocking
@@ -17,7 +18,9 @@ class BibixInterpreter(
   val preloadedPlugins: Map<String, PreloadedPlugin>,
   val mainProject: BibixProject,
   val repo: Repo,
+  val progressIndicatorContainer: ProgressIndicatorContainer,
   val bibixArgs: Map<List<String>, BibixValue>,
+  val actionArgs: List<String>,
 ) {
   private val g = TaskRelGraph()
 
@@ -55,7 +58,10 @@ class BibixInterpreter(
         return exprEvaluator.evaluateExpr(task, mainContext, definition.target.value(), null)
           .ensureValue()
 
-      is Definition.ActionDef -> TODO()
+      is Definition.ActionDef -> {
+        exprEvaluator.executeAction(task, mainContext, definition.action.expr())
+        return NoneValue
+      }
 
       else -> throw IllegalStateException("${nameTokens.joinToString(".")} is not a target or an action")
     }
@@ -93,9 +99,8 @@ class BibixInterpreter(
       }
 
       LookupResult.NameNotFound ->
-        throw IllegalStateException("Name not found: ${name.joinToString(".")}")
+        throw IllegalStateException("Name not found: ${name.joinToString(".")} from $context")
     }
-
 
   suspend fun executeAction(requester: Task, sourceId: SourceId, actionDef: BibixAst.ActionDef) {
     val task = g.add(requester, Task.ExecuteAction(sourceId, actionDef.id()))
@@ -121,12 +126,6 @@ class BibixInterpreter(
     import: BibixAst.ImportAll
   ): Unit = g.withTask(requester, Task.ResolveImport(context.sourceId, import.id())) { task ->
     val importSource = resolveImportSource(task, context, lookupResult, import.source())
-    check(
-      lookupResult.import.cname == CName(
-        context.sourceId,
-        context.scopePath + import.scopeName()
-      )
-    )
     nameLookupTable.addImport(lookupResult.import.cname, NameLookupContext(importSource, listOf()))
   }
 
@@ -137,9 +136,9 @@ class BibixInterpreter(
     import: BibixAst.ImportFrom
   ): Unit = g.withTask(requester, Task.ResolveImport(context.sourceId, import.id())) { task ->
     val importSource = resolveImportSource(task, context, lookupResult, import.source())
-    check(
-      lookupResult.import.cname == CName(context.sourceId, context.scopePath + import.scopeName())
-    )
+//    check(
+//      lookupResult.import.cname == CName(context.sourceId, context.scopePath + import.scopeName())
+//    )
     // lookupResult가 임포트하려던 것이 Definition을 직접 가리키고 있으면 그 definition을 등록
     val importedScope = NameLookupContext(importSource, listOf())
     val restName = lookupResult.restName + import.importing().tokens().toKtList()
@@ -180,12 +179,19 @@ class BibixInterpreter(
       }
 
       val sourceValue = exprEvaluator.evaluateExpr(task, context, importSource, null).ensureValue()
-      check(sourceValue is ClassInstanceValue) { "import source was not a BibixProject class value" }
-      check(sourceValue.packageName == "com.giyeok.bibix" && sourceValue.className == "BibixProject") { "import source was not a BibixProject class value" }
-      val importedProject = BibixProject(
-        projectRoot = (sourceValue.fieldValues.getValue("projectRoot") as DirectoryValue).directory,
-        scriptName = (sourceValue.fieldValues["scriptName"] as? StringValue)?.value
-      )
+      val importedProject = if (sourceValue is ClassInstanceValue) {
+        check(sourceValue.packageName == "com.giyeok.bibix" && sourceValue.className == "BibixProject") { "import source was not a BibixProject class value" }
+        BibixProject(
+          projectRoot = (sourceValue.fieldValues.getValue("projectRoot") as DirectoryValue).directory,
+          scriptName = (sourceValue.fieldValues["scriptName"] as? StringValue)?.value
+        )
+      } else {
+        val sourceRootDirectory = exprEvaluator.coerce(task, context, sourceValue, DirectoryType)
+        BibixProject(
+          projectRoot = (sourceRootDirectory as DirectoryValue).directory,
+          scriptName = null,
+        )
+      }
       return sourceManager.loadSource(importedProject, nameLookupTable)
     }
 

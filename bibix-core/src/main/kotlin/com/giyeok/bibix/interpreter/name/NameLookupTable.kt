@@ -145,6 +145,8 @@ data class NameLookupContext(val sourceId: SourceId, val scopePath: List<String>
   constructor(cname: CName) : this(cname.sourceId, cname.tokens)
 
   fun toCName(): CName = CName(sourceId, scopePath)
+
+  fun dropLastToken(): NameLookupContext = NameLookupContext(sourceId, scopePath.dropLast(1))
 }
 
 sealed class Definition {

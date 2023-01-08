@@ -90,7 +90,7 @@ data class ClassInstanceValue(
 ) : BibixValue() {
   operator fun get(fieldName: String): BibixValue? = fieldValues[fieldName]
 
-  override fun toString(): String = "$className($fieldValues)"
+  override fun toString(): String = "$packageName::$className($fieldValues)"
 }
 
 // Non-canonical named class

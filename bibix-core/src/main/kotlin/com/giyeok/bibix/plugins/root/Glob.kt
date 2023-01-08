@@ -10,7 +10,7 @@ class Glob {
     val matcher = when (val pattern = context.arguments.getValue("pattern")) {
       is StringValue -> {
         val matcherPattern =
-          "glob:" + context.callerBaseDirectory.absolutePathString() + "/" + pattern.value
+          "glob:" + context.callerBaseDirectory!!.absolutePathString() + "/" + pattern.value
         fileSystem.getPathMatcher(matcherPattern)
       }
       is SetValue -> {

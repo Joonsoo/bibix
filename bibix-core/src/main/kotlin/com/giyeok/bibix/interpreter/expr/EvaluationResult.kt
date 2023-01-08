@@ -24,50 +24,80 @@ sealed class EvaluationResult {
     val defaultValue: BibixAst.Expr?,
   )
 
-  data class PreloadedBuildRuleDef(
-    val context: NameLookupContext,
-    val params: List<Param>,
-    val returnType: BibixType,
-    val cls: Class<*>,
-    val methodName: String
-  ) : EvaluationResult()
+  sealed class Callable : EvaluationResult() {
+    abstract val context: NameLookupContext
+    abstract val params: List<Param>
+  }
 
-  data class UserBuildRuleDef(
-    val context: NameLookupContext,
-    val params: List<Param>,
-    val returnType: BibixType,
-    val realm: ClassRealm,
-    val className: String,
-    val methodName: String,
-  ) : EvaluationResult()
+  sealed class RuleDef : Callable() {
+    abstract val cls: Class<*>
+    abstract val methodName: String
 
-  data class PreloadedActionRuleDef(val cname: CName) : EvaluationResult()
+    sealed class BuildRuleDef : RuleDef() {
+      abstract val returnType: BibixType
 
-  data class UserActionRuleDef(
-    val realm: ClassRealm,
-    val className: String,
-    val methodName: String
-  ) : EvaluationResult()
+      data class PreloadedBuildRuleDef(
+        override val context: NameLookupContext,
+        override val params: List<Param>,
+        override val returnType: BibixType,
+        override val cls: Class<*>,
+        override val methodName: String
+      ) : BuildRuleDef()
+
+      data class UserBuildRuleDef(
+        override val context: NameLookupContext,
+        override val params: List<Param>,
+        override val returnType: BibixType,
+        val realm: ClassRealm,
+        val className: String,
+        override val methodName: String,
+      ) : BuildRuleDef() {
+        override val cls: Class<*>
+          get() = realm.loadClass(className)
+      }
+    }
+
+    sealed class ActionRuleDef : RuleDef() {
+      data class PreloadedActionRuleDef(
+        override val context: NameLookupContext,
+        override val params: List<Param>,
+        override val cls: Class<*>,
+        override val methodName: String,
+      ) : ActionRuleDef()
+
+      data class UserActionRuleDef(
+        override val context: NameLookupContext,
+        override val params: List<Param>,
+        val realm: ClassRealm,
+        val className: String,
+        override val methodName: String
+      ) : ActionRuleDef() {
+        override val cls: Class<*>
+          get() = realm.loadClass(className)
+      }
+    }
+  }
 
   data class DataClassDef(
-    val sourceId: SourceId,
-    val packageName: String,
-    val className: String
-    // TODO fields and super classes
-  ) : EvaluationResult()
-
-  data class SuperClassDef(
+    override val context: NameLookupContext,
     val sourceId: SourceId,
     val packageName: String,
     val className: String,
-    // TODO sub classes
+    override val params: List<Param>,
+  ) : Callable()
+
+  data class SuperClassDef(
+    val context: NameLookupContext,
+    val sourceId: SourceId,
+    val packageName: String,
+    val className: String,
+    val subClasses: List<String>,
   ) : EvaluationResult()
 
   data class EnumDef(
     val sourceId: SourceId,
     val packageName: String,
     val enumName: String,
-    // TODO enum values
-  ) :
-    EvaluationResult()
+    val enumValues: List<String>,
+  ) : EvaluationResult()
 }
