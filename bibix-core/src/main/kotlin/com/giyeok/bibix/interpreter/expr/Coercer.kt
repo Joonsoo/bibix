@@ -10,143 +10,143 @@ class Coercer(
   private val sourceManager: SourceManager,
   private val exprEvaluator: ExprEvaluator,
 ) {
-  private fun coercionFailed() = IllegalStateException("Cannot coerce value")
-
-  private fun withNoNull(
-    elems: List<BibixValue?>,
-    block: (List<BibixValue>) -> BibixValue
-  ): BibixValue = if (elems.contains(null)) {
-    throw coercionFailed()
-  } else {
-    block(elems.map { it!! })
-  }
-
   suspend fun coerce(
     task: Task,
     context: NameLookupContext,
     value: BibixValue,
     type: BibixType
-  ): BibixValue {
+  ): BibixValue = tryCoerce(task, context, value, type)
+    ?: throw IllegalStateException("Coercion failed: $value to $type")
+
+
+  suspend fun tryCoerce(
+    task: Task,
+    context: NameLookupContext,
+    value: BibixValue,
+    type: BibixType
+  ): BibixValue? {
     check(value !is NClassInstanceValue)
-    return when (type) {
-      AnyType -> value
+    when (type) {
+      AnyType -> return value
       BooleanType -> when (value) {
-        is BooleanValue -> value
-        else -> TODO()
+        is BooleanValue -> return value
+        else -> {}
       }
 
       StringType -> when (value) {
-        is StringValue -> value
-        else -> throw IllegalStateException("Coercion failed: $value to $type")
+        is StringValue -> return value
+        else -> {}
       }
 
       PathType -> when (value) {
-        is PathValue -> value
-        is FileValue -> PathValue(value.file)
-        is DirectoryValue -> PathValue(value.directory)
-        is StringValue -> PathValue(fileFromString(context.sourceId, value.value))
-        else -> TODO()
+        is PathValue -> return value
+        is FileValue -> return PathValue(value.file)
+        is DirectoryValue -> return PathValue(value.directory)
+        is StringValue -> return PathValue(fileFromString(context.sourceId, value.value))
+        else -> {}
       }
 
       FileType -> when (value) {
-        is FileValue -> value
+        is FileValue -> return value
         // TODO file value, directory value는 build rule에 주기 직전에 존재하는지/타입 확인하기
-        is PathValue -> FileValue(value.path)
-        is StringValue -> FileValue(fileFromString(context.sourceId, value.value))
-        else -> TODO()
+        is PathValue -> return FileValue(value.path)
+        is StringValue -> return FileValue(fileFromString(context.sourceId, value.value))
+        else -> {}
       }
 
       DirectoryType -> when (value) {
-        is DirectoryValue -> value
-        is PathValue -> DirectoryValue(value.path)
-        is StringValue -> DirectoryValue(fileFromString(context.sourceId, value.value))
-        else -> TODO()
+        is DirectoryValue -> return value
+        is PathValue -> return DirectoryValue(value.path)
+        is StringValue -> return DirectoryValue(fileFromString(context.sourceId, value.value))
+        else -> {}
       }
 
       is ListType -> {
         when (value) {
-          is ListValue -> withNoNull(value.values.map {
-            coerce(task, context, it, type.elemType)
-          }) { ListValue(it) }
+          is ListValue -> {
+            return ListValue(value.values.map {
+              coerce(task, context, it, type.elemType)
+            })
+          }
 
-          is SetValue -> withNoNull(value.values.map {
-            coerce(task, context, it, type.elemType)
-          }) { ListValue(it) }
+          is SetValue -> {
+            return ListValue(value.values.map {
+              coerce(task, context, it, type.elemType)
+            })
+          }
 
-          else -> TODO()
+          else -> {}
         }
       }
 
       is SetType -> {
         when (value) {
-          is ListValue -> withNoNull(value.values.map {
-            coerce(task, context, it, type.elemType)
-          }) { SetValue(it) }
+          is ListValue -> {
+            return SetValue(value.values.map {
+              coerce(task, context, it, type.elemType)
+            })
+          }
 
-          is SetValue -> withNoNull(value.values.map {
-            coerce(task, context, it, type.elemType)
-          }) { SetValue(it) }
+          is SetValue -> {
+            return SetValue(value.values.map {
+              coerce(task, context, it, type.elemType)
+            })
+          }
 
-          else -> TODO()
+          else -> {}
         }
       }
 
       is TupleType -> {
-        suspend fun ifElse(): BibixValue = if (type.elemTypes.size != 1) {
-          throw IllegalStateException("Cannot coerce")
-        } else {
-          // 길이가 1인 tuple이면 그냥 맞춰서 반환해주기
-          TupleValue(coerce(task, context, value, type.elemTypes[0]))
-        }
-
         when (value) {
           is TupleValue -> {
             check(type.elemTypes.size == value.values.size)
-            withNoNull(
-              value.values.zip(type.elemTypes)
-                .map {
-                  coerce(task, context, it.first, it.second)
-                }) { TupleValue(it) }
+            val elems = value.values.zip(type.elemTypes).map {
+              tryCoerce(task, context, it.first, it.second)
+            }
+            if (!elems.contains(null)) {
+              return TupleValue(elems.requireNoNulls())
+            }
           }
 
           is NamedTupleValue -> {
             check(type.elemTypes.size == value.pairs.size)
-            withNoNull(value.values().zip(type.elemTypes)
-              .map {
-                coerce(task, context, it.first, it.second)
-              }) { TupleValue(it) }
+            val elems = value.values().zip(type.elemTypes).map {
+              tryCoerce(task, context, it.first, it.second)
+            }
+            if (!elems.contains(null)) {
+              return TupleValue(elems.requireNoNulls())
+            }
           }
 
-          else -> ifElse()
+          else -> {}
         }
       }
 
       is NamedTupleType -> {
-        suspend fun ifElse() =
-          if (type.pairs.size != 1) throw coercionFailed() else {
-            // 길이가 1인 named tuple이면 그냥 맞춰서 반환해주기
-            val value = coerce(task, context, value, type.pairs[0].second)
-            NamedTupleValue(type.pairs[0].first to value)
-          }
-
         when (value) {
           is NamedTupleValue -> {
             check(type.pairs.size == value.pairs.size)
             check(type.names() == value.names())
-            withNoNull(value.values().zip(type.valueTypes()).map {
-              coerce(task, context, it.first, it.second)
-            }) { NamedTupleValue(type.names().zip(it)) }
+            val elems = value.values().zip(type.valueTypes()).map {
+              tryCoerce(task, context, it.first, it.second)
+            }
+            if (!elems.contains(null)) {
+              return NamedTupleValue(type.names().zip(elems.requireNoNulls()))
+            }
           }
 
           is TupleValue -> {
             check(type.pairs.size == value.values.size)
-            withNoNull(value.values.zip(type.valueTypes())
-              .map { coerce(task, context, it.first, it.second) }) {
-              NamedTupleValue(type.names().zip(it))
+            val elems = value.values.zip(type.valueTypes()).map {
+              tryCoerce(task, context, it.first, it.second)
+            }
+            if (!elems.contains(null)) {
+              return NamedTupleValue(type.names().zip(elems.requireNoNulls()))
             }
           }
 
-          else -> ifElse()
+          else -> {}
         }
       }
 
@@ -154,10 +154,10 @@ class Coercer(
         when (value) {
           is ClassInstanceValue -> {
             check(value.packageName == type.packageName && value.className == type.className)
-            value
+            return value
           }
 
-          else -> TODO()
+          else -> {}
         }
       }
 
@@ -179,10 +179,10 @@ class Coercer(
             // TODO recursive - superClass쪽에서 아래로 내려가야 함. data class에는 super class 정보가 없기 때문에
             check(superClassDef.subClasses.contains(valueClassName.last()))
             // TODO check if it is subtype
-            value
+            return value
           }
 
-          else -> TODO()
+          else -> {}
         }
       }
 
@@ -193,18 +193,38 @@ class Coercer(
         if (firstMatch == null) {
           println("${type.types} $value")
         }
-        firstMatch!!
+        return firstMatch!!
       }
 
-      NoneType -> if (value is NoneValue) value else throw coercionFailed()
-      ActionRuleDefType -> if (value is ActionRuleDefValue) value else throw coercionFailed()
-      BuildRuleDefType -> if (value is BuildRuleDefValue) value else throw coercionFailed()
-      TypeType -> if (value is TypeValue) value else throw coercionFailed()
+      NoneType -> return if (value is NoneValue) value else null
+      ActionRuleDefType -> return if (value is ActionRuleDefValue) value else null
+      BuildRuleDefType -> return if (value is BuildRuleDefValue) value else null
+      TypeType -> return if (value is TypeValue) value else null
       is EnumType -> TODO()
     }
+    return tryCoerceFromValue(task, context, value, type)
   }
 
   private suspend fun fileFromString(sourceId: SourceId, path: String): Path {
     return sourceManager.getProjectRoot(sourceId).resolve(path).normalize()
+  }
+
+  private fun tryCoerceFromValue(
+    task: Task,
+    context: NameLookupContext,
+    value: BibixValue,
+    type: BibixType
+  ): BibixValue? {
+    // value로부터 type으로 coerce해보기
+    // 특히 value가 ClassInstanceValue일 때 호환되는 cast expression이 있으면 사용해서 변환
+
+    // Tuple일 때: 길이가 1인 tuple이면 그냥 맞춰서 반환해주기
+    // TupleValue(coerce(task, context, value, type.elemTypes[0]))
+
+    // NamedTuple일 때: 길이가 1인 named tuple이면 그냥 맞춰서 반환해주기
+    // val value = coerce(task, context, value, type.pairs[0].second)
+    // NamedTupleValue(type.pairs[0].first to value)
+
+    return null
   }
 }

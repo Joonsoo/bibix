@@ -139,6 +139,23 @@ class ExprEvaluator(
       else -> throw IllegalStateException("Invalid access to $name on $targetExpr")
     }
 
+  private fun mergeValue(lhs: BibixValue, rhs: BibixValue): BibixValue {
+    when (lhs) {
+      is StringValue -> when (rhs) {
+        is StringValue -> return StringValue(lhs.value + rhs.value)
+        else -> {}
+      }
+
+      is ListValue -> return when (rhs) {
+        is ListValue -> ListValue(lhs.values + rhs.values)
+        else -> ListValue(lhs.values + rhs)
+      }
+
+      else -> {}
+    }
+    throw IllegalStateException("Cannot merge $lhs and $rhs")
+  }
+
   suspend fun evaluateExpr(
     requester: Task,
     context: NameLookupContext,
@@ -148,13 +165,17 @@ class ExprEvaluator(
     g.withTask(requester, Task.EvalExpr(context.sourceId, expr.id(), thisValue)) { task ->
       memoize(context.sourceId, expr.id(), thisValue) {
         when (expr) {
-          is BibixAst.CastExpr -> TODO()
+          is BibixAst.CastExpr -> {
+            val value = evaluateExpr(task, context, expr.expr(), thisValue).ensureValue()
+            val type = evaluateType(task, context, expr.castTo())
+            EvaluationResult.Value(coerce(task, context, value, type))
+          }
 
           is BibixAst.MergeOp -> {
             val lhs = evaluateExpr(task, context, expr.lhs(), thisValue).ensureValue()
             val rhs = evaluateExpr(task, context, expr.rhs(), thisValue).ensureValue()
-            EvaluationResult.Value(ListValue())
-            TODO()
+            val mergedValue = mergeValue(lhs, rhs)
+            EvaluationResult.Value(mergedValue)
           }
 
           is BibixAst.CallExpr ->
