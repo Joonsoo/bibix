@@ -29,8 +29,6 @@ class ExprEvaluatorTests {
     """.trimIndent()
     fs.getPath("/build.bbx").writeText(script)
 
-    println(script)
-
     val interpreter = testInterpreter(fs, "/", mapOf())
 
     assertThat(interpreter.userBuildRequest(listOf("aaa"))).isEqualTo(
