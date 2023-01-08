@@ -53,14 +53,14 @@ class BibixInterpreter(
     val definition = lookupName(task, mainContext, nameTokens)
     // task가 targetDef이면 evaluateExpr, action def이면 executeAction, 그 외의 다른 것이면 오류
 
-    when (definition) {
+    return when (definition) {
       is Definition.TargetDef ->
-        return exprEvaluator.evaluateExpr(task, mainContext, definition.target.value(), null)
+        exprEvaluator.evaluateExpr(task, mainContext, definition.target.value(), null)
           .ensureValue()
 
       is Definition.ActionDef -> {
         exprEvaluator.executeAction(task, mainContext, definition.action.expr())
-        return NoneValue
+        NoneValue
       }
 
       else -> throw IllegalStateException("${nameTokens.joinToString(".")} is not a target or an action")
@@ -98,8 +98,10 @@ class BibixInterpreter(
         lookupName(requester, context, name)
       }
 
-      LookupResult.NameNotFound ->
+      LookupResult.NameNotFound -> {
+        println(nameLookupTable)
         throw IllegalStateException("Name not found: ${name.joinToString(".")} from $context")
+      }
     }
 
   suspend fun executeAction(requester: Task, sourceId: SourceId, actionDef: BibixAst.ActionDef) {

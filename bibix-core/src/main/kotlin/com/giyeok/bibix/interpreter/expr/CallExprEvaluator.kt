@@ -97,16 +97,15 @@ class CallExprEvaluator(
 
   suspend fun resolveBuildRule(
     task: Task,
-    context: NameLookupContext,
     thisValue: BibixValue?,
     definition: Definition.BuildRule,
   ): EvaluationResult {
     val buildRule = definition.buildRule
 
-    val params = paramDefs(task, context, buildRule.params().toKtList())
-    val returnType = exprEvaluator.evaluateType(task, context, buildRule.returnType())
-
     val defContext = NameLookupContext(definition.cname).dropLastToken()
+
+    val params = paramDefs(task, defContext, buildRule.params().toKtList())
+    val returnType = exprEvaluator.evaluateType(task, defContext, buildRule.returnType())
 
     val implTarget = buildRule.impl().targetName().tokens().toKtList()
     val clsName = buildRule.impl().className().tokens().mkString(".")
@@ -127,15 +126,14 @@ class CallExprEvaluator(
 
   suspend fun resolveActionRule(
     task: Task,
-    context: NameLookupContext,
     thisValue: BibixValue?,
     definition: Definition.ActionRule,
   ): EvaluationResult {
     val actionRule = definition.actionRule
 
-    val params = paramDefs(task, context, actionRule.params().toKtList())
-
     val defContext = NameLookupContext(definition.cname).dropLastToken()
+
+    val params = paramDefs(task, defContext, actionRule.params().toKtList())
 
     val implTarget = actionRule.impl().targetName().tokens().toKtList()
     val clsName = actionRule.impl().className().tokens().mkString(".")

@@ -1,5 +1,7 @@
 package com.giyeok.bibix.interpreter.expr
 
+import com.giyeok.bibix.base.BibixValue
+import com.giyeok.bibix.base.BuildContext
 import com.giyeok.bibix.base.ClassInstanceValue
 import com.giyeok.bibix.base.StringValue
 import com.giyeok.bibix.interpreter.testInterpreter
@@ -87,6 +89,43 @@ class ClassValueTests {
   }
 
   @Test
+  fun testSuperClass(): Unit = runBlocking {
+    val fs = Jimfs.newFileSystem()
+
+    val script = """
+      import abc
+      
+      xxx = abc.rule1("ab")
+      yyy = abc.rule1("cd")
+      zzz = abc.rule1("ef")
+      aaa = abc.rule1("asdf")
+    """.trimIndent()
+    fs.getPath("/build.bbx").writeText(script)
+
+    val abcPlugin = PreloadedPlugin.fromScript(
+      "abc.def",
+      """
+        class Ab(hello: string)
+        class Cd(world: string)
+        class Ef(earth: string)
+        class NotChild()
+
+        super class Xyz {Ab, Cd, Ef}
+
+        def rule1(v: string): Xyz = native:com.giyeok.bibix.interpreter.expr.TestPlugin3
+      """.trimIndent(),
+      Classes(TestPlugin3::class.java)
+    )
+
+    val interpreter = testInterpreter(fs, "/", mapOf("abc" to abcPlugin))
+
+    interpreter.userBuildRequest(listOf("xxx"))
+    interpreter.userBuildRequest(listOf("yyy"))
+    interpreter.userBuildRequest(listOf("zzz"))
+    assertThrows<IllegalStateException> { interpreter.userBuildRequest(listOf("aaa")) }
+  }
+
+  @Test
   fun testFieldTypeMismatch(): Unit = runBlocking {
     val fs = Jimfs.newFileSystem()
 
@@ -135,6 +174,17 @@ class ClassValueTests {
 
     assertThrows<IllegalStateException>("Package name for class main:Abc not specified") {
       interpreter.userBuildRequest(listOf("xxx"))
+    }
+  }
+}
+
+class TestPlugin3 {
+  fun build(context: BuildContext): BibixValue {
+    return when ((context.arguments.getValue("v") as StringValue).value) {
+      "ab" -> ClassInstanceValue("abc.def", "Ab", mapOf("hello" to StringValue("world")))
+      "cd" -> ClassInstanceValue("abc.def", "Cd", mapOf("world" to StringValue("earth")))
+      "ef" -> ClassInstanceValue("abc.def", "Ef", mapOf("earth" to StringValue("hello")))
+      else -> ClassInstanceValue("abc.def", "NotChild", mapOf())
     }
   }
 }

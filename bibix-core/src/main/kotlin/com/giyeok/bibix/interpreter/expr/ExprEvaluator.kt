@@ -181,6 +181,30 @@ class ExprEvaluator(
         }
       }
 
+      is SuperClassType -> {
+        when (value) {
+          is ClassInstanceValue -> {
+            check(value.packageName == type.packageName)
+            val typeDefinedContext = NameLookupContext(
+              sourceManager.getSourceIdFromPackageName(type.packageName)!!,
+              listOf()
+            )
+            val valueClassName = value.className.split('.')
+            val typeClassName = type.className.split('.')
+            check(valueClassName.dropLast(1) == typeClassName.dropLast(1))
+
+            val superClassDef = evaluateName(task, typeDefinedContext, typeClassName, null)
+            check(superClassDef is EvaluationResult.SuperClassDef)
+            // TODO recursive - superClass쪽에서 아래로 내려가야 함. data class에는 super class 정보가 없기 때문에
+            check(superClassDef.subClasses.contains(valueClassName.last()))
+            // TODO check if it is subtype
+            value
+          }
+
+          else -> TODO()
+        }
+      }
+
       is UnionType -> {
         val firstMatch = type.types.firstNotNullOfOrNull {
           coerce(task, context, value, it)
@@ -196,7 +220,6 @@ class ExprEvaluator(
       BuildRuleDefType -> if (value is BuildRuleDefValue) value else throw coercionFailed()
       TypeType -> if (value is TypeValue) value else throw coercionFailed()
       is EnumType -> TODO()
-      is SuperClassType -> TODO()
     }
   }
 
@@ -288,10 +311,10 @@ class ExprEvaluator(
       is Definition.ArgRedef -> TODO()
 
       is Definition.BuildRule ->
-        callExprEvaluator.resolveBuildRule(task, context, thisValue, definition)
+        callExprEvaluator.resolveBuildRule(task, thisValue, definition)
 
       is Definition.ActionRule ->
-        callExprEvaluator.resolveActionRule(task, context, thisValue, definition)
+        callExprEvaluator.resolveActionRule(task, thisValue, definition)
     }
 
   private fun findMember(targetExpr: BibixAst.Expr, value: BibixValue, name: String): BibixValue =
