@@ -14,12 +14,6 @@ import java.nio.file.Path
 class BibixDaemonApiImpl(val projectDir: Path) :
   BibixDaemonApiGrpcKt.BibixDaemonApiCoroutineImplBase() {
 
-  lateinit var frontend: BuildFrontend
-
-  init {
-    frontend = BuildFrontend(projectDir)
-  }
-
   override suspend fun getRepoInfo(request: GetRepoInfoReq): RepoInfo {
     return super.getRepoInfo(request)
   }
@@ -49,10 +43,11 @@ class BibixDaemonApiImpl(val projectDir: Path) :
   }
 
   override suspend fun getIntellijProjectStructure(request: GetIntellijProjectStructureReq): IntellijProjectStructure {
-    val frontend = this.frontend
-    if (frontend.parseError != null) {
-      throw StatusException(Status.ABORTED.withDescription(frontend.parseError.msg()))
-    }
-    return IntellijProjectExtractor(frontend).extractIntellijProjectStructure()
+//    val frontend = this.frontend
+//    if (frontend.parseError != null) {
+//      throw StatusException(Status.ABORTED.withDescription(frontend.parseError.msg()))
+//    }
+//    return IntellijProjectExtractor(frontend).extractIntellijProjectStructure()
+    TODO()
   }
 }

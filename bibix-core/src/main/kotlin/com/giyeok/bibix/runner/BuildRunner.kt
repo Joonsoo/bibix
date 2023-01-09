@@ -8,6 +8,8 @@ import com.giyeok.bibix.interpreter.AnyType
 //import com.giyeok.bibix.interpreter.CustomType
 import com.giyeok.bibix.interpreter.DirectoryType
 import com.giyeok.bibix.interpreter.ListType
+import com.giyeok.bibix.interpreter.coroutine.ProgressIndicator
+import com.giyeok.bibix.interpreter.coroutine.ProgressIndicatorContainer
 import com.giyeok.bibix.objectId
 import com.giyeok.bibix.objectIdHash
 import com.giyeok.bibix.plugins.PreloadedPlugin

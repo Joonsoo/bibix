@@ -6,14 +6,15 @@ data class BuildEnv(
 )
 
 sealed class OS {
-  abstract val distributeName: String
-  abstract val version: String
-
-  data class Linux(override val distributeName: String, override val version: String) : OS()
-  data class Windows(override val distributeName: String, override val version: String) : OS()
-  data class MacOS(override val distributeName: String, override val version: String) : OS()
+  data class Linux(val distributeName: String, val version: String) : OS()
+  data class Windows(val distributeName: String, val version: String) : OS()
+  data class MacOS(val distributeName: String, val version: String) : OS()
+  object Unknown : OS()
 }
 
 enum class Architecture {
-  X86_64
+  X86_64,
+  X86,
+  Aarch_64,
+  Unknown
 }

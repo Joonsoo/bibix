@@ -1,6 +1,9 @@
 package com.giyeok.bibix.runner
 
 import com.giyeok.bibix.buildscript.BuildGraph
+import com.giyeok.bibix.interpreter.coroutine.ProgressIndicator
+import com.giyeok.bibix.interpreter.coroutine.ProgressIndicatorContainer
+import com.giyeok.bibix.interpreter.coroutine.ProgressIndicatorImpl
 import java.util.*
 import java.util.concurrent.Executors
 

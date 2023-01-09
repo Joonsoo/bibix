@@ -3,19 +3,11 @@ package com.giyeok.bibix.source
 import com.giyeok.bibix.BibixIdProto
 import com.giyeok.bibix.ast.BibixAst
 import com.giyeok.bibix.base.*
-import com.giyeok.bibix.remoteSourceId
 import com.giyeok.bibix.repo.Repo
-import com.giyeok.bibix.runner.ProgressIndicator
+import com.giyeok.bibix.interpreter.coroutine.ProgressIndicator
 import com.giyeok.bibix.sourceId
-import com.giyeok.bibix.utils.toProto
-import org.eclipse.jgit.api.Git
-import org.eclipse.jgit.transport.CredentialsProvider
-import org.eclipse.jgit.transport.URIish
-import java.io.IOException
 import java.nio.file.Path
 import java.util.concurrent.locks.Lock
-import java.util.concurrent.locks.ReentrantLock
-import kotlin.concurrent.withLock
 import kotlin.io.path.readText
 
 // 지원되는 source 종류:

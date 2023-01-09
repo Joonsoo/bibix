@@ -14,6 +14,11 @@ sealed class Task {
   data class EvalExpr(val sourceId: SourceId, val exprId: Int, val thisValue: BibixValue?) :
     Task()
 
+  data class EvalCallExpr(val sourceId: SourceId, val exprId: Int, val thisValue: BibixValue?) :
+    Task()
+
   // actionDefId는 action def의 ast id
   data class ExecuteAction(val sourceId: SourceId, val actionDefId: Int) : Task()
+
+  data class ExecuteActionCall(val sourceId: SourceId, val actionDefId: Int) : Task()
 }

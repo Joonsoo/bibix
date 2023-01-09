@@ -5,7 +5,7 @@ import com.giyeok.bibix.plugins.Classes
 import com.giyeok.bibix.plugins.PreloadedPlugin
 
 val dollar = "\$"
-val preloadedPlugin = PreloadedPlugin.fromScript(
+val bibixPlugin = PreloadedPlugin.fromScript(
   "com.giyeok.bibix.plugins.bibix",
   """
     import jvm

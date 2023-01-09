@@ -1,11 +1,15 @@
 package com.giyeok.bibix.frontend.cli
 
-import com.giyeok.bibix.base.*
 import com.giyeok.bibix.frontend.BuildFrontend
+import com.giyeok.bibix.interpreter.BibixProject
+import com.giyeok.bibix.plugins.bibix.bibixPlugin
+import com.giyeok.bibix.plugins.curl.curlPlugin
+import com.giyeok.bibix.plugins.java.javaPlugin
+import com.giyeok.bibix.plugins.jvm.jvmPlugin
+import com.giyeok.bibix.plugins.maven.mavenPlugin
 import java.nio.file.Paths
 import java.time.Duration
 import java.time.Instant
-import kotlin.io.path.absolute
 import kotlin.system.exitProcess
 
 object BibixCli {
@@ -20,18 +24,27 @@ object BibixCli {
 
     check(buildTargetNames.isNotEmpty()) { "Must specify at least one build target" }
 
-    val buildArgsMap = mapOf<CName, BibixValue>()
+    val buildArgsMap = mapOf<String, String>()
 
-    val targets = buildTargetNames.map { CName(MainSourceId, it.split('.').toList()) }
+    val preloadedPlugins = mapOf(
+      "curl" to curlPlugin,
+      "jvm" to jvmPlugin,
+      "java" to javaPlugin,
+      "maven" to mavenPlugin,
+      "bibix" to bibixPlugin,
+    )
+
     val useDebuggingMode = buildArgs.contains("--debug")
 
     val buildFrontend = BuildFrontend(
-      Paths.get("").absolute(),
-      buildArgsMap,
-      ListValue(actionArgs.map { StringValue(it) })
+      mainProject = BibixProject(Paths.get(""), null),
+      buildArgsMap = buildArgsMap,
+      actionArgs = actionArgs,
+      preloadedPlugins = preloadedPlugins,
+      debuggingMode = useDebuggingMode
     )
 
-    val targetResults = buildFrontend.runTargets("build", targets)
+    val targetResults = buildFrontend.buildTargets(buildTargetNames)
 
     targetResults.forEach { (targetName, value) ->
       println("$targetName = $value")

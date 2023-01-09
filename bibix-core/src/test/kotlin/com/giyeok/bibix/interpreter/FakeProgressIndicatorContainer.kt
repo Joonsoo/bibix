@@ -1,8 +1,8 @@
 package com.giyeok.bibix.interpreter
 
-import com.giyeok.bibix.runner.ProgressIndicator
-import com.giyeok.bibix.runner.ProgressIndicatorContainer
-import com.giyeok.bibix.runner.ProgressIndicatorImpl
+import com.giyeok.bibix.interpreter.coroutine.ProgressIndicator
+import com.giyeok.bibix.interpreter.coroutine.ProgressIndicatorContainer
+import com.giyeok.bibix.interpreter.coroutine.ProgressIndicatorImpl
 
 class FakeProgressIndicatorContainer : ProgressIndicatorContainer {
   override fun notifyUpdated(progressIndicator: ProgressIndicator) {

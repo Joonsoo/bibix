@@ -4,6 +4,8 @@ import com.giyeok.bibix.base.BibixValue
 import com.giyeok.bibix.base.BuildEnv
 import com.giyeok.bibix.base.MainSourceId
 import com.giyeok.bibix.base.NoneValue
+import com.giyeok.bibix.interpreter.coroutine.Memo
+import com.giyeok.bibix.interpreter.coroutine.TaskElement
 import com.giyeok.bibix.interpreter.expr.VarsManager
 import com.giyeok.bibix.interpreter.expr.ExprEvaluator
 import com.giyeok.bibix.interpreter.expr.NameLookup
@@ -14,13 +16,14 @@ import com.giyeok.bibix.interpreter.task.Task
 import com.giyeok.bibix.interpreter.task.TaskRelGraph
 import com.giyeok.bibix.plugins.PreloadedPlugin
 import com.giyeok.bibix.repo.Repo
-import com.giyeok.bibix.runner.ProgressIndicatorContainer
+import com.giyeok.bibix.interpreter.coroutine.ProgressIndicatorContainer
 import com.google.common.annotations.VisibleForTesting
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.*
 
 class BibixInterpreter(
   val buildEnv: BuildEnv,
   val preloadedPlugins: Map<String, PreloadedPlugin>,
+  val memo: Memo,
   val mainProject: BibixProject,
   val repo: Repo,
   val progressIndicatorContainer: ProgressIndicatorContainer,
@@ -36,7 +39,7 @@ class BibixInterpreter(
   @VisibleForTesting
   val sourceManager = SourceManager()
 
-  private val exprEvaluator = ExprEvaluator(this, g, sourceManager, varsManager)
+  private val exprEvaluator = ExprEvaluator(this, g, sourceManager, varsManager, memo)
 
   private val nameLookup =
     NameLookup(g, nameLookupTable, preloadedPlugins, exprEvaluator, sourceManager)
@@ -52,22 +55,25 @@ class BibixInterpreter(
 
   suspend fun userBuildRequest(nameTokens: List<String>): BibixValue {
     val task = Task.UserBuildRequest(nameTokens)
-    val mainContext = NameLookupContext(MainSourceId, listOf())
-    val definition = lookupName(task, mainContext, nameTokens)
-    // task가 targetDef이면 evaluateExpr, action def이면 executeAction, 그 외의 다른 것이면 오류
+    return withContext(currentCoroutineContext() + TaskElement(task)) {
+      val mainContext = NameLookupContext(MainSourceId, listOf())
+      val definition = lookupName(task, mainContext, nameTokens)
+      // task가 targetDef이면 evaluateExpr, action def이면 executeAction, 그 외의 다른 것이면 오류
 
-    val defContext = NameLookupContext(definition.cname).dropLastToken()
+      val defContext = NameLookupContext(definition.cname).dropLastToken()
 
-    return when (definition) {
-      is Definition.TargetDef ->
-        exprEvaluator.evaluateExpr(task, defContext, definition.target.value(), null).ensureValue()
+      when (definition) {
+        is Definition.TargetDef ->
+          exprEvaluator.evaluateExpr(task, defContext, definition.target.value(), null)
+            .ensureValue()
 
-      is Definition.ActionDef -> {
-        exprEvaluator.executeAction(task, defContext, definition.action.expr())
-        NoneValue
+        is Definition.ActionDef -> {
+          exprEvaluator.executeAction(task, defContext, definition.action.expr())
+          NoneValue
+        }
+
+        else -> throw IllegalStateException("${nameTokens.joinToString(".")} is not a target or an action")
       }
-
-      else -> throw IllegalStateException("${nameTokens.joinToString(".")} is not a target or an action")
     }
   }
 

@@ -3,6 +3,7 @@ package com.giyeok.bibix.interpreter.expr
 import com.giyeok.bibix.ast.BibixAst
 import com.giyeok.bibix.base.*
 import com.giyeok.bibix.interpreter.*
+import com.giyeok.bibix.interpreter.coroutine.Memo
 import com.giyeok.bibix.interpreter.task.Task
 import com.giyeok.bibix.interpreter.task.TaskRelGraph
 import com.giyeok.bibix.utils.getOrNull
@@ -13,18 +14,10 @@ class ExprEvaluator(
   private val g: TaskRelGraph,
   private val sourceManager: SourceManager,
   private val varsManager: VarsManager,
+  private val memo: Memo,
 ) {
   private val callExprEvaluator = CallExprEvaluator(interpreter, g, sourceManager, this)
   private val coercer = Coercer(sourceManager, this)
-
-  private suspend fun memoize(
-    sourceId: SourceId,
-    exprId: Int,
-    thisValue: BibixValue?,
-    eval: suspend () -> EvaluationResult
-  ): EvaluationResult {
-    return eval()
-  }
 
   suspend fun coerce(
     task: Task,
@@ -202,15 +195,17 @@ class ExprEvaluator(
     thisValue: BibixValue?,
   ): EvaluationResult =
     g.withTask(requester, Task.EvalExpr(context.sourceId, expr.id(), thisValue)) { task ->
-      memoize(context.sourceId, expr.id(), thisValue) {
+      memo.memoize(context.sourceId, expr.id(), thisValue) {
         when (expr) {
           is BibixAst.CastExpr -> {
+            // TODO concurrent
             val value = evaluateExpr(task, context, expr.expr(), thisValue).ensureValue()
             val type = evaluateType(task, context, expr.castTo())
             EvaluationResult.Value(coerce(task, context, value, type))
           }
 
           is BibixAst.MergeOp -> {
+            // TODO concurrent
             val lhs = evaluateExpr(task, context, expr.lhs(), thisValue).ensureValue()
             val rhs = evaluateExpr(task, context, expr.rhs(), thisValue).ensureValue()
             val mergedValue = mergeValue(lhs, rhs)
@@ -219,12 +214,7 @@ class ExprEvaluator(
 
           is BibixAst.CallExpr ->
             EvaluationResult.Value(
-              callExprEvaluator.evaluateCallExpr(
-                task,
-                context,
-                expr,
-                thisValue
-              )
+              callExprEvaluator.evaluateCallExpr(task, context, expr, thisValue)
             )
 
           is BibixAst.MemberAccess -> {
@@ -248,18 +238,21 @@ class ExprEvaluator(
             evaluateName(task, context, listOf(expr.name()), thisValue)
 
           is BibixAst.ListExpr -> {
+            // TODO concurrent
             val elemValues = expr.elems().toKtList()
               .map { elemExpr -> evaluateExpr(task, context, elemExpr, thisValue).ensureValue() }
             EvaluationResult.Value(ListValue(elemValues))
           }
 
           is BibixAst.TupleExpr -> {
+            // TODO concurrent
             val elemValues = expr.elems().toKtList()
               .map { elemExpr -> evaluateExpr(task, context, elemExpr, thisValue).ensureValue() }
             EvaluationResult.Value(TupleValue(elemValues))
           }
 
           is BibixAst.NamedTupleExpr -> {
+            // TODO concurrent
             val elemValues = expr.elems().toKtList()
               .map { pair ->
                 pair.name() to evaluateExpr(task, context, pair.expr(), thisValue).ensureValue()
@@ -268,6 +261,7 @@ class ExprEvaluator(
           }
 
           is BibixAst.StringLiteral -> {
+            // TODO concurrent
             val elems = expr.elems().toKtList().map { elem ->
               when (elem) {
                 is BibixAst.JustChar -> elem.chr().toString()
