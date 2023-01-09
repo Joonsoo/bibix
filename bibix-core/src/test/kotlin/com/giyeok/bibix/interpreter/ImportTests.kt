@@ -1,11 +1,10 @@
 package com.giyeok.bibix.interpreter
 
 import com.giyeok.bibix.base.*
-import com.giyeok.bibix.interpreter.name.ImportedSource
-import com.giyeok.bibix.interpreter.name.NameLookupContext
+import com.giyeok.bibix.interpreter.expr.ImportedSource
+import com.giyeok.bibix.interpreter.expr.NameLookupContext
 import com.giyeok.bibix.plugins.Classes
 import com.giyeok.bibix.plugins.PreloadedPlugin
-import com.giyeok.bibix.runner.ProgressIndicatorContainer
 import com.google.common.jimfs.Jimfs
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.runBlocking
@@ -202,6 +201,40 @@ class ImportTests {
     assertThat(interpreter.sourceManager.sourcePackageName).containsExactly(
       ExternSourceId(1), "com.abc.xyz",
     )
+  }
+
+  @Test
+  fun testImportsInNamespace(): Unit = runBlocking {
+    val fs = Jimfs.newFileSystem()
+
+    val script = """
+      namespace aaa {
+        import xyz
+        abc = xyz.hello
+      }
+      
+      bcd = aaa.xyz.world
+    """.trimIndent()
+    fs.getPath("/build.bbx").writeText(script)
+
+    val xyzPlugin = PreloadedPlugin.fromScript(
+      "com.abc.xyz",
+      """
+        import yza
+        
+        hello = "good!"
+        
+        world = "hi!"
+        
+        def worldRule(): string = native:com.giyeok.bibix.interpreter.TestWorldRule
+      """.trimIndent(),
+      Classes(TestWorldRule::class.java),
+    )
+
+    val interpreter = testInterpreter(fs, "/", mapOf("xyz" to xyzPlugin))
+
+    assertThat(interpreter.userBuildRequest(listOf("aaa", "abc"))).isEqualTo(StringValue("good!"))
+    assertThat(interpreter.userBuildRequest(listOf("bcd"))).isEqualTo(StringValue("hi!"))
   }
 }
 

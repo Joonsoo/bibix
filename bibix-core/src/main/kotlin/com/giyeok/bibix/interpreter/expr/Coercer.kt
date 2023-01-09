@@ -2,7 +2,6 @@ package com.giyeok.bibix.interpreter.expr
 
 import com.giyeok.bibix.base.*
 import com.giyeok.bibix.interpreter.*
-import com.giyeok.bibix.interpreter.name.NameLookupContext
 import com.giyeok.bibix.interpreter.task.Task
 import java.nio.file.Path
 

@@ -63,8 +63,8 @@ sealed class NameLookupChain {
             is BibixAst.TargetDef -> def.name()
             is BibixAst.DataClassDef -> def.name()
             is BibixAst.SuperClassDef -> def.name()
-            is BibixAst.ArgDef -> def.name()
-            is BibixAst.ArgRedef -> null
+            is BibixAst.VarDef -> def.name()
+            is BibixAst.VarRedef -> null
             is BibixAst.BuildRuleDef -> def.name()
             is BibixAst.ActionDef -> def.name()
             is BibixAst.ActionRuleDef -> def.name()

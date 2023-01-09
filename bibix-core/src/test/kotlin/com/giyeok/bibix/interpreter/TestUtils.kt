@@ -3,6 +3,7 @@ package com.giyeok.bibix.interpreter
 import com.giyeok.bibix.base.Architecture
 import com.giyeok.bibix.base.BuildEnv
 import com.giyeok.bibix.base.OS
+import com.giyeok.bibix.interpreter.expr.VarsManager
 import com.giyeok.bibix.plugins.PreloadedPlugin
 import com.giyeok.bibix.repo.BibixRepoProto
 import com.giyeok.bibix.repo.Repo
@@ -33,6 +34,5 @@ fun testInterpreter(
   BibixProject(fs.getPath(mainPath), null),
   testRepo(fs),
   FakeProgressIndicatorContainer(),
-  mapOf(),
   listOf()
 )

@@ -154,7 +154,7 @@ class BuildGraph(
           )
         }
 
-        is BibixAst.ArgDef -> {
+        is BibixAst.VarDef -> {
           registerName(
             cname.append(def.name()),
             CNameValue.ArgVar(

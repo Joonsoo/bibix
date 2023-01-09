@@ -7,8 +7,6 @@ import com.giyeok.bibix.interpreter.DataClassType
 import com.giyeok.bibix.interpreter.SourceManager
 import com.giyeok.bibix.interpreter.expr.EvaluationResult.RuleDef.ActionRuleDef
 import com.giyeok.bibix.interpreter.expr.EvaluationResult.RuleDef.BuildRuleDef
-import com.giyeok.bibix.interpreter.name.Definition
-import com.giyeok.bibix.interpreter.name.NameLookupContext
 import com.giyeok.bibix.interpreter.task.Task
 import com.giyeok.bibix.interpreter.task.TaskRelGraph
 import com.giyeok.bibix.objectId

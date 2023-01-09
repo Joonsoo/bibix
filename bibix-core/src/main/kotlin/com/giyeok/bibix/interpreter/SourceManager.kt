@@ -5,13 +5,12 @@ import com.giyeok.bibix.base.ExternSourceId
 import com.giyeok.bibix.base.MainSourceId
 import com.giyeok.bibix.base.PreloadedSourceId
 import com.giyeok.bibix.base.SourceId
-import com.giyeok.bibix.interpreter.name.NameLookupContext
-import com.giyeok.bibix.interpreter.name.NameLookupTable
+import com.giyeok.bibix.interpreter.expr.NameLookupContext
+import com.giyeok.bibix.interpreter.expr.NameLookupTable
 import com.giyeok.bibix.plugins.Classes
 import com.giyeok.bibix.plugins.PreloadedPlugin
 import com.giyeok.bibix.utils.toKtList
 import com.google.common.annotations.VisibleForTesting
-import com.google.common.collect.BiMap
 import com.google.common.collect.HashBiMap
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock

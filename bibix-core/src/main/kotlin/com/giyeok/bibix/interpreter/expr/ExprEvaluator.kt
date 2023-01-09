@@ -3,17 +3,16 @@ package com.giyeok.bibix.interpreter.expr
 import com.giyeok.bibix.ast.BibixAst
 import com.giyeok.bibix.base.*
 import com.giyeok.bibix.interpreter.*
-import com.giyeok.bibix.interpreter.name.Definition
-import com.giyeok.bibix.interpreter.name.NameLookupContext
 import com.giyeok.bibix.interpreter.task.Task
 import com.giyeok.bibix.interpreter.task.TaskRelGraph
+import com.giyeok.bibix.utils.getOrNull
 import com.giyeok.bibix.utils.toKtList
-import java.nio.file.Path
 
 class ExprEvaluator(
   private val interpreter: BibixInterpreter,
   private val g: TaskRelGraph,
   private val sourceManager: SourceManager,
+  private val varsManager: VarsManager,
 ) {
   private val callExprEvaluator = CallExprEvaluator(interpreter, g, sourceManager, this)
   private val coercer = Coercer(sourceManager, this)
@@ -76,10 +75,35 @@ class ExprEvaluator(
     }
 
     is BibixAst.NoneType -> NoneType
-    is BibixAst.CollectionType -> TODO()
-    is BibixAst.TupleType -> TODO()
-    is BibixAst.NamedTupleType -> TODO()
-    is BibixAst.UnionType -> TODO()
+    is BibixAst.CollectionType -> {
+      val typeParams = type.typeParams().params().toKtList()
+      check(typeParams.size == 1) { "Invalid number of type parameters" }
+      when (type.name()) {
+        "set" -> SetType(evaluateType(task, context, typeParams.first()))
+        "list" -> ListType(evaluateType(task, context, typeParams.first()))
+        else -> throw IllegalStateException("Unknown colleciton type: ${type.name()}")
+      }
+    }
+
+    is BibixAst.TupleType -> {
+      val elemTypes = type.elems().toKtList().map { elemTypeElem ->
+        evaluateType(task, context, elemTypeElem)
+      }
+      TupleType(elemTypes)
+    }
+
+    is BibixAst.NamedTupleType -> {
+      val elemTypes = type.elems().toKtList().map { pair ->
+        pair.name() to evaluateType(task, context, pair.typ())
+      }
+      NamedTupleType(elemTypes)
+    }
+
+    is BibixAst.UnionType -> {
+      val candTypes = type.elems().toKtList().map { evaluateType(task, context, it) }
+      UnionType(candTypes)
+    }
+
     else -> throw AssertionError()
   }
 
@@ -117,9 +141,24 @@ class ExprEvaluator(
         )
       }
 
-      is Definition.ArgDef -> TODO()
+      is Definition.VarDef -> {
+        val varDef = varsManager.getVarDef(definition.cname)
+        check(varDef.def == definition.varDef)
+        // TODO 프로그램 argument 지원
+        val redefines = varsManager.redefines(interpreter.nameLookupTable, definition.cname)
+        if (redefines.isNotEmpty()) {
+          // TODO redefinition이 여러개 발견되면 어떻게 처리하지..?
+          check(redefines.size == 1) { "more than one redefinition for ${definition.cname} found" }
+          val redefine = redefines.first()
+          evaluateExpr(task, redefine.redefContext, redefine.def.redefValue(), null)
+        } else {
+          val defaultValueExpr =
+            varDef.def.defaultValue().getOrNull() ?: throw IllegalStateException("???")
+          evaluateExpr(task, varDef.defContext, defaultValueExpr, null)
+        }
+      }
 
-      is Definition.ArgRedef -> TODO()
+      is Definition.VarRedef -> TODO()
 
       is Definition.BuildRule ->
         callExprEvaluator.resolveBuildRule(task, thisValue, definition)
