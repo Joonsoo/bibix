@@ -2,9 +2,8 @@ package com.giyeok.bibix.interpreter.expr
 
 import com.giyeok.bibix.ast.BibixAst
 import com.giyeok.bibix.base.*
-import com.giyeok.bibix.interpreter.BibixInterpreter
-import com.giyeok.bibix.interpreter.DataClassType
-import com.giyeok.bibix.interpreter.SourceManager
+import com.giyeok.bibix.base.DataClassType
+import com.giyeok.bibix.interpreter.*
 import com.giyeok.bibix.interpreter.expr.EvaluationResult.RuleDef.ActionRuleDef
 import com.giyeok.bibix.interpreter.expr.EvaluationResult.RuleDef.BuildRuleDef
 import com.giyeok.bibix.interpreter.task.Task
@@ -239,7 +238,6 @@ class CallExprEvaluator(
     val progressIndicator = interpreter.progressIndicatorContainer.ofCurrentThread()
     val buildContext = BuildContext(
       env = interpreter.buildEnv,
-      sourceId = buildRule.context.sourceId,
       fileSystem = interpreter.repo.fileSystem,
       mainBaseDirectory = interpreter.sourceManager.getProjectRoot(MainSourceId),
       callerBaseDirectory = if (context.sourceId is ExternSourceId) {
@@ -320,8 +318,7 @@ class CallExprEvaluator(
     val method = pluginClass.getMethod(callTarget.methodName, ActionContext::class.java)
 
     val progressIndicator = interpreter.progressIndicatorContainer.ofCurrentThread()
-    val actionContext =
-      ActionContext(interpreter.buildEnv, callTarget.context.sourceId, params, progressIndicator)
+    val actionContext = ActionContext(interpreter.buildEnv, params, progressIndicator)
 
     progressIndicator.updateProgressDescription("Calling ${callTarget.context}...")
     try {

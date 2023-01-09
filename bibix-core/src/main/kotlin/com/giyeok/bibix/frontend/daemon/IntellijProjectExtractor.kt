@@ -7,8 +7,8 @@
 //import com.giyeok.bibix.daemon.BibixDaemonApiProto
 //import com.giyeok.bibix.daemon.intellijProjectNode
 //import com.giyeok.bibix.daemon.intellijProjectStructure
-//import com.giyeok.bibix.interpreter.FileType
-//import com.giyeok.bibix.interpreter.SetType
+//import com.giyeok.bibix.base.FileType
+//import com.giyeok.bibix.base.SetType
 //import com.giyeok.bibix.frontend.BuildFrontend
 //import com.giyeok.bibix.plugins.ClassPkg
 //import com.giyeok.bibix.runner.*

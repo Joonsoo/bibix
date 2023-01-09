@@ -3,7 +3,7 @@ package com.giyeok.bibix.interpreter.expr
 import com.giyeok.bibix.ast.BibixAst
 import com.giyeok.bibix.base.BibixValue
 import com.giyeok.bibix.base.SourceId
-import com.giyeok.bibix.interpreter.BibixType
+import com.giyeok.bibix.base.BibixType
 import org.codehaus.plexus.classworlds.realm.ClassRealm
 
 sealed class EvaluationResult {

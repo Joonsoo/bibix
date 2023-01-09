@@ -8,8 +8,6 @@ import kotlin.io.path.notExists
 
 data class BuildContext(
   val env: BuildEnv,
-  // 해당 모듈의 definition source id
-  val sourceId: SourceId,
   val fileSystem: FileSystem,
   // 메인 스크립트의 베이스 디렉토리
   val mainBaseDirectory: Path,

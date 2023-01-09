@@ -3,7 +3,7 @@ package com.giyeok.bibix.buildscript
 import com.giyeok.bibix.ast.BibixAst
 import com.giyeok.bibix.base.CName
 import com.giyeok.bibix.base.SourceId
-import com.giyeok.bibix.interpreter.BibixType
+import com.giyeok.bibix.base.BibixType
 import com.giyeok.bibix.utils.toKtList
 import com.giyeok.jparser.ParseResultTree
 

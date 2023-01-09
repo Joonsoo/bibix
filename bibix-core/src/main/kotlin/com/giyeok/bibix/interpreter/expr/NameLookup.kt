@@ -3,7 +3,8 @@ package com.giyeok.bibix.interpreter.expr
 import com.giyeok.bibix.ast.BibixAst
 import com.giyeok.bibix.base.*
 import com.giyeok.bibix.interpreter.BibixProject
-import com.giyeok.bibix.interpreter.DirectoryType
+import com.giyeok.bibix.base.DirectoryType
+import com.giyeok.bibix.base.PreloadedSourceId
 import com.giyeok.bibix.interpreter.SourceManager
 import com.giyeok.bibix.interpreter.task.Task
 import com.giyeok.bibix.interpreter.task.TaskRelGraph

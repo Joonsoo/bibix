@@ -3,7 +3,7 @@ package com.giyeok.bibix.runner
 import com.giyeok.bibix.BibixIdProto
 import com.giyeok.bibix.base.CName
 import com.giyeok.bibix.base.SourceId
-import com.giyeok.bibix.interpreter.BibixType
+import com.giyeok.bibix.base.BibixType
 
 // TODO build rule impl info를 native impl용이랑 아닌걸로 분리할 것.
 // native impl용은 user가 buildrule로 받을 수 없음(impl name에 접근이 불가하기 때문)

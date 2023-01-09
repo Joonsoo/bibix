@@ -2,7 +2,7 @@ package com.giyeok.bibix.runner
 
 import com.giyeok.bibix.base.BibixValue
 import com.giyeok.bibix.base.CName
-import com.giyeok.bibix.interpreter.BibixType
+import com.giyeok.bibix.base.BibixType
 
 sealed class CNameValue {
   data class DeferredImport(val deferredImportId: Int) : CNameValue()

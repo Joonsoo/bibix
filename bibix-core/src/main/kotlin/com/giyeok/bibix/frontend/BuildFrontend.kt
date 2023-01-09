@@ -6,6 +6,13 @@ import com.giyeok.bibix.interpreter.BibixProject
 import com.giyeok.bibix.interpreter.coroutine.QueuedCoroutineDispatcher
 import com.giyeok.bibix.interpreter.coroutine.ThreadPool
 import com.giyeok.bibix.plugins.PreloadedPlugin
+import com.giyeok.bibix.plugins.bibix.bibixPlugin
+import com.giyeok.bibix.plugins.curl.curlPlugin
+import com.giyeok.bibix.plugins.fs.fsPlugin
+import com.giyeok.bibix.plugins.java.javaPlugin
+import com.giyeok.bibix.plugins.jvm.jvmPlugin
+import com.giyeok.bibix.plugins.maven.mavenPlugin
+import com.giyeok.bibix.plugins.repo.repoPlugin
 import com.giyeok.bibix.repo.Repo
 import kotlinx.coroutines.*
 
@@ -13,7 +20,15 @@ class BuildFrontend(
   val mainProject: BibixProject,
   val buildArgsMap: Map<String, String>,
   val actionArgs: List<String>,
-  val preloadedPlugins: Map<String, PreloadedPlugin>,
+  val preloadedPlugins: Map<String, PreloadedPlugin> = mapOf(
+    "bibix" to bibixPlugin,
+    "curl" to curlPlugin,
+    "jvm" to jvmPlugin,
+    "java" to javaPlugin,
+    "maven" to mavenPlugin,
+    "repo" to repoPlugin,
+    "fs" to fsPlugin,
+  ),
   val debuggingMode: Boolean = false
 ) {
   val repo = Repo.load(mainProject.projectRoot, debuggingMode = debuggingMode)
@@ -61,11 +76,16 @@ class BuildFrontend(
 
   fun buildTargets(targetNames: List<String>): Map<String, BibixValue> {
     val coroutineDispatcher = QueuedCoroutineDispatcher(threadPool)
-    return runBlocking(coroutineDispatcher) {
+
+    val deferred = CoroutineScope(coroutineDispatcher).async {
       targetNames.map { targetName ->
         val targetNameTokens = targetName.split('.').map { it.trim() }
         async { targetName to interpreter.userBuildRequest(targetNameTokens) }
       }.awaitAll().toMap()
     }
+
+    coroutineDispatcher.waitUntilQueueIsEmpty()
+
+    return runBlocking { deferred.await() }
   }
 }

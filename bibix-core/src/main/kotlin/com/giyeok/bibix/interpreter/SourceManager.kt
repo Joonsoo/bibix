@@ -11,6 +11,7 @@ import com.giyeok.bibix.plugins.Classes
 import com.giyeok.bibix.plugins.PreloadedPlugin
 import com.giyeok.bibix.utils.toKtList
 import com.google.common.annotations.VisibleForTesting
+import com.google.common.collect.BiMap
 import com.google.common.collect.HashBiMap
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -21,7 +22,7 @@ class SourceManager {
   private val projectRoots = mutableMapOf<SourceId, Path>()
 
   @VisibleForTesting
-  val sourcePackageName = HashBiMap.create<SourceId, String>()
+  val sourcePackageName: BiMap<SourceId, String> = HashBiMap.create<SourceId, String>()
   private val externSources = mutableMapOf<BibixProject, ExternSourceId>()
   private var externSourceIdCounter = 0
   private val mutex = Mutex()

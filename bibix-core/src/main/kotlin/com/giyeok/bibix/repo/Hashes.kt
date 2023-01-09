@@ -3,6 +3,10 @@ package com.giyeok.bibix.repo
 import com.giyeok.bibix.*
 import com.giyeok.bibix.base.*
 import com.giyeok.bibix.buildscript.BuildGraph
+import com.giyeok.bibix.base.BibixRootSourceId
+import com.giyeok.bibix.base.ExternSourceId
+import com.giyeok.bibix.base.MainSourceId
+import com.giyeok.bibix.base.PreloadedSourceId
 import com.giyeok.bibix.utils.toProto
 import com.google.protobuf.ByteString
 import com.google.protobuf.empty

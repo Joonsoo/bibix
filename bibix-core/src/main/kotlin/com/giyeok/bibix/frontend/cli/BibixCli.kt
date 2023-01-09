@@ -26,21 +26,12 @@ object BibixCli {
 
     val buildArgsMap = mapOf<String, String>()
 
-    val preloadedPlugins = mapOf(
-      "curl" to curlPlugin,
-      "jvm" to jvmPlugin,
-      "java" to javaPlugin,
-      "maven" to mavenPlugin,
-      "bibix" to bibixPlugin,
-    )
-
     val useDebuggingMode = buildArgs.contains("--debug")
 
     val buildFrontend = BuildFrontend(
       mainProject = BibixProject(Paths.get(""), null),
       buildArgsMap = buildArgsMap,
       actionArgs = actionArgs,
-      preloadedPlugins = preloadedPlugins,
       debuggingMode = useDebuggingMode
     )
 

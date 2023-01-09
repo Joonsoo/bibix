@@ -2,9 +2,7 @@ package com.giyeok.bibix.buildscript
 
 import com.giyeok.bibix.BibixIdProto
 import com.giyeok.bibix.ast.BibixAst
-import com.giyeok.bibix.base.CName
-import com.giyeok.bibix.base.SourceId
-import com.giyeok.bibix.interpreter.*
+import com.giyeok.bibix.base.*
 import com.giyeok.bibix.runner.CNameValue
 import com.giyeok.bibix.runner.Param
 import com.giyeok.bibix.utils.getOrNull

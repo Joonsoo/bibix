@@ -4,10 +4,14 @@ import com.giyeok.bibix.BibixIdProto
 import com.giyeok.bibix.base.*
 import com.giyeok.bibix.base.Constants.BIBIX_VERSION
 import com.giyeok.bibix.buildscript.*
-import com.giyeok.bibix.interpreter.AnyType
+import com.giyeok.bibix.base.AnyType
 //import com.giyeok.bibix.interpreter.CustomType
-import com.giyeok.bibix.interpreter.DirectoryType
-import com.giyeok.bibix.interpreter.ListType
+import com.giyeok.bibix.base.DirectoryType
+import com.giyeok.bibix.base.ListType
+import com.giyeok.bibix.base.BibixRootSourceId
+import com.giyeok.bibix.base.ExternSourceId
+import com.giyeok.bibix.base.MainSourceId
+import com.giyeok.bibix.base.PreloadedSourceId
 import com.giyeok.bibix.interpreter.coroutine.ProgressIndicator
 import com.giyeok.bibix.interpreter.coroutine.ProgressIndicatorContainer
 import com.giyeok.bibix.objectId
@@ -661,7 +665,6 @@ class BuildRunner(
     val progressIndicator = getProgressIndicator()
     val buildContext = BuildContext(
       buildEnv,
-      ruleImplInfo.origin,
       repo.fileSystem,
       buildGraph.baseDirectories.getValue(ruleImplInfo.origin),
       buildGraph.baseDirectories.getValue(origin),
@@ -830,7 +833,7 @@ class BuildRunner(
 
     val progressIndicator = getProgressIndicator()
 
-    val actionContext = ActionContext(buildEnv, ruleImplInfo.origin, args, progressIndicator)
+    val actionContext = ActionContext(buildEnv, args, progressIndicator)
 
     val callingTarget = "${ruleImplInfo.cls.canonicalName}:$methodName"
 

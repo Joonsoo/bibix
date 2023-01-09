@@ -1,4 +1,4 @@
-package com.giyeok.bibix.interpreter
+package com.giyeok.bibix.base
 
 sealed class BibixType
 
