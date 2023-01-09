@@ -99,11 +99,13 @@ class ExprEvaluatorTests {
       }
       
       class Abc(name: string) {
-        as Xyz = Xyz("Hello ${d}name")
+        as Xyz = Xyz("Hello ${d}{this.name}")
+        as string = "Abc is called ${d}{this.name}"
       }
       
       bbb = Xyz("good") as string
       ccc = Abc("world") as Xyz
+      ddd = Abc("world") as string
     """.trimIndent()
     fs.getPath("/build.bbx").writeText(script)
 
@@ -114,5 +116,6 @@ class ExprEvaluatorTests {
     assertThat(interpreter.userBuildRequest(listOf("ccc"))).isEqualTo(
       ClassInstanceValue("abc.def", "Xyz", mapOf("message" to StringValue("Hello world")))
     )
+    assertThat(interpreter.userBuildRequest(listOf("ddd"))).isEqualTo(StringValue("Abc is called world"))
   }
 }

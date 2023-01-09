@@ -50,10 +50,8 @@ class NameLookup(
         lookupName(requester, context, name)
       }
 
-      LookupResult.NameNotFound -> {
-        println(nameLookupTable)
+      LookupResult.NameNotFound ->
         throw IllegalStateException("Name not found: ${name.joinToString(".")} from $context")
-      }
     }
 
   private suspend fun resolveImportAll(

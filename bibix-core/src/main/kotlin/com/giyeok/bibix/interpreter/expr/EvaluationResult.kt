@@ -7,10 +7,12 @@ import com.giyeok.bibix.interpreter.BibixType
 import org.codehaus.plexus.classworlds.realm.ClassRealm
 
 sealed class EvaluationResult {
-  open fun ensureValue(): BibixValue = throw IllegalStateException()
+
+  fun ensureValue(): BibixValue = tryEnsureValue() ?: throw IllegalStateException()
+  open fun tryEnsureValue(): BibixValue? = null
 
   data class Value(val value: BibixValue) : EvaluationResult() {
-    override fun ensureValue(): BibixValue = value
+    override fun tryEnsureValue(): BibixValue = value
   }
 
   data class Namespace(val context: NameLookupContext) : EvaluationResult()
@@ -82,6 +84,7 @@ sealed class EvaluationResult {
     val packageName: String,
     val className: String,
     override val params: List<Param>,
+    val bodyElems: List<BibixAst.ClassBodyElem>,
   ) : Callable()
 
   data class SuperClassDef(

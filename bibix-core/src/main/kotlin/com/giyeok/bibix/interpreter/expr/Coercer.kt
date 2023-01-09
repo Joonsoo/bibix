@@ -1,5 +1,6 @@
 package com.giyeok.bibix.interpreter.expr
 
+import com.giyeok.bibix.ast.BibixAst
 import com.giyeok.bibix.base.*
 import com.giyeok.bibix.interpreter.*
 import com.giyeok.bibix.interpreter.task.Task
@@ -16,7 +17,6 @@ class Coercer(
     type: BibixType
   ): BibixValue = tryCoerce(task, context, value, type)
     ?: throw IllegalStateException("Coercion failed: $value to $type")
-
 
   suspend fun tryCoerce(
     task: Task,
@@ -151,10 +151,10 @@ class Coercer(
 
       is DataClassType -> {
         when (value) {
-          is ClassInstanceValue -> {
-            check(value.packageName == type.packageName && value.className == type.className)
-            return value
-          }
+          is ClassInstanceValue ->
+            if (isValidValueOf(value, type)) {
+              return value
+            }
 
           else -> {}
         }
@@ -162,24 +162,10 @@ class Coercer(
 
       is SuperClassType -> {
         when (value) {
-          is ClassInstanceValue -> {
-            check(value.packageName == type.packageName)
-            val typeDefinedContext = NameLookupContext(
-              sourceManager.getSourceIdFromPackageName(type.packageName)!!,
-              listOf()
-            )
-            val valueClassName = value.className.split('.')
-            val typeClassName = type.className.split('.')
-            check(valueClassName.dropLast(1) == typeClassName.dropLast(1))
-
-            val superClassDef =
-              exprEvaluator.evaluateName(task, typeDefinedContext, typeClassName, null)
-            check(superClassDef is EvaluationResult.SuperClassDef)
-            // TODO recursive - superClass쪽에서 아래로 내려가야 함. data class에는 super class 정보가 없기 때문에
-            check(superClassDef.subClasses.contains(valueClassName.last()))
-            // TODO check if it is subtype
-            return value
-          }
+          is ClassInstanceValue ->
+            if (isValidValueOf(task, value, type)) {
+              return value
+            }
 
           else -> {}
         }
@@ -208,7 +194,52 @@ class Coercer(
     return sourceManager.getProjectRoot(sourceId).resolve(path).normalize()
   }
 
-  private fun tryCoerceFromValue(
+  private fun isValidValueOf(
+    value: ClassInstanceValue,
+    type: DataClassType
+  ): Boolean = value.packageName == type.packageName && value.className == type.className
+
+  private suspend fun isValidValueOf(
+    task: Task,
+    value: ClassInstanceValue,
+    type: SuperClassType
+  ): Boolean {
+    // super class는 반드시 같은 패키지 안에 있어야 함
+    if (value.packageName != type.packageName) {
+      return false
+    }
+    val typeDefinedContext = NameLookupContext(
+      sourceManager.getSourceIdFromPackageName(type.packageName)!!,
+      listOf()
+    )
+    val valueClassName = value.className.split('.')
+    val typeClassName = type.className.split('.')
+    if (valueClassName.dropLast(1) != typeClassName.dropLast(1)) {
+      return false
+    }
+
+    val superClassDef =
+      exprEvaluator.evaluateName(task, typeDefinedContext, typeClassName, null)
+    if (superClassDef !is EvaluationResult.SuperClassDef) {
+      return false
+    }
+    // TODO recursive - superClass쪽에서 아래로 내려가야 함. data class에는 super class 정보가 없기 때문에
+    if (!superClassDef.subClasses.contains(valueClassName.last())) {
+      return false
+    }
+    // TODO move the type checking part to `isSubType`
+    return true
+  }
+
+  private suspend fun isSubType(task: Task, superType: BibixType, subType: BibixType): Boolean {
+    // TODO implement
+    if (superType == subType) {
+      return true
+    }
+    return false
+  }
+
+  private suspend fun tryCoerceFromValue(
     task: Task,
     context: NameLookupContext,
     value: BibixValue,
@@ -224,6 +255,36 @@ class Coercer(
     // val value = coerce(task, context, value, type.pairs[0].second)
     // NamedTupleValue(type.pairs[0].first to value)
 
+    when (value) {
+      is ClassInstanceValue -> {
+        val sourceId = sourceManager.getSourceIdFromPackageName(value.packageName)
+        if (sourceId != null) {
+          val className = value.className.split('.')
+          val classDef =
+            exprEvaluator.evaluateName(task, NameLookupContext(sourceId, listOf()), className, null)
+          if (classDef is EvaluationResult.DataClassDef) {
+            // 클래스 body에 정의된 cast 중 호환되는 첫번째 타입 캐스트로 반환
+            classDef.bodyElems.forEach { bodyElem ->
+              when (bodyElem) {
+                is BibixAst.ActionRuleDef -> {}
+                is BibixAst.ClassCastDef -> {
+                  val castType =
+                    exprEvaluator.evaluateType(task, classDef.context, bodyElem.castTo())
+                  if (isSubType(task, type, castType)) {
+                    return exprEvaluator.evaluateExpr(task, context, bodyElem.expr(), value)
+                      .ensureValue()
+                  }
+                }
+
+                else -> throw AssertionError()
+              }
+            }
+          }
+        }
+      }
+
+      else -> {}
+    }
     return null
   }
 }

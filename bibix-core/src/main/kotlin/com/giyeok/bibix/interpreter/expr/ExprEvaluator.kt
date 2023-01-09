@@ -306,6 +306,9 @@ class ExprEvaluator(
           is BibixAst.NoneLiteral ->
             EvaluationResult.Value(NoneValue)
 
+          is BibixAst.This ->
+            EvaluationResult.Value(checkNotNull(thisValue) { "this is not available" })
+
           is BibixAst.Paren -> evaluateExpr(task, context, expr.expr(), thisValue)
 
           else -> throw AssertionError()

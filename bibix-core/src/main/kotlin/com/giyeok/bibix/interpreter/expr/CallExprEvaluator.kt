@@ -81,7 +81,8 @@ class CallExprEvaluator(
       is BibixAst.DataClassDef -> {
         val fields = paramDefs(task, context, definition.classDef.fields().toKtList())
         // TODO handle definition.classDef.body()
-        EvaluationResult.DataClassDef(context, sourceId, packageName, className, fields)
+        val bodyElems = definition.classDef.body().toKtList()
+        EvaluationResult.DataClassDef(context, sourceId, packageName, className, fields, bodyElems)
       }
 
       is BibixAst.SuperClassDef -> {
