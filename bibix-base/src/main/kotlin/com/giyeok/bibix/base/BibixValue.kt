@@ -100,7 +100,7 @@ data class NClassInstanceValue(
   val fieldValues: Map<String, BibixValue>
 ) : BibixValue() {
   constructor(name: String, fieldValues: Map<String, BibixValue>) :
-    this(name.split('.'), fieldValues)
+    this(name.split('.').map { it.trim() }, fieldValues)
 
   override fun toString(): String = "${nameTokens.joinToString(".")}($fieldValues)"
 }

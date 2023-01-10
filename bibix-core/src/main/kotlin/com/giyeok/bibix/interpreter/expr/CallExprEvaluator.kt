@@ -199,9 +199,15 @@ class CallExprEvaluator(
     returnValue: Any,
   ): BibixValue {
     when (returnValue) {
-      is BibixValue -> return returnValue
-      is BuildRuleReturn.ValueReturn -> return returnValue.value
-      is BuildRuleReturn.FailedReturn -> throw returnValue.exception
+      is BibixValue ->
+        return handleNClassInstanceValue(task, context, returnValue)
+
+      is BuildRuleReturn.ValueReturn ->
+        return handleNClassInstanceValue(task, context, returnValue.value)
+
+      is BuildRuleReturn.FailedReturn ->
+        throw returnValue.exception
+
       is BuildRuleReturn.DoneReturn ->
         throw IllegalStateException("Done is not allowed for build rule")
 
@@ -218,6 +224,19 @@ class CallExprEvaluator(
 
       else -> throw IllegalStateException("Unknown return value: $returnValue")
     }
+  }
+
+  private suspend fun handleNClassInstanceValue(
+    task: Task,
+    context: NameLookupContext,
+    value: BibixValue
+  ): BibixValue {
+    if (value !is NClassInstanceValue) {
+      return value
+    }
+    val classType = exprEvaluator.evaluateName(task, context, value.nameTokens, null)
+    check(classType is EvaluationResult.DataClassDef) { "Invalid NClassInstanceValue: $value" }
+    return ClassInstanceValue(classType.packageName, classType.className, value.fieldValues)
   }
 
   suspend fun callBuildRule(
@@ -239,14 +258,14 @@ class CallExprEvaluator(
     val buildContext = BuildContext(
       env = interpreter.buildEnv,
       fileSystem = interpreter.repo.fileSystem,
-      mainBaseDirectory = interpreter.sourceManager.getProjectRoot(MainSourceId),
+      mainBaseDirectory = sourceManager.getProjectRoot(MainSourceId),
       callerBaseDirectory = if (context.sourceId is ExternSourceId) {
-        interpreter.sourceManager.getProjectRoot(context.sourceId)
+        sourceManager.getProjectRoot(context.sourceId)
       } else {
         Path("/")
       },
       ruleDefinedDirectory = if (context.sourceId is ExternSourceId) {
-        interpreter.sourceManager.getProjectRoot(buildRule.context.sourceId)
+        sourceManager.getProjectRoot(buildRule.context.sourceId)
       } else {
         Path("/")
       },

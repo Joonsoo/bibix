@@ -22,7 +22,6 @@ val rootScript = PreloadedPlugin.fromScript(
       aarch_64,
     }
     
-    class BibixPackage(baseDirectory: directory, scriptName?: string)
     
     def glob(
       pattern: {string, set<string>}

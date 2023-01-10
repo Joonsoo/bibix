@@ -151,10 +151,13 @@ class Coercer(
 
       is DataClassType -> {
         when (value) {
-          is ClassInstanceValue ->
-            if (isValidValueOf(value, type)) {
-              return value
+          is ClassInstanceValue -> {
+            // TODO class instance coercion은 plugin에서 반환된 값에 대해서만 하면 될듯도 하고..?
+            val coercedClassValue = tryCoerceClassInstanceValue(task, context, value, type)
+            if (coercedClassValue != null) {
+              return coercedClassValue
             }
+          }
 
           else -> {}
         }
@@ -162,10 +165,12 @@ class Coercer(
 
       is SuperClassType -> {
         when (value) {
-          is ClassInstanceValue ->
+          is ClassInstanceValue -> {
             if (isValidValueOf(task, value, type)) {
-              return value
+              // 실제 Data class type에 대해서 찾아서 coerce해서 반환
+              return coerce(task, context, value, DataClassType(value.packageName, value.className))
             }
+          }
 
           else -> {}
         }
@@ -194,49 +199,107 @@ class Coercer(
     return sourceManager.getProjectRoot(sourceId).resolve(path).normalize()
   }
 
-  private fun isValidValueOf(
+  private suspend fun findDataClassDef(
+    task: Task,
+    packageName: String,
+    className: String
+  ): EvaluationResult.DataClassDef {
+    val typeDefinedContext = NameLookupContext(
+      sourceManager.getSourceIdFromPackageName(packageName)!!,
+      listOf()
+    )
+    val classDef =
+      exprEvaluator.evaluateName(task, typeDefinedContext, className.split('.'), null)
+    check(classDef is EvaluationResult.DataClassDef)
+    return classDef
+  }
+
+  private suspend fun tryCoerceClassInstanceValue(
+    task: Task,
+    context: NameLookupContext,
     value: ClassInstanceValue,
     type: DataClassType
-  ): Boolean = value.packageName == type.packageName && value.className == type.className
+  ): ClassInstanceValue? {
+    if (value.packageName != type.packageName || value.className != type.className) {
+      return null
+    }
+
+    val classDef = findDataClassDef(task, type.packageName, type.className)
+
+    val fieldDefs = classDef.params.associateBy { it.name }
+    val missingFields = fieldDefs.keys - value.fieldValues.keys
+    if (missingFields.any { !fieldDefs.getValue(it).optional }) {
+      // optional이 아닌데 빠진 필드가 있으면 실패
+      return null
+    }
+    if ((value.fieldValues.keys - fieldDefs.keys).isNotEmpty()) {
+      // 모르는 필드 이름이 있으면 실패
+      return null
+    }
+    val coercedFields = value.fieldValues.mapValues { field ->
+      val fieldType = fieldDefs.getValue(field.key).type
+      tryCoerce(task, context, field.value, fieldType)
+    }
+    if (coercedFields.any { it.value == null }) {
+      // 필드 중 coerce 실패하는 것이 있으면 실패
+      return null
+    }
+    return ClassInstanceValue(
+      value.packageName,
+      value.className,
+      coercedFields.mapValues { it.value!! })
+  }
 
   private suspend fun isValidValueOf(
     task: Task,
     value: ClassInstanceValue,
     type: SuperClassType
   ): Boolean {
-    // super class는 반드시 같은 패키지 안에 있어야 함
-    if (value.packageName != type.packageName) {
+    if (!isSubClass(task, type, DataClassType(value.packageName, value.className))) {
       return false
     }
-    val typeDefinedContext = NameLookupContext(
-      sourceManager.getSourceIdFromPackageName(type.packageName)!!,
-      listOf()
-    )
-    val valueClassName = value.className.split('.')
-    val typeClassName = type.className.split('.')
-    if (valueClassName.dropLast(1) != typeClassName.dropLast(1)) {
-      return false
-    }
-
-    val superClassDef =
-      exprEvaluator.evaluateName(task, typeDefinedContext, typeClassName, null)
-    if (superClassDef !is EvaluationResult.SuperClassDef) {
-      return false
-    }
-    // TODO recursive - superClass쪽에서 아래로 내려가야 함. data class에는 super class 정보가 없기 때문에
-    if (!superClassDef.subClasses.contains(valueClassName.last())) {
-      return false
-    }
-    // TODO move the type checking part to `isSubType`
     return true
   }
 
-  private suspend fun isSubType(task: Task, superType: BibixType, subType: BibixType): Boolean {
-    // TODO implement
-    if (superType == subType) {
-      return true
+  private suspend fun isSubClass(
+    task: Task,
+    superClass: SuperClassType,
+    dataClass: DataClassType
+  ): Boolean {
+    // super class와 data class는 반드시 같은 패키지 안에 있어야 함
+    if (superClass.packageName != dataClass.packageName) {
+      return false
     }
-    return false
+    val superClassName = superClass.className.split('.').map { it.trim() }
+    val dataClassName = dataClass.className.split('.').map { it.trim() }
+    val superClassNamespace = superClassName.dropLast(1)
+    if (superClassNamespace != dataClassName.dropLast(1)) {
+      // super class와 data 클래스는 반드시 같은 네임스페이스 안에 있어야 함
+      return false
+    }
+
+    val typContext = NameLookupContext(
+      sourceManager.getSourceIdFromPackageName(superClass.packageName)!!,
+      listOf()
+    )
+
+    suspend fun traverse(superClassName: String): Boolean {
+      val superClassDef =
+        exprEvaluator.evaluateName(task, typContext, superClassNamespace + superClassName, null)
+      if (superClassDef !is EvaluationResult.SuperClassDef) {
+        return false
+      }
+      if (superClassDef.subClasses.contains(dataClassName.last())) {
+        return true
+      }
+      return superClassDef.subClasses.any { traverse(it) }
+    }
+    return traverse(superClassName.last())
+  }
+
+  private suspend fun isSubType(task: Task, superType: BibixType, subType: BibixType): Boolean {
+    // TODO
+    return superType == subType
   }
 
   private suspend fun tryCoerceFromValue(
@@ -271,8 +334,9 @@ class Coercer(
                   val castType =
                     exprEvaluator.evaluateType(task, classDef.context, bodyElem.castTo())
                   if (isSubType(task, type, castType)) {
-                    return exprEvaluator.evaluateExpr(task, context, bodyElem.expr(), value)
+                    val cast = exprEvaluator.evaluateExpr(task, context, bodyElem.expr(), value)
                       .ensureValue()
+                    return coerce(task, context, cast, type)
                   }
                 }
 

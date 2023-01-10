@@ -11,6 +11,22 @@ val bibixPlugin = PreloadedPlugin.fromScript(
     import jvm
     import curl
     
+    class Env(os: OS, arch: Arch)
+    
+    super class OS { Linux, OSX, Windows }
+    class Linux()
+    class OSX()
+    class Windows()
+    
+    class BibixPackage(baseDirectory: directory, scriptName?: string)
+
+    enum Arch {
+      unknown,
+      x86,
+      x86_64,
+      aarch_64,
+    }
+    
     arg buildingBibixVersion: string = "${Constants.BUILDING_BIBIX_VERSION}"
     arg bibixVersion: string = "${Constants.BIBIX_VERSION}"
     

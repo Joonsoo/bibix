@@ -1,9 +1,6 @@
 package com.giyeok.bibix.interpreter.expr
 
-import com.giyeok.bibix.base.BibixValue
-import com.giyeok.bibix.base.BuildContext
-import com.giyeok.bibix.base.ClassInstanceValue
-import com.giyeok.bibix.base.StringValue
+import com.giyeok.bibix.base.*
 import com.giyeok.bibix.interpreter.testInterpreter
 import com.giyeok.bibix.plugins.Classes
 import com.giyeok.bibix.plugins.PreloadedPlugin
@@ -176,6 +173,108 @@ class ClassValueTests {
       interpreter.userBuildRequest(listOf("xxx"))
     }
   }
+
+  @Test
+  fun testNClassInstance(): Unit = runBlocking {
+    val fs = Jimfs.newFileSystem()
+
+    val script = """
+      import abc
+      
+      aaa = abc.hello("world")
+      bbb = abc.hello("earth")
+      ccc = abc.hello("error")
+      ddd = abc.hello("wrong")
+    """.trimIndent()
+    fs.getPath("/build.bbx").writeText(script)
+
+    val abcPlugin = PreloadedPlugin.fromScript(
+      "com.abc",
+      """
+        import xyz
+        
+        def hello(
+          helloTo: string
+        ): xyz.Sup = native:com.giyeok.bibix.interpreter.expr.TestPlugin4
+      """.trimIndent(),
+      Classes(TestPlugin4::class.java)
+    )
+
+    val xyzPlugin = PreloadedPlugin.fromScript(
+      "com.xyz",
+      """
+        super class Sup{Sub1, Sub2}
+        class Sub1(message: string)
+        class Sub2(another: string)
+        class NotSub(haha: string)
+      """.trimIndent(),
+      Classes()
+    )
+
+    val interpreter = testInterpreter(fs, "/", mapOf("abc" to abcPlugin, "xyz" to xyzPlugin))
+
+    assertThat(interpreter.userBuildRequest(listOf("aaa"))).isEqualTo(
+      ClassInstanceValue("com.xyz", "Sub1", mapOf("message" to StringValue("hello world~")))
+    )
+    assertThat(interpreter.userBuildRequest(listOf("bbb"))).isEqualTo(
+      ClassInstanceValue("com.xyz", "Sub2", mapOf("another" to StringValue("hello earth!")))
+    )
+    assertThrows<IllegalStateException> { interpreter.userBuildRequest(listOf("ccc")) }
+    assertThrows<IllegalStateException> { interpreter.userBuildRequest(listOf("ddd")) }
+  }
+
+  @Test
+  fun testGrandSubType(): Unit = runBlocking {
+    val fs = Jimfs.newFileSystem()
+
+    val script = """
+      import abc
+      
+      target1 = abc.ruleA("data1")
+      target2 = abc.ruleA("data2")
+      target3 = abc.ruleA("data3")
+      target4 = abc.ruleB("data1")
+      target5 = abc.ruleB("data2")
+      target6 = abc.ruleB("data3")
+      target7 = abc.ruleC("data1")
+      target8 = abc.ruleC("data2")
+      target9 = abc.ruleC("data3")
+    """.trimIndent()
+    fs.getPath("/build.bbx").writeText(script)
+
+    val abcPlugin = PreloadedPlugin.fromScript(
+      "com.abc",
+      """
+        super class Super1 { Super2, Data1 }
+        super class Super2 { Super3, Data2 }
+        super class Super3 { Data3 }
+        class Data1(hello: string)
+        class Data2(hello: string)
+        class Data3(hello: string)
+        
+        def ruleA(sel: string): Super1 = native:com.giyeok.bibix.interpreter.expr.TestPlugin5
+        def ruleB(sel: string): Super2 = native:com.giyeok.bibix.interpreter.expr.TestPlugin5
+        def ruleC(sel: string): Super3 = native:com.giyeok.bibix.interpreter.expr.TestPlugin5
+      """.trimIndent(),
+      Classes(TestPlugin5::class.java)
+    )
+
+    val interpreter = testInterpreter(fs, "/", mapOf("abc" to abcPlugin))
+
+    val data1 = ClassInstanceValue("com.abc", "Data1", mapOf("hello" to StringValue("world")))
+    val data2 = ClassInstanceValue("com.abc", "Data2", mapOf("hello" to StringValue("world")))
+    val data3 = ClassInstanceValue("com.abc", "Data3", mapOf("hello" to StringValue("world")))
+
+    assertThat(interpreter.userBuildRequest(listOf("target1"))).isEqualTo(data1)
+    assertThat(interpreter.userBuildRequest(listOf("target2"))).isEqualTo(data2)
+    assertThat(interpreter.userBuildRequest(listOf("target3"))).isEqualTo(data3)
+    assertThrows<IllegalStateException> { interpreter.userBuildRequest(listOf("target4")) }
+    assertThat(interpreter.userBuildRequest(listOf("target5"))).isEqualTo(data2)
+    assertThat(interpreter.userBuildRequest(listOf("target6"))).isEqualTo(data3)
+    assertThrows<IllegalStateException> { interpreter.userBuildRequest(listOf("target7")) }
+    assertThrows<IllegalStateException> { interpreter.userBuildRequest(listOf("target8")) }
+    assertThat(interpreter.userBuildRequest(listOf("target9"))).isEqualTo(data3)
+  }
 }
 
 class TestPlugin3 {
@@ -185,6 +284,28 @@ class TestPlugin3 {
       "cd" -> ClassInstanceValue("abc.def", "Cd", mapOf("world" to StringValue("earth")))
       "ef" -> ClassInstanceValue("abc.def", "Ef", mapOf("earth" to StringValue("hello")))
       else -> ClassInstanceValue("abc.def", "NotChild", mapOf())
+    }
+  }
+}
+
+class TestPlugin4 {
+  fun build(context: BuildContext): BibixValue {
+    return when (val helloTo = (context.arguments.getValue("helloTo") as StringValue).value) {
+      "world" -> NClassInstanceValue("xyz.Sub1", mapOf("message" to StringValue("hello $helloTo~")))
+      "error" -> NClassInstanceValue("xyz.NotSub", mapOf("haha" to StringValue("error")))
+      "wrong" -> NClassInstanceValue("xyz.Sub1", mapOf("msg" to StringValue("hello $helloTo~")))
+      else -> NClassInstanceValue("xyz.Sub2", mapOf("another" to StringValue("hello $helloTo!")))
+    }
+  }
+}
+
+class TestPlugin5 {
+  fun build(context: BuildContext): BibixValue {
+    return when (val sel = (context.arguments.getValue("sel") as StringValue).value) {
+      "data1" -> ClassInstanceValue("com.abc", "Data1", mapOf("hello" to StringValue("world")))
+      "data2" -> ClassInstanceValue("com.abc", "Data2", mapOf("hello" to StringValue("world")))
+      "data3" -> ClassInstanceValue("com.abc", "Data3", mapOf("hello" to StringValue("world")))
+      else -> throw AssertionError()
     }
   }
 }

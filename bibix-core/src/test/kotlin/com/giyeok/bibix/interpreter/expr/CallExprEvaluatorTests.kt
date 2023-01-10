@@ -71,6 +71,11 @@ class CallExprEvaluatorTests {
 
     interpreter.userBuildRequest(listOf("xxx"))
   }
+
+  @Test
+  fun testBuildRuleReturnEvalAndThen(): Unit = runBlocking {
+    TODO()
+  }
 }
 
 class TestPlugin1 {
