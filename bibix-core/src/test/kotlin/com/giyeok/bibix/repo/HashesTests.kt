@@ -1,4 +1,4 @@
-package com.giyeok.bibix.runner
+package com.giyeok.bibix.repo
 
 import com.giyeok.bibix.argPair
 import com.giyeok.bibix.argsMap

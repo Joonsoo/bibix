@@ -1,15 +1,10 @@
 package com.giyeok.bibix.repo
 
 import com.giyeok.bibix.*
-import com.giyeok.bibix.base.*
-import com.giyeok.bibix.buildscript.BuildGraph
-import com.giyeok.bibix.base.BibixRootSourceId
-import com.giyeok.bibix.base.ExternSourceId
-import com.giyeok.bibix.base.MainSourceId
-import com.giyeok.bibix.base.PreloadedSourceId
+import com.giyeok.bibix.base.BibixValue
+import com.giyeok.bibix.base.SourceId
 import com.giyeok.bibix.utils.toProto
 import com.google.protobuf.ByteString
-import com.google.protobuf.empty
 import com.google.protobuf.kotlin.toByteString
 import com.google.protobuf.util.Timestamps
 import java.io.File
@@ -18,19 +13,6 @@ import java.security.MessageDigest
 // TODO proto는 항상 같은 bytes를 반환한다는 보장이 없기 때문에 개선 필요.
 // 다만 보통은 같은 object -> 같은 해시가 나오고,
 // 혹 다른 값이 나오더라도 그냥 불필요하게 추가로 빌드하는 상황이 발생할 수 있는 것일 뿐이라 큰 문제는 아님
-
-fun SourceId.toProto(buildGraph: BuildGraph): BibixIdProto.SourceId = when (val sourceId = this) {
-  BibixRootSourceId -> sourceId { this.rootSource = empty {} }
-  MainSourceId -> sourceId { this.mainSource = empty {} }
-  is PreloadedSourceId -> sourceId {
-    this.bibixInternalSource = sourceId.name
-  }
-
-  is ExternSourceId -> {
-    val remoteSource = buildGraph.remoteSources[sourceId.externSourceId]
-    sourceId { this.remoteSource = remoteSource }
-  }
-}
 
 fun SourceId.toProto(): BibixIdProto.SourceId = sourceId {
   // TODO

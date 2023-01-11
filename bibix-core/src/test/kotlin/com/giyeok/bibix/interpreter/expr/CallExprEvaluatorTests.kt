@@ -40,8 +40,8 @@ class CallExprEvaluatorTests {
 
     val interpreter = testInterpreter(fs, "/", mapOf("abc" to abcPlugin))
 
-    assertThat(interpreter.userBuildRequest(listOf("xxx"))).isEqualTo(StringValue("hello world!"))
-    assertThat(interpreter.userBuildRequest(listOf("yyy"))).isEqualTo(StringValue("hello earth! again!"))
+    assertThat(interpreter.userBuildRequest("xxx")).isEqualTo(StringValue("hello world!"))
+    assertThat(interpreter.userBuildRequest("yyy")).isEqualTo(StringValue("hello earth! again!"))
   }
 
   @Test
@@ -69,12 +69,42 @@ class CallExprEvaluatorTests {
 
     val interpreter = testInterpreter(fs, "/", mapOf("abc" to abcPlugin))
 
-    interpreter.userBuildRequest(listOf("xxx"))
+    interpreter.userBuildRequest("xxx")
   }
 
   @Test
   fun testBuildRuleReturnEvalAndThen(): Unit = runBlocking {
-    TODO()
+    val fs = Jimfs.newFileSystem()
+
+    val script = """
+      import abc
+      
+      aaa = abc.hello3()
+    """.trimIndent()
+    fs.getPath("/build.bbx").writeText(script)
+
+    val abcPlugin = PreloadedPlugin.fromScript(
+      "com.abc.abc",
+      """
+        def depend(helloTo: string): string =
+          native:com.giyeok.bibix.interpreter.expr.TestPlugin6:depend
+        def hello3(): list<string> =
+          native:com.giyeok.bibix.interpreter.expr.TestPlugin6
+      """.trimIndent(),
+      Classes(
+        TestPlugin6::class.java
+      )
+    )
+
+    val interpreter = testInterpreter(fs, "/", mapOf("abc" to abcPlugin))
+
+    assertThat(interpreter.userBuildRequest("aaa")).isEqualTo(
+      ListValue(
+        StringValue("Hello world!"),
+        StringValue("Hello world!"),
+        StringValue("Hello world!")
+      )
+    )
   }
 }
 
@@ -99,6 +129,23 @@ class TestPlugin2 {
       val helloMessage = (result as StringValue).value
       val adding = (context.arguments.getValue("adding") as StringValue).value
       BuildRuleReturn.value(StringValue("$helloMessage $adding!"))
+    }
+  }
+}
+
+class TestPlugin6 {
+  fun depend(context: BuildContext): BibixValue {
+    val helloTo = (context.arguments.getValue("helloTo") as StringValue).value
+    return StringValue("Hello $helloTo!")
+  }
+
+  fun build(context: BuildContext): BuildRuleReturn {
+    return BuildRuleReturn.evalAndThen(
+      "depend",
+      mapOf("helloTo" to StringValue("world"))
+    ) { result ->
+      result as StringValue
+      BuildRuleReturn.value(ListValue(result, result, result))
     }
   }
 }

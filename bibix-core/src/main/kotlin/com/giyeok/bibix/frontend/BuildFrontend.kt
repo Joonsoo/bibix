@@ -3,8 +3,9 @@ package com.giyeok.bibix.frontend
 import com.giyeok.bibix.base.*
 import com.giyeok.bibix.interpreter.BibixInterpreter
 import com.giyeok.bibix.interpreter.BibixProject
-import com.giyeok.bibix.interpreter.coroutine.QueuedCoroutineDispatcher
+import com.giyeok.bibix.interpreter.coroutine.TaskElement
 import com.giyeok.bibix.interpreter.coroutine.ThreadPool
+import com.giyeok.bibix.interpreter.task.Task
 import com.giyeok.bibix.plugins.PreloadedPlugin
 import com.giyeok.bibix.plugins.bibix.bibixPlugin
 import com.giyeok.bibix.plugins.curl.curlPlugin
@@ -37,15 +38,8 @@ class BuildFrontend(
 
   private val threadPool = ThreadPool(getMaxThreads())
 
-  val interpreter = BibixInterpreter(
-    buildEnv,
-    preloadedPlugins,
-    threadPool,
-    mainProject,
-    repo,
-    threadPool,
-    actionArgs
-  )
+  val interpreter =
+    BibixInterpreter(buildEnv, preloadedPlugins, mainProject, repo, threadPool, actionArgs)
 
   private fun getMaxThreads(): Int {
     val maxThreads = repo.runConfig.maxThreads
@@ -75,17 +69,14 @@ class BuildFrontend(
   }
 
   fun buildTargets(targetNames: List<String>): Map<String, BibixValue> {
-    val coroutineDispatcher = QueuedCoroutineDispatcher(threadPool)
-
-    val deferred = CoroutineScope(coroutineDispatcher).async {
+    val deferred = CoroutineScope(threadPool + TaskElement(Task.RootTask)).async {
       targetNames.map { targetName ->
-        val targetNameTokens = targetName.split('.').map { it.trim() }
-        async { targetName to interpreter.userBuildRequest(targetNameTokens) }
-      }.awaitAll().toMap()
+        async { targetName to interpreter.userBuildRequest(targetName) }
+      }.awaitAll()
     }
 
-    coroutineDispatcher.waitUntilQueueIsEmpty()
+    threadPool.processTasks(deferred.job)
 
-    return runBlocking { deferred.await() }
+    return runBlocking { deferred.await().toMap() }
   }
 }

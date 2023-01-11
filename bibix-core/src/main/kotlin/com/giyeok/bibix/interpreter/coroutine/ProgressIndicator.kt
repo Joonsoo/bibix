@@ -1,82 +1,46 @@
 package com.giyeok.bibix.interpreter.coroutine
 
 import com.giyeok.bibix.base.ProgressLogger
-import com.giyeok.bibix.runner.BuildTaskRoutineId
+import com.giyeok.bibix.interpreter.task.Task
 import java.time.Instant
 
+// Task별로 시작 시각 -> 종료 시각 기록
+// Thread별로 거쳐간 Task들(과 각각의 시작/종료 시각), 현재 상태
+// TaskRelGraph와 연동해야 할까? Task간의 관계..
 interface ProgressIndicatorContainer {
   fun notifyUpdated(progressIndicator: ProgressIndicator)
 
   fun ofCurrentThread(): ProgressIndicator
 }
 
-interface ProgressIndicator : ProgressLogger {
-  val isFinished: Boolean
+data class ThreadState(val task: Task, val isActive: Boolean, val lastMessage: ProgressMessage)
 
-  fun markStarted(task: BuildTaskRoutineId)
-  override fun logInfo(message: String)
-  override fun logError(message: String)
-  fun updateProgressDescription(description: String)
-  fun markSuspended()
-  fun markFinished()
+data class ProgressMessage(val time: Instant, val level: String, val message: String)
 
-  fun routineIdAndProgress(): Pair<BuildTaskRoutineId, String>?
-}
+class ProgressIndicator(val container: ProgressIndicatorContainer, val threadIdx: Int) :
+  ProgressLogger {
+  private var task: Task? = null
+  private var isActive: Boolean = false
+  private var lastMessage: ProgressMessage = ProgressMessage(Instant.now(), "D", "Created")
 
-class ProgressIndicatorImpl(val container: ProgressIndicatorContainer, val index: Int) :
-  ProgressIndicator, ProgressLogger {
-  private var routineId: BuildTaskRoutineId? = null
-  private var startTime: Instant? = null
-  private var endTime: Instant? = null
-  private var description: String? = null
+  fun setTask(task: Task) = synchronized(this) {
+    this.task = task
+    this.isActive = true
+  }
 
-  override val isFinished: Boolean get() = endTime != null
+  fun setFinished() = synchronized(this) {
+    this.isActive = false
+  }
 
-  override fun markStarted(task: BuildTaskRoutineId) {
-    synchronized(this) {
-      this.routineId = task
-      this.startTime = Instant.now()
-      this.endTime = null
-      this.description = "Starting..."
-    }
+  override fun logInfo(message: String) = synchronized(this) {
+    this.lastMessage = ProgressMessage(Instant.now(), "I", message)
     container.notifyUpdated(this)
   }
 
-  override fun logInfo(message: String) {
-    // TODO
-  }
-
-  override fun logError(message: String) {
-    synchronized(this) {
-      this.description = message
-    }
+  override fun logError(message: String) = synchronized(this) {
+    this.lastMessage = ProgressMessage(Instant.now(), "I", message)
     container.notifyUpdated(this)
   }
 
-  override fun updateProgressDescription(description: String) {
-    synchronized(this) {
-      this.description = description
-    }
-    container.notifyUpdated(this)
-  }
-
-  override fun markSuspended() {
-    synchronized(this) {
-      this.endTime = Instant.now()
-      this.description = "Suspended..."
-    }
-    container.notifyUpdated(this)
-  }
-
-  override fun markFinished() {
-    synchronized(this) {
-      this.endTime = Instant.now()
-      this.description = "Finished"
-    }
-    container.notifyUpdated(this)
-  }
-
-  override fun routineIdAndProgress(): Pair<BuildTaskRoutineId, String>? = synchronized(this) {
-    if (routineId == null) null else Pair(routineId!!, description!!)
-  }
+  fun toThreadState(): ThreadState? = task?.let { ThreadState(it, isActive, lastMessage) }
 }

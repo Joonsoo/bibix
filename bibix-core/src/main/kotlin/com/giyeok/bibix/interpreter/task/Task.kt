@@ -4,6 +4,8 @@ import com.giyeok.bibix.base.BibixValue
 import com.giyeok.bibix.base.SourceId
 
 sealed class Task {
+  object RootTask : Task()
+
   data class UserBuildRequest(val name: List<String>) : Task()
 
   // importDefId는 import def의 ast id

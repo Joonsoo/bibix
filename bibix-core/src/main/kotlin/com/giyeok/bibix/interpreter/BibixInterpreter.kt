@@ -4,32 +4,28 @@ import com.giyeok.bibix.base.BibixValue
 import com.giyeok.bibix.base.BuildEnv
 import com.giyeok.bibix.base.MainSourceId
 import com.giyeok.bibix.base.NoneValue
-import com.giyeok.bibix.interpreter.coroutine.Memo
 import com.giyeok.bibix.interpreter.coroutine.TaskElement
-import com.giyeok.bibix.interpreter.expr.VarsManager
-import com.giyeok.bibix.interpreter.expr.ExprEvaluator
-import com.giyeok.bibix.interpreter.expr.NameLookup
-import com.giyeok.bibix.interpreter.expr.Definition
-import com.giyeok.bibix.interpreter.expr.NameLookupContext
-import com.giyeok.bibix.interpreter.expr.NameLookupTable
 import com.giyeok.bibix.interpreter.task.Task
 import com.giyeok.bibix.interpreter.task.TaskRelGraph
 import com.giyeok.bibix.plugins.PreloadedPlugin
 import com.giyeok.bibix.repo.Repo
 import com.giyeok.bibix.interpreter.coroutine.ProgressIndicatorContainer
+import com.giyeok.bibix.interpreter.expr.*
 import com.google.common.annotations.VisibleForTesting
 import kotlinx.coroutines.*
+import java.util.concurrent.ConcurrentHashMap
 
 class BibixInterpreter(
   val buildEnv: BuildEnv,
   val preloadedPlugins: Map<String, PreloadedPlugin>,
-  val memo: Memo,
   val mainProject: BibixProject,
   val repo: Repo,
   val progressIndicatorContainer: ProgressIndicatorContainer,
   val actionArgs: List<String>,
 ) {
   private val g = TaskRelGraph()
+
+  val taskRelGraph get() = g
 
   private val varsManager = VarsManager()
 
@@ -39,7 +35,7 @@ class BibixInterpreter(
   @VisibleForTesting
   val sourceManager = SourceManager()
 
-  private val exprEvaluator = ExprEvaluator(this, g, sourceManager, varsManager, memo)
+  private val exprEvaluator = ExprEvaluator(this, g, sourceManager, varsManager)
 
   private val nameLookup =
     NameLookup(g, nameLookupTable, preloadedPlugins, exprEvaluator, sourceManager)
@@ -52,6 +48,9 @@ class BibixInterpreter(
       }
     }
   }
+
+  suspend fun userBuildRequest(name: String): BibixValue =
+    userBuildRequest(name.split('.').map { it.trim() })
 
   suspend fun userBuildRequest(nameTokens: List<String>): BibixValue {
     val task = Task.UserBuildRequest(nameTokens)

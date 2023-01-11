@@ -26,11 +26,11 @@ class EnumValueTests {
 
     val interpreter = testInterpreter(fs, "/", mapOf())
 
-    assertThat(interpreter.userBuildRequest(listOf("xxx"))).isEqualTo(
+    assertThat(interpreter.userBuildRequest("xxx")).isEqualTo(
       EnumValue("abc.def", "MyEnum", "Hello")
     )
     assertThrows<IllegalStateException>("Invalid enum value name") {
-      interpreter.userBuildRequest(listOf("yyy"))
+      interpreter.userBuildRequest("yyy")
     }
   }
 
@@ -48,7 +48,7 @@ class EnumValueTests {
     val interpreter = testInterpreter(fs, "/", mapOf())
 
     assertThrows<IllegalStateException>("Package name for enum type main:MyEnum not specified") {
-      interpreter.userBuildRequest(listOf("xxx"))
+      interpreter.userBuildRequest("xxx")
     }
   }
 }

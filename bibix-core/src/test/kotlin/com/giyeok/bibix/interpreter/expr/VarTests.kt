@@ -27,7 +27,7 @@ class VarTests {
 
     val interpreter = testInterpreter(fs, "/", mapOf())
 
-    assertThat(interpreter.userBuildRequest(listOf("msg"))).isEqualTo(StringValue("var value"))
+    assertThat(interpreter.userBuildRequest("msg")).isEqualTo(StringValue("var value"))
   }
 
   @Test
@@ -53,7 +53,7 @@ class VarTests {
 
     val interpreter = testInterpreter(fs, "/", mapOf("xyz" to xyz))
 
-    assertThat(interpreter.userBuildRequest(listOf("msg"))).isEqualTo(StringValue("new value"))
+    assertThat(interpreter.userBuildRequest("msg")).isEqualTo(StringValue("new value"))
   }
 
   @Test

@@ -131,7 +131,6 @@ class NameLookup(
     return g.withTask(
       requester,
       Task.ResolveImportSource(context.sourceId, importSource.id()),
-      ::process
-    )
+    ) { task -> process(task) }
   }
 }

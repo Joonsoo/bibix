@@ -53,7 +53,7 @@ class ClassValueTests {
 
     val interpreter = testInterpreter(fs, "/", mapOf("abc" to abcPlugin, "xyz" to xyzPlugin))
 
-    assertThat(interpreter.userBuildRequest(listOf("xxx"))).isEqualTo(
+    assertThat(interpreter.userBuildRequest("xxx")).isEqualTo(
       ClassInstanceValue(
         "abc.def", "Abc", mapOf(
           "name" to StringValue("joonsoo"),
@@ -61,7 +61,7 @@ class ClassValueTests {
         )
       )
     )
-    assertThat(interpreter.userBuildRequest(listOf("aaa"))).isEqualTo(
+    assertThat(interpreter.userBuildRequest("aaa")).isEqualTo(
       ClassInstanceValue(
         "abc.def", "Abc", mapOf(
           "name" to StringValue("def"),
@@ -69,14 +69,14 @@ class ClassValueTests {
         )
       )
     )
-    assertThat(interpreter.userBuildRequest(listOf("yyy"))).isEqualTo(
+    assertThat(interpreter.userBuildRequest("yyy")).isEqualTo(
       ClassInstanceValue(
         "com.abc", "Qwe", mapOf(
           "bye" to StringValue("google"),
         )
       )
     )
-    assertThat(interpreter.userBuildRequest(listOf("zzz"))).isEqualTo(
+    assertThat(interpreter.userBuildRequest("zzz")).isEqualTo(
       ClassInstanceValue(
         "com.abc", "Rty", mapOf(
           "hi" to ClassInstanceValue("com.xyz", "Xyz", mapOf("msg" to StringValue("farewell!")))
@@ -116,10 +116,10 @@ class ClassValueTests {
 
     val interpreter = testInterpreter(fs, "/", mapOf("abc" to abcPlugin))
 
-    interpreter.userBuildRequest(listOf("xxx"))
-    interpreter.userBuildRequest(listOf("yyy"))
-    interpreter.userBuildRequest(listOf("zzz"))
-    assertThrows<IllegalStateException> { interpreter.userBuildRequest(listOf("aaa")) }
+    interpreter.userBuildRequest("xxx")
+    interpreter.userBuildRequest("yyy")
+    interpreter.userBuildRequest("zzz")
+    assertThrows<IllegalStateException> { interpreter.userBuildRequest("aaa") }
   }
 
   @Test
@@ -142,16 +142,16 @@ class ClassValueTests {
     val interpreter = testInterpreter(fs, "/", mapOf())
 
     assertThrows<IllegalStateException>("Missing parameters") {
-      interpreter.userBuildRequest(listOf("xxx"))
+      interpreter.userBuildRequest("xxx")
     }
     assertThrows<IllegalStateException>("Coercion failed") {
-      interpreter.userBuildRequest(listOf("yyy"))
+      interpreter.userBuildRequest("yyy")
     }
     assertThrows<IllegalStateException>("Unknown positional parameters") {
-      interpreter.userBuildRequest(listOf("aaa"))
+      interpreter.userBuildRequest("aaa")
     }
     assertThrows<IllegalStateException>("Unknown parameters") {
-      interpreter.userBuildRequest(listOf("zzz"))
+      interpreter.userBuildRequest("zzz")
     }
   }
 
@@ -170,7 +170,7 @@ class ClassValueTests {
     val interpreter = testInterpreter(fs, "/", mapOf())
 
     assertThrows<IllegalStateException>("Package name for class main:Abc not specified") {
-      interpreter.userBuildRequest(listOf("xxx"))
+      interpreter.userBuildRequest("xxx")
     }
   }
 
@@ -213,14 +213,14 @@ class ClassValueTests {
 
     val interpreter = testInterpreter(fs, "/", mapOf("abc" to abcPlugin, "xyz" to xyzPlugin))
 
-    assertThat(interpreter.userBuildRequest(listOf("aaa"))).isEqualTo(
+    assertThat(interpreter.userBuildRequest("aaa")).isEqualTo(
       ClassInstanceValue("com.xyz", "Sub1", mapOf("message" to StringValue("hello world~")))
     )
-    assertThat(interpreter.userBuildRequest(listOf("bbb"))).isEqualTo(
+    assertThat(interpreter.userBuildRequest("bbb")).isEqualTo(
       ClassInstanceValue("com.xyz", "Sub2", mapOf("another" to StringValue("hello earth!")))
     )
-    assertThrows<IllegalStateException> { interpreter.userBuildRequest(listOf("ccc")) }
-    assertThrows<IllegalStateException> { interpreter.userBuildRequest(listOf("ddd")) }
+    assertThrows<IllegalStateException> { interpreter.userBuildRequest("ccc") }
+    assertThrows<IllegalStateException> { interpreter.userBuildRequest("ddd") }
   }
 
   @Test
@@ -265,15 +265,15 @@ class ClassValueTests {
     val data2 = ClassInstanceValue("com.abc", "Data2", mapOf("hello" to StringValue("world")))
     val data3 = ClassInstanceValue("com.abc", "Data3", mapOf("hello" to StringValue("world")))
 
-    assertThat(interpreter.userBuildRequest(listOf("target1"))).isEqualTo(data1)
-    assertThat(interpreter.userBuildRequest(listOf("target2"))).isEqualTo(data2)
-    assertThat(interpreter.userBuildRequest(listOf("target3"))).isEqualTo(data3)
-    assertThrows<IllegalStateException> { interpreter.userBuildRequest(listOf("target4")) }
-    assertThat(interpreter.userBuildRequest(listOf("target5"))).isEqualTo(data2)
-    assertThat(interpreter.userBuildRequest(listOf("target6"))).isEqualTo(data3)
-    assertThrows<IllegalStateException> { interpreter.userBuildRequest(listOf("target7")) }
-    assertThrows<IllegalStateException> { interpreter.userBuildRequest(listOf("target8")) }
-    assertThat(interpreter.userBuildRequest(listOf("target9"))).isEqualTo(data3)
+    assertThat(interpreter.userBuildRequest("target1")).isEqualTo(data1)
+    assertThat(interpreter.userBuildRequest("target2")).isEqualTo(data2)
+    assertThat(interpreter.userBuildRequest("target3")).isEqualTo(data3)
+    assertThrows<IllegalStateException> { interpreter.userBuildRequest("target4") }
+    assertThat(interpreter.userBuildRequest("target5")).isEqualTo(data2)
+    assertThat(interpreter.userBuildRequest("target6")).isEqualTo(data3)
+    assertThrows<IllegalStateException> { interpreter.userBuildRequest("target7") }
+    assertThrows<IllegalStateException> { interpreter.userBuildRequest("target8") }
+    assertThat(interpreter.userBuildRequest("target9")).isEqualTo(data3)
   }
 }
 

@@ -2,19 +2,20 @@ package com.giyeok.bibix.interpreter.expr
 
 import com.giyeok.bibix.ast.BibixAst
 import com.giyeok.bibix.base.*
-import com.giyeok.bibix.interpreter.*
-import com.giyeok.bibix.interpreter.coroutine.Memo
+import com.giyeok.bibix.interpreter.BibixInterpreter
+import com.giyeok.bibix.interpreter.SourceManager
 import com.giyeok.bibix.interpreter.task.Task
 import com.giyeok.bibix.interpreter.task.TaskRelGraph
 import com.giyeok.bibix.utils.getOrNull
 import com.giyeok.bibix.utils.toKtList
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 
 class ExprEvaluator(
   private val interpreter: BibixInterpreter,
   private val g: TaskRelGraph,
   private val sourceManager: SourceManager,
   private val varsManager: VarsManager,
-  private val memo: Memo,
 ) {
   private val callExprEvaluator = CallExprEvaluator(interpreter, g, sourceManager, this)
   private val coercer = Coercer(sourceManager, this)
@@ -194,75 +195,80 @@ class ExprEvaluator(
     expr: BibixAst.Expr,
     thisValue: BibixValue?,
   ): EvaluationResult =
-    g.withTask(requester, Task.EvalExpr(context.sourceId, expr.id(), thisValue)) { task ->
-      memo.memoize(context.sourceId, expr.id(), thisValue) {
-        when (expr) {
-          is BibixAst.CastExpr -> {
-            // TODO concurrent
-            val value = evaluateExpr(task, context, expr.expr(), thisValue).ensureValue()
-            val type = evaluateType(task, context, expr.castTo())
-            EvaluationResult.Value(coerce(task, context, value, type))
-          }
+    g.withTaskMemo(requester, Task.EvalExpr(context.sourceId, expr.id(), thisValue)) { task ->
+      when (expr) {
+        is BibixAst.CastExpr -> {
+          // Run concurrently
+          val value = async { evaluateExpr(task, context, expr.expr(), thisValue).ensureValue() }
+          val type = async { evaluateType(task, context, expr.castTo()) }
+          EvaluationResult.Value(coerce(task, context, value.await(), type.await()))
+        }
 
-          is BibixAst.MergeOp -> {
-            // TODO concurrent
-            val lhs = evaluateExpr(task, context, expr.lhs(), thisValue).ensureValue()
-            val rhs = evaluateExpr(task, context, expr.rhs(), thisValue).ensureValue()
-            val mergedValue = mergeValue(lhs, rhs)
-            EvaluationResult.Value(mergedValue)
-          }
+        is BibixAst.MergeOp -> {
+          // Run concurrently
+          val lhs = async { evaluateExpr(task, context, expr.lhs(), thisValue).ensureValue() }
+          val rhs = async { evaluateExpr(task, context, expr.rhs(), thisValue).ensureValue() }
+          val mergedValue = mergeValue(lhs.await(), rhs.await())
+          EvaluationResult.Value(mergedValue)
+        }
 
-          is BibixAst.CallExpr ->
-            EvaluationResult.Value(
-              callExprEvaluator.evaluateCallExpr(task, context, expr, thisValue)
-            )
+        is BibixAst.CallExpr ->
+          EvaluationResult.Value(
+            callExprEvaluator.evaluateCallExpr(task, context, expr, thisValue)
+          )
 
-          is BibixAst.MemberAccess -> {
-            when (val target = evaluateExpr(task, context, expr.target(), thisValue)) {
-              is EvaluationResult.Namespace ->
-                evaluateName(task, target.context, listOf(expr.name()), thisValue)
+        is BibixAst.MemberAccess -> {
+          when (val target = evaluateExpr(task, context, expr.target(), thisValue)) {
+            is EvaluationResult.Namespace ->
+              evaluateName(task, target.context, listOf(expr.name()), thisValue)
 
-              is EvaluationResult.Value ->
-                EvaluationResult.Value(findMember(expr.target(), target.value, expr.name()))
+            is EvaluationResult.Value ->
+              EvaluationResult.Value(findMember(expr.target(), target.value, expr.name()))
 
-              is EvaluationResult.EnumDef -> {
-                check(target.enumValues.contains(expr.name())) { "Invalid enum value name" }
-                EvaluationResult.Value(EnumValue(target.packageName, target.enumName, expr.name()))
-              }
-
-              else -> throw IllegalStateException("Invalid access to ${expr.name()} on ${expr.target()}")
+            is EvaluationResult.EnumDef -> {
+              check(target.enumValues.contains(expr.name())) { "Invalid enum value name" }
+              EvaluationResult.Value(EnumValue(target.packageName, target.enumName, expr.name()))
             }
+
+            else -> throw IllegalStateException("Invalid access to ${expr.name()} on ${expr.target()}")
           }
+        }
 
-          is BibixAst.NameRef ->
-            evaluateName(task, context, listOf(expr.name()), thisValue)
+        is BibixAst.NameRef ->
+          evaluateName(task, context, listOf(expr.name()), thisValue)
 
-          is BibixAst.ListExpr -> {
-            // TODO concurrent
-            val elemValues = expr.elems().toKtList()
-              .map { elemExpr -> evaluateExpr(task, context, elemExpr, thisValue).ensureValue() }
-            EvaluationResult.Value(ListValue(elemValues))
-          }
+        is BibixAst.ListExpr -> {
+          // Run concurrently
+          val elemValues = expr.elems().toKtList().map { elemExpr ->
+            async {
+              evaluateExpr(task, context, elemExpr, thisValue).ensureValue()
+            }
+          }.awaitAll()
+          EvaluationResult.Value(ListValue(elemValues))
+        }
 
-          is BibixAst.TupleExpr -> {
-            // TODO concurrent
-            val elemValues = expr.elems().toKtList()
-              .map { elemExpr -> evaluateExpr(task, context, elemExpr, thisValue).ensureValue() }
-            EvaluationResult.Value(TupleValue(elemValues))
-          }
+        is BibixAst.TupleExpr -> {
+          // Run concurrently
+          val elemValues = expr.elems().toKtList().map { elemExpr ->
+            async { evaluateExpr(task, context, elemExpr, thisValue).ensureValue() }
+          }.awaitAll()
+          EvaluationResult.Value(TupleValue(elemValues))
+        }
 
-          is BibixAst.NamedTupleExpr -> {
-            // TODO concurrent
-            val elemValues = expr.elems().toKtList()
-              .map { pair ->
-                pair.name() to evaluateExpr(task, context, pair.expr(), thisValue).ensureValue()
-              }
-            EvaluationResult.Value(NamedTupleValue(elemValues))
-          }
+        is BibixAst.NamedTupleExpr -> {
+          // Run concurrently
+          val elemValues = expr.elems().toKtList().map { pair ->
+            pair.name() to async {
+              evaluateExpr(task, context, pair.expr(), thisValue).ensureValue()
+            }
+          }.map { (name, value) -> name to value.await() }
+          EvaluationResult.Value(NamedTupleValue(elemValues))
+        }
 
-          is BibixAst.StringLiteral -> {
-            // TODO concurrent
-            val elems = expr.elems().toKtList().map { elem ->
+        is BibixAst.StringLiteral -> {
+          // Run concurrently
+          val elems = expr.elems().toKtList().map { elem ->
+            async {
               when (elem) {
                 is BibixAst.JustChar -> elem.chr().toString()
 
@@ -291,22 +297,22 @@ class ExprEvaluator(
                 else -> throw AssertionError()
               }
             }
-            EvaluationResult.Value(StringValue(elems.joinToString("")))
-          }
-
-          is BibixAst.BooleanLiteral ->
-            EvaluationResult.Value(BooleanValue(expr.value()))
-
-          is BibixAst.NoneLiteral ->
-            EvaluationResult.Value(NoneValue)
-
-          is BibixAst.This ->
-            EvaluationResult.Value(checkNotNull(thisValue) { "this is not available" })
-
-          is BibixAst.Paren -> evaluateExpr(task, context, expr.expr(), thisValue)
-
-          else -> throw AssertionError()
+          }.awaitAll()
+          EvaluationResult.Value(StringValue(elems.joinToString("")))
         }
+
+        is BibixAst.BooleanLiteral ->
+          EvaluationResult.Value(BooleanValue(expr.value()))
+
+        is BibixAst.NoneLiteral ->
+          EvaluationResult.Value(NoneValue)
+
+        is BibixAst.This ->
+          EvaluationResult.Value(checkNotNull(thisValue) { "this is not available" })
+
+        is BibixAst.Paren -> evaluateExpr(task, context, expr.expr(), thisValue)
+
+        else -> throw AssertionError()
       }
     }
 

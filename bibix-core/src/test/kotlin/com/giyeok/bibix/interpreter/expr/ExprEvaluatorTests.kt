@@ -33,25 +33,25 @@ class ExprEvaluatorTests {
 
     val interpreter = testInterpreter(fs, "/", mapOf())
 
-    assertThat(interpreter.userBuildRequest(listOf("aaa"))).isEqualTo(
+    assertThat(interpreter.userBuildRequest("aaa")).isEqualTo(
       ListValue(StringValue("hello"), StringValue("world"))
     )
-    assertThat(interpreter.userBuildRequest(listOf("bbb"))).isEqualTo(
+    assertThat(interpreter.userBuildRequest("bbb")).isEqualTo(
       TupleValue(StringValue("good"), StringValue("bibix"))
     )
-    assertThat(interpreter.userBuildRequest(listOf("ccc"))).isEqualTo(
+    assertThat(interpreter.userBuildRequest("ccc")).isEqualTo(
       NamedTupleValue("planet" to StringValue("earth"), "person" to StringValue("joonsoo"))
     )
-    assertThat(interpreter.userBuildRequest(listOf("ddd"))).isEqualTo(StringValue("earth"))
-    assertThat(interpreter.userBuildRequest(listOf("eee"))).isEqualTo(StringValue("Hello earth!"))
-    assertThat(interpreter.userBuildRequest(listOf("fff"))).isEqualTo(StringValue("Hello joonsoo!"))
-    assertThat(interpreter.userBuildRequest(listOf("ggg"))).isEqualTo(BooleanValue(true))
-    assertThat(interpreter.userBuildRequest(listOf("hhh"))).isEqualTo(BooleanValue(false))
-    assertThat(interpreter.userBuildRequest(listOf("iii"))).isEqualTo(
+    assertThat(interpreter.userBuildRequest("ddd")).isEqualTo(StringValue("earth"))
+    assertThat(interpreter.userBuildRequest("eee")).isEqualTo(StringValue("Hello earth!"))
+    assertThat(interpreter.userBuildRequest("fff")).isEqualTo(StringValue("Hello joonsoo!"))
+    assertThat(interpreter.userBuildRequest("ggg")).isEqualTo(BooleanValue(true))
+    assertThat(interpreter.userBuildRequest("hhh")).isEqualTo(BooleanValue(false))
+    assertThat(interpreter.userBuildRequest("iii")).isEqualTo(
       ListValue(BooleanValue(true), BooleanValue(false))
     )
-    assertThat(interpreter.userBuildRequest(listOf("jjj"))).isEqualTo(NoneValue)
-    assertThat(interpreter.userBuildRequest(listOf("xxx"))).isEqualTo(StringValue("hello"))
+    assertThat(interpreter.userBuildRequest("jjj")).isEqualTo(NoneValue)
+    assertThat(interpreter.userBuildRequest("xxx")).isEqualTo(StringValue("hello"))
   }
 
   @Test
@@ -69,17 +69,17 @@ class ExprEvaluatorTests {
 
     val interpreter = testInterpreter(fs, "/", mapOf())
 
-    assertThat(interpreter.userBuildRequest(listOf("aaa"))).isEqualTo(StringValue("hello world!"))
-    assertThat(interpreter.userBuildRequest(listOf("bbb"))).isEqualTo(
+    assertThat(interpreter.userBuildRequest("aaa")).isEqualTo(StringValue("hello world!"))
+    assertThat(interpreter.userBuildRequest("bbb")).isEqualTo(
       ListValue(StringValue("hello"), StringValue("world"), StringValue("everyone"))
     )
-    assertThat(interpreter.userBuildRequest(listOf("ccc"))).isEqualTo(
+    assertThat(interpreter.userBuildRequest("ccc")).isEqualTo(
       ListValue(StringValue("hello"), StringValue("world"))
     )
-    assertThat(interpreter.userBuildRequest(listOf("ddd"))).isEqualTo(
+    assertThat(interpreter.userBuildRequest("ddd")).isEqualTo(
       ListValue(StringValue("hello"))
     )
-    assertThat(interpreter.userBuildRequest(listOf("eee"))).isEqualTo(
+    assertThat(interpreter.userBuildRequest("eee")).isEqualTo(
       ListValue(TupleValue(StringValue("hello"), StringValue("world")), StringValue("good"))
     )
   }
@@ -111,11 +111,11 @@ class ExprEvaluatorTests {
 
     val interpreter = testInterpreter(fs, "/", mapOf())
 
-    assertThat(interpreter.userBuildRequest(listOf("aaa"))).isEqualTo(PathValue(fs.getPath("/hello")))
-    assertThat(interpreter.userBuildRequest(listOf("bbb"))).isEqualTo(StringValue("Xyz says good"))
-    assertThat(interpreter.userBuildRequest(listOf("ccc"))).isEqualTo(
+    assertThat(interpreter.userBuildRequest("aaa")).isEqualTo(PathValue(fs.getPath("/hello")))
+    assertThat(interpreter.userBuildRequest("bbb")).isEqualTo(StringValue("Xyz says good"))
+    assertThat(interpreter.userBuildRequest("ccc")).isEqualTo(
       ClassInstanceValue("abc.def", "Xyz", mapOf("message" to StringValue("Hello world")))
     )
-    assertThat(interpreter.userBuildRequest(listOf("ddd"))).isEqualTo(StringValue("Abc is called world"))
+    assertThat(interpreter.userBuildRequest("ddd")).isEqualTo(StringValue("Abc is called world"))
   }
 }

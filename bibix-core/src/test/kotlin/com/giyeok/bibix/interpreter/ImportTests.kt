@@ -65,11 +65,11 @@ class ImportTests {
 
     val interpreter = testInterpreter(fs, "/", mapOf("xyz" to xyzPlugin, "yza" to yzaPlugin))
 
-    assertThat(interpreter.userBuildRequest(listOf("abc"))).isEqualTo(StringValue("good!"))
-    assertThat(interpreter.userBuildRequest(listOf("bcd"))).isEqualTo(StringValue("earth"))
-    assertThat(interpreter.userBuildRequest(listOf("xxx"))).isEqualTo(StringValue("earth"))
-    assertThat(interpreter.userBuildRequest(listOf("yyy"))).isEqualTo(StringValue("earth"))
-    assertThat(interpreter.userBuildRequest(listOf("zzz"))).isEqualTo(StringValue("moon"))
+    assertThat(interpreter.userBuildRequest("abc")).isEqualTo(StringValue("good!"))
+    assertThat(interpreter.userBuildRequest("bcd")).isEqualTo(StringValue("earth"))
+    assertThat(interpreter.userBuildRequest("xxx")).isEqualTo(StringValue("earth"))
+    assertThat(interpreter.userBuildRequest("yyy")).isEqualTo(StringValue("earth"))
+    assertThat(interpreter.userBuildRequest("zzz")).isEqualTo(StringValue("moon"))
     assertThat(interpreter.nameLookupTable.definitions.keys).containsExactly(
       CName(MainSourceId, "xyz"),
       CName(MainSourceId, "azy"),
@@ -157,11 +157,11 @@ class ImportTests {
 
     val interpreter = testInterpreter(fs, "/", mapOf())
 
-    assertThat(interpreter.userBuildRequest(listOf("xxx"))).isEqualTo(StringValue("earth!"))
-    assertThat(interpreter.userBuildRequest(listOf("hug"))).isEqualTo(StringValue("huge"))
-    assertThat(interpreter.userBuildRequest(listOf("ddd"))).isEqualTo(StringValue("has moon"))
-    assertThat(interpreter.userBuildRequest(listOf("uni"))).isEqualTo(StringValue("huge"))
-    assertThat(interpreter.userBuildRequest(listOf("ear"))).isEqualTo(StringValue("has moon"))
+    assertThat(interpreter.userBuildRequest("xxx")).isEqualTo(StringValue("earth!"))
+    assertThat(interpreter.userBuildRequest("hug")).isEqualTo(StringValue("huge"))
+    assertThat(interpreter.userBuildRequest("ddd")).isEqualTo(StringValue("has moon"))
+    assertThat(interpreter.userBuildRequest("uni")).isEqualTo(StringValue("huge"))
+    assertThat(interpreter.userBuildRequest("ear")).isEqualTo(StringValue("has moon"))
     assertThat(interpreter.nameLookupTable.definitions.keys).containsExactly(
       CName(MainSourceId, "xyz"),
       CName(MainSourceId, "qqq"),
@@ -233,8 +233,8 @@ class ImportTests {
 
     val interpreter = testInterpreter(fs, "/", mapOf("xyz" to xyzPlugin))
 
-    assertThat(interpreter.userBuildRequest(listOf("aaa", "abc"))).isEqualTo(StringValue("good!"))
-    assertThat(interpreter.userBuildRequest(listOf("bcd"))).isEqualTo(StringValue("hi!"))
+    assertThat(interpreter.userBuildRequest("aaa.abc")).isEqualTo(StringValue("good!"))
+    assertThat(interpreter.userBuildRequest("bcd")).isEqualTo(StringValue("hi!"))
   }
 }
 

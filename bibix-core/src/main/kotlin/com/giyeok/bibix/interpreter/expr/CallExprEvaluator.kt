@@ -15,6 +15,8 @@ import com.giyeok.bibix.utils.getOrNull
 import com.giyeok.bibix.utils.toArgsMap
 import com.giyeok.bibix.utils.toHexString
 import com.giyeok.bibix.utils.toKtList
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.async
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import org.codehaus.plexus.classworlds.ClassWorld
@@ -150,6 +152,9 @@ class CallExprEvaluator(
     return ActionRuleDef.UserActionRuleDef(defContext, params, realm, clsName, methodName)
   }
 
+  suspend fun <K, V> Map<K, Deferred<V>>.awaitAllValues(): Map<K, V> =
+    this.mapValues { (_, deferred) -> deferred.await() }
+
   private suspend fun organizeParams(
     requester: Task,
     context: NameLookupContext,
@@ -177,19 +182,21 @@ class CallExprEvaluator(
       val defaultParamsMap =
         unspecifiedParams.associateWith { name -> namedParams.getValue(name) }
 
-      // TODO concurrent
+      // Run concurrently
       val paramValues = (posParamsMap + namedParams).mapValues { (_, valueExpr) ->
-        exprEvaluator.evaluateExpr(task, context, valueExpr, thisValue).ensureValue()
+        async { exprEvaluator.evaluateExpr(task, context, valueExpr, thisValue).ensureValue() }
       }
       val defaultParamValues = defaultParamsMap.mapValues { (_, valueExpr) ->
-        exprEvaluator.evaluateExpr(task, callable.context, valueExpr, thisValue).ensureValue()
+        async {
+          exprEvaluator.evaluateExpr(task, callable.context, valueExpr, thisValue).ensureValue()
+        }
       }
 
-      val values = paramValues + defaultParamValues
+      val values = (paramValues + defaultParamValues).awaitAllValues()
       val coercedValues = values.mapValues { (name, value) ->
         val type = paramDefsMap.getValue(name).type
-        exprEvaluator.coerce(task, context, value, type)
-      }
+        async { exprEvaluator.coerce(task, context, value, type) }
+      }.awaitAllValues()
       coercedValues
     }
 
@@ -280,13 +287,13 @@ class CallExprEvaluator(
 
     check(method.trySetAccessible())
 
-    progressIndicator.updateProgressDescription("Calling ${buildRule.context}...")
+    progressIndicator.logInfo("Calling ${buildRule.context}...")
     val returnValue = try {
       method.invoke(pluginInstance, buildContext)
     } catch (e: Exception) {
       throw IllegalStateException("Error from the plugin", e)
     }
-    progressIndicator.updateProgressDescription("Continuing from ${buildRule.context}...")
+    progressIndicator.logInfo("Continuing from ${buildRule.context}...")
 
     val finalValue = handlePluginReturnValue(task, buildRule.context, returnValue)
     return exprEvaluator.coerce(task, buildRule.context, finalValue, buildRule.returnType)
@@ -339,12 +346,12 @@ class CallExprEvaluator(
     val progressIndicator = interpreter.progressIndicatorContainer.ofCurrentThread()
     val actionContext = ActionContext(interpreter.buildEnv, params, progressIndicator)
 
-    progressIndicator.updateProgressDescription("Calling ${callTarget.context}...")
+    progressIndicator.logInfo("Calling ${callTarget.context}...")
     try {
       method.invoke(pluginInstance, actionContext)
     } catch (e: Exception) {
       throw IllegalStateException("Error from the plugin", e)
     }
-    progressIndicator.updateProgressDescription("Continuing from ${callTarget.context}...")
+    progressIndicator.logInfo("Continuing from ${callTarget.context}...")
   }
 }

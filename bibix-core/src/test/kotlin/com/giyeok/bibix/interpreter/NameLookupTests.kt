@@ -40,11 +40,11 @@ class NameLookupTests {
 
     val interpreter = testInterpreter(fs, "/", mapOf())
 
-    assertThat(interpreter.userBuildRequest(listOf("abc"))).isEqualTo(StringValue("hello!"))
-    assertThat(interpreter.userBuildRequest(listOf("xyz"))).isEqualTo(StringValue("hello!"))
-    assertThat(interpreter.userBuildRequest(listOf("qwe", "rty"))).isEqualTo(StringValue("hello!"))
-    assertThat(interpreter.userBuildRequest(listOf("asd"))).isEqualTo(StringValue("hello!"))
-    assertThat(interpreter.userBuildRequest(listOf("fgh"))).isEqualTo(StringValue("world!"))
-    assertThat(interpreter.userBuildRequest(listOf("str"))).isEqualTo(StringValue("hello world!"))
+    assertThat(interpreter.userBuildRequest("abc")).isEqualTo(StringValue("hello!"))
+    assertThat(interpreter.userBuildRequest("xyz")).isEqualTo(StringValue("hello!"))
+    assertThat(interpreter.userBuildRequest("qwe.rty")).isEqualTo(StringValue("hello!"))
+    assertThat(interpreter.userBuildRequest("asd")).isEqualTo(StringValue("hello!"))
+    assertThat(interpreter.userBuildRequest("fgh")).isEqualTo(StringValue("world!"))
+    assertThat(interpreter.userBuildRequest("str")).isEqualTo(StringValue("hello world!"))
   }
 }
