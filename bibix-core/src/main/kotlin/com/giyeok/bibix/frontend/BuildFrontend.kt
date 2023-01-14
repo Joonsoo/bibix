@@ -13,7 +13,6 @@ import com.giyeok.bibix.plugins.fs.fsPlugin
 import com.giyeok.bibix.plugins.java.javaPlugin
 import com.giyeok.bibix.plugins.jvm.jvmPlugin
 import com.giyeok.bibix.plugins.maven.mavenPlugin
-import com.giyeok.bibix.plugins.repo.repoPlugin
 import com.giyeok.bibix.repo.Repo
 import kotlinx.coroutines.*
 
@@ -27,7 +26,6 @@ class BuildFrontend(
     "jvm" to jvmPlugin,
     "java" to javaPlugin,
     "maven" to mavenPlugin,
-    "repo" to repoPlugin,
     "fs" to fsPlugin,
   ),
   val debuggingMode: Boolean = false

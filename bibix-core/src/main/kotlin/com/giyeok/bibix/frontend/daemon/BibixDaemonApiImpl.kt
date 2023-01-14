@@ -32,13 +32,13 @@ class BibixDaemonApiImpl(val projectDir: Path) :
 
   override fun streamingInvokeAction(request: InvokeActionReq): Flow<StreamingActionEvent> {
     return flow {
-      emit(streamingActionEvent {
-        this.stdout = "new message"
-      })
-      delay(500)
-      emit(streamingActionEvent {
-        this.stdout = "done"
-      })
+//      emit(streamingActionEvent {
+//        this.stdout = "new message"
+//      })
+//      delay(500)
+//      emit(streamingActionEvent {
+//        this.stdout = "done"
+//      })
     }
   }
 

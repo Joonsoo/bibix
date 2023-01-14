@@ -1,27 +1,27 @@
-package com.giyeok.bibix.source
-
-import com.giyeok.bibix.BibixIdProto
-import com.giyeok.bibix.ast.BibixAst
-import com.giyeok.bibix.base.*
-import com.giyeok.bibix.repo.Repo
-import com.giyeok.bibix.interpreter.coroutine.ProgressIndicator
-import com.giyeok.bibix.sourceId
-import java.nio.file.Path
-import java.util.concurrent.locks.Lock
-import kotlin.io.path.readText
-
-// 지원되는 source 종류:
-// "path/to/source/on/local"
-// git(url: string, branch?: string, tag?: string, commitId?: string, path: string = "/", buildFile: string = "build.bbx")
-class ImportSourceResolver(
-  val repo: Repo,
-  private val locks: MutableMap<BibixIdProto.SourceId, Lock> = mutableMapOf(),
-) {
-  fun resolveImportSourceCall(
-    spec: ClassInstanceValue,
-    progressIndicator: ProgressIndicator
-  ): ImportedSource {
-    TODO()
+//package com.giyeok.bibix.source
+//
+//import com.giyeok.bibix.BibixIdProto
+//import com.giyeok.bibix.ast.BibixAst
+//import com.giyeok.bibix.base.*
+//import com.giyeok.bibix.repo.Repo
+//import com.giyeok.bibix.interpreter.coroutine.ProgressIndicator
+//import com.giyeok.bibix.sourceId
+//import java.nio.file.Path
+//import java.util.concurrent.locks.Lock
+//import kotlin.io.path.readText
+//
+//// 지원되는 source 종류:
+//// "path/to/source/on/local"
+//// git(url: string, branch?: string, tag?: string, commitId?: string, path: string = "/", buildFile: string = "build.bbx")
+//class ImportSourceResolver(
+//  val repo: Repo,
+//  private val locks: MutableMap<BibixIdProto.SourceId, Lock> = mutableMapOf(),
+//) {
+//  fun resolveImportSourceCall(
+//    spec: ClassInstanceValue,
+//    progressIndicator: ProgressIndicator
+//  ): ImportedSource {
+//    TODO()
 //    when (spec.className) {
 //      CName(BibixRootSourceId, "GitSource") -> {
 //        // TODO remote의 ref를 pull해오도록 수정
@@ -98,34 +98,34 @@ class ImportSourceResolver(
 //
 //      else -> TODO()
 //    }
-  }
-
-  fun resolveImportSourcePath(
-    mainBaseDirectory: Path,
-    path: DirectoryValue,
-    progressIndicator: ProgressIndicator
-  ): ImportedSource {
-    val baseDirectory = path.directory
-    val scriptSource = baseDirectory.resolve("build.bbx").readText()
-    val parsed = BibixAst.parseAst(scriptSource)
-
-    if (parsed.isRight) {
-      throw IllegalStateException(
-        "Invalid build file from path ${path.directory}, ${parsed.right().get()}"
-      )
-    }
-
-    val sourceId = sourceId {
-      // TODO mainBaseDirectory에 대한 상대 경로로 저장
-      this.localSource = path.directory.normalize().toString()
-    }
-
-    return ImportedSource(sourceId, baseDirectory, parsed.left().get())
-  }
-}
-
-data class ImportedSource(
-  val sourceId: BibixIdProto.SourceId,
-  val baseDirectory: Path,
-  val buildScript: BibixAst.BuildScript,
-)
+//  }
+//
+//  fun resolveImportSourcePath(
+//    mainBaseDirectory: Path,
+//    path: DirectoryValue,
+//    progressIndicator: ProgressIndicator
+//  ): ImportedSource {
+//    val baseDirectory = path.directory
+//    val scriptSource = baseDirectory.resolve("build.bbx").readText()
+//    val parsed = BibixAst.parseAst(scriptSource)
+//
+//    if (parsed.isRight) {
+//      throw IllegalStateException(
+//        "Invalid build file from path ${path.directory}, ${parsed.right().get()}"
+//      )
+//    }
+//
+//    val sourceId = sourceId {
+//      // TODO mainBaseDirectory에 대한 상대 경로로 저장
+//      this.localSource = path.directory.normalize().toString()
+//    }
+//
+//    return ImportedSource(sourceId, baseDirectory, parsed.left().get())
+//  }
+//}
+//
+//data class ImportedSource(
+//  val sourceId: BibixIdProto.SourceId,
+//  val baseDirectory: Path,
+//  val buildScript: BibixAst.BuildScript,
+//)

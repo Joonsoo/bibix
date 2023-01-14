@@ -28,7 +28,6 @@ val rootScript = PreloadedPlugin.fromScript(
     ): set<path> = native:com.giyeok.bibix.plugins.root.Glob
   """.trimIndent(),
   Classes(
-    Git::class.java,
     Glob::class.java,
   )
 )

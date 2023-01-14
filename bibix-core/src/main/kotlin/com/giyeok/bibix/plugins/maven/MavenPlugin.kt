@@ -16,7 +16,7 @@ val mavenPlugin = PreloadedPlugin.fromScript(
     }
     class MavenRepo(repoType: RepoType, url: string)
     
-    arg defaultRepos: list<MavenRepo> = [
+    var defaultRepos: list<MavenRepo> = [
       (RepoType.remote, "http://repo.maven.apache.org/maven2/")
     ]
     

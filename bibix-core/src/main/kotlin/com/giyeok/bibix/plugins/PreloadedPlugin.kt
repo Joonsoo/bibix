@@ -26,7 +26,7 @@ data class PreloadedPlugin(
         val lines = location?.let {
           script.take(location).count { it == '\n' }
         }
-        throw IllegalStateException("Failed to parse build script at line $lines: ${exception.msg()}")
+        throw IllegalStateException("Failed to parse build script at line $lines: ${exception.msg()} (packageName=$packageName)")
       }
       val ast = parsed.left().get()
       return PreloadedPlugin(packageName, ast.defs().toKtList(), classes)

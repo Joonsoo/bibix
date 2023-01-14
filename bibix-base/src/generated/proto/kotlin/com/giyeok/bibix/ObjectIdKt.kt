@@ -23,91 +23,55 @@ public object ObjectIdKt {
     internal fun _build(): com.giyeok.bibix.BibixIdProto.ObjectId = _builder.build()
 
     /**
-     * <code>.com.giyeok.bibix.SourceId source_id = 1;</code>
+     * <code>.com.giyeok.bibix.SourceId call_expr_source_id = 1;</code>
      */
-    public var sourceId: com.giyeok.bibix.BibixIdProto.SourceId
-      @JvmName("getSourceId")
-      get() = _builder.getSourceId()
-      @JvmName("setSourceId")
+    public var callExprSourceId: com.giyeok.bibix.BibixIdProto.SourceId
+      @JvmName("getCallExprSourceId")
+      get() = _builder.getCallExprSourceId()
+      @JvmName("setCallExprSourceId")
       set(value) {
-        _builder.setSourceId(value)
+        _builder.setCallExprSourceId(value)
       }
     /**
-     * <code>.com.giyeok.bibix.SourceId source_id = 1;</code>
+     * <code>.com.giyeok.bibix.SourceId call_expr_source_id = 1;</code>
      */
-    public fun clearSourceId() {
-      _builder.clearSourceId()
+    public fun clearCallExprSourceId() {
+      _builder.clearCallExprSourceId()
     }
     /**
-     * <code>.com.giyeok.bibix.SourceId source_id = 1;</code>
-     * @return Whether the sourceId field is set.
+     * <code>.com.giyeok.bibix.SourceId call_expr_source_id = 1;</code>
+     * @return Whether the callExprSourceId field is set.
      */
-    public fun hasSourceId(): kotlin.Boolean {
-      return _builder.hasSourceId()
+    public fun hasCallExprSourceId(): kotlin.Boolean {
+      return _builder.hasCallExprSourceId()
     }
 
     /**
-     * <code>.com.giyeok.bibix.ObjectIdHash rule_impl_id_hash = 2;</code>
+     * <code>.com.giyeok.bibix.ObjectIdHash call_target_objhash = 2;</code>
      */
-    public var ruleImplIdHash: com.giyeok.bibix.BibixIdProto.ObjectIdHash
-      @JvmName("getRuleImplIdHash")
-      get() = _builder.getRuleImplIdHash()
-      @JvmName("setRuleImplIdHash")
+    public var callTargetObjhash: com.giyeok.bibix.BibixIdProto.ObjectIdHash
+      @JvmName("getCallTargetObjhash")
+      get() = _builder.getCallTargetObjhash()
+      @JvmName("setCallTargetObjhash")
       set(value) {
-        _builder.setRuleImplIdHash(value)
+        _builder.setCallTargetObjhash(value)
       }
     /**
-     * <code>.com.giyeok.bibix.ObjectIdHash rule_impl_id_hash = 2;</code>
+     * <code>.com.giyeok.bibix.ObjectIdHash call_target_objhash = 2;</code>
      */
-    public fun clearRuleImplIdHash() {
-      _builder.clearRuleImplIdHash()
+    public fun clearCallTargetObjhash() {
+      _builder.clearCallTargetObjhash()
     }
     /**
-     * <code>.com.giyeok.bibix.ObjectIdHash rule_impl_id_hash = 2;</code>
-     * @return Whether the ruleImplIdHash field is set.
+     * <code>.com.giyeok.bibix.ObjectIdHash call_target_objhash = 2;</code>
+     * @return Whether the callTargetObjhash field is set.
      */
-    public fun hasRuleImplIdHash(): kotlin.Boolean {
-      return _builder.hasRuleImplIdHash()
+    public fun hasCallTargetObjhash(): kotlin.Boolean {
+      return _builder.hasCallTargetObjhash()
     }
 
     /**
-     * <pre>
-     * rule impl의 구현 코드가 바뀐 경우. rule_impl_id_hash는 argument가 바뀐 경우에만 변경되기 때문에 필요
-     * </pre>
-     *
-     * <code>.com.giyeok.bibix.SourceHashId rule_impl_source_hash = 3;</code>
-     */
-    public var ruleImplSourceHash: com.giyeok.bibix.BibixIdProto.SourceHashId
-      @JvmName("getRuleImplSourceHash")
-      get() = _builder.getRuleImplSourceHash()
-      @JvmName("setRuleImplSourceHash")
-      set(value) {
-        _builder.setRuleImplSourceHash(value)
-      }
-    /**
-     * <pre>
-     * rule impl의 구현 코드가 바뀐 경우. rule_impl_id_hash는 argument가 바뀐 경우에만 변경되기 때문에 필요
-     * </pre>
-     *
-     * <code>.com.giyeok.bibix.SourceHashId rule_impl_source_hash = 3;</code>
-     */
-    public fun clearRuleImplSourceHash() {
-      _builder.clearRuleImplSourceHash()
-    }
-    /**
-     * <pre>
-     * rule impl의 구현 코드가 바뀐 경우. rule_impl_id_hash는 argument가 바뀐 경우에만 변경되기 때문에 필요
-     * </pre>
-     *
-     * <code>.com.giyeok.bibix.SourceHashId rule_impl_source_hash = 3;</code>
-     * @return Whether the ruleImplSourceHash field is set.
-     */
-    public fun hasRuleImplSourceHash(): kotlin.Boolean {
-      return _builder.hasRuleImplSourceHash()
-    }
-
-    /**
-     * <code>string method_name = 4;</code>
+     * <code>string method_name = 3;</code>
      */
     public var methodName: kotlin.String
       @JvmName("getMethodName")
@@ -117,14 +81,14 @@ public object ObjectIdKt {
         _builder.setMethodName(value)
       }
     /**
-     * <code>string method_name = 4;</code>
+     * <code>string method_name = 3;</code>
      */
     public fun clearMethodName() {
       _builder.clearMethodName()
     }
 
     /**
-     * <code>.com.giyeok.bibix.ArgsMap args_map = 5;</code>
+     * <code>.com.giyeok.bibix.ArgsMap args_map = 4;</code>
      */
     public var argsMap: com.giyeok.bibix.BibixIdProto.ArgsMap
       @JvmName("getArgsMap")
@@ -134,17 +98,41 @@ public object ObjectIdKt {
         _builder.setArgsMap(value)
       }
     /**
-     * <code>.com.giyeok.bibix.ArgsMap args_map = 5;</code>
+     * <code>.com.giyeok.bibix.ArgsMap args_map = 4;</code>
      */
     public fun clearArgsMap() {
       _builder.clearArgsMap()
     }
     /**
-     * <code>.com.giyeok.bibix.ArgsMap args_map = 5;</code>
+     * <code>.com.giyeok.bibix.ArgsMap args_map = 4;</code>
      * @return Whether the argsMap field is set.
      */
     public fun hasArgsMap(): kotlin.Boolean {
       return _builder.hasArgsMap()
+    }
+
+    /**
+     * <code>.com.giyeok.bibix.InputHashes input_hashes = 5;</code>
+     */
+    public var inputHashes: com.giyeok.bibix.BibixIdProto.InputHashes
+      @JvmName("getInputHashes")
+      get() = _builder.getInputHashes()
+      @JvmName("setInputHashes")
+      set(value) {
+        _builder.setInputHashes(value)
+      }
+    /**
+     * <code>.com.giyeok.bibix.InputHashes input_hashes = 5;</code>
+     */
+    public fun clearInputHashes() {
+      _builder.clearInputHashes()
+    }
+    /**
+     * <code>.com.giyeok.bibix.InputHashes input_hashes = 5;</code>
+     * @return Whether the inputHashes field is set.
+     */
+    public fun hasInputHashes(): kotlin.Boolean {
+      return _builder.hasInputHashes()
     }
   }
 }

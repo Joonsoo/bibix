@@ -195,7 +195,7 @@ class ExprEvaluator(
     expr: BibixAst.Expr,
     thisValue: BibixValue?,
   ): EvaluationResult =
-    g.withTaskMemo(requester, Task.EvalExpr(context.sourceId, expr.id(), thisValue)) { task ->
+    g.withTask(requester, Task.EvalExpr(context.sourceId, expr.id(), thisValue)) { task ->
       when (expr) {
         is BibixAst.CastExpr -> {
           // Run concurrently

@@ -21,40 +21,6 @@ public object ActionResultKt {
     @kotlin.jvm.JvmSynthetic
     @kotlin.PublishedApi
     internal fun _build(): com.giyeok.bibix.daemon.BibixDaemonApiProto.ActionResult = _builder.build()
-
-    /**
-     * <code>string stdout = 1;</code>
-     */
-    public var stdout: kotlin.String
-      @JvmName("getStdout")
-      get() = _builder.getStdout()
-      @JvmName("setStdout")
-      set(value) {
-        _builder.setStdout(value)
-      }
-    /**
-     * <code>string stdout = 1;</code>
-     */
-    public fun clearStdout() {
-      _builder.clearStdout()
-    }
-
-    /**
-     * <code>string stderr = 2;</code>
-     */
-    public var stderr: kotlin.String
-      @JvmName("getStderr")
-      get() = _builder.getStderr()
-      @JvmName("setStderr")
-      set(value) {
-        _builder.setStderr(value)
-      }
-    /**
-     * <code>string stderr = 2;</code>
-     */
-    public fun clearStderr() {
-      _builder.clearStderr()
-    }
   }
 }
 @kotlin.jvm.JvmSynthetic

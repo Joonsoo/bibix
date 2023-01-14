@@ -21,30 +21,6 @@ public object IntellijProjectStructureKt {
     @kotlin.jvm.JvmSynthetic
     @kotlin.PublishedApi
     internal fun _build(): com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijProjectStructure = _builder.build()
-
-    /**
-     * <code>.com.giyeok.bibix.daemon.IntellijProjectNode project = 1;</code>
-     */
-    public var project: com.giyeok.bibix.daemon.BibixDaemonApiProto.IntellijProjectNode
-      @JvmName("getProject")
-      get() = _builder.getProject()
-      @JvmName("setProject")
-      set(value) {
-        _builder.setProject(value)
-      }
-    /**
-     * <code>.com.giyeok.bibix.daemon.IntellijProjectNode project = 1;</code>
-     */
-    public fun clearProject() {
-      _builder.clearProject()
-    }
-    /**
-     * <code>.com.giyeok.bibix.daemon.IntellijProjectNode project = 1;</code>
-     * @return Whether the project field is set.
-     */
-    public fun hasProject(): kotlin.Boolean {
-      return _builder.hasProject()
-    }
   }
 }
 @kotlin.jvm.JvmSynthetic

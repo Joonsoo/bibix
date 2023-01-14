@@ -18,8 +18,6 @@ val bibixPlugin = PreloadedPlugin.fromScript(
     class OSX()
     class Windows()
     
-    class BibixPackage(baseDirectory: directory, scriptName?: string)
-
     enum Arch {
       unknown,
       x86,
@@ -27,20 +25,31 @@ val bibixPlugin = PreloadedPlugin.fromScript(
       aarch_64,
     }
     
-    arg buildingBibixVersion: string = "${Constants.BUILDING_BIBIX_VERSION}"
-    arg bibixVersion: string = "${Constants.BIBIX_VERSION}"
+    var buildingBibixVersion: string = "${Constants.BUILDING_BIBIX_VERSION}"
+    var bibixVersion: string = "${Constants.BIBIX_VERSION}"
     
     def base(
       classpath: path = curl.download("https://github.com/Joonsoo/bibix/releases/download/${dollar}buildingBibixVersion/bibix-base-${dollar}buildingBibixVersion.jar")
     ): jvm.ClassPkg = native:com.giyeok.bibix.plugins.bibix.Base
     
+    class BibixProject(projectRoot: directory, scriptName?: string)
+
+    def git(
+      url: string,
+      tag?: string,
+      branch?: string,
+      ref?: string,
+      path: string = "",
+      scriptName?: string,
+    ): BibixProject = native:com.giyeok.bibix.plugins.bibix.GitPlugin
+
     def plugins(
       tag: string = bibixVersion
-    ): GitSource = native:com.giyeok.bibix.plugins.bibix.Plugins
+    ): BibixProject = native:com.giyeok.bibix.plugins.bibix.Plugins
     
     def devPlugins(
       branch: string = "main"
-    ): GitSource = native:com.giyeok.bibix.plugins.bibix.Plugins:dev
+    ): BibixProject = native:com.giyeok.bibix.plugins.bibix.Plugins:dev
     
     class RuleImplTemplate(implClass: file, interfaceClass: file) {
       as list<file> = [this.implClass, this.interfaceClass]

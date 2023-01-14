@@ -11,11 +11,11 @@ import bibix
 
 jparserVersion = "0.5"
 
-arg kotlinVersion: string = "1.8.0"
-arg jvmVersion: string = "20"
-arg ktjvm.kotlinVersion = kotlinVersion
-arg ktjvm.outputJvmVersion = jvmVersion
-arg java.outputJvmVersion = jvmVersion
+var kotlinVersion: string = "1.8.0"
+var jvmVersion: string = "20"
+var ktjvm.kotlinVersion = kotlinVersion
+var ktjvm.outputJvmVersion = jvmVersion
+var java.outputJvmVersion = jvmVersion
 // -> ktjvm.kotlinVersion arg의 기본값을 변경. 이렇게 해도 여전히 cli에서 값 변경 가능
 // -> 다만 ktjvm.kotlinVersion과 kotlinVersion을 동시에 설정하면 오류 발생
 

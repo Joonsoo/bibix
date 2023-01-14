@@ -23,165 +23,165 @@ message GetRepoInfoReq {
 message RepoInfo {
   string repo_path = 1;
   string script_path = 2;
-  map<string, NamespaceInfo> namespaces = 3;
-  map<string, TargetInfo> targets = 4;
-  map<string, ActionInfo> actions = 5;
-  map<string, ArgInfo> args = 6;
+  //  map<string, NamespaceInfo> namespaces = 3;
+  //  map<string, TargetInfo> targets = 4;
+  //  map<string, ActionInfo> actions = 5;
+  //  map<string, ArgInfo> args = 6;
 }
 
-message NamespaceInfo {
-  repeated NamespaceInfo namespaces = 1;
-  repeated TargetInfo targets = 2;
-  repeated ActionInfo actions = 3;
-}
-
-message TargetInfo {
-  string builtin_plugin = 1; // Optional
-  com.giyeok.bibix.RuleImplId rule = 2;
-  map<string, BibixExpr> args = 3;
-}
-
-message BibixExpr {
-  // Optional. evaluate된 결과가 있으면 반환.
-  com.giyeok.bibix.BibixValue value = 1;
-
-  message SeqExpr {
-    repeated BibixExpr elems = 1;
-  }
-  SeqExpr seq = 2;
-  message Glob {
-    repeated string patterns = 1;
-    repeated string files = 2;
-  }
-  Glob glob = 3;
-  message MavenDep {
-    string group_id = 1;
-    string artifact_id = 2;
-    string version = 3;
-  }
-  MavenDep maven_dep = 4;
-  string jar_path = 5;
-  string jvm_lib_path = 6;
-  TargetInfo target = 7;
-}
-
-message ActionInfo {
-  string builtin_plugin = 1;
-  com.giyeok.bibix.RuleImplId rule = 2;
-  map<string, BibixExpr> args = 3;
-}
-
-message ArgInfo {
-
-}
+//message NamespaceInfo {
+//  repeated NamespaceInfo namespaces = 1;
+//  repeated TargetInfo targets = 2;
+//  repeated ActionInfo actions = 3;
+//}
+//
+//message TargetInfo {
+//  string builtin_plugin = 1; // Optional
+//  com.giyeok.bibix.ObjectIdHash rule = 2;
+//  map<string, BibixExpr> args = 3;
+//}
+//
+//message BibixExpr {
+//  // Optional. evaluate된 결과가 있으면 반환.
+//  com.giyeok.bibix.BibixValue value = 1;
+//
+//  message SeqExpr {
+//    repeated BibixExpr elems = 1;
+//  }
+//  SeqExpr seq = 2;
+//  message Glob {
+//    repeated string patterns = 1;
+//    repeated string files = 2;
+//  }
+//  Glob glob = 3;
+//  message MavenDep {
+//    string group_id = 1;
+//    string artifact_id = 2;
+//    string version = 3;
+//  }
+//  MavenDep maven_dep = 4;
+//  string jar_path = 5;
+//  string jvm_lib_path = 6;
+//  TargetInfo target = 7;
+//}
+//
+//message ActionInfo {
+//  string builtin_plugin = 1;
+//  com.giyeok.bibix.RuleImplId rule = 2;
+//  map<string, BibixExpr> args = 3;
+//}
+//
+//message ArgInfo {
+//
+//}
 
 message ReloadScriptReq {
 }
 
 message BuildTargetReq {
-  string target_name = 1;
-  repeated ArgValue args = 2;
+//  string target_name = 1;
+//  repeated ArgValue args = 2;
 }
-
-message ArgValue {
-  string name = 1;
-  oneof value {
-    com.giyeok.bibix.BibixValue value_inst = 2;
-    string value_expr = 3;
-  }
-}
+//
+//message ArgValue {
+//  string name = 1;
+//  oneof value {
+//    com.giyeok.bibix.BibixValue value_inst = 2;
+//    string value_expr = 3;
+//  }
+//}
 
 message BuiltTargetInfo {
-  com.giyeok.bibix.BibixValue value = 1;
-  com.giyeok.bibix.ObjectIdHash object_id = 2;
-  // Optional. destination directory가 만들어졌을 때만 설정
-  string object_path = 3;
-  // Optional. output 디렉토리가 만들어졌을 때만 설정
-  string output_path = 4;
+//  com.giyeok.bibix.BibixValue value = 1;
+//  com.giyeok.bibix.ObjectIdHash object_id = 2;
+//  // Optional. destination directory가 만들어졌을 때만 설정
+//  string object_path = 3;
+//  // Optional. output 디렉토리가 만들어졌을 때만 설정
+//  string output_path = 4;
 }
 
 message InvokeActionReq {
-  string target_name = 1;
-  repeated ArgValue args = 2;
+//  string target_name = 1;
+//  repeated ArgValue args = 2;
 }
 
 message ActionResult {
-  string stdout = 1;
-  string stderr = 2;
+//  string stdout = 1;
+//  string stderr = 2;
 }
 
 message StreamingActionEvent {
-  string stdout = 1;
-  string stderr = 2;
+//  string stdout = 1;
+//  string stderr = 2;
 }
 
 message GetIntellijProjectStructureReq {
 }
 
 message IntellijProjectStructure {
-  IntellijProjectNode project = 1;
+//  IntellijProjectNode project = 1;
 }
-
-message IntellijProjectNode {
-  string name = 1;
-  string path = 2;
-  string jdk_version = 3;
-  repeated IntellijModuleNode modules = 4;
-  // project level library들
-  repeated IntellijLibraryNode libraries = 5;
-}
-
-message IntellijModuleNode {
-  string name = 1;
-  string path = 2;
-  string object_path = 3;
-  string jdk_version = 4;
-  repeated IntellijModuleNode sub_modules = 5;
-  // module level library들
-  repeated IntellijLibraryNode libraries = 6;
-  repeated IntellijDependencyNode dependencies = 7;
-  repeated IntellijContentRootNode content_roots = 8;
-  repeated IntellijTaskNode tasks = 9;
-}
-
-message IntellijLibraryNode {
-  string library_name = 1;
-  repeated string classpath = 2;
-  repeated string source = 3;
-
-  oneof library {
-    IntellijMavenLibraryNode maven_library = 4;
-    IntellijLocalLibraryNode local_library = 5;
-    IntellijScalaSdkLibraryNode scala_sdk_library = 6;
-  }
-
-  message IntellijMavenLibraryNode {
-    string group = 1;
-    string artifact = 2;
-    string version = 3;
-  }
-
-  message IntellijLocalLibraryNode {
-    string path = 1;
-  }
-
-  message IntellijScalaSdkLibraryNode {
-    string scala_version = 1;
-  }
-}
-
-message IntellijDependencyNode {
-  oneof dependency {
-    string library_name = 1;
-    string module_name = 2;
-  }
-  // TODO export?
-}
-
-message IntellijContentRootNode {
-  string path = 1;
-}
-
-message IntellijTaskNode {
-  string name = 1;
-}
+//
+//message IntellijProjectNode {
+//  string name = 1;
+//  string path = 2;
+//  string jdk_version = 3;
+//  repeated IntellijModuleNode modules = 4;
+//  // project level library들
+//  repeated IntellijLibraryNode libraries = 5;
+//}
+//
+//message IntellijModuleNode {
+//  string name = 1;
+//  string path = 2;
+//  string object_path = 3;
+//  string jdk_version = 4;
+//  repeated IntellijModuleNode sub_modules = 5;
+//  // module level library들
+//  repeated IntellijLibraryNode libraries = 6;
+//  repeated IntellijDependencyNode dependencies = 7;
+//  repeated IntellijContentRootNode content_roots = 8;
+//  repeated IntellijTaskNode tasks = 9;
+//}
+//
+//message IntellijLibraryNode {
+//  string library_name = 1;
+//  repeated string classpath = 2;
+//  repeated string source = 3;
+//
+//  oneof library {
+//    IntellijMavenLibraryNode maven_library = 4;
+//    IntellijLocalLibraryNode local_library = 5;
+//    IntellijScalaSdkLibraryNode scala_sdk_library = 6;
+//  }
+//
+//  message IntellijMavenLibraryNode {
+//    string group = 1;
+//    string artifact = 2;
+//    string version = 3;
+//  }
+//
+//  message IntellijLocalLibraryNode {
+//    string path = 1;
+//  }
+//
+//  message IntellijScalaSdkLibraryNode {
+//    string scala_version = 1;
+//  }
+//}
+//
+//message IntellijDependencyNode {
+//  oneof dependency {
+//    string library_name = 1;
+//    string module_name = 2;
+//  }
+//  // TODO export?
+//}
+//
+//message IntellijContentRootNode {
+//  string path = 1;
+//}
+//
+//message IntellijTaskNode {
+//  string name = 1;
+//}

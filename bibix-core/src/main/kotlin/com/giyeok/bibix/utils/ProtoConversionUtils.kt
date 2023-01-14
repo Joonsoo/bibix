@@ -4,6 +4,7 @@ import com.giyeok.bibix.*
 import com.giyeok.bibix.base.*
 import com.google.protobuf.ByteString
 import com.google.protobuf.kotlin.get
+import java.nio.file.Path
 import kotlin.io.path.absolutePathString
 
 fun ByteString.toHexString(): String {
@@ -97,7 +98,7 @@ fun BibixValue.toProto(): BibixValueProto.BibixValue = when (val value = this) {
     }
   }
 
-  is NClassInstanceValue -> throw AssertionError("N(ame)ClassInstnaceValue cannot be marshalled")
+  is NClassInstanceValue -> throw AssertionError("NClassInstnaceValue cannot be marshalled")
   is NoneValue -> bibixValue { }
   is ActionRuleDefValue ->
     // TODO
@@ -112,7 +113,7 @@ fun BibixValue.toProto(): BibixValueProto.BibixValue = when (val value = this) {
     bibixValue {}
 }
 
-fun Map<String, BibixValue>.toArgsMap(): BibixIdProto.ArgsMap {
+fun Map<String, BibixValue>.toArgsMapProto(): BibixIdProto.ArgsMap {
   val value = this
   return argsMap {
     this.pairs.addAll(value.entries.toList()

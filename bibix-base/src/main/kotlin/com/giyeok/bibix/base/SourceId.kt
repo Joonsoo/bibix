@@ -2,10 +2,6 @@ package com.giyeok.bibix.base
 
 sealed class SourceId
 
-object BibixRootSourceId : SourceId() {
-  override fun toString(): String = "root"
-}
-
 object MainSourceId : SourceId() {
   override fun toString(): String = "main"
 }

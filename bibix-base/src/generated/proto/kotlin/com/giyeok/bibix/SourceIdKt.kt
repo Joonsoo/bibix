@@ -23,31 +23,7 @@ public object SourceIdKt {
     internal fun _build(): com.giyeok.bibix.BibixIdProto.SourceId = _builder.build()
 
     /**
-     * <code>.google.protobuf.Empty root_source = 1;</code>
-     */
-    public var rootSource: com.google.protobuf.Empty
-      @JvmName("getRootSource")
-      get() = _builder.getRootSource()
-      @JvmName("setRootSource")
-      set(value) {
-        _builder.setRootSource(value)
-      }
-    /**
-     * <code>.google.protobuf.Empty root_source = 1;</code>
-     */
-    public fun clearRootSource() {
-      _builder.clearRootSource()
-    }
-    /**
-     * <code>.google.protobuf.Empty root_source = 1;</code>
-     * @return Whether the rootSource field is set.
-     */
-    public fun hasRootSource(): kotlin.Boolean {
-      return _builder.hasRootSource()
-    }
-
-    /**
-     * <code>.google.protobuf.Empty main_source = 2;</code>
+     * <code>.google.protobuf.Empty main_source = 1;</code>
      */
     public var mainSource: com.google.protobuf.Empty
       @JvmName("getMainSource")
@@ -57,13 +33,13 @@ public object SourceIdKt {
         _builder.setMainSource(value)
       }
     /**
-     * <code>.google.protobuf.Empty main_source = 2;</code>
+     * <code>.google.protobuf.Empty main_source = 1;</code>
      */
     public fun clearMainSource() {
       _builder.clearMainSource()
     }
     /**
-     * <code>.google.protobuf.Empty main_source = 2;</code>
+     * <code>.google.protobuf.Empty main_source = 1;</code>
      * @return Whether the mainSource field is set.
      */
     public fun hasMainSource(): kotlin.Boolean {
@@ -71,75 +47,51 @@ public object SourceIdKt {
     }
 
     /**
-     * <code>string bibix_internal_source = 3;</code>
+     * <code>string preloaded_plugin = 2;</code>
      */
-    public var bibixInternalSource: kotlin.String
-      @JvmName("getBibixInternalSource")
-      get() = _builder.getBibixInternalSource()
-      @JvmName("setBibixInternalSource")
+    public var preloadedPlugin: kotlin.String
+      @JvmName("getPreloadedPlugin")
+      get() = _builder.getPreloadedPlugin()
+      @JvmName("setPreloadedPlugin")
       set(value) {
-        _builder.setBibixInternalSource(value)
+        _builder.setPreloadedPlugin(value)
       }
     /**
-     * <code>string bibix_internal_source = 3;</code>
+     * <code>string preloaded_plugin = 2;</code>
      */
-    public fun clearBibixInternalSource() {
-      _builder.clearBibixInternalSource()
+    public fun clearPreloadedPlugin() {
+      _builder.clearPreloadedPlugin()
     }
     /**
-     * <code>string bibix_internal_source = 3;</code>
-     * @return Whether the bibixInternalSource field is set.
+     * <code>string preloaded_plugin = 2;</code>
+     * @return Whether the preloadedPlugin field is set.
      */
-    public fun hasBibixInternalSource(): kotlin.Boolean {
-      return _builder.hasBibixInternalSource()
+    public fun hasPreloadedPlugin(): kotlin.Boolean {
+      return _builder.hasPreloadedPlugin()
     }
 
     /**
-     * <code>string local_source = 4;</code>
+     * <code>.com.giyeok.bibix.ExternalBibixProject extern_plugin_objhash = 3;</code>
      */
-    public var localSource: kotlin.String
-      @JvmName("getLocalSource")
-      get() = _builder.getLocalSource()
-      @JvmName("setLocalSource")
+    public var externPluginObjhash: com.giyeok.bibix.BibixIdProto.ExternalBibixProject
+      @JvmName("getExternPluginObjhash")
+      get() = _builder.getExternPluginObjhash()
+      @JvmName("setExternPluginObjhash")
       set(value) {
-        _builder.setLocalSource(value)
+        _builder.setExternPluginObjhash(value)
       }
     /**
-     * <code>string local_source = 4;</code>
+     * <code>.com.giyeok.bibix.ExternalBibixProject extern_plugin_objhash = 3;</code>
      */
-    public fun clearLocalSource() {
-      _builder.clearLocalSource()
+    public fun clearExternPluginObjhash() {
+      _builder.clearExternPluginObjhash()
     }
     /**
-     * <code>string local_source = 4;</code>
-     * @return Whether the localSource field is set.
+     * <code>.com.giyeok.bibix.ExternalBibixProject extern_plugin_objhash = 3;</code>
+     * @return Whether the externPluginObjhash field is set.
      */
-    public fun hasLocalSource(): kotlin.Boolean {
-      return _builder.hasLocalSource()
-    }
-
-    /**
-     * <code>.com.giyeok.bibix.RemoteSourceId remote_source = 5;</code>
-     */
-    public var remoteSource: com.giyeok.bibix.BibixIdProto.RemoteSourceId
-      @JvmName("getRemoteSource")
-      get() = _builder.getRemoteSource()
-      @JvmName("setRemoteSource")
-      set(value) {
-        _builder.setRemoteSource(value)
-      }
-    /**
-     * <code>.com.giyeok.bibix.RemoteSourceId remote_source = 5;</code>
-     */
-    public fun clearRemoteSource() {
-      _builder.clearRemoteSource()
-    }
-    /**
-     * <code>.com.giyeok.bibix.RemoteSourceId remote_source = 5;</code>
-     * @return Whether the remoteSource field is set.
-     */
-    public fun hasRemoteSource(): kotlin.Boolean {
-      return _builder.hasRemoteSource()
+    public fun hasExternPluginObjhash(): kotlin.Boolean {
+      return _builder.hasExternPluginObjhash()
     }
     public val sourceCase: com.giyeok.bibix.BibixIdProto.SourceId.SourceCase
       @JvmName("getSourceCase")

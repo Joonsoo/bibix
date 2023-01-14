@@ -8,8 +8,8 @@ val javaPlugin = PreloadedPlugin.fromScript(
   """
     import jvm
     
-    arg srcVersion: string = "16"
-    arg outVersion: string = "16"
+    var srcVersion: string = "16"
+    var outVersion: string = "16"
     
     def library(
       srcs: set<file>,

@@ -83,6 +83,7 @@ class ThreadPool(val numThreads: Int, private val listener: (ThreadPoolEvent) ->
         }
         executeBlockAtThread(nextBlock, assignedThreadIdx)
       }
+      printProgresses()
     }
   }
 
@@ -93,7 +94,9 @@ class ThreadPool(val numThreads: Int, private val listener: (ThreadPoolEvent) ->
   override fun ofCurrentThread(): ProgressIndicator = progressIndicatorThreadLocal.get()
 
   fun printProgresses() {
-    // TODO throttling
+    progressIndicators.forEachIndexed { threadIdx, progressIndicator ->
+      println("$threadIdx: ${progressIndicator.toThreadState()}")
+    }
   }
 
   override fun close() {

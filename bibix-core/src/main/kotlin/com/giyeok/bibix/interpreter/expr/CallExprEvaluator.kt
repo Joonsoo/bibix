@@ -1,5 +1,8 @@
 package com.giyeok.bibix.interpreter.expr
 
+import com.giyeok.bibix.BibixIdProto
+import com.giyeok.bibix.BibixIdProto.InputHashes
+import com.giyeok.bibix.BibixIdProto.ObjectId
 import com.giyeok.bibix.ast.BibixAst
 import com.giyeok.bibix.base.*
 import com.giyeok.bibix.base.DataClassType
@@ -9,12 +12,14 @@ import com.giyeok.bibix.interpreter.expr.EvaluationResult.RuleDef.BuildRuleDef
 import com.giyeok.bibix.interpreter.task.Task
 import com.giyeok.bibix.interpreter.task.TaskRelGraph
 import com.giyeok.bibix.objectId
+import com.giyeok.bibix.repo.extractInputHashes
 import com.giyeok.bibix.repo.hashString
-import com.giyeok.bibix.repo.toProto
+import com.giyeok.bibix.sourceId
 import com.giyeok.bibix.utils.getOrNull
-import com.giyeok.bibix.utils.toArgsMap
+import com.giyeok.bibix.utils.toArgsMapProto
 import com.giyeok.bibix.utils.toHexString
 import com.giyeok.bibix.utils.toKtList
+import com.google.protobuf.empty
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import kotlinx.coroutines.sync.Mutex
@@ -246,20 +251,40 @@ class CallExprEvaluator(
     return ClassInstanceValue(classType.packageName, classType.className, value.fieldValues)
   }
 
+  private fun SourceId.toProto(): BibixIdProto.SourceId = when (val sourceId = this) {
+    MainSourceId -> sourceId { this.mainSource = empty { } }
+    is PreloadedSourceId -> sourceId { this.preloadedPlugin = sourceId.name }
+    is ExternSourceId -> sourceId { this.externPluginObjhash = TODO() }
+  }
+
+  private suspend fun objectHashOf(
+    callingSourceId: SourceId,
+    buildRule: BuildRuleDef,
+    params: Map<String, BibixValue>
+  ): ObjectId {
+    TODO()
+    val callExprSourceId = callingSourceId.toProto()
+    val argsMap = params.toArgsMapProto()
+    val inputHashes = argsMap.extractInputHashes()
+    return objectId {
+      this.callExprSourceId = callExprSourceId
+      // TODO call_Target_objhash, method_name
+      // TODO for preloaded plugin
+      this.argsMap = argsMap
+      this.inputHashes = inputHashes
+    }
+  }
+
   suspend fun callBuildRule(
     task: Task,
     context: NameLookupContext,
     buildRule: BuildRuleDef,
     params: Map<String, BibixValue>
-  ): BibixValue {
+  ): BibixValue = g.withMemo(objectHashOf(context.sourceId, buildRule, params)) { objectId ->
     val pluginClass = buildRule.cls
     val pluginInstance = pluginClass.getDeclaredConstructor().newInstance()
     val method = pluginClass.getMethod(buildRule.methodName, BuildContext::class.java)
 
-    val objectId = objectId {
-      this.sourceId = context.sourceId.toProto()
-      this.argsMap = params.toArgsMap()
-    }
     val objectIdHash = objectId.hashString().toHexString()
     val progressIndicator = interpreter.progressIndicatorContainer.ofCurrentThread()
     val buildContext = BuildContext(
@@ -296,7 +321,7 @@ class CallExprEvaluator(
     progressIndicator.logInfo("Continuing from ${buildRule.context}...")
 
     val finalValue = handlePluginReturnValue(task, buildRule.context, returnValue)
-    return exprEvaluator.coerce(task, buildRule.context, finalValue, buildRule.returnType)
+    exprEvaluator.coerce(task, buildRule.context, finalValue, buildRule.returnType)
   }
 
   suspend fun evaluateCallExpr(

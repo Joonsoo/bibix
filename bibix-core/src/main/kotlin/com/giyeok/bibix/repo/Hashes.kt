@@ -1,22 +1,20 @@
 package com.giyeok.bibix.repo
 
 import com.giyeok.bibix.*
-import com.giyeok.bibix.base.BibixValue
-import com.giyeok.bibix.base.SourceId
+import com.giyeok.bibix.base.*
 import com.giyeok.bibix.utils.toProto
 import com.google.protobuf.ByteString
 import com.google.protobuf.kotlin.toByteString
 import com.google.protobuf.util.Timestamps
 import java.io.File
+import java.nio.file.Files
+import java.nio.file.Path
 import java.security.MessageDigest
+import kotlin.io.path.*
 
 // TODO proto는 항상 같은 bytes를 반환한다는 보장이 없기 때문에 개선 필요.
 // 다만 보통은 같은 object -> 같은 해시가 나오고,
 // 혹 다른 값이 나오더라도 그냥 불필요하게 추가로 빌드하는 상황이 발생할 수 있는 것일 뿐이라 큰 문제는 아님
-
-fun SourceId.toProto(): BibixIdProto.SourceId = sourceId {
-  // TODO
-}
 
 fun newDigest() = MessageDigest.getInstance("SHA-1")
 
@@ -49,9 +47,6 @@ fun BibixIdProto.ArgsMap.hashString(): ByteString {
   return digest.digest().toByteString()
 }
 
-fun BibixIdProto.RuleImplId.hashString(): ByteString =
-  sha1Hash(this.toByteArray())
-
 fun BibixIdProto.ObjectId.hashString(): ByteString =
   sha1Hash(this.toByteArray())
 
@@ -59,10 +54,10 @@ fun BibixIdProto.SourceId.hashString(): ByteString =
   sha1Hash(this.toByteArray())
 
 fun inputHashesFromPaths(paths: List<String>): BibixIdProto.InputHashes {
-  fun fileHashOf(file: File): BibixIdProto.FileHash {
+  fun fileHashOf(path: Path): BibixIdProto.FileHash {
     val digest = newDigest()
     val buffer = ByteArray(1000)
-    file.inputStream().buffered().use { stream ->
+    path.inputStream().buffered().use { stream ->
       stream.read(buffer, 0, 1000)
       digest.update(buffer)
     }
@@ -70,19 +65,19 @@ fun inputHashesFromPaths(paths: List<String>): BibixIdProto.InputHashes {
 
     // TODO file.lastModified()나 file.length() 사용해도 괜찮나..?
     return fileHash {
-      this.path = file.path
-      this.lastModifiedTime = Timestamps.fromMillis(file.lastModified())
-      this.size = file.length()
+      this.path = path.pathString
+      this.lastModifiedTime = Timestamps.fromMillis(Files.getLastModifiedTime(path).toMillis())
+      this.size = Files.size(path)
       this.sha1Hash = fileHash
     }
   }
 
-  fun traverseDirectory(file: File): BibixIdProto.DirectoryHash {
-    val elems = (file.listFiles() ?: arrayOf()).sortedBy { it.name }
+  fun traverseDirectory(path: Path): BibixIdProto.DirectoryHash {
+    val elems = path.listDirectoryEntries().sortedBy { it.name }
     return directoryHash {
-      this.path = file.path
+      this.path = path.pathString
       elems.forEach { elem ->
-        if (elem.isDirectory) {
+        if (Files.isDirectory(elem)) {
           this.directories.add(traverseDirectory(elem))
         } else {
           this.files.add(fileHashOf(elem))
@@ -92,11 +87,11 @@ fun inputHashesFromPaths(paths: List<String>): BibixIdProto.InputHashes {
   }
 
   return inputHashes {
-    paths.distinct().sorted().map { File(it) }.forEach {
-      if (it.isDirectory) {
-        directories.add(traverseDirectory(it))
+    paths.distinct().sorted().map { Path(it) }.forEach { path ->
+      if (Files.isDirectory(path)) {
+        directories.add(traverseDirectory(path))
       } else {
-        files.add(fileHashOf(it))
+        files.add(fileHashOf(path))
       }
     }
   }

@@ -10,6 +10,12 @@ sealed class BuildRuleReturn {
     ) = EvalAndThen(ruleName, params, whenDone)
 
     @JvmStatic
+    fun eval(
+      ruleName: String,
+      params: Map<String, BibixValue>,
+    ) = EvalAndThen(ruleName, params, ::value)
+
+    @JvmStatic
     fun getClassInfos(
       cnames: List<CName>,
       unames: List<String> = listOf(),

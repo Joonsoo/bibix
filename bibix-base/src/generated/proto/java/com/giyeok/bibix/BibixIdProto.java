@@ -19,83 +19,51 @@ public final class BibixIdProto {
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>.google.protobuf.Empty root_source = 1;</code>
-     * @return Whether the rootSource field is set.
-     */
-    boolean hasRootSource();
-    /**
-     * <code>.google.protobuf.Empty root_source = 1;</code>
-     * @return The rootSource.
-     */
-    com.google.protobuf.Empty getRootSource();
-    /**
-     * <code>.google.protobuf.Empty root_source = 1;</code>
-     */
-    com.google.protobuf.EmptyOrBuilder getRootSourceOrBuilder();
-
-    /**
-     * <code>.google.protobuf.Empty main_source = 2;</code>
+     * <code>.google.protobuf.Empty main_source = 1;</code>
      * @return Whether the mainSource field is set.
      */
     boolean hasMainSource();
     /**
-     * <code>.google.protobuf.Empty main_source = 2;</code>
+     * <code>.google.protobuf.Empty main_source = 1;</code>
      * @return The mainSource.
      */
     com.google.protobuf.Empty getMainSource();
     /**
-     * <code>.google.protobuf.Empty main_source = 2;</code>
+     * <code>.google.protobuf.Empty main_source = 1;</code>
      */
     com.google.protobuf.EmptyOrBuilder getMainSourceOrBuilder();
 
     /**
-     * <code>string bibix_internal_source = 3;</code>
-     * @return Whether the bibixInternalSource field is set.
+     * <code>string preloaded_plugin = 2;</code>
+     * @return Whether the preloadedPlugin field is set.
      */
-    boolean hasBibixInternalSource();
+    boolean hasPreloadedPlugin();
     /**
-     * <code>string bibix_internal_source = 3;</code>
-     * @return The bibixInternalSource.
+     * <code>string preloaded_plugin = 2;</code>
+     * @return The preloadedPlugin.
      */
-    java.lang.String getBibixInternalSource();
+    java.lang.String getPreloadedPlugin();
     /**
-     * <code>string bibix_internal_source = 3;</code>
-     * @return The bytes for bibixInternalSource.
+     * <code>string preloaded_plugin = 2;</code>
+     * @return The bytes for preloadedPlugin.
      */
     com.google.protobuf.ByteString
-        getBibixInternalSourceBytes();
+        getPreloadedPluginBytes();
 
     /**
-     * <code>string local_source = 4;</code>
-     * @return Whether the localSource field is set.
+     * <code>.com.giyeok.bibix.ExternalBibixProject extern_plugin_objhash = 3;</code>
+     * @return Whether the externPluginObjhash field is set.
      */
-    boolean hasLocalSource();
+    boolean hasExternPluginObjhash();
     /**
-     * <code>string local_source = 4;</code>
-     * @return The localSource.
+     * <code>.com.giyeok.bibix.ExternalBibixProject extern_plugin_objhash = 3;</code>
+     * @return The externPluginObjhash.
      */
-    java.lang.String getLocalSource();
+    com.giyeok.bibix.BibixIdProto.ExternalBibixProject getExternPluginObjhash();
     /**
-     * <code>string local_source = 4;</code>
-     * @return The bytes for localSource.
+     * <code>.com.giyeok.bibix.ExternalBibixProject extern_plugin_objhash = 3;</code>
      */
-    com.google.protobuf.ByteString
-        getLocalSourceBytes();
-
-    /**
-     * <code>.com.giyeok.bibix.RemoteSourceId remote_source = 5;</code>
-     * @return Whether the remoteSource field is set.
-     */
-    boolean hasRemoteSource();
-    /**
-     * <code>.com.giyeok.bibix.RemoteSourceId remote_source = 5;</code>
-     * @return The remoteSource.
-     */
-    com.giyeok.bibix.BibixIdProto.RemoteSourceId getRemoteSource();
-    /**
-     * <code>.com.giyeok.bibix.RemoteSourceId remote_source = 5;</code>
-     */
-    com.giyeok.bibix.BibixIdProto.RemoteSourceIdOrBuilder getRemoteSourceOrBuilder();
+    com.giyeok.bibix.BibixIdProto.ExternalBibixProjectOrBuilder getExternPluginObjhashOrBuilder();
 
     public com.giyeok.bibix.BibixIdProto.SourceId.SourceCase getSourceCase();
   }
@@ -159,43 +127,23 @@ public final class BibixIdProto {
               break;
             }
             case 18: {
-              com.google.protobuf.Empty.Builder subBuilder = null;
-              if (sourceCase_ == 2) {
-                subBuilder = ((com.google.protobuf.Empty) source_).toBuilder();
-              }
-              source_ =
-                  input.readMessage(com.google.protobuf.Empty.parser(), extensionRegistry);
-              if (subBuilder != null) {
-                subBuilder.mergeFrom((com.google.protobuf.Empty) source_);
-                source_ = subBuilder.buildPartial();
-              }
+              java.lang.String s = input.readStringRequireUtf8();
               sourceCase_ = 2;
+              source_ = s;
               break;
             }
             case 26: {
-              java.lang.String s = input.readStringRequireUtf8();
-              sourceCase_ = 3;
-              source_ = s;
-              break;
-            }
-            case 34: {
-              java.lang.String s = input.readStringRequireUtf8();
-              sourceCase_ = 4;
-              source_ = s;
-              break;
-            }
-            case 42: {
-              com.giyeok.bibix.BibixIdProto.RemoteSourceId.Builder subBuilder = null;
-              if (sourceCase_ == 5) {
-                subBuilder = ((com.giyeok.bibix.BibixIdProto.RemoteSourceId) source_).toBuilder();
+              com.giyeok.bibix.BibixIdProto.ExternalBibixProject.Builder subBuilder = null;
+              if (sourceCase_ == 3) {
+                subBuilder = ((com.giyeok.bibix.BibixIdProto.ExternalBibixProject) source_).toBuilder();
               }
               source_ =
-                  input.readMessage(com.giyeok.bibix.BibixIdProto.RemoteSourceId.parser(), extensionRegistry);
+                  input.readMessage(com.giyeok.bibix.BibixIdProto.ExternalBibixProject.parser(), extensionRegistry);
               if (subBuilder != null) {
-                subBuilder.mergeFrom((com.giyeok.bibix.BibixIdProto.RemoteSourceId) source_);
+                subBuilder.mergeFrom((com.giyeok.bibix.BibixIdProto.ExternalBibixProject) source_);
                 source_ = subBuilder.buildPartial();
               }
-              sourceCase_ = 5;
+              sourceCase_ = 3;
               break;
             }
             default: {
@@ -235,11 +183,9 @@ public final class BibixIdProto {
     public enum SourceCase
         implements com.google.protobuf.Internal.EnumLite,
             com.google.protobuf.AbstractMessage.InternalOneOfEnum {
-      ROOT_SOURCE(1),
-      MAIN_SOURCE(2),
-      BIBIX_INTERNAL_SOURCE(3),
-      LOCAL_SOURCE(4),
-      REMOTE_SOURCE(5),
+      MAIN_SOURCE(1),
+      PRELOADED_PLUGIN(2),
+      EXTERN_PLUGIN_OBJHASH(3),
       SOURCE_NOT_SET(0);
       private final int value;
       private SourceCase(int value) {
@@ -257,11 +203,9 @@ public final class BibixIdProto {
 
       public static SourceCase forNumber(int value) {
         switch (value) {
-          case 1: return ROOT_SOURCE;
-          case 2: return MAIN_SOURCE;
-          case 3: return BIBIX_INTERNAL_SOURCE;
-          case 4: return LOCAL_SOURCE;
-          case 5: return REMOTE_SOURCE;
+          case 1: return MAIN_SOURCE;
+          case 2: return PRELOADED_PLUGIN;
+          case 3: return EXTERN_PLUGIN_OBJHASH;
           case 0: return SOURCE_NOT_SET;
           default: return null;
         }
@@ -277,201 +221,118 @@ public final class BibixIdProto {
           sourceCase_);
     }
 
-    public static final int ROOT_SOURCE_FIELD_NUMBER = 1;
+    public static final int MAIN_SOURCE_FIELD_NUMBER = 1;
     /**
-     * <code>.google.protobuf.Empty root_source = 1;</code>
-     * @return Whether the rootSource field is set.
-     */
-    @java.lang.Override
-    public boolean hasRootSource() {
-      return sourceCase_ == 1;
-    }
-    /**
-     * <code>.google.protobuf.Empty root_source = 1;</code>
-     * @return The rootSource.
-     */
-    @java.lang.Override
-    public com.google.protobuf.Empty getRootSource() {
-      if (sourceCase_ == 1) {
-         return (com.google.protobuf.Empty) source_;
-      }
-      return com.google.protobuf.Empty.getDefaultInstance();
-    }
-    /**
-     * <code>.google.protobuf.Empty root_source = 1;</code>
-     */
-    @java.lang.Override
-    public com.google.protobuf.EmptyOrBuilder getRootSourceOrBuilder() {
-      if (sourceCase_ == 1) {
-         return (com.google.protobuf.Empty) source_;
-      }
-      return com.google.protobuf.Empty.getDefaultInstance();
-    }
-
-    public static final int MAIN_SOURCE_FIELD_NUMBER = 2;
-    /**
-     * <code>.google.protobuf.Empty main_source = 2;</code>
+     * <code>.google.protobuf.Empty main_source = 1;</code>
      * @return Whether the mainSource field is set.
      */
     @java.lang.Override
     public boolean hasMainSource() {
-      return sourceCase_ == 2;
+      return sourceCase_ == 1;
     }
     /**
-     * <code>.google.protobuf.Empty main_source = 2;</code>
+     * <code>.google.protobuf.Empty main_source = 1;</code>
      * @return The mainSource.
      */
     @java.lang.Override
     public com.google.protobuf.Empty getMainSource() {
-      if (sourceCase_ == 2) {
+      if (sourceCase_ == 1) {
          return (com.google.protobuf.Empty) source_;
       }
       return com.google.protobuf.Empty.getDefaultInstance();
     }
     /**
-     * <code>.google.protobuf.Empty main_source = 2;</code>
+     * <code>.google.protobuf.Empty main_source = 1;</code>
      */
     @java.lang.Override
     public com.google.protobuf.EmptyOrBuilder getMainSourceOrBuilder() {
-      if (sourceCase_ == 2) {
+      if (sourceCase_ == 1) {
          return (com.google.protobuf.Empty) source_;
       }
       return com.google.protobuf.Empty.getDefaultInstance();
     }
 
-    public static final int BIBIX_INTERNAL_SOURCE_FIELD_NUMBER = 3;
+    public static final int PRELOADED_PLUGIN_FIELD_NUMBER = 2;
     /**
-     * <code>string bibix_internal_source = 3;</code>
-     * @return Whether the bibixInternalSource field is set.
+     * <code>string preloaded_plugin = 2;</code>
+     * @return Whether the preloadedPlugin field is set.
      */
-    public boolean hasBibixInternalSource() {
+    public boolean hasPreloadedPlugin() {
+      return sourceCase_ == 2;
+    }
+    /**
+     * <code>string preloaded_plugin = 2;</code>
+     * @return The preloadedPlugin.
+     */
+    public java.lang.String getPreloadedPlugin() {
+      java.lang.Object ref = "";
+      if (sourceCase_ == 2) {
+        ref = source_;
+      }
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (sourceCase_ == 2) {
+          source_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>string preloaded_plugin = 2;</code>
+     * @return The bytes for preloadedPlugin.
+     */
+    public com.google.protobuf.ByteString
+        getPreloadedPluginBytes() {
+      java.lang.Object ref = "";
+      if (sourceCase_ == 2) {
+        ref = source_;
+      }
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        if (sourceCase_ == 2) {
+          source_ = b;
+        }
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int EXTERN_PLUGIN_OBJHASH_FIELD_NUMBER = 3;
+    /**
+     * <code>.com.giyeok.bibix.ExternalBibixProject extern_plugin_objhash = 3;</code>
+     * @return Whether the externPluginObjhash field is set.
+     */
+    @java.lang.Override
+    public boolean hasExternPluginObjhash() {
       return sourceCase_ == 3;
     }
     /**
-     * <code>string bibix_internal_source = 3;</code>
-     * @return The bibixInternalSource.
+     * <code>.com.giyeok.bibix.ExternalBibixProject extern_plugin_objhash = 3;</code>
+     * @return The externPluginObjhash.
      */
-    public java.lang.String getBibixInternalSource() {
-      java.lang.Object ref = "";
+    @java.lang.Override
+    public com.giyeok.bibix.BibixIdProto.ExternalBibixProject getExternPluginObjhash() {
       if (sourceCase_ == 3) {
-        ref = source_;
+         return (com.giyeok.bibix.BibixIdProto.ExternalBibixProject) source_;
       }
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        if (sourceCase_ == 3) {
-          source_ = s;
-        }
-        return s;
-      }
+      return com.giyeok.bibix.BibixIdProto.ExternalBibixProject.getDefaultInstance();
     }
     /**
-     * <code>string bibix_internal_source = 3;</code>
-     * @return The bytes for bibixInternalSource.
+     * <code>.com.giyeok.bibix.ExternalBibixProject extern_plugin_objhash = 3;</code>
      */
-    public com.google.protobuf.ByteString
-        getBibixInternalSourceBytes() {
-      java.lang.Object ref = "";
+    @java.lang.Override
+    public com.giyeok.bibix.BibixIdProto.ExternalBibixProjectOrBuilder getExternPluginObjhashOrBuilder() {
       if (sourceCase_ == 3) {
-        ref = source_;
+         return (com.giyeok.bibix.BibixIdProto.ExternalBibixProject) source_;
       }
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        if (sourceCase_ == 3) {
-          source_ = b;
-        }
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-
-    public static final int LOCAL_SOURCE_FIELD_NUMBER = 4;
-    /**
-     * <code>string local_source = 4;</code>
-     * @return Whether the localSource field is set.
-     */
-    public boolean hasLocalSource() {
-      return sourceCase_ == 4;
-    }
-    /**
-     * <code>string local_source = 4;</code>
-     * @return The localSource.
-     */
-    public java.lang.String getLocalSource() {
-      java.lang.Object ref = "";
-      if (sourceCase_ == 4) {
-        ref = source_;
-      }
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        if (sourceCase_ == 4) {
-          source_ = s;
-        }
-        return s;
-      }
-    }
-    /**
-     * <code>string local_source = 4;</code>
-     * @return The bytes for localSource.
-     */
-    public com.google.protobuf.ByteString
-        getLocalSourceBytes() {
-      java.lang.Object ref = "";
-      if (sourceCase_ == 4) {
-        ref = source_;
-      }
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        if (sourceCase_ == 4) {
-          source_ = b;
-        }
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-
-    public static final int REMOTE_SOURCE_FIELD_NUMBER = 5;
-    /**
-     * <code>.com.giyeok.bibix.RemoteSourceId remote_source = 5;</code>
-     * @return Whether the remoteSource field is set.
-     */
-    @java.lang.Override
-    public boolean hasRemoteSource() {
-      return sourceCase_ == 5;
-    }
-    /**
-     * <code>.com.giyeok.bibix.RemoteSourceId remote_source = 5;</code>
-     * @return The remoteSource.
-     */
-    @java.lang.Override
-    public com.giyeok.bibix.BibixIdProto.RemoteSourceId getRemoteSource() {
-      if (sourceCase_ == 5) {
-         return (com.giyeok.bibix.BibixIdProto.RemoteSourceId) source_;
-      }
-      return com.giyeok.bibix.BibixIdProto.RemoteSourceId.getDefaultInstance();
-    }
-    /**
-     * <code>.com.giyeok.bibix.RemoteSourceId remote_source = 5;</code>
-     */
-    @java.lang.Override
-    public com.giyeok.bibix.BibixIdProto.RemoteSourceIdOrBuilder getRemoteSourceOrBuilder() {
-      if (sourceCase_ == 5) {
-         return (com.giyeok.bibix.BibixIdProto.RemoteSourceId) source_;
-      }
-      return com.giyeok.bibix.BibixIdProto.RemoteSourceId.getDefaultInstance();
+      return com.giyeok.bibix.BibixIdProto.ExternalBibixProject.getDefaultInstance();
     }
 
     private byte memoizedIsInitialized = -1;
@@ -492,16 +353,10 @@ public final class BibixIdProto {
         output.writeMessage(1, (com.google.protobuf.Empty) source_);
       }
       if (sourceCase_ == 2) {
-        output.writeMessage(2, (com.google.protobuf.Empty) source_);
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, source_);
       }
       if (sourceCase_ == 3) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 3, source_);
-      }
-      if (sourceCase_ == 4) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 4, source_);
-      }
-      if (sourceCase_ == 5) {
-        output.writeMessage(5, (com.giyeok.bibix.BibixIdProto.RemoteSourceId) source_);
+        output.writeMessage(3, (com.giyeok.bibix.BibixIdProto.ExternalBibixProject) source_);
       }
       unknownFields.writeTo(output);
     }
@@ -517,18 +372,11 @@ public final class BibixIdProto {
           .computeMessageSize(1, (com.google.protobuf.Empty) source_);
       }
       if (sourceCase_ == 2) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(2, (com.google.protobuf.Empty) source_);
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, source_);
       }
       if (sourceCase_ == 3) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, source_);
-      }
-      if (sourceCase_ == 4) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, source_);
-      }
-      if (sourceCase_ == 5) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(5, (com.giyeok.bibix.BibixIdProto.RemoteSourceId) source_);
+          .computeMessageSize(3, (com.giyeok.bibix.BibixIdProto.ExternalBibixProject) source_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -548,24 +396,16 @@ public final class BibixIdProto {
       if (!getSourceCase().equals(other.getSourceCase())) return false;
       switch (sourceCase_) {
         case 1:
-          if (!getRootSource()
-              .equals(other.getRootSource())) return false;
-          break;
-        case 2:
           if (!getMainSource()
               .equals(other.getMainSource())) return false;
           break;
+        case 2:
+          if (!getPreloadedPlugin()
+              .equals(other.getPreloadedPlugin())) return false;
+          break;
         case 3:
-          if (!getBibixInternalSource()
-              .equals(other.getBibixInternalSource())) return false;
-          break;
-        case 4:
-          if (!getLocalSource()
-              .equals(other.getLocalSource())) return false;
-          break;
-        case 5:
-          if (!getRemoteSource()
-              .equals(other.getRemoteSource())) return false;
+          if (!getExternPluginObjhash()
+              .equals(other.getExternPluginObjhash())) return false;
           break;
         case 0:
         default:
@@ -583,24 +423,16 @@ public final class BibixIdProto {
       hash = (19 * hash) + getDescriptor().hashCode();
       switch (sourceCase_) {
         case 1:
-          hash = (37 * hash) + ROOT_SOURCE_FIELD_NUMBER;
-          hash = (53 * hash) + getRootSource().hashCode();
-          break;
-        case 2:
           hash = (37 * hash) + MAIN_SOURCE_FIELD_NUMBER;
           hash = (53 * hash) + getMainSource().hashCode();
           break;
+        case 2:
+          hash = (37 * hash) + PRELOADED_PLUGIN_FIELD_NUMBER;
+          hash = (53 * hash) + getPreloadedPlugin().hashCode();
+          break;
         case 3:
-          hash = (37 * hash) + BIBIX_INTERNAL_SOURCE_FIELD_NUMBER;
-          hash = (53 * hash) + getBibixInternalSource().hashCode();
-          break;
-        case 4:
-          hash = (37 * hash) + LOCAL_SOURCE_FIELD_NUMBER;
-          hash = (53 * hash) + getLocalSource().hashCode();
-          break;
-        case 5:
-          hash = (37 * hash) + REMOTE_SOURCE_FIELD_NUMBER;
-          hash = (53 * hash) + getRemoteSource().hashCode();
+          hash = (37 * hash) + EXTERN_PLUGIN_OBJHASH_FIELD_NUMBER;
+          hash = (53 * hash) + getExternPluginObjhash().hashCode();
           break;
         case 0:
         default:
@@ -767,30 +599,20 @@ public final class BibixIdProto {
       public com.giyeok.bibix.BibixIdProto.SourceId buildPartial() {
         com.giyeok.bibix.BibixIdProto.SourceId result = new com.giyeok.bibix.BibixIdProto.SourceId(this);
         if (sourceCase_ == 1) {
-          if (rootSourceBuilder_ == null) {
-            result.source_ = source_;
-          } else {
-            result.source_ = rootSourceBuilder_.build();
-          }
-        }
-        if (sourceCase_ == 2) {
           if (mainSourceBuilder_ == null) {
             result.source_ = source_;
           } else {
             result.source_ = mainSourceBuilder_.build();
           }
         }
+        if (sourceCase_ == 2) {
+          result.source_ = source_;
+        }
         if (sourceCase_ == 3) {
-          result.source_ = source_;
-        }
-        if (sourceCase_ == 4) {
-          result.source_ = source_;
-        }
-        if (sourceCase_ == 5) {
-          if (remoteSourceBuilder_ == null) {
+          if (externPluginObjhashBuilder_ == null) {
             result.source_ = source_;
           } else {
-            result.source_ = remoteSourceBuilder_.build();
+            result.source_ = externPluginObjhashBuilder_.build();
           }
         }
         result.sourceCase_ = sourceCase_;
@@ -843,28 +665,18 @@ public final class BibixIdProto {
       public Builder mergeFrom(com.giyeok.bibix.BibixIdProto.SourceId other) {
         if (other == com.giyeok.bibix.BibixIdProto.SourceId.getDefaultInstance()) return this;
         switch (other.getSourceCase()) {
-          case ROOT_SOURCE: {
-            mergeRootSource(other.getRootSource());
-            break;
-          }
           case MAIN_SOURCE: {
             mergeMainSource(other.getMainSource());
             break;
           }
-          case BIBIX_INTERNAL_SOURCE: {
-            sourceCase_ = 3;
+          case PRELOADED_PLUGIN: {
+            sourceCase_ = 2;
             source_ = other.source_;
             onChanged();
             break;
           }
-          case LOCAL_SOURCE: {
-            sourceCase_ = 4;
-            source_ = other.source_;
-            onChanged();
-            break;
-          }
-          case REMOTE_SOURCE: {
-            mergeRemoteSource(other.getRemoteSource());
+          case EXTERN_PLUGIN_OBJHASH: {
+            mergeExternPluginObjhash(other.getExternPluginObjhash());
             break;
           }
           case SOURCE_NOT_SET: {
@@ -916,176 +728,35 @@ public final class BibixIdProto {
 
 
       private com.google.protobuf.SingleFieldBuilderV3<
-          com.google.protobuf.Empty, com.google.protobuf.Empty.Builder, com.google.protobuf.EmptyOrBuilder> rootSourceBuilder_;
-      /**
-       * <code>.google.protobuf.Empty root_source = 1;</code>
-       * @return Whether the rootSource field is set.
-       */
-      @java.lang.Override
-      public boolean hasRootSource() {
-        return sourceCase_ == 1;
-      }
-      /**
-       * <code>.google.protobuf.Empty root_source = 1;</code>
-       * @return The rootSource.
-       */
-      @java.lang.Override
-      public com.google.protobuf.Empty getRootSource() {
-        if (rootSourceBuilder_ == null) {
-          if (sourceCase_ == 1) {
-            return (com.google.protobuf.Empty) source_;
-          }
-          return com.google.protobuf.Empty.getDefaultInstance();
-        } else {
-          if (sourceCase_ == 1) {
-            return rootSourceBuilder_.getMessage();
-          }
-          return com.google.protobuf.Empty.getDefaultInstance();
-        }
-      }
-      /**
-       * <code>.google.protobuf.Empty root_source = 1;</code>
-       */
-      public Builder setRootSource(com.google.protobuf.Empty value) {
-        if (rootSourceBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          source_ = value;
-          onChanged();
-        } else {
-          rootSourceBuilder_.setMessage(value);
-        }
-        sourceCase_ = 1;
-        return this;
-      }
-      /**
-       * <code>.google.protobuf.Empty root_source = 1;</code>
-       */
-      public Builder setRootSource(
-          com.google.protobuf.Empty.Builder builderForValue) {
-        if (rootSourceBuilder_ == null) {
-          source_ = builderForValue.build();
-          onChanged();
-        } else {
-          rootSourceBuilder_.setMessage(builderForValue.build());
-        }
-        sourceCase_ = 1;
-        return this;
-      }
-      /**
-       * <code>.google.protobuf.Empty root_source = 1;</code>
-       */
-      public Builder mergeRootSource(com.google.protobuf.Empty value) {
-        if (rootSourceBuilder_ == null) {
-          if (sourceCase_ == 1 &&
-              source_ != com.google.protobuf.Empty.getDefaultInstance()) {
-            source_ = com.google.protobuf.Empty.newBuilder((com.google.protobuf.Empty) source_)
-                .mergeFrom(value).buildPartial();
-          } else {
-            source_ = value;
-          }
-          onChanged();
-        } else {
-          if (sourceCase_ == 1) {
-            rootSourceBuilder_.mergeFrom(value);
-          }
-          rootSourceBuilder_.setMessage(value);
-        }
-        sourceCase_ = 1;
-        return this;
-      }
-      /**
-       * <code>.google.protobuf.Empty root_source = 1;</code>
-       */
-      public Builder clearRootSource() {
-        if (rootSourceBuilder_ == null) {
-          if (sourceCase_ == 1) {
-            sourceCase_ = 0;
-            source_ = null;
-            onChanged();
-          }
-        } else {
-          if (sourceCase_ == 1) {
-            sourceCase_ = 0;
-            source_ = null;
-          }
-          rootSourceBuilder_.clear();
-        }
-        return this;
-      }
-      /**
-       * <code>.google.protobuf.Empty root_source = 1;</code>
-       */
-      public com.google.protobuf.Empty.Builder getRootSourceBuilder() {
-        return getRootSourceFieldBuilder().getBuilder();
-      }
-      /**
-       * <code>.google.protobuf.Empty root_source = 1;</code>
-       */
-      @java.lang.Override
-      public com.google.protobuf.EmptyOrBuilder getRootSourceOrBuilder() {
-        if ((sourceCase_ == 1) && (rootSourceBuilder_ != null)) {
-          return rootSourceBuilder_.getMessageOrBuilder();
-        } else {
-          if (sourceCase_ == 1) {
-            return (com.google.protobuf.Empty) source_;
-          }
-          return com.google.protobuf.Empty.getDefaultInstance();
-        }
-      }
-      /**
-       * <code>.google.protobuf.Empty root_source = 1;</code>
-       */
-      private com.google.protobuf.SingleFieldBuilderV3<
-          com.google.protobuf.Empty, com.google.protobuf.Empty.Builder, com.google.protobuf.EmptyOrBuilder> 
-          getRootSourceFieldBuilder() {
-        if (rootSourceBuilder_ == null) {
-          if (!(sourceCase_ == 1)) {
-            source_ = com.google.protobuf.Empty.getDefaultInstance();
-          }
-          rootSourceBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-              com.google.protobuf.Empty, com.google.protobuf.Empty.Builder, com.google.protobuf.EmptyOrBuilder>(
-                  (com.google.protobuf.Empty) source_,
-                  getParentForChildren(),
-                  isClean());
-          source_ = null;
-        }
-        sourceCase_ = 1;
-        onChanged();;
-        return rootSourceBuilder_;
-      }
-
-      private com.google.protobuf.SingleFieldBuilderV3<
           com.google.protobuf.Empty, com.google.protobuf.Empty.Builder, com.google.protobuf.EmptyOrBuilder> mainSourceBuilder_;
       /**
-       * <code>.google.protobuf.Empty main_source = 2;</code>
+       * <code>.google.protobuf.Empty main_source = 1;</code>
        * @return Whether the mainSource field is set.
        */
       @java.lang.Override
       public boolean hasMainSource() {
-        return sourceCase_ == 2;
+        return sourceCase_ == 1;
       }
       /**
-       * <code>.google.protobuf.Empty main_source = 2;</code>
+       * <code>.google.protobuf.Empty main_source = 1;</code>
        * @return The mainSource.
        */
       @java.lang.Override
       public com.google.protobuf.Empty getMainSource() {
         if (mainSourceBuilder_ == null) {
-          if (sourceCase_ == 2) {
+          if (sourceCase_ == 1) {
             return (com.google.protobuf.Empty) source_;
           }
           return com.google.protobuf.Empty.getDefaultInstance();
         } else {
-          if (sourceCase_ == 2) {
+          if (sourceCase_ == 1) {
             return mainSourceBuilder_.getMessage();
           }
           return com.google.protobuf.Empty.getDefaultInstance();
         }
       }
       /**
-       * <code>.google.protobuf.Empty main_source = 2;</code>
+       * <code>.google.protobuf.Empty main_source = 1;</code>
        */
       public Builder setMainSource(com.google.protobuf.Empty value) {
         if (mainSourceBuilder_ == null) {
@@ -1097,11 +768,11 @@ public final class BibixIdProto {
         } else {
           mainSourceBuilder_.setMessage(value);
         }
-        sourceCase_ = 2;
+        sourceCase_ = 1;
         return this;
       }
       /**
-       * <code>.google.protobuf.Empty main_source = 2;</code>
+       * <code>.google.protobuf.Empty main_source = 1;</code>
        */
       public Builder setMainSource(
           com.google.protobuf.Empty.Builder builderForValue) {
@@ -1111,15 +782,15 @@ public final class BibixIdProto {
         } else {
           mainSourceBuilder_.setMessage(builderForValue.build());
         }
-        sourceCase_ = 2;
+        sourceCase_ = 1;
         return this;
       }
       /**
-       * <code>.google.protobuf.Empty main_source = 2;</code>
+       * <code>.google.protobuf.Empty main_source = 1;</code>
        */
       public Builder mergeMainSource(com.google.protobuf.Empty value) {
         if (mainSourceBuilder_ == null) {
-          if (sourceCase_ == 2 &&
+          if (sourceCase_ == 1 &&
               source_ != com.google.protobuf.Empty.getDefaultInstance()) {
             source_ = com.google.protobuf.Empty.newBuilder((com.google.protobuf.Empty) source_)
                 .mergeFrom(value).buildPartial();
@@ -1128,26 +799,26 @@ public final class BibixIdProto {
           }
           onChanged();
         } else {
-          if (sourceCase_ == 2) {
+          if (sourceCase_ == 1) {
             mainSourceBuilder_.mergeFrom(value);
           }
           mainSourceBuilder_.setMessage(value);
         }
-        sourceCase_ = 2;
+        sourceCase_ = 1;
         return this;
       }
       /**
-       * <code>.google.protobuf.Empty main_source = 2;</code>
+       * <code>.google.protobuf.Empty main_source = 1;</code>
        */
       public Builder clearMainSource() {
         if (mainSourceBuilder_ == null) {
-          if (sourceCase_ == 2) {
+          if (sourceCase_ == 1) {
             sourceCase_ = 0;
             source_ = null;
             onChanged();
           }
         } else {
-          if (sourceCase_ == 2) {
+          if (sourceCase_ == 1) {
             sourceCase_ = 0;
             source_ = null;
           }
@@ -1156,33 +827,33 @@ public final class BibixIdProto {
         return this;
       }
       /**
-       * <code>.google.protobuf.Empty main_source = 2;</code>
+       * <code>.google.protobuf.Empty main_source = 1;</code>
        */
       public com.google.protobuf.Empty.Builder getMainSourceBuilder() {
         return getMainSourceFieldBuilder().getBuilder();
       }
       /**
-       * <code>.google.protobuf.Empty main_source = 2;</code>
+       * <code>.google.protobuf.Empty main_source = 1;</code>
        */
       @java.lang.Override
       public com.google.protobuf.EmptyOrBuilder getMainSourceOrBuilder() {
-        if ((sourceCase_ == 2) && (mainSourceBuilder_ != null)) {
+        if ((sourceCase_ == 1) && (mainSourceBuilder_ != null)) {
           return mainSourceBuilder_.getMessageOrBuilder();
         } else {
-          if (sourceCase_ == 2) {
+          if (sourceCase_ == 1) {
             return (com.google.protobuf.Empty) source_;
           }
           return com.google.protobuf.Empty.getDefaultInstance();
         }
       }
       /**
-       * <code>.google.protobuf.Empty main_source = 2;</code>
+       * <code>.google.protobuf.Empty main_source = 1;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
           com.google.protobuf.Empty, com.google.protobuf.Empty.Builder, com.google.protobuf.EmptyOrBuilder> 
           getMainSourceFieldBuilder() {
         if (mainSourceBuilder_ == null) {
-          if (!(sourceCase_ == 2)) {
+          if (!(sourceCase_ == 1)) {
             source_ = com.google.protobuf.Empty.getDefaultInstance();
           }
           mainSourceBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
@@ -1192,34 +863,34 @@ public final class BibixIdProto {
                   isClean());
           source_ = null;
         }
-        sourceCase_ = 2;
+        sourceCase_ = 1;
         onChanged();;
         return mainSourceBuilder_;
       }
 
       /**
-       * <code>string bibix_internal_source = 3;</code>
-       * @return Whether the bibixInternalSource field is set.
+       * <code>string preloaded_plugin = 2;</code>
+       * @return Whether the preloadedPlugin field is set.
        */
       @java.lang.Override
-      public boolean hasBibixInternalSource() {
-        return sourceCase_ == 3;
+      public boolean hasPreloadedPlugin() {
+        return sourceCase_ == 2;
       }
       /**
-       * <code>string bibix_internal_source = 3;</code>
-       * @return The bibixInternalSource.
+       * <code>string preloaded_plugin = 2;</code>
+       * @return The preloadedPlugin.
        */
       @java.lang.Override
-      public java.lang.String getBibixInternalSource() {
+      public java.lang.String getPreloadedPlugin() {
         java.lang.Object ref = "";
-        if (sourceCase_ == 3) {
+        if (sourceCase_ == 2) {
           ref = source_;
         }
         if (!(ref instanceof java.lang.String)) {
           com.google.protobuf.ByteString bs =
               (com.google.protobuf.ByteString) ref;
           java.lang.String s = bs.toStringUtf8();
-          if (sourceCase_ == 3) {
+          if (sourceCase_ == 2) {
             source_ = s;
           }
           return s;
@@ -1228,21 +899,21 @@ public final class BibixIdProto {
         }
       }
       /**
-       * <code>string bibix_internal_source = 3;</code>
-       * @return The bytes for bibixInternalSource.
+       * <code>string preloaded_plugin = 2;</code>
+       * @return The bytes for preloadedPlugin.
        */
       @java.lang.Override
       public com.google.protobuf.ByteString
-          getBibixInternalSourceBytes() {
+          getPreloadedPluginBytes() {
         java.lang.Object ref = "";
-        if (sourceCase_ == 3) {
+        if (sourceCase_ == 2) {
           ref = source_;
         }
         if (ref instanceof String) {
           com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
-          if (sourceCase_ == 3) {
+          if (sourceCase_ == 2) {
             source_ = b;
           }
           return b;
@@ -1251,26 +922,26 @@ public final class BibixIdProto {
         }
       }
       /**
-       * <code>string bibix_internal_source = 3;</code>
-       * @param value The bibixInternalSource to set.
+       * <code>string preloaded_plugin = 2;</code>
+       * @param value The preloadedPlugin to set.
        * @return This builder for chaining.
        */
-      public Builder setBibixInternalSource(
+      public Builder setPreloadedPlugin(
           java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
-  sourceCase_ = 3;
+  sourceCase_ = 2;
         source_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>string bibix_internal_source = 3;</code>
+       * <code>string preloaded_plugin = 2;</code>
        * @return This builder for chaining.
        */
-      public Builder clearBibixInternalSource() {
-        if (sourceCase_ == 3) {
+      public Builder clearPreloadedPlugin() {
+        if (sourceCase_ == 2) {
           sourceCase_ = 0;
           source_ = null;
           onChanged();
@@ -1278,258 +949,161 @@ public final class BibixIdProto {
         return this;
       }
       /**
-       * <code>string bibix_internal_source = 3;</code>
-       * @param value The bytes for bibixInternalSource to set.
+       * <code>string preloaded_plugin = 2;</code>
+       * @param value The bytes for preloadedPlugin to set.
        * @return This builder for chaining.
        */
-      public Builder setBibixInternalSourceBytes(
+      public Builder setPreloadedPluginBytes(
           com.google.protobuf.ByteString value) {
         if (value == null) {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
-        sourceCase_ = 3;
-        source_ = value;
-        onChanged();
-        return this;
-      }
-
-      /**
-       * <code>string local_source = 4;</code>
-       * @return Whether the localSource field is set.
-       */
-      @java.lang.Override
-      public boolean hasLocalSource() {
-        return sourceCase_ == 4;
-      }
-      /**
-       * <code>string local_source = 4;</code>
-       * @return The localSource.
-       */
-      @java.lang.Override
-      public java.lang.String getLocalSource() {
-        java.lang.Object ref = "";
-        if (sourceCase_ == 4) {
-          ref = source_;
-        }
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          if (sourceCase_ == 4) {
-            source_ = s;
-          }
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
-      }
-      /**
-       * <code>string local_source = 4;</code>
-       * @return The bytes for localSource.
-       */
-      @java.lang.Override
-      public com.google.protobuf.ByteString
-          getLocalSourceBytes() {
-        java.lang.Object ref = "";
-        if (sourceCase_ == 4) {
-          ref = source_;
-        }
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          if (sourceCase_ == 4) {
-            source_ = b;
-          }
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <code>string local_source = 4;</code>
-       * @param value The localSource to set.
-       * @return This builder for chaining.
-       */
-      public Builder setLocalSource(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  sourceCase_ = 4;
-        source_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>string local_source = 4;</code>
-       * @return This builder for chaining.
-       */
-      public Builder clearLocalSource() {
-        if (sourceCase_ == 4) {
-          sourceCase_ = 0;
-          source_ = null;
-          onChanged();
-        }
-        return this;
-      }
-      /**
-       * <code>string local_source = 4;</code>
-       * @param value The bytes for localSource to set.
-       * @return This builder for chaining.
-       */
-      public Builder setLocalSourceBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        sourceCase_ = 4;
+        sourceCase_ = 2;
         source_ = value;
         onChanged();
         return this;
       }
 
       private com.google.protobuf.SingleFieldBuilderV3<
-          com.giyeok.bibix.BibixIdProto.RemoteSourceId, com.giyeok.bibix.BibixIdProto.RemoteSourceId.Builder, com.giyeok.bibix.BibixIdProto.RemoteSourceIdOrBuilder> remoteSourceBuilder_;
+          com.giyeok.bibix.BibixIdProto.ExternalBibixProject, com.giyeok.bibix.BibixIdProto.ExternalBibixProject.Builder, com.giyeok.bibix.BibixIdProto.ExternalBibixProjectOrBuilder> externPluginObjhashBuilder_;
       /**
-       * <code>.com.giyeok.bibix.RemoteSourceId remote_source = 5;</code>
-       * @return Whether the remoteSource field is set.
+       * <code>.com.giyeok.bibix.ExternalBibixProject extern_plugin_objhash = 3;</code>
+       * @return Whether the externPluginObjhash field is set.
        */
       @java.lang.Override
-      public boolean hasRemoteSource() {
-        return sourceCase_ == 5;
+      public boolean hasExternPluginObjhash() {
+        return sourceCase_ == 3;
       }
       /**
-       * <code>.com.giyeok.bibix.RemoteSourceId remote_source = 5;</code>
-       * @return The remoteSource.
+       * <code>.com.giyeok.bibix.ExternalBibixProject extern_plugin_objhash = 3;</code>
+       * @return The externPluginObjhash.
        */
       @java.lang.Override
-      public com.giyeok.bibix.BibixIdProto.RemoteSourceId getRemoteSource() {
-        if (remoteSourceBuilder_ == null) {
-          if (sourceCase_ == 5) {
-            return (com.giyeok.bibix.BibixIdProto.RemoteSourceId) source_;
+      public com.giyeok.bibix.BibixIdProto.ExternalBibixProject getExternPluginObjhash() {
+        if (externPluginObjhashBuilder_ == null) {
+          if (sourceCase_ == 3) {
+            return (com.giyeok.bibix.BibixIdProto.ExternalBibixProject) source_;
           }
-          return com.giyeok.bibix.BibixIdProto.RemoteSourceId.getDefaultInstance();
+          return com.giyeok.bibix.BibixIdProto.ExternalBibixProject.getDefaultInstance();
         } else {
-          if (sourceCase_ == 5) {
-            return remoteSourceBuilder_.getMessage();
+          if (sourceCase_ == 3) {
+            return externPluginObjhashBuilder_.getMessage();
           }
-          return com.giyeok.bibix.BibixIdProto.RemoteSourceId.getDefaultInstance();
+          return com.giyeok.bibix.BibixIdProto.ExternalBibixProject.getDefaultInstance();
         }
       }
       /**
-       * <code>.com.giyeok.bibix.RemoteSourceId remote_source = 5;</code>
+       * <code>.com.giyeok.bibix.ExternalBibixProject extern_plugin_objhash = 3;</code>
        */
-      public Builder setRemoteSource(com.giyeok.bibix.BibixIdProto.RemoteSourceId value) {
-        if (remoteSourceBuilder_ == null) {
+      public Builder setExternPluginObjhash(com.giyeok.bibix.BibixIdProto.ExternalBibixProject value) {
+        if (externPluginObjhashBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
           }
           source_ = value;
           onChanged();
         } else {
-          remoteSourceBuilder_.setMessage(value);
+          externPluginObjhashBuilder_.setMessage(value);
         }
-        sourceCase_ = 5;
+        sourceCase_ = 3;
         return this;
       }
       /**
-       * <code>.com.giyeok.bibix.RemoteSourceId remote_source = 5;</code>
+       * <code>.com.giyeok.bibix.ExternalBibixProject extern_plugin_objhash = 3;</code>
        */
-      public Builder setRemoteSource(
-          com.giyeok.bibix.BibixIdProto.RemoteSourceId.Builder builderForValue) {
-        if (remoteSourceBuilder_ == null) {
+      public Builder setExternPluginObjhash(
+          com.giyeok.bibix.BibixIdProto.ExternalBibixProject.Builder builderForValue) {
+        if (externPluginObjhashBuilder_ == null) {
           source_ = builderForValue.build();
           onChanged();
         } else {
-          remoteSourceBuilder_.setMessage(builderForValue.build());
+          externPluginObjhashBuilder_.setMessage(builderForValue.build());
         }
-        sourceCase_ = 5;
+        sourceCase_ = 3;
         return this;
       }
       /**
-       * <code>.com.giyeok.bibix.RemoteSourceId remote_source = 5;</code>
+       * <code>.com.giyeok.bibix.ExternalBibixProject extern_plugin_objhash = 3;</code>
        */
-      public Builder mergeRemoteSource(com.giyeok.bibix.BibixIdProto.RemoteSourceId value) {
-        if (remoteSourceBuilder_ == null) {
-          if (sourceCase_ == 5 &&
-              source_ != com.giyeok.bibix.BibixIdProto.RemoteSourceId.getDefaultInstance()) {
-            source_ = com.giyeok.bibix.BibixIdProto.RemoteSourceId.newBuilder((com.giyeok.bibix.BibixIdProto.RemoteSourceId) source_)
+      public Builder mergeExternPluginObjhash(com.giyeok.bibix.BibixIdProto.ExternalBibixProject value) {
+        if (externPluginObjhashBuilder_ == null) {
+          if (sourceCase_ == 3 &&
+              source_ != com.giyeok.bibix.BibixIdProto.ExternalBibixProject.getDefaultInstance()) {
+            source_ = com.giyeok.bibix.BibixIdProto.ExternalBibixProject.newBuilder((com.giyeok.bibix.BibixIdProto.ExternalBibixProject) source_)
                 .mergeFrom(value).buildPartial();
           } else {
             source_ = value;
           }
           onChanged();
         } else {
-          if (sourceCase_ == 5) {
-            remoteSourceBuilder_.mergeFrom(value);
+          if (sourceCase_ == 3) {
+            externPluginObjhashBuilder_.mergeFrom(value);
           }
-          remoteSourceBuilder_.setMessage(value);
+          externPluginObjhashBuilder_.setMessage(value);
         }
-        sourceCase_ = 5;
+        sourceCase_ = 3;
         return this;
       }
       /**
-       * <code>.com.giyeok.bibix.RemoteSourceId remote_source = 5;</code>
+       * <code>.com.giyeok.bibix.ExternalBibixProject extern_plugin_objhash = 3;</code>
        */
-      public Builder clearRemoteSource() {
-        if (remoteSourceBuilder_ == null) {
-          if (sourceCase_ == 5) {
+      public Builder clearExternPluginObjhash() {
+        if (externPluginObjhashBuilder_ == null) {
+          if (sourceCase_ == 3) {
             sourceCase_ = 0;
             source_ = null;
             onChanged();
           }
         } else {
-          if (sourceCase_ == 5) {
+          if (sourceCase_ == 3) {
             sourceCase_ = 0;
             source_ = null;
           }
-          remoteSourceBuilder_.clear();
+          externPluginObjhashBuilder_.clear();
         }
         return this;
       }
       /**
-       * <code>.com.giyeok.bibix.RemoteSourceId remote_source = 5;</code>
+       * <code>.com.giyeok.bibix.ExternalBibixProject extern_plugin_objhash = 3;</code>
        */
-      public com.giyeok.bibix.BibixIdProto.RemoteSourceId.Builder getRemoteSourceBuilder() {
-        return getRemoteSourceFieldBuilder().getBuilder();
+      public com.giyeok.bibix.BibixIdProto.ExternalBibixProject.Builder getExternPluginObjhashBuilder() {
+        return getExternPluginObjhashFieldBuilder().getBuilder();
       }
       /**
-       * <code>.com.giyeok.bibix.RemoteSourceId remote_source = 5;</code>
+       * <code>.com.giyeok.bibix.ExternalBibixProject extern_plugin_objhash = 3;</code>
        */
       @java.lang.Override
-      public com.giyeok.bibix.BibixIdProto.RemoteSourceIdOrBuilder getRemoteSourceOrBuilder() {
-        if ((sourceCase_ == 5) && (remoteSourceBuilder_ != null)) {
-          return remoteSourceBuilder_.getMessageOrBuilder();
+      public com.giyeok.bibix.BibixIdProto.ExternalBibixProjectOrBuilder getExternPluginObjhashOrBuilder() {
+        if ((sourceCase_ == 3) && (externPluginObjhashBuilder_ != null)) {
+          return externPluginObjhashBuilder_.getMessageOrBuilder();
         } else {
-          if (sourceCase_ == 5) {
-            return (com.giyeok.bibix.BibixIdProto.RemoteSourceId) source_;
+          if (sourceCase_ == 3) {
+            return (com.giyeok.bibix.BibixIdProto.ExternalBibixProject) source_;
           }
-          return com.giyeok.bibix.BibixIdProto.RemoteSourceId.getDefaultInstance();
+          return com.giyeok.bibix.BibixIdProto.ExternalBibixProject.getDefaultInstance();
         }
       }
       /**
-       * <code>.com.giyeok.bibix.RemoteSourceId remote_source = 5;</code>
+       * <code>.com.giyeok.bibix.ExternalBibixProject extern_plugin_objhash = 3;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
-          com.giyeok.bibix.BibixIdProto.RemoteSourceId, com.giyeok.bibix.BibixIdProto.RemoteSourceId.Builder, com.giyeok.bibix.BibixIdProto.RemoteSourceIdOrBuilder> 
-          getRemoteSourceFieldBuilder() {
-        if (remoteSourceBuilder_ == null) {
-          if (!(sourceCase_ == 5)) {
-            source_ = com.giyeok.bibix.BibixIdProto.RemoteSourceId.getDefaultInstance();
+          com.giyeok.bibix.BibixIdProto.ExternalBibixProject, com.giyeok.bibix.BibixIdProto.ExternalBibixProject.Builder, com.giyeok.bibix.BibixIdProto.ExternalBibixProjectOrBuilder> 
+          getExternPluginObjhashFieldBuilder() {
+        if (externPluginObjhashBuilder_ == null) {
+          if (!(sourceCase_ == 3)) {
+            source_ = com.giyeok.bibix.BibixIdProto.ExternalBibixProject.getDefaultInstance();
           }
-          remoteSourceBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-              com.giyeok.bibix.BibixIdProto.RemoteSourceId, com.giyeok.bibix.BibixIdProto.RemoteSourceId.Builder, com.giyeok.bibix.BibixIdProto.RemoteSourceIdOrBuilder>(
-                  (com.giyeok.bibix.BibixIdProto.RemoteSourceId) source_,
+          externPluginObjhashBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              com.giyeok.bibix.BibixIdProto.ExternalBibixProject, com.giyeok.bibix.BibixIdProto.ExternalBibixProject.Builder, com.giyeok.bibix.BibixIdProto.ExternalBibixProjectOrBuilder>(
+                  (com.giyeok.bibix.BibixIdProto.ExternalBibixProject) source_,
                   getParentForChildren(),
                   isClean());
           source_ = null;
         }
-        sourceCase_ = 5;
+        sourceCase_ = 3;
         onChanged();;
-        return remoteSourceBuilder_;
+        return externPluginObjhashBuilder_;
       }
       @java.lang.Override
       public final Builder setUnknownFields(
@@ -1584,58 +1158,69 @@ public final class BibixIdProto {
 
   }
 
-  public interface RemoteSourceIdOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:com.giyeok.bibix.RemoteSourceId)
+  public interface ExternalBibixProjectOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:com.giyeok.bibix.ExternalBibixProject)
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>string source_type = 1;</code>
-     * @return The sourceType.
+     * <code>string root_directory = 1;</code>
+     * @return The rootDirectory.
      */
-    java.lang.String getSourceType();
+    java.lang.String getRootDirectory();
     /**
-     * <code>string source_type = 1;</code>
-     * @return The bytes for sourceType.
+     * <code>string root_directory = 1;</code>
+     * @return The bytes for rootDirectory.
      */
     com.google.protobuf.ByteString
-        getSourceTypeBytes();
+        getRootDirectoryBytes();
 
     /**
-     * <code>.com.giyeok.bibix.BibixValue source_spec = 2;</code>
-     * @return Whether the sourceSpec field is set.
+     * <code>string script_name = 2;</code>
+     * @return The scriptName.
      */
-    boolean hasSourceSpec();
+    java.lang.String getScriptName();
     /**
-     * <code>.com.giyeok.bibix.BibixValue source_spec = 2;</code>
-     * @return The sourceSpec.
+     * <code>string script_name = 2;</code>
+     * @return The bytes for scriptName.
      */
-    com.giyeok.bibix.BibixValueProto.BibixValue getSourceSpec();
+    com.google.protobuf.ByteString
+        getScriptNameBytes();
+
     /**
-     * <code>.com.giyeok.bibix.BibixValue source_spec = 2;</code>
+     * <code>bytes project_obj_hash = 3;</code>
+     * @return The projectObjHash.
      */
-    com.giyeok.bibix.BibixValueProto.BibixValueOrBuilder getSourceSpecOrBuilder();
+    com.google.protobuf.ByteString getProjectObjHash();
+
+    /**
+     * <code>int64 version = 4;</code>
+     * @return The version.
+     */
+    long getVersion();
   }
   /**
-   * Protobuf type {@code com.giyeok.bibix.RemoteSourceId}
+   * Protobuf type {@code com.giyeok.bibix.ExternalBibixProject}
    */
-  public static final class RemoteSourceId extends
+  public static final class ExternalBibixProject extends
       com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:com.giyeok.bibix.RemoteSourceId)
-      RemoteSourceIdOrBuilder {
+      // @@protoc_insertion_point(message_implements:com.giyeok.bibix.ExternalBibixProject)
+      ExternalBibixProjectOrBuilder {
   private static final long serialVersionUID = 0L;
-    // Use RemoteSourceId.newBuilder() to construct.
-    private RemoteSourceId(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+    // Use ExternalBibixProject.newBuilder() to construct.
+    private ExternalBibixProject(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
       super(builder);
     }
-    private RemoteSourceId() {
-      sourceType_ = "";
+    private ExternalBibixProject() {
+      rootDirectory_ = "";
+      scriptName_ = "";
+      projectObjHash_ = com.google.protobuf.ByteString.EMPTY;
     }
 
     @java.lang.Override
     @SuppressWarnings({"unused"})
     protected java.lang.Object newInstance(
         UnusedPrivateParameter unused) {
-      return new RemoteSourceId();
+      return new ExternalBibixProject();
     }
 
     @java.lang.Override
@@ -1643,7 +1228,7 @@ public final class BibixIdProto {
     getUnknownFields() {
       return this.unknownFields;
     }
-    private RemoteSourceId(
+    private ExternalBibixProject(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
@@ -1664,1322 +1249,23 @@ public final class BibixIdProto {
             case 10: {
               java.lang.String s = input.readStringRequireUtf8();
 
-              sourceType_ = s;
+              rootDirectory_ = s;
               break;
             }
             case 18: {
-              com.giyeok.bibix.BibixValueProto.BibixValue.Builder subBuilder = null;
-              if (sourceSpec_ != null) {
-                subBuilder = sourceSpec_.toBuilder();
-              }
-              sourceSpec_ = input.readMessage(com.giyeok.bibix.BibixValueProto.BibixValue.parser(), extensionRegistry);
-              if (subBuilder != null) {
-                subBuilder.mergeFrom(sourceSpec_);
-                sourceSpec_ = subBuilder.buildPartial();
-              }
-
-              break;
-            }
-            default: {
-              if (!parseUnknownField(
-                  input, unknownFields, extensionRegistry, tag)) {
-                done = true;
-              }
-              break;
-            }
-          }
-        }
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw e.setUnfinishedMessage(this);
-      } catch (java.io.IOException e) {
-        throw new com.google.protobuf.InvalidProtocolBufferException(
-            e).setUnfinishedMessage(this);
-      } finally {
-        this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
-      }
-    }
-    public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return com.giyeok.bibix.BibixIdProto.internal_static_com_giyeok_bibix_RemoteSourceId_descriptor;
-    }
-
-    @java.lang.Override
-    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-      return com.giyeok.bibix.BibixIdProto.internal_static_com_giyeok_bibix_RemoteSourceId_fieldAccessorTable
-          .ensureFieldAccessorsInitialized(
-              com.giyeok.bibix.BibixIdProto.RemoteSourceId.class, com.giyeok.bibix.BibixIdProto.RemoteSourceId.Builder.class);
-    }
-
-    public static final int SOURCE_TYPE_FIELD_NUMBER = 1;
-    private volatile java.lang.Object sourceType_;
-    /**
-     * <code>string source_type = 1;</code>
-     * @return The sourceType.
-     */
-    @java.lang.Override
-    public java.lang.String getSourceType() {
-      java.lang.Object ref = sourceType_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        sourceType_ = s;
-        return s;
-      }
-    }
-    /**
-     * <code>string source_type = 1;</code>
-     * @return The bytes for sourceType.
-     */
-    @java.lang.Override
-    public com.google.protobuf.ByteString
-        getSourceTypeBytes() {
-      java.lang.Object ref = sourceType_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        sourceType_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-
-    public static final int SOURCE_SPEC_FIELD_NUMBER = 2;
-    private com.giyeok.bibix.BibixValueProto.BibixValue sourceSpec_;
-    /**
-     * <code>.com.giyeok.bibix.BibixValue source_spec = 2;</code>
-     * @return Whether the sourceSpec field is set.
-     */
-    @java.lang.Override
-    public boolean hasSourceSpec() {
-      return sourceSpec_ != null;
-    }
-    /**
-     * <code>.com.giyeok.bibix.BibixValue source_spec = 2;</code>
-     * @return The sourceSpec.
-     */
-    @java.lang.Override
-    public com.giyeok.bibix.BibixValueProto.BibixValue getSourceSpec() {
-      return sourceSpec_ == null ? com.giyeok.bibix.BibixValueProto.BibixValue.getDefaultInstance() : sourceSpec_;
-    }
-    /**
-     * <code>.com.giyeok.bibix.BibixValue source_spec = 2;</code>
-     */
-    @java.lang.Override
-    public com.giyeok.bibix.BibixValueProto.BibixValueOrBuilder getSourceSpecOrBuilder() {
-      return getSourceSpec();
-    }
-
-    private byte memoizedIsInitialized = -1;
-    @java.lang.Override
-    public final boolean isInitialized() {
-      byte isInitialized = memoizedIsInitialized;
-      if (isInitialized == 1) return true;
-      if (isInitialized == 0) return false;
-
-      memoizedIsInitialized = 1;
-      return true;
-    }
-
-    @java.lang.Override
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
-      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(sourceType_)) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, sourceType_);
-      }
-      if (sourceSpec_ != null) {
-        output.writeMessage(2, getSourceSpec());
-      }
-      unknownFields.writeTo(output);
-    }
-
-    @java.lang.Override
-    public int getSerializedSize() {
-      int size = memoizedSize;
-      if (size != -1) return size;
-
-      size = 0;
-      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(sourceType_)) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, sourceType_);
-      }
-      if (sourceSpec_ != null) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(2, getSourceSpec());
-      }
-      size += unknownFields.getSerializedSize();
-      memoizedSize = size;
-      return size;
-    }
-
-    @java.lang.Override
-    public boolean equals(final java.lang.Object obj) {
-      if (obj == this) {
-       return true;
-      }
-      if (!(obj instanceof com.giyeok.bibix.BibixIdProto.RemoteSourceId)) {
-        return super.equals(obj);
-      }
-      com.giyeok.bibix.BibixIdProto.RemoteSourceId other = (com.giyeok.bibix.BibixIdProto.RemoteSourceId) obj;
-
-      if (!getSourceType()
-          .equals(other.getSourceType())) return false;
-      if (hasSourceSpec() != other.hasSourceSpec()) return false;
-      if (hasSourceSpec()) {
-        if (!getSourceSpec()
-            .equals(other.getSourceSpec())) return false;
-      }
-      if (!unknownFields.equals(other.unknownFields)) return false;
-      return true;
-    }
-
-    @java.lang.Override
-    public int hashCode() {
-      if (memoizedHashCode != 0) {
-        return memoizedHashCode;
-      }
-      int hash = 41;
-      hash = (19 * hash) + getDescriptor().hashCode();
-      hash = (37 * hash) + SOURCE_TYPE_FIELD_NUMBER;
-      hash = (53 * hash) + getSourceType().hashCode();
-      if (hasSourceSpec()) {
-        hash = (37 * hash) + SOURCE_SPEC_FIELD_NUMBER;
-        hash = (53 * hash) + getSourceSpec().hashCode();
-      }
-      hash = (29 * hash) + unknownFields.hashCode();
-      memoizedHashCode = hash;
-      return hash;
-    }
-
-    public static com.giyeok.bibix.BibixIdProto.RemoteSourceId parseFrom(
-        java.nio.ByteBuffer data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static com.giyeok.bibix.BibixIdProto.RemoteSourceId parseFrom(
-        java.nio.ByteBuffer data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static com.giyeok.bibix.BibixIdProto.RemoteSourceId parseFrom(
-        com.google.protobuf.ByteString data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static com.giyeok.bibix.BibixIdProto.RemoteSourceId parseFrom(
-        com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static com.giyeok.bibix.BibixIdProto.RemoteSourceId parseFrom(byte[] data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static com.giyeok.bibix.BibixIdProto.RemoteSourceId parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static com.giyeok.bibix.BibixIdProto.RemoteSourceId parseFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
-    }
-    public static com.giyeok.bibix.BibixIdProto.RemoteSourceId parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
-    }
-    public static com.giyeok.bibix.BibixIdProto.RemoteSourceId parseDelimitedFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input);
-    }
-    public static com.giyeok.bibix.BibixIdProto.RemoteSourceId parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
-    }
-    public static com.giyeok.bibix.BibixIdProto.RemoteSourceId parseFrom(
-        com.google.protobuf.CodedInputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
-    }
-    public static com.giyeok.bibix.BibixIdProto.RemoteSourceId parseFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
-    }
-
-    @java.lang.Override
-    public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder() {
-      return DEFAULT_INSTANCE.toBuilder();
-    }
-    public static Builder newBuilder(com.giyeok.bibix.BibixIdProto.RemoteSourceId prototype) {
-      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
-    }
-    @java.lang.Override
-    public Builder toBuilder() {
-      return this == DEFAULT_INSTANCE
-          ? new Builder() : new Builder().mergeFrom(this);
-    }
-
-    @java.lang.Override
-    protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-      Builder builder = new Builder(parent);
-      return builder;
-    }
-    /**
-     * Protobuf type {@code com.giyeok.bibix.RemoteSourceId}
-     */
-    public static final class Builder extends
-        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:com.giyeok.bibix.RemoteSourceId)
-        com.giyeok.bibix.BibixIdProto.RemoteSourceIdOrBuilder {
-      public static final com.google.protobuf.Descriptors.Descriptor
-          getDescriptor() {
-        return com.giyeok.bibix.BibixIdProto.internal_static_com_giyeok_bibix_RemoteSourceId_descriptor;
-      }
-
-      @java.lang.Override
-      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-          internalGetFieldAccessorTable() {
-        return com.giyeok.bibix.BibixIdProto.internal_static_com_giyeok_bibix_RemoteSourceId_fieldAccessorTable
-            .ensureFieldAccessorsInitialized(
-                com.giyeok.bibix.BibixIdProto.RemoteSourceId.class, com.giyeok.bibix.BibixIdProto.RemoteSourceId.Builder.class);
-      }
-
-      // Construct using com.giyeok.bibix.BibixIdProto.RemoteSourceId.newBuilder()
-      private Builder() {
-        maybeForceBuilderInitialization();
-      }
-
-      private Builder(
-          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
-        }
-      }
-      @java.lang.Override
-      public Builder clear() {
-        super.clear();
-        sourceType_ = "";
-
-        if (sourceSpecBuilder_ == null) {
-          sourceSpec_ = null;
-        } else {
-          sourceSpec_ = null;
-          sourceSpecBuilder_ = null;
-        }
-        return this;
-      }
-
-      @java.lang.Override
-      public com.google.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
-        return com.giyeok.bibix.BibixIdProto.internal_static_com_giyeok_bibix_RemoteSourceId_descriptor;
-      }
-
-      @java.lang.Override
-      public com.giyeok.bibix.BibixIdProto.RemoteSourceId getDefaultInstanceForType() {
-        return com.giyeok.bibix.BibixIdProto.RemoteSourceId.getDefaultInstance();
-      }
-
-      @java.lang.Override
-      public com.giyeok.bibix.BibixIdProto.RemoteSourceId build() {
-        com.giyeok.bibix.BibixIdProto.RemoteSourceId result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(result);
-        }
-        return result;
-      }
-
-      @java.lang.Override
-      public com.giyeok.bibix.BibixIdProto.RemoteSourceId buildPartial() {
-        com.giyeok.bibix.BibixIdProto.RemoteSourceId result = new com.giyeok.bibix.BibixIdProto.RemoteSourceId(this);
-        result.sourceType_ = sourceType_;
-        if (sourceSpecBuilder_ == null) {
-          result.sourceSpec_ = sourceSpec_;
-        } else {
-          result.sourceSpec_ = sourceSpecBuilder_.build();
-        }
-        onBuilt();
-        return result;
-      }
-
-      @java.lang.Override
-      public Builder clone() {
-        return super.clone();
-      }
-      @java.lang.Override
-      public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return super.setField(field, value);
-      }
-      @java.lang.Override
-      public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return super.clearField(field);
-      }
-      @java.lang.Override
-      public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return super.clearOneof(oneof);
-      }
-      @java.lang.Override
-      public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, java.lang.Object value) {
-        return super.setRepeatedField(field, index, value);
-      }
-      @java.lang.Override
-      public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return super.addRepeatedField(field, value);
-      }
-      @java.lang.Override
-      public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof com.giyeok.bibix.BibixIdProto.RemoteSourceId) {
-          return mergeFrom((com.giyeok.bibix.BibixIdProto.RemoteSourceId)other);
-        } else {
-          super.mergeFrom(other);
-          return this;
-        }
-      }
-
-      public Builder mergeFrom(com.giyeok.bibix.BibixIdProto.RemoteSourceId other) {
-        if (other == com.giyeok.bibix.BibixIdProto.RemoteSourceId.getDefaultInstance()) return this;
-        if (!other.getSourceType().isEmpty()) {
-          sourceType_ = other.sourceType_;
-          onChanged();
-        }
-        if (other.hasSourceSpec()) {
-          mergeSourceSpec(other.getSourceSpec());
-        }
-        this.mergeUnknownFields(other.unknownFields);
-        onChanged();
-        return this;
-      }
-
-      @java.lang.Override
-      public final boolean isInitialized() {
-        return true;
-      }
-
-      @java.lang.Override
-      public Builder mergeFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        com.giyeok.bibix.BibixIdProto.RemoteSourceId parsedMessage = null;
-        try {
-          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
-        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (com.giyeok.bibix.BibixIdProto.RemoteSourceId) e.getUnfinishedMessage();
-          throw e.unwrapIOException();
-        } finally {
-          if (parsedMessage != null) {
-            mergeFrom(parsedMessage);
-          }
-        }
-        return this;
-      }
-
-      private java.lang.Object sourceType_ = "";
-      /**
-       * <code>string source_type = 1;</code>
-       * @return The sourceType.
-       */
-      public java.lang.String getSourceType() {
-        java.lang.Object ref = sourceType_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          sourceType_ = s;
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
-      }
-      /**
-       * <code>string source_type = 1;</code>
-       * @return The bytes for sourceType.
-       */
-      public com.google.protobuf.ByteString
-          getSourceTypeBytes() {
-        java.lang.Object ref = sourceType_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          sourceType_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <code>string source_type = 1;</code>
-       * @param value The sourceType to set.
-       * @return This builder for chaining.
-       */
-      public Builder setSourceType(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
-        sourceType_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>string source_type = 1;</code>
-       * @return This builder for chaining.
-       */
-      public Builder clearSourceType() {
-        
-        sourceType_ = getDefaultInstance().getSourceType();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>string source_type = 1;</code>
-       * @param value The bytes for sourceType to set.
-       * @return This builder for chaining.
-       */
-      public Builder setSourceTypeBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
-        sourceType_ = value;
-        onChanged();
-        return this;
-      }
-
-      private com.giyeok.bibix.BibixValueProto.BibixValue sourceSpec_;
-      private com.google.protobuf.SingleFieldBuilderV3<
-          com.giyeok.bibix.BibixValueProto.BibixValue, com.giyeok.bibix.BibixValueProto.BibixValue.Builder, com.giyeok.bibix.BibixValueProto.BibixValueOrBuilder> sourceSpecBuilder_;
-      /**
-       * <code>.com.giyeok.bibix.BibixValue source_spec = 2;</code>
-       * @return Whether the sourceSpec field is set.
-       */
-      public boolean hasSourceSpec() {
-        return sourceSpecBuilder_ != null || sourceSpec_ != null;
-      }
-      /**
-       * <code>.com.giyeok.bibix.BibixValue source_spec = 2;</code>
-       * @return The sourceSpec.
-       */
-      public com.giyeok.bibix.BibixValueProto.BibixValue getSourceSpec() {
-        if (sourceSpecBuilder_ == null) {
-          return sourceSpec_ == null ? com.giyeok.bibix.BibixValueProto.BibixValue.getDefaultInstance() : sourceSpec_;
-        } else {
-          return sourceSpecBuilder_.getMessage();
-        }
-      }
-      /**
-       * <code>.com.giyeok.bibix.BibixValue source_spec = 2;</code>
-       */
-      public Builder setSourceSpec(com.giyeok.bibix.BibixValueProto.BibixValue value) {
-        if (sourceSpecBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          sourceSpec_ = value;
-          onChanged();
-        } else {
-          sourceSpecBuilder_.setMessage(value);
-        }
-
-        return this;
-      }
-      /**
-       * <code>.com.giyeok.bibix.BibixValue source_spec = 2;</code>
-       */
-      public Builder setSourceSpec(
-          com.giyeok.bibix.BibixValueProto.BibixValue.Builder builderForValue) {
-        if (sourceSpecBuilder_ == null) {
-          sourceSpec_ = builderForValue.build();
-          onChanged();
-        } else {
-          sourceSpecBuilder_.setMessage(builderForValue.build());
-        }
-
-        return this;
-      }
-      /**
-       * <code>.com.giyeok.bibix.BibixValue source_spec = 2;</code>
-       */
-      public Builder mergeSourceSpec(com.giyeok.bibix.BibixValueProto.BibixValue value) {
-        if (sourceSpecBuilder_ == null) {
-          if (sourceSpec_ != null) {
-            sourceSpec_ =
-              com.giyeok.bibix.BibixValueProto.BibixValue.newBuilder(sourceSpec_).mergeFrom(value).buildPartial();
-          } else {
-            sourceSpec_ = value;
-          }
-          onChanged();
-        } else {
-          sourceSpecBuilder_.mergeFrom(value);
-        }
-
-        return this;
-      }
-      /**
-       * <code>.com.giyeok.bibix.BibixValue source_spec = 2;</code>
-       */
-      public Builder clearSourceSpec() {
-        if (sourceSpecBuilder_ == null) {
-          sourceSpec_ = null;
-          onChanged();
-        } else {
-          sourceSpec_ = null;
-          sourceSpecBuilder_ = null;
-        }
-
-        return this;
-      }
-      /**
-       * <code>.com.giyeok.bibix.BibixValue source_spec = 2;</code>
-       */
-      public com.giyeok.bibix.BibixValueProto.BibixValue.Builder getSourceSpecBuilder() {
-        
-        onChanged();
-        return getSourceSpecFieldBuilder().getBuilder();
-      }
-      /**
-       * <code>.com.giyeok.bibix.BibixValue source_spec = 2;</code>
-       */
-      public com.giyeok.bibix.BibixValueProto.BibixValueOrBuilder getSourceSpecOrBuilder() {
-        if (sourceSpecBuilder_ != null) {
-          return sourceSpecBuilder_.getMessageOrBuilder();
-        } else {
-          return sourceSpec_ == null ?
-              com.giyeok.bibix.BibixValueProto.BibixValue.getDefaultInstance() : sourceSpec_;
-        }
-      }
-      /**
-       * <code>.com.giyeok.bibix.BibixValue source_spec = 2;</code>
-       */
-      private com.google.protobuf.SingleFieldBuilderV3<
-          com.giyeok.bibix.BibixValueProto.BibixValue, com.giyeok.bibix.BibixValueProto.BibixValue.Builder, com.giyeok.bibix.BibixValueProto.BibixValueOrBuilder> 
-          getSourceSpecFieldBuilder() {
-        if (sourceSpecBuilder_ == null) {
-          sourceSpecBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-              com.giyeok.bibix.BibixValueProto.BibixValue, com.giyeok.bibix.BibixValueProto.BibixValue.Builder, com.giyeok.bibix.BibixValueProto.BibixValueOrBuilder>(
-                  getSourceSpec(),
-                  getParentForChildren(),
-                  isClean());
-          sourceSpec_ = null;
-        }
-        return sourceSpecBuilder_;
-      }
-      @java.lang.Override
-      public final Builder setUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.setUnknownFields(unknownFields);
-      }
-
-      @java.lang.Override
-      public final Builder mergeUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.mergeUnknownFields(unknownFields);
-      }
-
-
-      // @@protoc_insertion_point(builder_scope:com.giyeok.bibix.RemoteSourceId)
-    }
-
-    // @@protoc_insertion_point(class_scope:com.giyeok.bibix.RemoteSourceId)
-    private static final com.giyeok.bibix.BibixIdProto.RemoteSourceId DEFAULT_INSTANCE;
-    static {
-      DEFAULT_INSTANCE = new com.giyeok.bibix.BibixIdProto.RemoteSourceId();
-    }
-
-    public static com.giyeok.bibix.BibixIdProto.RemoteSourceId getDefaultInstance() {
-      return DEFAULT_INSTANCE;
-    }
-
-    private static final com.google.protobuf.Parser<RemoteSourceId>
-        PARSER = new com.google.protobuf.AbstractParser<RemoteSourceId>() {
-      @java.lang.Override
-      public RemoteSourceId parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return new RemoteSourceId(input, extensionRegistry);
-      }
-    };
-
-    public static com.google.protobuf.Parser<RemoteSourceId> parser() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<RemoteSourceId> getParserForType() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public com.giyeok.bibix.BibixIdProto.RemoteSourceId getDefaultInstanceForType() {
-      return DEFAULT_INSTANCE;
-    }
-
-  }
-
-  public interface SourceHashIdOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:com.giyeok.bibix.SourceHashId)
-      com.google.protobuf.MessageOrBuilder {
-
-    /**
-     * <pre>
-     * source_hash는 source의 내용이 변경되면 같이 변경되는 해시. git repository라면 commit id가 적당할 것
-     * </pre>
-     *
-     * <code>bytes source_hash = 1;</code>
-     * @return The sourceHash.
-     */
-    com.google.protobuf.ByteString getSourceHash();
-  }
-  /**
-   * Protobuf type {@code com.giyeok.bibix.SourceHashId}
-   */
-  public static final class SourceHashId extends
-      com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:com.giyeok.bibix.SourceHashId)
-      SourceHashIdOrBuilder {
-  private static final long serialVersionUID = 0L;
-    // Use SourceHashId.newBuilder() to construct.
-    private SourceHashId(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
-      super(builder);
-    }
-    private SourceHashId() {
-      sourceHash_ = com.google.protobuf.ByteString.EMPTY;
-    }
-
-    @java.lang.Override
-    @SuppressWarnings({"unused"})
-    protected java.lang.Object newInstance(
-        UnusedPrivateParameter unused) {
-      return new SourceHashId();
-    }
-
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-      return this.unknownFields;
-    }
-    private SourceHashId(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      this();
-      if (extensionRegistry == null) {
-        throw new java.lang.NullPointerException();
-      }
-      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder();
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            case 10: {
-
-              sourceHash_ = input.readBytes();
-              break;
-            }
-            default: {
-              if (!parseUnknownField(
-                  input, unknownFields, extensionRegistry, tag)) {
-                done = true;
-              }
-              break;
-            }
-          }
-        }
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw e.setUnfinishedMessage(this);
-      } catch (java.io.IOException e) {
-        throw new com.google.protobuf.InvalidProtocolBufferException(
-            e).setUnfinishedMessage(this);
-      } finally {
-        this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
-      }
-    }
-    public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return com.giyeok.bibix.BibixIdProto.internal_static_com_giyeok_bibix_SourceHashId_descriptor;
-    }
-
-    @java.lang.Override
-    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-      return com.giyeok.bibix.BibixIdProto.internal_static_com_giyeok_bibix_SourceHashId_fieldAccessorTable
-          .ensureFieldAccessorsInitialized(
-              com.giyeok.bibix.BibixIdProto.SourceHashId.class, com.giyeok.bibix.BibixIdProto.SourceHashId.Builder.class);
-    }
-
-    public static final int SOURCE_HASH_FIELD_NUMBER = 1;
-    private com.google.protobuf.ByteString sourceHash_;
-    /**
-     * <pre>
-     * source_hash는 source의 내용이 변경되면 같이 변경되는 해시. git repository라면 commit id가 적당할 것
-     * </pre>
-     *
-     * <code>bytes source_hash = 1;</code>
-     * @return The sourceHash.
-     */
-    @java.lang.Override
-    public com.google.protobuf.ByteString getSourceHash() {
-      return sourceHash_;
-    }
-
-    private byte memoizedIsInitialized = -1;
-    @java.lang.Override
-    public final boolean isInitialized() {
-      byte isInitialized = memoizedIsInitialized;
-      if (isInitialized == 1) return true;
-      if (isInitialized == 0) return false;
-
-      memoizedIsInitialized = 1;
-      return true;
-    }
-
-    @java.lang.Override
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
-      if (!sourceHash_.isEmpty()) {
-        output.writeBytes(1, sourceHash_);
-      }
-      unknownFields.writeTo(output);
-    }
-
-    @java.lang.Override
-    public int getSerializedSize() {
-      int size = memoizedSize;
-      if (size != -1) return size;
-
-      size = 0;
-      if (!sourceHash_.isEmpty()) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(1, sourceHash_);
-      }
-      size += unknownFields.getSerializedSize();
-      memoizedSize = size;
-      return size;
-    }
-
-    @java.lang.Override
-    public boolean equals(final java.lang.Object obj) {
-      if (obj == this) {
-       return true;
-      }
-      if (!(obj instanceof com.giyeok.bibix.BibixIdProto.SourceHashId)) {
-        return super.equals(obj);
-      }
-      com.giyeok.bibix.BibixIdProto.SourceHashId other = (com.giyeok.bibix.BibixIdProto.SourceHashId) obj;
-
-      if (!getSourceHash()
-          .equals(other.getSourceHash())) return false;
-      if (!unknownFields.equals(other.unknownFields)) return false;
-      return true;
-    }
-
-    @java.lang.Override
-    public int hashCode() {
-      if (memoizedHashCode != 0) {
-        return memoizedHashCode;
-      }
-      int hash = 41;
-      hash = (19 * hash) + getDescriptor().hashCode();
-      hash = (37 * hash) + SOURCE_HASH_FIELD_NUMBER;
-      hash = (53 * hash) + getSourceHash().hashCode();
-      hash = (29 * hash) + unknownFields.hashCode();
-      memoizedHashCode = hash;
-      return hash;
-    }
-
-    public static com.giyeok.bibix.BibixIdProto.SourceHashId parseFrom(
-        java.nio.ByteBuffer data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static com.giyeok.bibix.BibixIdProto.SourceHashId parseFrom(
-        java.nio.ByteBuffer data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static com.giyeok.bibix.BibixIdProto.SourceHashId parseFrom(
-        com.google.protobuf.ByteString data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static com.giyeok.bibix.BibixIdProto.SourceHashId parseFrom(
-        com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static com.giyeok.bibix.BibixIdProto.SourceHashId parseFrom(byte[] data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static com.giyeok.bibix.BibixIdProto.SourceHashId parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static com.giyeok.bibix.BibixIdProto.SourceHashId parseFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
-    }
-    public static com.giyeok.bibix.BibixIdProto.SourceHashId parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
-    }
-    public static com.giyeok.bibix.BibixIdProto.SourceHashId parseDelimitedFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input);
-    }
-    public static com.giyeok.bibix.BibixIdProto.SourceHashId parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
-    }
-    public static com.giyeok.bibix.BibixIdProto.SourceHashId parseFrom(
-        com.google.protobuf.CodedInputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
-    }
-    public static com.giyeok.bibix.BibixIdProto.SourceHashId parseFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
-    }
-
-    @java.lang.Override
-    public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder() {
-      return DEFAULT_INSTANCE.toBuilder();
-    }
-    public static Builder newBuilder(com.giyeok.bibix.BibixIdProto.SourceHashId prototype) {
-      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
-    }
-    @java.lang.Override
-    public Builder toBuilder() {
-      return this == DEFAULT_INSTANCE
-          ? new Builder() : new Builder().mergeFrom(this);
-    }
-
-    @java.lang.Override
-    protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-      Builder builder = new Builder(parent);
-      return builder;
-    }
-    /**
-     * Protobuf type {@code com.giyeok.bibix.SourceHashId}
-     */
-    public static final class Builder extends
-        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:com.giyeok.bibix.SourceHashId)
-        com.giyeok.bibix.BibixIdProto.SourceHashIdOrBuilder {
-      public static final com.google.protobuf.Descriptors.Descriptor
-          getDescriptor() {
-        return com.giyeok.bibix.BibixIdProto.internal_static_com_giyeok_bibix_SourceHashId_descriptor;
-      }
-
-      @java.lang.Override
-      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-          internalGetFieldAccessorTable() {
-        return com.giyeok.bibix.BibixIdProto.internal_static_com_giyeok_bibix_SourceHashId_fieldAccessorTable
-            .ensureFieldAccessorsInitialized(
-                com.giyeok.bibix.BibixIdProto.SourceHashId.class, com.giyeok.bibix.BibixIdProto.SourceHashId.Builder.class);
-      }
-
-      // Construct using com.giyeok.bibix.BibixIdProto.SourceHashId.newBuilder()
-      private Builder() {
-        maybeForceBuilderInitialization();
-      }
-
-      private Builder(
-          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
-        }
-      }
-      @java.lang.Override
-      public Builder clear() {
-        super.clear();
-        sourceHash_ = com.google.protobuf.ByteString.EMPTY;
-
-        return this;
-      }
-
-      @java.lang.Override
-      public com.google.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
-        return com.giyeok.bibix.BibixIdProto.internal_static_com_giyeok_bibix_SourceHashId_descriptor;
-      }
-
-      @java.lang.Override
-      public com.giyeok.bibix.BibixIdProto.SourceHashId getDefaultInstanceForType() {
-        return com.giyeok.bibix.BibixIdProto.SourceHashId.getDefaultInstance();
-      }
-
-      @java.lang.Override
-      public com.giyeok.bibix.BibixIdProto.SourceHashId build() {
-        com.giyeok.bibix.BibixIdProto.SourceHashId result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(result);
-        }
-        return result;
-      }
-
-      @java.lang.Override
-      public com.giyeok.bibix.BibixIdProto.SourceHashId buildPartial() {
-        com.giyeok.bibix.BibixIdProto.SourceHashId result = new com.giyeok.bibix.BibixIdProto.SourceHashId(this);
-        result.sourceHash_ = sourceHash_;
-        onBuilt();
-        return result;
-      }
-
-      @java.lang.Override
-      public Builder clone() {
-        return super.clone();
-      }
-      @java.lang.Override
-      public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return super.setField(field, value);
-      }
-      @java.lang.Override
-      public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return super.clearField(field);
-      }
-      @java.lang.Override
-      public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return super.clearOneof(oneof);
-      }
-      @java.lang.Override
-      public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, java.lang.Object value) {
-        return super.setRepeatedField(field, index, value);
-      }
-      @java.lang.Override
-      public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return super.addRepeatedField(field, value);
-      }
-      @java.lang.Override
-      public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof com.giyeok.bibix.BibixIdProto.SourceHashId) {
-          return mergeFrom((com.giyeok.bibix.BibixIdProto.SourceHashId)other);
-        } else {
-          super.mergeFrom(other);
-          return this;
-        }
-      }
-
-      public Builder mergeFrom(com.giyeok.bibix.BibixIdProto.SourceHashId other) {
-        if (other == com.giyeok.bibix.BibixIdProto.SourceHashId.getDefaultInstance()) return this;
-        if (other.getSourceHash() != com.google.protobuf.ByteString.EMPTY) {
-          setSourceHash(other.getSourceHash());
-        }
-        this.mergeUnknownFields(other.unknownFields);
-        onChanged();
-        return this;
-      }
-
-      @java.lang.Override
-      public final boolean isInitialized() {
-        return true;
-      }
-
-      @java.lang.Override
-      public Builder mergeFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        com.giyeok.bibix.BibixIdProto.SourceHashId parsedMessage = null;
-        try {
-          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
-        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (com.giyeok.bibix.BibixIdProto.SourceHashId) e.getUnfinishedMessage();
-          throw e.unwrapIOException();
-        } finally {
-          if (parsedMessage != null) {
-            mergeFrom(parsedMessage);
-          }
-        }
-        return this;
-      }
-
-      private com.google.protobuf.ByteString sourceHash_ = com.google.protobuf.ByteString.EMPTY;
-      /**
-       * <pre>
-       * source_hash는 source의 내용이 변경되면 같이 변경되는 해시. git repository라면 commit id가 적당할 것
-       * </pre>
-       *
-       * <code>bytes source_hash = 1;</code>
-       * @return The sourceHash.
-       */
-      @java.lang.Override
-      public com.google.protobuf.ByteString getSourceHash() {
-        return sourceHash_;
-      }
-      /**
-       * <pre>
-       * source_hash는 source의 내용이 변경되면 같이 변경되는 해시. git repository라면 commit id가 적당할 것
-       * </pre>
-       *
-       * <code>bytes source_hash = 1;</code>
-       * @param value The sourceHash to set.
-       * @return This builder for chaining.
-       */
-      public Builder setSourceHash(com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
-        sourceHash_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <pre>
-       * source_hash는 source의 내용이 변경되면 같이 변경되는 해시. git repository라면 commit id가 적당할 것
-       * </pre>
-       *
-       * <code>bytes source_hash = 1;</code>
-       * @return This builder for chaining.
-       */
-      public Builder clearSourceHash() {
-        
-        sourceHash_ = getDefaultInstance().getSourceHash();
-        onChanged();
-        return this;
-      }
-      @java.lang.Override
-      public final Builder setUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.setUnknownFields(unknownFields);
-      }
-
-      @java.lang.Override
-      public final Builder mergeUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.mergeUnknownFields(unknownFields);
-      }
-
-
-      // @@protoc_insertion_point(builder_scope:com.giyeok.bibix.SourceHashId)
-    }
-
-    // @@protoc_insertion_point(class_scope:com.giyeok.bibix.SourceHashId)
-    private static final com.giyeok.bibix.BibixIdProto.SourceHashId DEFAULT_INSTANCE;
-    static {
-      DEFAULT_INSTANCE = new com.giyeok.bibix.BibixIdProto.SourceHashId();
-    }
-
-    public static com.giyeok.bibix.BibixIdProto.SourceHashId getDefaultInstance() {
-      return DEFAULT_INSTANCE;
-    }
-
-    private static final com.google.protobuf.Parser<SourceHashId>
-        PARSER = new com.google.protobuf.AbstractParser<SourceHashId>() {
-      @java.lang.Override
-      public SourceHashId parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return new SourceHashId(input, extensionRegistry);
-      }
-    };
-
-    public static com.google.protobuf.Parser<SourceHashId> parser() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<SourceHashId> getParserForType() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public com.giyeok.bibix.BibixIdProto.SourceHashId getDefaultInstanceForType() {
-      return DEFAULT_INSTANCE;
-    }
-
-  }
-
-  public interface RuleImplIdOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:com.giyeok.bibix.RuleImplId)
-      com.google.protobuf.MessageOrBuilder {
-
-    /**
-     * <pre>
-     * bibix version
-     * </pre>
-     *
-     * <code>string native_rule_impl = 1;</code>
-     * @return Whether the nativeRuleImpl field is set.
-     */
-    boolean hasNativeRuleImpl();
-    /**
-     * <pre>
-     * bibix version
-     * </pre>
-     *
-     * <code>string native_rule_impl = 1;</code>
-     * @return The nativeRuleImpl.
-     */
-    java.lang.String getNativeRuleImpl();
-    /**
-     * <pre>
-     * bibix version
-     * </pre>
-     *
-     * <code>string native_rule_impl = 1;</code>
-     * @return The bytes for nativeRuleImpl.
-     */
-    com.google.protobuf.ByteString
-        getNativeRuleImplBytes();
-
-    /**
-     * <code>.com.giyeok.bibix.ObjectId rule_impl_object_id = 2;</code>
-     * @return Whether the ruleImplObjectId field is set.
-     */
-    boolean hasRuleImplObjectId();
-    /**
-     * <code>.com.giyeok.bibix.ObjectId rule_impl_object_id = 2;</code>
-     * @return The ruleImplObjectId.
-     */
-    com.giyeok.bibix.BibixIdProto.ObjectId getRuleImplObjectId();
-    /**
-     * <code>.com.giyeok.bibix.ObjectId rule_impl_object_id = 2;</code>
-     */
-    com.giyeok.bibix.BibixIdProto.ObjectIdOrBuilder getRuleImplObjectIdOrBuilder();
-
-    public com.giyeok.bibix.BibixIdProto.RuleImplId.ImplIdCase getImplIdCase();
-  }
-  /**
-   * Protobuf type {@code com.giyeok.bibix.RuleImplId}
-   */
-  public static final class RuleImplId extends
-      com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:com.giyeok.bibix.RuleImplId)
-      RuleImplIdOrBuilder {
-  private static final long serialVersionUID = 0L;
-    // Use RuleImplId.newBuilder() to construct.
-    private RuleImplId(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
-      super(builder);
-    }
-    private RuleImplId() {
-    }
-
-    @java.lang.Override
-    @SuppressWarnings({"unused"})
-    protected java.lang.Object newInstance(
-        UnusedPrivateParameter unused) {
-      return new RuleImplId();
-    }
-
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-      return this.unknownFields;
-    }
-    private RuleImplId(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      this();
-      if (extensionRegistry == null) {
-        throw new java.lang.NullPointerException();
-      }
-      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder();
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            case 10: {
               java.lang.String s = input.readStringRequireUtf8();
-              implIdCase_ = 1;
-              implId_ = s;
+
+              scriptName_ = s;
               break;
             }
-            case 18: {
-              com.giyeok.bibix.BibixIdProto.ObjectId.Builder subBuilder = null;
-              if (implIdCase_ == 2) {
-                subBuilder = ((com.giyeok.bibix.BibixIdProto.ObjectId) implId_).toBuilder();
-              }
-              implId_ =
-                  input.readMessage(com.giyeok.bibix.BibixIdProto.ObjectId.parser(), extensionRegistry);
-              if (subBuilder != null) {
-                subBuilder.mergeFrom((com.giyeok.bibix.BibixIdProto.ObjectId) implId_);
-                implId_ = subBuilder.buildPartial();
-              }
-              implIdCase_ = 2;
+            case 26: {
+
+              projectObjHash_ = input.readBytes();
+              break;
+            }
+            case 32: {
+
+              version_ = input.readInt64();
               break;
             }
             default: {
@@ -3003,151 +1289,113 @@ public final class BibixIdProto {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return com.giyeok.bibix.BibixIdProto.internal_static_com_giyeok_bibix_RuleImplId_descriptor;
+      return com.giyeok.bibix.BibixIdProto.internal_static_com_giyeok_bibix_ExternalBibixProject_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return com.giyeok.bibix.BibixIdProto.internal_static_com_giyeok_bibix_RuleImplId_fieldAccessorTable
+      return com.giyeok.bibix.BibixIdProto.internal_static_com_giyeok_bibix_ExternalBibixProject_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              com.giyeok.bibix.BibixIdProto.RuleImplId.class, com.giyeok.bibix.BibixIdProto.RuleImplId.Builder.class);
+              com.giyeok.bibix.BibixIdProto.ExternalBibixProject.class, com.giyeok.bibix.BibixIdProto.ExternalBibixProject.Builder.class);
     }
 
-    private int implIdCase_ = 0;
-    private java.lang.Object implId_;
-    public enum ImplIdCase
-        implements com.google.protobuf.Internal.EnumLite,
-            com.google.protobuf.AbstractMessage.InternalOneOfEnum {
-      NATIVE_RULE_IMPL(1),
-      RULE_IMPL_OBJECT_ID(2),
-      IMPLID_NOT_SET(0);
-      private final int value;
-      private ImplIdCase(int value) {
-        this.value = value;
-      }
-      /**
-       * @param value The number of the enum to look for.
-       * @return The enum associated with the given number.
-       * @deprecated Use {@link #forNumber(int)} instead.
-       */
-      @java.lang.Deprecated
-      public static ImplIdCase valueOf(int value) {
-        return forNumber(value);
-      }
-
-      public static ImplIdCase forNumber(int value) {
-        switch (value) {
-          case 1: return NATIVE_RULE_IMPL;
-          case 2: return RULE_IMPL_OBJECT_ID;
-          case 0: return IMPLID_NOT_SET;
-          default: return null;
-        }
-      }
-      public int getNumber() {
-        return this.value;
-      }
-    };
-
-    public ImplIdCase
-    getImplIdCase() {
-      return ImplIdCase.forNumber(
-          implIdCase_);
-    }
-
-    public static final int NATIVE_RULE_IMPL_FIELD_NUMBER = 1;
+    public static final int ROOT_DIRECTORY_FIELD_NUMBER = 1;
+    private volatile java.lang.Object rootDirectory_;
     /**
-     * <pre>
-     * bibix version
-     * </pre>
-     *
-     * <code>string native_rule_impl = 1;</code>
-     * @return Whether the nativeRuleImpl field is set.
+     * <code>string root_directory = 1;</code>
+     * @return The rootDirectory.
      */
-    public boolean hasNativeRuleImpl() {
-      return implIdCase_ == 1;
-    }
-    /**
-     * <pre>
-     * bibix version
-     * </pre>
-     *
-     * <code>string native_rule_impl = 1;</code>
-     * @return The nativeRuleImpl.
-     */
-    public java.lang.String getNativeRuleImpl() {
-      java.lang.Object ref = "";
-      if (implIdCase_ == 1) {
-        ref = implId_;
-      }
+    @java.lang.Override
+    public java.lang.String getRootDirectory() {
+      java.lang.Object ref = rootDirectory_;
       if (ref instanceof java.lang.String) {
         return (java.lang.String) ref;
       } else {
         com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
-        if (implIdCase_ == 1) {
-          implId_ = s;
-        }
+        rootDirectory_ = s;
         return s;
       }
     }
     /**
-     * <pre>
-     * bibix version
-     * </pre>
-     *
-     * <code>string native_rule_impl = 1;</code>
-     * @return The bytes for nativeRuleImpl.
+     * <code>string root_directory = 1;</code>
+     * @return The bytes for rootDirectory.
      */
+    @java.lang.Override
     public com.google.protobuf.ByteString
-        getNativeRuleImplBytes() {
-      java.lang.Object ref = "";
-      if (implIdCase_ == 1) {
-        ref = implId_;
-      }
+        getRootDirectoryBytes() {
+      java.lang.Object ref = rootDirectory_;
       if (ref instanceof java.lang.String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
-        if (implIdCase_ == 1) {
-          implId_ = b;
-        }
+        rootDirectory_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
       }
     }
 
-    public static final int RULE_IMPL_OBJECT_ID_FIELD_NUMBER = 2;
+    public static final int SCRIPT_NAME_FIELD_NUMBER = 2;
+    private volatile java.lang.Object scriptName_;
     /**
-     * <code>.com.giyeok.bibix.ObjectId rule_impl_object_id = 2;</code>
-     * @return Whether the ruleImplObjectId field is set.
+     * <code>string script_name = 2;</code>
+     * @return The scriptName.
      */
     @java.lang.Override
-    public boolean hasRuleImplObjectId() {
-      return implIdCase_ == 2;
+    public java.lang.String getScriptName() {
+      java.lang.Object ref = scriptName_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        scriptName_ = s;
+        return s;
+      }
     }
     /**
-     * <code>.com.giyeok.bibix.ObjectId rule_impl_object_id = 2;</code>
-     * @return The ruleImplObjectId.
+     * <code>string script_name = 2;</code>
+     * @return The bytes for scriptName.
      */
     @java.lang.Override
-    public com.giyeok.bibix.BibixIdProto.ObjectId getRuleImplObjectId() {
-      if (implIdCase_ == 2) {
-         return (com.giyeok.bibix.BibixIdProto.ObjectId) implId_;
+    public com.google.protobuf.ByteString
+        getScriptNameBytes() {
+      java.lang.Object ref = scriptName_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        scriptName_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
       }
-      return com.giyeok.bibix.BibixIdProto.ObjectId.getDefaultInstance();
     }
+
+    public static final int PROJECT_OBJ_HASH_FIELD_NUMBER = 3;
+    private com.google.protobuf.ByteString projectObjHash_;
     /**
-     * <code>.com.giyeok.bibix.ObjectId rule_impl_object_id = 2;</code>
+     * <code>bytes project_obj_hash = 3;</code>
+     * @return The projectObjHash.
      */
     @java.lang.Override
-    public com.giyeok.bibix.BibixIdProto.ObjectIdOrBuilder getRuleImplObjectIdOrBuilder() {
-      if (implIdCase_ == 2) {
-         return (com.giyeok.bibix.BibixIdProto.ObjectId) implId_;
-      }
-      return com.giyeok.bibix.BibixIdProto.ObjectId.getDefaultInstance();
+    public com.google.protobuf.ByteString getProjectObjHash() {
+      return projectObjHash_;
+    }
+
+    public static final int VERSION_FIELD_NUMBER = 4;
+    private long version_;
+    /**
+     * <code>int64 version = 4;</code>
+     * @return The version.
+     */
+    @java.lang.Override
+    public long getVersion() {
+      return version_;
     }
 
     private byte memoizedIsInitialized = -1;
@@ -3164,11 +1412,17 @@ public final class BibixIdProto {
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
-      if (implIdCase_ == 1) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, implId_);
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(rootDirectory_)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, rootDirectory_);
       }
-      if (implIdCase_ == 2) {
-        output.writeMessage(2, (com.giyeok.bibix.BibixIdProto.ObjectId) implId_);
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(scriptName_)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, scriptName_);
+      }
+      if (!projectObjHash_.isEmpty()) {
+        output.writeBytes(3, projectObjHash_);
+      }
+      if (version_ != 0L) {
+        output.writeInt64(4, version_);
       }
       unknownFields.writeTo(output);
     }
@@ -3179,12 +1433,19 @@ public final class BibixIdProto {
       if (size != -1) return size;
 
       size = 0;
-      if (implIdCase_ == 1) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, implId_);
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(rootDirectory_)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, rootDirectory_);
       }
-      if (implIdCase_ == 2) {
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(scriptName_)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, scriptName_);
+      }
+      if (!projectObjHash_.isEmpty()) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(2, (com.giyeok.bibix.BibixIdProto.ObjectId) implId_);
+          .computeBytesSize(3, projectObjHash_);
+      }
+      if (version_ != 0L) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt64Size(4, version_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -3196,24 +1457,19 @@ public final class BibixIdProto {
       if (obj == this) {
        return true;
       }
-      if (!(obj instanceof com.giyeok.bibix.BibixIdProto.RuleImplId)) {
+      if (!(obj instanceof com.giyeok.bibix.BibixIdProto.ExternalBibixProject)) {
         return super.equals(obj);
       }
-      com.giyeok.bibix.BibixIdProto.RuleImplId other = (com.giyeok.bibix.BibixIdProto.RuleImplId) obj;
+      com.giyeok.bibix.BibixIdProto.ExternalBibixProject other = (com.giyeok.bibix.BibixIdProto.ExternalBibixProject) obj;
 
-      if (!getImplIdCase().equals(other.getImplIdCase())) return false;
-      switch (implIdCase_) {
-        case 1:
-          if (!getNativeRuleImpl()
-              .equals(other.getNativeRuleImpl())) return false;
-          break;
-        case 2:
-          if (!getRuleImplObjectId()
-              .equals(other.getRuleImplObjectId())) return false;
-          break;
-        case 0:
-        default:
-      }
+      if (!getRootDirectory()
+          .equals(other.getRootDirectory())) return false;
+      if (!getScriptName()
+          .equals(other.getScriptName())) return false;
+      if (!getProjectObjHash()
+          .equals(other.getProjectObjHash())) return false;
+      if (getVersion()
+          != other.getVersion()) return false;
       if (!unknownFields.equals(other.unknownFields)) return false;
       return true;
     }
@@ -3225,86 +1481,83 @@ public final class BibixIdProto {
       }
       int hash = 41;
       hash = (19 * hash) + getDescriptor().hashCode();
-      switch (implIdCase_) {
-        case 1:
-          hash = (37 * hash) + NATIVE_RULE_IMPL_FIELD_NUMBER;
-          hash = (53 * hash) + getNativeRuleImpl().hashCode();
-          break;
-        case 2:
-          hash = (37 * hash) + RULE_IMPL_OBJECT_ID_FIELD_NUMBER;
-          hash = (53 * hash) + getRuleImplObjectId().hashCode();
-          break;
-        case 0:
-        default:
-      }
+      hash = (37 * hash) + ROOT_DIRECTORY_FIELD_NUMBER;
+      hash = (53 * hash) + getRootDirectory().hashCode();
+      hash = (37 * hash) + SCRIPT_NAME_FIELD_NUMBER;
+      hash = (53 * hash) + getScriptName().hashCode();
+      hash = (37 * hash) + PROJECT_OBJ_HASH_FIELD_NUMBER;
+      hash = (53 * hash) + getProjectObjHash().hashCode();
+      hash = (37 * hash) + VERSION_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          getVersion());
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
     }
 
-    public static com.giyeok.bibix.BibixIdProto.RuleImplId parseFrom(
+    public static com.giyeok.bibix.BibixIdProto.ExternalBibixProject parseFrom(
         java.nio.ByteBuffer data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static com.giyeok.bibix.BibixIdProto.RuleImplId parseFrom(
+    public static com.giyeok.bibix.BibixIdProto.ExternalBibixProject parseFrom(
         java.nio.ByteBuffer data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static com.giyeok.bibix.BibixIdProto.RuleImplId parseFrom(
+    public static com.giyeok.bibix.BibixIdProto.ExternalBibixProject parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static com.giyeok.bibix.BibixIdProto.RuleImplId parseFrom(
+    public static com.giyeok.bibix.BibixIdProto.ExternalBibixProject parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static com.giyeok.bibix.BibixIdProto.RuleImplId parseFrom(byte[] data)
+    public static com.giyeok.bibix.BibixIdProto.ExternalBibixProject parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static com.giyeok.bibix.BibixIdProto.RuleImplId parseFrom(
+    public static com.giyeok.bibix.BibixIdProto.ExternalBibixProject parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static com.giyeok.bibix.BibixIdProto.RuleImplId parseFrom(java.io.InputStream input)
+    public static com.giyeok.bibix.BibixIdProto.ExternalBibixProject parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static com.giyeok.bibix.BibixIdProto.RuleImplId parseFrom(
+    public static com.giyeok.bibix.BibixIdProto.ExternalBibixProject parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
-    public static com.giyeok.bibix.BibixIdProto.RuleImplId parseDelimitedFrom(java.io.InputStream input)
+    public static com.giyeok.bibix.BibixIdProto.ExternalBibixProject parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input);
     }
-    public static com.giyeok.bibix.BibixIdProto.RuleImplId parseDelimitedFrom(
+    public static com.giyeok.bibix.BibixIdProto.ExternalBibixProject parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
-    public static com.giyeok.bibix.BibixIdProto.RuleImplId parseFrom(
+    public static com.giyeok.bibix.BibixIdProto.ExternalBibixProject parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static com.giyeok.bibix.BibixIdProto.RuleImplId parseFrom(
+    public static com.giyeok.bibix.BibixIdProto.ExternalBibixProject parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -3317,7 +1570,7 @@ public final class BibixIdProto {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(com.giyeok.bibix.BibixIdProto.RuleImplId prototype) {
+    public static Builder newBuilder(com.giyeok.bibix.BibixIdProto.ExternalBibixProject prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     @java.lang.Override
@@ -3333,26 +1586,26 @@ public final class BibixIdProto {
       return builder;
     }
     /**
-     * Protobuf type {@code com.giyeok.bibix.RuleImplId}
+     * Protobuf type {@code com.giyeok.bibix.ExternalBibixProject}
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:com.giyeok.bibix.RuleImplId)
-        com.giyeok.bibix.BibixIdProto.RuleImplIdOrBuilder {
+        // @@protoc_insertion_point(builder_implements:com.giyeok.bibix.ExternalBibixProject)
+        com.giyeok.bibix.BibixIdProto.ExternalBibixProjectOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return com.giyeok.bibix.BibixIdProto.internal_static_com_giyeok_bibix_RuleImplId_descriptor;
+        return com.giyeok.bibix.BibixIdProto.internal_static_com_giyeok_bibix_ExternalBibixProject_descriptor;
       }
 
       @java.lang.Override
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return com.giyeok.bibix.BibixIdProto.internal_static_com_giyeok_bibix_RuleImplId_fieldAccessorTable
+        return com.giyeok.bibix.BibixIdProto.internal_static_com_giyeok_bibix_ExternalBibixProject_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                com.giyeok.bibix.BibixIdProto.RuleImplId.class, com.giyeok.bibix.BibixIdProto.RuleImplId.Builder.class);
+                com.giyeok.bibix.BibixIdProto.ExternalBibixProject.class, com.giyeok.bibix.BibixIdProto.ExternalBibixProject.Builder.class);
       }
 
-      // Construct using com.giyeok.bibix.BibixIdProto.RuleImplId.newBuilder()
+      // Construct using com.giyeok.bibix.BibixIdProto.ExternalBibixProject.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -3370,25 +1623,31 @@ public final class BibixIdProto {
       @java.lang.Override
       public Builder clear() {
         super.clear();
-        implIdCase_ = 0;
-        implId_ = null;
+        rootDirectory_ = "";
+
+        scriptName_ = "";
+
+        projectObjHash_ = com.google.protobuf.ByteString.EMPTY;
+
+        version_ = 0L;
+
         return this;
       }
 
       @java.lang.Override
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return com.giyeok.bibix.BibixIdProto.internal_static_com_giyeok_bibix_RuleImplId_descriptor;
+        return com.giyeok.bibix.BibixIdProto.internal_static_com_giyeok_bibix_ExternalBibixProject_descriptor;
       }
 
       @java.lang.Override
-      public com.giyeok.bibix.BibixIdProto.RuleImplId getDefaultInstanceForType() {
-        return com.giyeok.bibix.BibixIdProto.RuleImplId.getDefaultInstance();
+      public com.giyeok.bibix.BibixIdProto.ExternalBibixProject getDefaultInstanceForType() {
+        return com.giyeok.bibix.BibixIdProto.ExternalBibixProject.getDefaultInstance();
       }
 
       @java.lang.Override
-      public com.giyeok.bibix.BibixIdProto.RuleImplId build() {
-        com.giyeok.bibix.BibixIdProto.RuleImplId result = buildPartial();
+      public com.giyeok.bibix.BibixIdProto.ExternalBibixProject build() {
+        com.giyeok.bibix.BibixIdProto.ExternalBibixProject result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
@@ -3396,19 +1655,12 @@ public final class BibixIdProto {
       }
 
       @java.lang.Override
-      public com.giyeok.bibix.BibixIdProto.RuleImplId buildPartial() {
-        com.giyeok.bibix.BibixIdProto.RuleImplId result = new com.giyeok.bibix.BibixIdProto.RuleImplId(this);
-        if (implIdCase_ == 1) {
-          result.implId_ = implId_;
-        }
-        if (implIdCase_ == 2) {
-          if (ruleImplObjectIdBuilder_ == null) {
-            result.implId_ = implId_;
-          } else {
-            result.implId_ = ruleImplObjectIdBuilder_.build();
-          }
-        }
-        result.implIdCase_ = implIdCase_;
+      public com.giyeok.bibix.BibixIdProto.ExternalBibixProject buildPartial() {
+        com.giyeok.bibix.BibixIdProto.ExternalBibixProject result = new com.giyeok.bibix.BibixIdProto.ExternalBibixProject(this);
+        result.rootDirectory_ = rootDirectory_;
+        result.scriptName_ = scriptName_;
+        result.projectObjHash_ = projectObjHash_;
+        result.version_ = version_;
         onBuilt();
         return result;
       }
@@ -3447,30 +1699,29 @@ public final class BibixIdProto {
       }
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof com.giyeok.bibix.BibixIdProto.RuleImplId) {
-          return mergeFrom((com.giyeok.bibix.BibixIdProto.RuleImplId)other);
+        if (other instanceof com.giyeok.bibix.BibixIdProto.ExternalBibixProject) {
+          return mergeFrom((com.giyeok.bibix.BibixIdProto.ExternalBibixProject)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(com.giyeok.bibix.BibixIdProto.RuleImplId other) {
-        if (other == com.giyeok.bibix.BibixIdProto.RuleImplId.getDefaultInstance()) return this;
-        switch (other.getImplIdCase()) {
-          case NATIVE_RULE_IMPL: {
-            implIdCase_ = 1;
-            implId_ = other.implId_;
-            onChanged();
-            break;
-          }
-          case RULE_IMPL_OBJECT_ID: {
-            mergeRuleImplObjectId(other.getRuleImplObjectId());
-            break;
-          }
-          case IMPLID_NOT_SET: {
-            break;
-          }
+      public Builder mergeFrom(com.giyeok.bibix.BibixIdProto.ExternalBibixProject other) {
+        if (other == com.giyeok.bibix.BibixIdProto.ExternalBibixProject.getDefaultInstance()) return this;
+        if (!other.getRootDirectory().isEmpty()) {
+          rootDirectory_ = other.rootDirectory_;
+          onChanged();
+        }
+        if (!other.getScriptName().isEmpty()) {
+          scriptName_ = other.scriptName_;
+          onChanged();
+        }
+        if (other.getProjectObjHash() != com.google.protobuf.ByteString.EMPTY) {
+          setProjectObjHash(other.getProjectObjHash());
+        }
+        if (other.getVersion() != 0L) {
+          setVersion(other.getVersion());
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -3487,11 +1738,11 @@ public final class BibixIdProto {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        com.giyeok.bibix.BibixIdProto.RuleImplId parsedMessage = null;
+        com.giyeok.bibix.BibixIdProto.ExternalBibixProject parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (com.giyeok.bibix.BibixIdProto.RuleImplId) e.getUnfinishedMessage();
+          parsedMessage = (com.giyeok.bibix.BibixIdProto.ExternalBibixProject) e.getUnfinishedMessage();
           throw e.unwrapIOException();
         } finally {
           if (parsedMessage != null) {
@@ -3500,282 +1751,222 @@ public final class BibixIdProto {
         }
         return this;
       }
-      private int implIdCase_ = 0;
-      private java.lang.Object implId_;
-      public ImplIdCase
-          getImplIdCase() {
-        return ImplIdCase.forNumber(
-            implIdCase_);
-      }
 
-      public Builder clearImplId() {
-        implIdCase_ = 0;
-        implId_ = null;
-        onChanged();
-        return this;
-      }
-
-
+      private java.lang.Object rootDirectory_ = "";
       /**
-       * <pre>
-       * bibix version
-       * </pre>
-       *
-       * <code>string native_rule_impl = 1;</code>
-       * @return Whether the nativeRuleImpl field is set.
+       * <code>string root_directory = 1;</code>
+       * @return The rootDirectory.
        */
-      @java.lang.Override
-      public boolean hasNativeRuleImpl() {
-        return implIdCase_ == 1;
-      }
-      /**
-       * <pre>
-       * bibix version
-       * </pre>
-       *
-       * <code>string native_rule_impl = 1;</code>
-       * @return The nativeRuleImpl.
-       */
-      @java.lang.Override
-      public java.lang.String getNativeRuleImpl() {
-        java.lang.Object ref = "";
-        if (implIdCase_ == 1) {
-          ref = implId_;
-        }
+      public java.lang.String getRootDirectory() {
+        java.lang.Object ref = rootDirectory_;
         if (!(ref instanceof java.lang.String)) {
           com.google.protobuf.ByteString bs =
               (com.google.protobuf.ByteString) ref;
           java.lang.String s = bs.toStringUtf8();
-          if (implIdCase_ == 1) {
-            implId_ = s;
-          }
+          rootDirectory_ = s;
           return s;
         } else {
           return (java.lang.String) ref;
         }
       }
       /**
-       * <pre>
-       * bibix version
-       * </pre>
-       *
-       * <code>string native_rule_impl = 1;</code>
-       * @return The bytes for nativeRuleImpl.
+       * <code>string root_directory = 1;</code>
+       * @return The bytes for rootDirectory.
        */
-      @java.lang.Override
       public com.google.protobuf.ByteString
-          getNativeRuleImplBytes() {
-        java.lang.Object ref = "";
-        if (implIdCase_ == 1) {
-          ref = implId_;
-        }
+          getRootDirectoryBytes() {
+        java.lang.Object ref = rootDirectory_;
         if (ref instanceof String) {
           com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
-          if (implIdCase_ == 1) {
-            implId_ = b;
-          }
+          rootDirectory_ = b;
           return b;
         } else {
           return (com.google.protobuf.ByteString) ref;
         }
       }
       /**
-       * <pre>
-       * bibix version
-       * </pre>
-       *
-       * <code>string native_rule_impl = 1;</code>
-       * @param value The nativeRuleImpl to set.
+       * <code>string root_directory = 1;</code>
+       * @param value The rootDirectory to set.
        * @return This builder for chaining.
        */
-      public Builder setNativeRuleImpl(
+      public Builder setRootDirectory(
           java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
-  implIdCase_ = 1;
-        implId_ = value;
+  
+        rootDirectory_ = value;
         onChanged();
         return this;
       }
       /**
-       * <pre>
-       * bibix version
-       * </pre>
-       *
-       * <code>string native_rule_impl = 1;</code>
+       * <code>string root_directory = 1;</code>
        * @return This builder for chaining.
        */
-      public Builder clearNativeRuleImpl() {
-        if (implIdCase_ == 1) {
-          implIdCase_ = 0;
-          implId_ = null;
-          onChanged();
-        }
+      public Builder clearRootDirectory() {
+        
+        rootDirectory_ = getDefaultInstance().getRootDirectory();
+        onChanged();
         return this;
       }
       /**
-       * <pre>
-       * bibix version
-       * </pre>
-       *
-       * <code>string native_rule_impl = 1;</code>
-       * @param value The bytes for nativeRuleImpl to set.
+       * <code>string root_directory = 1;</code>
+       * @param value The bytes for rootDirectory to set.
        * @return This builder for chaining.
        */
-      public Builder setNativeRuleImplBytes(
+      public Builder setRootDirectoryBytes(
           com.google.protobuf.ByteString value) {
         if (value == null) {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
-        implIdCase_ = 1;
-        implId_ = value;
+        
+        rootDirectory_ = value;
         onChanged();
         return this;
       }
 
-      private com.google.protobuf.SingleFieldBuilderV3<
-          com.giyeok.bibix.BibixIdProto.ObjectId, com.giyeok.bibix.BibixIdProto.ObjectId.Builder, com.giyeok.bibix.BibixIdProto.ObjectIdOrBuilder> ruleImplObjectIdBuilder_;
+      private java.lang.Object scriptName_ = "";
       /**
-       * <code>.com.giyeok.bibix.ObjectId rule_impl_object_id = 2;</code>
-       * @return Whether the ruleImplObjectId field is set.
+       * <code>string script_name = 2;</code>
+       * @return The scriptName.
+       */
+      public java.lang.String getScriptName() {
+        java.lang.Object ref = scriptName_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          scriptName_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string script_name = 2;</code>
+       * @return The bytes for scriptName.
+       */
+      public com.google.protobuf.ByteString
+          getScriptNameBytes() {
+        java.lang.Object ref = scriptName_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          scriptName_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string script_name = 2;</code>
+       * @param value The scriptName to set.
+       * @return This builder for chaining.
+       */
+      public Builder setScriptName(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        scriptName_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string script_name = 2;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearScriptName() {
+        
+        scriptName_ = getDefaultInstance().getScriptName();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string script_name = 2;</code>
+       * @param value The bytes for scriptName to set.
+       * @return This builder for chaining.
+       */
+      public Builder setScriptNameBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        scriptName_ = value;
+        onChanged();
+        return this;
+      }
+
+      private com.google.protobuf.ByteString projectObjHash_ = com.google.protobuf.ByteString.EMPTY;
+      /**
+       * <code>bytes project_obj_hash = 3;</code>
+       * @return The projectObjHash.
        */
       @java.lang.Override
-      public boolean hasRuleImplObjectId() {
-        return implIdCase_ == 2;
+      public com.google.protobuf.ByteString getProjectObjHash() {
+        return projectObjHash_;
       }
       /**
-       * <code>.com.giyeok.bibix.ObjectId rule_impl_object_id = 2;</code>
-       * @return The ruleImplObjectId.
+       * <code>bytes project_obj_hash = 3;</code>
+       * @param value The projectObjHash to set.
+       * @return This builder for chaining.
+       */
+      public Builder setProjectObjHash(com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        projectObjHash_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>bytes project_obj_hash = 3;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearProjectObjHash() {
+        
+        projectObjHash_ = getDefaultInstance().getProjectObjHash();
+        onChanged();
+        return this;
+      }
+
+      private long version_ ;
+      /**
+       * <code>int64 version = 4;</code>
+       * @return The version.
        */
       @java.lang.Override
-      public com.giyeok.bibix.BibixIdProto.ObjectId getRuleImplObjectId() {
-        if (ruleImplObjectIdBuilder_ == null) {
-          if (implIdCase_ == 2) {
-            return (com.giyeok.bibix.BibixIdProto.ObjectId) implId_;
-          }
-          return com.giyeok.bibix.BibixIdProto.ObjectId.getDefaultInstance();
-        } else {
-          if (implIdCase_ == 2) {
-            return ruleImplObjectIdBuilder_.getMessage();
-          }
-          return com.giyeok.bibix.BibixIdProto.ObjectId.getDefaultInstance();
-        }
+      public long getVersion() {
+        return version_;
       }
       /**
-       * <code>.com.giyeok.bibix.ObjectId rule_impl_object_id = 2;</code>
+       * <code>int64 version = 4;</code>
+       * @param value The version to set.
+       * @return This builder for chaining.
        */
-      public Builder setRuleImplObjectId(com.giyeok.bibix.BibixIdProto.ObjectId value) {
-        if (ruleImplObjectIdBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          implId_ = value;
-          onChanged();
-        } else {
-          ruleImplObjectIdBuilder_.setMessage(value);
-        }
-        implIdCase_ = 2;
+      public Builder setVersion(long value) {
+        
+        version_ = value;
+        onChanged();
         return this;
       }
       /**
-       * <code>.com.giyeok.bibix.ObjectId rule_impl_object_id = 2;</code>
+       * <code>int64 version = 4;</code>
+       * @return This builder for chaining.
        */
-      public Builder setRuleImplObjectId(
-          com.giyeok.bibix.BibixIdProto.ObjectId.Builder builderForValue) {
-        if (ruleImplObjectIdBuilder_ == null) {
-          implId_ = builderForValue.build();
-          onChanged();
-        } else {
-          ruleImplObjectIdBuilder_.setMessage(builderForValue.build());
-        }
-        implIdCase_ = 2;
+      public Builder clearVersion() {
+        
+        version_ = 0L;
+        onChanged();
         return this;
-      }
-      /**
-       * <code>.com.giyeok.bibix.ObjectId rule_impl_object_id = 2;</code>
-       */
-      public Builder mergeRuleImplObjectId(com.giyeok.bibix.BibixIdProto.ObjectId value) {
-        if (ruleImplObjectIdBuilder_ == null) {
-          if (implIdCase_ == 2 &&
-              implId_ != com.giyeok.bibix.BibixIdProto.ObjectId.getDefaultInstance()) {
-            implId_ = com.giyeok.bibix.BibixIdProto.ObjectId.newBuilder((com.giyeok.bibix.BibixIdProto.ObjectId) implId_)
-                .mergeFrom(value).buildPartial();
-          } else {
-            implId_ = value;
-          }
-          onChanged();
-        } else {
-          if (implIdCase_ == 2) {
-            ruleImplObjectIdBuilder_.mergeFrom(value);
-          }
-          ruleImplObjectIdBuilder_.setMessage(value);
-        }
-        implIdCase_ = 2;
-        return this;
-      }
-      /**
-       * <code>.com.giyeok.bibix.ObjectId rule_impl_object_id = 2;</code>
-       */
-      public Builder clearRuleImplObjectId() {
-        if (ruleImplObjectIdBuilder_ == null) {
-          if (implIdCase_ == 2) {
-            implIdCase_ = 0;
-            implId_ = null;
-            onChanged();
-          }
-        } else {
-          if (implIdCase_ == 2) {
-            implIdCase_ = 0;
-            implId_ = null;
-          }
-          ruleImplObjectIdBuilder_.clear();
-        }
-        return this;
-      }
-      /**
-       * <code>.com.giyeok.bibix.ObjectId rule_impl_object_id = 2;</code>
-       */
-      public com.giyeok.bibix.BibixIdProto.ObjectId.Builder getRuleImplObjectIdBuilder() {
-        return getRuleImplObjectIdFieldBuilder().getBuilder();
-      }
-      /**
-       * <code>.com.giyeok.bibix.ObjectId rule_impl_object_id = 2;</code>
-       */
-      @java.lang.Override
-      public com.giyeok.bibix.BibixIdProto.ObjectIdOrBuilder getRuleImplObjectIdOrBuilder() {
-        if ((implIdCase_ == 2) && (ruleImplObjectIdBuilder_ != null)) {
-          return ruleImplObjectIdBuilder_.getMessageOrBuilder();
-        } else {
-          if (implIdCase_ == 2) {
-            return (com.giyeok.bibix.BibixIdProto.ObjectId) implId_;
-          }
-          return com.giyeok.bibix.BibixIdProto.ObjectId.getDefaultInstance();
-        }
-      }
-      /**
-       * <code>.com.giyeok.bibix.ObjectId rule_impl_object_id = 2;</code>
-       */
-      private com.google.protobuf.SingleFieldBuilderV3<
-          com.giyeok.bibix.BibixIdProto.ObjectId, com.giyeok.bibix.BibixIdProto.ObjectId.Builder, com.giyeok.bibix.BibixIdProto.ObjectIdOrBuilder> 
-          getRuleImplObjectIdFieldBuilder() {
-        if (ruleImplObjectIdBuilder_ == null) {
-          if (!(implIdCase_ == 2)) {
-            implId_ = com.giyeok.bibix.BibixIdProto.ObjectId.getDefaultInstance();
-          }
-          ruleImplObjectIdBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-              com.giyeok.bibix.BibixIdProto.ObjectId, com.giyeok.bibix.BibixIdProto.ObjectId.Builder, com.giyeok.bibix.BibixIdProto.ObjectIdOrBuilder>(
-                  (com.giyeok.bibix.BibixIdProto.ObjectId) implId_,
-                  getParentForChildren(),
-                  isClean());
-          implId_ = null;
-        }
-        implIdCase_ = 2;
-        onChanged();;
-        return ruleImplObjectIdBuilder_;
       }
       @java.lang.Override
       public final Builder setUnknownFields(
@@ -3790,41 +1981,41 @@ public final class BibixIdProto {
       }
 
 
-      // @@protoc_insertion_point(builder_scope:com.giyeok.bibix.RuleImplId)
+      // @@protoc_insertion_point(builder_scope:com.giyeok.bibix.ExternalBibixProject)
     }
 
-    // @@protoc_insertion_point(class_scope:com.giyeok.bibix.RuleImplId)
-    private static final com.giyeok.bibix.BibixIdProto.RuleImplId DEFAULT_INSTANCE;
+    // @@protoc_insertion_point(class_scope:com.giyeok.bibix.ExternalBibixProject)
+    private static final com.giyeok.bibix.BibixIdProto.ExternalBibixProject DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new com.giyeok.bibix.BibixIdProto.RuleImplId();
+      DEFAULT_INSTANCE = new com.giyeok.bibix.BibixIdProto.ExternalBibixProject();
     }
 
-    public static com.giyeok.bibix.BibixIdProto.RuleImplId getDefaultInstance() {
+    public static com.giyeok.bibix.BibixIdProto.ExternalBibixProject getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
-    private static final com.google.protobuf.Parser<RuleImplId>
-        PARSER = new com.google.protobuf.AbstractParser<RuleImplId>() {
+    private static final com.google.protobuf.Parser<ExternalBibixProject>
+        PARSER = new com.google.protobuf.AbstractParser<ExternalBibixProject>() {
       @java.lang.Override
-      public RuleImplId parsePartialFrom(
+      public ExternalBibixProject parsePartialFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return new RuleImplId(input, extensionRegistry);
+        return new ExternalBibixProject(input, extensionRegistry);
       }
     };
 
-    public static com.google.protobuf.Parser<RuleImplId> parser() {
+    public static com.google.protobuf.Parser<ExternalBibixProject> parser() {
       return PARSER;
     }
 
     @java.lang.Override
-    public com.google.protobuf.Parser<RuleImplId> getParserForType() {
+    public com.google.protobuf.Parser<ExternalBibixProject> getParserForType() {
       return PARSER;
     }
 
     @java.lang.Override
-    public com.giyeok.bibix.BibixIdProto.RuleImplId getDefaultInstanceForType() {
+    public com.giyeok.bibix.BibixIdProto.ExternalBibixProject getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -3835,88 +2026,76 @@ public final class BibixIdProto {
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>.com.giyeok.bibix.SourceId source_id = 1;</code>
-     * @return Whether the sourceId field is set.
+     * <code>.com.giyeok.bibix.SourceId call_expr_source_id = 1;</code>
+     * @return Whether the callExprSourceId field is set.
      */
-    boolean hasSourceId();
+    boolean hasCallExprSourceId();
     /**
-     * <code>.com.giyeok.bibix.SourceId source_id = 1;</code>
-     * @return The sourceId.
+     * <code>.com.giyeok.bibix.SourceId call_expr_source_id = 1;</code>
+     * @return The callExprSourceId.
      */
-    com.giyeok.bibix.BibixIdProto.SourceId getSourceId();
+    com.giyeok.bibix.BibixIdProto.SourceId getCallExprSourceId();
     /**
-     * <code>.com.giyeok.bibix.SourceId source_id = 1;</code>
+     * <code>.com.giyeok.bibix.SourceId call_expr_source_id = 1;</code>
      */
-    com.giyeok.bibix.BibixIdProto.SourceIdOrBuilder getSourceIdOrBuilder();
+    com.giyeok.bibix.BibixIdProto.SourceIdOrBuilder getCallExprSourceIdOrBuilder();
 
     /**
-     * <code>.com.giyeok.bibix.ObjectIdHash rule_impl_id_hash = 2;</code>
-     * @return Whether the ruleImplIdHash field is set.
+     * <code>.com.giyeok.bibix.ObjectIdHash call_target_objhash = 2;</code>
+     * @return Whether the callTargetObjhash field is set.
      */
-    boolean hasRuleImplIdHash();
+    boolean hasCallTargetObjhash();
     /**
-     * <code>.com.giyeok.bibix.ObjectIdHash rule_impl_id_hash = 2;</code>
-     * @return The ruleImplIdHash.
+     * <code>.com.giyeok.bibix.ObjectIdHash call_target_objhash = 2;</code>
+     * @return The callTargetObjhash.
      */
-    com.giyeok.bibix.BibixIdProto.ObjectIdHash getRuleImplIdHash();
+    com.giyeok.bibix.BibixIdProto.ObjectIdHash getCallTargetObjhash();
     /**
-     * <code>.com.giyeok.bibix.ObjectIdHash rule_impl_id_hash = 2;</code>
+     * <code>.com.giyeok.bibix.ObjectIdHash call_target_objhash = 2;</code>
      */
-    com.giyeok.bibix.BibixIdProto.ObjectIdHashOrBuilder getRuleImplIdHashOrBuilder();
+    com.giyeok.bibix.BibixIdProto.ObjectIdHashOrBuilder getCallTargetObjhashOrBuilder();
 
     /**
-     * <pre>
-     * rule impl의 구현 코드가 바뀐 경우. rule_impl_id_hash는 argument가 바뀐 경우에만 변경되기 때문에 필요
-     * </pre>
-     *
-     * <code>.com.giyeok.bibix.SourceHashId rule_impl_source_hash = 3;</code>
-     * @return Whether the ruleImplSourceHash field is set.
-     */
-    boolean hasRuleImplSourceHash();
-    /**
-     * <pre>
-     * rule impl의 구현 코드가 바뀐 경우. rule_impl_id_hash는 argument가 바뀐 경우에만 변경되기 때문에 필요
-     * </pre>
-     *
-     * <code>.com.giyeok.bibix.SourceHashId rule_impl_source_hash = 3;</code>
-     * @return The ruleImplSourceHash.
-     */
-    com.giyeok.bibix.BibixIdProto.SourceHashId getRuleImplSourceHash();
-    /**
-     * <pre>
-     * rule impl의 구현 코드가 바뀐 경우. rule_impl_id_hash는 argument가 바뀐 경우에만 변경되기 때문에 필요
-     * </pre>
-     *
-     * <code>.com.giyeok.bibix.SourceHashId rule_impl_source_hash = 3;</code>
-     */
-    com.giyeok.bibix.BibixIdProto.SourceHashIdOrBuilder getRuleImplSourceHashOrBuilder();
-
-    /**
-     * <code>string method_name = 4;</code>
+     * <code>string method_name = 3;</code>
      * @return The methodName.
      */
     java.lang.String getMethodName();
     /**
-     * <code>string method_name = 4;</code>
+     * <code>string method_name = 3;</code>
      * @return The bytes for methodName.
      */
     com.google.protobuf.ByteString
         getMethodNameBytes();
 
     /**
-     * <code>.com.giyeok.bibix.ArgsMap args_map = 5;</code>
+     * <code>.com.giyeok.bibix.ArgsMap args_map = 4;</code>
      * @return Whether the argsMap field is set.
      */
     boolean hasArgsMap();
     /**
-     * <code>.com.giyeok.bibix.ArgsMap args_map = 5;</code>
+     * <code>.com.giyeok.bibix.ArgsMap args_map = 4;</code>
      * @return The argsMap.
      */
     com.giyeok.bibix.BibixIdProto.ArgsMap getArgsMap();
     /**
-     * <code>.com.giyeok.bibix.ArgsMap args_map = 5;</code>
+     * <code>.com.giyeok.bibix.ArgsMap args_map = 4;</code>
      */
     com.giyeok.bibix.BibixIdProto.ArgsMapOrBuilder getArgsMapOrBuilder();
+
+    /**
+     * <code>.com.giyeok.bibix.InputHashes input_hashes = 5;</code>
+     * @return Whether the inputHashes field is set.
+     */
+    boolean hasInputHashes();
+    /**
+     * <code>.com.giyeok.bibix.InputHashes input_hashes = 5;</code>
+     * @return The inputHashes.
+     */
+    com.giyeok.bibix.BibixIdProto.InputHashes getInputHashes();
+    /**
+     * <code>.com.giyeok.bibix.InputHashes input_hashes = 5;</code>
+     */
+    com.giyeok.bibix.BibixIdProto.InputHashesOrBuilder getInputHashesOrBuilder();
   }
   /**
    * Protobuf type {@code com.giyeok.bibix.ObjectId}
@@ -3966,50 +2145,37 @@ public final class BibixIdProto {
               break;
             case 10: {
               com.giyeok.bibix.BibixIdProto.SourceId.Builder subBuilder = null;
-              if (sourceId_ != null) {
-                subBuilder = sourceId_.toBuilder();
+              if (callExprSourceId_ != null) {
+                subBuilder = callExprSourceId_.toBuilder();
               }
-              sourceId_ = input.readMessage(com.giyeok.bibix.BibixIdProto.SourceId.parser(), extensionRegistry);
+              callExprSourceId_ = input.readMessage(com.giyeok.bibix.BibixIdProto.SourceId.parser(), extensionRegistry);
               if (subBuilder != null) {
-                subBuilder.mergeFrom(sourceId_);
-                sourceId_ = subBuilder.buildPartial();
+                subBuilder.mergeFrom(callExprSourceId_);
+                callExprSourceId_ = subBuilder.buildPartial();
               }
 
               break;
             }
             case 18: {
               com.giyeok.bibix.BibixIdProto.ObjectIdHash.Builder subBuilder = null;
-              if (ruleImplIdHash_ != null) {
-                subBuilder = ruleImplIdHash_.toBuilder();
+              if (callTargetObjhash_ != null) {
+                subBuilder = callTargetObjhash_.toBuilder();
               }
-              ruleImplIdHash_ = input.readMessage(com.giyeok.bibix.BibixIdProto.ObjectIdHash.parser(), extensionRegistry);
+              callTargetObjhash_ = input.readMessage(com.giyeok.bibix.BibixIdProto.ObjectIdHash.parser(), extensionRegistry);
               if (subBuilder != null) {
-                subBuilder.mergeFrom(ruleImplIdHash_);
-                ruleImplIdHash_ = subBuilder.buildPartial();
+                subBuilder.mergeFrom(callTargetObjhash_);
+                callTargetObjhash_ = subBuilder.buildPartial();
               }
 
               break;
             }
             case 26: {
-              com.giyeok.bibix.BibixIdProto.SourceHashId.Builder subBuilder = null;
-              if (ruleImplSourceHash_ != null) {
-                subBuilder = ruleImplSourceHash_.toBuilder();
-              }
-              ruleImplSourceHash_ = input.readMessage(com.giyeok.bibix.BibixIdProto.SourceHashId.parser(), extensionRegistry);
-              if (subBuilder != null) {
-                subBuilder.mergeFrom(ruleImplSourceHash_);
-                ruleImplSourceHash_ = subBuilder.buildPartial();
-              }
-
-              break;
-            }
-            case 34: {
               java.lang.String s = input.readStringRequireUtf8();
 
               methodName_ = s;
               break;
             }
-            case 42: {
+            case 34: {
               com.giyeok.bibix.BibixIdProto.ArgsMap.Builder subBuilder = null;
               if (argsMap_ != null) {
                 subBuilder = argsMap_.toBuilder();
@@ -4018,6 +2184,19 @@ public final class BibixIdProto {
               if (subBuilder != null) {
                 subBuilder.mergeFrom(argsMap_);
                 argsMap_ = subBuilder.buildPartial();
+              }
+
+              break;
+            }
+            case 42: {
+              com.giyeok.bibix.BibixIdProto.InputHashes.Builder subBuilder = null;
+              if (inputHashes_ != null) {
+                subBuilder = inputHashes_.toBuilder();
+              }
+              inputHashes_ = input.readMessage(com.giyeok.bibix.BibixIdProto.InputHashes.parser(), extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(inputHashes_);
+                inputHashes_ = subBuilder.buildPartial();
               }
 
               break;
@@ -4054,100 +2233,62 @@ public final class BibixIdProto {
               com.giyeok.bibix.BibixIdProto.ObjectId.class, com.giyeok.bibix.BibixIdProto.ObjectId.Builder.class);
     }
 
-    public static final int SOURCE_ID_FIELD_NUMBER = 1;
-    private com.giyeok.bibix.BibixIdProto.SourceId sourceId_;
+    public static final int CALL_EXPR_SOURCE_ID_FIELD_NUMBER = 1;
+    private com.giyeok.bibix.BibixIdProto.SourceId callExprSourceId_;
     /**
-     * <code>.com.giyeok.bibix.SourceId source_id = 1;</code>
-     * @return Whether the sourceId field is set.
+     * <code>.com.giyeok.bibix.SourceId call_expr_source_id = 1;</code>
+     * @return Whether the callExprSourceId field is set.
      */
     @java.lang.Override
-    public boolean hasSourceId() {
-      return sourceId_ != null;
+    public boolean hasCallExprSourceId() {
+      return callExprSourceId_ != null;
     }
     /**
-     * <code>.com.giyeok.bibix.SourceId source_id = 1;</code>
-     * @return The sourceId.
+     * <code>.com.giyeok.bibix.SourceId call_expr_source_id = 1;</code>
+     * @return The callExprSourceId.
      */
     @java.lang.Override
-    public com.giyeok.bibix.BibixIdProto.SourceId getSourceId() {
-      return sourceId_ == null ? com.giyeok.bibix.BibixIdProto.SourceId.getDefaultInstance() : sourceId_;
+    public com.giyeok.bibix.BibixIdProto.SourceId getCallExprSourceId() {
+      return callExprSourceId_ == null ? com.giyeok.bibix.BibixIdProto.SourceId.getDefaultInstance() : callExprSourceId_;
     }
     /**
-     * <code>.com.giyeok.bibix.SourceId source_id = 1;</code>
+     * <code>.com.giyeok.bibix.SourceId call_expr_source_id = 1;</code>
      */
     @java.lang.Override
-    public com.giyeok.bibix.BibixIdProto.SourceIdOrBuilder getSourceIdOrBuilder() {
-      return getSourceId();
-    }
-
-    public static final int RULE_IMPL_ID_HASH_FIELD_NUMBER = 2;
-    private com.giyeok.bibix.BibixIdProto.ObjectIdHash ruleImplIdHash_;
-    /**
-     * <code>.com.giyeok.bibix.ObjectIdHash rule_impl_id_hash = 2;</code>
-     * @return Whether the ruleImplIdHash field is set.
-     */
-    @java.lang.Override
-    public boolean hasRuleImplIdHash() {
-      return ruleImplIdHash_ != null;
-    }
-    /**
-     * <code>.com.giyeok.bibix.ObjectIdHash rule_impl_id_hash = 2;</code>
-     * @return The ruleImplIdHash.
-     */
-    @java.lang.Override
-    public com.giyeok.bibix.BibixIdProto.ObjectIdHash getRuleImplIdHash() {
-      return ruleImplIdHash_ == null ? com.giyeok.bibix.BibixIdProto.ObjectIdHash.getDefaultInstance() : ruleImplIdHash_;
-    }
-    /**
-     * <code>.com.giyeok.bibix.ObjectIdHash rule_impl_id_hash = 2;</code>
-     */
-    @java.lang.Override
-    public com.giyeok.bibix.BibixIdProto.ObjectIdHashOrBuilder getRuleImplIdHashOrBuilder() {
-      return getRuleImplIdHash();
+    public com.giyeok.bibix.BibixIdProto.SourceIdOrBuilder getCallExprSourceIdOrBuilder() {
+      return getCallExprSourceId();
     }
 
-    public static final int RULE_IMPL_SOURCE_HASH_FIELD_NUMBER = 3;
-    private com.giyeok.bibix.BibixIdProto.SourceHashId ruleImplSourceHash_;
+    public static final int CALL_TARGET_OBJHASH_FIELD_NUMBER = 2;
+    private com.giyeok.bibix.BibixIdProto.ObjectIdHash callTargetObjhash_;
     /**
-     * <pre>
-     * rule impl의 구현 코드가 바뀐 경우. rule_impl_id_hash는 argument가 바뀐 경우에만 변경되기 때문에 필요
-     * </pre>
-     *
-     * <code>.com.giyeok.bibix.SourceHashId rule_impl_source_hash = 3;</code>
-     * @return Whether the ruleImplSourceHash field is set.
+     * <code>.com.giyeok.bibix.ObjectIdHash call_target_objhash = 2;</code>
+     * @return Whether the callTargetObjhash field is set.
      */
     @java.lang.Override
-    public boolean hasRuleImplSourceHash() {
-      return ruleImplSourceHash_ != null;
+    public boolean hasCallTargetObjhash() {
+      return callTargetObjhash_ != null;
     }
     /**
-     * <pre>
-     * rule impl의 구현 코드가 바뀐 경우. rule_impl_id_hash는 argument가 바뀐 경우에만 변경되기 때문에 필요
-     * </pre>
-     *
-     * <code>.com.giyeok.bibix.SourceHashId rule_impl_source_hash = 3;</code>
-     * @return The ruleImplSourceHash.
+     * <code>.com.giyeok.bibix.ObjectIdHash call_target_objhash = 2;</code>
+     * @return The callTargetObjhash.
      */
     @java.lang.Override
-    public com.giyeok.bibix.BibixIdProto.SourceHashId getRuleImplSourceHash() {
-      return ruleImplSourceHash_ == null ? com.giyeok.bibix.BibixIdProto.SourceHashId.getDefaultInstance() : ruleImplSourceHash_;
+    public com.giyeok.bibix.BibixIdProto.ObjectIdHash getCallTargetObjhash() {
+      return callTargetObjhash_ == null ? com.giyeok.bibix.BibixIdProto.ObjectIdHash.getDefaultInstance() : callTargetObjhash_;
     }
     /**
-     * <pre>
-     * rule impl의 구현 코드가 바뀐 경우. rule_impl_id_hash는 argument가 바뀐 경우에만 변경되기 때문에 필요
-     * </pre>
-     *
-     * <code>.com.giyeok.bibix.SourceHashId rule_impl_source_hash = 3;</code>
+     * <code>.com.giyeok.bibix.ObjectIdHash call_target_objhash = 2;</code>
      */
     @java.lang.Override
-    public com.giyeok.bibix.BibixIdProto.SourceHashIdOrBuilder getRuleImplSourceHashOrBuilder() {
-      return getRuleImplSourceHash();
+    public com.giyeok.bibix.BibixIdProto.ObjectIdHashOrBuilder getCallTargetObjhashOrBuilder() {
+      return getCallTargetObjhash();
     }
 
-    public static final int METHOD_NAME_FIELD_NUMBER = 4;
+    public static final int METHOD_NAME_FIELD_NUMBER = 3;
     private volatile java.lang.Object methodName_;
     /**
-     * <code>string method_name = 4;</code>
+     * <code>string method_name = 3;</code>
      * @return The methodName.
      */
     @java.lang.Override
@@ -4164,7 +2305,7 @@ public final class BibixIdProto {
       }
     }
     /**
-     * <code>string method_name = 4;</code>
+     * <code>string method_name = 3;</code>
      * @return The bytes for methodName.
      */
     @java.lang.Override
@@ -4182,10 +2323,10 @@ public final class BibixIdProto {
       }
     }
 
-    public static final int ARGS_MAP_FIELD_NUMBER = 5;
+    public static final int ARGS_MAP_FIELD_NUMBER = 4;
     private com.giyeok.bibix.BibixIdProto.ArgsMap argsMap_;
     /**
-     * <code>.com.giyeok.bibix.ArgsMap args_map = 5;</code>
+     * <code>.com.giyeok.bibix.ArgsMap args_map = 4;</code>
      * @return Whether the argsMap field is set.
      */
     @java.lang.Override
@@ -4193,7 +2334,7 @@ public final class BibixIdProto {
       return argsMap_ != null;
     }
     /**
-     * <code>.com.giyeok.bibix.ArgsMap args_map = 5;</code>
+     * <code>.com.giyeok.bibix.ArgsMap args_map = 4;</code>
      * @return The argsMap.
      */
     @java.lang.Override
@@ -4201,11 +2342,37 @@ public final class BibixIdProto {
       return argsMap_ == null ? com.giyeok.bibix.BibixIdProto.ArgsMap.getDefaultInstance() : argsMap_;
     }
     /**
-     * <code>.com.giyeok.bibix.ArgsMap args_map = 5;</code>
+     * <code>.com.giyeok.bibix.ArgsMap args_map = 4;</code>
      */
     @java.lang.Override
     public com.giyeok.bibix.BibixIdProto.ArgsMapOrBuilder getArgsMapOrBuilder() {
       return getArgsMap();
+    }
+
+    public static final int INPUT_HASHES_FIELD_NUMBER = 5;
+    private com.giyeok.bibix.BibixIdProto.InputHashes inputHashes_;
+    /**
+     * <code>.com.giyeok.bibix.InputHashes input_hashes = 5;</code>
+     * @return Whether the inputHashes field is set.
+     */
+    @java.lang.Override
+    public boolean hasInputHashes() {
+      return inputHashes_ != null;
+    }
+    /**
+     * <code>.com.giyeok.bibix.InputHashes input_hashes = 5;</code>
+     * @return The inputHashes.
+     */
+    @java.lang.Override
+    public com.giyeok.bibix.BibixIdProto.InputHashes getInputHashes() {
+      return inputHashes_ == null ? com.giyeok.bibix.BibixIdProto.InputHashes.getDefaultInstance() : inputHashes_;
+    }
+    /**
+     * <code>.com.giyeok.bibix.InputHashes input_hashes = 5;</code>
+     */
+    @java.lang.Override
+    public com.giyeok.bibix.BibixIdProto.InputHashesOrBuilder getInputHashesOrBuilder() {
+      return getInputHashes();
     }
 
     private byte memoizedIsInitialized = -1;
@@ -4222,20 +2389,20 @@ public final class BibixIdProto {
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
-      if (sourceId_ != null) {
-        output.writeMessage(1, getSourceId());
+      if (callExprSourceId_ != null) {
+        output.writeMessage(1, getCallExprSourceId());
       }
-      if (ruleImplIdHash_ != null) {
-        output.writeMessage(2, getRuleImplIdHash());
-      }
-      if (ruleImplSourceHash_ != null) {
-        output.writeMessage(3, getRuleImplSourceHash());
+      if (callTargetObjhash_ != null) {
+        output.writeMessage(2, getCallTargetObjhash());
       }
       if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(methodName_)) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 4, methodName_);
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 3, methodName_);
       }
       if (argsMap_ != null) {
-        output.writeMessage(5, getArgsMap());
+        output.writeMessage(4, getArgsMap());
+      }
+      if (inputHashes_ != null) {
+        output.writeMessage(5, getInputHashes());
       }
       unknownFields.writeTo(output);
     }
@@ -4246,24 +2413,24 @@ public final class BibixIdProto {
       if (size != -1) return size;
 
       size = 0;
-      if (sourceId_ != null) {
+      if (callExprSourceId_ != null) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(1, getSourceId());
+          .computeMessageSize(1, getCallExprSourceId());
       }
-      if (ruleImplIdHash_ != null) {
+      if (callTargetObjhash_ != null) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(2, getRuleImplIdHash());
-      }
-      if (ruleImplSourceHash_ != null) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(3, getRuleImplSourceHash());
+          .computeMessageSize(2, getCallTargetObjhash());
       }
       if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(methodName_)) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, methodName_);
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, methodName_);
       }
       if (argsMap_ != null) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(5, getArgsMap());
+          .computeMessageSize(4, getArgsMap());
+      }
+      if (inputHashes_ != null) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(5, getInputHashes());
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -4280,20 +2447,15 @@ public final class BibixIdProto {
       }
       com.giyeok.bibix.BibixIdProto.ObjectId other = (com.giyeok.bibix.BibixIdProto.ObjectId) obj;
 
-      if (hasSourceId() != other.hasSourceId()) return false;
-      if (hasSourceId()) {
-        if (!getSourceId()
-            .equals(other.getSourceId())) return false;
+      if (hasCallExprSourceId() != other.hasCallExprSourceId()) return false;
+      if (hasCallExprSourceId()) {
+        if (!getCallExprSourceId()
+            .equals(other.getCallExprSourceId())) return false;
       }
-      if (hasRuleImplIdHash() != other.hasRuleImplIdHash()) return false;
-      if (hasRuleImplIdHash()) {
-        if (!getRuleImplIdHash()
-            .equals(other.getRuleImplIdHash())) return false;
-      }
-      if (hasRuleImplSourceHash() != other.hasRuleImplSourceHash()) return false;
-      if (hasRuleImplSourceHash()) {
-        if (!getRuleImplSourceHash()
-            .equals(other.getRuleImplSourceHash())) return false;
+      if (hasCallTargetObjhash() != other.hasCallTargetObjhash()) return false;
+      if (hasCallTargetObjhash()) {
+        if (!getCallTargetObjhash()
+            .equals(other.getCallTargetObjhash())) return false;
       }
       if (!getMethodName()
           .equals(other.getMethodName())) return false;
@@ -4301,6 +2463,11 @@ public final class BibixIdProto {
       if (hasArgsMap()) {
         if (!getArgsMap()
             .equals(other.getArgsMap())) return false;
+      }
+      if (hasInputHashes() != other.hasInputHashes()) return false;
+      if (hasInputHashes()) {
+        if (!getInputHashes()
+            .equals(other.getInputHashes())) return false;
       }
       if (!unknownFields.equals(other.unknownFields)) return false;
       return true;
@@ -4313,23 +2480,23 @@ public final class BibixIdProto {
       }
       int hash = 41;
       hash = (19 * hash) + getDescriptor().hashCode();
-      if (hasSourceId()) {
-        hash = (37 * hash) + SOURCE_ID_FIELD_NUMBER;
-        hash = (53 * hash) + getSourceId().hashCode();
+      if (hasCallExprSourceId()) {
+        hash = (37 * hash) + CALL_EXPR_SOURCE_ID_FIELD_NUMBER;
+        hash = (53 * hash) + getCallExprSourceId().hashCode();
       }
-      if (hasRuleImplIdHash()) {
-        hash = (37 * hash) + RULE_IMPL_ID_HASH_FIELD_NUMBER;
-        hash = (53 * hash) + getRuleImplIdHash().hashCode();
-      }
-      if (hasRuleImplSourceHash()) {
-        hash = (37 * hash) + RULE_IMPL_SOURCE_HASH_FIELD_NUMBER;
-        hash = (53 * hash) + getRuleImplSourceHash().hashCode();
+      if (hasCallTargetObjhash()) {
+        hash = (37 * hash) + CALL_TARGET_OBJHASH_FIELD_NUMBER;
+        hash = (53 * hash) + getCallTargetObjhash().hashCode();
       }
       hash = (37 * hash) + METHOD_NAME_FIELD_NUMBER;
       hash = (53 * hash) + getMethodName().hashCode();
       if (hasArgsMap()) {
         hash = (37 * hash) + ARGS_MAP_FIELD_NUMBER;
         hash = (53 * hash) + getArgsMap().hashCode();
+      }
+      if (hasInputHashes()) {
+        hash = (37 * hash) + INPUT_HASHES_FIELD_NUMBER;
+        hash = (53 * hash) + getInputHashes().hashCode();
       }
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
@@ -4464,23 +2631,17 @@ public final class BibixIdProto {
       @java.lang.Override
       public Builder clear() {
         super.clear();
-        if (sourceIdBuilder_ == null) {
-          sourceId_ = null;
+        if (callExprSourceIdBuilder_ == null) {
+          callExprSourceId_ = null;
         } else {
-          sourceId_ = null;
-          sourceIdBuilder_ = null;
+          callExprSourceId_ = null;
+          callExprSourceIdBuilder_ = null;
         }
-        if (ruleImplIdHashBuilder_ == null) {
-          ruleImplIdHash_ = null;
+        if (callTargetObjhashBuilder_ == null) {
+          callTargetObjhash_ = null;
         } else {
-          ruleImplIdHash_ = null;
-          ruleImplIdHashBuilder_ = null;
-        }
-        if (ruleImplSourceHashBuilder_ == null) {
-          ruleImplSourceHash_ = null;
-        } else {
-          ruleImplSourceHash_ = null;
-          ruleImplSourceHashBuilder_ = null;
+          callTargetObjhash_ = null;
+          callTargetObjhashBuilder_ = null;
         }
         methodName_ = "";
 
@@ -4489,6 +2650,12 @@ public final class BibixIdProto {
         } else {
           argsMap_ = null;
           argsMapBuilder_ = null;
+        }
+        if (inputHashesBuilder_ == null) {
+          inputHashes_ = null;
+        } else {
+          inputHashes_ = null;
+          inputHashesBuilder_ = null;
         }
         return this;
       }
@@ -4516,26 +2683,26 @@ public final class BibixIdProto {
       @java.lang.Override
       public com.giyeok.bibix.BibixIdProto.ObjectId buildPartial() {
         com.giyeok.bibix.BibixIdProto.ObjectId result = new com.giyeok.bibix.BibixIdProto.ObjectId(this);
-        if (sourceIdBuilder_ == null) {
-          result.sourceId_ = sourceId_;
+        if (callExprSourceIdBuilder_ == null) {
+          result.callExprSourceId_ = callExprSourceId_;
         } else {
-          result.sourceId_ = sourceIdBuilder_.build();
+          result.callExprSourceId_ = callExprSourceIdBuilder_.build();
         }
-        if (ruleImplIdHashBuilder_ == null) {
-          result.ruleImplIdHash_ = ruleImplIdHash_;
+        if (callTargetObjhashBuilder_ == null) {
+          result.callTargetObjhash_ = callTargetObjhash_;
         } else {
-          result.ruleImplIdHash_ = ruleImplIdHashBuilder_.build();
-        }
-        if (ruleImplSourceHashBuilder_ == null) {
-          result.ruleImplSourceHash_ = ruleImplSourceHash_;
-        } else {
-          result.ruleImplSourceHash_ = ruleImplSourceHashBuilder_.build();
+          result.callTargetObjhash_ = callTargetObjhashBuilder_.build();
         }
         result.methodName_ = methodName_;
         if (argsMapBuilder_ == null) {
           result.argsMap_ = argsMap_;
         } else {
           result.argsMap_ = argsMapBuilder_.build();
+        }
+        if (inputHashesBuilder_ == null) {
+          result.inputHashes_ = inputHashes_;
+        } else {
+          result.inputHashes_ = inputHashesBuilder_.build();
         }
         onBuilt();
         return result;
@@ -4585,14 +2752,11 @@ public final class BibixIdProto {
 
       public Builder mergeFrom(com.giyeok.bibix.BibixIdProto.ObjectId other) {
         if (other == com.giyeok.bibix.BibixIdProto.ObjectId.getDefaultInstance()) return this;
-        if (other.hasSourceId()) {
-          mergeSourceId(other.getSourceId());
+        if (other.hasCallExprSourceId()) {
+          mergeCallExprSourceId(other.getCallExprSourceId());
         }
-        if (other.hasRuleImplIdHash()) {
-          mergeRuleImplIdHash(other.getRuleImplIdHash());
-        }
-        if (other.hasRuleImplSourceHash()) {
-          mergeRuleImplSourceHash(other.getRuleImplSourceHash());
+        if (other.hasCallTargetObjhash()) {
+          mergeCallTargetObjhash(other.getCallTargetObjhash());
         }
         if (!other.getMethodName().isEmpty()) {
           methodName_ = other.methodName_;
@@ -4600,6 +2764,9 @@ public final class BibixIdProto {
         }
         if (other.hasArgsMap()) {
           mergeArgsMap(other.getArgsMap());
+        }
+        if (other.hasInputHashes()) {
+          mergeInputHashes(other.getInputHashes());
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -4630,402 +2797,247 @@ public final class BibixIdProto {
         return this;
       }
 
-      private com.giyeok.bibix.BibixIdProto.SourceId sourceId_;
+      private com.giyeok.bibix.BibixIdProto.SourceId callExprSourceId_;
       private com.google.protobuf.SingleFieldBuilderV3<
-          com.giyeok.bibix.BibixIdProto.SourceId, com.giyeok.bibix.BibixIdProto.SourceId.Builder, com.giyeok.bibix.BibixIdProto.SourceIdOrBuilder> sourceIdBuilder_;
+          com.giyeok.bibix.BibixIdProto.SourceId, com.giyeok.bibix.BibixIdProto.SourceId.Builder, com.giyeok.bibix.BibixIdProto.SourceIdOrBuilder> callExprSourceIdBuilder_;
       /**
-       * <code>.com.giyeok.bibix.SourceId source_id = 1;</code>
-       * @return Whether the sourceId field is set.
+       * <code>.com.giyeok.bibix.SourceId call_expr_source_id = 1;</code>
+       * @return Whether the callExprSourceId field is set.
        */
-      public boolean hasSourceId() {
-        return sourceIdBuilder_ != null || sourceId_ != null;
+      public boolean hasCallExprSourceId() {
+        return callExprSourceIdBuilder_ != null || callExprSourceId_ != null;
       }
       /**
-       * <code>.com.giyeok.bibix.SourceId source_id = 1;</code>
-       * @return The sourceId.
+       * <code>.com.giyeok.bibix.SourceId call_expr_source_id = 1;</code>
+       * @return The callExprSourceId.
        */
-      public com.giyeok.bibix.BibixIdProto.SourceId getSourceId() {
-        if (sourceIdBuilder_ == null) {
-          return sourceId_ == null ? com.giyeok.bibix.BibixIdProto.SourceId.getDefaultInstance() : sourceId_;
+      public com.giyeok.bibix.BibixIdProto.SourceId getCallExprSourceId() {
+        if (callExprSourceIdBuilder_ == null) {
+          return callExprSourceId_ == null ? com.giyeok.bibix.BibixIdProto.SourceId.getDefaultInstance() : callExprSourceId_;
         } else {
-          return sourceIdBuilder_.getMessage();
+          return callExprSourceIdBuilder_.getMessage();
         }
       }
       /**
-       * <code>.com.giyeok.bibix.SourceId source_id = 1;</code>
+       * <code>.com.giyeok.bibix.SourceId call_expr_source_id = 1;</code>
        */
-      public Builder setSourceId(com.giyeok.bibix.BibixIdProto.SourceId value) {
-        if (sourceIdBuilder_ == null) {
+      public Builder setCallExprSourceId(com.giyeok.bibix.BibixIdProto.SourceId value) {
+        if (callExprSourceIdBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
           }
-          sourceId_ = value;
+          callExprSourceId_ = value;
           onChanged();
         } else {
-          sourceIdBuilder_.setMessage(value);
+          callExprSourceIdBuilder_.setMessage(value);
         }
 
         return this;
       }
       /**
-       * <code>.com.giyeok.bibix.SourceId source_id = 1;</code>
+       * <code>.com.giyeok.bibix.SourceId call_expr_source_id = 1;</code>
        */
-      public Builder setSourceId(
+      public Builder setCallExprSourceId(
           com.giyeok.bibix.BibixIdProto.SourceId.Builder builderForValue) {
-        if (sourceIdBuilder_ == null) {
-          sourceId_ = builderForValue.build();
+        if (callExprSourceIdBuilder_ == null) {
+          callExprSourceId_ = builderForValue.build();
           onChanged();
         } else {
-          sourceIdBuilder_.setMessage(builderForValue.build());
+          callExprSourceIdBuilder_.setMessage(builderForValue.build());
         }
 
         return this;
       }
       /**
-       * <code>.com.giyeok.bibix.SourceId source_id = 1;</code>
+       * <code>.com.giyeok.bibix.SourceId call_expr_source_id = 1;</code>
        */
-      public Builder mergeSourceId(com.giyeok.bibix.BibixIdProto.SourceId value) {
-        if (sourceIdBuilder_ == null) {
-          if (sourceId_ != null) {
-            sourceId_ =
-              com.giyeok.bibix.BibixIdProto.SourceId.newBuilder(sourceId_).mergeFrom(value).buildPartial();
+      public Builder mergeCallExprSourceId(com.giyeok.bibix.BibixIdProto.SourceId value) {
+        if (callExprSourceIdBuilder_ == null) {
+          if (callExprSourceId_ != null) {
+            callExprSourceId_ =
+              com.giyeok.bibix.BibixIdProto.SourceId.newBuilder(callExprSourceId_).mergeFrom(value).buildPartial();
           } else {
-            sourceId_ = value;
+            callExprSourceId_ = value;
           }
           onChanged();
         } else {
-          sourceIdBuilder_.mergeFrom(value);
+          callExprSourceIdBuilder_.mergeFrom(value);
         }
 
         return this;
       }
       /**
-       * <code>.com.giyeok.bibix.SourceId source_id = 1;</code>
+       * <code>.com.giyeok.bibix.SourceId call_expr_source_id = 1;</code>
        */
-      public Builder clearSourceId() {
-        if (sourceIdBuilder_ == null) {
-          sourceId_ = null;
+      public Builder clearCallExprSourceId() {
+        if (callExprSourceIdBuilder_ == null) {
+          callExprSourceId_ = null;
           onChanged();
         } else {
-          sourceId_ = null;
-          sourceIdBuilder_ = null;
+          callExprSourceId_ = null;
+          callExprSourceIdBuilder_ = null;
         }
 
         return this;
       }
       /**
-       * <code>.com.giyeok.bibix.SourceId source_id = 1;</code>
+       * <code>.com.giyeok.bibix.SourceId call_expr_source_id = 1;</code>
        */
-      public com.giyeok.bibix.BibixIdProto.SourceId.Builder getSourceIdBuilder() {
+      public com.giyeok.bibix.BibixIdProto.SourceId.Builder getCallExprSourceIdBuilder() {
         
         onChanged();
-        return getSourceIdFieldBuilder().getBuilder();
+        return getCallExprSourceIdFieldBuilder().getBuilder();
       }
       /**
-       * <code>.com.giyeok.bibix.SourceId source_id = 1;</code>
+       * <code>.com.giyeok.bibix.SourceId call_expr_source_id = 1;</code>
        */
-      public com.giyeok.bibix.BibixIdProto.SourceIdOrBuilder getSourceIdOrBuilder() {
-        if (sourceIdBuilder_ != null) {
-          return sourceIdBuilder_.getMessageOrBuilder();
+      public com.giyeok.bibix.BibixIdProto.SourceIdOrBuilder getCallExprSourceIdOrBuilder() {
+        if (callExprSourceIdBuilder_ != null) {
+          return callExprSourceIdBuilder_.getMessageOrBuilder();
         } else {
-          return sourceId_ == null ?
-              com.giyeok.bibix.BibixIdProto.SourceId.getDefaultInstance() : sourceId_;
+          return callExprSourceId_ == null ?
+              com.giyeok.bibix.BibixIdProto.SourceId.getDefaultInstance() : callExprSourceId_;
         }
       }
       /**
-       * <code>.com.giyeok.bibix.SourceId source_id = 1;</code>
+       * <code>.com.giyeok.bibix.SourceId call_expr_source_id = 1;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
           com.giyeok.bibix.BibixIdProto.SourceId, com.giyeok.bibix.BibixIdProto.SourceId.Builder, com.giyeok.bibix.BibixIdProto.SourceIdOrBuilder> 
-          getSourceIdFieldBuilder() {
-        if (sourceIdBuilder_ == null) {
-          sourceIdBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+          getCallExprSourceIdFieldBuilder() {
+        if (callExprSourceIdBuilder_ == null) {
+          callExprSourceIdBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
               com.giyeok.bibix.BibixIdProto.SourceId, com.giyeok.bibix.BibixIdProto.SourceId.Builder, com.giyeok.bibix.BibixIdProto.SourceIdOrBuilder>(
-                  getSourceId(),
+                  getCallExprSourceId(),
                   getParentForChildren(),
                   isClean());
-          sourceId_ = null;
+          callExprSourceId_ = null;
         }
-        return sourceIdBuilder_;
+        return callExprSourceIdBuilder_;
       }
 
-      private com.giyeok.bibix.BibixIdProto.ObjectIdHash ruleImplIdHash_;
+      private com.giyeok.bibix.BibixIdProto.ObjectIdHash callTargetObjhash_;
       private com.google.protobuf.SingleFieldBuilderV3<
-          com.giyeok.bibix.BibixIdProto.ObjectIdHash, com.giyeok.bibix.BibixIdProto.ObjectIdHash.Builder, com.giyeok.bibix.BibixIdProto.ObjectIdHashOrBuilder> ruleImplIdHashBuilder_;
+          com.giyeok.bibix.BibixIdProto.ObjectIdHash, com.giyeok.bibix.BibixIdProto.ObjectIdHash.Builder, com.giyeok.bibix.BibixIdProto.ObjectIdHashOrBuilder> callTargetObjhashBuilder_;
       /**
-       * <code>.com.giyeok.bibix.ObjectIdHash rule_impl_id_hash = 2;</code>
-       * @return Whether the ruleImplIdHash field is set.
+       * <code>.com.giyeok.bibix.ObjectIdHash call_target_objhash = 2;</code>
+       * @return Whether the callTargetObjhash field is set.
        */
-      public boolean hasRuleImplIdHash() {
-        return ruleImplIdHashBuilder_ != null || ruleImplIdHash_ != null;
+      public boolean hasCallTargetObjhash() {
+        return callTargetObjhashBuilder_ != null || callTargetObjhash_ != null;
       }
       /**
-       * <code>.com.giyeok.bibix.ObjectIdHash rule_impl_id_hash = 2;</code>
-       * @return The ruleImplIdHash.
+       * <code>.com.giyeok.bibix.ObjectIdHash call_target_objhash = 2;</code>
+       * @return The callTargetObjhash.
        */
-      public com.giyeok.bibix.BibixIdProto.ObjectIdHash getRuleImplIdHash() {
-        if (ruleImplIdHashBuilder_ == null) {
-          return ruleImplIdHash_ == null ? com.giyeok.bibix.BibixIdProto.ObjectIdHash.getDefaultInstance() : ruleImplIdHash_;
+      public com.giyeok.bibix.BibixIdProto.ObjectIdHash getCallTargetObjhash() {
+        if (callTargetObjhashBuilder_ == null) {
+          return callTargetObjhash_ == null ? com.giyeok.bibix.BibixIdProto.ObjectIdHash.getDefaultInstance() : callTargetObjhash_;
         } else {
-          return ruleImplIdHashBuilder_.getMessage();
+          return callTargetObjhashBuilder_.getMessage();
         }
       }
       /**
-       * <code>.com.giyeok.bibix.ObjectIdHash rule_impl_id_hash = 2;</code>
+       * <code>.com.giyeok.bibix.ObjectIdHash call_target_objhash = 2;</code>
        */
-      public Builder setRuleImplIdHash(com.giyeok.bibix.BibixIdProto.ObjectIdHash value) {
-        if (ruleImplIdHashBuilder_ == null) {
+      public Builder setCallTargetObjhash(com.giyeok.bibix.BibixIdProto.ObjectIdHash value) {
+        if (callTargetObjhashBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
           }
-          ruleImplIdHash_ = value;
+          callTargetObjhash_ = value;
           onChanged();
         } else {
-          ruleImplIdHashBuilder_.setMessage(value);
+          callTargetObjhashBuilder_.setMessage(value);
         }
 
         return this;
       }
       /**
-       * <code>.com.giyeok.bibix.ObjectIdHash rule_impl_id_hash = 2;</code>
+       * <code>.com.giyeok.bibix.ObjectIdHash call_target_objhash = 2;</code>
        */
-      public Builder setRuleImplIdHash(
+      public Builder setCallTargetObjhash(
           com.giyeok.bibix.BibixIdProto.ObjectIdHash.Builder builderForValue) {
-        if (ruleImplIdHashBuilder_ == null) {
-          ruleImplIdHash_ = builderForValue.build();
+        if (callTargetObjhashBuilder_ == null) {
+          callTargetObjhash_ = builderForValue.build();
           onChanged();
         } else {
-          ruleImplIdHashBuilder_.setMessage(builderForValue.build());
+          callTargetObjhashBuilder_.setMessage(builderForValue.build());
         }
 
         return this;
       }
       /**
-       * <code>.com.giyeok.bibix.ObjectIdHash rule_impl_id_hash = 2;</code>
+       * <code>.com.giyeok.bibix.ObjectIdHash call_target_objhash = 2;</code>
        */
-      public Builder mergeRuleImplIdHash(com.giyeok.bibix.BibixIdProto.ObjectIdHash value) {
-        if (ruleImplIdHashBuilder_ == null) {
-          if (ruleImplIdHash_ != null) {
-            ruleImplIdHash_ =
-              com.giyeok.bibix.BibixIdProto.ObjectIdHash.newBuilder(ruleImplIdHash_).mergeFrom(value).buildPartial();
+      public Builder mergeCallTargetObjhash(com.giyeok.bibix.BibixIdProto.ObjectIdHash value) {
+        if (callTargetObjhashBuilder_ == null) {
+          if (callTargetObjhash_ != null) {
+            callTargetObjhash_ =
+              com.giyeok.bibix.BibixIdProto.ObjectIdHash.newBuilder(callTargetObjhash_).mergeFrom(value).buildPartial();
           } else {
-            ruleImplIdHash_ = value;
+            callTargetObjhash_ = value;
           }
           onChanged();
         } else {
-          ruleImplIdHashBuilder_.mergeFrom(value);
+          callTargetObjhashBuilder_.mergeFrom(value);
         }
 
         return this;
       }
       /**
-       * <code>.com.giyeok.bibix.ObjectIdHash rule_impl_id_hash = 2;</code>
+       * <code>.com.giyeok.bibix.ObjectIdHash call_target_objhash = 2;</code>
        */
-      public Builder clearRuleImplIdHash() {
-        if (ruleImplIdHashBuilder_ == null) {
-          ruleImplIdHash_ = null;
+      public Builder clearCallTargetObjhash() {
+        if (callTargetObjhashBuilder_ == null) {
+          callTargetObjhash_ = null;
           onChanged();
         } else {
-          ruleImplIdHash_ = null;
-          ruleImplIdHashBuilder_ = null;
+          callTargetObjhash_ = null;
+          callTargetObjhashBuilder_ = null;
         }
 
         return this;
       }
       /**
-       * <code>.com.giyeok.bibix.ObjectIdHash rule_impl_id_hash = 2;</code>
+       * <code>.com.giyeok.bibix.ObjectIdHash call_target_objhash = 2;</code>
        */
-      public com.giyeok.bibix.BibixIdProto.ObjectIdHash.Builder getRuleImplIdHashBuilder() {
+      public com.giyeok.bibix.BibixIdProto.ObjectIdHash.Builder getCallTargetObjhashBuilder() {
         
         onChanged();
-        return getRuleImplIdHashFieldBuilder().getBuilder();
+        return getCallTargetObjhashFieldBuilder().getBuilder();
       }
       /**
-       * <code>.com.giyeok.bibix.ObjectIdHash rule_impl_id_hash = 2;</code>
+       * <code>.com.giyeok.bibix.ObjectIdHash call_target_objhash = 2;</code>
        */
-      public com.giyeok.bibix.BibixIdProto.ObjectIdHashOrBuilder getRuleImplIdHashOrBuilder() {
-        if (ruleImplIdHashBuilder_ != null) {
-          return ruleImplIdHashBuilder_.getMessageOrBuilder();
+      public com.giyeok.bibix.BibixIdProto.ObjectIdHashOrBuilder getCallTargetObjhashOrBuilder() {
+        if (callTargetObjhashBuilder_ != null) {
+          return callTargetObjhashBuilder_.getMessageOrBuilder();
         } else {
-          return ruleImplIdHash_ == null ?
-              com.giyeok.bibix.BibixIdProto.ObjectIdHash.getDefaultInstance() : ruleImplIdHash_;
+          return callTargetObjhash_ == null ?
+              com.giyeok.bibix.BibixIdProto.ObjectIdHash.getDefaultInstance() : callTargetObjhash_;
         }
       }
       /**
-       * <code>.com.giyeok.bibix.ObjectIdHash rule_impl_id_hash = 2;</code>
+       * <code>.com.giyeok.bibix.ObjectIdHash call_target_objhash = 2;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
           com.giyeok.bibix.BibixIdProto.ObjectIdHash, com.giyeok.bibix.BibixIdProto.ObjectIdHash.Builder, com.giyeok.bibix.BibixIdProto.ObjectIdHashOrBuilder> 
-          getRuleImplIdHashFieldBuilder() {
-        if (ruleImplIdHashBuilder_ == null) {
-          ruleImplIdHashBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+          getCallTargetObjhashFieldBuilder() {
+        if (callTargetObjhashBuilder_ == null) {
+          callTargetObjhashBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
               com.giyeok.bibix.BibixIdProto.ObjectIdHash, com.giyeok.bibix.BibixIdProto.ObjectIdHash.Builder, com.giyeok.bibix.BibixIdProto.ObjectIdHashOrBuilder>(
-                  getRuleImplIdHash(),
+                  getCallTargetObjhash(),
                   getParentForChildren(),
                   isClean());
-          ruleImplIdHash_ = null;
+          callTargetObjhash_ = null;
         }
-        return ruleImplIdHashBuilder_;
-      }
-
-      private com.giyeok.bibix.BibixIdProto.SourceHashId ruleImplSourceHash_;
-      private com.google.protobuf.SingleFieldBuilderV3<
-          com.giyeok.bibix.BibixIdProto.SourceHashId, com.giyeok.bibix.BibixIdProto.SourceHashId.Builder, com.giyeok.bibix.BibixIdProto.SourceHashIdOrBuilder> ruleImplSourceHashBuilder_;
-      /**
-       * <pre>
-       * rule impl의 구현 코드가 바뀐 경우. rule_impl_id_hash는 argument가 바뀐 경우에만 변경되기 때문에 필요
-       * </pre>
-       *
-       * <code>.com.giyeok.bibix.SourceHashId rule_impl_source_hash = 3;</code>
-       * @return Whether the ruleImplSourceHash field is set.
-       */
-      public boolean hasRuleImplSourceHash() {
-        return ruleImplSourceHashBuilder_ != null || ruleImplSourceHash_ != null;
-      }
-      /**
-       * <pre>
-       * rule impl의 구현 코드가 바뀐 경우. rule_impl_id_hash는 argument가 바뀐 경우에만 변경되기 때문에 필요
-       * </pre>
-       *
-       * <code>.com.giyeok.bibix.SourceHashId rule_impl_source_hash = 3;</code>
-       * @return The ruleImplSourceHash.
-       */
-      public com.giyeok.bibix.BibixIdProto.SourceHashId getRuleImplSourceHash() {
-        if (ruleImplSourceHashBuilder_ == null) {
-          return ruleImplSourceHash_ == null ? com.giyeok.bibix.BibixIdProto.SourceHashId.getDefaultInstance() : ruleImplSourceHash_;
-        } else {
-          return ruleImplSourceHashBuilder_.getMessage();
-        }
-      }
-      /**
-       * <pre>
-       * rule impl의 구현 코드가 바뀐 경우. rule_impl_id_hash는 argument가 바뀐 경우에만 변경되기 때문에 필요
-       * </pre>
-       *
-       * <code>.com.giyeok.bibix.SourceHashId rule_impl_source_hash = 3;</code>
-       */
-      public Builder setRuleImplSourceHash(com.giyeok.bibix.BibixIdProto.SourceHashId value) {
-        if (ruleImplSourceHashBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ruleImplSourceHash_ = value;
-          onChanged();
-        } else {
-          ruleImplSourceHashBuilder_.setMessage(value);
-        }
-
-        return this;
-      }
-      /**
-       * <pre>
-       * rule impl의 구현 코드가 바뀐 경우. rule_impl_id_hash는 argument가 바뀐 경우에만 변경되기 때문에 필요
-       * </pre>
-       *
-       * <code>.com.giyeok.bibix.SourceHashId rule_impl_source_hash = 3;</code>
-       */
-      public Builder setRuleImplSourceHash(
-          com.giyeok.bibix.BibixIdProto.SourceHashId.Builder builderForValue) {
-        if (ruleImplSourceHashBuilder_ == null) {
-          ruleImplSourceHash_ = builderForValue.build();
-          onChanged();
-        } else {
-          ruleImplSourceHashBuilder_.setMessage(builderForValue.build());
-        }
-
-        return this;
-      }
-      /**
-       * <pre>
-       * rule impl의 구현 코드가 바뀐 경우. rule_impl_id_hash는 argument가 바뀐 경우에만 변경되기 때문에 필요
-       * </pre>
-       *
-       * <code>.com.giyeok.bibix.SourceHashId rule_impl_source_hash = 3;</code>
-       */
-      public Builder mergeRuleImplSourceHash(com.giyeok.bibix.BibixIdProto.SourceHashId value) {
-        if (ruleImplSourceHashBuilder_ == null) {
-          if (ruleImplSourceHash_ != null) {
-            ruleImplSourceHash_ =
-              com.giyeok.bibix.BibixIdProto.SourceHashId.newBuilder(ruleImplSourceHash_).mergeFrom(value).buildPartial();
-          } else {
-            ruleImplSourceHash_ = value;
-          }
-          onChanged();
-        } else {
-          ruleImplSourceHashBuilder_.mergeFrom(value);
-        }
-
-        return this;
-      }
-      /**
-       * <pre>
-       * rule impl의 구현 코드가 바뀐 경우. rule_impl_id_hash는 argument가 바뀐 경우에만 변경되기 때문에 필요
-       * </pre>
-       *
-       * <code>.com.giyeok.bibix.SourceHashId rule_impl_source_hash = 3;</code>
-       */
-      public Builder clearRuleImplSourceHash() {
-        if (ruleImplSourceHashBuilder_ == null) {
-          ruleImplSourceHash_ = null;
-          onChanged();
-        } else {
-          ruleImplSourceHash_ = null;
-          ruleImplSourceHashBuilder_ = null;
-        }
-
-        return this;
-      }
-      /**
-       * <pre>
-       * rule impl의 구현 코드가 바뀐 경우. rule_impl_id_hash는 argument가 바뀐 경우에만 변경되기 때문에 필요
-       * </pre>
-       *
-       * <code>.com.giyeok.bibix.SourceHashId rule_impl_source_hash = 3;</code>
-       */
-      public com.giyeok.bibix.BibixIdProto.SourceHashId.Builder getRuleImplSourceHashBuilder() {
-        
-        onChanged();
-        return getRuleImplSourceHashFieldBuilder().getBuilder();
-      }
-      /**
-       * <pre>
-       * rule impl의 구현 코드가 바뀐 경우. rule_impl_id_hash는 argument가 바뀐 경우에만 변경되기 때문에 필요
-       * </pre>
-       *
-       * <code>.com.giyeok.bibix.SourceHashId rule_impl_source_hash = 3;</code>
-       */
-      public com.giyeok.bibix.BibixIdProto.SourceHashIdOrBuilder getRuleImplSourceHashOrBuilder() {
-        if (ruleImplSourceHashBuilder_ != null) {
-          return ruleImplSourceHashBuilder_.getMessageOrBuilder();
-        } else {
-          return ruleImplSourceHash_ == null ?
-              com.giyeok.bibix.BibixIdProto.SourceHashId.getDefaultInstance() : ruleImplSourceHash_;
-        }
-      }
-      /**
-       * <pre>
-       * rule impl의 구현 코드가 바뀐 경우. rule_impl_id_hash는 argument가 바뀐 경우에만 변경되기 때문에 필요
-       * </pre>
-       *
-       * <code>.com.giyeok.bibix.SourceHashId rule_impl_source_hash = 3;</code>
-       */
-      private com.google.protobuf.SingleFieldBuilderV3<
-          com.giyeok.bibix.BibixIdProto.SourceHashId, com.giyeok.bibix.BibixIdProto.SourceHashId.Builder, com.giyeok.bibix.BibixIdProto.SourceHashIdOrBuilder> 
-          getRuleImplSourceHashFieldBuilder() {
-        if (ruleImplSourceHashBuilder_ == null) {
-          ruleImplSourceHashBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-              com.giyeok.bibix.BibixIdProto.SourceHashId, com.giyeok.bibix.BibixIdProto.SourceHashId.Builder, com.giyeok.bibix.BibixIdProto.SourceHashIdOrBuilder>(
-                  getRuleImplSourceHash(),
-                  getParentForChildren(),
-                  isClean());
-          ruleImplSourceHash_ = null;
-        }
-        return ruleImplSourceHashBuilder_;
+        return callTargetObjhashBuilder_;
       }
 
       private java.lang.Object methodName_ = "";
       /**
-       * <code>string method_name = 4;</code>
+       * <code>string method_name = 3;</code>
        * @return The methodName.
        */
       public java.lang.String getMethodName() {
@@ -5041,7 +3053,7 @@ public final class BibixIdProto {
         }
       }
       /**
-       * <code>string method_name = 4;</code>
+       * <code>string method_name = 3;</code>
        * @return The bytes for methodName.
        */
       public com.google.protobuf.ByteString
@@ -5058,7 +3070,7 @@ public final class BibixIdProto {
         }
       }
       /**
-       * <code>string method_name = 4;</code>
+       * <code>string method_name = 3;</code>
        * @param value The methodName to set.
        * @return This builder for chaining.
        */
@@ -5073,7 +3085,7 @@ public final class BibixIdProto {
         return this;
       }
       /**
-       * <code>string method_name = 4;</code>
+       * <code>string method_name = 3;</code>
        * @return This builder for chaining.
        */
       public Builder clearMethodName() {
@@ -5083,7 +3095,7 @@ public final class BibixIdProto {
         return this;
       }
       /**
-       * <code>string method_name = 4;</code>
+       * <code>string method_name = 3;</code>
        * @param value The bytes for methodName to set.
        * @return This builder for chaining.
        */
@@ -5103,14 +3115,14 @@ public final class BibixIdProto {
       private com.google.protobuf.SingleFieldBuilderV3<
           com.giyeok.bibix.BibixIdProto.ArgsMap, com.giyeok.bibix.BibixIdProto.ArgsMap.Builder, com.giyeok.bibix.BibixIdProto.ArgsMapOrBuilder> argsMapBuilder_;
       /**
-       * <code>.com.giyeok.bibix.ArgsMap args_map = 5;</code>
+       * <code>.com.giyeok.bibix.ArgsMap args_map = 4;</code>
        * @return Whether the argsMap field is set.
        */
       public boolean hasArgsMap() {
         return argsMapBuilder_ != null || argsMap_ != null;
       }
       /**
-       * <code>.com.giyeok.bibix.ArgsMap args_map = 5;</code>
+       * <code>.com.giyeok.bibix.ArgsMap args_map = 4;</code>
        * @return The argsMap.
        */
       public com.giyeok.bibix.BibixIdProto.ArgsMap getArgsMap() {
@@ -5121,7 +3133,7 @@ public final class BibixIdProto {
         }
       }
       /**
-       * <code>.com.giyeok.bibix.ArgsMap args_map = 5;</code>
+       * <code>.com.giyeok.bibix.ArgsMap args_map = 4;</code>
        */
       public Builder setArgsMap(com.giyeok.bibix.BibixIdProto.ArgsMap value) {
         if (argsMapBuilder_ == null) {
@@ -5137,7 +3149,7 @@ public final class BibixIdProto {
         return this;
       }
       /**
-       * <code>.com.giyeok.bibix.ArgsMap args_map = 5;</code>
+       * <code>.com.giyeok.bibix.ArgsMap args_map = 4;</code>
        */
       public Builder setArgsMap(
           com.giyeok.bibix.BibixIdProto.ArgsMap.Builder builderForValue) {
@@ -5151,7 +3163,7 @@ public final class BibixIdProto {
         return this;
       }
       /**
-       * <code>.com.giyeok.bibix.ArgsMap args_map = 5;</code>
+       * <code>.com.giyeok.bibix.ArgsMap args_map = 4;</code>
        */
       public Builder mergeArgsMap(com.giyeok.bibix.BibixIdProto.ArgsMap value) {
         if (argsMapBuilder_ == null) {
@@ -5169,7 +3181,7 @@ public final class BibixIdProto {
         return this;
       }
       /**
-       * <code>.com.giyeok.bibix.ArgsMap args_map = 5;</code>
+       * <code>.com.giyeok.bibix.ArgsMap args_map = 4;</code>
        */
       public Builder clearArgsMap() {
         if (argsMapBuilder_ == null) {
@@ -5183,7 +3195,7 @@ public final class BibixIdProto {
         return this;
       }
       /**
-       * <code>.com.giyeok.bibix.ArgsMap args_map = 5;</code>
+       * <code>.com.giyeok.bibix.ArgsMap args_map = 4;</code>
        */
       public com.giyeok.bibix.BibixIdProto.ArgsMap.Builder getArgsMapBuilder() {
         
@@ -5191,7 +3203,7 @@ public final class BibixIdProto {
         return getArgsMapFieldBuilder().getBuilder();
       }
       /**
-       * <code>.com.giyeok.bibix.ArgsMap args_map = 5;</code>
+       * <code>.com.giyeok.bibix.ArgsMap args_map = 4;</code>
        */
       public com.giyeok.bibix.BibixIdProto.ArgsMapOrBuilder getArgsMapOrBuilder() {
         if (argsMapBuilder_ != null) {
@@ -5202,7 +3214,7 @@ public final class BibixIdProto {
         }
       }
       /**
-       * <code>.com.giyeok.bibix.ArgsMap args_map = 5;</code>
+       * <code>.com.giyeok.bibix.ArgsMap args_map = 4;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
           com.giyeok.bibix.BibixIdProto.ArgsMap, com.giyeok.bibix.BibixIdProto.ArgsMap.Builder, com.giyeok.bibix.BibixIdProto.ArgsMapOrBuilder> 
@@ -5216,6 +3228,125 @@ public final class BibixIdProto {
           argsMap_ = null;
         }
         return argsMapBuilder_;
+      }
+
+      private com.giyeok.bibix.BibixIdProto.InputHashes inputHashes_;
+      private com.google.protobuf.SingleFieldBuilderV3<
+          com.giyeok.bibix.BibixIdProto.InputHashes, com.giyeok.bibix.BibixIdProto.InputHashes.Builder, com.giyeok.bibix.BibixIdProto.InputHashesOrBuilder> inputHashesBuilder_;
+      /**
+       * <code>.com.giyeok.bibix.InputHashes input_hashes = 5;</code>
+       * @return Whether the inputHashes field is set.
+       */
+      public boolean hasInputHashes() {
+        return inputHashesBuilder_ != null || inputHashes_ != null;
+      }
+      /**
+       * <code>.com.giyeok.bibix.InputHashes input_hashes = 5;</code>
+       * @return The inputHashes.
+       */
+      public com.giyeok.bibix.BibixIdProto.InputHashes getInputHashes() {
+        if (inputHashesBuilder_ == null) {
+          return inputHashes_ == null ? com.giyeok.bibix.BibixIdProto.InputHashes.getDefaultInstance() : inputHashes_;
+        } else {
+          return inputHashesBuilder_.getMessage();
+        }
+      }
+      /**
+       * <code>.com.giyeok.bibix.InputHashes input_hashes = 5;</code>
+       */
+      public Builder setInputHashes(com.giyeok.bibix.BibixIdProto.InputHashes value) {
+        if (inputHashesBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          inputHashes_ = value;
+          onChanged();
+        } else {
+          inputHashesBuilder_.setMessage(value);
+        }
+
+        return this;
+      }
+      /**
+       * <code>.com.giyeok.bibix.InputHashes input_hashes = 5;</code>
+       */
+      public Builder setInputHashes(
+          com.giyeok.bibix.BibixIdProto.InputHashes.Builder builderForValue) {
+        if (inputHashesBuilder_ == null) {
+          inputHashes_ = builderForValue.build();
+          onChanged();
+        } else {
+          inputHashesBuilder_.setMessage(builderForValue.build());
+        }
+
+        return this;
+      }
+      /**
+       * <code>.com.giyeok.bibix.InputHashes input_hashes = 5;</code>
+       */
+      public Builder mergeInputHashes(com.giyeok.bibix.BibixIdProto.InputHashes value) {
+        if (inputHashesBuilder_ == null) {
+          if (inputHashes_ != null) {
+            inputHashes_ =
+              com.giyeok.bibix.BibixIdProto.InputHashes.newBuilder(inputHashes_).mergeFrom(value).buildPartial();
+          } else {
+            inputHashes_ = value;
+          }
+          onChanged();
+        } else {
+          inputHashesBuilder_.mergeFrom(value);
+        }
+
+        return this;
+      }
+      /**
+       * <code>.com.giyeok.bibix.InputHashes input_hashes = 5;</code>
+       */
+      public Builder clearInputHashes() {
+        if (inputHashesBuilder_ == null) {
+          inputHashes_ = null;
+          onChanged();
+        } else {
+          inputHashes_ = null;
+          inputHashesBuilder_ = null;
+        }
+
+        return this;
+      }
+      /**
+       * <code>.com.giyeok.bibix.InputHashes input_hashes = 5;</code>
+       */
+      public com.giyeok.bibix.BibixIdProto.InputHashes.Builder getInputHashesBuilder() {
+        
+        onChanged();
+        return getInputHashesFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>.com.giyeok.bibix.InputHashes input_hashes = 5;</code>
+       */
+      public com.giyeok.bibix.BibixIdProto.InputHashesOrBuilder getInputHashesOrBuilder() {
+        if (inputHashesBuilder_ != null) {
+          return inputHashesBuilder_.getMessageOrBuilder();
+        } else {
+          return inputHashes_ == null ?
+              com.giyeok.bibix.BibixIdProto.InputHashes.getDefaultInstance() : inputHashes_;
+        }
+      }
+      /**
+       * <code>.com.giyeok.bibix.InputHashes input_hashes = 5;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          com.giyeok.bibix.BibixIdProto.InputHashes, com.giyeok.bibix.BibixIdProto.InputHashes.Builder, com.giyeok.bibix.BibixIdProto.InputHashesOrBuilder> 
+          getInputHashesFieldBuilder() {
+        if (inputHashesBuilder_ == null) {
+          inputHashesBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              com.giyeok.bibix.BibixIdProto.InputHashes, com.giyeok.bibix.BibixIdProto.InputHashes.Builder, com.giyeok.bibix.BibixIdProto.InputHashesOrBuilder>(
+                  getInputHashes(),
+                  getParentForChildren(),
+                  isClean());
+          inputHashes_ = null;
+        }
+        return inputHashesBuilder_;
       }
       @java.lang.Override
       public final Builder setUnknownFields(
@@ -7824,6 +5955,1388 @@ public final class BibixIdProto {
 
   }
 
+  public interface InputHashesOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:com.giyeok.bibix.InputHashes)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>repeated .com.giyeok.bibix.DirectoryHash directories = 1;</code>
+     */
+    java.util.List<com.giyeok.bibix.BibixIdProto.DirectoryHash> 
+        getDirectoriesList();
+    /**
+     * <code>repeated .com.giyeok.bibix.DirectoryHash directories = 1;</code>
+     */
+    com.giyeok.bibix.BibixIdProto.DirectoryHash getDirectories(int index);
+    /**
+     * <code>repeated .com.giyeok.bibix.DirectoryHash directories = 1;</code>
+     */
+    int getDirectoriesCount();
+    /**
+     * <code>repeated .com.giyeok.bibix.DirectoryHash directories = 1;</code>
+     */
+    java.util.List<? extends com.giyeok.bibix.BibixIdProto.DirectoryHashOrBuilder> 
+        getDirectoriesOrBuilderList();
+    /**
+     * <code>repeated .com.giyeok.bibix.DirectoryHash directories = 1;</code>
+     */
+    com.giyeok.bibix.BibixIdProto.DirectoryHashOrBuilder getDirectoriesOrBuilder(
+        int index);
+
+    /**
+     * <code>repeated .com.giyeok.bibix.FileHash files = 2;</code>
+     */
+    java.util.List<com.giyeok.bibix.BibixIdProto.FileHash> 
+        getFilesList();
+    /**
+     * <code>repeated .com.giyeok.bibix.FileHash files = 2;</code>
+     */
+    com.giyeok.bibix.BibixIdProto.FileHash getFiles(int index);
+    /**
+     * <code>repeated .com.giyeok.bibix.FileHash files = 2;</code>
+     */
+    int getFilesCount();
+    /**
+     * <code>repeated .com.giyeok.bibix.FileHash files = 2;</code>
+     */
+    java.util.List<? extends com.giyeok.bibix.BibixIdProto.FileHashOrBuilder> 
+        getFilesOrBuilderList();
+    /**
+     * <code>repeated .com.giyeok.bibix.FileHash files = 2;</code>
+     */
+    com.giyeok.bibix.BibixIdProto.FileHashOrBuilder getFilesOrBuilder(
+        int index);
+
+    /**
+     * <code>repeated string non_existent = 3;</code>
+     * @return A list containing the nonExistent.
+     */
+    java.util.List<java.lang.String>
+        getNonExistentList();
+    /**
+     * <code>repeated string non_existent = 3;</code>
+     * @return The count of nonExistent.
+     */
+    int getNonExistentCount();
+    /**
+     * <code>repeated string non_existent = 3;</code>
+     * @param index The index of the element to return.
+     * @return The nonExistent at the given index.
+     */
+    java.lang.String getNonExistent(int index);
+    /**
+     * <code>repeated string non_existent = 3;</code>
+     * @param index The index of the value to return.
+     * @return The bytes of the nonExistent at the given index.
+     */
+    com.google.protobuf.ByteString
+        getNonExistentBytes(int index);
+  }
+  /**
+   * Protobuf type {@code com.giyeok.bibix.InputHashes}
+   */
+  public static final class InputHashes extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:com.giyeok.bibix.InputHashes)
+      InputHashesOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use InputHashes.newBuilder() to construct.
+    private InputHashes(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private InputHashes() {
+      directories_ = java.util.Collections.emptyList();
+      files_ = java.util.Collections.emptyList();
+      nonExistent_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+    }
+
+    @java.lang.Override
+    @SuppressWarnings({"unused"})
+    protected java.lang.Object newInstance(
+        UnusedPrivateParameter unused) {
+      return new InputHashes();
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private InputHashes(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            case 10: {
+              if (!((mutable_bitField0_ & 0x00000001) != 0)) {
+                directories_ = new java.util.ArrayList<com.giyeok.bibix.BibixIdProto.DirectoryHash>();
+                mutable_bitField0_ |= 0x00000001;
+              }
+              directories_.add(
+                  input.readMessage(com.giyeok.bibix.BibixIdProto.DirectoryHash.parser(), extensionRegistry));
+              break;
+            }
+            case 18: {
+              if (!((mutable_bitField0_ & 0x00000002) != 0)) {
+                files_ = new java.util.ArrayList<com.giyeok.bibix.BibixIdProto.FileHash>();
+                mutable_bitField0_ |= 0x00000002;
+              }
+              files_.add(
+                  input.readMessage(com.giyeok.bibix.BibixIdProto.FileHash.parser(), extensionRegistry));
+              break;
+            }
+            case 26: {
+              java.lang.String s = input.readStringRequireUtf8();
+              if (!((mutable_bitField0_ & 0x00000004) != 0)) {
+                nonExistent_ = new com.google.protobuf.LazyStringArrayList();
+                mutable_bitField0_ |= 0x00000004;
+              }
+              nonExistent_.add(s);
+              break;
+            }
+            default: {
+              if (!parseUnknownField(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        if (((mutable_bitField0_ & 0x00000001) != 0)) {
+          directories_ = java.util.Collections.unmodifiableList(directories_);
+        }
+        if (((mutable_bitField0_ & 0x00000002) != 0)) {
+          files_ = java.util.Collections.unmodifiableList(files_);
+        }
+        if (((mutable_bitField0_ & 0x00000004) != 0)) {
+          nonExistent_ = nonExistent_.getUnmodifiableView();
+        }
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return com.giyeok.bibix.BibixIdProto.internal_static_com_giyeok_bibix_InputHashes_descriptor;
+    }
+
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return com.giyeok.bibix.BibixIdProto.internal_static_com_giyeok_bibix_InputHashes_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              com.giyeok.bibix.BibixIdProto.InputHashes.class, com.giyeok.bibix.BibixIdProto.InputHashes.Builder.class);
+    }
+
+    public static final int DIRECTORIES_FIELD_NUMBER = 1;
+    private java.util.List<com.giyeok.bibix.BibixIdProto.DirectoryHash> directories_;
+    /**
+     * <code>repeated .com.giyeok.bibix.DirectoryHash directories = 1;</code>
+     */
+    @java.lang.Override
+    public java.util.List<com.giyeok.bibix.BibixIdProto.DirectoryHash> getDirectoriesList() {
+      return directories_;
+    }
+    /**
+     * <code>repeated .com.giyeok.bibix.DirectoryHash directories = 1;</code>
+     */
+    @java.lang.Override
+    public java.util.List<? extends com.giyeok.bibix.BibixIdProto.DirectoryHashOrBuilder> 
+        getDirectoriesOrBuilderList() {
+      return directories_;
+    }
+    /**
+     * <code>repeated .com.giyeok.bibix.DirectoryHash directories = 1;</code>
+     */
+    @java.lang.Override
+    public int getDirectoriesCount() {
+      return directories_.size();
+    }
+    /**
+     * <code>repeated .com.giyeok.bibix.DirectoryHash directories = 1;</code>
+     */
+    @java.lang.Override
+    public com.giyeok.bibix.BibixIdProto.DirectoryHash getDirectories(int index) {
+      return directories_.get(index);
+    }
+    /**
+     * <code>repeated .com.giyeok.bibix.DirectoryHash directories = 1;</code>
+     */
+    @java.lang.Override
+    public com.giyeok.bibix.BibixIdProto.DirectoryHashOrBuilder getDirectoriesOrBuilder(
+        int index) {
+      return directories_.get(index);
+    }
+
+    public static final int FILES_FIELD_NUMBER = 2;
+    private java.util.List<com.giyeok.bibix.BibixIdProto.FileHash> files_;
+    /**
+     * <code>repeated .com.giyeok.bibix.FileHash files = 2;</code>
+     */
+    @java.lang.Override
+    public java.util.List<com.giyeok.bibix.BibixIdProto.FileHash> getFilesList() {
+      return files_;
+    }
+    /**
+     * <code>repeated .com.giyeok.bibix.FileHash files = 2;</code>
+     */
+    @java.lang.Override
+    public java.util.List<? extends com.giyeok.bibix.BibixIdProto.FileHashOrBuilder> 
+        getFilesOrBuilderList() {
+      return files_;
+    }
+    /**
+     * <code>repeated .com.giyeok.bibix.FileHash files = 2;</code>
+     */
+    @java.lang.Override
+    public int getFilesCount() {
+      return files_.size();
+    }
+    /**
+     * <code>repeated .com.giyeok.bibix.FileHash files = 2;</code>
+     */
+    @java.lang.Override
+    public com.giyeok.bibix.BibixIdProto.FileHash getFiles(int index) {
+      return files_.get(index);
+    }
+    /**
+     * <code>repeated .com.giyeok.bibix.FileHash files = 2;</code>
+     */
+    @java.lang.Override
+    public com.giyeok.bibix.BibixIdProto.FileHashOrBuilder getFilesOrBuilder(
+        int index) {
+      return files_.get(index);
+    }
+
+    public static final int NON_EXISTENT_FIELD_NUMBER = 3;
+    private com.google.protobuf.LazyStringList nonExistent_;
+    /**
+     * <code>repeated string non_existent = 3;</code>
+     * @return A list containing the nonExistent.
+     */
+    public com.google.protobuf.ProtocolStringList
+        getNonExistentList() {
+      return nonExistent_;
+    }
+    /**
+     * <code>repeated string non_existent = 3;</code>
+     * @return The count of nonExistent.
+     */
+    public int getNonExistentCount() {
+      return nonExistent_.size();
+    }
+    /**
+     * <code>repeated string non_existent = 3;</code>
+     * @param index The index of the element to return.
+     * @return The nonExistent at the given index.
+     */
+    public java.lang.String getNonExistent(int index) {
+      return nonExistent_.get(index);
+    }
+    /**
+     * <code>repeated string non_existent = 3;</code>
+     * @param index The index of the value to return.
+     * @return The bytes of the nonExistent at the given index.
+     */
+    public com.google.protobuf.ByteString
+        getNonExistentBytes(int index) {
+      return nonExistent_.getByteString(index);
+    }
+
+    private byte memoizedIsInitialized = -1;
+    @java.lang.Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    @java.lang.Override
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      for (int i = 0; i < directories_.size(); i++) {
+        output.writeMessage(1, directories_.get(i));
+      }
+      for (int i = 0; i < files_.size(); i++) {
+        output.writeMessage(2, files_.get(i));
+      }
+      for (int i = 0; i < nonExistent_.size(); i++) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 3, nonExistent_.getRaw(i));
+      }
+      unknownFields.writeTo(output);
+    }
+
+    @java.lang.Override
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      for (int i = 0; i < directories_.size(); i++) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(1, directories_.get(i));
+      }
+      for (int i = 0; i < files_.size(); i++) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(2, files_.get(i));
+      }
+      {
+        int dataSize = 0;
+        for (int i = 0; i < nonExistent_.size(); i++) {
+          dataSize += computeStringSizeNoTag(nonExistent_.getRaw(i));
+        }
+        size += dataSize;
+        size += 1 * getNonExistentList().size();
+      }
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof com.giyeok.bibix.BibixIdProto.InputHashes)) {
+        return super.equals(obj);
+      }
+      com.giyeok.bibix.BibixIdProto.InputHashes other = (com.giyeok.bibix.BibixIdProto.InputHashes) obj;
+
+      if (!getDirectoriesList()
+          .equals(other.getDirectoriesList())) return false;
+      if (!getFilesList()
+          .equals(other.getFilesList())) return false;
+      if (!getNonExistentList()
+          .equals(other.getNonExistentList())) return false;
+      if (!unknownFields.equals(other.unknownFields)) return false;
+      return true;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      if (getDirectoriesCount() > 0) {
+        hash = (37 * hash) + DIRECTORIES_FIELD_NUMBER;
+        hash = (53 * hash) + getDirectoriesList().hashCode();
+      }
+      if (getFilesCount() > 0) {
+        hash = (37 * hash) + FILES_FIELD_NUMBER;
+        hash = (53 * hash) + getFilesList().hashCode();
+      }
+      if (getNonExistentCount() > 0) {
+        hash = (37 * hash) + NON_EXISTENT_FIELD_NUMBER;
+        hash = (53 * hash) + getNonExistentList().hashCode();
+      }
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static com.giyeok.bibix.BibixIdProto.InputHashes parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.giyeok.bibix.BibixIdProto.InputHashes parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.giyeok.bibix.BibixIdProto.InputHashes parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.giyeok.bibix.BibixIdProto.InputHashes parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.giyeok.bibix.BibixIdProto.InputHashes parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.giyeok.bibix.BibixIdProto.InputHashes parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.giyeok.bibix.BibixIdProto.InputHashes parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.giyeok.bibix.BibixIdProto.InputHashes parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.giyeok.bibix.BibixIdProto.InputHashes parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static com.giyeok.bibix.BibixIdProto.InputHashes parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.giyeok.bibix.BibixIdProto.InputHashes parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.giyeok.bibix.BibixIdProto.InputHashes parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    @java.lang.Override
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(com.giyeok.bibix.BibixIdProto.InputHashes prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @java.lang.Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code com.giyeok.bibix.InputHashes}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:com.giyeok.bibix.InputHashes)
+        com.giyeok.bibix.BibixIdProto.InputHashesOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return com.giyeok.bibix.BibixIdProto.internal_static_com_giyeok_bibix_InputHashes_descriptor;
+      }
+
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return com.giyeok.bibix.BibixIdProto.internal_static_com_giyeok_bibix_InputHashes_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                com.giyeok.bibix.BibixIdProto.InputHashes.class, com.giyeok.bibix.BibixIdProto.InputHashes.Builder.class);
+      }
+
+      // Construct using com.giyeok.bibix.BibixIdProto.InputHashes.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+          getDirectoriesFieldBuilder();
+          getFilesFieldBuilder();
+        }
+      }
+      @java.lang.Override
+      public Builder clear() {
+        super.clear();
+        if (directoriesBuilder_ == null) {
+          directories_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000001);
+        } else {
+          directoriesBuilder_.clear();
+        }
+        if (filesBuilder_ == null) {
+          files_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000002);
+        } else {
+          filesBuilder_.clear();
+        }
+        nonExistent_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000004);
+        return this;
+      }
+
+      @java.lang.Override
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return com.giyeok.bibix.BibixIdProto.internal_static_com_giyeok_bibix_InputHashes_descriptor;
+      }
+
+      @java.lang.Override
+      public com.giyeok.bibix.BibixIdProto.InputHashes getDefaultInstanceForType() {
+        return com.giyeok.bibix.BibixIdProto.InputHashes.getDefaultInstance();
+      }
+
+      @java.lang.Override
+      public com.giyeok.bibix.BibixIdProto.InputHashes build() {
+        com.giyeok.bibix.BibixIdProto.InputHashes result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      @java.lang.Override
+      public com.giyeok.bibix.BibixIdProto.InputHashes buildPartial() {
+        com.giyeok.bibix.BibixIdProto.InputHashes result = new com.giyeok.bibix.BibixIdProto.InputHashes(this);
+        int from_bitField0_ = bitField0_;
+        if (directoriesBuilder_ == null) {
+          if (((bitField0_ & 0x00000001) != 0)) {
+            directories_ = java.util.Collections.unmodifiableList(directories_);
+            bitField0_ = (bitField0_ & ~0x00000001);
+          }
+          result.directories_ = directories_;
+        } else {
+          result.directories_ = directoriesBuilder_.build();
+        }
+        if (filesBuilder_ == null) {
+          if (((bitField0_ & 0x00000002) != 0)) {
+            files_ = java.util.Collections.unmodifiableList(files_);
+            bitField0_ = (bitField0_ & ~0x00000002);
+          }
+          result.files_ = files_;
+        } else {
+          result.files_ = filesBuilder_.build();
+        }
+        if (((bitField0_ & 0x00000004) != 0)) {
+          nonExistent_ = nonExistent_.getUnmodifiableView();
+          bitField0_ = (bitField0_ & ~0x00000004);
+        }
+        result.nonExistent_ = nonExistent_;
+        onBuilt();
+        return result;
+      }
+
+      @java.lang.Override
+      public Builder clone() {
+        return super.clone();
+      }
+      @java.lang.Override
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.setField(field, value);
+      }
+      @java.lang.Override
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return super.clearField(field);
+      }
+      @java.lang.Override
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return super.clearOneof(oneof);
+      }
+      @java.lang.Override
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return super.setRepeatedField(field, index, value);
+      }
+      @java.lang.Override
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.addRepeatedField(field, value);
+      }
+      @java.lang.Override
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof com.giyeok.bibix.BibixIdProto.InputHashes) {
+          return mergeFrom((com.giyeok.bibix.BibixIdProto.InputHashes)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(com.giyeok.bibix.BibixIdProto.InputHashes other) {
+        if (other == com.giyeok.bibix.BibixIdProto.InputHashes.getDefaultInstance()) return this;
+        if (directoriesBuilder_ == null) {
+          if (!other.directories_.isEmpty()) {
+            if (directories_.isEmpty()) {
+              directories_ = other.directories_;
+              bitField0_ = (bitField0_ & ~0x00000001);
+            } else {
+              ensureDirectoriesIsMutable();
+              directories_.addAll(other.directories_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.directories_.isEmpty()) {
+            if (directoriesBuilder_.isEmpty()) {
+              directoriesBuilder_.dispose();
+              directoriesBuilder_ = null;
+              directories_ = other.directories_;
+              bitField0_ = (bitField0_ & ~0x00000001);
+              directoriesBuilder_ = 
+                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                   getDirectoriesFieldBuilder() : null;
+            } else {
+              directoriesBuilder_.addAllMessages(other.directories_);
+            }
+          }
+        }
+        if (filesBuilder_ == null) {
+          if (!other.files_.isEmpty()) {
+            if (files_.isEmpty()) {
+              files_ = other.files_;
+              bitField0_ = (bitField0_ & ~0x00000002);
+            } else {
+              ensureFilesIsMutable();
+              files_.addAll(other.files_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.files_.isEmpty()) {
+            if (filesBuilder_.isEmpty()) {
+              filesBuilder_.dispose();
+              filesBuilder_ = null;
+              files_ = other.files_;
+              bitField0_ = (bitField0_ & ~0x00000002);
+              filesBuilder_ = 
+                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                   getFilesFieldBuilder() : null;
+            } else {
+              filesBuilder_.addAllMessages(other.files_);
+            }
+          }
+        }
+        if (!other.nonExistent_.isEmpty()) {
+          if (nonExistent_.isEmpty()) {
+            nonExistent_ = other.nonExistent_;
+            bitField0_ = (bitField0_ & ~0x00000004);
+          } else {
+            ensureNonExistentIsMutable();
+            nonExistent_.addAll(other.nonExistent_);
+          }
+          onChanged();
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      @java.lang.Override
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      @java.lang.Override
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.giyeok.bibix.BibixIdProto.InputHashes parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (com.giyeok.bibix.BibixIdProto.InputHashes) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      private java.util.List<com.giyeok.bibix.BibixIdProto.DirectoryHash> directories_ =
+        java.util.Collections.emptyList();
+      private void ensureDirectoriesIsMutable() {
+        if (!((bitField0_ & 0x00000001) != 0)) {
+          directories_ = new java.util.ArrayList<com.giyeok.bibix.BibixIdProto.DirectoryHash>(directories_);
+          bitField0_ |= 0x00000001;
+         }
+      }
+
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          com.giyeok.bibix.BibixIdProto.DirectoryHash, com.giyeok.bibix.BibixIdProto.DirectoryHash.Builder, com.giyeok.bibix.BibixIdProto.DirectoryHashOrBuilder> directoriesBuilder_;
+
+      /**
+       * <code>repeated .com.giyeok.bibix.DirectoryHash directories = 1;</code>
+       */
+      public java.util.List<com.giyeok.bibix.BibixIdProto.DirectoryHash> getDirectoriesList() {
+        if (directoriesBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(directories_);
+        } else {
+          return directoriesBuilder_.getMessageList();
+        }
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.DirectoryHash directories = 1;</code>
+       */
+      public int getDirectoriesCount() {
+        if (directoriesBuilder_ == null) {
+          return directories_.size();
+        } else {
+          return directoriesBuilder_.getCount();
+        }
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.DirectoryHash directories = 1;</code>
+       */
+      public com.giyeok.bibix.BibixIdProto.DirectoryHash getDirectories(int index) {
+        if (directoriesBuilder_ == null) {
+          return directories_.get(index);
+        } else {
+          return directoriesBuilder_.getMessage(index);
+        }
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.DirectoryHash directories = 1;</code>
+       */
+      public Builder setDirectories(
+          int index, com.giyeok.bibix.BibixIdProto.DirectoryHash value) {
+        if (directoriesBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureDirectoriesIsMutable();
+          directories_.set(index, value);
+          onChanged();
+        } else {
+          directoriesBuilder_.setMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.DirectoryHash directories = 1;</code>
+       */
+      public Builder setDirectories(
+          int index, com.giyeok.bibix.BibixIdProto.DirectoryHash.Builder builderForValue) {
+        if (directoriesBuilder_ == null) {
+          ensureDirectoriesIsMutable();
+          directories_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          directoriesBuilder_.setMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.DirectoryHash directories = 1;</code>
+       */
+      public Builder addDirectories(com.giyeok.bibix.BibixIdProto.DirectoryHash value) {
+        if (directoriesBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureDirectoriesIsMutable();
+          directories_.add(value);
+          onChanged();
+        } else {
+          directoriesBuilder_.addMessage(value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.DirectoryHash directories = 1;</code>
+       */
+      public Builder addDirectories(
+          int index, com.giyeok.bibix.BibixIdProto.DirectoryHash value) {
+        if (directoriesBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureDirectoriesIsMutable();
+          directories_.add(index, value);
+          onChanged();
+        } else {
+          directoriesBuilder_.addMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.DirectoryHash directories = 1;</code>
+       */
+      public Builder addDirectories(
+          com.giyeok.bibix.BibixIdProto.DirectoryHash.Builder builderForValue) {
+        if (directoriesBuilder_ == null) {
+          ensureDirectoriesIsMutable();
+          directories_.add(builderForValue.build());
+          onChanged();
+        } else {
+          directoriesBuilder_.addMessage(builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.DirectoryHash directories = 1;</code>
+       */
+      public Builder addDirectories(
+          int index, com.giyeok.bibix.BibixIdProto.DirectoryHash.Builder builderForValue) {
+        if (directoriesBuilder_ == null) {
+          ensureDirectoriesIsMutable();
+          directories_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          directoriesBuilder_.addMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.DirectoryHash directories = 1;</code>
+       */
+      public Builder addAllDirectories(
+          java.lang.Iterable<? extends com.giyeok.bibix.BibixIdProto.DirectoryHash> values) {
+        if (directoriesBuilder_ == null) {
+          ensureDirectoriesIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, directories_);
+          onChanged();
+        } else {
+          directoriesBuilder_.addAllMessages(values);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.DirectoryHash directories = 1;</code>
+       */
+      public Builder clearDirectories() {
+        if (directoriesBuilder_ == null) {
+          directories_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000001);
+          onChanged();
+        } else {
+          directoriesBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.DirectoryHash directories = 1;</code>
+       */
+      public Builder removeDirectories(int index) {
+        if (directoriesBuilder_ == null) {
+          ensureDirectoriesIsMutable();
+          directories_.remove(index);
+          onChanged();
+        } else {
+          directoriesBuilder_.remove(index);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.DirectoryHash directories = 1;</code>
+       */
+      public com.giyeok.bibix.BibixIdProto.DirectoryHash.Builder getDirectoriesBuilder(
+          int index) {
+        return getDirectoriesFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.DirectoryHash directories = 1;</code>
+       */
+      public com.giyeok.bibix.BibixIdProto.DirectoryHashOrBuilder getDirectoriesOrBuilder(
+          int index) {
+        if (directoriesBuilder_ == null) {
+          return directories_.get(index);  } else {
+          return directoriesBuilder_.getMessageOrBuilder(index);
+        }
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.DirectoryHash directories = 1;</code>
+       */
+      public java.util.List<? extends com.giyeok.bibix.BibixIdProto.DirectoryHashOrBuilder> 
+           getDirectoriesOrBuilderList() {
+        if (directoriesBuilder_ != null) {
+          return directoriesBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(directories_);
+        }
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.DirectoryHash directories = 1;</code>
+       */
+      public com.giyeok.bibix.BibixIdProto.DirectoryHash.Builder addDirectoriesBuilder() {
+        return getDirectoriesFieldBuilder().addBuilder(
+            com.giyeok.bibix.BibixIdProto.DirectoryHash.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.DirectoryHash directories = 1;</code>
+       */
+      public com.giyeok.bibix.BibixIdProto.DirectoryHash.Builder addDirectoriesBuilder(
+          int index) {
+        return getDirectoriesFieldBuilder().addBuilder(
+            index, com.giyeok.bibix.BibixIdProto.DirectoryHash.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.DirectoryHash directories = 1;</code>
+       */
+      public java.util.List<com.giyeok.bibix.BibixIdProto.DirectoryHash.Builder> 
+           getDirectoriesBuilderList() {
+        return getDirectoriesFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          com.giyeok.bibix.BibixIdProto.DirectoryHash, com.giyeok.bibix.BibixIdProto.DirectoryHash.Builder, com.giyeok.bibix.BibixIdProto.DirectoryHashOrBuilder> 
+          getDirectoriesFieldBuilder() {
+        if (directoriesBuilder_ == null) {
+          directoriesBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+              com.giyeok.bibix.BibixIdProto.DirectoryHash, com.giyeok.bibix.BibixIdProto.DirectoryHash.Builder, com.giyeok.bibix.BibixIdProto.DirectoryHashOrBuilder>(
+                  directories_,
+                  ((bitField0_ & 0x00000001) != 0),
+                  getParentForChildren(),
+                  isClean());
+          directories_ = null;
+        }
+        return directoriesBuilder_;
+      }
+
+      private java.util.List<com.giyeok.bibix.BibixIdProto.FileHash> files_ =
+        java.util.Collections.emptyList();
+      private void ensureFilesIsMutable() {
+        if (!((bitField0_ & 0x00000002) != 0)) {
+          files_ = new java.util.ArrayList<com.giyeok.bibix.BibixIdProto.FileHash>(files_);
+          bitField0_ |= 0x00000002;
+         }
+      }
+
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          com.giyeok.bibix.BibixIdProto.FileHash, com.giyeok.bibix.BibixIdProto.FileHash.Builder, com.giyeok.bibix.BibixIdProto.FileHashOrBuilder> filesBuilder_;
+
+      /**
+       * <code>repeated .com.giyeok.bibix.FileHash files = 2;</code>
+       */
+      public java.util.List<com.giyeok.bibix.BibixIdProto.FileHash> getFilesList() {
+        if (filesBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(files_);
+        } else {
+          return filesBuilder_.getMessageList();
+        }
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.FileHash files = 2;</code>
+       */
+      public int getFilesCount() {
+        if (filesBuilder_ == null) {
+          return files_.size();
+        } else {
+          return filesBuilder_.getCount();
+        }
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.FileHash files = 2;</code>
+       */
+      public com.giyeok.bibix.BibixIdProto.FileHash getFiles(int index) {
+        if (filesBuilder_ == null) {
+          return files_.get(index);
+        } else {
+          return filesBuilder_.getMessage(index);
+        }
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.FileHash files = 2;</code>
+       */
+      public Builder setFiles(
+          int index, com.giyeok.bibix.BibixIdProto.FileHash value) {
+        if (filesBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureFilesIsMutable();
+          files_.set(index, value);
+          onChanged();
+        } else {
+          filesBuilder_.setMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.FileHash files = 2;</code>
+       */
+      public Builder setFiles(
+          int index, com.giyeok.bibix.BibixIdProto.FileHash.Builder builderForValue) {
+        if (filesBuilder_ == null) {
+          ensureFilesIsMutable();
+          files_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          filesBuilder_.setMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.FileHash files = 2;</code>
+       */
+      public Builder addFiles(com.giyeok.bibix.BibixIdProto.FileHash value) {
+        if (filesBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureFilesIsMutable();
+          files_.add(value);
+          onChanged();
+        } else {
+          filesBuilder_.addMessage(value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.FileHash files = 2;</code>
+       */
+      public Builder addFiles(
+          int index, com.giyeok.bibix.BibixIdProto.FileHash value) {
+        if (filesBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureFilesIsMutable();
+          files_.add(index, value);
+          onChanged();
+        } else {
+          filesBuilder_.addMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.FileHash files = 2;</code>
+       */
+      public Builder addFiles(
+          com.giyeok.bibix.BibixIdProto.FileHash.Builder builderForValue) {
+        if (filesBuilder_ == null) {
+          ensureFilesIsMutable();
+          files_.add(builderForValue.build());
+          onChanged();
+        } else {
+          filesBuilder_.addMessage(builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.FileHash files = 2;</code>
+       */
+      public Builder addFiles(
+          int index, com.giyeok.bibix.BibixIdProto.FileHash.Builder builderForValue) {
+        if (filesBuilder_ == null) {
+          ensureFilesIsMutable();
+          files_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          filesBuilder_.addMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.FileHash files = 2;</code>
+       */
+      public Builder addAllFiles(
+          java.lang.Iterable<? extends com.giyeok.bibix.BibixIdProto.FileHash> values) {
+        if (filesBuilder_ == null) {
+          ensureFilesIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, files_);
+          onChanged();
+        } else {
+          filesBuilder_.addAllMessages(values);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.FileHash files = 2;</code>
+       */
+      public Builder clearFiles() {
+        if (filesBuilder_ == null) {
+          files_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000002);
+          onChanged();
+        } else {
+          filesBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.FileHash files = 2;</code>
+       */
+      public Builder removeFiles(int index) {
+        if (filesBuilder_ == null) {
+          ensureFilesIsMutable();
+          files_.remove(index);
+          onChanged();
+        } else {
+          filesBuilder_.remove(index);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.FileHash files = 2;</code>
+       */
+      public com.giyeok.bibix.BibixIdProto.FileHash.Builder getFilesBuilder(
+          int index) {
+        return getFilesFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.FileHash files = 2;</code>
+       */
+      public com.giyeok.bibix.BibixIdProto.FileHashOrBuilder getFilesOrBuilder(
+          int index) {
+        if (filesBuilder_ == null) {
+          return files_.get(index);  } else {
+          return filesBuilder_.getMessageOrBuilder(index);
+        }
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.FileHash files = 2;</code>
+       */
+      public java.util.List<? extends com.giyeok.bibix.BibixIdProto.FileHashOrBuilder> 
+           getFilesOrBuilderList() {
+        if (filesBuilder_ != null) {
+          return filesBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(files_);
+        }
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.FileHash files = 2;</code>
+       */
+      public com.giyeok.bibix.BibixIdProto.FileHash.Builder addFilesBuilder() {
+        return getFilesFieldBuilder().addBuilder(
+            com.giyeok.bibix.BibixIdProto.FileHash.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.FileHash files = 2;</code>
+       */
+      public com.giyeok.bibix.BibixIdProto.FileHash.Builder addFilesBuilder(
+          int index) {
+        return getFilesFieldBuilder().addBuilder(
+            index, com.giyeok.bibix.BibixIdProto.FileHash.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.FileHash files = 2;</code>
+       */
+      public java.util.List<com.giyeok.bibix.BibixIdProto.FileHash.Builder> 
+           getFilesBuilderList() {
+        return getFilesFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          com.giyeok.bibix.BibixIdProto.FileHash, com.giyeok.bibix.BibixIdProto.FileHash.Builder, com.giyeok.bibix.BibixIdProto.FileHashOrBuilder> 
+          getFilesFieldBuilder() {
+        if (filesBuilder_ == null) {
+          filesBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+              com.giyeok.bibix.BibixIdProto.FileHash, com.giyeok.bibix.BibixIdProto.FileHash.Builder, com.giyeok.bibix.BibixIdProto.FileHashOrBuilder>(
+                  files_,
+                  ((bitField0_ & 0x00000002) != 0),
+                  getParentForChildren(),
+                  isClean());
+          files_ = null;
+        }
+        return filesBuilder_;
+      }
+
+      private com.google.protobuf.LazyStringList nonExistent_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      private void ensureNonExistentIsMutable() {
+        if (!((bitField0_ & 0x00000004) != 0)) {
+          nonExistent_ = new com.google.protobuf.LazyStringArrayList(nonExistent_);
+          bitField0_ |= 0x00000004;
+         }
+      }
+      /**
+       * <code>repeated string non_existent = 3;</code>
+       * @return A list containing the nonExistent.
+       */
+      public com.google.protobuf.ProtocolStringList
+          getNonExistentList() {
+        return nonExistent_.getUnmodifiableView();
+      }
+      /**
+       * <code>repeated string non_existent = 3;</code>
+       * @return The count of nonExistent.
+       */
+      public int getNonExistentCount() {
+        return nonExistent_.size();
+      }
+      /**
+       * <code>repeated string non_existent = 3;</code>
+       * @param index The index of the element to return.
+       * @return The nonExistent at the given index.
+       */
+      public java.lang.String getNonExistent(int index) {
+        return nonExistent_.get(index);
+      }
+      /**
+       * <code>repeated string non_existent = 3;</code>
+       * @param index The index of the value to return.
+       * @return The bytes of the nonExistent at the given index.
+       */
+      public com.google.protobuf.ByteString
+          getNonExistentBytes(int index) {
+        return nonExistent_.getByteString(index);
+      }
+      /**
+       * <code>repeated string non_existent = 3;</code>
+       * @param index The index to set the value at.
+       * @param value The nonExistent to set.
+       * @return This builder for chaining.
+       */
+      public Builder setNonExistent(
+          int index, java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureNonExistentIsMutable();
+        nonExistent_.set(index, value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string non_existent = 3;</code>
+       * @param value The nonExistent to add.
+       * @return This builder for chaining.
+       */
+      public Builder addNonExistent(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureNonExistentIsMutable();
+        nonExistent_.add(value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string non_existent = 3;</code>
+       * @param values The nonExistent to add.
+       * @return This builder for chaining.
+       */
+      public Builder addAllNonExistent(
+          java.lang.Iterable<java.lang.String> values) {
+        ensureNonExistentIsMutable();
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, nonExistent_);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string non_existent = 3;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearNonExistent() {
+        nonExistent_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000004);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string non_existent = 3;</code>
+       * @param value The bytes of the nonExistent to add.
+       * @return This builder for chaining.
+       */
+      public Builder addNonExistentBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        ensureNonExistentIsMutable();
+        nonExistent_.add(value);
+        onChanged();
+        return this;
+      }
+      @java.lang.Override
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFields(unknownFields);
+      }
+
+      @java.lang.Override
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:com.giyeok.bibix.InputHashes)
+    }
+
+    // @@protoc_insertion_point(class_scope:com.giyeok.bibix.InputHashes)
+    private static final com.giyeok.bibix.BibixIdProto.InputHashes DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new com.giyeok.bibix.BibixIdProto.InputHashes();
+    }
+
+    public static com.giyeok.bibix.BibixIdProto.InputHashes getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<InputHashes>
+        PARSER = new com.google.protobuf.AbstractParser<InputHashes>() {
+      @java.lang.Override
+      public InputHashes parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new InputHashes(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<InputHashes> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<InputHashes> getParserForType() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.giyeok.bibix.BibixIdProto.InputHashes getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
   public interface DirectoryHashOrBuilder extends
       // @@protoc_insertion_point(interface_extends:com.giyeok.bibix.DirectoryHash)
       com.google.protobuf.MessageOrBuilder {
@@ -7890,7 +7403,7 @@ public final class BibixIdProto {
   }
   /**
    * <pre>
-   * path는 root script 기준 상대 경로
+   * path는 해당 프로젝트의 root script 기준 상대 경로
    * </pre>
    *
    * Protobuf type {@code com.giyeok.bibix.DirectoryHash}
@@ -8303,7 +7816,7 @@ public final class BibixIdProto {
     }
     /**
      * <pre>
-     * path는 root script 기준 상대 경로
+     * path는 해당 프로젝트의 root script 기준 상대 경로
      * </pre>
      *
      * Protobuf type {@code com.giyeok.bibix.DirectoryHash}
@@ -10063,1408 +9576,16 @@ public final class BibixIdProto {
 
   }
 
-  public interface InputHashesOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:com.giyeok.bibix.InputHashes)
-      com.google.protobuf.MessageOrBuilder {
-
-    /**
-     * <code>repeated .com.giyeok.bibix.DirectoryHash directories = 1;</code>
-     */
-    java.util.List<com.giyeok.bibix.BibixIdProto.DirectoryHash> 
-        getDirectoriesList();
-    /**
-     * <code>repeated .com.giyeok.bibix.DirectoryHash directories = 1;</code>
-     */
-    com.giyeok.bibix.BibixIdProto.DirectoryHash getDirectories(int index);
-    /**
-     * <code>repeated .com.giyeok.bibix.DirectoryHash directories = 1;</code>
-     */
-    int getDirectoriesCount();
-    /**
-     * <code>repeated .com.giyeok.bibix.DirectoryHash directories = 1;</code>
-     */
-    java.util.List<? extends com.giyeok.bibix.BibixIdProto.DirectoryHashOrBuilder> 
-        getDirectoriesOrBuilderList();
-    /**
-     * <code>repeated .com.giyeok.bibix.DirectoryHash directories = 1;</code>
-     */
-    com.giyeok.bibix.BibixIdProto.DirectoryHashOrBuilder getDirectoriesOrBuilder(
-        int index);
-
-    /**
-     * <code>repeated .com.giyeok.bibix.FileHash files = 2;</code>
-     */
-    java.util.List<com.giyeok.bibix.BibixIdProto.FileHash> 
-        getFilesList();
-    /**
-     * <code>repeated .com.giyeok.bibix.FileHash files = 2;</code>
-     */
-    com.giyeok.bibix.BibixIdProto.FileHash getFiles(int index);
-    /**
-     * <code>repeated .com.giyeok.bibix.FileHash files = 2;</code>
-     */
-    int getFilesCount();
-    /**
-     * <code>repeated .com.giyeok.bibix.FileHash files = 2;</code>
-     */
-    java.util.List<? extends com.giyeok.bibix.BibixIdProto.FileHashOrBuilder> 
-        getFilesOrBuilderList();
-    /**
-     * <code>repeated .com.giyeok.bibix.FileHash files = 2;</code>
-     */
-    com.giyeok.bibix.BibixIdProto.FileHashOrBuilder getFilesOrBuilder(
-        int index);
-
-    /**
-     * <code>repeated string non_existent = 3;</code>
-     * @return A list containing the nonExistent.
-     */
-    java.util.List<java.lang.String>
-        getNonExistentList();
-    /**
-     * <code>repeated string non_existent = 3;</code>
-     * @return The count of nonExistent.
-     */
-    int getNonExistentCount();
-    /**
-     * <code>repeated string non_existent = 3;</code>
-     * @param index The index of the element to return.
-     * @return The nonExistent at the given index.
-     */
-    java.lang.String getNonExistent(int index);
-    /**
-     * <code>repeated string non_existent = 3;</code>
-     * @param index The index of the value to return.
-     * @return The bytes of the nonExistent at the given index.
-     */
-    com.google.protobuf.ByteString
-        getNonExistentBytes(int index);
-  }
-  /**
-   * Protobuf type {@code com.giyeok.bibix.InputHashes}
-   */
-  public static final class InputHashes extends
-      com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:com.giyeok.bibix.InputHashes)
-      InputHashesOrBuilder {
-  private static final long serialVersionUID = 0L;
-    // Use InputHashes.newBuilder() to construct.
-    private InputHashes(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
-      super(builder);
-    }
-    private InputHashes() {
-      directories_ = java.util.Collections.emptyList();
-      files_ = java.util.Collections.emptyList();
-      nonExistent_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-    }
-
-    @java.lang.Override
-    @SuppressWarnings({"unused"})
-    protected java.lang.Object newInstance(
-        UnusedPrivateParameter unused) {
-      return new InputHashes();
-    }
-
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-      return this.unknownFields;
-    }
-    private InputHashes(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      this();
-      if (extensionRegistry == null) {
-        throw new java.lang.NullPointerException();
-      }
-      int mutable_bitField0_ = 0;
-      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder();
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            case 10: {
-              if (!((mutable_bitField0_ & 0x00000001) != 0)) {
-                directories_ = new java.util.ArrayList<com.giyeok.bibix.BibixIdProto.DirectoryHash>();
-                mutable_bitField0_ |= 0x00000001;
-              }
-              directories_.add(
-                  input.readMessage(com.giyeok.bibix.BibixIdProto.DirectoryHash.parser(), extensionRegistry));
-              break;
-            }
-            case 18: {
-              if (!((mutable_bitField0_ & 0x00000002) != 0)) {
-                files_ = new java.util.ArrayList<com.giyeok.bibix.BibixIdProto.FileHash>();
-                mutable_bitField0_ |= 0x00000002;
-              }
-              files_.add(
-                  input.readMessage(com.giyeok.bibix.BibixIdProto.FileHash.parser(), extensionRegistry));
-              break;
-            }
-            case 26: {
-              java.lang.String s = input.readStringRequireUtf8();
-              if (!((mutable_bitField0_ & 0x00000004) != 0)) {
-                nonExistent_ = new com.google.protobuf.LazyStringArrayList();
-                mutable_bitField0_ |= 0x00000004;
-              }
-              nonExistent_.add(s);
-              break;
-            }
-            default: {
-              if (!parseUnknownField(
-                  input, unknownFields, extensionRegistry, tag)) {
-                done = true;
-              }
-              break;
-            }
-          }
-        }
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw e.setUnfinishedMessage(this);
-      } catch (java.io.IOException e) {
-        throw new com.google.protobuf.InvalidProtocolBufferException(
-            e).setUnfinishedMessage(this);
-      } finally {
-        if (((mutable_bitField0_ & 0x00000001) != 0)) {
-          directories_ = java.util.Collections.unmodifiableList(directories_);
-        }
-        if (((mutable_bitField0_ & 0x00000002) != 0)) {
-          files_ = java.util.Collections.unmodifiableList(files_);
-        }
-        if (((mutable_bitField0_ & 0x00000004) != 0)) {
-          nonExistent_ = nonExistent_.getUnmodifiableView();
-        }
-        this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
-      }
-    }
-    public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return com.giyeok.bibix.BibixIdProto.internal_static_com_giyeok_bibix_InputHashes_descriptor;
-    }
-
-    @java.lang.Override
-    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-      return com.giyeok.bibix.BibixIdProto.internal_static_com_giyeok_bibix_InputHashes_fieldAccessorTable
-          .ensureFieldAccessorsInitialized(
-              com.giyeok.bibix.BibixIdProto.InputHashes.class, com.giyeok.bibix.BibixIdProto.InputHashes.Builder.class);
-    }
-
-    public static final int DIRECTORIES_FIELD_NUMBER = 1;
-    private java.util.List<com.giyeok.bibix.BibixIdProto.DirectoryHash> directories_;
-    /**
-     * <code>repeated .com.giyeok.bibix.DirectoryHash directories = 1;</code>
-     */
-    @java.lang.Override
-    public java.util.List<com.giyeok.bibix.BibixIdProto.DirectoryHash> getDirectoriesList() {
-      return directories_;
-    }
-    /**
-     * <code>repeated .com.giyeok.bibix.DirectoryHash directories = 1;</code>
-     */
-    @java.lang.Override
-    public java.util.List<? extends com.giyeok.bibix.BibixIdProto.DirectoryHashOrBuilder> 
-        getDirectoriesOrBuilderList() {
-      return directories_;
-    }
-    /**
-     * <code>repeated .com.giyeok.bibix.DirectoryHash directories = 1;</code>
-     */
-    @java.lang.Override
-    public int getDirectoriesCount() {
-      return directories_.size();
-    }
-    /**
-     * <code>repeated .com.giyeok.bibix.DirectoryHash directories = 1;</code>
-     */
-    @java.lang.Override
-    public com.giyeok.bibix.BibixIdProto.DirectoryHash getDirectories(int index) {
-      return directories_.get(index);
-    }
-    /**
-     * <code>repeated .com.giyeok.bibix.DirectoryHash directories = 1;</code>
-     */
-    @java.lang.Override
-    public com.giyeok.bibix.BibixIdProto.DirectoryHashOrBuilder getDirectoriesOrBuilder(
-        int index) {
-      return directories_.get(index);
-    }
-
-    public static final int FILES_FIELD_NUMBER = 2;
-    private java.util.List<com.giyeok.bibix.BibixIdProto.FileHash> files_;
-    /**
-     * <code>repeated .com.giyeok.bibix.FileHash files = 2;</code>
-     */
-    @java.lang.Override
-    public java.util.List<com.giyeok.bibix.BibixIdProto.FileHash> getFilesList() {
-      return files_;
-    }
-    /**
-     * <code>repeated .com.giyeok.bibix.FileHash files = 2;</code>
-     */
-    @java.lang.Override
-    public java.util.List<? extends com.giyeok.bibix.BibixIdProto.FileHashOrBuilder> 
-        getFilesOrBuilderList() {
-      return files_;
-    }
-    /**
-     * <code>repeated .com.giyeok.bibix.FileHash files = 2;</code>
-     */
-    @java.lang.Override
-    public int getFilesCount() {
-      return files_.size();
-    }
-    /**
-     * <code>repeated .com.giyeok.bibix.FileHash files = 2;</code>
-     */
-    @java.lang.Override
-    public com.giyeok.bibix.BibixIdProto.FileHash getFiles(int index) {
-      return files_.get(index);
-    }
-    /**
-     * <code>repeated .com.giyeok.bibix.FileHash files = 2;</code>
-     */
-    @java.lang.Override
-    public com.giyeok.bibix.BibixIdProto.FileHashOrBuilder getFilesOrBuilder(
-        int index) {
-      return files_.get(index);
-    }
-
-    public static final int NON_EXISTENT_FIELD_NUMBER = 3;
-    private com.google.protobuf.LazyStringList nonExistent_;
-    /**
-     * <code>repeated string non_existent = 3;</code>
-     * @return A list containing the nonExistent.
-     */
-    public com.google.protobuf.ProtocolStringList
-        getNonExistentList() {
-      return nonExistent_;
-    }
-    /**
-     * <code>repeated string non_existent = 3;</code>
-     * @return The count of nonExistent.
-     */
-    public int getNonExistentCount() {
-      return nonExistent_.size();
-    }
-    /**
-     * <code>repeated string non_existent = 3;</code>
-     * @param index The index of the element to return.
-     * @return The nonExistent at the given index.
-     */
-    public java.lang.String getNonExistent(int index) {
-      return nonExistent_.get(index);
-    }
-    /**
-     * <code>repeated string non_existent = 3;</code>
-     * @param index The index of the value to return.
-     * @return The bytes of the nonExistent at the given index.
-     */
-    public com.google.protobuf.ByteString
-        getNonExistentBytes(int index) {
-      return nonExistent_.getByteString(index);
-    }
-
-    private byte memoizedIsInitialized = -1;
-    @java.lang.Override
-    public final boolean isInitialized() {
-      byte isInitialized = memoizedIsInitialized;
-      if (isInitialized == 1) return true;
-      if (isInitialized == 0) return false;
-
-      memoizedIsInitialized = 1;
-      return true;
-    }
-
-    @java.lang.Override
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
-      for (int i = 0; i < directories_.size(); i++) {
-        output.writeMessage(1, directories_.get(i));
-      }
-      for (int i = 0; i < files_.size(); i++) {
-        output.writeMessage(2, files_.get(i));
-      }
-      for (int i = 0; i < nonExistent_.size(); i++) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 3, nonExistent_.getRaw(i));
-      }
-      unknownFields.writeTo(output);
-    }
-
-    @java.lang.Override
-    public int getSerializedSize() {
-      int size = memoizedSize;
-      if (size != -1) return size;
-
-      size = 0;
-      for (int i = 0; i < directories_.size(); i++) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(1, directories_.get(i));
-      }
-      for (int i = 0; i < files_.size(); i++) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(2, files_.get(i));
-      }
-      {
-        int dataSize = 0;
-        for (int i = 0; i < nonExistent_.size(); i++) {
-          dataSize += computeStringSizeNoTag(nonExistent_.getRaw(i));
-        }
-        size += dataSize;
-        size += 1 * getNonExistentList().size();
-      }
-      size += unknownFields.getSerializedSize();
-      memoizedSize = size;
-      return size;
-    }
-
-    @java.lang.Override
-    public boolean equals(final java.lang.Object obj) {
-      if (obj == this) {
-       return true;
-      }
-      if (!(obj instanceof com.giyeok.bibix.BibixIdProto.InputHashes)) {
-        return super.equals(obj);
-      }
-      com.giyeok.bibix.BibixIdProto.InputHashes other = (com.giyeok.bibix.BibixIdProto.InputHashes) obj;
-
-      if (!getDirectoriesList()
-          .equals(other.getDirectoriesList())) return false;
-      if (!getFilesList()
-          .equals(other.getFilesList())) return false;
-      if (!getNonExistentList()
-          .equals(other.getNonExistentList())) return false;
-      if (!unknownFields.equals(other.unknownFields)) return false;
-      return true;
-    }
-
-    @java.lang.Override
-    public int hashCode() {
-      if (memoizedHashCode != 0) {
-        return memoizedHashCode;
-      }
-      int hash = 41;
-      hash = (19 * hash) + getDescriptor().hashCode();
-      if (getDirectoriesCount() > 0) {
-        hash = (37 * hash) + DIRECTORIES_FIELD_NUMBER;
-        hash = (53 * hash) + getDirectoriesList().hashCode();
-      }
-      if (getFilesCount() > 0) {
-        hash = (37 * hash) + FILES_FIELD_NUMBER;
-        hash = (53 * hash) + getFilesList().hashCode();
-      }
-      if (getNonExistentCount() > 0) {
-        hash = (37 * hash) + NON_EXISTENT_FIELD_NUMBER;
-        hash = (53 * hash) + getNonExistentList().hashCode();
-      }
-      hash = (29 * hash) + unknownFields.hashCode();
-      memoizedHashCode = hash;
-      return hash;
-    }
-
-    public static com.giyeok.bibix.BibixIdProto.InputHashes parseFrom(
-        java.nio.ByteBuffer data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static com.giyeok.bibix.BibixIdProto.InputHashes parseFrom(
-        java.nio.ByteBuffer data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static com.giyeok.bibix.BibixIdProto.InputHashes parseFrom(
-        com.google.protobuf.ByteString data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static com.giyeok.bibix.BibixIdProto.InputHashes parseFrom(
-        com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static com.giyeok.bibix.BibixIdProto.InputHashes parseFrom(byte[] data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static com.giyeok.bibix.BibixIdProto.InputHashes parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static com.giyeok.bibix.BibixIdProto.InputHashes parseFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
-    }
-    public static com.giyeok.bibix.BibixIdProto.InputHashes parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
-    }
-    public static com.giyeok.bibix.BibixIdProto.InputHashes parseDelimitedFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input);
-    }
-    public static com.giyeok.bibix.BibixIdProto.InputHashes parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
-    }
-    public static com.giyeok.bibix.BibixIdProto.InputHashes parseFrom(
-        com.google.protobuf.CodedInputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
-    }
-    public static com.giyeok.bibix.BibixIdProto.InputHashes parseFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
-    }
-
-    @java.lang.Override
-    public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder() {
-      return DEFAULT_INSTANCE.toBuilder();
-    }
-    public static Builder newBuilder(com.giyeok.bibix.BibixIdProto.InputHashes prototype) {
-      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
-    }
-    @java.lang.Override
-    public Builder toBuilder() {
-      return this == DEFAULT_INSTANCE
-          ? new Builder() : new Builder().mergeFrom(this);
-    }
-
-    @java.lang.Override
-    protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-      Builder builder = new Builder(parent);
-      return builder;
-    }
-    /**
-     * Protobuf type {@code com.giyeok.bibix.InputHashes}
-     */
-    public static final class Builder extends
-        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:com.giyeok.bibix.InputHashes)
-        com.giyeok.bibix.BibixIdProto.InputHashesOrBuilder {
-      public static final com.google.protobuf.Descriptors.Descriptor
-          getDescriptor() {
-        return com.giyeok.bibix.BibixIdProto.internal_static_com_giyeok_bibix_InputHashes_descriptor;
-      }
-
-      @java.lang.Override
-      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-          internalGetFieldAccessorTable() {
-        return com.giyeok.bibix.BibixIdProto.internal_static_com_giyeok_bibix_InputHashes_fieldAccessorTable
-            .ensureFieldAccessorsInitialized(
-                com.giyeok.bibix.BibixIdProto.InputHashes.class, com.giyeok.bibix.BibixIdProto.InputHashes.Builder.class);
-      }
-
-      // Construct using com.giyeok.bibix.BibixIdProto.InputHashes.newBuilder()
-      private Builder() {
-        maybeForceBuilderInitialization();
-      }
-
-      private Builder(
-          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
-          getDirectoriesFieldBuilder();
-          getFilesFieldBuilder();
-        }
-      }
-      @java.lang.Override
-      public Builder clear() {
-        super.clear();
-        if (directoriesBuilder_ == null) {
-          directories_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000001);
-        } else {
-          directoriesBuilder_.clear();
-        }
-        if (filesBuilder_ == null) {
-          files_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000002);
-        } else {
-          filesBuilder_.clear();
-        }
-        nonExistent_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-        bitField0_ = (bitField0_ & ~0x00000004);
-        return this;
-      }
-
-      @java.lang.Override
-      public com.google.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
-        return com.giyeok.bibix.BibixIdProto.internal_static_com_giyeok_bibix_InputHashes_descriptor;
-      }
-
-      @java.lang.Override
-      public com.giyeok.bibix.BibixIdProto.InputHashes getDefaultInstanceForType() {
-        return com.giyeok.bibix.BibixIdProto.InputHashes.getDefaultInstance();
-      }
-
-      @java.lang.Override
-      public com.giyeok.bibix.BibixIdProto.InputHashes build() {
-        com.giyeok.bibix.BibixIdProto.InputHashes result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(result);
-        }
-        return result;
-      }
-
-      @java.lang.Override
-      public com.giyeok.bibix.BibixIdProto.InputHashes buildPartial() {
-        com.giyeok.bibix.BibixIdProto.InputHashes result = new com.giyeok.bibix.BibixIdProto.InputHashes(this);
-        int from_bitField0_ = bitField0_;
-        if (directoriesBuilder_ == null) {
-          if (((bitField0_ & 0x00000001) != 0)) {
-            directories_ = java.util.Collections.unmodifiableList(directories_);
-            bitField0_ = (bitField0_ & ~0x00000001);
-          }
-          result.directories_ = directories_;
-        } else {
-          result.directories_ = directoriesBuilder_.build();
-        }
-        if (filesBuilder_ == null) {
-          if (((bitField0_ & 0x00000002) != 0)) {
-            files_ = java.util.Collections.unmodifiableList(files_);
-            bitField0_ = (bitField0_ & ~0x00000002);
-          }
-          result.files_ = files_;
-        } else {
-          result.files_ = filesBuilder_.build();
-        }
-        if (((bitField0_ & 0x00000004) != 0)) {
-          nonExistent_ = nonExistent_.getUnmodifiableView();
-          bitField0_ = (bitField0_ & ~0x00000004);
-        }
-        result.nonExistent_ = nonExistent_;
-        onBuilt();
-        return result;
-      }
-
-      @java.lang.Override
-      public Builder clone() {
-        return super.clone();
-      }
-      @java.lang.Override
-      public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return super.setField(field, value);
-      }
-      @java.lang.Override
-      public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return super.clearField(field);
-      }
-      @java.lang.Override
-      public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return super.clearOneof(oneof);
-      }
-      @java.lang.Override
-      public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, java.lang.Object value) {
-        return super.setRepeatedField(field, index, value);
-      }
-      @java.lang.Override
-      public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return super.addRepeatedField(field, value);
-      }
-      @java.lang.Override
-      public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof com.giyeok.bibix.BibixIdProto.InputHashes) {
-          return mergeFrom((com.giyeok.bibix.BibixIdProto.InputHashes)other);
-        } else {
-          super.mergeFrom(other);
-          return this;
-        }
-      }
-
-      public Builder mergeFrom(com.giyeok.bibix.BibixIdProto.InputHashes other) {
-        if (other == com.giyeok.bibix.BibixIdProto.InputHashes.getDefaultInstance()) return this;
-        if (directoriesBuilder_ == null) {
-          if (!other.directories_.isEmpty()) {
-            if (directories_.isEmpty()) {
-              directories_ = other.directories_;
-              bitField0_ = (bitField0_ & ~0x00000001);
-            } else {
-              ensureDirectoriesIsMutable();
-              directories_.addAll(other.directories_);
-            }
-            onChanged();
-          }
-        } else {
-          if (!other.directories_.isEmpty()) {
-            if (directoriesBuilder_.isEmpty()) {
-              directoriesBuilder_.dispose();
-              directoriesBuilder_ = null;
-              directories_ = other.directories_;
-              bitField0_ = (bitField0_ & ~0x00000001);
-              directoriesBuilder_ = 
-                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
-                   getDirectoriesFieldBuilder() : null;
-            } else {
-              directoriesBuilder_.addAllMessages(other.directories_);
-            }
-          }
-        }
-        if (filesBuilder_ == null) {
-          if (!other.files_.isEmpty()) {
-            if (files_.isEmpty()) {
-              files_ = other.files_;
-              bitField0_ = (bitField0_ & ~0x00000002);
-            } else {
-              ensureFilesIsMutable();
-              files_.addAll(other.files_);
-            }
-            onChanged();
-          }
-        } else {
-          if (!other.files_.isEmpty()) {
-            if (filesBuilder_.isEmpty()) {
-              filesBuilder_.dispose();
-              filesBuilder_ = null;
-              files_ = other.files_;
-              bitField0_ = (bitField0_ & ~0x00000002);
-              filesBuilder_ = 
-                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
-                   getFilesFieldBuilder() : null;
-            } else {
-              filesBuilder_.addAllMessages(other.files_);
-            }
-          }
-        }
-        if (!other.nonExistent_.isEmpty()) {
-          if (nonExistent_.isEmpty()) {
-            nonExistent_ = other.nonExistent_;
-            bitField0_ = (bitField0_ & ~0x00000004);
-          } else {
-            ensureNonExistentIsMutable();
-            nonExistent_.addAll(other.nonExistent_);
-          }
-          onChanged();
-        }
-        this.mergeUnknownFields(other.unknownFields);
-        onChanged();
-        return this;
-      }
-
-      @java.lang.Override
-      public final boolean isInitialized() {
-        return true;
-      }
-
-      @java.lang.Override
-      public Builder mergeFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        com.giyeok.bibix.BibixIdProto.InputHashes parsedMessage = null;
-        try {
-          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
-        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (com.giyeok.bibix.BibixIdProto.InputHashes) e.getUnfinishedMessage();
-          throw e.unwrapIOException();
-        } finally {
-          if (parsedMessage != null) {
-            mergeFrom(parsedMessage);
-          }
-        }
-        return this;
-      }
-      private int bitField0_;
-
-      private java.util.List<com.giyeok.bibix.BibixIdProto.DirectoryHash> directories_ =
-        java.util.Collections.emptyList();
-      private void ensureDirectoriesIsMutable() {
-        if (!((bitField0_ & 0x00000001) != 0)) {
-          directories_ = new java.util.ArrayList<com.giyeok.bibix.BibixIdProto.DirectoryHash>(directories_);
-          bitField0_ |= 0x00000001;
-         }
-      }
-
-      private com.google.protobuf.RepeatedFieldBuilderV3<
-          com.giyeok.bibix.BibixIdProto.DirectoryHash, com.giyeok.bibix.BibixIdProto.DirectoryHash.Builder, com.giyeok.bibix.BibixIdProto.DirectoryHashOrBuilder> directoriesBuilder_;
-
-      /**
-       * <code>repeated .com.giyeok.bibix.DirectoryHash directories = 1;</code>
-       */
-      public java.util.List<com.giyeok.bibix.BibixIdProto.DirectoryHash> getDirectoriesList() {
-        if (directoriesBuilder_ == null) {
-          return java.util.Collections.unmodifiableList(directories_);
-        } else {
-          return directoriesBuilder_.getMessageList();
-        }
-      }
-      /**
-       * <code>repeated .com.giyeok.bibix.DirectoryHash directories = 1;</code>
-       */
-      public int getDirectoriesCount() {
-        if (directoriesBuilder_ == null) {
-          return directories_.size();
-        } else {
-          return directoriesBuilder_.getCount();
-        }
-      }
-      /**
-       * <code>repeated .com.giyeok.bibix.DirectoryHash directories = 1;</code>
-       */
-      public com.giyeok.bibix.BibixIdProto.DirectoryHash getDirectories(int index) {
-        if (directoriesBuilder_ == null) {
-          return directories_.get(index);
-        } else {
-          return directoriesBuilder_.getMessage(index);
-        }
-      }
-      /**
-       * <code>repeated .com.giyeok.bibix.DirectoryHash directories = 1;</code>
-       */
-      public Builder setDirectories(
-          int index, com.giyeok.bibix.BibixIdProto.DirectoryHash value) {
-        if (directoriesBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ensureDirectoriesIsMutable();
-          directories_.set(index, value);
-          onChanged();
-        } else {
-          directoriesBuilder_.setMessage(index, value);
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .com.giyeok.bibix.DirectoryHash directories = 1;</code>
-       */
-      public Builder setDirectories(
-          int index, com.giyeok.bibix.BibixIdProto.DirectoryHash.Builder builderForValue) {
-        if (directoriesBuilder_ == null) {
-          ensureDirectoriesIsMutable();
-          directories_.set(index, builderForValue.build());
-          onChanged();
-        } else {
-          directoriesBuilder_.setMessage(index, builderForValue.build());
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .com.giyeok.bibix.DirectoryHash directories = 1;</code>
-       */
-      public Builder addDirectories(com.giyeok.bibix.BibixIdProto.DirectoryHash value) {
-        if (directoriesBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ensureDirectoriesIsMutable();
-          directories_.add(value);
-          onChanged();
-        } else {
-          directoriesBuilder_.addMessage(value);
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .com.giyeok.bibix.DirectoryHash directories = 1;</code>
-       */
-      public Builder addDirectories(
-          int index, com.giyeok.bibix.BibixIdProto.DirectoryHash value) {
-        if (directoriesBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ensureDirectoriesIsMutable();
-          directories_.add(index, value);
-          onChanged();
-        } else {
-          directoriesBuilder_.addMessage(index, value);
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .com.giyeok.bibix.DirectoryHash directories = 1;</code>
-       */
-      public Builder addDirectories(
-          com.giyeok.bibix.BibixIdProto.DirectoryHash.Builder builderForValue) {
-        if (directoriesBuilder_ == null) {
-          ensureDirectoriesIsMutable();
-          directories_.add(builderForValue.build());
-          onChanged();
-        } else {
-          directoriesBuilder_.addMessage(builderForValue.build());
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .com.giyeok.bibix.DirectoryHash directories = 1;</code>
-       */
-      public Builder addDirectories(
-          int index, com.giyeok.bibix.BibixIdProto.DirectoryHash.Builder builderForValue) {
-        if (directoriesBuilder_ == null) {
-          ensureDirectoriesIsMutable();
-          directories_.add(index, builderForValue.build());
-          onChanged();
-        } else {
-          directoriesBuilder_.addMessage(index, builderForValue.build());
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .com.giyeok.bibix.DirectoryHash directories = 1;</code>
-       */
-      public Builder addAllDirectories(
-          java.lang.Iterable<? extends com.giyeok.bibix.BibixIdProto.DirectoryHash> values) {
-        if (directoriesBuilder_ == null) {
-          ensureDirectoriesIsMutable();
-          com.google.protobuf.AbstractMessageLite.Builder.addAll(
-              values, directories_);
-          onChanged();
-        } else {
-          directoriesBuilder_.addAllMessages(values);
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .com.giyeok.bibix.DirectoryHash directories = 1;</code>
-       */
-      public Builder clearDirectories() {
-        if (directoriesBuilder_ == null) {
-          directories_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000001);
-          onChanged();
-        } else {
-          directoriesBuilder_.clear();
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .com.giyeok.bibix.DirectoryHash directories = 1;</code>
-       */
-      public Builder removeDirectories(int index) {
-        if (directoriesBuilder_ == null) {
-          ensureDirectoriesIsMutable();
-          directories_.remove(index);
-          onChanged();
-        } else {
-          directoriesBuilder_.remove(index);
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .com.giyeok.bibix.DirectoryHash directories = 1;</code>
-       */
-      public com.giyeok.bibix.BibixIdProto.DirectoryHash.Builder getDirectoriesBuilder(
-          int index) {
-        return getDirectoriesFieldBuilder().getBuilder(index);
-      }
-      /**
-       * <code>repeated .com.giyeok.bibix.DirectoryHash directories = 1;</code>
-       */
-      public com.giyeok.bibix.BibixIdProto.DirectoryHashOrBuilder getDirectoriesOrBuilder(
-          int index) {
-        if (directoriesBuilder_ == null) {
-          return directories_.get(index);  } else {
-          return directoriesBuilder_.getMessageOrBuilder(index);
-        }
-      }
-      /**
-       * <code>repeated .com.giyeok.bibix.DirectoryHash directories = 1;</code>
-       */
-      public java.util.List<? extends com.giyeok.bibix.BibixIdProto.DirectoryHashOrBuilder> 
-           getDirectoriesOrBuilderList() {
-        if (directoriesBuilder_ != null) {
-          return directoriesBuilder_.getMessageOrBuilderList();
-        } else {
-          return java.util.Collections.unmodifiableList(directories_);
-        }
-      }
-      /**
-       * <code>repeated .com.giyeok.bibix.DirectoryHash directories = 1;</code>
-       */
-      public com.giyeok.bibix.BibixIdProto.DirectoryHash.Builder addDirectoriesBuilder() {
-        return getDirectoriesFieldBuilder().addBuilder(
-            com.giyeok.bibix.BibixIdProto.DirectoryHash.getDefaultInstance());
-      }
-      /**
-       * <code>repeated .com.giyeok.bibix.DirectoryHash directories = 1;</code>
-       */
-      public com.giyeok.bibix.BibixIdProto.DirectoryHash.Builder addDirectoriesBuilder(
-          int index) {
-        return getDirectoriesFieldBuilder().addBuilder(
-            index, com.giyeok.bibix.BibixIdProto.DirectoryHash.getDefaultInstance());
-      }
-      /**
-       * <code>repeated .com.giyeok.bibix.DirectoryHash directories = 1;</code>
-       */
-      public java.util.List<com.giyeok.bibix.BibixIdProto.DirectoryHash.Builder> 
-           getDirectoriesBuilderList() {
-        return getDirectoriesFieldBuilder().getBuilderList();
-      }
-      private com.google.protobuf.RepeatedFieldBuilderV3<
-          com.giyeok.bibix.BibixIdProto.DirectoryHash, com.giyeok.bibix.BibixIdProto.DirectoryHash.Builder, com.giyeok.bibix.BibixIdProto.DirectoryHashOrBuilder> 
-          getDirectoriesFieldBuilder() {
-        if (directoriesBuilder_ == null) {
-          directoriesBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
-              com.giyeok.bibix.BibixIdProto.DirectoryHash, com.giyeok.bibix.BibixIdProto.DirectoryHash.Builder, com.giyeok.bibix.BibixIdProto.DirectoryHashOrBuilder>(
-                  directories_,
-                  ((bitField0_ & 0x00000001) != 0),
-                  getParentForChildren(),
-                  isClean());
-          directories_ = null;
-        }
-        return directoriesBuilder_;
-      }
-
-      private java.util.List<com.giyeok.bibix.BibixIdProto.FileHash> files_ =
-        java.util.Collections.emptyList();
-      private void ensureFilesIsMutable() {
-        if (!((bitField0_ & 0x00000002) != 0)) {
-          files_ = new java.util.ArrayList<com.giyeok.bibix.BibixIdProto.FileHash>(files_);
-          bitField0_ |= 0x00000002;
-         }
-      }
-
-      private com.google.protobuf.RepeatedFieldBuilderV3<
-          com.giyeok.bibix.BibixIdProto.FileHash, com.giyeok.bibix.BibixIdProto.FileHash.Builder, com.giyeok.bibix.BibixIdProto.FileHashOrBuilder> filesBuilder_;
-
-      /**
-       * <code>repeated .com.giyeok.bibix.FileHash files = 2;</code>
-       */
-      public java.util.List<com.giyeok.bibix.BibixIdProto.FileHash> getFilesList() {
-        if (filesBuilder_ == null) {
-          return java.util.Collections.unmodifiableList(files_);
-        } else {
-          return filesBuilder_.getMessageList();
-        }
-      }
-      /**
-       * <code>repeated .com.giyeok.bibix.FileHash files = 2;</code>
-       */
-      public int getFilesCount() {
-        if (filesBuilder_ == null) {
-          return files_.size();
-        } else {
-          return filesBuilder_.getCount();
-        }
-      }
-      /**
-       * <code>repeated .com.giyeok.bibix.FileHash files = 2;</code>
-       */
-      public com.giyeok.bibix.BibixIdProto.FileHash getFiles(int index) {
-        if (filesBuilder_ == null) {
-          return files_.get(index);
-        } else {
-          return filesBuilder_.getMessage(index);
-        }
-      }
-      /**
-       * <code>repeated .com.giyeok.bibix.FileHash files = 2;</code>
-       */
-      public Builder setFiles(
-          int index, com.giyeok.bibix.BibixIdProto.FileHash value) {
-        if (filesBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ensureFilesIsMutable();
-          files_.set(index, value);
-          onChanged();
-        } else {
-          filesBuilder_.setMessage(index, value);
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .com.giyeok.bibix.FileHash files = 2;</code>
-       */
-      public Builder setFiles(
-          int index, com.giyeok.bibix.BibixIdProto.FileHash.Builder builderForValue) {
-        if (filesBuilder_ == null) {
-          ensureFilesIsMutable();
-          files_.set(index, builderForValue.build());
-          onChanged();
-        } else {
-          filesBuilder_.setMessage(index, builderForValue.build());
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .com.giyeok.bibix.FileHash files = 2;</code>
-       */
-      public Builder addFiles(com.giyeok.bibix.BibixIdProto.FileHash value) {
-        if (filesBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ensureFilesIsMutable();
-          files_.add(value);
-          onChanged();
-        } else {
-          filesBuilder_.addMessage(value);
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .com.giyeok.bibix.FileHash files = 2;</code>
-       */
-      public Builder addFiles(
-          int index, com.giyeok.bibix.BibixIdProto.FileHash value) {
-        if (filesBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ensureFilesIsMutable();
-          files_.add(index, value);
-          onChanged();
-        } else {
-          filesBuilder_.addMessage(index, value);
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .com.giyeok.bibix.FileHash files = 2;</code>
-       */
-      public Builder addFiles(
-          com.giyeok.bibix.BibixIdProto.FileHash.Builder builderForValue) {
-        if (filesBuilder_ == null) {
-          ensureFilesIsMutable();
-          files_.add(builderForValue.build());
-          onChanged();
-        } else {
-          filesBuilder_.addMessage(builderForValue.build());
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .com.giyeok.bibix.FileHash files = 2;</code>
-       */
-      public Builder addFiles(
-          int index, com.giyeok.bibix.BibixIdProto.FileHash.Builder builderForValue) {
-        if (filesBuilder_ == null) {
-          ensureFilesIsMutable();
-          files_.add(index, builderForValue.build());
-          onChanged();
-        } else {
-          filesBuilder_.addMessage(index, builderForValue.build());
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .com.giyeok.bibix.FileHash files = 2;</code>
-       */
-      public Builder addAllFiles(
-          java.lang.Iterable<? extends com.giyeok.bibix.BibixIdProto.FileHash> values) {
-        if (filesBuilder_ == null) {
-          ensureFilesIsMutable();
-          com.google.protobuf.AbstractMessageLite.Builder.addAll(
-              values, files_);
-          onChanged();
-        } else {
-          filesBuilder_.addAllMessages(values);
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .com.giyeok.bibix.FileHash files = 2;</code>
-       */
-      public Builder clearFiles() {
-        if (filesBuilder_ == null) {
-          files_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000002);
-          onChanged();
-        } else {
-          filesBuilder_.clear();
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .com.giyeok.bibix.FileHash files = 2;</code>
-       */
-      public Builder removeFiles(int index) {
-        if (filesBuilder_ == null) {
-          ensureFilesIsMutable();
-          files_.remove(index);
-          onChanged();
-        } else {
-          filesBuilder_.remove(index);
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .com.giyeok.bibix.FileHash files = 2;</code>
-       */
-      public com.giyeok.bibix.BibixIdProto.FileHash.Builder getFilesBuilder(
-          int index) {
-        return getFilesFieldBuilder().getBuilder(index);
-      }
-      /**
-       * <code>repeated .com.giyeok.bibix.FileHash files = 2;</code>
-       */
-      public com.giyeok.bibix.BibixIdProto.FileHashOrBuilder getFilesOrBuilder(
-          int index) {
-        if (filesBuilder_ == null) {
-          return files_.get(index);  } else {
-          return filesBuilder_.getMessageOrBuilder(index);
-        }
-      }
-      /**
-       * <code>repeated .com.giyeok.bibix.FileHash files = 2;</code>
-       */
-      public java.util.List<? extends com.giyeok.bibix.BibixIdProto.FileHashOrBuilder> 
-           getFilesOrBuilderList() {
-        if (filesBuilder_ != null) {
-          return filesBuilder_.getMessageOrBuilderList();
-        } else {
-          return java.util.Collections.unmodifiableList(files_);
-        }
-      }
-      /**
-       * <code>repeated .com.giyeok.bibix.FileHash files = 2;</code>
-       */
-      public com.giyeok.bibix.BibixIdProto.FileHash.Builder addFilesBuilder() {
-        return getFilesFieldBuilder().addBuilder(
-            com.giyeok.bibix.BibixIdProto.FileHash.getDefaultInstance());
-      }
-      /**
-       * <code>repeated .com.giyeok.bibix.FileHash files = 2;</code>
-       */
-      public com.giyeok.bibix.BibixIdProto.FileHash.Builder addFilesBuilder(
-          int index) {
-        return getFilesFieldBuilder().addBuilder(
-            index, com.giyeok.bibix.BibixIdProto.FileHash.getDefaultInstance());
-      }
-      /**
-       * <code>repeated .com.giyeok.bibix.FileHash files = 2;</code>
-       */
-      public java.util.List<com.giyeok.bibix.BibixIdProto.FileHash.Builder> 
-           getFilesBuilderList() {
-        return getFilesFieldBuilder().getBuilderList();
-      }
-      private com.google.protobuf.RepeatedFieldBuilderV3<
-          com.giyeok.bibix.BibixIdProto.FileHash, com.giyeok.bibix.BibixIdProto.FileHash.Builder, com.giyeok.bibix.BibixIdProto.FileHashOrBuilder> 
-          getFilesFieldBuilder() {
-        if (filesBuilder_ == null) {
-          filesBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
-              com.giyeok.bibix.BibixIdProto.FileHash, com.giyeok.bibix.BibixIdProto.FileHash.Builder, com.giyeok.bibix.BibixIdProto.FileHashOrBuilder>(
-                  files_,
-                  ((bitField0_ & 0x00000002) != 0),
-                  getParentForChildren(),
-                  isClean());
-          files_ = null;
-        }
-        return filesBuilder_;
-      }
-
-      private com.google.protobuf.LazyStringList nonExistent_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-      private void ensureNonExistentIsMutable() {
-        if (!((bitField0_ & 0x00000004) != 0)) {
-          nonExistent_ = new com.google.protobuf.LazyStringArrayList(nonExistent_);
-          bitField0_ |= 0x00000004;
-         }
-      }
-      /**
-       * <code>repeated string non_existent = 3;</code>
-       * @return A list containing the nonExistent.
-       */
-      public com.google.protobuf.ProtocolStringList
-          getNonExistentList() {
-        return nonExistent_.getUnmodifiableView();
-      }
-      /**
-       * <code>repeated string non_existent = 3;</code>
-       * @return The count of nonExistent.
-       */
-      public int getNonExistentCount() {
-        return nonExistent_.size();
-      }
-      /**
-       * <code>repeated string non_existent = 3;</code>
-       * @param index The index of the element to return.
-       * @return The nonExistent at the given index.
-       */
-      public java.lang.String getNonExistent(int index) {
-        return nonExistent_.get(index);
-      }
-      /**
-       * <code>repeated string non_existent = 3;</code>
-       * @param index The index of the value to return.
-       * @return The bytes of the nonExistent at the given index.
-       */
-      public com.google.protobuf.ByteString
-          getNonExistentBytes(int index) {
-        return nonExistent_.getByteString(index);
-      }
-      /**
-       * <code>repeated string non_existent = 3;</code>
-       * @param index The index to set the value at.
-       * @param value The nonExistent to set.
-       * @return This builder for chaining.
-       */
-      public Builder setNonExistent(
-          int index, java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  ensureNonExistentIsMutable();
-        nonExistent_.set(index, value);
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>repeated string non_existent = 3;</code>
-       * @param value The nonExistent to add.
-       * @return This builder for chaining.
-       */
-      public Builder addNonExistent(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  ensureNonExistentIsMutable();
-        nonExistent_.add(value);
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>repeated string non_existent = 3;</code>
-       * @param values The nonExistent to add.
-       * @return This builder for chaining.
-       */
-      public Builder addAllNonExistent(
-          java.lang.Iterable<java.lang.String> values) {
-        ensureNonExistentIsMutable();
-        com.google.protobuf.AbstractMessageLite.Builder.addAll(
-            values, nonExistent_);
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>repeated string non_existent = 3;</code>
-       * @return This builder for chaining.
-       */
-      public Builder clearNonExistent() {
-        nonExistent_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-        bitField0_ = (bitField0_ & ~0x00000004);
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>repeated string non_existent = 3;</code>
-       * @param value The bytes of the nonExistent to add.
-       * @return This builder for chaining.
-       */
-      public Builder addNonExistentBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        ensureNonExistentIsMutable();
-        nonExistent_.add(value);
-        onChanged();
-        return this;
-      }
-      @java.lang.Override
-      public final Builder setUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.setUnknownFields(unknownFields);
-      }
-
-      @java.lang.Override
-      public final Builder mergeUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.mergeUnknownFields(unknownFields);
-      }
-
-
-      // @@protoc_insertion_point(builder_scope:com.giyeok.bibix.InputHashes)
-    }
-
-    // @@protoc_insertion_point(class_scope:com.giyeok.bibix.InputHashes)
-    private static final com.giyeok.bibix.BibixIdProto.InputHashes DEFAULT_INSTANCE;
-    static {
-      DEFAULT_INSTANCE = new com.giyeok.bibix.BibixIdProto.InputHashes();
-    }
-
-    public static com.giyeok.bibix.BibixIdProto.InputHashes getDefaultInstance() {
-      return DEFAULT_INSTANCE;
-    }
-
-    private static final com.google.protobuf.Parser<InputHashes>
-        PARSER = new com.google.protobuf.AbstractParser<InputHashes>() {
-      @java.lang.Override
-      public InputHashes parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return new InputHashes(input, extensionRegistry);
-      }
-    };
-
-    public static com.google.protobuf.Parser<InputHashes> parser() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<InputHashes> getParserForType() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public com.giyeok.bibix.BibixIdProto.InputHashes getDefaultInstanceForType() {
-      return DEFAULT_INSTANCE;
-    }
-
-  }
-
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_com_giyeok_bibix_SourceId_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_com_giyeok_bibix_SourceId_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_com_giyeok_bibix_RemoteSourceId_descriptor;
+    internal_static_com_giyeok_bibix_ExternalBibixProject_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_com_giyeok_bibix_RemoteSourceId_fieldAccessorTable;
-  private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_com_giyeok_bibix_SourceHashId_descriptor;
-  private static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_com_giyeok_bibix_SourceHashId_fieldAccessorTable;
-  private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_com_giyeok_bibix_RuleImplId_descriptor;
-  private static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_com_giyeok_bibix_RuleImplId_fieldAccessorTable;
+      internal_static_com_giyeok_bibix_ExternalBibixProject_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_com_giyeok_bibix_ObjectId_descriptor;
   private static final 
@@ -11486,6 +9607,11 @@ public final class BibixIdProto {
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_com_giyeok_bibix_ArgPair_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_com_giyeok_bibix_InputHashes_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_com_giyeok_bibix_InputHashes_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_com_giyeok_bibix_DirectoryHash_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
@@ -11495,11 +9621,6 @@ public final class BibixIdProto {
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_com_giyeok_bibix_FileHash_fieldAccessorTable;
-  private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_com_giyeok_bibix_InputHashes_descriptor;
-  private static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_com_giyeok_bibix_InputHashes_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -11511,41 +9632,36 @@ public final class BibixIdProto {
     java.lang.String[] descriptorData = {
       "\n\tids.proto\022\020com.giyeok.bibix\032\014values.pr" +
       "oto\032\033google/protobuf/empty.proto\032\037google" +
-      "/protobuf/timestamp.proto\"\346\001\n\010SourceId\022-" +
-      "\n\013root_source\030\001 \001(\0132\026.google.protobuf.Em" +
-      "ptyH\000\022-\n\013main_source\030\002 \001(\0132\026.google.prot" +
-      "obuf.EmptyH\000\022\037\n\025bibix_internal_source\030\003 " +
-      "\001(\tH\000\022\026\n\014local_source\030\004 \001(\tH\000\0229\n\rremote_" +
-      "source\030\005 \001(\0132 .com.giyeok.bibix.RemoteSo" +
-      "urceIdH\000B\010\n\006source\"X\n\016RemoteSourceId\022\023\n\013" +
-      "source_type\030\001 \001(\t\0221\n\013source_spec\030\002 \001(\0132\034" +
-      ".com.giyeok.bibix.BibixValue\"#\n\014SourceHa" +
-      "shId\022\023\n\013source_hash\030\001 \001(\014\"n\n\nRuleImplId\022" +
-      "\032\n\020native_rule_impl\030\001 \001(\tH\000\0229\n\023rule_impl" +
-      "_object_id\030\002 \001(\0132\032.com.giyeok.bibix.Obje" +
-      "ctIdH\000B\t\n\007impl_id\"\365\001\n\010ObjectId\022-\n\tsource" +
-      "_id\030\001 \001(\0132\032.com.giyeok.bibix.SourceId\0229\n" +
-      "\021rule_impl_id_hash\030\002 \001(\0132\036.com.giyeok.bi" +
-      "bix.ObjectIdHash\022=\n\025rule_impl_source_has" +
-      "h\030\003 \001(\0132\036.com.giyeok.bibix.SourceHashId\022" +
-      "\023\n\013method_name\030\004 \001(\t\022+\n\010args_map\030\005 \001(\0132\031" +
-      ".com.giyeok.bibix.ArgsMap\"o\n\014ObjectIdHas" +
-      "h\022\025\n\013root_source\030\001 \001(\tH\000\022\037\n\025bibix_intern" +
-      "al_source\030\002 \001(\tH\000\022\037\n\025object_id_hash_stri" +
-      "ng\030\003 \001(\014H\000B\006\n\004hash\"3\n\007ArgsMap\022(\n\005pairs\030\001" +
-      " \003(\0132\031.com.giyeok.bibix.ArgPair\"D\n\007ArgPa" +
-      "ir\022\014\n\004name\030\001 \001(\t\022+\n\005value\030\002 \001(\0132\034.com.gi" +
-      "yeok.bibix.BibixValue\"~\n\rDirectoryHash\022\014" +
-      "\n\004path\030\001 \001(\t\0224\n\013directories\030\002 \003(\0132\037.com." +
-      "giyeok.bibix.DirectoryHash\022)\n\005files\030\003 \003(" +
-      "\0132\032.com.giyeok.bibix.FileHash\"q\n\010FileHas" +
-      "h\022\014\n\004path\030\001 \001(\t\0226\n\022last_modified_time\030\002 " +
-      "\001(\0132\032.google.protobuf.Timestamp\022\014\n\004size\030" +
-      "\003 \001(\003\022\021\n\tsha1_hash\030\004 \001(\014\"\204\001\n\013InputHashes" +
-      "\0224\n\013directories\030\001 \003(\0132\037.com.giyeok.bibix" +
-      ".DirectoryHash\022)\n\005files\030\002 \003(\0132\032.com.giye" +
-      "ok.bibix.FileHash\022\024\n\014non_existent\030\003 \003(\tB" +
-      "\016B\014BibixIdProtob\006proto3"
+      "/protobuf/timestamp.proto\"\250\001\n\010SourceId\022-" +
+      "\n\013main_source\030\001 \001(\0132\026.google.protobuf.Em" +
+      "ptyH\000\022\032\n\020preloaded_plugin\030\002 \001(\tH\000\022G\n\025ext" +
+      "ern_plugin_objhash\030\003 \001(\0132&.com.giyeok.bi" +
+      "bix.ExternalBibixProjectH\000B\010\n\006source\"n\n\024" +
+      "ExternalBibixProject\022\026\n\016root_directory\030\001" +
+      " \001(\t\022\023\n\013script_name\030\002 \001(\t\022\030\n\020project_obj" +
+      "_hash\030\003 \001(\014\022\017\n\007version\030\004 \001(\003\"\367\001\n\010ObjectI" +
+      "d\0227\n\023call_expr_source_id\030\001 \001(\0132\032.com.giy" +
+      "eok.bibix.SourceId\022;\n\023call_target_objhas" +
+      "h\030\002 \001(\0132\036.com.giyeok.bibix.ObjectIdHash\022" +
+      "\023\n\013method_name\030\003 \001(\t\022+\n\010args_map\030\004 \001(\0132\031" +
+      ".com.giyeok.bibix.ArgsMap\0223\n\014input_hashe" +
+      "s\030\005 \001(\0132\035.com.giyeok.bibix.InputHashes\"o" +
+      "\n\014ObjectIdHash\022\025\n\013root_source\030\001 \001(\tH\000\022\037\n" +
+      "\025bibix_internal_source\030\002 \001(\tH\000\022\037\n\025object" +
+      "_id_hash_string\030\003 \001(\014H\000B\006\n\004hash\"3\n\007ArgsM" +
+      "ap\022(\n\005pairs\030\001 \003(\0132\031.com.giyeok.bibix.Arg" +
+      "Pair\"D\n\007ArgPair\022\014\n\004name\030\001 \001(\t\022+\n\005value\030\002" +
+      " \001(\0132\034.com.giyeok.bibix.BibixValue\"\204\001\n\013I" +
+      "nputHashes\0224\n\013directories\030\001 \003(\0132\037.com.gi" +
+      "yeok.bibix.DirectoryHash\022)\n\005files\030\002 \003(\0132" +
+      "\032.com.giyeok.bibix.FileHash\022\024\n\014non_exist" +
+      "ent\030\003 \003(\t\"~\n\rDirectoryHash\022\014\n\004path\030\001 \001(\t" +
+      "\0224\n\013directories\030\002 \003(\0132\037.com.giyeok.bibix" +
+      ".DirectoryHash\022)\n\005files\030\003 \003(\0132\032.com.giye" +
+      "ok.bibix.FileHash\"q\n\010FileHash\022\014\n\004path\030\001 " +
+      "\001(\t\0226\n\022last_modified_time\030\002 \001(\0132\032.google" +
+      ".protobuf.Timestamp\022\014\n\004size\030\003 \001(\003\022\021\n\tsha" +
+      "1_hash\030\004 \001(\014B\016B\014BibixIdProtob\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -11559,67 +9675,55 @@ public final class BibixIdProto {
     internal_static_com_giyeok_bibix_SourceId_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_giyeok_bibix_SourceId_descriptor,
-        new java.lang.String[] { "RootSource", "MainSource", "BibixInternalSource", "LocalSource", "RemoteSource", "Source", });
-    internal_static_com_giyeok_bibix_RemoteSourceId_descriptor =
+        new java.lang.String[] { "MainSource", "PreloadedPlugin", "ExternPluginObjhash", "Source", });
+    internal_static_com_giyeok_bibix_ExternalBibixProject_descriptor =
       getDescriptor().getMessageTypes().get(1);
-    internal_static_com_giyeok_bibix_RemoteSourceId_fieldAccessorTable = new
+    internal_static_com_giyeok_bibix_ExternalBibixProject_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_com_giyeok_bibix_RemoteSourceId_descriptor,
-        new java.lang.String[] { "SourceType", "SourceSpec", });
-    internal_static_com_giyeok_bibix_SourceHashId_descriptor =
-      getDescriptor().getMessageTypes().get(2);
-    internal_static_com_giyeok_bibix_SourceHashId_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_com_giyeok_bibix_SourceHashId_descriptor,
-        new java.lang.String[] { "SourceHash", });
-    internal_static_com_giyeok_bibix_RuleImplId_descriptor =
-      getDescriptor().getMessageTypes().get(3);
-    internal_static_com_giyeok_bibix_RuleImplId_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_com_giyeok_bibix_RuleImplId_descriptor,
-        new java.lang.String[] { "NativeRuleImpl", "RuleImplObjectId", "ImplId", });
+        internal_static_com_giyeok_bibix_ExternalBibixProject_descriptor,
+        new java.lang.String[] { "RootDirectory", "ScriptName", "ProjectObjHash", "Version", });
     internal_static_com_giyeok_bibix_ObjectId_descriptor =
-      getDescriptor().getMessageTypes().get(4);
+      getDescriptor().getMessageTypes().get(2);
     internal_static_com_giyeok_bibix_ObjectId_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_giyeok_bibix_ObjectId_descriptor,
-        new java.lang.String[] { "SourceId", "RuleImplIdHash", "RuleImplSourceHash", "MethodName", "ArgsMap", });
+        new java.lang.String[] { "CallExprSourceId", "CallTargetObjhash", "MethodName", "ArgsMap", "InputHashes", });
     internal_static_com_giyeok_bibix_ObjectIdHash_descriptor =
-      getDescriptor().getMessageTypes().get(5);
+      getDescriptor().getMessageTypes().get(3);
     internal_static_com_giyeok_bibix_ObjectIdHash_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_giyeok_bibix_ObjectIdHash_descriptor,
         new java.lang.String[] { "RootSource", "BibixInternalSource", "ObjectIdHashString", "Hash", });
     internal_static_com_giyeok_bibix_ArgsMap_descriptor =
-      getDescriptor().getMessageTypes().get(6);
+      getDescriptor().getMessageTypes().get(4);
     internal_static_com_giyeok_bibix_ArgsMap_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_giyeok_bibix_ArgsMap_descriptor,
         new java.lang.String[] { "Pairs", });
     internal_static_com_giyeok_bibix_ArgPair_descriptor =
-      getDescriptor().getMessageTypes().get(7);
+      getDescriptor().getMessageTypes().get(5);
     internal_static_com_giyeok_bibix_ArgPair_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_giyeok_bibix_ArgPair_descriptor,
         new java.lang.String[] { "Name", "Value", });
+    internal_static_com_giyeok_bibix_InputHashes_descriptor =
+      getDescriptor().getMessageTypes().get(6);
+    internal_static_com_giyeok_bibix_InputHashes_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_com_giyeok_bibix_InputHashes_descriptor,
+        new java.lang.String[] { "Directories", "Files", "NonExistent", });
     internal_static_com_giyeok_bibix_DirectoryHash_descriptor =
-      getDescriptor().getMessageTypes().get(8);
+      getDescriptor().getMessageTypes().get(7);
     internal_static_com_giyeok_bibix_DirectoryHash_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_giyeok_bibix_DirectoryHash_descriptor,
         new java.lang.String[] { "Path", "Directories", "Files", });
     internal_static_com_giyeok_bibix_FileHash_descriptor =
-      getDescriptor().getMessageTypes().get(9);
+      getDescriptor().getMessageTypes().get(8);
     internal_static_com_giyeok_bibix_FileHash_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_giyeok_bibix_FileHash_descriptor,
         new java.lang.String[] { "Path", "LastModifiedTime", "Size", "Sha1Hash", });
-    internal_static_com_giyeok_bibix_InputHashes_descriptor =
-      getDescriptor().getMessageTypes().get(10);
-    internal_static_com_giyeok_bibix_InputHashes_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_com_giyeok_bibix_InputHashes_descriptor,
-        new java.lang.String[] { "Directories", "Files", "NonExistent", });
     com.giyeok.bibix.BibixValueProto.getDescriptor();
     com.google.protobuf.EmptyProto.getDescriptor();
     com.google.protobuf.TimestampProto.getDescriptor();

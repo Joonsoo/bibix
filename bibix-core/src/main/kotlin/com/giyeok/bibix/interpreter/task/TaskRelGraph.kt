@@ -1,8 +1,12 @@
 package com.giyeok.bibix.interpreter.task
 
+import com.giyeok.bibix.BibixIdProto.ObjectId
+import com.giyeok.bibix.base.BibixValue
 import com.giyeok.bibix.interpreter.coroutine.TaskElement
 import com.giyeok.bibix.interpreter.expr.EvaluationResult
+import com.giyeok.bibix.repo.hashString
 import com.google.common.annotations.VisibleForTesting
+import com.google.protobuf.ByteString
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.filterNotNull
@@ -17,9 +21,6 @@ class TaskRelGraph {
   val deps = ConcurrentHashMap<Task, MutableSet<Task>>()
 
   private val depsMutex = Mutex()
-
-  private val memoMap = mutableMapOf<Task, MutableStateFlow<EvaluationResult?>>()
-  private val memoMutex = Mutex()
 
   private fun add(requester: Task, task: Task): Task {
     deps.getOrPut(requester) { mutableSetOf() }.add(task)
@@ -61,30 +62,33 @@ class TaskRelGraph {
     val cycle = findCycleBetween(requester, task)
     check(cycle == null) { "Cycle found: $cycle" }
 
-    return withContext(currentCoroutineContext() + TaskElement(task)) {
-      // TODO requester 태스크는 suspend로 돌리고 task를 비어있는 스레드에 할당해서 돌리고
-      body(task)
-      // TODO 결과가 나오면 requester 태스크를 다시 active로 돌린다
-    }
+    return withContext(currentCoroutineContext() + TaskElement(task)) { body(task) }
   }
 
-  suspend fun withTaskMemo(
-    requester: Task,
-    task: Task,
-    body: suspend CoroutineScope.(Task) -> EvaluationResult
-  ): EvaluationResult = coroutineScope {
+  private val objHashMap = mutableMapOf<ByteString, ObjectId>()
+  private val objMemoMap = mutableMapOf<ByteString, MutableStateFlow<BibixValue?>>()
+  private val memoMutex = Mutex()
+
+  suspend fun withMemo(
+    objId: ObjectId,
+    body: suspend CoroutineScope.(ObjectId) -> BibixValue
+  ): BibixValue = coroutineScope {
+    val objIdHash = objId.hashString()
     val (newMemo, stateFlow) = memoMutex.withLock {
-      val existing = memoMap[task]
+      val existing = objMemoMap[objIdHash]
       if (existing == null) {
-        val newStateFlow = MutableStateFlow<EvaluationResult?>(null)
-        memoMap[task] = newStateFlow
+        val newStateFlow = MutableStateFlow<BibixValue?>(null)
+        objMemoMap[objIdHash] = newStateFlow
+        check(!objHashMap.containsKey(objIdHash))
+        objHashMap[objIdHash] = objId
         Pair(true, newStateFlow)
       } else {
+        check(objHashMap[objIdHash] == objId)
         Pair(false, existing)
       }
     }
     if (newMemo) {
-      val result = withTask(requester, task, body)
+      val result = body(objId)
       stateFlow.emit(result)
       result
     } else {

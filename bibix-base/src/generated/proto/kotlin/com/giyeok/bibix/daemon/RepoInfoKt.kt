@@ -40,6 +40,13 @@ public object RepoInfoKt {
     }
 
     /**
+     * <pre>
+     *  map&lt;string, NamespaceInfo&gt; namespaces = 3;
+     *  map&lt;string, TargetInfo&gt; targets = 4;
+     *  map&lt;string, ActionInfo&gt; actions = 5;
+     *  map&lt;string, ArgInfo&gt; args = 6;
+     * </pre>
+     *
      * <code>string script_path = 2;</code>
      */
     public var scriptPath: kotlin.String
@@ -50,255 +57,18 @@ public object RepoInfoKt {
         _builder.setScriptPath(value)
       }
     /**
+     * <pre>
+     *  map&lt;string, NamespaceInfo&gt; namespaces = 3;
+     *  map&lt;string, TargetInfo&gt; targets = 4;
+     *  map&lt;string, ActionInfo&gt; actions = 5;
+     *  map&lt;string, ArgInfo&gt; args = 6;
+     * </pre>
+     *
      * <code>string script_path = 2;</code>
      */
     public fun clearScriptPath() {
       _builder.clearScriptPath()
     }
-
-    /**
-     * An uninstantiable, behaviorless type to represent the field in
-     * generics.
-     */
-    @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
-    public class NamespacesProxy private constructor() : com.google.protobuf.kotlin.DslProxy()
-    /**
-     * <code>map&lt;string, .com.giyeok.bibix.daemon.NamespaceInfo&gt; namespaces = 3;</code>
-     */
-     public val namespaces: com.google.protobuf.kotlin.DslMap<kotlin.String, com.giyeok.bibix.daemon.BibixDaemonApiProto.NamespaceInfo, NamespacesProxy>
-      @kotlin.jvm.JvmSynthetic
-      @JvmName("getNamespacesMap")
-      get() = com.google.protobuf.kotlin.DslMap(
-        _builder.getNamespacesMap()
-      )
-    /**
-     * <code>map&lt;string, .com.giyeok.bibix.daemon.NamespaceInfo&gt; namespaces = 3;</code>
-     */
-    @JvmName("putNamespaces")
-    public fun com.google.protobuf.kotlin.DslMap<kotlin.String, com.giyeok.bibix.daemon.BibixDaemonApiProto.NamespaceInfo, NamespacesProxy>
-      .put(key: kotlin.String, value: com.giyeok.bibix.daemon.BibixDaemonApiProto.NamespaceInfo) {
-         _builder.putNamespaces(key, value)
-       }
-    /**
-     * <code>map&lt;string, .com.giyeok.bibix.daemon.NamespaceInfo&gt; namespaces = 3;</code>
-     */
-    @kotlin.jvm.JvmSynthetic
-    @JvmName("setNamespaces")
-    @Suppress("NOTHING_TO_INLINE")
-    public inline operator fun com.google.protobuf.kotlin.DslMap<kotlin.String, com.giyeok.bibix.daemon.BibixDaemonApiProto.NamespaceInfo, NamespacesProxy>
-      .set(key: kotlin.String, value: com.giyeok.bibix.daemon.BibixDaemonApiProto.NamespaceInfo) {
-         put(key, value)
-       }
-    /**
-     * <code>map&lt;string, .com.giyeok.bibix.daemon.NamespaceInfo&gt; namespaces = 3;</code>
-     */
-    @kotlin.jvm.JvmSynthetic
-    @JvmName("removeNamespaces")
-    public fun com.google.protobuf.kotlin.DslMap<kotlin.String, com.giyeok.bibix.daemon.BibixDaemonApiProto.NamespaceInfo, NamespacesProxy>
-      .remove(key: kotlin.String) {
-         _builder.removeNamespaces(key)
-       }
-    /**
-     * <code>map&lt;string, .com.giyeok.bibix.daemon.NamespaceInfo&gt; namespaces = 3;</code>
-     */
-    @kotlin.jvm.JvmSynthetic
-    @JvmName("putAllNamespaces")
-    public fun com.google.protobuf.kotlin.DslMap<kotlin.String, com.giyeok.bibix.daemon.BibixDaemonApiProto.NamespaceInfo, NamespacesProxy>
-      .putAll(map: kotlin.collections.Map<kotlin.String, com.giyeok.bibix.daemon.BibixDaemonApiProto.NamespaceInfo>) {
-         _builder.putAllNamespaces(map)
-       }
-    /**
-     * <code>map&lt;string, .com.giyeok.bibix.daemon.NamespaceInfo&gt; namespaces = 3;</code>
-     */
-    @kotlin.jvm.JvmSynthetic
-    @JvmName("clearNamespaces")
-    public fun com.google.protobuf.kotlin.DslMap<kotlin.String, com.giyeok.bibix.daemon.BibixDaemonApiProto.NamespaceInfo, NamespacesProxy>
-      .clear() {
-         _builder.clearNamespaces()
-       }
-
-    /**
-     * An uninstantiable, behaviorless type to represent the field in
-     * generics.
-     */
-    @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
-    public class TargetsProxy private constructor() : com.google.protobuf.kotlin.DslProxy()
-    /**
-     * <code>map&lt;string, .com.giyeok.bibix.daemon.TargetInfo&gt; targets = 4;</code>
-     */
-     public val targets: com.google.protobuf.kotlin.DslMap<kotlin.String, com.giyeok.bibix.daemon.BibixDaemonApiProto.TargetInfo, TargetsProxy>
-      @kotlin.jvm.JvmSynthetic
-      @JvmName("getTargetsMap")
-      get() = com.google.protobuf.kotlin.DslMap(
-        _builder.getTargetsMap()
-      )
-    /**
-     * <code>map&lt;string, .com.giyeok.bibix.daemon.TargetInfo&gt; targets = 4;</code>
-     */
-    @JvmName("putTargets")
-    public fun com.google.protobuf.kotlin.DslMap<kotlin.String, com.giyeok.bibix.daemon.BibixDaemonApiProto.TargetInfo, TargetsProxy>
-      .put(key: kotlin.String, value: com.giyeok.bibix.daemon.BibixDaemonApiProto.TargetInfo) {
-         _builder.putTargets(key, value)
-       }
-    /**
-     * <code>map&lt;string, .com.giyeok.bibix.daemon.TargetInfo&gt; targets = 4;</code>
-     */
-    @kotlin.jvm.JvmSynthetic
-    @JvmName("setTargets")
-    @Suppress("NOTHING_TO_INLINE")
-    public inline operator fun com.google.protobuf.kotlin.DslMap<kotlin.String, com.giyeok.bibix.daemon.BibixDaemonApiProto.TargetInfo, TargetsProxy>
-      .set(key: kotlin.String, value: com.giyeok.bibix.daemon.BibixDaemonApiProto.TargetInfo) {
-         put(key, value)
-       }
-    /**
-     * <code>map&lt;string, .com.giyeok.bibix.daemon.TargetInfo&gt; targets = 4;</code>
-     */
-    @kotlin.jvm.JvmSynthetic
-    @JvmName("removeTargets")
-    public fun com.google.protobuf.kotlin.DslMap<kotlin.String, com.giyeok.bibix.daemon.BibixDaemonApiProto.TargetInfo, TargetsProxy>
-      .remove(key: kotlin.String) {
-         _builder.removeTargets(key)
-       }
-    /**
-     * <code>map&lt;string, .com.giyeok.bibix.daemon.TargetInfo&gt; targets = 4;</code>
-     */
-    @kotlin.jvm.JvmSynthetic
-    @JvmName("putAllTargets")
-    public fun com.google.protobuf.kotlin.DslMap<kotlin.String, com.giyeok.bibix.daemon.BibixDaemonApiProto.TargetInfo, TargetsProxy>
-      .putAll(map: kotlin.collections.Map<kotlin.String, com.giyeok.bibix.daemon.BibixDaemonApiProto.TargetInfo>) {
-         _builder.putAllTargets(map)
-       }
-    /**
-     * <code>map&lt;string, .com.giyeok.bibix.daemon.TargetInfo&gt; targets = 4;</code>
-     */
-    @kotlin.jvm.JvmSynthetic
-    @JvmName("clearTargets")
-    public fun com.google.protobuf.kotlin.DslMap<kotlin.String, com.giyeok.bibix.daemon.BibixDaemonApiProto.TargetInfo, TargetsProxy>
-      .clear() {
-         _builder.clearTargets()
-       }
-
-    /**
-     * An uninstantiable, behaviorless type to represent the field in
-     * generics.
-     */
-    @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
-    public class ActionsProxy private constructor() : com.google.protobuf.kotlin.DslProxy()
-    /**
-     * <code>map&lt;string, .com.giyeok.bibix.daemon.ActionInfo&gt; actions = 5;</code>
-     */
-     public val actions: com.google.protobuf.kotlin.DslMap<kotlin.String, com.giyeok.bibix.daemon.BibixDaemonApiProto.ActionInfo, ActionsProxy>
-      @kotlin.jvm.JvmSynthetic
-      @JvmName("getActionsMap")
-      get() = com.google.protobuf.kotlin.DslMap(
-        _builder.getActionsMap()
-      )
-    /**
-     * <code>map&lt;string, .com.giyeok.bibix.daemon.ActionInfo&gt; actions = 5;</code>
-     */
-    @JvmName("putActions")
-    public fun com.google.protobuf.kotlin.DslMap<kotlin.String, com.giyeok.bibix.daemon.BibixDaemonApiProto.ActionInfo, ActionsProxy>
-      .put(key: kotlin.String, value: com.giyeok.bibix.daemon.BibixDaemonApiProto.ActionInfo) {
-         _builder.putActions(key, value)
-       }
-    /**
-     * <code>map&lt;string, .com.giyeok.bibix.daemon.ActionInfo&gt; actions = 5;</code>
-     */
-    @kotlin.jvm.JvmSynthetic
-    @JvmName("setActions")
-    @Suppress("NOTHING_TO_INLINE")
-    public inline operator fun com.google.protobuf.kotlin.DslMap<kotlin.String, com.giyeok.bibix.daemon.BibixDaemonApiProto.ActionInfo, ActionsProxy>
-      .set(key: kotlin.String, value: com.giyeok.bibix.daemon.BibixDaemonApiProto.ActionInfo) {
-         put(key, value)
-       }
-    /**
-     * <code>map&lt;string, .com.giyeok.bibix.daemon.ActionInfo&gt; actions = 5;</code>
-     */
-    @kotlin.jvm.JvmSynthetic
-    @JvmName("removeActions")
-    public fun com.google.protobuf.kotlin.DslMap<kotlin.String, com.giyeok.bibix.daemon.BibixDaemonApiProto.ActionInfo, ActionsProxy>
-      .remove(key: kotlin.String) {
-         _builder.removeActions(key)
-       }
-    /**
-     * <code>map&lt;string, .com.giyeok.bibix.daemon.ActionInfo&gt; actions = 5;</code>
-     */
-    @kotlin.jvm.JvmSynthetic
-    @JvmName("putAllActions")
-    public fun com.google.protobuf.kotlin.DslMap<kotlin.String, com.giyeok.bibix.daemon.BibixDaemonApiProto.ActionInfo, ActionsProxy>
-      .putAll(map: kotlin.collections.Map<kotlin.String, com.giyeok.bibix.daemon.BibixDaemonApiProto.ActionInfo>) {
-         _builder.putAllActions(map)
-       }
-    /**
-     * <code>map&lt;string, .com.giyeok.bibix.daemon.ActionInfo&gt; actions = 5;</code>
-     */
-    @kotlin.jvm.JvmSynthetic
-    @JvmName("clearActions")
-    public fun com.google.protobuf.kotlin.DslMap<kotlin.String, com.giyeok.bibix.daemon.BibixDaemonApiProto.ActionInfo, ActionsProxy>
-      .clear() {
-         _builder.clearActions()
-       }
-
-    /**
-     * An uninstantiable, behaviorless type to represent the field in
-     * generics.
-     */
-    @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
-    public class ArgsProxy private constructor() : com.google.protobuf.kotlin.DslProxy()
-    /**
-     * <code>map&lt;string, .com.giyeok.bibix.daemon.ArgInfo&gt; args = 6;</code>
-     */
-     public val args: com.google.protobuf.kotlin.DslMap<kotlin.String, com.giyeok.bibix.daemon.BibixDaemonApiProto.ArgInfo, ArgsProxy>
-      @kotlin.jvm.JvmSynthetic
-      @JvmName("getArgsMap")
-      get() = com.google.protobuf.kotlin.DslMap(
-        _builder.getArgsMap()
-      )
-    /**
-     * <code>map&lt;string, .com.giyeok.bibix.daemon.ArgInfo&gt; args = 6;</code>
-     */
-    @JvmName("putArgs")
-    public fun com.google.protobuf.kotlin.DslMap<kotlin.String, com.giyeok.bibix.daemon.BibixDaemonApiProto.ArgInfo, ArgsProxy>
-      .put(key: kotlin.String, value: com.giyeok.bibix.daemon.BibixDaemonApiProto.ArgInfo) {
-         _builder.putArgs(key, value)
-       }
-    /**
-     * <code>map&lt;string, .com.giyeok.bibix.daemon.ArgInfo&gt; args = 6;</code>
-     */
-    @kotlin.jvm.JvmSynthetic
-    @JvmName("setArgs")
-    @Suppress("NOTHING_TO_INLINE")
-    public inline operator fun com.google.protobuf.kotlin.DslMap<kotlin.String, com.giyeok.bibix.daemon.BibixDaemonApiProto.ArgInfo, ArgsProxy>
-      .set(key: kotlin.String, value: com.giyeok.bibix.daemon.BibixDaemonApiProto.ArgInfo) {
-         put(key, value)
-       }
-    /**
-     * <code>map&lt;string, .com.giyeok.bibix.daemon.ArgInfo&gt; args = 6;</code>
-     */
-    @kotlin.jvm.JvmSynthetic
-    @JvmName("removeArgs")
-    public fun com.google.protobuf.kotlin.DslMap<kotlin.String, com.giyeok.bibix.daemon.BibixDaemonApiProto.ArgInfo, ArgsProxy>
-      .remove(key: kotlin.String) {
-         _builder.removeArgs(key)
-       }
-    /**
-     * <code>map&lt;string, .com.giyeok.bibix.daemon.ArgInfo&gt; args = 6;</code>
-     */
-    @kotlin.jvm.JvmSynthetic
-    @JvmName("putAllArgs")
-    public fun com.google.protobuf.kotlin.DslMap<kotlin.String, com.giyeok.bibix.daemon.BibixDaemonApiProto.ArgInfo, ArgsProxy>
-      .putAll(map: kotlin.collections.Map<kotlin.String, com.giyeok.bibix.daemon.BibixDaemonApiProto.ArgInfo>) {
-         _builder.putAllArgs(map)
-       }
-    /**
-     * <code>map&lt;string, .com.giyeok.bibix.daemon.ArgInfo&gt; args = 6;</code>
-     */
-    @kotlin.jvm.JvmSynthetic
-    @JvmName("clearArgs")
-    public fun com.google.protobuf.kotlin.DslMap<kotlin.String, com.giyeok.bibix.daemon.BibixDaemonApiProto.ArgInfo, ArgsProxy>
-      .clear() {
-         _builder.clearArgs()
-       }
   }
 }
 @kotlin.jvm.JvmSynthetic
