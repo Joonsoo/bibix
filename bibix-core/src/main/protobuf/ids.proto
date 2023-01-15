@@ -25,10 +25,11 @@ message ExternalBibixProject {
 
 message ObjectId {
   SourceId call_expr_source_id = 1;
-  ObjectIdHash call_target_objhash = 2;
-  string method_name = 3;
-  ArgsMap args_map = 4;
-  InputHashes input_hashes = 5;
+  bytes call_target_objhash = 2;
+  string class_name = 3;
+  string method_name = 4;
+  ArgsMap args_map = 5;
+  InputHashes input_hashes = 6;
 }
 
 message ObjectIdHash {

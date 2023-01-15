@@ -2041,59 +2041,62 @@ public final class BibixIdProto {
     com.giyeok.bibix.BibixIdProto.SourceIdOrBuilder getCallExprSourceIdOrBuilder();
 
     /**
-     * <code>.com.giyeok.bibix.ObjectIdHash call_target_objhash = 2;</code>
-     * @return Whether the callTargetObjhash field is set.
-     */
-    boolean hasCallTargetObjhash();
-    /**
-     * <code>.com.giyeok.bibix.ObjectIdHash call_target_objhash = 2;</code>
+     * <code>bytes call_target_objhash = 2;</code>
      * @return The callTargetObjhash.
      */
-    com.giyeok.bibix.BibixIdProto.ObjectIdHash getCallTargetObjhash();
-    /**
-     * <code>.com.giyeok.bibix.ObjectIdHash call_target_objhash = 2;</code>
-     */
-    com.giyeok.bibix.BibixIdProto.ObjectIdHashOrBuilder getCallTargetObjhashOrBuilder();
+    com.google.protobuf.ByteString getCallTargetObjhash();
 
     /**
-     * <code>string method_name = 3;</code>
+     * <code>string class_name = 3;</code>
+     * @return The className.
+     */
+    java.lang.String getClassName();
+    /**
+     * <code>string class_name = 3;</code>
+     * @return The bytes for className.
+     */
+    com.google.protobuf.ByteString
+        getClassNameBytes();
+
+    /**
+     * <code>string method_name = 4;</code>
      * @return The methodName.
      */
     java.lang.String getMethodName();
     /**
-     * <code>string method_name = 3;</code>
+     * <code>string method_name = 4;</code>
      * @return The bytes for methodName.
      */
     com.google.protobuf.ByteString
         getMethodNameBytes();
 
     /**
-     * <code>.com.giyeok.bibix.ArgsMap args_map = 4;</code>
+     * <code>.com.giyeok.bibix.ArgsMap args_map = 5;</code>
      * @return Whether the argsMap field is set.
      */
     boolean hasArgsMap();
     /**
-     * <code>.com.giyeok.bibix.ArgsMap args_map = 4;</code>
+     * <code>.com.giyeok.bibix.ArgsMap args_map = 5;</code>
      * @return The argsMap.
      */
     com.giyeok.bibix.BibixIdProto.ArgsMap getArgsMap();
     /**
-     * <code>.com.giyeok.bibix.ArgsMap args_map = 4;</code>
+     * <code>.com.giyeok.bibix.ArgsMap args_map = 5;</code>
      */
     com.giyeok.bibix.BibixIdProto.ArgsMapOrBuilder getArgsMapOrBuilder();
 
     /**
-     * <code>.com.giyeok.bibix.InputHashes input_hashes = 5;</code>
+     * <code>.com.giyeok.bibix.InputHashes input_hashes = 6;</code>
      * @return Whether the inputHashes field is set.
      */
     boolean hasInputHashes();
     /**
-     * <code>.com.giyeok.bibix.InputHashes input_hashes = 5;</code>
+     * <code>.com.giyeok.bibix.InputHashes input_hashes = 6;</code>
      * @return The inputHashes.
      */
     com.giyeok.bibix.BibixIdProto.InputHashes getInputHashes();
     /**
-     * <code>.com.giyeok.bibix.InputHashes input_hashes = 5;</code>
+     * <code>.com.giyeok.bibix.InputHashes input_hashes = 6;</code>
      */
     com.giyeok.bibix.BibixIdProto.InputHashesOrBuilder getInputHashesOrBuilder();
   }
@@ -2110,6 +2113,8 @@ public final class BibixIdProto {
       super(builder);
     }
     private ObjectId() {
+      callTargetObjhash_ = com.google.protobuf.ByteString.EMPTY;
+      className_ = "";
       methodName_ = "";
     }
 
@@ -2157,25 +2162,23 @@ public final class BibixIdProto {
               break;
             }
             case 18: {
-              com.giyeok.bibix.BibixIdProto.ObjectIdHash.Builder subBuilder = null;
-              if (callTargetObjhash_ != null) {
-                subBuilder = callTargetObjhash_.toBuilder();
-              }
-              callTargetObjhash_ = input.readMessage(com.giyeok.bibix.BibixIdProto.ObjectIdHash.parser(), extensionRegistry);
-              if (subBuilder != null) {
-                subBuilder.mergeFrom(callTargetObjhash_);
-                callTargetObjhash_ = subBuilder.buildPartial();
-              }
 
+              callTargetObjhash_ = input.readBytes();
               break;
             }
             case 26: {
               java.lang.String s = input.readStringRequireUtf8();
 
-              methodName_ = s;
+              className_ = s;
               break;
             }
             case 34: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              methodName_ = s;
+              break;
+            }
+            case 42: {
               com.giyeok.bibix.BibixIdProto.ArgsMap.Builder subBuilder = null;
               if (argsMap_ != null) {
                 subBuilder = argsMap_.toBuilder();
@@ -2188,7 +2191,7 @@ public final class BibixIdProto {
 
               break;
             }
-            case 42: {
+            case 50: {
               com.giyeok.bibix.BibixIdProto.InputHashes.Builder subBuilder = null;
               if (inputHashes_ != null) {
                 subBuilder = inputHashes_.toBuilder();
@@ -2260,35 +2263,58 @@ public final class BibixIdProto {
     }
 
     public static final int CALL_TARGET_OBJHASH_FIELD_NUMBER = 2;
-    private com.giyeok.bibix.BibixIdProto.ObjectIdHash callTargetObjhash_;
+    private com.google.protobuf.ByteString callTargetObjhash_;
     /**
-     * <code>.com.giyeok.bibix.ObjectIdHash call_target_objhash = 2;</code>
-     * @return Whether the callTargetObjhash field is set.
-     */
-    @java.lang.Override
-    public boolean hasCallTargetObjhash() {
-      return callTargetObjhash_ != null;
-    }
-    /**
-     * <code>.com.giyeok.bibix.ObjectIdHash call_target_objhash = 2;</code>
+     * <code>bytes call_target_objhash = 2;</code>
      * @return The callTargetObjhash.
      */
     @java.lang.Override
-    public com.giyeok.bibix.BibixIdProto.ObjectIdHash getCallTargetObjhash() {
-      return callTargetObjhash_ == null ? com.giyeok.bibix.BibixIdProto.ObjectIdHash.getDefaultInstance() : callTargetObjhash_;
-    }
-    /**
-     * <code>.com.giyeok.bibix.ObjectIdHash call_target_objhash = 2;</code>
-     */
-    @java.lang.Override
-    public com.giyeok.bibix.BibixIdProto.ObjectIdHashOrBuilder getCallTargetObjhashOrBuilder() {
-      return getCallTargetObjhash();
+    public com.google.protobuf.ByteString getCallTargetObjhash() {
+      return callTargetObjhash_;
     }
 
-    public static final int METHOD_NAME_FIELD_NUMBER = 3;
+    public static final int CLASS_NAME_FIELD_NUMBER = 3;
+    private volatile java.lang.Object className_;
+    /**
+     * <code>string class_name = 3;</code>
+     * @return The className.
+     */
+    @java.lang.Override
+    public java.lang.String getClassName() {
+      java.lang.Object ref = className_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        className_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string class_name = 3;</code>
+     * @return The bytes for className.
+     */
+    @java.lang.Override
+    public com.google.protobuf.ByteString
+        getClassNameBytes() {
+      java.lang.Object ref = className_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        className_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int METHOD_NAME_FIELD_NUMBER = 4;
     private volatile java.lang.Object methodName_;
     /**
-     * <code>string method_name = 3;</code>
+     * <code>string method_name = 4;</code>
      * @return The methodName.
      */
     @java.lang.Override
@@ -2305,7 +2331,7 @@ public final class BibixIdProto {
       }
     }
     /**
-     * <code>string method_name = 3;</code>
+     * <code>string method_name = 4;</code>
      * @return The bytes for methodName.
      */
     @java.lang.Override
@@ -2323,10 +2349,10 @@ public final class BibixIdProto {
       }
     }
 
-    public static final int ARGS_MAP_FIELD_NUMBER = 4;
+    public static final int ARGS_MAP_FIELD_NUMBER = 5;
     private com.giyeok.bibix.BibixIdProto.ArgsMap argsMap_;
     /**
-     * <code>.com.giyeok.bibix.ArgsMap args_map = 4;</code>
+     * <code>.com.giyeok.bibix.ArgsMap args_map = 5;</code>
      * @return Whether the argsMap field is set.
      */
     @java.lang.Override
@@ -2334,7 +2360,7 @@ public final class BibixIdProto {
       return argsMap_ != null;
     }
     /**
-     * <code>.com.giyeok.bibix.ArgsMap args_map = 4;</code>
+     * <code>.com.giyeok.bibix.ArgsMap args_map = 5;</code>
      * @return The argsMap.
      */
     @java.lang.Override
@@ -2342,17 +2368,17 @@ public final class BibixIdProto {
       return argsMap_ == null ? com.giyeok.bibix.BibixIdProto.ArgsMap.getDefaultInstance() : argsMap_;
     }
     /**
-     * <code>.com.giyeok.bibix.ArgsMap args_map = 4;</code>
+     * <code>.com.giyeok.bibix.ArgsMap args_map = 5;</code>
      */
     @java.lang.Override
     public com.giyeok.bibix.BibixIdProto.ArgsMapOrBuilder getArgsMapOrBuilder() {
       return getArgsMap();
     }
 
-    public static final int INPUT_HASHES_FIELD_NUMBER = 5;
+    public static final int INPUT_HASHES_FIELD_NUMBER = 6;
     private com.giyeok.bibix.BibixIdProto.InputHashes inputHashes_;
     /**
-     * <code>.com.giyeok.bibix.InputHashes input_hashes = 5;</code>
+     * <code>.com.giyeok.bibix.InputHashes input_hashes = 6;</code>
      * @return Whether the inputHashes field is set.
      */
     @java.lang.Override
@@ -2360,7 +2386,7 @@ public final class BibixIdProto {
       return inputHashes_ != null;
     }
     /**
-     * <code>.com.giyeok.bibix.InputHashes input_hashes = 5;</code>
+     * <code>.com.giyeok.bibix.InputHashes input_hashes = 6;</code>
      * @return The inputHashes.
      */
     @java.lang.Override
@@ -2368,7 +2394,7 @@ public final class BibixIdProto {
       return inputHashes_ == null ? com.giyeok.bibix.BibixIdProto.InputHashes.getDefaultInstance() : inputHashes_;
     }
     /**
-     * <code>.com.giyeok.bibix.InputHashes input_hashes = 5;</code>
+     * <code>.com.giyeok.bibix.InputHashes input_hashes = 6;</code>
      */
     @java.lang.Override
     public com.giyeok.bibix.BibixIdProto.InputHashesOrBuilder getInputHashesOrBuilder() {
@@ -2392,17 +2418,20 @@ public final class BibixIdProto {
       if (callExprSourceId_ != null) {
         output.writeMessage(1, getCallExprSourceId());
       }
-      if (callTargetObjhash_ != null) {
-        output.writeMessage(2, getCallTargetObjhash());
+      if (!callTargetObjhash_.isEmpty()) {
+        output.writeBytes(2, callTargetObjhash_);
+      }
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(className_)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 3, className_);
       }
       if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(methodName_)) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 3, methodName_);
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 4, methodName_);
       }
       if (argsMap_ != null) {
-        output.writeMessage(4, getArgsMap());
+        output.writeMessage(5, getArgsMap());
       }
       if (inputHashes_ != null) {
-        output.writeMessage(5, getInputHashes());
+        output.writeMessage(6, getInputHashes());
       }
       unknownFields.writeTo(output);
     }
@@ -2417,20 +2446,23 @@ public final class BibixIdProto {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(1, getCallExprSourceId());
       }
-      if (callTargetObjhash_ != null) {
+      if (!callTargetObjhash_.isEmpty()) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(2, getCallTargetObjhash());
+          .computeBytesSize(2, callTargetObjhash_);
+      }
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(className_)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, className_);
       }
       if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(methodName_)) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, methodName_);
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, methodName_);
       }
       if (argsMap_ != null) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(4, getArgsMap());
+          .computeMessageSize(5, getArgsMap());
       }
       if (inputHashes_ != null) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(5, getInputHashes());
+          .computeMessageSize(6, getInputHashes());
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -2452,11 +2484,10 @@ public final class BibixIdProto {
         if (!getCallExprSourceId()
             .equals(other.getCallExprSourceId())) return false;
       }
-      if (hasCallTargetObjhash() != other.hasCallTargetObjhash()) return false;
-      if (hasCallTargetObjhash()) {
-        if (!getCallTargetObjhash()
-            .equals(other.getCallTargetObjhash())) return false;
-      }
+      if (!getCallTargetObjhash()
+          .equals(other.getCallTargetObjhash())) return false;
+      if (!getClassName()
+          .equals(other.getClassName())) return false;
       if (!getMethodName()
           .equals(other.getMethodName())) return false;
       if (hasArgsMap() != other.hasArgsMap()) return false;
@@ -2484,10 +2515,10 @@ public final class BibixIdProto {
         hash = (37 * hash) + CALL_EXPR_SOURCE_ID_FIELD_NUMBER;
         hash = (53 * hash) + getCallExprSourceId().hashCode();
       }
-      if (hasCallTargetObjhash()) {
-        hash = (37 * hash) + CALL_TARGET_OBJHASH_FIELD_NUMBER;
-        hash = (53 * hash) + getCallTargetObjhash().hashCode();
-      }
+      hash = (37 * hash) + CALL_TARGET_OBJHASH_FIELD_NUMBER;
+      hash = (53 * hash) + getCallTargetObjhash().hashCode();
+      hash = (37 * hash) + CLASS_NAME_FIELD_NUMBER;
+      hash = (53 * hash) + getClassName().hashCode();
       hash = (37 * hash) + METHOD_NAME_FIELD_NUMBER;
       hash = (53 * hash) + getMethodName().hashCode();
       if (hasArgsMap()) {
@@ -2637,12 +2668,10 @@ public final class BibixIdProto {
           callExprSourceId_ = null;
           callExprSourceIdBuilder_ = null;
         }
-        if (callTargetObjhashBuilder_ == null) {
-          callTargetObjhash_ = null;
-        } else {
-          callTargetObjhash_ = null;
-          callTargetObjhashBuilder_ = null;
-        }
+        callTargetObjhash_ = com.google.protobuf.ByteString.EMPTY;
+
+        className_ = "";
+
         methodName_ = "";
 
         if (argsMapBuilder_ == null) {
@@ -2688,11 +2717,8 @@ public final class BibixIdProto {
         } else {
           result.callExprSourceId_ = callExprSourceIdBuilder_.build();
         }
-        if (callTargetObjhashBuilder_ == null) {
-          result.callTargetObjhash_ = callTargetObjhash_;
-        } else {
-          result.callTargetObjhash_ = callTargetObjhashBuilder_.build();
-        }
+        result.callTargetObjhash_ = callTargetObjhash_;
+        result.className_ = className_;
         result.methodName_ = methodName_;
         if (argsMapBuilder_ == null) {
           result.argsMap_ = argsMap_;
@@ -2755,8 +2781,12 @@ public final class BibixIdProto {
         if (other.hasCallExprSourceId()) {
           mergeCallExprSourceId(other.getCallExprSourceId());
         }
-        if (other.hasCallTargetObjhash()) {
-          mergeCallTargetObjhash(other.getCallTargetObjhash());
+        if (other.getCallTargetObjhash() != com.google.protobuf.ByteString.EMPTY) {
+          setCallTargetObjhash(other.getCallTargetObjhash());
+        }
+        if (!other.getClassName().isEmpty()) {
+          className_ = other.className_;
+          onChanged();
         }
         if (!other.getMethodName().isEmpty()) {
           methodName_ = other.methodName_;
@@ -2916,128 +2946,119 @@ public final class BibixIdProto {
         return callExprSourceIdBuilder_;
       }
 
-      private com.giyeok.bibix.BibixIdProto.ObjectIdHash callTargetObjhash_;
-      private com.google.protobuf.SingleFieldBuilderV3<
-          com.giyeok.bibix.BibixIdProto.ObjectIdHash, com.giyeok.bibix.BibixIdProto.ObjectIdHash.Builder, com.giyeok.bibix.BibixIdProto.ObjectIdHashOrBuilder> callTargetObjhashBuilder_;
+      private com.google.protobuf.ByteString callTargetObjhash_ = com.google.protobuf.ByteString.EMPTY;
       /**
-       * <code>.com.giyeok.bibix.ObjectIdHash call_target_objhash = 2;</code>
-       * @return Whether the callTargetObjhash field is set.
-       */
-      public boolean hasCallTargetObjhash() {
-        return callTargetObjhashBuilder_ != null || callTargetObjhash_ != null;
-      }
-      /**
-       * <code>.com.giyeok.bibix.ObjectIdHash call_target_objhash = 2;</code>
+       * <code>bytes call_target_objhash = 2;</code>
        * @return The callTargetObjhash.
        */
-      public com.giyeok.bibix.BibixIdProto.ObjectIdHash getCallTargetObjhash() {
-        if (callTargetObjhashBuilder_ == null) {
-          return callTargetObjhash_ == null ? com.giyeok.bibix.BibixIdProto.ObjectIdHash.getDefaultInstance() : callTargetObjhash_;
-        } else {
-          return callTargetObjhashBuilder_.getMessage();
-        }
+      @java.lang.Override
+      public com.google.protobuf.ByteString getCallTargetObjhash() {
+        return callTargetObjhash_;
       }
       /**
-       * <code>.com.giyeok.bibix.ObjectIdHash call_target_objhash = 2;</code>
+       * <code>bytes call_target_objhash = 2;</code>
+       * @param value The callTargetObjhash to set.
+       * @return This builder for chaining.
        */
-      public Builder setCallTargetObjhash(com.giyeok.bibix.BibixIdProto.ObjectIdHash value) {
-        if (callTargetObjhashBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          callTargetObjhash_ = value;
-          onChanged();
-        } else {
-          callTargetObjhashBuilder_.setMessage(value);
-        }
-
+      public Builder setCallTargetObjhash(com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        callTargetObjhash_ = value;
+        onChanged();
         return this;
       }
       /**
-       * <code>.com.giyeok.bibix.ObjectIdHash call_target_objhash = 2;</code>
-       */
-      public Builder setCallTargetObjhash(
-          com.giyeok.bibix.BibixIdProto.ObjectIdHash.Builder builderForValue) {
-        if (callTargetObjhashBuilder_ == null) {
-          callTargetObjhash_ = builderForValue.build();
-          onChanged();
-        } else {
-          callTargetObjhashBuilder_.setMessage(builderForValue.build());
-        }
-
-        return this;
-      }
-      /**
-       * <code>.com.giyeok.bibix.ObjectIdHash call_target_objhash = 2;</code>
-       */
-      public Builder mergeCallTargetObjhash(com.giyeok.bibix.BibixIdProto.ObjectIdHash value) {
-        if (callTargetObjhashBuilder_ == null) {
-          if (callTargetObjhash_ != null) {
-            callTargetObjhash_ =
-              com.giyeok.bibix.BibixIdProto.ObjectIdHash.newBuilder(callTargetObjhash_).mergeFrom(value).buildPartial();
-          } else {
-            callTargetObjhash_ = value;
-          }
-          onChanged();
-        } else {
-          callTargetObjhashBuilder_.mergeFrom(value);
-        }
-
-        return this;
-      }
-      /**
-       * <code>.com.giyeok.bibix.ObjectIdHash call_target_objhash = 2;</code>
+       * <code>bytes call_target_objhash = 2;</code>
+       * @return This builder for chaining.
        */
       public Builder clearCallTargetObjhash() {
-        if (callTargetObjhashBuilder_ == null) {
-          callTargetObjhash_ = null;
-          onChanged();
-        } else {
-          callTargetObjhash_ = null;
-          callTargetObjhashBuilder_ = null;
-        }
+        
+        callTargetObjhash_ = getDefaultInstance().getCallTargetObjhash();
+        onChanged();
+        return this;
+      }
 
+      private java.lang.Object className_ = "";
+      /**
+       * <code>string class_name = 3;</code>
+       * @return The className.
+       */
+      public java.lang.String getClassName() {
+        java.lang.Object ref = className_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          className_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string class_name = 3;</code>
+       * @return The bytes for className.
+       */
+      public com.google.protobuf.ByteString
+          getClassNameBytes() {
+        java.lang.Object ref = className_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          className_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string class_name = 3;</code>
+       * @param value The className to set.
+       * @return This builder for chaining.
+       */
+      public Builder setClassName(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        className_ = value;
+        onChanged();
         return this;
       }
       /**
-       * <code>.com.giyeok.bibix.ObjectIdHash call_target_objhash = 2;</code>
+       * <code>string class_name = 3;</code>
+       * @return This builder for chaining.
        */
-      public com.giyeok.bibix.BibixIdProto.ObjectIdHash.Builder getCallTargetObjhashBuilder() {
+      public Builder clearClassName() {
         
+        className_ = getDefaultInstance().getClassName();
         onChanged();
-        return getCallTargetObjhashFieldBuilder().getBuilder();
+        return this;
       }
       /**
-       * <code>.com.giyeok.bibix.ObjectIdHash call_target_objhash = 2;</code>
+       * <code>string class_name = 3;</code>
+       * @param value The bytes for className to set.
+       * @return This builder for chaining.
        */
-      public com.giyeok.bibix.BibixIdProto.ObjectIdHashOrBuilder getCallTargetObjhashOrBuilder() {
-        if (callTargetObjhashBuilder_ != null) {
-          return callTargetObjhashBuilder_.getMessageOrBuilder();
-        } else {
-          return callTargetObjhash_ == null ?
-              com.giyeok.bibix.BibixIdProto.ObjectIdHash.getDefaultInstance() : callTargetObjhash_;
-        }
-      }
-      /**
-       * <code>.com.giyeok.bibix.ObjectIdHash call_target_objhash = 2;</code>
-       */
-      private com.google.protobuf.SingleFieldBuilderV3<
-          com.giyeok.bibix.BibixIdProto.ObjectIdHash, com.giyeok.bibix.BibixIdProto.ObjectIdHash.Builder, com.giyeok.bibix.BibixIdProto.ObjectIdHashOrBuilder> 
-          getCallTargetObjhashFieldBuilder() {
-        if (callTargetObjhashBuilder_ == null) {
-          callTargetObjhashBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-              com.giyeok.bibix.BibixIdProto.ObjectIdHash, com.giyeok.bibix.BibixIdProto.ObjectIdHash.Builder, com.giyeok.bibix.BibixIdProto.ObjectIdHashOrBuilder>(
-                  getCallTargetObjhash(),
-                  getParentForChildren(),
-                  isClean());
-          callTargetObjhash_ = null;
-        }
-        return callTargetObjhashBuilder_;
+      public Builder setClassNameBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        className_ = value;
+        onChanged();
+        return this;
       }
 
       private java.lang.Object methodName_ = "";
       /**
-       * <code>string method_name = 3;</code>
+       * <code>string method_name = 4;</code>
        * @return The methodName.
        */
       public java.lang.String getMethodName() {
@@ -3053,7 +3074,7 @@ public final class BibixIdProto {
         }
       }
       /**
-       * <code>string method_name = 3;</code>
+       * <code>string method_name = 4;</code>
        * @return The bytes for methodName.
        */
       public com.google.protobuf.ByteString
@@ -3070,7 +3091,7 @@ public final class BibixIdProto {
         }
       }
       /**
-       * <code>string method_name = 3;</code>
+       * <code>string method_name = 4;</code>
        * @param value The methodName to set.
        * @return This builder for chaining.
        */
@@ -3085,7 +3106,7 @@ public final class BibixIdProto {
         return this;
       }
       /**
-       * <code>string method_name = 3;</code>
+       * <code>string method_name = 4;</code>
        * @return This builder for chaining.
        */
       public Builder clearMethodName() {
@@ -3095,7 +3116,7 @@ public final class BibixIdProto {
         return this;
       }
       /**
-       * <code>string method_name = 3;</code>
+       * <code>string method_name = 4;</code>
        * @param value The bytes for methodName to set.
        * @return This builder for chaining.
        */
@@ -3115,14 +3136,14 @@ public final class BibixIdProto {
       private com.google.protobuf.SingleFieldBuilderV3<
           com.giyeok.bibix.BibixIdProto.ArgsMap, com.giyeok.bibix.BibixIdProto.ArgsMap.Builder, com.giyeok.bibix.BibixIdProto.ArgsMapOrBuilder> argsMapBuilder_;
       /**
-       * <code>.com.giyeok.bibix.ArgsMap args_map = 4;</code>
+       * <code>.com.giyeok.bibix.ArgsMap args_map = 5;</code>
        * @return Whether the argsMap field is set.
        */
       public boolean hasArgsMap() {
         return argsMapBuilder_ != null || argsMap_ != null;
       }
       /**
-       * <code>.com.giyeok.bibix.ArgsMap args_map = 4;</code>
+       * <code>.com.giyeok.bibix.ArgsMap args_map = 5;</code>
        * @return The argsMap.
        */
       public com.giyeok.bibix.BibixIdProto.ArgsMap getArgsMap() {
@@ -3133,7 +3154,7 @@ public final class BibixIdProto {
         }
       }
       /**
-       * <code>.com.giyeok.bibix.ArgsMap args_map = 4;</code>
+       * <code>.com.giyeok.bibix.ArgsMap args_map = 5;</code>
        */
       public Builder setArgsMap(com.giyeok.bibix.BibixIdProto.ArgsMap value) {
         if (argsMapBuilder_ == null) {
@@ -3149,7 +3170,7 @@ public final class BibixIdProto {
         return this;
       }
       /**
-       * <code>.com.giyeok.bibix.ArgsMap args_map = 4;</code>
+       * <code>.com.giyeok.bibix.ArgsMap args_map = 5;</code>
        */
       public Builder setArgsMap(
           com.giyeok.bibix.BibixIdProto.ArgsMap.Builder builderForValue) {
@@ -3163,7 +3184,7 @@ public final class BibixIdProto {
         return this;
       }
       /**
-       * <code>.com.giyeok.bibix.ArgsMap args_map = 4;</code>
+       * <code>.com.giyeok.bibix.ArgsMap args_map = 5;</code>
        */
       public Builder mergeArgsMap(com.giyeok.bibix.BibixIdProto.ArgsMap value) {
         if (argsMapBuilder_ == null) {
@@ -3181,7 +3202,7 @@ public final class BibixIdProto {
         return this;
       }
       /**
-       * <code>.com.giyeok.bibix.ArgsMap args_map = 4;</code>
+       * <code>.com.giyeok.bibix.ArgsMap args_map = 5;</code>
        */
       public Builder clearArgsMap() {
         if (argsMapBuilder_ == null) {
@@ -3195,7 +3216,7 @@ public final class BibixIdProto {
         return this;
       }
       /**
-       * <code>.com.giyeok.bibix.ArgsMap args_map = 4;</code>
+       * <code>.com.giyeok.bibix.ArgsMap args_map = 5;</code>
        */
       public com.giyeok.bibix.BibixIdProto.ArgsMap.Builder getArgsMapBuilder() {
         
@@ -3203,7 +3224,7 @@ public final class BibixIdProto {
         return getArgsMapFieldBuilder().getBuilder();
       }
       /**
-       * <code>.com.giyeok.bibix.ArgsMap args_map = 4;</code>
+       * <code>.com.giyeok.bibix.ArgsMap args_map = 5;</code>
        */
       public com.giyeok.bibix.BibixIdProto.ArgsMapOrBuilder getArgsMapOrBuilder() {
         if (argsMapBuilder_ != null) {
@@ -3214,7 +3235,7 @@ public final class BibixIdProto {
         }
       }
       /**
-       * <code>.com.giyeok.bibix.ArgsMap args_map = 4;</code>
+       * <code>.com.giyeok.bibix.ArgsMap args_map = 5;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
           com.giyeok.bibix.BibixIdProto.ArgsMap, com.giyeok.bibix.BibixIdProto.ArgsMap.Builder, com.giyeok.bibix.BibixIdProto.ArgsMapOrBuilder> 
@@ -3234,14 +3255,14 @@ public final class BibixIdProto {
       private com.google.protobuf.SingleFieldBuilderV3<
           com.giyeok.bibix.BibixIdProto.InputHashes, com.giyeok.bibix.BibixIdProto.InputHashes.Builder, com.giyeok.bibix.BibixIdProto.InputHashesOrBuilder> inputHashesBuilder_;
       /**
-       * <code>.com.giyeok.bibix.InputHashes input_hashes = 5;</code>
+       * <code>.com.giyeok.bibix.InputHashes input_hashes = 6;</code>
        * @return Whether the inputHashes field is set.
        */
       public boolean hasInputHashes() {
         return inputHashesBuilder_ != null || inputHashes_ != null;
       }
       /**
-       * <code>.com.giyeok.bibix.InputHashes input_hashes = 5;</code>
+       * <code>.com.giyeok.bibix.InputHashes input_hashes = 6;</code>
        * @return The inputHashes.
        */
       public com.giyeok.bibix.BibixIdProto.InputHashes getInputHashes() {
@@ -3252,7 +3273,7 @@ public final class BibixIdProto {
         }
       }
       /**
-       * <code>.com.giyeok.bibix.InputHashes input_hashes = 5;</code>
+       * <code>.com.giyeok.bibix.InputHashes input_hashes = 6;</code>
        */
       public Builder setInputHashes(com.giyeok.bibix.BibixIdProto.InputHashes value) {
         if (inputHashesBuilder_ == null) {
@@ -3268,7 +3289,7 @@ public final class BibixIdProto {
         return this;
       }
       /**
-       * <code>.com.giyeok.bibix.InputHashes input_hashes = 5;</code>
+       * <code>.com.giyeok.bibix.InputHashes input_hashes = 6;</code>
        */
       public Builder setInputHashes(
           com.giyeok.bibix.BibixIdProto.InputHashes.Builder builderForValue) {
@@ -3282,7 +3303,7 @@ public final class BibixIdProto {
         return this;
       }
       /**
-       * <code>.com.giyeok.bibix.InputHashes input_hashes = 5;</code>
+       * <code>.com.giyeok.bibix.InputHashes input_hashes = 6;</code>
        */
       public Builder mergeInputHashes(com.giyeok.bibix.BibixIdProto.InputHashes value) {
         if (inputHashesBuilder_ == null) {
@@ -3300,7 +3321,7 @@ public final class BibixIdProto {
         return this;
       }
       /**
-       * <code>.com.giyeok.bibix.InputHashes input_hashes = 5;</code>
+       * <code>.com.giyeok.bibix.InputHashes input_hashes = 6;</code>
        */
       public Builder clearInputHashes() {
         if (inputHashesBuilder_ == null) {
@@ -3314,7 +3335,7 @@ public final class BibixIdProto {
         return this;
       }
       /**
-       * <code>.com.giyeok.bibix.InputHashes input_hashes = 5;</code>
+       * <code>.com.giyeok.bibix.InputHashes input_hashes = 6;</code>
        */
       public com.giyeok.bibix.BibixIdProto.InputHashes.Builder getInputHashesBuilder() {
         
@@ -3322,7 +3343,7 @@ public final class BibixIdProto {
         return getInputHashesFieldBuilder().getBuilder();
       }
       /**
-       * <code>.com.giyeok.bibix.InputHashes input_hashes = 5;</code>
+       * <code>.com.giyeok.bibix.InputHashes input_hashes = 6;</code>
        */
       public com.giyeok.bibix.BibixIdProto.InputHashesOrBuilder getInputHashesOrBuilder() {
         if (inputHashesBuilder_ != null) {
@@ -3333,7 +3354,7 @@ public final class BibixIdProto {
         }
       }
       /**
-       * <code>.com.giyeok.bibix.InputHashes input_hashes = 5;</code>
+       * <code>.com.giyeok.bibix.InputHashes input_hashes = 6;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
           com.giyeok.bibix.BibixIdProto.InputHashes, com.giyeok.bibix.BibixIdProto.InputHashes.Builder, com.giyeok.bibix.BibixIdProto.InputHashesOrBuilder> 
@@ -9639,29 +9660,29 @@ public final class BibixIdProto {
       "bix.ExternalBibixProjectH\000B\010\n\006source\"n\n\024" +
       "ExternalBibixProject\022\026\n\016root_directory\030\001" +
       " \001(\t\022\023\n\013script_name\030\002 \001(\t\022\030\n\020project_obj" +
-      "_hash\030\003 \001(\014\022\017\n\007version\030\004 \001(\003\"\367\001\n\010ObjectI" +
+      "_hash\030\003 \001(\014\022\017\n\007version\030\004 \001(\003\"\353\001\n\010ObjectI" +
       "d\0227\n\023call_expr_source_id\030\001 \001(\0132\032.com.giy" +
-      "eok.bibix.SourceId\022;\n\023call_target_objhas" +
-      "h\030\002 \001(\0132\036.com.giyeok.bibix.ObjectIdHash\022" +
-      "\023\n\013method_name\030\003 \001(\t\022+\n\010args_map\030\004 \001(\0132\031" +
-      ".com.giyeok.bibix.ArgsMap\0223\n\014input_hashe" +
-      "s\030\005 \001(\0132\035.com.giyeok.bibix.InputHashes\"o" +
-      "\n\014ObjectIdHash\022\025\n\013root_source\030\001 \001(\tH\000\022\037\n" +
-      "\025bibix_internal_source\030\002 \001(\tH\000\022\037\n\025object" +
-      "_id_hash_string\030\003 \001(\014H\000B\006\n\004hash\"3\n\007ArgsM" +
-      "ap\022(\n\005pairs\030\001 \003(\0132\031.com.giyeok.bibix.Arg" +
-      "Pair\"D\n\007ArgPair\022\014\n\004name\030\001 \001(\t\022+\n\005value\030\002" +
-      " \001(\0132\034.com.giyeok.bibix.BibixValue\"\204\001\n\013I" +
-      "nputHashes\0224\n\013directories\030\001 \003(\0132\037.com.gi" +
-      "yeok.bibix.DirectoryHash\022)\n\005files\030\002 \003(\0132" +
-      "\032.com.giyeok.bibix.FileHash\022\024\n\014non_exist" +
-      "ent\030\003 \003(\t\"~\n\rDirectoryHash\022\014\n\004path\030\001 \001(\t" +
-      "\0224\n\013directories\030\002 \003(\0132\037.com.giyeok.bibix" +
-      ".DirectoryHash\022)\n\005files\030\003 \003(\0132\032.com.giye" +
-      "ok.bibix.FileHash\"q\n\010FileHash\022\014\n\004path\030\001 " +
-      "\001(\t\0226\n\022last_modified_time\030\002 \001(\0132\032.google" +
-      ".protobuf.Timestamp\022\014\n\004size\030\003 \001(\003\022\021\n\tsha" +
-      "1_hash\030\004 \001(\014B\016B\014BibixIdProtob\006proto3"
+      "eok.bibix.SourceId\022\033\n\023call_target_objhas" +
+      "h\030\002 \001(\014\022\022\n\nclass_name\030\003 \001(\t\022\023\n\013method_na" +
+      "me\030\004 \001(\t\022+\n\010args_map\030\005 \001(\0132\031.com.giyeok." +
+      "bibix.ArgsMap\0223\n\014input_hashes\030\006 \001(\0132\035.co" +
+      "m.giyeok.bibix.InputHashes\"o\n\014ObjectIdHa" +
+      "sh\022\025\n\013root_source\030\001 \001(\tH\000\022\037\n\025bibix_inter" +
+      "nal_source\030\002 \001(\tH\000\022\037\n\025object_id_hash_str" +
+      "ing\030\003 \001(\014H\000B\006\n\004hash\"3\n\007ArgsMap\022(\n\005pairs\030" +
+      "\001 \003(\0132\031.com.giyeok.bibix.ArgPair\"D\n\007ArgP" +
+      "air\022\014\n\004name\030\001 \001(\t\022+\n\005value\030\002 \001(\0132\034.com.g" +
+      "iyeok.bibix.BibixValue\"\204\001\n\013InputHashes\0224" +
+      "\n\013directories\030\001 \003(\0132\037.com.giyeok.bibix.D" +
+      "irectoryHash\022)\n\005files\030\002 \003(\0132\032.com.giyeok" +
+      ".bibix.FileHash\022\024\n\014non_existent\030\003 \003(\t\"~\n" +
+      "\rDirectoryHash\022\014\n\004path\030\001 \001(\t\0224\n\013director" +
+      "ies\030\002 \003(\0132\037.com.giyeok.bibix.DirectoryHa" +
+      "sh\022)\n\005files\030\003 \003(\0132\032.com.giyeok.bibix.Fil" +
+      "eHash\"q\n\010FileHash\022\014\n\004path\030\001 \001(\t\0226\n\022last_" +
+      "modified_time\030\002 \001(\0132\032.google.protobuf.Ti" +
+      "mestamp\022\014\n\004size\030\003 \001(\003\022\021\n\tsha1_hash\030\004 \001(\014" +
+      "B\016B\014BibixIdProtob\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -9687,7 +9708,7 @@ public final class BibixIdProto {
     internal_static_com_giyeok_bibix_ObjectId_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_giyeok_bibix_ObjectId_descriptor,
-        new java.lang.String[] { "CallExprSourceId", "CallTargetObjhash", "MethodName", "ArgsMap", "InputHashes", });
+        new java.lang.String[] { "CallExprSourceId", "CallTargetObjhash", "ClassName", "MethodName", "ArgsMap", "InputHashes", });
     internal_static_com_giyeok_bibix_ObjectIdHash_descriptor =
       getDescriptor().getMessageTypes().get(3);
     internal_static_com_giyeok_bibix_ObjectIdHash_fieldAccessorTable = new

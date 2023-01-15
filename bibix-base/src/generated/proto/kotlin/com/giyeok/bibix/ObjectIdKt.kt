@@ -47,9 +47,9 @@ public object ObjectIdKt {
     }
 
     /**
-     * <code>.com.giyeok.bibix.ObjectIdHash call_target_objhash = 2;</code>
+     * <code>bytes call_target_objhash = 2;</code>
      */
-    public var callTargetObjhash: com.giyeok.bibix.BibixIdProto.ObjectIdHash
+    public var callTargetObjhash: com.google.protobuf.ByteString
       @JvmName("getCallTargetObjhash")
       get() = _builder.getCallTargetObjhash()
       @JvmName("setCallTargetObjhash")
@@ -57,21 +57,31 @@ public object ObjectIdKt {
         _builder.setCallTargetObjhash(value)
       }
     /**
-     * <code>.com.giyeok.bibix.ObjectIdHash call_target_objhash = 2;</code>
+     * <code>bytes call_target_objhash = 2;</code>
      */
     public fun clearCallTargetObjhash() {
       _builder.clearCallTargetObjhash()
     }
+
     /**
-     * <code>.com.giyeok.bibix.ObjectIdHash call_target_objhash = 2;</code>
-     * @return Whether the callTargetObjhash field is set.
+     * <code>string class_name = 3;</code>
      */
-    public fun hasCallTargetObjhash(): kotlin.Boolean {
-      return _builder.hasCallTargetObjhash()
+    public var className: kotlin.String
+      @JvmName("getClassName")
+      get() = _builder.getClassName()
+      @JvmName("setClassName")
+      set(value) {
+        _builder.setClassName(value)
+      }
+    /**
+     * <code>string class_name = 3;</code>
+     */
+    public fun clearClassName() {
+      _builder.clearClassName()
     }
 
     /**
-     * <code>string method_name = 3;</code>
+     * <code>string method_name = 4;</code>
      */
     public var methodName: kotlin.String
       @JvmName("getMethodName")
@@ -81,14 +91,14 @@ public object ObjectIdKt {
         _builder.setMethodName(value)
       }
     /**
-     * <code>string method_name = 3;</code>
+     * <code>string method_name = 4;</code>
      */
     public fun clearMethodName() {
       _builder.clearMethodName()
     }
 
     /**
-     * <code>.com.giyeok.bibix.ArgsMap args_map = 4;</code>
+     * <code>.com.giyeok.bibix.ArgsMap args_map = 5;</code>
      */
     public var argsMap: com.giyeok.bibix.BibixIdProto.ArgsMap
       @JvmName("getArgsMap")
@@ -98,13 +108,13 @@ public object ObjectIdKt {
         _builder.setArgsMap(value)
       }
     /**
-     * <code>.com.giyeok.bibix.ArgsMap args_map = 4;</code>
+     * <code>.com.giyeok.bibix.ArgsMap args_map = 5;</code>
      */
     public fun clearArgsMap() {
       _builder.clearArgsMap()
     }
     /**
-     * <code>.com.giyeok.bibix.ArgsMap args_map = 4;</code>
+     * <code>.com.giyeok.bibix.ArgsMap args_map = 5;</code>
      * @return Whether the argsMap field is set.
      */
     public fun hasArgsMap(): kotlin.Boolean {
@@ -112,7 +122,7 @@ public object ObjectIdKt {
     }
 
     /**
-     * <code>.com.giyeok.bibix.InputHashes input_hashes = 5;</code>
+     * <code>.com.giyeok.bibix.InputHashes input_hashes = 6;</code>
      */
     public var inputHashes: com.giyeok.bibix.BibixIdProto.InputHashes
       @JvmName("getInputHashes")
@@ -122,13 +132,13 @@ public object ObjectIdKt {
         _builder.setInputHashes(value)
       }
     /**
-     * <code>.com.giyeok.bibix.InputHashes input_hashes = 5;</code>
+     * <code>.com.giyeok.bibix.InputHashes input_hashes = 6;</code>
      */
     public fun clearInputHashes() {
       _builder.clearInputHashes()
     }
     /**
-     * <code>.com.giyeok.bibix.InputHashes input_hashes = 5;</code>
+     * <code>.com.giyeok.bibix.InputHashes input_hashes = 6;</code>
      * @return Whether the inputHashes field is set.
      */
     public fun hasInputHashes(): kotlin.Boolean {
