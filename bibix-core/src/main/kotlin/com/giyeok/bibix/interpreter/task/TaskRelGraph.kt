@@ -1,18 +1,19 @@
 package com.giyeok.bibix.interpreter.task
 
-import com.giyeok.bibix.BibixIdProto.ObjectId
 import com.giyeok.bibix.base.BibixValue
 import com.giyeok.bibix.interpreter.coroutine.TaskElement
-import com.giyeok.bibix.interpreter.expr.EvaluationResult
-import com.giyeok.bibix.repo.hashString
+import com.giyeok.bibix.interpreter.hash.ObjectHash
 import com.google.common.annotations.VisibleForTesting
 import com.google.protobuf.ByteString
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import kotlinx.coroutines.withContext
 import java.util.concurrent.ConcurrentHashMap
 
 // 태스크 사이의 관계를 저장해서 싸이클을 찾아내는 클래스
@@ -65,15 +66,21 @@ class TaskRelGraph {
     return withContext(currentCoroutineContext() + TaskElement(task)) { body(task) }
   }
 
-  private val objHashMap = mutableMapOf<ByteString, ObjectId>()
+  private val objHashMap = mutableMapOf<ByteString, ObjectHash>()
   private val objMemoMap = mutableMapOf<ByteString, MutableStateFlow<BibixValue?>>()
   private val memoMutex = Mutex()
 
+  @VisibleForTesting
+  suspend fun getObjHashMap() = memoMutex.withLock { objHashMap }
+
+  @VisibleForTesting
+  suspend fun getObjMemoMap() = memoMutex.withLock { objMemoMap }
+
   suspend fun withMemo(
-    objId: ObjectId,
-    body: suspend CoroutineScope.(ObjectId) -> BibixValue
+    objId: ObjectHash,
+    body: suspend CoroutineScope.(ObjectHash) -> BibixValue
   ): BibixValue = coroutineScope {
-    val objIdHash = objId.hashString()
+    val objIdHash = objId.hashString
     val (newMemo, stateFlow) = memoMutex.withLock {
       val existing = objMemoMap[objIdHash]
       if (existing == null) {

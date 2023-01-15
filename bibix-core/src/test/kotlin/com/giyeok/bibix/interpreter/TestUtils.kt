@@ -27,10 +27,12 @@ fun testRepo(fs: FileSystem): Repo = Repo(
 fun testInterpreter(
   fs: FileSystem,
   mainPath: String,
-  preloadedPlugins: Map<String, PreloadedPlugin>
+  preloadedPlugins: Map<String, PreloadedPlugin>,
+  realmProvider: RealmProvider = FakeRealmProvider { throw NotImplementedError() }
 ) = BibixInterpreter(
   BuildEnv(OS.Linux("", ""), Architecture.X86_64),
   preloadedPlugins,
+  realmProvider,
   BibixProject(fs.getPath(mainPath), null),
   testRepo(fs),
   FakeProgressIndicatorContainer(),

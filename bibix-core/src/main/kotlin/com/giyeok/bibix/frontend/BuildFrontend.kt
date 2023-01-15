@@ -3,6 +3,7 @@ package com.giyeok.bibix.frontend
 import com.giyeok.bibix.base.*
 import com.giyeok.bibix.interpreter.BibixInterpreter
 import com.giyeok.bibix.interpreter.BibixProject
+import com.giyeok.bibix.interpreter.RealmProviderImpl
 import com.giyeok.bibix.interpreter.coroutine.TaskElement
 import com.giyeok.bibix.interpreter.coroutine.ThreadPool
 import com.giyeok.bibix.interpreter.task.Task
@@ -36,8 +37,15 @@ class BuildFrontend(
 
   private val threadPool = ThreadPool(getMaxThreads())
 
-  val interpreter =
-    BibixInterpreter(buildEnv, preloadedPlugins, mainProject, repo, threadPool, actionArgs)
+  val interpreter = BibixInterpreter(
+    buildEnv = buildEnv,
+    preloadedPlugins = preloadedPlugins,
+    realmProvider = RealmProviderImpl(),
+    mainProject = mainProject,
+    repo = repo,
+    progressIndicatorContainer = threadPool,
+    actionArgs = actionArgs
+  )
 
   private fun getMaxThreads(): Int {
     val maxThreads = repo.runConfig.maxThreads

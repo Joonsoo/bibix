@@ -18,14 +18,14 @@ import java.util.concurrent.ConcurrentHashMap
 class BibixInterpreter(
   val buildEnv: BuildEnv,
   val preloadedPlugins: Map<String, PreloadedPlugin>,
+  val realmProvider: RealmProvider,
   val mainProject: BibixProject,
   val repo: Repo,
   val progressIndicatorContainer: ProgressIndicatorContainer,
   val actionArgs: List<String>,
 ) {
-  private val g = TaskRelGraph()
-
-  val taskRelGraph get() = g
+  @VisibleForTesting
+  val g = TaskRelGraph()
 
   private val varsManager = VarsManager()
 
@@ -35,7 +35,8 @@ class BibixInterpreter(
   @VisibleForTesting
   val sourceManager = SourceManager()
 
-  private val exprEvaluator = ExprEvaluator(this, g, sourceManager, varsManager)
+  @VisibleForTesting
+  val exprEvaluator = ExprEvaluator(this, g, sourceManager, varsManager, realmProvider)
 
   private val nameLookup =
     NameLookup(g, nameLookupTable, preloadedPlugins, exprEvaluator, sourceManager)

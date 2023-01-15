@@ -112,17 +112,3 @@ fun BibixValue.toProto(): BibixValueProto.BibixValue = when (val value = this) {
     // TODO
     bibixValue {}
 }
-
-fun Map<String, BibixValue>.toArgsMapProto(): BibixIdProto.ArgsMap {
-  val value = this
-  return argsMap {
-    this.pairs.addAll(value.entries.toList()
-      .sortedBy { it.key }
-      .map {
-        argPair {
-          this.name = it.key
-          this.value = it.value.toProto()
-        }
-      })
-  }
-}

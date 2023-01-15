@@ -1,7 +1,6 @@
 package com.giyeok.bibix.plugins.bibix
 
 import com.giyeok.bibix.base.*
-import com.giyeok.bibix.interpreter.BibixProject
 import com.giyeok.bibix.repo.sha1Hash
 import com.giyeok.bibix.utils.toHexString
 import com.google.protobuf.kotlin.toByteStringUtf8

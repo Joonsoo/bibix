@@ -24,12 +24,18 @@ message ExternalBibixProject {
 }
 
 message ObjectId {
-  SourceId call_expr_source_id = 1;
-  bytes call_target_objhash = 2;
-  string class_name = 3;
-  string method_name = 4;
-  ArgsMap args_map = 5;
-  InputHashes input_hashes = 6;
+  // caller expression의 위치
+  SourceId calling_source_id = 1;
+  oneof rule_source {
+    // rule이 preloaded plugin에서 정의된 경우, bibix 버젼
+    string bibix_version = 2;
+    // 그 외의 경우(rule이 메인 스크립트에서 정의되었거나 extern source에서 정의된 경우), ClassPaths 인스턴스의 sha1 해시
+    bytes rule_impl_objhash = 3;
+  }
+  string class_name = 4;
+  string method_name = 5;
+  ArgsMap args_map = 6;
+  InputHashes input_hashes = 7;
 }
 
 message ObjectIdHash {

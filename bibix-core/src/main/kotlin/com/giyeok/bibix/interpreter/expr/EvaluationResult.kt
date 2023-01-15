@@ -1,9 +1,10 @@
 package com.giyeok.bibix.interpreter.expr
 
 import com.giyeok.bibix.ast.BibixAst
-import com.giyeok.bibix.base.BibixValue
-import com.giyeok.bibix.base.SourceId
 import com.giyeok.bibix.base.BibixType
+import com.giyeok.bibix.base.BibixValue
+import com.giyeok.bibix.base.ClassInstanceValue
+import com.giyeok.bibix.base.SourceId
 import org.codehaus.plexus.classworlds.realm.ClassRealm
 
 sealed class EvaluationResult {
@@ -30,6 +31,7 @@ sealed class EvaluationResult {
   }
 
   sealed class RuleDef : Callable() {
+    abstract val className: String
     abstract val cls: Class<*>
     abstract val methodName: String
 
@@ -42,18 +44,20 @@ sealed class EvaluationResult {
         override val returnType: BibixType,
         override val cls: Class<*>,
         override val methodName: String
-      ) : BuildRuleDef()
+      ) : BuildRuleDef() {
+        override val className: String get() = cls.canonicalName
+      }
 
       data class UserBuildRuleDef(
         override val context: NameLookupContext,
         override val params: List<Param>,
         override val returnType: BibixType,
+        val implValue: ClassInstanceValue,
         val realm: ClassRealm,
-        val className: String,
+        override val className: String,
         override val methodName: String,
       ) : BuildRuleDef() {
-        override val cls: Class<*>
-          get() = realm.loadClass(className)
+        override val cls: Class<*> get() = realm.loadClass(className)
       }
     }
 
@@ -63,17 +67,18 @@ sealed class EvaluationResult {
         override val params: List<Param>,
         override val cls: Class<*>,
         override val methodName: String,
-      ) : ActionRuleDef()
+      ) : ActionRuleDef() {
+        override val className: String get() = cls.canonicalName
+      }
 
       data class UserActionRuleDef(
         override val context: NameLookupContext,
         override val params: List<Param>,
         val realm: ClassRealm,
-        val className: String,
+        override val className: String,
         override val methodName: String
       ) : ActionRuleDef() {
-        override val cls: Class<*>
-          get() = realm.loadClass(className)
+        override val cls: Class<*> get() = realm.loadClass(className)
       }
     }
   }

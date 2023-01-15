@@ -23,48 +23,115 @@ public object ObjectIdKt {
     internal fun _build(): com.giyeok.bibix.BibixIdProto.ObjectId = _builder.build()
 
     /**
-     * <code>.com.giyeok.bibix.SourceId call_expr_source_id = 1;</code>
+     * <pre>
+     * caller expression의 위치
+     * </pre>
+     *
+     * <code>.com.giyeok.bibix.SourceId calling_source_id = 1;</code>
      */
-    public var callExprSourceId: com.giyeok.bibix.BibixIdProto.SourceId
-      @JvmName("getCallExprSourceId")
-      get() = _builder.getCallExprSourceId()
-      @JvmName("setCallExprSourceId")
+    public var callingSourceId: com.giyeok.bibix.BibixIdProto.SourceId
+      @JvmName("getCallingSourceId")
+      get() = _builder.getCallingSourceId()
+      @JvmName("setCallingSourceId")
       set(value) {
-        _builder.setCallExprSourceId(value)
+        _builder.setCallingSourceId(value)
       }
     /**
-     * <code>.com.giyeok.bibix.SourceId call_expr_source_id = 1;</code>
+     * <pre>
+     * caller expression의 위치
+     * </pre>
+     *
+     * <code>.com.giyeok.bibix.SourceId calling_source_id = 1;</code>
      */
-    public fun clearCallExprSourceId() {
-      _builder.clearCallExprSourceId()
+    public fun clearCallingSourceId() {
+      _builder.clearCallingSourceId()
     }
     /**
-     * <code>.com.giyeok.bibix.SourceId call_expr_source_id = 1;</code>
-     * @return Whether the callExprSourceId field is set.
+     * <pre>
+     * caller expression의 위치
+     * </pre>
+     *
+     * <code>.com.giyeok.bibix.SourceId calling_source_id = 1;</code>
+     * @return Whether the callingSourceId field is set.
      */
-    public fun hasCallExprSourceId(): kotlin.Boolean {
-      return _builder.hasCallExprSourceId()
+    public fun hasCallingSourceId(): kotlin.Boolean {
+      return _builder.hasCallingSourceId()
     }
 
     /**
-     * <code>bytes call_target_objhash = 2;</code>
+     * <pre>
+     * rule이 preloaded plugin에서 정의된 경우, bibix 버젼
+     * </pre>
+     *
+     * <code>string bibix_version = 2;</code>
      */
-    public var callTargetObjhash: com.google.protobuf.ByteString
-      @JvmName("getCallTargetObjhash")
-      get() = _builder.getCallTargetObjhash()
-      @JvmName("setCallTargetObjhash")
+    public var bibixVersion: kotlin.String
+      @JvmName("getBibixVersion")
+      get() = _builder.getBibixVersion()
+      @JvmName("setBibixVersion")
       set(value) {
-        _builder.setCallTargetObjhash(value)
+        _builder.setBibixVersion(value)
       }
     /**
-     * <code>bytes call_target_objhash = 2;</code>
+     * <pre>
+     * rule이 preloaded plugin에서 정의된 경우, bibix 버젼
+     * </pre>
+     *
+     * <code>string bibix_version = 2;</code>
      */
-    public fun clearCallTargetObjhash() {
-      _builder.clearCallTargetObjhash()
+    public fun clearBibixVersion() {
+      _builder.clearBibixVersion()
+    }
+    /**
+     * <pre>
+     * rule이 preloaded plugin에서 정의된 경우, bibix 버젼
+     * </pre>
+     *
+     * <code>string bibix_version = 2;</code>
+     * @return Whether the bibixVersion field is set.
+     */
+    public fun hasBibixVersion(): kotlin.Boolean {
+      return _builder.hasBibixVersion()
     }
 
     /**
-     * <code>string class_name = 3;</code>
+     * <pre>
+     * 그 외의 경우(rule이 메인 스크립트에서 정의되었거나 extern source에서 정의된 경우), ClassPaths 인스턴스의 sha1 해시
+     * </pre>
+     *
+     * <code>bytes rule_impl_objhash = 3;</code>
+     */
+    public var ruleImplObjhash: com.google.protobuf.ByteString
+      @JvmName("getRuleImplObjhash")
+      get() = _builder.getRuleImplObjhash()
+      @JvmName("setRuleImplObjhash")
+      set(value) {
+        _builder.setRuleImplObjhash(value)
+      }
+    /**
+     * <pre>
+     * 그 외의 경우(rule이 메인 스크립트에서 정의되었거나 extern source에서 정의된 경우), ClassPaths 인스턴스의 sha1 해시
+     * </pre>
+     *
+     * <code>bytes rule_impl_objhash = 3;</code>
+     */
+    public fun clearRuleImplObjhash() {
+      _builder.clearRuleImplObjhash()
+    }
+    /**
+     * <pre>
+     * 그 외의 경우(rule이 메인 스크립트에서 정의되었거나 extern source에서 정의된 경우), ClassPaths 인스턴스의 sha1 해시
+     * </pre>
+     *
+     * <code>bytes rule_impl_objhash = 3;</code>
+     * @return Whether the ruleImplObjhash field is set.
+     */
+    public fun hasRuleImplObjhash(): kotlin.Boolean {
+      return _builder.hasRuleImplObjhash()
+    }
+
+    /**
+     * <code>string class_name = 4;</code>
      */
     public var className: kotlin.String
       @JvmName("getClassName")
@@ -74,14 +141,14 @@ public object ObjectIdKt {
         _builder.setClassName(value)
       }
     /**
-     * <code>string class_name = 3;</code>
+     * <code>string class_name = 4;</code>
      */
     public fun clearClassName() {
       _builder.clearClassName()
     }
 
     /**
-     * <code>string method_name = 4;</code>
+     * <code>string method_name = 5;</code>
      */
     public var methodName: kotlin.String
       @JvmName("getMethodName")
@@ -91,14 +158,14 @@ public object ObjectIdKt {
         _builder.setMethodName(value)
       }
     /**
-     * <code>string method_name = 4;</code>
+     * <code>string method_name = 5;</code>
      */
     public fun clearMethodName() {
       _builder.clearMethodName()
     }
 
     /**
-     * <code>.com.giyeok.bibix.ArgsMap args_map = 5;</code>
+     * <code>.com.giyeok.bibix.ArgsMap args_map = 6;</code>
      */
     public var argsMap: com.giyeok.bibix.BibixIdProto.ArgsMap
       @JvmName("getArgsMap")
@@ -108,13 +175,13 @@ public object ObjectIdKt {
         _builder.setArgsMap(value)
       }
     /**
-     * <code>.com.giyeok.bibix.ArgsMap args_map = 5;</code>
+     * <code>.com.giyeok.bibix.ArgsMap args_map = 6;</code>
      */
     public fun clearArgsMap() {
       _builder.clearArgsMap()
     }
     /**
-     * <code>.com.giyeok.bibix.ArgsMap args_map = 5;</code>
+     * <code>.com.giyeok.bibix.ArgsMap args_map = 6;</code>
      * @return Whether the argsMap field is set.
      */
     public fun hasArgsMap(): kotlin.Boolean {
@@ -122,7 +189,7 @@ public object ObjectIdKt {
     }
 
     /**
-     * <code>.com.giyeok.bibix.InputHashes input_hashes = 6;</code>
+     * <code>.com.giyeok.bibix.InputHashes input_hashes = 7;</code>
      */
     public var inputHashes: com.giyeok.bibix.BibixIdProto.InputHashes
       @JvmName("getInputHashes")
@@ -132,17 +199,24 @@ public object ObjectIdKt {
         _builder.setInputHashes(value)
       }
     /**
-     * <code>.com.giyeok.bibix.InputHashes input_hashes = 6;</code>
+     * <code>.com.giyeok.bibix.InputHashes input_hashes = 7;</code>
      */
     public fun clearInputHashes() {
       _builder.clearInputHashes()
     }
     /**
-     * <code>.com.giyeok.bibix.InputHashes input_hashes = 6;</code>
+     * <code>.com.giyeok.bibix.InputHashes input_hashes = 7;</code>
      * @return Whether the inputHashes field is set.
      */
     public fun hasInputHashes(): kotlin.Boolean {
       return _builder.hasInputHashes()
+    }
+    public val ruleSourceCase: com.giyeok.bibix.BibixIdProto.ObjectId.RuleSourceCase
+      @JvmName("getRuleSourceCase")
+      get() = _builder.getRuleSourceCase()
+
+    public fun clearRuleSource() {
+      _builder.clearRuleSource()
     }
   }
 }

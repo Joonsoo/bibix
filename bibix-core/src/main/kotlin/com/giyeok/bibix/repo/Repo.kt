@@ -36,53 +36,53 @@ class Repo(
     val objectIdHash: ByteString,
     val objectIdHashHex: String,
     val directory: Path,
-    val hashChanged: Boolean,
+    val inputHashChanged: Boolean,
   )
 
-  fun prepareObjectDirectory(
-    objectId: BibixIdProto.ObjectId,
-    inputHashes: BibixIdProto.InputHashes
-  ): ObjectDirectory {
-    val objectIdHash = objectId.hashString()
-    val objectIdHashHex = objectIdHash.toHexString()
-    val inputsHash = inputHashes.hashString()
-    // objectIdHash -> objectId, inputsHash 정보 저장
-    val hashChanged = synchronized(this) {
-      if (repoMeta.buildingTargetsMap.containsKey(objectIdHashHex)) true else {
-        val hashChanged = repoMeta.objectsMap[objectIdHashHex]?.inputsHash != inputsHash
-        repoMeta.putObjects(objectIdHashHex, objectInfo {
-          this.inputsHash = inputsHash
-          this.startTime = now()
-        })
-        repoMeta.putBuildingTargets(objectIdHashHex, true)
-        if (debuggingMode) {
-          // object id detail은 디버깅모드에서만 저장
-          repoMeta.putObjectIds(objectIdHashHex, objectId)
-        }
-        hashChanged
-      }
-    }
-    commitRepoMeta()
-    // object 디렉토리는 destDirectory를 가져갈때 생성하자. 아예 파일 output이 나오지 않는 빌드 룰도 꽤 많아서
-    return ObjectDirectory(
-      objectIdHash,
-      objectIdHashHex,
-      objectsDirectory.resolve(objectIdHashHex),
-      hashChanged
-    )
-  }
+//  fun prepareObjectDirectory(
+//    objectId: BibixIdProto.ObjectId,
+//    inputHashes: BibixIdProto.InputHashes
+//  ): ObjectDirectory {
+//    val objectIdHash = objectId.hashString()
+//    val objectIdHashHex = objectIdHash.toHexString()
+//    val inputsHash = inputHashes.hashString()
+//    // objectIdHash -> objectId, inputsHash 정보 저장
+//    val hashChanged = synchronized(this) {
+//      if (repoMeta.buildingTargetsMap.containsKey(objectIdHashHex)) true else {
+//        val hashChanged = repoMeta.objectsMap[objectIdHashHex]?.inputsHash != inputsHash
+//        repoMeta.putObjects(objectIdHashHex, objectInfo {
+//          this.inputsHash = inputsHash
+//          this.startTime = now()
+//        })
+//        repoMeta.putBuildingTargets(objectIdHashHex, true)
+//        if (debuggingMode) {
+//          // object id detail은 디버깅모드에서만 저장
+//          repoMeta.putObjectIds(objectIdHashHex, objectId)
+//        }
+//        hashChanged
+//      }
+//    }
+//    commitRepoMeta()
+//    // object 디렉토리는 destDirectory를 가져갈때 생성하자. 아예 파일 output이 나오지 않는 빌드 룰도 꽤 많아서
+//    return ObjectDirectory(
+//      objectIdHash,
+//      objectIdHashHex,
+//      objectsDirectory.resolve(objectIdHashHex),
+//      hashChanged
+//    )
+//  }
 
-  fun prepareSourceDirectory(
-    sourceId: BibixIdProto.SourceId,
-  ): Path {
-    val sourceIdHash = sourceId.hashString().toHexString()
-
-    val directory = sourcesDirectory.resolve(sourceIdHash)
-    if (directory.notExists()) {
-      directory.createDirectory()
-    }
-    return directory
-  }
+//  fun prepareSourceDirectory(
+//    sourceId: BibixIdProto.SourceId,
+//  ): Path {
+//    val sourceIdHash = sourceId.hashString().toHexString()
+//
+//    val directory = sourcesDirectory.resolve(sourceIdHash)
+//    if (directory.notExists()) {
+//      directory.createDirectory()
+//    }
+//    return directory
+//  }
 
   override fun prepareSharedDirectory(
     sharedRepoName: String
@@ -99,35 +99,35 @@ class Repo(
     }
   }
 
-  fun markFinished(objectId: BibixIdProto.ObjectId) {
-    synchronized(this) {
-      val targetIdHash = objectId.hashString().toHexString()
-      repoMeta.removeBuildingTargets(targetIdHash)
-      repoMeta.putObjects(targetIdHash, repoMeta.objectsMap[targetIdHash]?.copy {
-        this.endTime = now()
-        this.duration = Timestamps.between(this.startTime, this.endTime)
-      })
-    }
-    commitRepoMeta()
-  }
+//  fun markFinished(objectId: BibixIdProto.ObjectId) {
+//    synchronized(this) {
+//      val targetIdHash = objectId.hashString().toHexString()
+//      repoMeta.removeBuildingTargets(targetIdHash)
+//      repoMeta.putObjects(targetIdHash, repoMeta.objectsMap[targetIdHash]?.copy {
+//        this.endTime = now()
+//        this.duration = Timestamps.between(this.startTime, this.endTime)
+//      })
+//    }
+//    commitRepoMeta()
+//  }
 
   private fun commitRepoMeta() = synchronized(this) {
     Files.writeString(repoMetaFile, JsonFormat.printer().print(repoMeta))
   }
 
-  fun linkNameTo(name: String, targetId: BibixIdProto.ObjectId) {
-    val targetIdHash = targetId.hashString().toHexString()
-    val linkFile = outputsDirectory.resolve(name)
-    linkFile.deleteIfExists()
-    val targetDirectory = objectsDirectory.resolve(targetIdHash).absolute()
-    if (Files.exists(targetDirectory)) {
-      Files.createSymbolicLink(linkFile, targetDirectory)
-    }
-    synchronized(this) {
-      repoMeta.putObjectNames(name, targetIdHash)
-    }
-    commitRepoMeta()
-  }
+//  fun linkNameTo(name: String, targetId: BibixIdProto.ObjectId) {
+//    val targetIdHash = targetId.hashString().toHexString()
+//    val linkFile = outputsDirectory.resolve(name)
+//    linkFile.deleteIfExists()
+//    val targetDirectory = objectsDirectory.resolve(targetIdHash).absolute()
+//    if (Files.exists(targetDirectory)) {
+//      Files.createSymbolicLink(linkFile, targetDirectory)
+//    }
+//    synchronized(this) {
+//      repoMeta.putObjectNames(name, targetIdHash)
+//    }
+//    commitRepoMeta()
+//  }
 
   fun finalize() {
     commitRepoMeta()

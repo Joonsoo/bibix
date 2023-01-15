@@ -3,6 +3,7 @@ package com.giyeok.bibix.interpreter.expr
 import com.giyeok.bibix.ast.BibixAst
 import com.giyeok.bibix.base.*
 import com.giyeok.bibix.interpreter.BibixInterpreter
+import com.giyeok.bibix.interpreter.RealmProvider
 import com.giyeok.bibix.interpreter.SourceManager
 import com.giyeok.bibix.interpreter.task.Task
 import com.giyeok.bibix.interpreter.task.TaskRelGraph
@@ -16,8 +17,10 @@ class ExprEvaluator(
   private val g: TaskRelGraph,
   private val sourceManager: SourceManager,
   private val varsManager: VarsManager,
+  realmProvider: RealmProvider,
 ) {
-  private val callExprEvaluator = CallExprEvaluator(interpreter, g, sourceManager, this)
+  private val callExprEvaluator =
+    CallExprEvaluator(interpreter, g, sourceManager, this, realmProvider)
   private val coercer = Coercer(sourceManager, this)
 
   suspend fun coerce(
