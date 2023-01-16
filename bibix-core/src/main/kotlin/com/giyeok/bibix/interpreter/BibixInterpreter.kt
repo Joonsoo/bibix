@@ -68,7 +68,7 @@ class BibixInterpreter(
             .ensureValue()
 
         is Definition.ActionDef -> {
-          exprEvaluator.executeAction(task, defContext, definition.action.expr())
+          exprEvaluator.executeAction(task, defContext, definition.action.expr(), actionArgs)
           NoneValue
         }
 

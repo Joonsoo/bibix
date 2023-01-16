@@ -10,6 +10,7 @@ import com.giyeok.bibix.interpreter.expr.EvaluationResult.RuleDef.BuildRuleDef
 import com.giyeok.bibix.interpreter.hash.ObjectHasher
 import com.giyeok.bibix.interpreter.task.Task
 import com.giyeok.bibix.interpreter.task.TaskRelGraph
+import com.giyeok.bibix.utils.await
 import com.giyeok.bibix.utils.getOrNull
 import com.giyeok.bibix.utils.toKtList
 import kotlinx.coroutines.Deferred
@@ -18,6 +19,12 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import org.codehaus.plexus.classworlds.ClassWorld
 import org.codehaus.plexus.classworlds.realm.ClassRealm
+import java.io.RandomAccessFile
+import java.nio.channels.AsynchronousFileChannel
+import java.nio.channels.FileChannel
+import java.nio.channels.FileLock
+import java.nio.file.OpenOption
+import java.nio.file.StandardOpenOption
 import kotlin.io.path.Path
 import kotlin.io.path.absolute
 
@@ -169,10 +176,16 @@ class CallExprEvaluator(
       check(unknownParams.isEmpty()) { "Unknown parameters: $unknownParams at $params" }
 
       val unspecifiedParams = remainingParamDefs.map { it.name }.toSet() - namedParams.keys
-      check(unspecifiedParams.all { paramDefsMap.getValue(it).optional }) { "Required parameter not specified at $params" }
+      val missingParams = unspecifiedParams.filter { paramName ->
+        val paramDef = paramDefsMap.getValue(paramName)
+        !paramDef.optional && paramDef.defaultValue == null
+      }
+      check(missingParams.isEmpty()) { "Required parameters $missingParams not specified at $params" }
 
-      val defaultParamsMap =
-        unspecifiedParams.associateWith { name -> namedParams.getValue(name) }
+      val defaultParamsMap = unspecifiedParams.mapNotNull { paramName ->
+        val paramDef = paramDefsMap.getValue(paramName)
+        paramDef.defaultValue?.let { paramName to paramDef.defaultValue }
+      }.toMap()
 
       // Run concurrently
       val paramValues = (posParamsMap + namedParams).mapValues { (_, valueExpr) ->
@@ -219,6 +232,17 @@ class CallExprEvaluator(
 
       is BuildRuleReturn.GetClassTypeDetails -> {
         TODO()
+      }
+
+      is BuildRuleReturn.WithDirectoryLock -> {
+        val lockFilePath = returnValue.directory.resolve("directory.lock")
+        val channel = AsynchronousFileChannel.open(
+          lockFilePath,
+          StandardOpenOption.WRITE,
+          StandardOpenOption.CREATE
+        )
+        val nextValue = channel.lock().await().use { returnValue.withLock() }
+        return handlePluginReturnValue(task, context, nextValue)
       }
 
       else -> throw IllegalStateException("Unknown return value: $returnValue")
@@ -314,7 +338,9 @@ class CallExprEvaluator(
     requester: Task,
     context: NameLookupContext,
     expr: BibixAst.CallExpr,
+    actionArgs: List<String>
   ): Unit = g.withTask(requester, Task.ExecuteActionCall(context.sourceId, expr.id())) { task ->
+    // TODO handle actionArgs
     val callTarget = exprEvaluator.evaluateName(task, context, expr.name(), null)
 
     check(callTarget is ActionRuleDef) { "TODO message" }

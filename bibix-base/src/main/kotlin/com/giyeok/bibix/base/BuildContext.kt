@@ -48,6 +48,6 @@ data class BuildContext(
     return destDirectory
   }
 
-  fun getSharedDirectory(sharedRepoName: String) =
+  fun getSharedDirectory(sharedRepoName: String): Path =
     repo.prepareSharedDirectory(sharedRepoName)
 }

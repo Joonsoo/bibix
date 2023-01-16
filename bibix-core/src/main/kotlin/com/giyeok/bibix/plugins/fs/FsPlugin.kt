@@ -10,5 +10,5 @@ val fsPlugin = PreloadedPlugin.fromScript(
       pattern: {string, set<string>}
     ): set<file> = native:com.giyeok.bibix.plugins.fs.Glob
   """.trimIndent(),
-  Classes()
+  Classes(Glob::class.java)
 )

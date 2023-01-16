@@ -319,14 +319,18 @@ class ExprEvaluator(
       }
     }
 
-  suspend fun executeAction(requester: Task, context: NameLookupContext, expr: BibixAst.Expr) =
-    g.withTask(requester, Task.ExecuteAction(context.sourceId, expr.id())) { task ->
-      when (expr) {
-        is BibixAst.CallExpr ->
-          callExprEvaluator.executeActionCallExpr(task, context, expr)
+  suspend fun executeAction(
+    requester: Task,
+    context: NameLookupContext,
+    expr: BibixAst.Expr,
+    actionArgs: List<String>
+  ) = g.withTask(requester, Task.ExecuteAction(context.sourceId, expr.id())) { task ->
+    when (expr) {
+      is BibixAst.CallExpr ->
+        callExprEvaluator.executeActionCallExpr(task, context, expr, actionArgs)
 
-        else -> throw IllegalStateException("")
-      }
+      else -> throw IllegalStateException("")
     }
+  }
 }
 

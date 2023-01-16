@@ -35,69 +35,70 @@ import java.text.DecimalFormatSymbols
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 
-
 class Dep {
-  fun build(context: BuildContext): BibixValue {
-    // TODO resolve 결과 캐시해놨다 그대로 사용
-    // TODO -> bibix value proto로 저장/로드할 때 CName sourceId 복구 문제
-    // TODO -> 프로젝트 전체 디렉토리를 옮겼을 때 문제가 없을지 확인
-    val groupId = (context.arguments.getValue("group") as StringValue).value
-    val artifactId = (context.arguments.getValue("artifact") as StringValue).value
-    val extension = (context.arguments.getValue("extension") as StringValue).value
-    val version = (context.arguments["version"] as? StringValue)?.value
-    val scope = (context.arguments.getValue("scope") as EnumValue).value
-    val javaScope = when (scope) {
-      "compile" -> JavaScopes.COMPILE
-      "test" -> JavaScopes.TEST
-      else -> TODO()
-    }
-    val repos = (context.arguments.getValue("repos") as ListValue).values.map { resolver ->
-      0
-      // TODO
+  fun build(context: BuildContext): BuildRuleReturn {
+    val mavenRepos = context.getSharedDirectory("com.giyeok.bibix.plugins.maven")
+    return BuildRuleReturn.withDirectoryLock(mavenRepos) {
+      // TODO resolve 결과 캐시해놨다 그대로 사용
+      // TODO -> bibix value proto로 저장/로드할 때 CName sourceId 복구 문제
+      // TODO -> 프로젝트 전체 디렉토리를 옮겼을 때 문제가 없을지 확인
+      val groupId = (context.arguments.getValue("group") as StringValue).value
+      val artifactId = (context.arguments.getValue("artifact") as StringValue).value
+      val extension = (context.arguments.getValue("extension") as StringValue).value
+      val version = (context.arguments["version"] as? StringValue)?.value
+      val scope = (context.arguments.getValue("scope") as EnumValue).value
+      val javaScope = when (scope) {
+        "compile" -> JavaScopes.COMPILE
+        "test" -> JavaScopes.TEST
+        else -> TODO()
+      }
+      val repos = (context.arguments.getValue("repos") as ListValue).values.map { resolver ->
+        0
+        // TODO
 //      val tuple = ((resolver as DataClassInstanceValue).value as NamedTupleValue)
 //      Pair(
 //        (tuple.pairs[0].second as EnumValue).value,
 //        (tuple.pairs[1].second as StringValue).value
 //      )
-    }
+      }
 
 //    val repositories = listOf(
 //      RemoteRepository.Builder("central", "default", "https://repo.maven.apache.org/maven2").build()
 //    )
 
-    val system: RepositorySystem = newRepositorySystem()
-    val session: RepositorySystemSession =
-      newRepositorySystemSession(context.getSharedDirectory("maven"), system)
+      val system: RepositorySystem = newRepositorySystem()
+      val session: RepositorySystemSession = newRepositorySystemSession(mavenRepos, system)
 
-    val artifact = DefaultArtifact(groupId, artifactId, "", extension, version)
-    val repositories = newRepositories(system, session)
+      val artifact = DefaultArtifact(groupId, artifactId, "", extension, version)
+      val repositories = newRepositories(system, session)
 
-    val artifactRequest = ArtifactRequest()
-    artifactRequest.artifact = artifact
-    artifactRequest.repositories = repositories
+      val artifactRequest = ArtifactRequest()
+      artifactRequest.artifact = artifact
+      artifactRequest.repositories = repositories
 
-    val collectRequest = CollectRequest()
-    collectRequest.root = Dependency(artifact, javaScope)
-    collectRequest.repositories = repositories
-    val classpathFilter = DependencyFilterUtils.classpathFilter(javaScope)
-    val dependencyRequest = DependencyRequest(collectRequest, classpathFilter)
-    val dependencyResult = system.resolveDependencies(session, dependencyRequest)
+      val collectRequest = CollectRequest()
+      collectRequest.root = Dependency(artifact, javaScope)
+      collectRequest.repositories = repositories
+      val classpathFilter = DependencyFilterUtils.classpathFilter(javaScope)
+      val dependencyRequest = DependencyRequest(collectRequest, classpathFilter)
+      val dependencyResult = system.resolveDependencies(session, dependencyRequest)
 //    println("dependencies: $dependencyResult")
 //    println(dependencyResult.artifactResults)
 
-    val artifactsMap = dependencyResult.artifactResults.associateBy { it.artifact }
+      val artifactsMap = dependencyResult.artifactResults.associateBy { it.artifact }
 
-    fun traverse(node: DependencyNode): ClassPkg {
-      val artifactResult = artifactsMap.getValue(node.artifact)
-      return ClassPkg(
-        mavenDep("central", artifactResult.artifact),
-        JarInfo(artifactResult.artifact.file.toPath(), null),
-        node.children.filter { artifactsMap.containsKey(it.artifact) }.map { traverse(it) },
-      )
+      fun traverse(node: DependencyNode): ClassPkg {
+        val artifactResult = artifactsMap.getValue(node.artifact)
+        return ClassPkg(
+          mavenDep("central", artifactResult.artifact),
+          JarInfo(artifactResult.artifact.file.toPath(), null),
+          node.children.filter { artifactsMap.containsKey(it.artifact) }.map { traverse(it) },
+        )
+      }
+
+      val dep = traverse(dependencyResult.root)
+      BuildRuleReturn.value(dep.toBibix())
     }
-
-    val dep = traverse(dependencyResult.root)
-    return dep.toBibix()
   }
 
   private fun mavenDep(repo: String, artifact: Artifact): MavenDep =

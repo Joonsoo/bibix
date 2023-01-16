@@ -1,5 +1,7 @@
 package com.giyeok.bibix.base
 
+import java.nio.file.Path
+
 sealed class BuildRuleReturn {
   companion object {
     @JvmStatic
@@ -30,6 +32,10 @@ sealed class BuildRuleReturn {
 
     @JvmStatic
     fun done() = DoneReturn
+
+    @JvmStatic
+    fun withDirectoryLock(directory: Path, withLock: () -> BuildRuleReturn) =
+      WithDirectoryLock(directory, withLock)
   }
 
   data class ValueReturn(val value: BibixValue) : BuildRuleReturn()
@@ -48,5 +54,10 @@ sealed class BuildRuleReturn {
     val cnames: List<CName>,
     val unames: List<List<String>>,
     val whenDone: (List<TypeValue.ClassTypeDetail>) -> BuildRuleReturn,
+  ) : BuildRuleReturn()
+
+  data class WithDirectoryLock(
+    val directory: Path,
+    val withLock: () -> BuildRuleReturn
   ) : BuildRuleReturn()
 }

@@ -1,4 +1,4 @@
-package com.giyeok.bibix.plugins.root
+package com.giyeok.bibix.plugins.fs
 
 import com.giyeok.bibix.base.*
 import java.nio.file.Files

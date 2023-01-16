@@ -2,11 +2,6 @@ package com.giyeok.bibix.frontend.cli
 
 import com.giyeok.bibix.frontend.BuildFrontend
 import com.giyeok.bibix.interpreter.BibixProject
-import com.giyeok.bibix.plugins.bibix.bibixPlugin
-import com.giyeok.bibix.plugins.curl.curlPlugin
-import com.giyeok.bibix.plugins.java.javaPlugin
-import com.giyeok.bibix.plugins.jvm.jvmPlugin
-import com.giyeok.bibix.plugins.maven.mavenPlugin
 import java.nio.file.Paths
 import java.time.Duration
 import java.time.Instant

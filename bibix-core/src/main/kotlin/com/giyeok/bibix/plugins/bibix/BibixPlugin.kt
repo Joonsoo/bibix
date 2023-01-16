@@ -41,7 +41,7 @@ val bibixPlugin = PreloadedPlugin.fromScript(
       ref?: string,
       path: string = "",
       scriptName?: string,
-    ): BibixProject = native:com.giyeok.bibix.plugins.bibix.GitPlugin
+    ): BibixProject = native:com.giyeok.bibix.plugins.bibix.Git
 
     def plugins(
       tag: string = bibixVersion
@@ -72,6 +72,7 @@ val bibixPlugin = PreloadedPlugin.fromScript(
   """.trimIndent(),
   Classes(
     Base::class.java,
+    Git::class.java,
     Plugins::class.java,
     GenRuleImplTemplateKt::class.java,
     GenClassesKt::class.java,

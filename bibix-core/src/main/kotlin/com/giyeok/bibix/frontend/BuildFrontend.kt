@@ -24,10 +24,10 @@ class BuildFrontend(
   val preloadedPlugins: Map<String, PreloadedPlugin> = mapOf(
     "bibix" to bibixPlugin,
     "curl" to curlPlugin,
-    "jvm" to jvmPlugin,
-    "java" to javaPlugin,
-    "maven" to mavenPlugin,
     "fs" to fsPlugin,
+    "java" to javaPlugin,
+    "jvm" to jvmPlugin,
+    "maven" to mavenPlugin,
   ),
   val debuggingMode: Boolean = false
 ) {
