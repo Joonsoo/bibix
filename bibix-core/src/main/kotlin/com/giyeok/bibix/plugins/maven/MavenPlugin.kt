@@ -14,20 +14,20 @@ val mavenPlugin = PreloadedPlugin.fromScript(
     enum ScopeType {
       compile, test
     }
-    class MavenRepo(repoType: RepoType, url: string)
+    class MavenRepo(name: string, repoType: RepoType, url: string)
     
     var defaultRepos: list<MavenRepo> = [
-      (RepoType.remote, "http://repo.maven.apache.org/maven2/")
+      MavenRepo("Maven central", RepoType.remote, "http://repo.maven.apache.org/maven2/")
     ]
     
-    def dep(
+    def artifact(
       group: string,
       artifact: string,
       version?: string,
       scope: ScopeType = ScopeType.compile,
       extension: string = "jar",
       repos: list<MavenRepo> = defaultRepos,
-    ): jvm.ClassPkg = native:com.giyeok.bibix.plugins.maven.Dep
+    ): jvm.ClassPkg = native:com.giyeok.bibix.plugins.maven.Artifact
     
     action def deploy(
       target: jvm.Jar,
@@ -38,7 +38,7 @@ val mavenPlugin = PreloadedPlugin.fromScript(
     ) = native:com.giyeok.bibix.plugins.maven.Deploy
   """.trimIndent(),
   Classes(
-    Dep::class.java,
+    Artifact::class.java,
     Deploy::class.java,
   ),
 )

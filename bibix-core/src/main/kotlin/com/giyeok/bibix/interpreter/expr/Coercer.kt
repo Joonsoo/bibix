@@ -190,7 +190,15 @@ class Coercer(
       ActionRuleDefType -> return if (value is ActionRuleDefValue) value else null
       BuildRuleDefType -> return if (value is BuildRuleDefValue) value else null
       TypeType -> return if (value is TypeValue) value else null
-      is EnumType -> TODO()
+      is EnumType -> {
+        if (value is EnumValue && value.packageName == type.packageName && value.enumName == type.enumName) {
+          return value
+        } else {
+          println(type)
+          println(value)
+          TODO()
+        }
+      }
     }
     return tryCoerceFromValue(task, context, value, type)
   }

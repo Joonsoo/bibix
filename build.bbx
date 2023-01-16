@@ -10,6 +10,7 @@ from bibix.devPlugins() import grpc
 import bibix
 
 gitTest = bibix.git("https://github.com/Joonsoo/jparser.git")
+mavenTest = maven.artifact("org.codehaus.plexus", "plexus-classworlds", "2.6.0")
 
 jparserVersion = "0.5"
 
@@ -34,7 +35,7 @@ floggerVersion = "0.7.4"
 //   deps = [
 //     jparser.base,
 //     jparser.fast,
-//     maven.dep("org.scala-lang", "scala-library", "2.13.8"),
+//     maven.artifact("org.scala-lang", "scala-library", "2.13.8"),
 //   ],
 //   resources = [parserData.parserData]
 // )
@@ -48,9 +49,9 @@ ast0 = scala.library(
     jvm.lib("lib/jparser-fast-0.2.3.jar"),
     jvm.lib("lib/jparser-naive-0.2.3.jar"),
     jvm.lib("lib/jparser-utils-0.2.3.jar"),
-    maven.dep("org.scala-lang", "scala-library", "2.13.8"),
-    maven.dep("com.google.protobuf", "protobuf-java", "3.19.4"),
-    maven.dep("com.google.protobuf", "protobuf-java-util", "3.19.4"),
+    maven.artifact("org.scala-lang", "scala-library", "2.13.8"),
+    maven.artifact("com.google.protobuf", "protobuf-java", "3.19.4"),
+    maven.artifact("com.google.protobuf", "protobuf-java-util", "3.19.4"),
   ],
   //resources = ["bibix-ast/src/generated/resources/parserdata.pb"],
 )
@@ -74,9 +75,9 @@ namespace proto {
   javalib = java.library(
     srcs = javaprotosrc + javagrpcsrc,
     deps = [
-      maven.dep("com.google.protobuf", "protobuf-java", "3.19.4"),
-      maven.dep("io.grpc", "grpc-all", "1.46.0"),
-      maven.dep("javax.annotation", "javax.annotation-api", "1.3.2"),
+      maven.artifact("com.google.protobuf", "protobuf-java", "3.19.4"),
+      maven.artifact("io.grpc", "grpc-all", "1.46.0"),
+      maven.artifact("javax.annotation", "javax.annotation-api", "1.3.2"),
     ],
   )
   kotlinprotosrc = protobuf.kotlin(schema)
@@ -85,11 +86,11 @@ namespace proto {
     srcs = kotlinprotosrc + kotlingrpcsrc,
     deps = [
       javalib,
-      maven.dep("com.google.protobuf", "protobuf-kotlin", "3.19.4"),
-      maven.dep("org.jetbrains.kotlin", "kotlin-stdlib-jdk8", kotlinVersion),
-      maven.dep("org.jetbrains.kotlinx", "kotlinx-coroutines-core", "1.6.1"),
-      maven.dep("org.jetbrains.kotlinx", "kotlinx-coroutines-jdk8", "1.6.1"),
-      maven.dep("io.grpc", "grpc-kotlin-stub", "1.2.1"),
+      maven.artifact("com.google.protobuf", "protobuf-kotlin", "3.19.4"),
+      maven.artifact("org.jetbrains.kotlin", "kotlin-stdlib-jdk8", kotlinVersion),
+      maven.artifact("org.jetbrains.kotlinx", "kotlinx-coroutines-core", "1.6.1"),
+      maven.artifact("org.jetbrains.kotlinx", "kotlinx-coroutines-jdk8", "1.6.1"),
+      maven.artifact("io.grpc", "grpc-kotlin-stub", "1.2.1"),
     ],
     optIns = ["kotlin.RequiresOptIn"]
   )
@@ -98,7 +99,7 @@ namespace proto {
 base = ktjvm.library(
   srcs = glob("bibix-base/src/main/kotlin/**/*.kt"),
   deps = [
-    maven.dep("org.jetbrains.kotlin", "kotlin-stdlib-jdk8", kotlinVersion),
+    maven.artifact("org.jetbrains.kotlin", "kotlin-stdlib-jdk8", kotlinVersion),
     // proto.javalib,
     proto.kotlinlib,
   ]
@@ -110,40 +111,40 @@ core = ktjvm.library(
     base,
     ast0,
 
-    maven.dep("org.jetbrains.kotlin", "kotlin-stdlib-jdk8", kotlinVersion),
-    maven.dep("org.jetbrains.kotlin", "kotlin-reflect", kotlinVersion),
-    maven.dep("org.jetbrains.kotlinx", "kotlinx-coroutines-core", "1.6.1"),
-    maven.dep("org.jetbrains.kotlinx", "kotlinx-coroutines-jdk8", "1.6.1"),
+    maven.artifact("org.jetbrains.kotlin", "kotlin-stdlib-jdk8", kotlinVersion),
+    maven.artifact("org.jetbrains.kotlin", "kotlin-reflect", kotlinVersion),
+    maven.artifact("org.jetbrains.kotlinx", "kotlinx-coroutines-core", "1.6.1"),
+    maven.artifact("org.jetbrains.kotlinx", "kotlinx-coroutines-jdk8", "1.6.1"),
 
-    maven.dep("com.google.protobuf", "protobuf-java-util", "3.19.4"),
-    maven.dep("com.fasterxml.jackson.core", "jackson-databind", "2.13.1"),
-    maven.dep("com.fasterxml.jackson.module", "jackson-module-kotlin", "2.13.1"),
+    maven.artifact("com.google.protobuf", "protobuf-java-util", "3.19.4"),
+    maven.artifact("com.fasterxml.jackson.core", "jackson-databind", "2.13.1"),
+    maven.artifact("com.fasterxml.jackson.module", "jackson-module-kotlin", "2.13.1"),
 
-    maven.dep("io.grpc", "grpc-netty-shaded", "1.41.0"),
-    maven.dep("io.grpc", "grpc-services", "1.41.0"),
-    maven.dep("io.grpc", "grpc-kotlin-stub", "1.2.1"),
+    maven.artifact("io.grpc", "grpc-netty-shaded", "1.41.0"),
+    maven.artifact("io.grpc", "grpc-services", "1.41.0"),
+    maven.artifact("io.grpc", "grpc-kotlin-stub", "1.2.1"),
 
-    maven.dep("org.codehaus.plexus", "plexus-classworlds", "2.6.0"),
-    maven.dep("org.eclipse.jgit", "org.eclipse.jgit", "6.1.0.202203080745-r"),
-    maven.dep("org.apache.maven", "maven-resolver-provider", "3.8.5"),
-    maven.dep("org.apache.maven.resolver", "maven-resolver-connector-basic", "1.7.3"),
-    maven.dep("org.apache.maven.resolver", "maven-resolver-transport-file", "1.7.3"),
-    maven.dep("org.apache.maven.resolver", "maven-resolver-transport-http", "1.7.3"),
+    maven.artifact("org.codehaus.plexus", "plexus-classworlds", "2.6.0"),
+    maven.artifact("org.eclipse.jgit", "org.eclipse.jgit", "6.1.0.202203080745-r"),
+    maven.artifact("org.apache.maven", "maven-resolver-provider", "3.8.5"),
+    maven.artifact("org.apache.maven.resolver", "maven-resolver-connector-basic", "1.7.3"),
+    maven.artifact("org.apache.maven.resolver", "maven-resolver-transport-file", "1.7.3"),
+    maven.artifact("org.apache.maven.resolver", "maven-resolver-transport-http", "1.7.3"),
 
-    maven.dep("com.google.flogger", "flogger", floggerVersion),
-    maven.dep("com.google.flogger", "flogger-system-backend", floggerVersion),
-    maven.dep("commons-logging", "commons-logging", "1.2"),
+    maven.artifact("com.google.flogger", "flogger", floggerVersion),
+    maven.artifact("com.google.flogger", "flogger-system-backend", floggerVersion),
+    maven.artifact("commons-logging", "commons-logging", "1.2"),
   ],
 )
 
 junitVersion = "5.8.2"
 
 testDeps = [
-  maven.dep("com.google.jimfs", "jimfs", "1.2"),
-  maven.dep("org.junit.jupiter", "junit-jupiter-api", junitVersion, scope=maven.ScopeType.test),
-  maven.dep("com.google.truth", "truth", "1.1.3"),
+  maven.artifact("com.google.jimfs", "jimfs", "1.2"),
+  maven.artifact("org.junit.jupiter", "junit-jupiter-api", junitVersion, scope=maven.ScopeType.test),
+  maven.artifact("com.google.truth", "truth", "1.1.3"),
   // runtime deps?
-  maven.dep("org.junit.jupiter", "junit-jupiter-engine", junitVersion, scope=maven.ScopeType.test),
+  maven.artifact("org.junit.jupiter", "junit-jupiter-engine", junitVersion, scope=maven.ScopeType.test),
 ]
 
 action coreTest = junit5.runTests(

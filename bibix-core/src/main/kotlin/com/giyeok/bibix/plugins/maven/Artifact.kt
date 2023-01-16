@@ -35,7 +35,7 @@ import java.text.DecimalFormatSymbols
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 
-class Dep {
+class Artifact {
   fun build(context: BuildContext): BuildRuleReturn {
     val mavenRepos = context.getSharedDirectory("com.giyeok.bibix.plugins.maven")
     return BuildRuleReturn.withDirectoryLock(mavenRepos) {

@@ -30,7 +30,7 @@ data class EnumValue(
   val enumName: String,
   val value: String
 ) : BibixValue() {
-  override fun toString(): String = "$packageName:$enumName($value)"
+  override fun toString(): String = "enum $packageName:$enumName($value)"
 }
 
 data class ListValue(val values: List<BibixValue>) : BibixValue() {
