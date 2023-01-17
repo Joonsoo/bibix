@@ -10,10 +10,10 @@ import com.giyeok.bibix.interpreter.task.Task
 import com.giyeok.bibix.plugins.PreloadedPlugin
 import com.giyeok.bibix.plugins.bibix.bibixPlugin
 import com.giyeok.bibix.plugins.curl.curlPlugin
-import com.giyeok.bibix.plugins.fs.fsPlugin
 import com.giyeok.bibix.plugins.java.javaPlugin
 import com.giyeok.bibix.plugins.jvm.jvmPlugin
 import com.giyeok.bibix.plugins.maven.mavenPlugin
+import com.giyeok.bibix.plugins.prelude.preludePlugin
 import com.giyeok.bibix.repo.Repo
 import kotlinx.coroutines.*
 
@@ -22,10 +22,10 @@ class BuildFrontend(
   val buildArgsMap: Map<String, String>,
   val actionArgs: List<String>,
   val progressNotifier: ProgressNotifier,
-  val preloadedPlugins: Map<String, PreloadedPlugin> = mapOf(
+  prelude: PreloadedPlugin = preludePlugin,
+  preloadedPlugins: Map<String, PreloadedPlugin> = mapOf(
     "bibix" to bibixPlugin,
     "curl" to curlPlugin,
-    "fs" to fsPlugin,
     "java" to javaPlugin,
     "jvm" to jvmPlugin,
     "maven" to mavenPlugin,
@@ -40,6 +40,7 @@ class BuildFrontend(
 
   val interpreter = BibixInterpreter(
     buildEnv = buildEnv,
+    prelude = prelude,
     preloadedPlugins = preloadedPlugins,
     realmProvider = RealmProviderImpl(),
     mainProject = mainProject,

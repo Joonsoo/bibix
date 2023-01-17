@@ -16,6 +16,7 @@ import kotlinx.coroutines.*
 
 class BibixInterpreter(
   val buildEnv: BuildEnv,
+  val prelude: PreloadedPlugin,
   val preloadedPlugins: Map<String, PreloadedPlugin>,
   val realmProvider: RealmProvider,
   val mainProject: BibixProject,
@@ -42,6 +43,7 @@ class BibixInterpreter(
 
   init {
     runBlocking {
+      sourceManager.loadPrelude(prelude, nameLookupTable)
       sourceManager.loadMainSource(mainProject, nameLookupTable)
       preloadedPlugins.forEach { (name, plugin) ->
         sourceManager.registerPreloadedPluginClasses(name, plugin)

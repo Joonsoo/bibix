@@ -24,6 +24,7 @@ import java.nio.channels.AsynchronousFileChannel
 import java.nio.channels.FileChannel
 import java.nio.channels.FileLock
 import java.nio.file.OpenOption
+import java.nio.file.Path
 import java.nio.file.StandardOpenOption
 import kotlin.io.path.Path
 import kotlin.io.path.absolute
@@ -109,6 +110,10 @@ class CallExprEvaluator(
         sourceManager.getPreloadedPluginClass(defName.sourceId as PreloadedSourceId, clsName)
       return BuildRuleDef.PreloadedBuildRuleDef(defContext, params, returnType, cls, methodName)
     }
+    if (defName.sourceId is PreludeSourceId && implTarget == listOf("native")) {
+      val cls = sourceManager.getPreludePluginClass(clsName)
+      return BuildRuleDef.PreloadedBuildRuleDef(defContext, params, returnType, cls, methodName)
+    }
 
     val impl = exprEvaluator.evaluateName(task, defContext, implTarget, thisValue).ensureValue()
     val cpInstance = coerceCpInstance(task, defContext, impl)
@@ -143,6 +148,10 @@ class CallExprEvaluator(
     if (defName.sourceId is PreloadedSourceId && implTarget == listOf("native")) {
       val cls =
         sourceManager.getPreloadedPluginClass(defName.sourceId as PreloadedSourceId, clsName)
+      return ActionRuleDef.PreloadedActionRuleDef(defContext, params, cls, methodName)
+    }
+    if (defName.sourceId is PreludeSourceId && implTarget == listOf("native")) {
+      val cls = sourceManager.getPreludePluginClass(clsName)
       return ActionRuleDef.PreloadedActionRuleDef(defContext, params, cls, methodName)
     }
 
@@ -262,6 +271,12 @@ class CallExprEvaluator(
     return ClassInstanceValue(classType.packageName, classType.className, value.fieldValues)
   }
 
+  private suspend fun baseDirectoryOf(sourceId: SourceId): Path =
+    when (sourceId) {
+      is ExternSourceId -> sourceManager.getProjectRoot(sourceId)
+      else -> sourceManager.mainBaseDirectory
+    }
+
   suspend fun callBuildRule(
     task: Task,
     context: NameLookupContext,
@@ -277,16 +292,8 @@ class CallExprEvaluator(
       env = interpreter.buildEnv,
       fileSystem = interpreter.repo.fileSystem,
       mainBaseDirectory = sourceManager.getProjectRoot(MainSourceId),
-      callerBaseDirectory = if (context.sourceId is ExternSourceId) {
-        sourceManager.getProjectRoot(context.sourceId)
-      } else {
-        Path("/")
-      },
-      ruleDefinedDirectory = if (context.sourceId is ExternSourceId) {
-        sourceManager.getProjectRoot(buildRule.context.sourceId)
-      } else {
-        Path("/")
-      },
+      callerBaseDirectory = baseDirectoryOf(context.sourceId),
+      ruleDefinedDirectory = baseDirectoryOf(buildRule.context.sourceId),
       arguments = params,
       hashChanged = false, // TODO
       objectId = objHash.objectId,

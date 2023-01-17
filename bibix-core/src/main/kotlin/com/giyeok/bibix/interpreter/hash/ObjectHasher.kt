@@ -40,6 +40,7 @@ class ObjectHasher(private val interpreter: BibixInterpreter) {
   }
 
   private fun protoOf(sourceId: SourceId): BibixIdProto.SourceId = when (sourceId) {
+    PreludeSourceId -> sourceId { this.preloadedPlugin = "" }
     MainSourceId -> sourceId { this.mainSource = empty { } }
     is PreloadedSourceId -> sourceId { this.preloadedPlugin = sourceId.name }
     is ExternSourceId -> sourceId { this.externPluginObjhash = TODO() }

@@ -2,6 +2,7 @@ package com.giyeok.bibix.interpreter.expr
 
 import com.giyeok.bibix.ast.BibixAst
 import com.giyeok.bibix.base.CName
+import com.giyeok.bibix.base.PreludeSourceId
 import com.giyeok.bibix.base.SourceId
 import com.giyeok.bibix.utils.getOrNull
 import com.giyeok.bibix.utils.toKtList
@@ -109,7 +110,7 @@ class NameLookupTable(private val varsManager: VarsManager) {
         if (scopePath.isEmpty()) break
         scopePath.removeAt(scopePath.size - 1)
       }
-      return null
+      return definitions[CName(PreludeSourceId, firstToken)]
     }
 
     check(name.isNotEmpty())

@@ -1,7 +1,8 @@
-package com.giyeok.bibix.plugins.fs
+package com.giyeok.bibix.plugins.prelude
 
 import com.giyeok.bibix.base.*
 import java.nio.file.Files
+import kotlin.io.path.absolute
 import kotlin.io.path.absolutePathString
 
 class Glob {
@@ -21,7 +22,7 @@ class Glob {
     }
 
     val matched = Files.walk(context.callerBaseDirectory).filter { path ->
-      matcher.matches(path)
+      matcher.matches(path.absolute())
     }
     val matchedList = matched.map { PathValue(it) }.toList()
     return SetValue(matchedList)

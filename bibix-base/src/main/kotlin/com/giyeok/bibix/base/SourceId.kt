@@ -2,6 +2,10 @@ package com.giyeok.bibix.base
 
 sealed class SourceId
 
+object PreludeSourceId : SourceId() {
+  override fun toString(): String = "prelude"
+}
+
 object MainSourceId : SourceId() {
   override fun toString(): String = "main"
 }

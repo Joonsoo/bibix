@@ -23,6 +23,9 @@ class SourceManager {
   private val externSources = mutableMapOf<BibixProject, ExternSourceId>()
   private var externSourceIdCounter = 0
   private val mutex = Mutex()
+  private lateinit var preludePluginClasses: Classes
+  private lateinit var _mainBaseDirectory: Path
+  val mainBaseDirectory get() = _mainBaseDirectory
   private val preloadedPluginClasses = mutableMapOf<PreloadedSourceId, Classes>()
 
   private fun parseScript(project: BibixProject): BibixAst.BuildScript {
@@ -53,10 +56,18 @@ class SourceManager {
     nameLookupTable.add(NameLookupContext(sourceId, listOf()), buildScript.defs().toKtList())
   }
 
+  suspend fun loadPrelude(prelude: PreloadedPlugin, nameLookupTable: NameLookupTable) {
+    mutex.withLock {
+      nameLookupTable.add(NameLookupContext(PreludeSourceId, listOf()), prelude.defs)
+      preludePluginClasses = prelude.classes
+    }
+  }
+
   suspend fun loadMainSource(project: BibixProject, nameLookupTable: NameLookupTable) {
     val buildScript = parseScript(project)
 
     mutex.withLock {
+      _mainBaseDirectory = project.projectRoot
       registerScript(MainSourceId, project, buildScript, nameLookupTable)
     }
   }
@@ -86,6 +97,8 @@ class SourceManager {
     preloadedPluginClasses[sourceId] = plugin.classes
     sourcePackageName[sourceId] = plugin.packageName
   }
+
+  fun getPreludePluginClass(className: String): Class<*> = preludePluginClasses.getClass(className)
 
   fun getPreloadedPluginClass(sourceId: PreloadedSourceId, className: String): Class<*> =
     preloadedPluginClasses.getValue(sourceId).getClass(className)
