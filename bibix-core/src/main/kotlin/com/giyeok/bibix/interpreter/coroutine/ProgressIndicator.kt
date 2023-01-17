@@ -1,6 +1,8 @@
 package com.giyeok.bibix.interpreter.coroutine
 
 import com.giyeok.bibix.base.ProgressLogger
+import com.giyeok.bibix.frontend.ProgressMessage
+import com.giyeok.bibix.frontend.ThreadState
 import com.giyeok.bibix.interpreter.task.Task
 import java.time.Instant
 
@@ -12,10 +14,6 @@ interface ProgressIndicatorContainer {
 
   fun ofCurrentThread(): ProgressIndicator
 }
-
-data class ThreadState(val task: Task, val isActive: Boolean, val lastMessage: ProgressMessage)
-
-data class ProgressMessage(val time: Instant, val level: String, val message: String)
 
 class ProgressIndicator(val container: ProgressIndicatorContainer, val threadIdx: Int) :
   ProgressLogger {

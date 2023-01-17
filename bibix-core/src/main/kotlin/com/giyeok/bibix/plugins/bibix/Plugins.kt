@@ -13,7 +13,6 @@ class Plugins {
       mapOf(
         "url" to StringValue(Constants.BIBIX_GIT_URL),
         "ref" to StringValue(ref),
-        "path" to StringValue("bibix-plugins"),
       )
     )
   }
@@ -27,7 +26,6 @@ class Plugins {
       mapOf(
         "url" to StringValue(Constants.BIBIX_GIT_URL),
         "ref" to StringValue(ref),
-        "path" to StringValue("bibix-plugins"),
       )
     )
   }

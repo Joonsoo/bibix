@@ -1,10 +1,7 @@
 package com.giyeok.bibix.interpreter
 
 import com.giyeok.bibix.ast.BibixAst
-import com.giyeok.bibix.base.ExternSourceId
-import com.giyeok.bibix.base.MainSourceId
-import com.giyeok.bibix.base.PreloadedSourceId
-import com.giyeok.bibix.base.SourceId
+import com.giyeok.bibix.base.*
 import com.giyeok.bibix.interpreter.expr.NameLookupContext
 import com.giyeok.bibix.interpreter.expr.NameLookupTable
 import com.giyeok.bibix.plugins.Classes

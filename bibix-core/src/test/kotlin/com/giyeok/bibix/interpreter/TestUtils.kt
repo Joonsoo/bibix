@@ -3,6 +3,8 @@ package com.giyeok.bibix.interpreter
 import com.giyeok.bibix.base.Architecture
 import com.giyeok.bibix.base.BuildEnv
 import com.giyeok.bibix.base.OS
+import com.giyeok.bibix.frontend.ProgressNotifier
+import com.giyeok.bibix.frontend.ThreadState
 import com.giyeok.bibix.interpreter.coroutine.FakeProgressIndicatorContainer
 import com.giyeok.bibix.plugins.PreloadedPlugin
 import com.giyeok.bibix.repo.BibixRepoProto
@@ -38,3 +40,9 @@ fun testInterpreter(
   FakeProgressIndicatorContainer(),
   listOf()
 )
+
+class NopeProgressNotifier : ProgressNotifier {
+  override fun notifyProgresses(progresses: () -> List<ThreadState?>) {
+    // do nothing
+  }
+}

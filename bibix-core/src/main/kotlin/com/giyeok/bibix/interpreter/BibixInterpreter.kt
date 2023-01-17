@@ -13,7 +13,6 @@ import com.giyeok.bibix.interpreter.coroutine.ProgressIndicatorContainer
 import com.giyeok.bibix.interpreter.expr.*
 import com.google.common.annotations.VisibleForTesting
 import kotlinx.coroutines.*
-import java.util.concurrent.ConcurrentHashMap
 
 class BibixInterpreter(
   val buildEnv: BuildEnv,

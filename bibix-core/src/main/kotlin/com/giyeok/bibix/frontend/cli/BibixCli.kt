@@ -27,6 +27,7 @@ object BibixCli {
       mainProject = BibixProject(Paths.get(""), null),
       buildArgsMap = buildArgsMap,
       actionArgs = actionArgs,
+      progressNotifier = ProgressConsolePrinter(),
       debuggingMode = useDebuggingMode
     )
 

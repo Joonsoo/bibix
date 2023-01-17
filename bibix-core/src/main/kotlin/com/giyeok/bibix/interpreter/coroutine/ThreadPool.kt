@@ -1,9 +1,9 @@
 package com.giyeok.bibix.interpreter.coroutine
 
+import com.giyeok.bibix.frontend.ProgressNotifier
 import com.giyeok.bibix.interpreter.task.Task
 import com.google.common.annotations.VisibleForTesting
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.MutableStateFlow
 import java.io.Closeable
 import java.util.concurrent.Executors
 import java.util.concurrent.LinkedBlockingQueue
@@ -11,8 +11,11 @@ import java.util.concurrent.TimeUnit
 import kotlin.coroutines.CoroutineContext
 
 // listener is for testing
-class ThreadPool(val numThreads: Int, private val listener: (ThreadPoolEvent) -> Unit = {}) :
-  CoroutineDispatcher(), ProgressIndicatorContainer, Closeable {
+class ThreadPool(
+  val numThreads: Int,
+  private val progressNotifier: ProgressNotifier,
+  private val listener: (ThreadPoolEvent) -> Unit = {}
+) : CoroutineDispatcher(), ProgressIndicatorContainer, Closeable {
 
   private val progressIndicators = List(numThreads) { idx -> ProgressIndicator(this, idx) }
   private val progressIndicatorThreadLocal = ThreadLocal<ProgressIndicator>()
@@ -83,19 +86,19 @@ class ThreadPool(val numThreads: Int, private val listener: (ThreadPoolEvent) ->
         }
         executeBlockAtThread(nextBlock, assignedThreadIdx)
       }
-      printProgresses()
+      notifyProgresses()
     }
   }
 
   override fun notifyUpdated(progressIndicator: ProgressIndicator) {
-    printProgresses()
+    notifyProgresses()
   }
 
   override fun ofCurrentThread(): ProgressIndicator = progressIndicatorThreadLocal.get()
 
-  fun printProgresses() {
-    progressIndicators.forEachIndexed { threadIdx, progressIndicator ->
-      println("$threadIdx: ${progressIndicator.toThreadState()}")
+  private fun notifyProgresses() {
+    progressNotifier.notifyProgresses {
+      progressIndicators.map { it.toThreadState() }
     }
   }
 

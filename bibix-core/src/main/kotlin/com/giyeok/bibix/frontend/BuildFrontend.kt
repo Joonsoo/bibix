@@ -21,6 +21,7 @@ class BuildFrontend(
   val mainProject: BibixProject,
   val buildArgsMap: Map<String, String>,
   val actionArgs: List<String>,
+  val progressNotifier: ProgressNotifier,
   val preloadedPlugins: Map<String, PreloadedPlugin> = mapOf(
     "bibix" to bibixPlugin,
     "curl" to curlPlugin,
@@ -35,7 +36,7 @@ class BuildFrontend(
 
   private val buildEnv = BuildEnv(getOsValue(), getArchValue())
 
-  private val threadPool = ThreadPool(getMaxThreads())
+  private val threadPool = ThreadPool(getMaxThreads(), progressNotifier)
 
   val interpreter = BibixInterpreter(
     buildEnv = buildEnv,
