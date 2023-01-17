@@ -32,7 +32,7 @@ fun testInterpreter(
   fs: FileSystem,
   mainPath: String,
   preloadedPlugins: Map<String, PreloadedPlugin>,
-  preludePlugin: PreloadedPlugin = PreloadedPlugin.fromScript("", "", Classes()),
+  preludePlugin: PreloadedPlugin = PreloadedPlugin("", listOf(), Classes()),
   realmProvider: RealmProvider = FakeRealmProvider { throw NotImplementedError() }
 ) = BibixInterpreter(
   BuildEnv(OS.Linux("", ""), Architecture.X86_64),
