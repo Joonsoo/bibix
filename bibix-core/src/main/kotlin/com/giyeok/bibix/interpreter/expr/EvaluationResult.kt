@@ -1,10 +1,7 @@
 package com.giyeok.bibix.interpreter.expr
 
 import com.giyeok.bibix.ast.BibixAst
-import com.giyeok.bibix.base.BibixType
-import com.giyeok.bibix.base.BibixValue
-import com.giyeok.bibix.base.ClassInstanceValue
-import com.giyeok.bibix.base.SourceId
+import com.giyeok.bibix.base.*
 import org.codehaus.plexus.classworlds.realm.ClassRealm
 
 sealed class EvaluationResult {
@@ -31,6 +28,7 @@ sealed class EvaluationResult {
   }
 
   sealed class RuleDef : Callable() {
+    abstract val name: CName
     abstract val className: String
     abstract val cls: Class<*>
     abstract val methodName: String
@@ -38,7 +36,8 @@ sealed class EvaluationResult {
     sealed class BuildRuleDef : RuleDef() {
       abstract val returnType: BibixType
 
-      data class PreloadedBuildRuleDef(
+      data class NativeBuildRuleDef(
+        override val name: CName,
         override val context: NameLookupContext,
         override val params: List<Param>,
         override val returnType: BibixType,
@@ -49,6 +48,7 @@ sealed class EvaluationResult {
       }
 
       data class UserBuildRuleDef(
+        override val name: CName,
         override val context: NameLookupContext,
         override val params: List<Param>,
         override val returnType: BibixType,
@@ -63,6 +63,7 @@ sealed class EvaluationResult {
 
     sealed class ActionRuleDef : RuleDef() {
       data class PreloadedActionRuleDef(
+        override val name: CName,
         override val context: NameLookupContext,
         override val params: List<Param>,
         override val cls: Class<*>,
@@ -72,6 +73,7 @@ sealed class EvaluationResult {
       }
 
       data class UserActionRuleDef(
+        override val name: CName,
         override val context: NameLookupContext,
         override val params: List<Param>,
         val realm: ClassRealm,

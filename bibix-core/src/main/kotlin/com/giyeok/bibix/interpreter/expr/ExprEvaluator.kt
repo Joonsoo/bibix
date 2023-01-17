@@ -9,6 +9,7 @@ import com.giyeok.bibix.interpreter.task.Task
 import com.giyeok.bibix.interpreter.task.TaskRelGraph
 import com.giyeok.bibix.utils.getOrNull
 import com.giyeok.bibix.utils.toKtList
+import com.google.common.annotations.VisibleForTesting
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 
@@ -21,6 +22,7 @@ class ExprEvaluator(
 ) {
   private val callExprEvaluator =
     CallExprEvaluator(interpreter, g, sourceManager, this, realmProvider)
+
   private val coercer = Coercer(sourceManager, this)
 
   suspend fun coerce(

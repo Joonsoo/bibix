@@ -25,12 +25,14 @@ class ObjectHasher(private val interpreter: BibixInterpreter) {
     val objectId = objectId {
       this.callingSourceId = callingSourceId
       when (buildRule) {
-        is EvaluationResult.RuleDef.BuildRuleDef.PreloadedBuildRuleDef ->
+        is EvaluationResult.RuleDef.BuildRuleDef.NativeBuildRuleDef ->
           this.bibixVersion = Constants.BIBIX_VERSION
 
         is EvaluationResult.RuleDef.BuildRuleDef.UserBuildRuleDef ->
           this.ruleImplObjhash = buildRule.implValue.hashString()
       }
+      this.ruleSourceId = protoOf(buildRule.name.sourceId)
+      this.ruleName = buildRule.name.tokens.joinToString(".")
       this.className = buildRule.className
       this.methodName = buildRule.methodName
       this.argsMap = argsMap

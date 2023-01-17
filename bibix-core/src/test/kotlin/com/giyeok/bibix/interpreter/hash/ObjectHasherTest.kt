@@ -57,13 +57,17 @@ class ObjectHasherTest {
     assertThat(objMemoMap1).hasSize(1)
     assertThat(objHashMap1.keys).isEqualTo(objMemoMap1.keys)
 
-    assertThat(Rule1.history.map { it.first }).containsExactly("ea669aff889a57f0932f8dbda067508d71f77653")
+    assertThat(Rule1.history.map { it.first }).containsExactly("497e23aee786c1e3c75bf1226884f1578afa80ed")
     assertThat(Rule1.history.map { it.second }).containsExactly(
       objectId {
         this.callingSourceId = sourceId {
           this.mainSource = empty { }
         }
         this.bibixVersion = "0.0.4"
+        this.ruleSourceId = sourceId {
+          this.preloadedPlugin = "abc"
+        }
+        this.ruleName = "rule1"
         this.className = "com.giyeok.bibix.interpreter.hash.Rule1"
         this.methodName = "build"
         this.argsMap = argsMap {

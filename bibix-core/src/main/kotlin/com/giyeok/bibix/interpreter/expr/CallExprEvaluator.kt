@@ -15,19 +15,9 @@ import com.giyeok.bibix.utils.getOrNull
 import com.giyeok.bibix.utils.toKtList
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
-import org.codehaus.plexus.classworlds.ClassWorld
-import org.codehaus.plexus.classworlds.realm.ClassRealm
-import java.io.RandomAccessFile
 import java.nio.channels.AsynchronousFileChannel
-import java.nio.channels.FileChannel
-import java.nio.channels.FileLock
-import java.nio.file.OpenOption
 import java.nio.file.Path
 import java.nio.file.StandardOpenOption
-import kotlin.io.path.Path
-import kotlin.io.path.absolute
 
 class CallExprEvaluator(
   private val interpreter: BibixInterpreter,
@@ -96,10 +86,10 @@ class CallExprEvaluator(
     val buildRule = definition.buildRule
 
     val defName = definition.cname
-    val defContext = NameLookupContext(defName).dropLastToken()
+    val defCtx = NameLookupContext(defName).dropLastToken()
 
-    val params = paramDefs(task, defContext, buildRule.params().toKtList())
-    val returnType = exprEvaluator.evaluateType(task, defContext, buildRule.returnType())
+    val params = paramDefs(task, defCtx, buildRule.params().toKtList())
+    val returnType = exprEvaluator.evaluateType(task, defCtx, buildRule.returnType())
 
     val implTarget = buildRule.impl().targetName().tokens().toKtList()
     val clsName = buildRule.impl().className().tokens().mkString(".")
@@ -108,18 +98,19 @@ class CallExprEvaluator(
     if (defName.sourceId is PreloadedSourceId && implTarget == listOf("native")) {
       val cls =
         sourceManager.getPreloadedPluginClass(defName.sourceId as PreloadedSourceId, clsName)
-      return BuildRuleDef.PreloadedBuildRuleDef(defContext, params, returnType, cls, methodName)
+      return BuildRuleDef.NativeBuildRuleDef(defName, defCtx, params, returnType, cls, methodName)
     }
     if (defName.sourceId is PreludeSourceId && implTarget == listOf("native")) {
       val cls = sourceManager.getPreludePluginClass(clsName)
-      return BuildRuleDef.PreloadedBuildRuleDef(defContext, params, returnType, cls, methodName)
+      return BuildRuleDef.NativeBuildRuleDef(defName, defCtx, params, returnType, cls, methodName)
     }
 
-    val impl = exprEvaluator.evaluateName(task, defContext, implTarget, thisValue).ensureValue()
-    val cpInstance = coerceCpInstance(task, defContext, impl)
+    val impl = exprEvaluator.evaluateName(task, defCtx, implTarget, thisValue).ensureValue()
+    val cpInstance = coerceCpInstance(task, defCtx, impl)
     val realm = realmProvider.prepareRealm(cpInstance)
     return BuildRuleDef.UserBuildRuleDef(
-      defContext,
+      defName,
+      defCtx,
       params,
       returnType,
       cpInstance,
@@ -148,16 +139,16 @@ class CallExprEvaluator(
     if (defName.sourceId is PreloadedSourceId && implTarget == listOf("native")) {
       val cls =
         sourceManager.getPreloadedPluginClass(defName.sourceId as PreloadedSourceId, clsName)
-      return ActionRuleDef.PreloadedActionRuleDef(defContext, params, cls, methodName)
+      return ActionRuleDef.PreloadedActionRuleDef(defName, defContext, params, cls, methodName)
     }
     if (defName.sourceId is PreludeSourceId && implTarget == listOf("native")) {
       val cls = sourceManager.getPreludePluginClass(clsName)
-      return ActionRuleDef.PreloadedActionRuleDef(defContext, params, cls, methodName)
+      return ActionRuleDef.PreloadedActionRuleDef(defName, defContext, params, cls, methodName)
     }
 
     val impl = exprEvaluator.evaluateName(task, defContext, implTarget, thisValue).ensureValue()
     val realm = realmProvider.prepareRealm(coerceCpInstance(task, defContext, impl))
-    return ActionRuleDef.UserActionRuleDef(defContext, params, realm, clsName, methodName)
+    return ActionRuleDef.UserActionRuleDef(defName, defContext, params, realm, clsName, methodName)
   }
 
   suspend fun <K, V> Map<K, Deferred<V>>.awaitAllValues(): Map<K, V> =

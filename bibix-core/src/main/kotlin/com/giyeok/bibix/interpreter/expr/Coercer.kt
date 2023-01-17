@@ -4,6 +4,7 @@ import com.giyeok.bibix.ast.BibixAst
 import com.giyeok.bibix.base.*
 import com.giyeok.bibix.interpreter.*
 import com.giyeok.bibix.interpreter.task.Task
+import com.google.common.annotations.VisibleForTesting
 import java.nio.file.Path
 
 class Coercer(
