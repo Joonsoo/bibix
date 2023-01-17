@@ -84,7 +84,9 @@ suspend fun inputHashesFromPaths(paths: List<String>): BibixIdProto.InputHashes 
       if (Files.isDirectory(path)) {
         directories.add(traverseDirectory(path))
       } else {
-        files.add(fileHashOf(path))
+        if (path.exists()) {
+          files.add(fileHashOf(path))
+        }
       }
     }
   }

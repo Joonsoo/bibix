@@ -1,5 +1,6 @@
 package com.giyeok.bibix.interpreter.expr
 
+import com.giyeok.bibix.ast.BibixAst
 import com.giyeok.bibix.base.*
 import com.giyeok.bibix.interpreter.testInterpreter
 import com.giyeok.bibix.plugins.Classes
@@ -224,6 +225,71 @@ class ClassValueTests {
   }
 
   @Test
+  fun testNClassInstanceFields(): Unit = runBlocking {
+    val fs = Jimfs.newFileSystem()
+
+    val script = """
+      import abc
+      
+      aaa = abc.hello("1")
+      bbb = abc.hello("2")
+    """.trimIndent()
+    fs.getPath("/build.bbx").writeText(script)
+
+    val abcPlugin = PreloadedPlugin.fromScript(
+      "com.abc",
+      """
+        import xyz
+        
+        def hello(key: string): xyz.Class1 = native:com.giyeok.bibix.interpreter.expr.TestPlugin7
+      """.trimIndent(),
+      Classes(TestPlugin7::class.java)
+    )
+
+    val xyzPlugin = PreloadedPlugin.fromScript(
+      "com.xyz",
+      """
+        class Class1(v1: list<Class2>)
+        class Class2(v2: list<Class1>)
+      """.trimIndent(),
+      Classes()
+    )
+
+    val interpreter = testInterpreter(fs, "/", mapOf("abc" to abcPlugin, "xyz" to xyzPlugin))
+
+    assertThat(interpreter.userBuildRequest("aaa")).isEqualTo(
+      ClassInstanceValue(
+        "com.xyz", "Class1",
+        mapOf(
+          "v1" to ListValue(
+            ClassInstanceValue(
+              "com.xyz", "Class2",
+              mapOf("v2" to ListValue())
+            )
+          )
+        )
+      )
+    )
+    assertThat(interpreter.userBuildRequest("bbb")).isEqualTo(
+      ClassInstanceValue(
+        "com.xyz", "Class1",
+        mapOf(
+          "v1" to ListValue(
+            ClassInstanceValue(
+              "com.xyz", "Class2",
+              mapOf(
+                "v2" to ListValue(
+                  ClassInstanceValue("com.xyz", "Class1", mapOf("v1" to ListValue()))
+                )
+              )
+            )
+          )
+        )
+      )
+    )
+  }
+
+  @Test
   fun testGrandSubType(): Unit = runBlocking {
     val fs = Jimfs.newFileSystem()
 
@@ -306,6 +372,39 @@ class TestPlugin5 {
       "data2" -> ClassInstanceValue("com.abc", "Data2", mapOf("hello" to StringValue("world")))
       "data3" -> ClassInstanceValue("com.abc", "Data3", mapOf("hello" to StringValue("world")))
       else -> throw AssertionError()
+    }
+  }
+}
+
+class TestPlugin7 {
+  fun build(context: BuildContext): BibixValue {
+    return when ((context.arguments.getValue("key") as StringValue).value) {
+      "1" -> NClassInstanceValue(
+        "xyz.Class1",
+        mapOf(
+          "v1" to ListValue(
+            NClassInstanceValue("xyz.Class2", mapOf("v2" to ListValue()))
+          )
+        )
+      )
+
+      else -> NClassInstanceValue(
+        "xyz.Class1",
+        mapOf(
+          "v1" to ListValue(
+            NClassInstanceValue(
+              "xyz.Class2", mapOf(
+                "v2" to ListValue(
+                  NClassInstanceValue(
+                    "xyz.Class1",
+                    mapOf("v1" to ListValue())
+                  )
+                )
+              )
+            )
+          )
+        )
+      )
     }
   }
 }

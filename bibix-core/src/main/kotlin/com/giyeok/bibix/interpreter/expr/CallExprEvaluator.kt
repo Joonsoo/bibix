@@ -54,10 +54,10 @@ class CallExprEvaluator(
 
   suspend fun resolveClassDef(
     task: Task,
-    context: NameLookupContext,
     definition: Definition.ClassDef
   ): EvaluationResult {
-    val sourceId = definition.cname.sourceId
+    val context = NameLookupContext(definition.cname).dropLastToken()
+    val sourceId = context.sourceId
     val packageName = sourceManager.getPackageName(sourceId)
       ?: throw IllegalStateException("Package name for class ${definition.cname} not specified")
     val className = definition.cname.tokens.joinToString(".")
@@ -66,12 +66,12 @@ class CallExprEvaluator(
         val fields = paramDefs(task, context, definition.classDef.fields().toKtList())
         // TODO handle definition.classDef.body()
         val bodyElems = definition.classDef.body().toKtList()
-        EvaluationResult.DataClassDef(context, sourceId, packageName, className, fields, bodyElems)
+        EvaluationResult.DataClassDef(context, packageName, className, fields, bodyElems)
       }
 
       is BibixAst.SuperClassDef -> {
         val subTypes = definition.classDef.subs().toKtList()
-        EvaluationResult.SuperClassDef(context, sourceId, packageName, className, subTypes)
+        EvaluationResult.SuperClassDef(context, packageName, className, subTypes)
       }
 
       else -> throw AssertionError()
@@ -253,13 +253,36 @@ class CallExprEvaluator(
     task: Task,
     context: NameLookupContext,
     value: BibixValue
-  ): BibixValue {
-    if (value !is NClassInstanceValue) {
-      return value
+  ): BibixValue = when (value) {
+    is NClassInstanceValue -> {
+      val classType = exprEvaluator.evaluateName(task, context, value.nameTokens, null)
+      check(classType is EvaluationResult.DataClassDef) { "Invalid NClassInstanceValue: $value" }
+      val fieldValues = value.fieldValues.mapValues { (_, value) ->
+        handleNClassInstanceValue(task, context, value)
+      }
+      ClassInstanceValue(classType.packageName, classType.className, fieldValues)
     }
-    val classType = exprEvaluator.evaluateName(task, context, value.nameTokens, null)
-    check(classType is EvaluationResult.DataClassDef) { "Invalid NClassInstanceValue: $value" }
-    return ClassInstanceValue(classType.packageName, classType.className, value.fieldValues)
+
+    is ClassInstanceValue -> ClassInstanceValue(value.packageName, value.className,
+      value.fieldValues.mapValues { (_, value) ->
+        handleNClassInstanceValue(task, context, value)
+      })
+
+    is ListValue ->
+      ListValue(value.values.map { handleNClassInstanceValue(task, context, it) })
+
+    is NamedTupleValue ->
+      NamedTupleValue(value.pairs.map { (name, value) ->
+        name to handleNClassInstanceValue(task, context, value)
+      })
+
+    is SetValue ->
+      SetValue(value.values.map { handleNClassInstanceValue(task, context, it) })
+
+    is TupleValue ->
+      TupleValue(value.values.map { handleNClassInstanceValue(task, context, it) })
+
+    else -> value
   }
 
   private suspend fun baseDirectoryOf(sourceId: SourceId): Path =

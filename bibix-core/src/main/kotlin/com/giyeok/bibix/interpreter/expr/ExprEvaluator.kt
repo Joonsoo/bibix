@@ -125,8 +125,7 @@ class ExprEvaluator(
       is Definition.NamespaceDef -> EvaluationResult.Namespace(NameLookupContext(definition.cname))
       is Definition.TargetDef -> evaluateExpr(task, context, definition.target.value(), thisValue)
       is Definition.ActionDef -> TODO()
-      is Definition.ClassDef ->
-        callExprEvaluator.resolveClassDef(task, context, definition)
+      is Definition.ClassDef -> callExprEvaluator.resolveClassDef(task, definition)
 
       is Definition.EnumDef -> {
         val sourceId = definition.cname.sourceId

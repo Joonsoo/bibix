@@ -19,11 +19,10 @@ class ObjectHasher(private val interpreter: BibixInterpreter) {
     buildRule: EvaluationResult.RuleDef.BuildRuleDef,
     params: Map<String, BibixValue>
   ): ObjectHash {
-    val callingSourceId = protoOf(callingSourceId)
     val argsMap = params.toArgsMapProto()
     val inputHashes = argsMap.extractInputHashes()
     val objectId = objectId {
-      this.callingSourceId = callingSourceId
+      this.callingSourceId = protoOf(callingSourceId)
       when (buildRule) {
         is EvaluationResult.RuleDef.BuildRuleDef.NativeBuildRuleDef ->
           this.bibixVersion = Constants.BIBIX_VERSION
@@ -45,7 +44,10 @@ class ObjectHasher(private val interpreter: BibixInterpreter) {
     PreludeSourceId -> sourceId { this.preloadedPlugin = "" }
     MainSourceId -> sourceId { this.mainSource = empty { } }
     is PreloadedSourceId -> sourceId { this.preloadedPlugin = sourceId.name }
-    is ExternSourceId -> sourceId { this.externPluginObjhash = TODO() }
+    is ExternSourceId -> {
+      // TODO
+      sourceId { this.externPluginObjhash = TODO() }
+    }
   }
 
   fun Map<String, BibixValue>.toArgsMapProto(): BibixIdProto.ArgsMap {

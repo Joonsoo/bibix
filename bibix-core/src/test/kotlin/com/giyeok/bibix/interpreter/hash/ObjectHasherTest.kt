@@ -57,16 +57,14 @@ class ObjectHasherTest {
     assertThat(objMemoMap1).hasSize(1)
     assertThat(objHashMap1.keys).isEqualTo(objMemoMap1.keys)
 
-    assertThat(Rule1.history.map { it.first }).containsExactly("497e23aee786c1e3c75bf1226884f1578afa80ed")
+    assertThat(Rule1.history.map { it.first }).containsExactly("08cd0cbaebc29f7ca36e80af3d914b42de48ef45")
     assertThat(Rule1.history.map { it.second }).containsExactly(
       objectId {
         this.callingSourceId = sourceId {
           this.mainSource = empty { }
         }
         this.bibixVersion = "0.0.4"
-        this.ruleSourceId = sourceId {
-          this.preloadedPlugin = "abc"
-        }
+        this.ruleSourceId = sourceId { this.preloadedPlugin = "abc" }
         this.ruleName = "rule1"
         this.className = "com.giyeok.bibix.interpreter.hash.Rule1"
         this.methodName = "build"
@@ -96,8 +94,8 @@ class ObjectHasherTest {
     assertThat(objHashMap2.keys).isEqualTo(objMemoMap2.keys)
 
     assertThat(Rule1.history.map { it.first }).containsExactly(
-      "ea669aff889a57f0932f8dbda067508d71f77653",
-      "3a35c193951857b778bc2b1fe7d2b60255f25b79",
+      "08cd0cbaebc29f7ca36e80af3d914b42de48ef45",
+      "227c8891d1d10539fbe4b5d3f84a5f4b6eddfde1",
     )
     assertThat(Rule1.history.map { it.second }).containsExactly(
       objectId {
@@ -105,6 +103,8 @@ class ObjectHasherTest {
           this.mainSource = empty { }
         }
         this.bibixVersion = "0.0.4"
+        this.ruleSourceId = sourceId { this.preloadedPlugin = "abc" }
+        this.ruleName = "rule1"
         this.className = "com.giyeok.bibix.interpreter.hash.Rule1"
         this.methodName = "build"
         this.argsMap = argsMap {
@@ -128,6 +128,8 @@ class ObjectHasherTest {
           this.preloadedPlugin = "abc"
         }
         this.bibixVersion = "0.0.4"
+        this.ruleSourceId = sourceId { this.preloadedPlugin = "abc" }
+        this.ruleName = "rule1"
         this.className = "com.giyeok.bibix.interpreter.hash.Rule1"
         this.methodName = "build"
         this.argsMap = argsMap {

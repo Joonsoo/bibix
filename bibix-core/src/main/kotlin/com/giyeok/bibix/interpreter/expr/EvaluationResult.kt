@@ -87,7 +87,6 @@ sealed class EvaluationResult {
 
   data class DataClassDef(
     override val context: NameLookupContext,
-    val sourceId: SourceId,
     val packageName: String,
     val className: String,
     override val params: List<Param>,
@@ -96,7 +95,6 @@ sealed class EvaluationResult {
 
   data class SuperClassDef(
     val context: NameLookupContext,
-    val sourceId: SourceId,
     val packageName: String,
     val className: String,
     val subClasses: List<String>,

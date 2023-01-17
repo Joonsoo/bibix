@@ -23,8 +23,10 @@ class TaskRelGraph {
 
   private val depsMutex = Mutex()
 
-  private fun add(requester: Task, task: Task): Task {
-    deps.getOrPut(requester) { mutableSetOf() }.add(task)
+  private suspend fun add(requester: Task, task: Task): Task {
+    depsMutex.withLock {
+      deps.getOrPut(requester) { mutableSetOf() }.add(task)
+    }
     return task
   }
 
