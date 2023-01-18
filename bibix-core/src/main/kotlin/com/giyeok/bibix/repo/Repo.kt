@@ -2,6 +2,7 @@ package com.giyeok.bibix.repo
 
 import com.giyeok.bibix.BibixIdProto
 import com.giyeok.bibix.base.BaseRepo
+import com.giyeok.bibix.interpreter.hash.ObjectHash
 import com.giyeok.bibix.runner.RunConfigProto
 import com.giyeok.bibix.utils.toHexString
 import com.google.protobuf.ByteString
@@ -15,16 +16,14 @@ import kotlin.io.path.*
 // bibix 빌드 폴더의 내용을 관리
 class Repo(
   val fileSystem: FileSystem,
-  val mainDirectory: Path,
-  val bibixDirectory: Path,
+  val projectRoot: Path,
+  val bbxbuildDirectory: Path,
   val runConfig: RunConfigProto.RunConfig,
   val repoMetaFile: Path,
   val repoMeta: BibixRepoProto.BibixRepo.Builder,
   // targets
   val objectsDirectory: Path,
   val outputsDirectory: Path,
-  // sources
-  val sourcesDirectory: Path,
   // shared - maven cache 폴더 등
   val sharedRootDirectory: Path,
   val sharedDirectoriesMap: MutableMap<String, Path>,
@@ -72,18 +71,6 @@ class Repo(
 //    )
 //  }
 
-//  fun prepareSourceDirectory(
-//    sourceId: BibixIdProto.SourceId,
-//  ): Path {
-//    val sourceIdHash = sourceId.hashString().toHexString()
-//
-//    val directory = sourcesDirectory.resolve(sourceIdHash)
-//    if (directory.notExists()) {
-//      directory.createDirectory()
-//    }
-//    return directory
-//  }
-
   override fun prepareSharedDirectory(
     sharedRepoName: String
   ): Path = synchronized(this) {
@@ -92,6 +79,7 @@ class Repo(
       val newDirectory = sharedRootDirectory.resolve(sharedRepoName)
       if (newDirectory.notExists()) {
         newDirectory.createDirectory()
+        sharedDirectoriesMap[sharedRepoName] = newDirectory
       }
       newDirectory
     } else {
@@ -112,22 +100,22 @@ class Repo(
 //  }
 
   private fun commitRepoMeta() = synchronized(this) {
-    Files.writeString(repoMetaFile, JsonFormat.printer().print(repoMeta))
+    repoMetaFile.writeText(JsonFormat.printer().print(repoMeta))
   }
 
-//  fun linkNameTo(name: String, targetId: BibixIdProto.ObjectId) {
-//    val targetIdHash = targetId.hashString().toHexString()
-//    val linkFile = outputsDirectory.resolve(name)
-//    linkFile.deleteIfExists()
-//    val targetDirectory = objectsDirectory.resolve(targetIdHash).absolute()
-//    if (Files.exists(targetDirectory)) {
-//      Files.createSymbolicLink(linkFile, targetDirectory)
-//    }
-//    synchronized(this) {
-//      repoMeta.putObjectNames(name, targetIdHash)
-//    }
-//    commitRepoMeta()
-//  }
+  suspend fun linkNameToObject(nameTokens: List<String>, objectHash: ObjectHash) {
+    val name = nameTokens.joinToString(".")
+    val linkFile = outputsDirectory.resolve(name)
+    linkFile.deleteIfExists()
+    val targetDirectory = objectsDirectory.resolve(objectHash.hashHexString).absolute()
+    if (targetDirectory.exists()) {
+      linkFile.createSymbolicLinkPointingTo(targetDirectory)
+    }
+    synchronized(this) {
+      repoMeta.putObjectNames(name, objectHash.hashHexString)
+    }
+    commitRepoMeta()
+  }
 
   fun finalize() {
     commitRepoMeta()
@@ -135,24 +123,24 @@ class Repo(
 
   companion object {
     fun load(mainDirectory: Path, debuggingMode: Boolean = false): Repo {
-      val bibixDirectory = mainDirectory.resolve("bbxbuild")
-      if (!Files.exists(bibixDirectory)) {
-        Files.createDirectory(bibixDirectory)
+      val bbxbuildDirectory = mainDirectory.resolve("bbxbuild")
+      if (!Files.exists(bbxbuildDirectory)) {
+        Files.createDirectory(bbxbuildDirectory)
       }
-      val runConfigFile = bibixDirectory.resolve("config.json")
+      val runConfigFile = bbxbuildDirectory.resolve("config.json")
       val runConfig = RunConfigProto.RunConfig.newBuilder()
-      if (Files.exists(runConfigFile)) {
-        Files.newBufferedReader(runConfigFile).use { reader ->
+      if (runConfigFile.exists()) {
+        runConfigFile.bufferedReader().use { reader ->
           JsonFormat.parser().merge(reader, runConfig)
         }
       } else {
         runConfig.maxThreads = 3
         runConfigFile.writeText(JsonFormat.printer().print(runConfig))
       }
-      val repoMetaFile = bibixDirectory.resolve("repo.json")
+      val repoMetaFile = bbxbuildDirectory.resolve("repo.json")
       val repoMeta = BibixRepoProto.BibixRepo.newBuilder()
-      if (Files.exists(repoMetaFile)) {
-        Files.newBufferedReader(repoMetaFile).use { reader ->
+      if (repoMetaFile.exists()) {
+        repoMetaFile.bufferedReader().use { reader ->
           JsonFormat.parser().merge(reader, repoMeta)
         }
         // TODO 파싱하다 오류 생기면 클리어하고 다시 시도
@@ -162,32 +150,27 @@ class Repo(
       if (!debuggingMode) {
         repoMeta.clearObjectIds()
       }
-      val objectsDirectory = bibixDirectory.resolve("objects")
+      val objectsDirectory = bbxbuildDirectory.resolve("objects")
       if (objectsDirectory.notExists()) {
         objectsDirectory.createDirectory()
       }
-      val outputsDirectory = bibixDirectory.resolve("outputs")
+      val outputsDirectory = bbxbuildDirectory.resolve("outputs")
       if (outputsDirectory.notExists()) {
         outputsDirectory.createDirectory()
       }
-      val sourcesDirectory = bibixDirectory.resolve("sources")
-      if (sourcesDirectory.notExists()) {
-        sourcesDirectory.createDirectory()
-      }
-      val sharedRootDirectory = bibixDirectory.resolve("shared")
+      val sharedRootDirectory = bbxbuildDirectory.resolve("shared")
       if (sharedRootDirectory.notExists()) {
         sharedRootDirectory.createDirectory()
       }
       return Repo(
         fileSystem = mainDirectory.fileSystem,
-        mainDirectory = mainDirectory,
-        bibixDirectory = bibixDirectory,
+        projectRoot = mainDirectory,
+        bbxbuildDirectory = bbxbuildDirectory,
         runConfig = runConfig.build(),
         repoMetaFile = repoMetaFile,
         repoMeta = repoMeta,
         objectsDirectory = objectsDirectory,
         outputsDirectory = outputsDirectory,
-        sourcesDirectory = sourcesDirectory,
         sharedRootDirectory = sharedRootDirectory,
         sharedDirectoriesMap = mutableMapOf(),
         debuggingMode = debuggingMode,

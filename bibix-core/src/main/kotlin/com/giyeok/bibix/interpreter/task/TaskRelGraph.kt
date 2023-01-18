@@ -2,6 +2,7 @@ package com.giyeok.bibix.interpreter.task
 
 import com.giyeok.bibix.base.BibixValue
 import com.giyeok.bibix.interpreter.coroutine.TaskElement
+import com.giyeok.bibix.interpreter.hash.BibixValueWithObjectHash
 import com.giyeok.bibix.interpreter.hash.ObjectHash
 import com.google.common.annotations.VisibleForTesting
 import com.google.protobuf.ByteString
@@ -69,7 +70,7 @@ class TaskRelGraph {
   }
 
   private val objHashMap = mutableMapOf<ByteString, ObjectHash>()
-  private val objMemoMap = mutableMapOf<ByteString, MutableStateFlow<BibixValue?>>()
+  private val objMemoMap = mutableMapOf<ByteString, MutableStateFlow<BibixValueWithObjectHash?>>()
   private val memoMutex = Mutex()
 
   @VisibleForTesting
@@ -81,12 +82,12 @@ class TaskRelGraph {
   suspend fun withMemo(
     objId: ObjectHash,
     body: suspend CoroutineScope.(ObjectHash) -> BibixValue
-  ): BibixValue = coroutineScope {
+  ): BibixValueWithObjectHash = coroutineScope {
     val objIdHash = objId.hashString
     val (newMemo, stateFlow) = memoMutex.withLock {
       val existing = objMemoMap[objIdHash]
       if (existing == null) {
-        val newStateFlow = MutableStateFlow<BibixValue?>(null)
+        val newStateFlow = MutableStateFlow<BibixValueWithObjectHash?>(null)
         objMemoMap[objIdHash] = newStateFlow
         check(!objHashMap.containsKey(objIdHash))
         objHashMap[objIdHash] = objId
@@ -97,7 +98,7 @@ class TaskRelGraph {
       }
     }
     if (newMemo) {
-      val result = body(objId)
+      val result = BibixValueWithObjectHash(body(objId), objId)
       stateFlow.emit(result)
       result
     } else {

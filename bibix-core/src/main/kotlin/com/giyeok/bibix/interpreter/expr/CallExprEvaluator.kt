@@ -7,6 +7,7 @@ import com.giyeok.bibix.interpreter.RealmProvider
 import com.giyeok.bibix.interpreter.SourceManager
 import com.giyeok.bibix.interpreter.expr.EvaluationResult.RuleDef.ActionRuleDef
 import com.giyeok.bibix.interpreter.expr.EvaluationResult.RuleDef.BuildRuleDef
+import com.giyeok.bibix.interpreter.hash.BibixValueWithObjectHash
 import com.giyeok.bibix.interpreter.hash.ObjectHasher
 import com.giyeok.bibix.interpreter.task.Task
 import com.giyeok.bibix.interpreter.task.TaskRelGraph
@@ -226,7 +227,7 @@ class CallExprEvaluator(
       is BuildRuleReturn.EvalAndThen -> {
         val name = exprEvaluator.evaluateName(task, context, returnValue.ruleName.split('.'), null)
         check(name is BuildRuleDef) { "" }
-        val result = callBuildRule(task, context, name, returnValue.params)
+        val result = callBuildRule(task, context, name, returnValue.params).value
         return handlePluginReturnValue(task, context, returnValue.whenDone(result))
       }
 
@@ -291,52 +292,53 @@ class CallExprEvaluator(
       else -> sourceManager.mainBaseDirectory
     }
 
-  suspend fun callBuildRule(
+  private suspend fun callBuildRule(
     task: Task,
     context: NameLookupContext,
     buildRule: BuildRuleDef,
     params: Map<String, BibixValue>
-  ): BibixValue = g.withMemo(objectHasher.hash(context.sourceId, buildRule, params)) { objHash ->
-    val pluginClass = buildRule.cls
-    val pluginInstance = pluginClass.getDeclaredConstructor().newInstance()
-    val method = pluginClass.getMethod(buildRule.methodName, BuildContext::class.java)
+  ): BibixValueWithObjectHash =
+    g.withMemo(objectHasher.hash(context.sourceId, buildRule, params)) { objHash ->
+      val pluginClass = buildRule.cls
+      val pluginInstance = pluginClass.getDeclaredConstructor().newInstance()
+      val method = pluginClass.getMethod(buildRule.methodName, BuildContext::class.java)
 
-    val progressIndicator = interpreter.progressIndicatorContainer.ofCurrentThread()
-    val buildContext = BuildContext(
-      env = interpreter.buildEnv,
-      fileSystem = interpreter.repo.fileSystem,
-      mainBaseDirectory = sourceManager.getProjectRoot(MainSourceId),
-      callerBaseDirectory = baseDirectoryOf(context.sourceId),
-      ruleDefinedDirectory = baseDirectoryOf(buildRule.context.sourceId),
-      arguments = params,
-      hashChanged = false, // TODO
-      objectId = objHash.objectId,
-      objectIdHash = objHash.hashHexString,
-      destDirectoryPath = interpreter.repo.objectsDirectory.resolve(objHash.hashHexString),
-      progressLogger = progressIndicator,
-      repo = interpreter.repo,
-    )
+      val progressIndicator = interpreter.progressIndicatorContainer.ofCurrentThread()
+      val buildContext = BuildContext(
+        env = interpreter.buildEnv,
+        fileSystem = interpreter.repo.fileSystem,
+        mainBaseDirectory = sourceManager.getProjectRoot(MainSourceId),
+        callerBaseDirectory = baseDirectoryOf(context.sourceId),
+        ruleDefinedDirectory = baseDirectoryOf(buildRule.context.sourceId),
+        arguments = params,
+        hashChanged = false, // TODO
+        objectId = objHash.objectId,
+        objectIdHash = objHash.hashHexString,
+        destDirectoryPath = interpreter.repo.objectsDirectory.resolve(objHash.hashHexString),
+        progressLogger = progressIndicator,
+        repo = interpreter.repo,
+      )
 
-    check(method.trySetAccessible())
+      check(method.trySetAccessible())
 
-    progressIndicator.logInfo("Calling ${buildRule.context}...")
-    val returnValue = try {
-      method.invoke(pluginInstance, buildContext)
-    } catch (e: Exception) {
-      throw IllegalStateException("Error from the plugin", e)
+      progressIndicator.logInfo("Calling ${buildRule.context}...")
+      val returnValue = try {
+        method.invoke(pluginInstance, buildContext)
+      } catch (e: Exception) {
+        throw IllegalStateException("Error from the plugin", e)
+      }
+      progressIndicator.logInfo("Continuing from ${buildRule.context}...")
+
+      val finalValue = handlePluginReturnValue(task, buildRule.context, returnValue)
+      exprEvaluator.coerce(task, buildRule.context, finalValue, buildRule.returnType)
     }
-    progressIndicator.logInfo("Continuing from ${buildRule.context}...")
-
-    val finalValue = handlePluginReturnValue(task, buildRule.context, returnValue)
-    exprEvaluator.coerce(task, buildRule.context, finalValue, buildRule.returnType)
-  }
 
   suspend fun evaluateCallExpr(
     requester: Task,
     context: NameLookupContext,
     expr: BibixAst.CallExpr,
     thisValue: BibixValue?,
-  ): BibixValue =
+  ): BibixValueWithObjectHash =
     g.withTask(requester, Task.EvalCallExpr(context.sourceId, expr.id(), thisValue)) { task ->
       when (val callTarget = exprEvaluator.evaluateName(task, context, expr.name(), null)) {
         is BuildRuleDef -> {
@@ -348,7 +350,8 @@ class CallExprEvaluator(
         is EvaluationResult.DataClassDef -> {
           val params =
             organizeParams(task, context, callTarget, expr.params(), thisValue)
-          ClassInstanceValue(callTarget.packageName, callTarget.className, params)
+          val value = ClassInstanceValue(callTarget.packageName, callTarget.className, params)
+          BibixValueWithObjectHash(value, null)
         }
 
         else -> throw IllegalStateException("TODO message")

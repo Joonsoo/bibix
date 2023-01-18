@@ -2,6 +2,7 @@ package com.giyeok.bibix.interpreter.expr
 
 import com.giyeok.bibix.ast.BibixAst
 import com.giyeok.bibix.base.*
+import com.giyeok.bibix.interpreter.hash.ObjectHash
 import org.codehaus.plexus.classworlds.realm.ClassRealm
 
 sealed class EvaluationResult {
@@ -10,6 +11,11 @@ sealed class EvaluationResult {
   open fun tryEnsureValue(): BibixValue? = null
 
   data class Value(val value: BibixValue) : EvaluationResult() {
+    override fun tryEnsureValue(): BibixValue = value
+  }
+
+  data class ValueWithObjectHash(val value: BibixValue, val objectHash: ObjectHash) :
+    EvaluationResult() {
     override fun tryEnsureValue(): BibixValue = value
   }
 

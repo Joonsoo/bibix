@@ -1,6 +1,5 @@
 package com.giyeok.bibix.interpreter.expr
 
-import com.giyeok.bibix.base.BibixValue
 import com.giyeok.bibix.base.BuildContext
 import com.giyeok.bibix.base.BuildRuleReturn
 import com.giyeok.bibix.base.StringValue
@@ -13,7 +12,8 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test
 import java.time.Instant
-import kotlin.io.path.*
+import kotlin.io.path.isDirectory
+import kotlin.io.path.writeText
 
 class DirectoryLockTests {
   @Test
@@ -45,7 +45,7 @@ class DirectoryLockTests {
     aaa.await()
     bbb.await()
 
-    assertThat(fs.getPath("/test").isDirectory()).isTrue()
+    assertThat(fs.getPath("/bbxbuild/shared/test").isDirectory()).isTrue()
 
     val history = DirectoryLockTestRule1.history
     val keys = history.map { it.first }

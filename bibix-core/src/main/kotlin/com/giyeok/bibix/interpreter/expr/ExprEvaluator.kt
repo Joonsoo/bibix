@@ -119,11 +119,17 @@ class ExprEvaluator(
     name: List<String>,
     thisValue: BibixValue?,
   ): EvaluationResult =
-    // TODO memoize
     when (val definition = interpreter.lookupName(task, context, name)) {
       is Definition.ImportDef -> TODO()
       is Definition.NamespaceDef -> EvaluationResult.Namespace(NameLookupContext(definition.cname))
-      is Definition.TargetDef -> evaluateExpr(task, context, definition.target.value(), thisValue)
+      is Definition.TargetDef -> {
+        val result = evaluateExpr(task, context, definition.target.value(), thisValue)
+        if (definition.cname.sourceId == MainSourceId && result is EvaluationResult.ValueWithObjectHash) {
+          interpreter.repo.linkNameToObject(definition.cname.tokens, result.objectHash)
+        }
+        result
+      }
+
       is Definition.ActionDef -> TODO()
       is Definition.ClassDef -> callExprEvaluator.resolveClassDef(task, definition)
 
@@ -217,9 +223,7 @@ class ExprEvaluator(
         }
 
         is BibixAst.CallExpr ->
-          EvaluationResult.Value(
-            callExprEvaluator.evaluateCallExpr(task, context, expr, thisValue)
-          )
+          callExprEvaluator.evaluateCallExpr(task, context, expr, thisValue).toEvaluationResult()
 
         is BibixAst.MemberAccess -> {
           when (val target = evaluateExpr(task, context, expr.target(), thisValue)) {
@@ -238,8 +242,7 @@ class ExprEvaluator(
           }
         }
 
-        is BibixAst.NameRef ->
-          evaluateName(task, context, listOf(expr.name()), thisValue)
+        is BibixAst.NameRef -> evaluateName(task, context, listOf(expr.name()), thisValue)
 
         is BibixAst.ListExpr -> {
           // Run concurrently
