@@ -106,19 +106,28 @@ sealed class EvaluationResult {
     val className: String,
     override val params: List<Param>,
     val bodyElems: List<BibixAst.ClassBodyElem>,
-  ) : Callable()
+  ) : Callable() {
+    override fun tryEnsureValue(): BibixValue =
+      TypeValue.DataClassTypeValue(packageName, className)
+  }
 
   data class SuperClassDef(
     val context: NameLookupContext,
     val packageName: String,
     val className: String,
     val subClasses: List<String>,
-  ) : EvaluationResult()
+  ) : EvaluationResult() {
+    override fun tryEnsureValue(): BibixValue =
+      TypeValue.SuperClassTypeValue(packageName, className)
+  }
 
   data class EnumDef(
     val sourceId: SourceId,
     val packageName: String,
     val enumName: String,
     val enumValues: List<String>,
-  ) : EvaluationResult()
+  ) : EvaluationResult() {
+    override fun tryEnsureValue(): BibixValue =
+      TypeValue.EnumTypeValue(packageName, enumName)
+  }
 }

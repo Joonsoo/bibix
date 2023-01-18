@@ -156,15 +156,25 @@ sealed class TypeValue : BibixValue() {
     override fun toString(): String = "directory"
   }
 
-  data class DataClassTypeValue(val packageName: String, val className: String) : TypeValue() {
+  sealed class PackageNamed : TypeValue() {
+    abstract val typeName: TypeName
+  }
+
+  data class DataClassTypeValue(val packageName: String, val className: String) : PackageNamed() {
+    override val typeName: TypeName get() = TypeName(packageName, className)
+
     override fun toString(): String = "class $packageName:$className"
   }
 
-  data class SuperClassTypeValue(val packageName: String, val className: String) : TypeValue() {
+  data class SuperClassTypeValue(val packageName: String, val className: String) : PackageNamed() {
+    override val typeName: TypeName get() = TypeName(packageName, className)
+
     override fun toString(): String = "super class $packageName:$className"
   }
 
-  data class EnumTypeValue(val packageName: String, val enumName: String) : TypeValue() {
+  data class EnumTypeValue(val packageName: String, val enumName: String) : PackageNamed() {
+    override val typeName: TypeName get() = TypeName(packageName, enumName)
+
     override fun toString(): String = "enum $packageName:$enumName"
   }
 

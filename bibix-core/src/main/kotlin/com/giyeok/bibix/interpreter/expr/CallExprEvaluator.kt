@@ -429,7 +429,7 @@ class CallExprEvaluator(
         callerBaseDirectory = baseDirectoryOf(context.sourceId),
         ruleDefinedDirectory = baseDirectoryOf(buildRule.context.sourceId),
         arguments = params,
-        hashChanged = false, // TODO
+        hashChanged = true, // TODO
         objectId = objHash.objectId,
         objectIdHash = objHash.hashHexString,
         destDirectoryPath = interpreter.repo.objectsDirectory.resolve(objHash.hashHexString),

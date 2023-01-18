@@ -19,8 +19,8 @@ sealed class BuildRuleReturn {
 
     @JvmStatic
     fun getTypeDetails(
-      typeNames: List<TypeName>,
-      relativeNames: List<String>,
+      typeNames: List<TypeName> = listOf(),
+      relativeNames: List<String> = listOf(),
       whenDone: (TypeDetailsMap) -> BuildRuleReturn,
     ) = GetTypeDetails(typeNames, relativeNames, whenDone)
 

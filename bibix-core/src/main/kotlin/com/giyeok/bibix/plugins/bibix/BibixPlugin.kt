@@ -36,17 +36,17 @@ val bibixPlugin = PreloadedPlugin.fromScript(
       implInterfaceName: string,
     ): RuleImplTemplate = native:com.giyeok.bibix.plugins.bibix.GenRuleImplTemplateKt
     
-    def genClassesKt(
+    def genTypesKt(
       types: set<type>,
       packageName: string,
-      fileName: string = "BibixClasses.kt",
+      fileName: string = "BibixTypes.kt",
       outerClassName?: string,
-    ): file = native:com.giyeok.bibix.plugins.bibix.GenClassesKt
+    ): file = native:com.giyeok.bibix.plugins.bibix.GenTypesKt
   """.trimIndent(),
   Classes(
     Base::class.java,
     Plugins::class.java,
     GenRuleImplTemplateKt::class.java,
-    GenClassesKt::class.java,
+    GenTypesKt::class.java,
   )
 )

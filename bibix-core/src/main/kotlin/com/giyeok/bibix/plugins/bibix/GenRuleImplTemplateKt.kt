@@ -1,10 +1,6 @@
 package com.giyeok.bibix.plugins.bibix
 
 import com.giyeok.bibix.base.*
-import com.giyeok.bibix.plugins.bibix.GenClassesKt.Companion.generateClassType
-import com.giyeok.bibix.plugins.bibix.GenClassesKt.Companion.generateEnumType
-import com.giyeok.bibix.plugins.bibix.GenCommon.bibixTypeToKtType
-import com.giyeok.bibix.plugins.bibix.GenCommon.bibixValueToKt
 import java.io.PrintWriter
 import java.nio.file.Files
 import kotlin.io.path.deleteIfExists
@@ -61,67 +57,74 @@ class GenRuleImplTemplateKt {
     implClassFile.deleteIfExists()
     implInterfaceFile.deleteIfExists()
 
-//    return BuildRuleReturn.getClassInfos(classTypes.map { it.className }) { classTypeDetails ->
-//      val classTypeDetailsMap = classTypeDetails.associateBy { it.className }
-//      val superclasses = GenClassesKt.superClassesMap(classTypes, classTypeDetailsMap)
-//      PrintWriter(Files.newBufferedWriter(implClassFile)).use { implClassPrinter ->
-//        if (ruleClassPkg.isNotEmpty()) {
-//          implClassPrinter.println("package ${ruleClassPkg.joinToString(".")}")
-//        }
-//        implClassPrinter.println()
-//        implClassPrinter.println("import com.giyeok.bibix.base.*")
-//        implClassPrinter.println("import java.nio.file.Path")
-//        implClassPrinter.println()
-//        implClassPrinter.println("class $ruleClassName(val impl: $implInterfaceClassName) {")
-//        implClassPrinter.println("  constructor() : this($implClassName())")
+    return BuildRuleReturn.getTypeDetails(typeNames = classTypes.map { it.typeName }) { classTypeDetails ->
+      val classTypeDetailsMap = classTypeDetails.canonicalNamed
+      val superclasses =
+        mapOf<CName, CName>() // GenClassesKt.superClassesMap(classTypes, classTypeDetailsMap)
+      PrintWriter(Files.newBufferedWriter(implClassFile)).use { implClassPrinter ->
+        if (ruleClassPkg.isNotEmpty()) {
+          implClassPrinter.println("package ${ruleClassPkg.joinToString(".")}")
+        }
+        implClassPrinter.println()
+        implClassPrinter.println("import com.giyeok.bibix.base.*")
+        implClassPrinter.println("import java.nio.file.Path")
+        implClassPrinter.println()
+        implClassPrinter.println("class $ruleClassName(val impl: $implInterfaceClassName) {")
+        implClassPrinter.println("  constructor() : this($implClassName())")
 //        types.forEach { type ->
 //          implClassPrinter.println()
 //          when (type) {
-//            is TypeValue.ClassTypeValue -> {
+//            is TypeValue.DataClassTypeValue -> {
 //              val detail = classTypeDetailsMap.getValue(type.className)
-//              generateClassType(implClassPrinter, detail, superclasses[type.className], "  ")
+//              GenClassesKt.generateDataClassType(
+//                implClassPrinter,
+//                detail,
+//                superclasses[type.className],
+//                "  "
+//              )
 //            }
+//
 //            is TypeValue.EnumTypeValue ->
 //              generateEnumType(implClassPrinter, type, "  ")
+//
 //            else -> TODO()
 //          }
 //        }
-//        if (rules.isNotEmpty()) {
-//          rules.forEach { rule ->
-//            implClassPrinter.println()
-//            generateRuleMethod(implClassPrinter, rule)
-//          }
-//        }
-//        implClassPrinter.println("}")
-//      }
-//      PrintWriter(Files.newBufferedWriter(implInterfaceFile)).use { implInterfacePrinter ->
-//        if (implInterfaceClassPkg.isNotEmpty()) {
-//          implInterfacePrinter.println("package ${implInterfaceClassPkg.joinToString(".")}")
-//        }
-//        implInterfacePrinter.println()
-//        implInterfacePrinter.println("import com.giyeok.bibix.base.*")
-//        implInterfacePrinter.println("import java.nio.file.Path")
-//        implInterfacePrinter.println("import ${ruleName.joinToString(".")}.*")
-//        implInterfacePrinter.println()
-//        implInterfacePrinter.println("interface $implInterfaceClassName {")
-//        rules.forEachIndexed { index, rule ->
-//          if (index > 0) {
-//            implInterfacePrinter.println()
-//          }
-//          generateImplMethod(implInterfacePrinter, rule)
-//        }
-//        implInterfacePrinter.println("}")
-//      }
-//      BuildRuleReturn.value(
-//        NClassInstanceValue(
-//          "RuleImplTemplate",
-//          mapOf(
-//            "implClass" to FileValue(implClassFile),
-//            "interfaceClass" to FileValue(implInterfaceFile),
-//          )
-//        )
-//      )
-//    }
-    TODO()
+        if (rules.isNotEmpty()) {
+          rules.forEach { rule ->
+            implClassPrinter.println()
+            generateRuleMethod(implClassPrinter, rule)
+          }
+        }
+        implClassPrinter.println("}")
+      }
+      PrintWriter(Files.newBufferedWriter(implInterfaceFile)).use { implInterfacePrinter ->
+        if (implInterfaceClassPkg.isNotEmpty()) {
+          implInterfacePrinter.println("package ${implInterfaceClassPkg.joinToString(".")}")
+        }
+        implInterfacePrinter.println()
+        implInterfacePrinter.println("import com.giyeok.bibix.base.*")
+        implInterfacePrinter.println("import java.nio.file.Path")
+        implInterfacePrinter.println("import ${ruleName.joinToString(".")}.*")
+        implInterfacePrinter.println()
+        implInterfacePrinter.println("interface $implInterfaceClassName {")
+        rules.forEachIndexed { index, rule ->
+          if (index > 0) {
+            implInterfacePrinter.println()
+          }
+          generateImplMethod(implInterfacePrinter, rule)
+        }
+        implInterfacePrinter.println("}")
+      }
+      BuildRuleReturn.value(
+        NClassInstanceValue(
+          "RuleImplTemplate",
+          mapOf(
+            "implClass" to FileValue(implClassFile),
+            "interfaceClass" to FileValue(implInterfaceFile),
+          )
+        )
+      )
+    }
   }
 }
