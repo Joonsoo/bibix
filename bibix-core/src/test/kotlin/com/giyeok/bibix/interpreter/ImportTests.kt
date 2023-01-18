@@ -112,6 +112,7 @@ class ImportTests {
     assertThat(interpreter.nameLookupTable.imports[CName(MainSourceId, "planet")])
       .isInstanceOf(ImportedSource.ImportedDefinition::class.java)
     assertThat(interpreter.sourceManager.sourcePackageName).containsExactly(
+      PreludeSourceId, "",
       PreloadedSourceId("xyz"), "com.abc.xyz",
       PreloadedSourceId("yza"), "com.abc.yza",
     )
@@ -199,6 +200,7 @@ class ImportTests {
     assertThat(interpreter.nameLookupTable.imports[CName(MainSourceId, "earth")])
       .isInstanceOf(ImportedSource.ImportedDefinition::class.java)
     assertThat(interpreter.sourceManager.sourcePackageName).containsExactly(
+      PreludeSourceId, "",
       ExternSourceId(1), "com.abc.xyz",
     )
   }

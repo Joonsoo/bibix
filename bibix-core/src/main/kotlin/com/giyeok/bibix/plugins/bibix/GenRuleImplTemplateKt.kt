@@ -37,12 +37,12 @@ class GenRuleImplTemplateKt {
     val rules = (context.arguments.getValue("rules") as SetValue).values.map {
       it as BuildRuleDefValue
     }
-    check(rules.map { it.implClass }.toSet().size == 1)
+    check(rules.map { it.implClassName }.toSet().size == 1)
     val types = (context.arguments.getValue("types") as SetValue).values.map {
       it as TypeValue
     }
-    val classTypes = types.filterIsInstance<TypeValue.ClassTypeValue>()
-    val ruleNames = rules.map { it.implClass }.distinct()
+    val classTypes = types.filterIsInstance<TypeValue.DataClassTypeValue>()
+    val ruleNames = rules.map { it.implClassName }.distinct()
     check(ruleNames.size == 1)
     val ruleName = ruleNames[0].split('.')
     val ruleClassName = ruleName.last()

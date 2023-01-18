@@ -1,42 +1,82 @@
 package com.giyeok.bibix.base
 
-sealed class BibixType
+sealed class BibixType {
+  abstract fun toTypeValue(): TypeValue
+}
 
-object AnyType : BibixType()
+object AnyType : BibixType() {
+  override fun toTypeValue(): TypeValue = TypeValue.AnyTypeValue
+}
 
-object BooleanType : BibixType()
+object BooleanType : BibixType() {
+  override fun toTypeValue(): TypeValue = TypeValue.BooleanTypeValue
+}
 
-object StringType : BibixType()
+object StringType : BibixType() {
+  override fun toTypeValue(): TypeValue = TypeValue.StringTypeValue
+}
 
-object PathType : BibixType()
+object PathType : BibixType() {
+  override fun toTypeValue(): TypeValue = TypeValue.PathTypeValue
+}
 
-object FileType : BibixType()
+object FileType : BibixType() {
+  override fun toTypeValue(): TypeValue = TypeValue.FileTypeValue
+}
 
-object DirectoryType : BibixType()
+object DirectoryType : BibixType() {
+  override fun toTypeValue(): TypeValue = TypeValue.DirectoryTypeValue
+}
 
-data class ListType(val elemType: BibixType) : BibixType()
+data class ListType(val elemType: BibixType) : BibixType() {
+  override fun toTypeValue(): TypeValue = TypeValue.ListTypeValue(elemType.toTypeValue())
+}
 
-data class SetType(val elemType: BibixType) : BibixType()
+data class SetType(val elemType: BibixType) : BibixType() {
+  override fun toTypeValue(): TypeValue = TypeValue.SetTypeValue(elemType.toTypeValue())
+}
 
-data class TupleType(val elemTypes: List<BibixType>) : BibixType()
+data class TupleType(val elemTypes: List<BibixType>) : BibixType() {
+  override fun toTypeValue(): TypeValue =
+    TypeValue.TupleTypeValue(elemTypes.map { it.toTypeValue() })
+}
 
 data class NamedTupleType(val pairs: List<Pair<String, BibixType>>) : BibixType() {
   fun names() = pairs.map { it.first }
   fun valueTypes() = pairs.map { it.second }
+
+  override fun toTypeValue(): TypeValue =
+    TypeValue.NamedTupleTypeValue(pairs.map { it.first to it.second.toTypeValue() })
 }
 
-data class DataClassType(val packageName: String, val className: String) : BibixType()
+data class DataClassType(val packageName: String, val className: String) : BibixType() {
+  override fun toTypeValue(): TypeValue = TypeValue.DataClassTypeValue(packageName, className)
+}
 
-data class SuperClassType(val packageName: String, val className: String) : BibixType()
+data class SuperClassType(val packageName: String, val className: String) : BibixType() {
+  override fun toTypeValue(): TypeValue = TypeValue.SuperClassTypeValue(packageName, className)
+}
 
-data class EnumType(val packageName: String, val enumName: String) : BibixType()
+data class EnumType(val packageName: String, val enumName: String) : BibixType() {
+  override fun toTypeValue(): TypeValue = TypeValue.EnumTypeValue(packageName, enumName)
+}
 
-data class UnionType(val types: List<BibixType>) : BibixType()
+data class UnionType(val types: List<BibixType>) : BibixType() {
+  override fun toTypeValue(): TypeValue = TypeValue.UnionTypeValue(types.map { it.toTypeValue() })
+}
 
-object NoneType : BibixType()
+object NoneType : BibixType() {
+  override fun toTypeValue(): TypeValue = TypeValue.NoneTypeValue
+}
 
-object BuildRuleDefType : BibixType()
+object BuildRuleDefType : BibixType() {
+  override fun toTypeValue(): TypeValue = TypeValue.BuildRuleDefTypeValue
+}
 
-object ActionRuleDefType : BibixType()
+object ActionRuleDefType : BibixType() {
+  override fun toTypeValue(): TypeValue = TypeValue.ActionRuleDefTypeValue
+}
 
-object TypeType : BibixType()
+object TypeType : BibixType() {
+  override fun toTypeValue(): TypeValue = TypeValue.TypeTypeValue
+}

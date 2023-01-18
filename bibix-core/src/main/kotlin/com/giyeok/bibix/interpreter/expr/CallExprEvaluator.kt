@@ -1,5 +1,8 @@
 package com.giyeok.bibix.interpreter.expr
 
+import com.giyeok.bibix.BibixIdProto
+import com.giyeok.bibix.argPair
+import com.giyeok.bibix.argsMap
 import com.giyeok.bibix.ast.BibixAst
 import com.giyeok.bibix.base.*
 import com.giyeok.bibix.interpreter.BibixInterpreter
@@ -8,12 +11,18 @@ import com.giyeok.bibix.interpreter.SourceManager
 import com.giyeok.bibix.interpreter.expr.EvaluationResult.RuleDef.ActionRuleDef
 import com.giyeok.bibix.interpreter.expr.EvaluationResult.RuleDef.BuildRuleDef
 import com.giyeok.bibix.interpreter.hash.BibixValueWithObjectHash
+import com.giyeok.bibix.interpreter.hash.ObjectHash
 import com.giyeok.bibix.interpreter.hash.ObjectHasher
 import com.giyeok.bibix.interpreter.task.Task
 import com.giyeok.bibix.interpreter.task.TaskRelGraph
+import com.giyeok.bibix.objectId
+import com.giyeok.bibix.repo.extractInputHashes
+import com.giyeok.bibix.repo.hashString
 import com.giyeok.bibix.utils.await
 import com.giyeok.bibix.utils.getOrNull
 import com.giyeok.bibix.utils.toKtList
+import com.giyeok.bibix.utils.toProto
+import com.google.protobuf.empty
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import java.nio.channels.AsynchronousFileChannel
@@ -83,7 +92,7 @@ class CallExprEvaluator(
     task: Task,
     thisValue: BibixValue?,
     definition: Definition.BuildRule,
-  ): EvaluationResult {
+  ): BuildRuleDef {
     val buildRule = definition.buildRule
 
     val defName = definition.cname
@@ -106,16 +115,13 @@ class CallExprEvaluator(
       return BuildRuleDef.NativeBuildRuleDef(defName, defCtx, params, returnType, cls, methodName)
     }
 
-    val impl = exprEvaluator.evaluateName(task, defCtx, implTarget, thisValue).ensureValue()
-    val cpInstance = coerceCpInstance(task, defCtx, impl)
-    val realm = realmProvider.prepareRealm(cpInstance)
     return BuildRuleDef.UserBuildRuleDef(
       defName,
       defCtx,
+      implTarget,
+      thisValue,
       params,
       returnType,
-      cpInstance,
-      realm,
       clsName,
       methodName
     )
@@ -125,7 +131,7 @@ class CallExprEvaluator(
     task: Task,
     thisValue: BibixValue?,
     definition: Definition.ActionRule,
-  ): EvaluationResult {
+  ): ActionRuleDef {
     val actionRule = definition.actionRule
     val defName = definition.cname
 
@@ -147,9 +153,15 @@ class CallExprEvaluator(
       return ActionRuleDef.PreloadedActionRuleDef(defName, defContext, params, cls, methodName)
     }
 
-    val impl = exprEvaluator.evaluateName(task, defContext, implTarget, thisValue).ensureValue()
-    val realm = realmProvider.prepareRealm(coerceCpInstance(task, defContext, impl))
-    return ActionRuleDef.UserActionRuleDef(defName, defContext, params, realm, clsName, methodName)
+    return ActionRuleDef.UserActionRuleDef(
+      defName,
+      defContext,
+      implTarget,
+      thisValue,
+      params,
+      clsName,
+      methodName
+    )
   }
 
   suspend fun <K, V> Map<K, Deferred<V>>.awaitAllValues(): Map<K, V> =
@@ -297,14 +309,88 @@ class CallExprEvaluator(
       else -> sourceManager.mainBaseDirectory
     }
 
+  private suspend fun getRuleImplValue(
+    task: Task,
+    buildRule: BuildRuleDef.UserBuildRuleDef
+  ): ClassInstanceValue {
+    val impl = exprEvaluator.evaluateName(
+      task,
+      buildRule.context,
+      buildRule.implTarget,
+      buildRule.thisValue
+    ).ensureValue()
+    return coerceCpInstance(task, buildRule.context, impl)
+  }
+
+  private suspend fun getRuleImplClass(task: Task, buildRule: BuildRuleDef): Class<*> =
+    when (buildRule) {
+      is BuildRuleDef.NativeBuildRuleDef -> buildRule.cls
+      is BuildRuleDef.UserBuildRuleDef -> {
+        val cpInstance = getRuleImplValue(task, buildRule)
+        val realm = realmProvider.prepareRealm(cpInstance)
+        realm.loadClass(buildRule.className)
+      }
+    }
+
+  suspend fun hash(
+    task: Task,
+    callingSourceId: SourceId,
+    buildRule: BuildRuleDef,
+    params: Map<String, BibixValue>
+  ): ObjectHash {
+    val argsMap = params.toArgsMapProto()
+    val inputHashes = argsMap.extractInputHashes()
+    val objectId = objectId {
+      this.callingSourceId = protoOf(callingSourceId)
+      when (buildRule) {
+        is BuildRuleDef.NativeBuildRuleDef ->
+          this.bibixVersion = Constants.BIBIX_VERSION
+
+        is BuildRuleDef.UserBuildRuleDef ->
+          this.ruleImplObjhash = getRuleImplValue(task, buildRule).hashString()
+      }
+      this.ruleSourceId = protoOf(buildRule.name.sourceId)
+      this.ruleName = buildRule.name.tokens.joinToString(".")
+      this.className = buildRule.className
+      this.methodName = buildRule.methodName
+      this.argsMap = argsMap
+      this.inputHashes = inputHashes
+    }
+    return ObjectHash(objectId, objectId.hashString())
+  }
+
+  private fun protoOf(sourceId: SourceId): BibixIdProto.SourceId = when (sourceId) {
+    PreludeSourceId -> com.giyeok.bibix.sourceId { this.preloadedPlugin = "" }
+    MainSourceId -> com.giyeok.bibix.sourceId { this.mainSource = empty { } }
+    is PreloadedSourceId -> com.giyeok.bibix.sourceId { this.preloadedPlugin = sourceId.name }
+    is ExternSourceId -> {
+      // TODO
+      com.giyeok.bibix.sourceId { this.externPluginObjhash = TODO() }
+    }
+  }
+
+  fun Map<String, BibixValue>.toArgsMapProto(): BibixIdProto.ArgsMap {
+    val value = this
+    return argsMap {
+      this.pairs.addAll(value.entries.toList()
+        .sortedBy { it.key }
+        .map {
+          argPair {
+            this.name = it.key
+            this.value = it.value.toProto()
+          }
+        })
+    }
+  }
+
   private suspend fun callBuildRule(
     task: Task,
     context: NameLookupContext,
     buildRule: BuildRuleDef,
     params: Map<String, BibixValue>
   ): BibixValueWithObjectHash =
-    g.withMemo(objectHasher.hash(context.sourceId, buildRule, params)) { objHash ->
-      val pluginClass = buildRule.cls
+    g.withMemo(hash(task, context.sourceId, buildRule, params)) { objHash ->
+      val pluginClass = getRuleImplClass(task, buildRule)
       val pluginInstance = pluginClass.getDeclaredConstructor().newInstance()
       val method = pluginClass.getMethod(buildRule.methodName, BuildContext::class.java)
 
@@ -363,6 +449,21 @@ class CallExprEvaluator(
       }
     }
 
+  private suspend fun getActionImplClass(task: Task, actionRule: ActionRuleDef): Class<*> =
+    when (actionRule) {
+      is ActionRuleDef.PreloadedActionRuleDef -> actionRule.cls
+      is ActionRuleDef.UserActionRuleDef -> {
+        val impl = exprEvaluator.evaluateName(
+          task,
+          actionRule.context,
+          actionRule.implTarget,
+          actionRule.thisValue
+        ).ensureValue()
+        val realm = realmProvider.prepareRealm(coerceCpInstance(task, actionRule.context, impl))
+        realm.loadClass(actionRule.className)
+      }
+    }
+
   suspend fun executeActionCallExpr(
     requester: Task,
     context: NameLookupContext,
@@ -378,7 +479,7 @@ class CallExprEvaluator(
       if (args == null) mapOf() else mapOf(args.first to ListValue(args.second.map { StringValue(it) }))
     val params = organizeParams(task, context, callTarget, expr.params(), null, directBindings)
 
-    val pluginClass = callTarget.cls
+    val pluginClass = getActionImplClass(task, callTarget)
     val pluginInstance = pluginClass.getDeclaredConstructor().newInstance()
     val method = pluginClass.getMethod(callTarget.methodName, ActionContext::class.java)
 

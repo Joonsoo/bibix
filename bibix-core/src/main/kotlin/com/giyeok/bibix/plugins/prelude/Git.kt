@@ -1,6 +1,7 @@
-package com.giyeok.bibix.plugins.bibix
+package com.giyeok.bibix.plugins.prelude
 
 import com.giyeok.bibix.base.*
+import com.giyeok.bibix.interpreter.BibixProject
 import org.eclipse.jgit.api.Git as JGit
 import org.eclipse.jgit.transport.CredentialsProvider
 import org.eclipse.jgit.transport.URIish
@@ -81,16 +82,7 @@ class Git {
       val projectRoot = gitDirectory.resolve(path)
       val scriptName = context.arguments["scriptName"] as? StringValue
 
-      BuildRuleReturn.value(
-        ClassInstanceValue(
-          "com.giyeok.bibix.plugins.bibix",
-          "BibixProject",
-          listOfNotNull(
-            "projectRoot" to PathValue(projectRoot),
-            scriptName?.let { "scriptName" to it }
-          ).toMap()
-        )
-      )
+      BuildRuleReturn.value(BibixProject(projectRoot, scriptName?.value).toBibixValue())
     }
   }
 }

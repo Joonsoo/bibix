@@ -59,6 +59,7 @@ class SourceManager {
   suspend fun loadPrelude(prelude: PreloadedPlugin, nameLookupTable: NameLookupTable) {
     mutex.withLock {
       nameLookupTable.add(NameLookupContext(PreludeSourceId, listOf()), prelude.defs)
+      sourcePackageName[PreludeSourceId] = prelude.packageName
       preludePluginClasses = prelude.classes
     }
   }

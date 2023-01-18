@@ -14,7 +14,8 @@ object GenCommon {
       TypeValue.BooleanTypeValue -> "Boolean"
       TypeValue.StringTypeValue -> "String"
       TypeValue.PathTypeValue, TypeValue.FileTypeValue, TypeValue.DirectoryTypeValue -> "Path"
-      is TypeValue.ClassTypeValue -> TODO() // bibixType.className.tokens.last()
+      is TypeValue.DataClassTypeValue -> TODO() // bibixType.className.tokens.last()
+      is TypeValue.SuperClassTypeValue -> TODO() // bibixType.className.tokens.last()
       is TypeValue.EnumTypeValue -> TODO() // bibixType.enumTypeName.tokens.last()
       is TypeValue.ListTypeValue -> "List<${bibixTypeToKtType(bibixType.elemType)}>"
       is TypeValue.SetTypeValue -> "List<${bibixTypeToKtType(bibixType.elemType)}>"
@@ -43,7 +44,8 @@ object GenCommon {
     TypeValue.PathTypeValue -> "($expr as PathValue).path"
     TypeValue.FileTypeValue -> "($expr as FileValue).file"
     TypeValue.DirectoryTypeValue -> "($expr as DirectoryValue).directory"
-    is TypeValue.ClassTypeValue -> "${bibixType.className}.fromBibix($expr)"
+    is TypeValue.DataClassTypeValue -> "${bibixType.className}.fromBibix($expr)"
+    is TypeValue.SuperClassTypeValue -> "${bibixType.className}.fromBibix($expr)"
     is TypeValue.EnumTypeValue -> {
       "${bibixType.enumName}.valueOf((($expr) as EnumValue).value)"
     }
@@ -78,7 +80,8 @@ object GenCommon {
     TypeValue.PathTypeValue -> "PathValue($expr)"
     TypeValue.FileTypeValue -> "FileValue($expr)"
     TypeValue.DirectoryTypeValue -> "DirectoryValue($expr)"
-    is TypeValue.ClassTypeValue -> "$expr.toBibix()"
+    is TypeValue.DataClassTypeValue -> "$expr.toBibix()"
+    is TypeValue.SuperClassTypeValue -> "$expr.toBibix()"
     is TypeValue.EnumTypeValue -> TODO()
     is TypeValue.ListTypeValue ->
       "ListValue($expr.map { ${ktValueToBibix("it", bibixType.elemType)} })"

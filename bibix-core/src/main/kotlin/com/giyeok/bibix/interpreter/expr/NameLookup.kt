@@ -113,13 +113,8 @@ class NameLookup(
 
       val sourceValue = exprEvaluator.evaluateExpr(task, context, importSource, null).ensureValue()
       val importedProject = if (sourceValue is ClassInstanceValue) {
-        check(sourceValue.packageName == "com.giyeok.bibix.plugins.bibix" && sourceValue.className == "BibixProject") {
-          "import source was not a BibixProject class value: $sourceValue"
-        }
-        BibixProject(
-          projectRoot = (sourceValue.fieldValues.getValue("projectRoot") as DirectoryValue).directory,
-          scriptName = (sourceValue.fieldValues["scriptName"] as? StringValue)?.value
-        )
+        BibixProject.fromBibixValue(sourceValue)
+          ?: throw IllegalStateException("import source was not a BibixProject class value: $sourceValue")
       } else {
         val sourceRootDirectory = exprEvaluator.coerce(task, context, sourceValue, DirectoryType)
         BibixProject(

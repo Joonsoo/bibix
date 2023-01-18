@@ -14,55 +14,6 @@ class ObjectHasher(private val interpreter: BibixInterpreter) {
 // 다만 보통은 같은 object -> 같은 해시가 나오고,
 // 혹 다른 값이 나오더라도 그냥 불필요하게 추가로 빌드하는 상황이 발생할 수 있는 것일 뿐이라 큰 문제는 아님
 
-  suspend fun hash(
-    callingSourceId: SourceId,
-    buildRule: EvaluationResult.RuleDef.BuildRuleDef,
-    params: Map<String, BibixValue>
-  ): ObjectHash {
-    val argsMap = params.toArgsMapProto()
-    val inputHashes = argsMap.extractInputHashes()
-    val objectId = objectId {
-      this.callingSourceId = protoOf(callingSourceId)
-      when (buildRule) {
-        is EvaluationResult.RuleDef.BuildRuleDef.NativeBuildRuleDef ->
-          this.bibixVersion = Constants.BIBIX_VERSION
-
-        is EvaluationResult.RuleDef.BuildRuleDef.UserBuildRuleDef ->
-          this.ruleImplObjhash = buildRule.implValue.hashString()
-      }
-      this.ruleSourceId = protoOf(buildRule.name.sourceId)
-      this.ruleName = buildRule.name.tokens.joinToString(".")
-      this.className = buildRule.className
-      this.methodName = buildRule.methodName
-      this.argsMap = argsMap
-      this.inputHashes = inputHashes
-    }
-    return ObjectHash(objectId, objectId.hashString())
-  }
-
-  private fun protoOf(sourceId: SourceId): BibixIdProto.SourceId = when (sourceId) {
-    PreludeSourceId -> sourceId { this.preloadedPlugin = "" }
-    MainSourceId -> sourceId { this.mainSource = empty { } }
-    is PreloadedSourceId -> sourceId { this.preloadedPlugin = sourceId.name }
-    is ExternSourceId -> {
-      // TODO
-      sourceId { this.externPluginObjhash = TODO() }
-    }
-  }
-
-  fun Map<String, BibixValue>.toArgsMapProto(): BibixIdProto.ArgsMap {
-    val value = this
-    return argsMap {
-      this.pairs.addAll(value.entries.toList()
-        .sortedBy { it.key }
-        .map {
-          argPair {
-            this.name = it.key
-            this.value = it.value.toProto()
-          }
-        })
-    }
-  }
 
 //sealed class RuleImplId
 //

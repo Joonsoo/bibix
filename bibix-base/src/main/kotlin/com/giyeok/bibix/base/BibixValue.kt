@@ -110,8 +110,7 @@ object NoneValue : BibixValue()
 data class BuildRuleDefValue(
   val name: CName,
   val params: List<RuleParam>,
-  val impl: CName,
-  val implClass: String,
+  val implClassName: String,
   val implMethodName: String,
 ) : BibixValue() {
   override fun toString(): String = "def $name"
@@ -120,8 +119,7 @@ data class BuildRuleDefValue(
 data class ActionRuleDefValue(
   val name: CName,
   val params: List<RuleParam>,
-  val impl: CName,
-  val implClass: String,
+  val implClassName: String,
   val implMethodName: String,
 ) : BibixValue() {
   override fun toString(): String = "action def $name"
@@ -158,8 +156,12 @@ sealed class TypeValue : BibixValue() {
     override fun toString(): String = "directory"
   }
 
-  data class ClassTypeValue(val packageName: String, val className: String) : TypeValue() {
+  data class DataClassTypeValue(val packageName: String, val className: String) : TypeValue() {
     override fun toString(): String = "class $packageName:$className"
+  }
+
+  data class SuperClassTypeValue(val packageName: String, val className: String) : TypeValue() {
+    override fun toString(): String = "super class $packageName:$className"
   }
 
   sealed class ClassTypeDetail {
@@ -186,11 +188,7 @@ sealed class TypeValue : BibixValue() {
     override fun toString(): String = "super class $className"
   }
 
-  data class EnumTypeValue(
-    val packageName: String,
-    val enumName: String,
-    val enumValues: List<String>
-  ) : TypeValue() {
+  data class EnumTypeValue(val packageName: String, val enumName: String) : TypeValue() {
     override fun toString(): String = "enum $packageName:$enumName"
   }
 

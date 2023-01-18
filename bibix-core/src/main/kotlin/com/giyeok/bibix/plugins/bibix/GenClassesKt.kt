@@ -128,7 +128,7 @@ class GenClassesKt {
     }
 
     fun superClassesMap(
-      classTypes: List<TypeValue.ClassTypeValue>,
+      classTypes: List<TypeValue.DataClassTypeValue>,
       classTypeDetailsMap: Map<CName, TypeValue.ClassTypeDetail>
     ): Map<CName, CName> {
       TODO()
@@ -162,7 +162,7 @@ class GenClassesKt {
       targetDir.deleteIfExists()
       targetDir.createDirectories()
 
-      val classTypes = types.filterIsInstance<TypeValue.ClassTypeValue>()
+      val classTypes = types.filterIsInstance<TypeValue.DataClassTypeValue>()
 //      return BuildRuleReturn.getClassInfos(classTypes.map { it.className }) { classTypeDetails ->
 //        PrintWriter(Files.newBufferedWriter(targetFile)).use { printer ->
 //          if (packageName != null) {

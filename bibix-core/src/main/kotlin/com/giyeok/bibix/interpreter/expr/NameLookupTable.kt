@@ -110,6 +110,7 @@ class NameLookupTable(private val varsManager: VarsManager) {
         if (scopePath.isEmpty()) break
         scopePath.removeAt(scopePath.size - 1)
       }
+      // prelude에서는 마지막에 찾는다
       return definitions[CName(PreludeSourceId, firstToken)]
     }
 
