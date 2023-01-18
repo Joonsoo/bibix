@@ -248,8 +248,35 @@ class CallExprEvaluator(
         return handlePluginReturnValue(task, context, returnValue.whenDone(result))
       }
 
-      is BuildRuleReturn.GetClassTypeDetails -> {
-        TODO()
+      is BuildRuleReturn.GetTypeDetails -> {
+        fun convertEvaluationResult(result: EvaluationResult): TypeDetails? =
+          when (result) {
+            is EvaluationResult.DataClassDef -> {
+              val fields = result.params.map { it.toRuleParamValue() }
+              DataClassTypeDetails(result.packageName, result.className, fields)
+            }
+
+            is EvaluationResult.SuperClassDef ->
+              SuperClassTypeDetails(result.packageName, result.className, result.subClasses)
+
+            is EvaluationResult.EnumDef ->
+              EnumTypeDetails(result.packageName, result.enumName, result.enumValues)
+
+            else -> null
+          }
+
+        val types = returnValue.typeNames.mapNotNull { typeName ->
+          val evalResult =
+            exprEvaluator.findTypeDefinition(task, typeName.packageName, typeName.typeName)
+          evalResult?.let { convertEvaluationResult(evalResult)?.let { typeName to it } }
+        }.toMap()
+        val relativeNamedTypes = returnValue.relativeNames.mapNotNull { typeName ->
+          val evalResult =
+            exprEvaluator.evaluateName(task, context, typeName.split('.').map { it.trim() }, null)
+          convertEvaluationResult(evalResult)?.let { typeName to it }
+        }.toMap()
+        val typeDetailsMap = TypeDetailsMap(types, relativeNamedTypes)
+        return handlePluginReturnValue(task, context, returnValue.whenDone(typeDetailsMap))
       }
 
       is BuildRuleReturn.WithDirectoryLock -> {

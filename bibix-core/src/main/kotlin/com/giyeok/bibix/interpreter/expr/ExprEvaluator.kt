@@ -9,7 +9,6 @@ import com.giyeok.bibix.interpreter.task.Task
 import com.giyeok.bibix.interpreter.task.TaskRelGraph
 import com.giyeok.bibix.utils.getOrNull
 import com.giyeok.bibix.utils.toKtList
-import com.google.common.annotations.VisibleForTesting
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 
@@ -170,6 +169,15 @@ class ExprEvaluator(
       is Definition.ActionRule ->
         callExprEvaluator.resolveActionRule(task, thisValue, definition)
     }
+
+  suspend fun findTypeDefinition(
+    task: Task,
+    packageName: String,
+    typeName: String
+  ): EvaluationResult? {
+    val sourceId = sourceManager.getSourceIdFromPackageName(packageName) ?: return null
+    return evaluateName(task, NameLookupContext(sourceId, listOf()), typeName.split('.'), null)
+  }
 
   private fun findMember(targetExpr: BibixAst.Expr, value: BibixValue, name: String): BibixValue =
     when (value) {

@@ -14,7 +14,7 @@ class GenClassesKt {
   companion object {
     fun generateDataClassType(
       p: PrintWriter,
-      cls: TypeValue.DataClassTypeDetail,
+      cls: DataClassTypeDetails,
       superClass: CName?,
       indent: String,
     ) {
@@ -76,7 +76,7 @@ class GenClassesKt {
 
     fun generateSuperClassType(
       p: PrintWriter,
-      cls: TypeValue.SuperClassTypeDetail,
+      cls: SuperClassTypeDetails,
       superClass: CName?,
       indent: String,
     ) {
@@ -108,13 +108,13 @@ class GenClassesKt {
 
     fun generateClassType(
       p: PrintWriter,
-      cls: TypeValue.ClassTypeDetail,
+      cls: ClassTypeDetails,
       superClass: CName?,
       indent: String,
     ) {
       when (cls) {
-        is TypeValue.DataClassTypeDetail -> generateDataClassType(p, cls, superClass, indent)
-        is TypeValue.SuperClassTypeDetail -> generateSuperClassType(p, cls, superClass, indent)
+        is DataClassTypeDetails -> generateDataClassType(p, cls, superClass, indent)
+        is SuperClassTypeDetails -> generateSuperClassType(p, cls, superClass, indent)
       }
     }
 
@@ -129,7 +129,7 @@ class GenClassesKt {
 
     fun superClassesMap(
       classTypes: List<TypeValue.DataClassTypeValue>,
-      classTypeDetailsMap: Map<CName, TypeValue.ClassTypeDetail>
+      classTypeDetailsMap: Map<CName, ClassTypeDetails>
     ): Map<CName, CName> {
       TODO()
 //      val superclasses = mutableMapOf<CName, CName>()

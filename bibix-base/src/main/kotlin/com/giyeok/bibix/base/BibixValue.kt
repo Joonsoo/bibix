@@ -164,30 +164,6 @@ sealed class TypeValue : BibixValue() {
     override fun toString(): String = "super class $packageName:$className"
   }
 
-  sealed class ClassTypeDetail {
-    abstract val packageName: String
-    abstract val className: String
-  }
-
-  data class DataClassTypeDetail(
-    override val packageName: String,
-    override val className: String,
-    val fields: List<DataClassFieldValue>
-  ) : ClassTypeDetail() {
-    override fun toString(): String = "class $className"
-  }
-
-  data class DataClassFieldValue(val name: String, val type: TypeValue, val optional: Boolean)
-
-  data class SuperClassTypeDetail(
-    override val packageName: String,
-    override val className: String,
-    // subclass들은 모두 같은 패키지(같은 스크립트) 안에 속해야 함
-    val subClasses: List<String>
-  ) : ClassTypeDetail() {
-    override fun toString(): String = "super class $className"
-  }
-
   data class EnumTypeValue(val packageName: String, val enumName: String) : TypeValue() {
     override fun toString(): String = "enum $packageName:$enumName"
   }

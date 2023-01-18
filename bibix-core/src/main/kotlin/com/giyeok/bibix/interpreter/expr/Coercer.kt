@@ -4,7 +4,6 @@ import com.giyeok.bibix.ast.BibixAst
 import com.giyeok.bibix.base.*
 import com.giyeok.bibix.interpreter.*
 import com.giyeok.bibix.interpreter.task.Task
-import com.google.common.annotations.VisibleForTesting
 import java.nio.file.Path
 
 class Coercer(
@@ -329,28 +328,24 @@ class Coercer(
 
     when (value) {
       is ClassInstanceValue -> {
-        val sourceId = sourceManager.getSourceIdFromPackageName(value.packageName)
-        if (sourceId != null) {
-          val className = value.className.split('.')
-          val classDef =
-            exprEvaluator.evaluateName(task, NameLookupContext(sourceId, listOf()), className, null)
-          if (classDef is EvaluationResult.DataClassDef) {
-            // 클래스 body에 정의된 cast 중 호환되는 첫번째 타입 캐스트로 반환
-            classDef.bodyElems.forEach { bodyElem ->
-              when (bodyElem) {
-                is BibixAst.ActionRuleDef -> {}
-                is BibixAst.ClassCastDef -> {
-                  val castType =
-                    exprEvaluator.evaluateType(task, classDef.context, bodyElem.castTo())
-                  if (isSubType(task, type, castType)) {
-                    val cast = exprEvaluator.evaluateExpr(task, context, bodyElem.expr(), value)
-                      .ensureValue()
-                    return coerce(task, context, cast, type)
-                  }
+        val classDef = exprEvaluator.findTypeDefinition(task, value.packageName, value.className)
+          ?: throw IllegalStateException("Cannot find class def for $value ($task)")
+        if (classDef is EvaluationResult.DataClassDef) {
+          // 클래스 body에 정의된 cast 중 호환되는 첫번째 타입 캐스트로 반환
+          classDef.bodyElems.forEach { bodyElem ->
+            when (bodyElem) {
+              is BibixAst.ActionRuleDef -> {}
+              is BibixAst.ClassCastDef -> {
+                val castType =
+                  exprEvaluator.evaluateType(task, classDef.context, bodyElem.castTo())
+                if (isSubType(task, type, castType)) {
+                  val cast = exprEvaluator.evaluateExpr(task, context, bodyElem.expr(), value)
+                    .ensureValue()
+                  return coerce(task, context, cast, type)
                 }
-
-                else -> throw AssertionError()
               }
+
+              else -> throw AssertionError()
             }
           }
         }
