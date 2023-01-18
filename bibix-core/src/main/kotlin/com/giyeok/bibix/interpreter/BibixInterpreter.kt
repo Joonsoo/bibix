@@ -11,6 +11,7 @@ import com.giyeok.bibix.plugins.PreloadedPlugin
 import com.giyeok.bibix.repo.Repo
 import com.giyeok.bibix.interpreter.coroutine.ProgressIndicatorContainer
 import com.giyeok.bibix.interpreter.expr.*
+import com.giyeok.bibix.utils.getOrNull
 import com.google.common.annotations.VisibleForTesting
 import kotlinx.coroutines.*
 
@@ -69,7 +70,13 @@ class BibixInterpreter(
             .ensureValue()
 
         is Definition.ActionDef -> {
-          exprEvaluator.executeAction(task, defContext, definition.action.expr(), actionArgs)
+          val actionExpr = definition.action.expr()
+          val argName = definition.action.argsName().getOrNull()
+          if (argName == null && actionArgs.isNotEmpty()) {
+            throw IllegalStateException("action args is not used")
+          }
+          val args = if (argName == null) null else Pair(argName, actionArgs)
+          exprEvaluator.executeAction(task, defContext, actionExpr, args)
           NoneValue
         }
 

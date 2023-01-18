@@ -21,16 +21,17 @@ fun testInterpreter(
   mainPath: String,
   preloadedPlugins: Map<String, PreloadedPlugin>,
   preludePlugin: PreloadedPlugin = PreloadedPlugin("", listOf(), Classes()),
-  realmProvider: RealmProvider = FakeRealmProvider { throw NotImplementedError() }
+  realmProvider: RealmProvider = FakeRealmProvider { throw NotImplementedError() },
+  actionArgs: List<String> = listOf()
 ) = BibixInterpreter(
-  BuildEnv(OS.Linux("", ""), Architecture.X86_64),
-  preludePlugin,
-  preloadedPlugins,
-  realmProvider,
-  BibixProject(fs.getPath(mainPath), null),
-  testRepo(fs),
-  FakeProgressIndicatorContainer(),
-  listOf()
+  buildEnv = BuildEnv(OS.Linux("", ""), Architecture.X86_64),
+  prelude = preludePlugin,
+  preloadedPlugins = preloadedPlugins,
+  realmProvider = realmProvider,
+  mainProject = BibixProject(fs.getPath(mainPath), null),
+  repo = testRepo(fs),
+  progressIndicatorContainer = FakeProgressIndicatorContainer(),
+  actionArgs = actionArgs
 )
 
 class NopeProgressNotifier : ProgressNotifier {

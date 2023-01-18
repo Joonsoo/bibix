@@ -161,6 +161,7 @@ class CallExprEvaluator(
     callable: EvaluationResult.Callable,
     params: BibixAst.CallParams,
     thisValue: BibixValue?,
+    directBindings: Map<String, BibixValue> = mapOf(),
   ): Map<String, BibixValue> =
     g.withTask(requester, Task.EvalExpr(context.sourceId, params.id(), thisValue)) { task ->
       val paramDefs = callable.params
@@ -190,10 +191,14 @@ class CallExprEvaluator(
 
       // Run concurrently
       val paramValues = (posParamsMap + namedParams).mapValues { (_, valueExpr) ->
-        async { exprEvaluator.evaluateExpr(task, context, valueExpr, thisValue).ensureValue() }
+        async {
+          exprEvaluator.evaluateExpr(task, context, valueExpr, thisValue, directBindings)
+            .ensureValue()
+        }
       }
       val defaultParamValues = defaultParamsMap.mapValues { (_, valueExpr) ->
         async {
+          // 여기선 directBindings 사용하지 말아야 함
           exprEvaluator.evaluateExpr(task, callable.context, valueExpr, thisValue).ensureValue()
         }
       }
@@ -362,14 +367,16 @@ class CallExprEvaluator(
     requester: Task,
     context: NameLookupContext,
     expr: BibixAst.CallExpr,
-    actionArgs: List<String>
+    args: Pair<String, List<String>>?
   ): Unit = g.withTask(requester, Task.ExecuteActionCall(context.sourceId, expr.id())) { task ->
     // TODO handle actionArgs
     val callTarget = exprEvaluator.evaluateName(task, context, expr.name(), null)
 
     check(callTarget is ActionRuleDef) { "TODO message" }
 
-    val params = organizeParams(task, context, callTarget, expr.params(), null)
+    val directBindings =
+      if (args == null) mapOf() else mapOf(args.first to ListValue(args.second.map { StringValue(it) }))
+    val params = organizeParams(task, context, callTarget, expr.params(), null, directBindings)
 
     val pluginClass = callTarget.cls
     val pluginInstance = pluginClass.getDeclaredConstructor().newInstance()

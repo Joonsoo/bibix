@@ -204,20 +204,35 @@ class ExprEvaluator(
     context: NameLookupContext,
     expr: BibixAst.Expr,
     thisValue: BibixValue?,
+  ): EvaluationResult = evaluateExpr(requester, context, expr, thisValue, mapOf())
+
+  // directBindings는 action의 args처럼 가장 가까운 스코프에서 값을 직접 할당하려는 경우 사용
+  suspend fun evaluateExpr(
+    requester: Task,
+    context: NameLookupContext,
+    expr: BibixAst.Expr,
+    thisValue: BibixValue?,
+    directBindings: Map<String, BibixValue>
   ): EvaluationResult =
     g.withTask(requester, Task.EvalExpr(context.sourceId, expr.id(), thisValue)) { task ->
       when (expr) {
         is BibixAst.CastExpr -> {
           // Run concurrently
-          val value = async { evaluateExpr(task, context, expr.expr(), thisValue).ensureValue() }
+          val value = async {
+            evaluateExpr(task, context, expr.expr(), thisValue, directBindings).ensureValue()
+          }
           val type = async { evaluateType(task, context, expr.castTo()) }
           EvaluationResult.Value(coerce(task, context, value.await(), type.await()))
         }
 
         is BibixAst.MergeOp -> {
           // Run concurrently
-          val lhs = async { evaluateExpr(task, context, expr.lhs(), thisValue).ensureValue() }
-          val rhs = async { evaluateExpr(task, context, expr.rhs(), thisValue).ensureValue() }
+          val lhs = async {
+            evaluateExpr(task, context, expr.lhs(), thisValue, directBindings).ensureValue()
+          }
+          val rhs = async {
+            evaluateExpr(task, context, expr.rhs(), thisValue, directBindings).ensureValue()
+          }
           val mergedValue = mergeValue(lhs.await(), rhs.await())
           EvaluationResult.Value(mergedValue)
         }
@@ -226,7 +241,8 @@ class ExprEvaluator(
           callExprEvaluator.evaluateCallExpr(task, context, expr, thisValue).toEvaluationResult()
 
         is BibixAst.MemberAccess -> {
-          when (val target = evaluateExpr(task, context, expr.target(), thisValue)) {
+          when (val target =
+            evaluateExpr(task, context, expr.target(), thisValue, directBindings)) {
             is EvaluationResult.Namespace ->
               evaluateName(task, target.context, listOf(expr.name()), thisValue)
 
@@ -242,13 +258,20 @@ class ExprEvaluator(
           }
         }
 
-        is BibixAst.NameRef -> evaluateName(task, context, listOf(expr.name()), thisValue)
+        is BibixAst.NameRef -> {
+          val directBinding = directBindings[expr.name()]
+          if (directBinding != null) {
+            EvaluationResult.Value(directBinding)
+          } else {
+            evaluateName(task, context, listOf(expr.name()), thisValue)
+          }
+        }
 
         is BibixAst.ListExpr -> {
           // Run concurrently
           val elemValues = expr.elems().toKtList().map { elemExpr ->
             async {
-              evaluateExpr(task, context, elemExpr, thisValue).ensureValue()
+              evaluateExpr(task, context, elemExpr, thisValue, directBindings).ensureValue()
             }
           }.awaitAll()
           EvaluationResult.Value(ListValue(elemValues))
@@ -257,7 +280,7 @@ class ExprEvaluator(
         is BibixAst.TupleExpr -> {
           // Run concurrently
           val elemValues = expr.elems().toKtList().map { elemExpr ->
-            async { evaluateExpr(task, context, elemExpr, thisValue).ensureValue() }
+            async { evaluateExpr(task, context, elemExpr, thisValue, directBindings).ensureValue() }
           }.awaitAll()
           EvaluationResult.Value(TupleValue(elemValues))
         }
@@ -266,7 +289,7 @@ class ExprEvaluator(
           // Run concurrently
           val elemValues = expr.elems().toKtList().map { pair ->
             pair.name() to async {
-              evaluateExpr(task, context, pair.expr(), thisValue).ensureValue()
+              evaluateExpr(task, context, pair.expr(), thisValue, directBindings).ensureValue()
             }
           }.map { (name, value) -> name to value.await() }
           EvaluationResult.Value(NamedTupleValue(elemValues))
@@ -297,7 +320,8 @@ class ExprEvaluator(
                 }
 
                 is BibixAst.ComplexExpr -> {
-                  val value = evaluateExpr(task, context, elem.expr(), thisValue).ensureValue()
+                  val value = evaluateExpr(task, context, elem.expr(), thisValue, directBindings)
+                    .ensureValue()
                   (coerce(task, context, value, StringType) as StringValue).value
                 }
 
@@ -317,7 +341,7 @@ class ExprEvaluator(
         is BibixAst.This ->
           EvaluationResult.Value(checkNotNull(thisValue) { "this is not available" })
 
-        is BibixAst.Paren -> evaluateExpr(task, context, expr.expr(), thisValue)
+        is BibixAst.Paren -> evaluateExpr(task, context, expr.expr(), thisValue, directBindings)
 
         else -> throw AssertionError()
       }
@@ -327,14 +351,13 @@ class ExprEvaluator(
     requester: Task,
     context: NameLookupContext,
     expr: BibixAst.Expr,
-    actionArgs: List<String>
+    args: Pair<String, List<String>>?,
   ) = g.withTask(requester, Task.ExecuteAction(context.sourceId, expr.id())) { task ->
     when (expr) {
       is BibixAst.CallExpr ->
-        callExprEvaluator.executeActionCallExpr(task, context, expr, actionArgs)
+        callExprEvaluator.executeActionCallExpr(task, context, expr, args)
 
       else -> throw IllegalStateException("")
     }
   }
 }
-
