@@ -12,6 +12,7 @@ import com.google.common.collect.BiMap
 import com.google.common.collect.HashBiMap
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import java.lang.IllegalArgumentException
 import java.nio.file.Path
 import kotlin.io.path.readText
 
@@ -96,7 +97,11 @@ class SourceManager {
   fun registerPreloadedPluginClasses(name: String, plugin: PreloadedPlugin) {
     val sourceId = PreloadedSourceId(name)
     preloadedPluginClasses[sourceId] = plugin.classes
-    sourcePackageName[sourceId] = plugin.packageName
+    try {
+      sourcePackageName[sourceId] = plugin.packageName
+    } catch (e: IllegalArgumentException) {
+      throw IllegalStateException("Package name conflict: ${plugin.packageName}")
+    }
   }
 
   fun getPreludePluginClass(className: String): Class<*> = preludePluginClasses.getClass(className)

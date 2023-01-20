@@ -30,8 +30,6 @@ val bibixPlugin = PreloadedPlugin.fromScript(
     
     def genRuleImplTemplateKt(
       rules: set<buildrule>,
-      // TODO (type, string)은 뭐하려고 했던거지..? rename인가?
-      types: set<{type, (type, string)}>,
       implName: string,
       implInterfaceName: string,
     ): RuleImplTemplate = native:com.giyeok.bibix.plugins.bibix.GenRuleImplTemplateKt

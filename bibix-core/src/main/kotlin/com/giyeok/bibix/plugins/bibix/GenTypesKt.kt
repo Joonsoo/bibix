@@ -12,24 +12,29 @@ class GenTypesKt {
     fun generateDataClassType(
       p: PrintWriter,
       cls: DataClassTypeDetails,
-      superClass: CName?,
+      superClasses: List<String>,
       indent: String,
     ) {
-      val clsName = cls.className.substringAfter('.')
+      check(!cls.className.contains('.')) { "Classes to generate must be placed in the root of the script(not under namespace)" }
+      val clsName = cls.className
       p.println("${indent}data class $clsName(")
       cls.fields.forEach { field ->
         val optional = if (field.optional) "?" else ""
         p.println("$indent  val ${field.name}: ${bibixTypeToKtType(field.type)}$optional,")
       }
-      if (superClass != null) {
-        p.println("$indent): ${superClass.tokens.last()}() {")
+      if (superClasses.isNotEmpty()) {
+        check(superClasses.size == 1) {
+          "Cannot generate the code for multiple super type: $cls is extending $superClasses"
+        }
+        p.println("$indent): ${superClasses.first()}() {")
       } else {
         p.println("$indent) {")
       }
       p.println("$indent  companion object {")
       p.println("$indent    fun fromBibix(value: BibixValue): $clsName {")
-      p.println("$indent      value as DataClassInstanceValue")
-      p.println("$indent      check(value.className.tokens == TODO())")
+      p.println("$indent      value as ClassInstanceValue")
+      p.println("$indent      check(value.packageName == \"${cls.packageName}\")")
+      p.println("$indent      check(value.className == \"$clsName\")")
       p.println("$indent      return $clsName(")
       cls.fields.forEach { field ->
         val fieldExpr = if (!field.optional) {
@@ -42,8 +47,9 @@ class GenTypesKt {
       p.println("$indent      )")
       p.println("$indent    }")
       p.println("$indent  }")
-      val override = if (superClass != null) "override " else ""
-      p.println("$indent  ${override}fun toBibix(): NDataClassInstanceValue = NDataClassInstanceValue(")
+      val override = if (superClasses.isNotEmpty()) "override " else ""
+      p.println("$indent  ${override}fun toBibix(): ClassInstanceValue = ClassInstanceValue(")
+      p.println("$indent    \"${cls.packageName}\",")
       p.println("$indent    \"${cls.className}\",")
       val hasOptional = cls.fields.any { it.optional }
       if (hasOptional) {
@@ -73,44 +79,45 @@ class GenTypesKt {
     fun generateSuperClassType(
       p: PrintWriter,
       cls: SuperClassTypeDetails,
-      superClass: CName?,
+      superClasses: List<String>,
+      subDataClasses: List<String>,
       indent: String,
     ) {
       val clsName = cls.className // including dots?
-      if (superClass != null) {
-        p.println("${indent}sealed class $clsName ${superClass.tokens.last()} {")
+      if (superClasses.isNotEmpty()) {
+        check(superClasses.size == 1)
+        p.println("${indent}sealed class $clsName: ${superClasses.first()}() {")
       } else {
         p.println("${indent}sealed class $clsName {")
       }
       p.println("$indent  companion object {")
       p.println("$indent    fun fromBibix(value: BibixValue): $clsName {")
-      p.println("$indent      value as DataClassInstanceValue")
-      p.println("$indent      return when (value.className.tokens) {")
-      // TODO subClasses 중에서 super class인 것은 다시 풀어서 전부 data class로 바꿔서 처리
-      cls.subClasses.forEach { sub ->
-        val tokens = "\"$sub\""
-        p.println("$indent        listOf($tokens) -> $sub.fromBibix(value)")
+      p.println("$indent      value as ClassInstanceValue")
+      p.println("$indent      check(value.packageName == \"${cls.packageName}\")")
+      p.println("$indent      return when (value.className) {")
+      subDataClasses.forEach { sub ->
+        p.println("$indent        \"$sub\" -> $sub.fromBibix(value)")
       }
       p.println("$indent        else -> throw IllegalStateException(\"Unknown subclass of ${clsName}: \${value.className}\")")
       p.println("$indent      }")
       p.println("$indent    }")
       p.println("$indent  }")
-      if (superClass == null) {
-        p.println("$indent  abstract fun toBibix(): NDataClassInstanceValue")
+      if (superClasses.isEmpty()) {
+        p.println("$indent  abstract fun toBibix(): ClassInstanceValue")
       }
       p.println("$indent}")
     }
 
-    fun generateClassType(
-      p: PrintWriter,
-      cls: ClassTypeDetails,
-      superClass: CName?,
-      indent: String,
-    ) {
-      when (cls) {
-        is DataClassTypeDetails -> generateDataClassType(p, cls, superClass, indent)
-        is SuperClassTypeDetails -> generateSuperClassType(p, cls, superClass, indent)
-      }
+    fun findSubDataClassesOf(
+      typeName: TypeName,
+      classDetails: Map<TypeName, TypeDetails>
+    ): List<String> = when (val details = classDetails[typeName]) {
+      is SuperClassTypeDetails -> details.subClasses.flatMap {
+        findSubDataClassesOf(TypeName(typeName.packageName, it), classDetails)
+      }.sorted().distinct()
+
+      is DataClassTypeDetails -> listOf(typeName.typeName)
+      else -> listOf()
     }
 
     fun generateEnumType(p: PrintWriter, detail: EnumTypeDetails, indent: String) {
@@ -121,21 +128,17 @@ class GenTypesKt {
       p.println("$indent}")
     }
 
-    fun superClassesMap(
-      classTypes: List<TypeValue.DataClassTypeValue>,
-      classTypeDetailsMap: Map<CName, ClassTypeDetails>
-    ): Map<CName, CName> {
-      TODO()
-//      val superclasses = mutableMapOf<CName, CName>()
-//      classTypes.forEach { clsType ->
-//        val detail = classTypeDetailsMap.getValue(clsType.className)
-//        if (detail is TypeValue.SuperClassTypeDetail) {
-//          detail.subClasses.forEach { subClass ->
-//            superclasses[subClass] = clsType.className
-//          }
-//        }
-//      }
-//      return superclasses
+    fun superClassesMap(typeDetails: TypeDetailsMap): Map<TypeName, List<String>> {
+      val map = mutableMapOf<TypeName, MutableList<String>>()
+      typeDetails.canonicalNamed.forEach { (typeName, details) ->
+        if (details is SuperClassTypeDetails) {
+          details.subClasses.forEach { subClass ->
+            map.getOrPut(TypeName(typeName.packageName, subClass)) { mutableListOf() }
+              .add(details.className)
+          }
+        }
+      }
+      return map
     }
   }
 
@@ -169,7 +172,7 @@ class GenTypesKt {
           if (outerClassName != null) {
             printer.println("object $outerClassName {")
           }
-          val superclasses = mapOf<String, CName>() // superClassesMap(classTypes, classTypeDetails)
+          val superClassesMap = superClassesMap(classTypeDetails)
           val indent = if (outerClassName == null) "" else "  "
           types.forEachIndexed { idx, type ->
             if (idx > 0) {
@@ -179,13 +182,17 @@ class GenTypesKt {
               is TypeValue.DataClassTypeValue -> {
                 val detail =
                   classTypeDetails.canonicalNamed.getValue(type.typeName) as DataClassTypeDetails
-                generateDataClassType(printer, detail, superclasses[type.className], indent)
+                val superClasses = superClassesMap[type.typeName] ?: listOf()
+                generateDataClassType(printer, detail, superClasses, indent)
               }
 
               is TypeValue.SuperClassTypeValue -> {
                 val detail =
                   classTypeDetails.canonicalNamed.getValue(type.typeName) as SuperClassTypeDetails
-                generateSuperClassType(printer, detail, superclasses[type.className], indent)
+                val superClasses = superClassesMap[type.typeName] ?: listOf()
+                val subClasses =
+                  findSubDataClassesOf(type.typeName, classTypeDetails.canonicalNamed)
+                generateSuperClassType(printer, detail, superClasses, subClasses, indent)
               }
 
               is TypeValue.EnumTypeValue -> {

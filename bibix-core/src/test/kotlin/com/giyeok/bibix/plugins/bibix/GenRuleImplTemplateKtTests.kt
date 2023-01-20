@@ -18,16 +18,17 @@ class GenRuleImplTemplateKtTests {
     val fs = Jimfs.newFileSystem()
 
     val script = """
+      package testing.pkgname
+      
       import jvm
       
       impl = jvm.ClassPaths(["/abc.jar"])
-      def helloRule(message: string): list<path> = impl:testing.name.HelloRule
-
+      def helloRule(message: string): list<path> = impl:testing.pkgname.HelloRule
+      
       aaa = bibix.genRuleImplTemplateKt(
         rules = [helloRule],
-        types = [],
-        implName = "testing.name.HelloRuleImpl",
-        implInterfaceName = "testing.name.HelloRuleInterface"
+        implName = "testing.pkgname.HelloRuleImpl",
+        implInterfaceName = "testing.pkgname.HelloRuleInterface"
       )
     """.trimIndent()
     fs.getPath("/build.bbx").writeText(script)
@@ -46,10 +47,35 @@ class GenRuleImplTemplateKtTests {
     val interfaceClass =
       (template.fieldValues.getValue("interfaceClass") as FileValue).file.readText()
 
-    println(implClass)
-    println(interfaceClass)
+    assertThat(implClass).isEqualTo("""
+      package testing.pkgname
 
-    assertThat(implClass).isEqualTo("")
-    assertThat(interfaceClass).isEqualTo("")
+      import com.giyeok.bibix.base.*
+      import java.nio.file.Path
+
+      class HelloRule(val impl: HelloRuleInterface) {
+        constructor() : this(HelloRuleImpl())
+
+        fun build(context: BuildContext): BuildRuleReturn {
+          val message = (context.arguments.getValue("message") as StringValue).value
+          return impl.build(context, message)
+        }
+      }
+      
+    """.trimIndent())
+    assertThat(interfaceClass).isEqualTo("""
+      package testing.pkgname
+
+      import com.giyeok.bibix.base.*
+      import java.nio.file.Path
+
+      interface HelloRuleInterface {
+        fun build(
+          context: BuildContext,
+          message: String,
+        ): BuildRuleReturn
+      }
+
+    """.trimIndent())
   }
 }
