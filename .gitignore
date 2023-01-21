@@ -3,6 +3,7 @@ out
 target
 build
 /bbxbuild/
+bbxbuild/
 .gradle
 gradle/
 gradlew
