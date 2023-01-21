@@ -57,12 +57,11 @@ sealed class CpInfo {
   companion object {
     fun fromBibix(value: BibixValue): CpInfo {
       value as ClassInstanceValue
-//      return when (value.className.tokens) {
-//        listOf("JarInfo") -> JarInfo.fromBibix(value)
-//        listOf("ClassesInfo") -> ClassesInfo.fromBibix(value)
-//        else -> throw IllegalStateException("Unknown subclass of CpInfo: ${value.className}")
-//      }
-      TODO()
+      return when (value.className) {
+        "JarInfo" -> JarInfo.fromBibix(value)
+        "ClassesInfo" -> ClassesInfo.fromBibix(value)
+        else -> throw IllegalStateException("Unknown subclass of CpInfo: ${value.className}")
+      }
     }
   }
 
@@ -79,7 +78,7 @@ data class JarInfo(
 //      check(value.className.tokens == listOf("JarInfo"))
       return JarInfo(
         jar = (value["jar"]!! as FileValue).file,
-        sourceJar = value["sourceJar"]?.let { (it as FileValue).file },
+        sourceJar = value["sourceJar"]?.let { if (it == NoneValue) null else (it as FileValue).file },
       )
     }
   }
@@ -126,13 +125,12 @@ sealed class ClassOrigin {
   companion object {
     fun fromBibix(value: BibixValue): ClassOrigin {
       value as ClassInstanceValue
-//      return when (value.className.tokens) {
-//        listOf("MavenDep") -> MavenDep.fromBibix(value)
-//        listOf("LocalLib") -> LocalLib.fromBibix(value)
-//        listOf("LocalBuilt") -> LocalBuilt.fromBibix(value)
-//        else -> throw IllegalStateException("Unknown subclass of ClassOrigin: ${value.className}")
-//      }
-      TODO()
+      return when (value.className) {
+        "MavenDep" -> MavenDep.fromBibix(value)
+        "LocalLib" -> LocalLib.fromBibix(value)
+        "LocalBuilt" -> LocalBuilt.fromBibix(value)
+        else -> throw IllegalStateException("Unknown subclass of ClassOrigin: ${value.className}")
+      }
     }
   }
 

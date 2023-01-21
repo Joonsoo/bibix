@@ -5,11 +5,15 @@ import com.giyeok.bibix.interpreter.expr.ImportedSource
 import com.giyeok.bibix.interpreter.expr.NameLookupContext
 import com.giyeok.bibix.plugins.Classes
 import com.giyeok.bibix.plugins.PreloadedPlugin
+import com.giyeok.bibix.plugins.jvm.jvmPlugin
 import com.google.common.jimfs.Jimfs
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.runBlocking
+import org.codehaus.plexus.classworlds.ClassWorld
 import org.junit.jupiter.api.Test
+import java.io.File
 import java.nio.file.Files
+import kotlin.io.path.createDirectory
 import kotlin.io.path.writeText
 
 class ImportTests {
@@ -238,10 +242,85 @@ class ImportTests {
     assertThat(interpreter.userBuildRequest("aaa.abc")).isEqualTo(StringValue("good!"))
     assertThat(interpreter.userBuildRequest("bcd")).isEqualTo(StringValue("hi!"))
   }
+
+  @Test
+  fun testPreloadedFromExternal(): Unit = runBlocking {
+    // main -> from bibix.plugins import ktjvm -> bibix.base -> bibix.baseDownload
+
+    val fs = Jimfs.newFileSystem()
+
+    val script = """
+      from bibix.plugins import ktjvm
+      
+      aaa = ktjvm.library()
+    """.trimIndent()
+    fs.getPath("/build.bbx").writeText(script)
+
+    val bibixPlugin = PreloadedPlugin.fromScript(
+      "com.bibix",
+      """
+        plugins = "/plugins"
+        base = baseDownload
+        baseDownload = "baseFile.jar"
+      """.trimIndent(),
+      Classes()
+    )
+
+    fs.getPath("/baseFile.jar").writeText("")
+
+    fs.getPath("/plugins").createDirectory()
+    fs.getPath("/plugins/build.bbx").writeText(
+      """
+      import "ktjvm" as ktjvm
+    """.trimIndent()
+    )
+
+    fs.getPath("/plugins/ktjvm").createDirectory()
+    fs.getPath("/plugins/ktjvm/build.bbx").writeText(
+      """
+        import jvm
+        
+        impl = jvm.ClassPaths([bibix.base])
+        
+        def library(): string = impl:com.giyeok.bibix.interpreter.FakeKtJvmLibraryRule
+      """.trimIndent()
+    )
+
+    val prelude = PreloadedPlugin.fromScript(
+      "com.prelude",
+      """
+        import bibix
+      """.trimIndent(),
+      Classes()
+    )
+
+    val classWorld = ClassWorld()
+    val classRealm = classWorld.newRealm("realm-test")
+    classRealm.addURL(File(".").toURI().toURL())
+
+    val interpreter = testInterpreter(
+      fs,
+      "/",
+      mapOf("bibix" to bibixPlugin, "jvm" to jvmPlugin),
+      prelude,
+      FakeRealmProvider { cpInstnace ->
+        assertThat(cpInstnace.fieldValues).containsExactly("cps", SetValue())
+        classRealm
+      })
+
+    assertThat(interpreter.userBuildRequest("aaa")).isEqualTo(StringValue("ktjvm successfully called"))
+
+  }
 }
 
 class TestWorldRule {
   fun build(context: BuildContext): BibixValue {
     return StringValue("World!")
+  }
+}
+
+class FakeKtJvmLibraryRule {
+  fun build(context: BuildContext): BibixValue {
+    return StringValue("ktjvm successfully called")
   }
 }

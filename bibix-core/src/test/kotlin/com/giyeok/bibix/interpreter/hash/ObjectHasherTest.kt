@@ -57,7 +57,7 @@ class ObjectHasherTest {
     assertThat(objMemoMap1).hasSize(1)
     assertThat(objHashMap1.keys).isEqualTo(objMemoMap1.keys)
 
-    assertThat(Rule1.history.map { it.first }).containsExactly("08cd0cbaebc29f7ca36e80af3d914b42de48ef45")
+    assertThat(Rule1.history.map { it.first }).containsExactly("db7000dcc00b327d87bb8eb07793ca36961b4160")
     assertThat(Rule1.history.map { it.second }).containsExactly(
       objectId {
         this.callingSourceId = sourceId {
@@ -82,7 +82,6 @@ class ObjectHasherTest {
             }
           })
         }
-        this.inputHashes = inputHashes { }
       })
 
     assertThat(interpreter.userBuildRequest("ddd")).isEqualTo(StringValue("Great!"))
@@ -94,8 +93,8 @@ class ObjectHasherTest {
     assertThat(objHashMap2.keys).isEqualTo(objMemoMap2.keys)
 
     assertThat(Rule1.history.map { it.first }).containsExactly(
-      "08cd0cbaebc29f7ca36e80af3d914b42de48ef45",
-      "227c8891d1d10539fbe4b5d3f84a5f4b6eddfde1",
+      "db7000dcc00b327d87bb8eb07793ca36961b4160",
+      "0829664783262acd474f26802263def7ca2f63cf",
     )
     assertThat(Rule1.history.map { it.second }).containsExactly(
       objectId {
@@ -121,7 +120,6 @@ class ObjectHasherTest {
             }
           })
         }
-        this.inputHashes = inputHashes { }
       },
       objectId {
         this.callingSourceId = sourceId {
@@ -146,7 +144,6 @@ class ObjectHasherTest {
             }
           })
         }
-        this.inputHashes = inputHashes { }
       })
   }
 
@@ -228,7 +225,6 @@ class ObjectHasherTest {
             }
           })
         }
-        this.inputHashes = inputHashes { }
       })
   }
 }

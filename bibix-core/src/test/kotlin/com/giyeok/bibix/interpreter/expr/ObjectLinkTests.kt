@@ -43,7 +43,7 @@ class ObjectLinkTests {
 
     assertThat(fs.getPath("/bbxbuild/outputs/aaa").isSymbolicLink()).isTrue()
     assertThat(fs.getPath("/bbxbuild/outputs/aaa").readSymbolicLink())
-      .isEqualTo(fs.getPath("/bbxbuild/objects/24711ea7bbe31fce0da8d2b2b8666e820b70f9f5"))
+      .isEqualTo(fs.getPath("/bbxbuild/objects/29246098a4beb0db7be38c36e090cd684af33f27"))
     assertThat(fs.getPath("/bbxbuild/outputs/aaa/output.txt").readText()).isEqualTo("hello!")
   }
 
@@ -87,16 +87,16 @@ class ObjectLinkTests {
 
     assertThat(fs.getPath("/bbxbuild/outputs/aaa").isSymbolicLink()).isTrue()
     assertThat(fs.getPath("/bbxbuild/outputs/aaa").readSymbolicLink())
-      .isEqualTo(fs.getPath("/bbxbuild/objects/680108981b96c58981217b8457f3e5fda70b97e8"))
+      .isEqualTo(fs.getPath("/bbxbuild/objects/2cb0fb4e186ef5df52cc5a0f8f257c3ddd780ed7"))
     assertThat(fs.getPath("/bbxbuild/outputs/aaa/output.txt").readText()).isEqualTo("hi!")
 
     assertThat(fs.getPath("/bbxbuild/outputs/bbb").isSymbolicLink()).isTrue()
     assertThat(fs.getPath("/bbxbuild/outputs/bbb").readSymbolicLink())
-      .isEqualTo(fs.getPath("/bbxbuild/objects/680108981b96c58981217b8457f3e5fda70b97e8"))
+      .isEqualTo(fs.getPath("/bbxbuild/objects/2cb0fb4e186ef5df52cc5a0f8f257c3ddd780ed7"))
 
     assertThat(fs.getPath("/bbxbuild/outputs/ccc").isSymbolicLink()).isTrue()
     assertThat(fs.getPath("/bbxbuild/outputs/ccc").readSymbolicLink())
-      .isEqualTo(fs.getPath("/bbxbuild/objects/3f4893ab222cca30e2294fe67f091aab443ab6e1"))
+      .isEqualTo(fs.getPath("/bbxbuild/objects/ece2b79ab7745138c7b998580f04ca8534b6c483"))
     assertThat(fs.getPath("/bbxbuild/outputs/ccc/output.txt").readText()).isEqualTo("Good!")
   }
 }

@@ -12,17 +12,11 @@ val bibixPlugin = PreloadedPlugin.fromScript(
     
     version = "${Constants.BIBIX_VERSION}"
     
-    def base(
-      classpath: path = curl.download("https://github.com/Joonsoo/bibix/releases/download/${Constants.BIBIX_VERSION}/bibix-base-${Constants.BIBIX_VERSION}.jar")
-    ): jvm.ClassPkg = native:com.giyeok.bibix.plugins.bibix.Base
+    baseDownload = curl.download("https://github.com/Joonsoo/bibix/releases/download/${Constants.BIBIX_VERSION}/bibix-base-${Constants.BIBIX_VERSION}-all.jar")
+    base = jvm.ClassPkg(origin=jvm.LocalLib(baseDownload), cpinfo=jvm.JarInfo(baseDownload, none), deps=[])
     
-    def plugins(
-      tag: string = version
-    ): BibixProject = native:com.giyeok.bibix.plugins.bibix.Plugins
-    
-    def devPlugins(
-      branch: string = "main"
-    ): BibixProject = native:com.giyeok.bibix.plugins.bibix.Plugins:dev
+    plugins = git("${Constants.BIBIX_PLUGINS_GIT_URL}")
+    devPlugins = git("${Constants.BIBIX_PLUGINS_GIT_URL}", branch="main")
     
     class RuleImplTemplate(implClass: file, interfaceClass: file) {
       as list<file> = [this.implClass, this.interfaceClass]

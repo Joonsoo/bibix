@@ -76,7 +76,9 @@ data class JarInfo(
 //      check(value.className.tokens == listOf("JarInfo"))
       return JarInfo(
         jar = (value["jar"]!! as FileValue).file,
-        sourceJar = value["sourceJar"]?.let { (it as FileValue).file },
+        sourceJar = value["sourceJar"]?.let {
+          if (it == NoneValue) null else (it as FileValue).file
+        },
       )
     }
   }
