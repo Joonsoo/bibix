@@ -1,14 +1,15 @@
 package com.giyeok.bibix.plugins.java
 
 import com.giyeok.bibix.plugins.Classes
-import com.giyeok.bibix.plugins.BibixPlugin
+import com.giyeok.bibix.plugins.PreloadedPlugin
 
-val javaPlugin = BibixPlugin.fromScript(
+val javaPlugin = PreloadedPlugin.fromScript(
+  "com.giyeok.bibix.plugins.java",
   """
     import jvm
     
-    arg srcVersion: string = "16"
-    arg outVersion: string = "16"
+    var srcVersion: string = "16"
+    var outVersion: string = "16"
     
     def library(
       srcs: set<file>,

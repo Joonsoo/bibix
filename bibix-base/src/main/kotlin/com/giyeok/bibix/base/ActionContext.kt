@@ -1,7 +1,7 @@
 package com.giyeok.bibix.base
 
 data class ActionContext(
-  val sourceId: SourceId,
+  val env: BuildEnv,
   val arguments: Map<String, BibixValue>,
   val progressLogger: ProgressLogger,
 )

@@ -14,7 +14,11 @@ version '0.0.1-SNAPSHOT'
 repositories {
     mavenCentral()
     maven {
-        url "https://github.com/Joonsoo/giyeok-maven-repo/raw/main"
+        url = uri("https://maven.pkg.github.com/Joonsoo/giyeok-maven-repo")
+        credentials {
+            username = "Joonsoo"
+            password = "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"
+        }
     }
 }
 
@@ -34,5 +38,5 @@ dependencies {
     implementation group: 'com.giyeok.jparser', name: 'jparser-fast', version: jparserVersion
 
     // https://mvnrepository.com/artifact/org.scalatest/scalatest
-    testImplementation group: 'org.scalatest', name: 'scalatest_2.13', version: '3.2.12'
+    testImplementation group: 'org.scalatest', name: 'scalatest_2.13', version: '3.2.14'
 }

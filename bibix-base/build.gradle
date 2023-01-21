@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        kotlinVersion = '1.6.10'
+        kotlinVersion = '1.8.0'
     }
 
     dependencies {
@@ -12,35 +12,40 @@ plugins {
     id 'java'
     id 'scala'
     id 'org.jetbrains.kotlin.jvm'
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
 }
 
 group 'com.giyeok.bibix'
-version '0.0.1-SNAPSHOT'
+version '0.1.0'
 
 repositories {
     mavenCentral()
+    mavenLocal()
 }
 
 sourceSets {
     main {
         java {
-            srcDir 'src/generated/java'
-            srcDir 'src/generated/java-grpc'
+            srcDir 'src/generated/proto/java'
+            srcDir 'src/generated/grpc/java'
         }
         kotlin {
             srcDir 'src/main/kotlin'
-            srcDir 'src/generated/kotlin'
-            srcDir 'src/generated/kotlin-grpc'
+            srcDir 'src/generated/proto/kotlin'
+            srcDir 'src/generated/grpc/kotlin'
         }
     }
 }
 
+java {
+    sourceCompatibility = JavaVersion.VERSION_16
+    targetCompatibility = JavaVersion.VERSION_16
+}
+
 dependencies {
-    implementation group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk8', version: kotlinVersion
+    implementation group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib', version: kotlinVersion
     implementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-core', version: '1.6.0'
     implementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-jdk8', version: '1.6.0'
-
-    implementation group: 'org.scala-lang', name: 'scala-library', version: '2.13.6'
 
     implementation "com.google.protobuf:protobuf-java-util:3.19.4"
     implementation "com.google.protobuf:protobuf-java:3.19.4"
@@ -67,4 +72,9 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
     testImplementation "com.google.truth:truth:1.1.3"
+}
+
+jar {
+    manifest {
+    }
 }

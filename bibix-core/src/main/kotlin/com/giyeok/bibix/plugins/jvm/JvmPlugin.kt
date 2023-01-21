@@ -1,9 +1,10 @@
 package com.giyeok.bibix.plugins.jvm
 
 import com.giyeok.bibix.plugins.Classes
-import com.giyeok.bibix.plugins.BibixPlugin
+import com.giyeok.bibix.plugins.PreloadedPlugin
 
-val jvmPlugin = BibixPlugin.fromScript(
+val jvmPlugin = PreloadedPlugin.fromScript(
+  "com.giyeok.bibix.plugins.jvm",
   """
     class ClassPaths(cps: set<path>)
     

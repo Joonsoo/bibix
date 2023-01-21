@@ -1,11 +1,10 @@
 package com.giyeok.bibix.frontend.cli
 
-import com.giyeok.bibix.base.*
 import com.giyeok.bibix.frontend.BuildFrontend
+import com.giyeok.bibix.interpreter.BibixProject
 import java.nio.file.Paths
 import java.time.Duration
 import java.time.Instant
-import kotlin.io.path.absolute
 import kotlin.system.exitProcess
 
 object BibixCli {
@@ -20,18 +19,19 @@ object BibixCli {
 
     check(buildTargetNames.isNotEmpty()) { "Must specify at least one build target" }
 
-    val buildArgsMap = mapOf<CName, BibixValue>()
+    val buildArgsMap = mapOf<String, String>()
 
-    val targets = buildTargetNames.map { CName(MainSourceId, it.split('.').toList()) }
     val useDebuggingMode = buildArgs.contains("--debug")
 
     val buildFrontend = BuildFrontend(
-      Paths.get("").absolute(),
-      buildArgsMap,
-      ListValue(actionArgs.map { StringValue(it) })
+      mainProject = BibixProject(Paths.get(""), null),
+      buildArgsMap = buildArgsMap,
+      actionArgs = actionArgs,
+      progressNotifier = ProgressConsolePrinter(),
+      debuggingMode = useDebuggingMode
     )
 
-    val targetResults = buildFrontend.runTargets("build", targets)
+    val targetResults = buildFrontend.buildTargets(buildTargetNames)
 
     targetResults.forEach { (targetName, value) ->
       println("$targetName = $value")

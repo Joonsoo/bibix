@@ -1,21 +1,21 @@
 package com.giyeok.bibix.base
 
-import com.giyeok.bibix.runner.BibixIdProto
+import com.giyeok.bibix.BibixIdProto
 import java.nio.file.FileSystem
 import java.nio.file.Path
 import kotlin.io.path.createDirectory
 import kotlin.io.path.notExists
 
 data class BuildContext(
-  // 해당 모듈의 definition source id
-  val sourceId: SourceId,
+  val env: BuildEnv,
   val fileSystem: FileSystem,
-  // sourceId의 베이스 디렉토리
-  val ruleBaseDirectory: Path,
-  // 이 룰을 호출하는 쪽의 베이스 디렉토리. 대체로 이 값을 사용하게 될 것
-  val callerBaseDirectory: Path,
   // 메인 스크립트의 베이스 디렉토리
   val mainBaseDirectory: Path,
+  // 이 룰을 호출하는 위치의 베이스 디렉토리. 대체로 이 값을 사용하게 될 것
+  // preloaded plugin에서 호출되는 경우엔 null이 된다
+  val callerBaseDirectory: Path?,
+  // sourceId의 베이스 디렉토리. rule이 preloaded plugin 안에 있는 경우 null이 된다.
+  val ruleDefinedDirectory: Path?,
   // target에 지정된 parameter들의 값
   val arguments: Map<String, BibixValue>,
   // input file들이 지난 빌드때와 같으면 true.
@@ -48,6 +48,6 @@ data class BuildContext(
     return destDirectory
   }
 
-  fun getSharedDirectory(sharedRepoName: String) =
+  fun getSharedDirectory(sharedRepoName: String): Path =
     repo.prepareSharedDirectory(sharedRepoName)
 }

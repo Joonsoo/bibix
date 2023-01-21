@@ -24,8 +24,13 @@ data class DirectoryValue(val directory: Path) : BibixValue() {
   override fun toString(): String = "dir($directory)"
 }
 
-data class EnumValue(val enumTypeName: CName, val value: String) : BibixValue() {
-  override fun toString(): String = "$enumTypeName::$value"
+data class EnumValue(
+  val packageName: String,
+  // className은 class가 namespace 안에 정의되어 있는 경우 "abc.def.Class"같은 형태가 될 수 있음
+  val enumName: String,
+  val value: String
+) : BibixValue() {
+  override fun toString(): String = "enum $packageName:$enumName($value)"
 }
 
 data class ListValue(val values: List<BibixValue>) : BibixValue() {
@@ -66,7 +71,9 @@ data class TupleValue(val values: List<BibixValue>) : BibixValue() {
 data class NamedTupleValue(val pairs: List<Pair<String, BibixValue>>) : BibixValue() {
   constructor(vararg values: Pair<String, BibixValue>) : this(values.toList())
 
-  fun getValue(name: String) = pairs.find { it.first == name }!!.second
+  val valuesMap = pairs.toMap()
+
+  fun getValue(name: String) = valuesMap.getValue(name)
 
   fun names() = pairs.map { it.first }
   fun values() = pairs.map { it.second }
@@ -75,25 +82,25 @@ data class NamedTupleValue(val pairs: List<Pair<String, BibixValue>>) : BibixVal
     "(${pairs.joinToString() { p -> "${p.first}: ${p.second}" }})"
 }
 
-sealed class ClassInstanceValue : BibixValue() {
-  abstract val className: CName
-}
-
-data class DataClassInstanceValue(
-  override val className: CName,
+data class ClassInstanceValue(
+  val packageName: String,
+  // className은 class가 namespace 안에 정의되어 있는 경우 "abc.def.Class"같은 형태가 될 수 있음
+  val className: String,
   val fieldValues: Map<String, BibixValue>
-) : ClassInstanceValue() {
+) : BibixValue() {
   operator fun get(fieldName: String): BibixValue? = fieldValues[fieldName]
 
-  override fun toString(): String = "$className($fieldValues)"
+  override fun toString(): String = "$packageName::$className($fieldValues)"
 }
 
-data class NDataClassInstanceValue(
+// Non-canonical named class
+// 플러그인이 클래스 값을 반환할 때는 NClassInstanceValue를 사용할 수 있다
+data class NClassInstanceValue(
   val nameTokens: List<String>,
   val fieldValues: Map<String, BibixValue>
 ) : BibixValue() {
   constructor(name: String, fieldValues: Map<String, BibixValue>) :
-    this(name.split('.'), fieldValues)
+    this(name.split('.').map { it.trim() }, fieldValues)
 
   override fun toString(): String = "${nameTokens.joinToString(".")}($fieldValues)"
 }
@@ -103,8 +110,7 @@ object NoneValue : BibixValue()
 data class BuildRuleDefValue(
   val name: CName,
   val params: List<RuleParam>,
-  val impl: CName,
-  val implClass: String,
+  val implClassName: String,
   val implMethodName: String,
 ) : BibixValue() {
   override fun toString(): String = "def $name"
@@ -113,8 +119,7 @@ data class BuildRuleDefValue(
 data class ActionRuleDefValue(
   val name: CName,
   val params: List<RuleParam>,
-  val impl: CName,
-  val implClass: String,
+  val implClassName: String,
   val implMethodName: String,
 ) : BibixValue() {
   override fun toString(): String = "action def $name"
@@ -151,35 +156,26 @@ sealed class TypeValue : BibixValue() {
     override fun toString(): String = "directory"
   }
 
-  data class ClassTypeValue(val className: CName) : TypeValue() {
-    override fun toString(): String = "class $className"
+  sealed class PackageNamed : TypeValue() {
+    abstract val typeName: TypeName
   }
 
-  sealed class ClassTypeDetail {
-    abstract val className: CName
-    abstract val relativeName: List<String>
+  data class DataClassTypeValue(val packageName: String, val className: String) : PackageNamed() {
+    override val typeName: TypeName get() = TypeName(packageName, className)
+
+    override fun toString(): String = "class $packageName:$className"
   }
 
-  data class DataClassTypeDetail(
-    override val className: CName,
-    override val relativeName: List<String>,
-    val fields: List<DataClassFieldValue>
-  ) : ClassTypeDetail() {
-    override fun toString(): String = "class $className"
+  data class SuperClassTypeValue(val packageName: String, val className: String) : PackageNamed() {
+    override val typeName: TypeName get() = TypeName(packageName, className)
+
+    override fun toString(): String = "super class $packageName:$className"
   }
 
-  data class DataClassFieldValue(val name: String, val type: TypeValue, val optional: Boolean)
+  data class EnumTypeValue(val packageName: String, val enumName: String) : PackageNamed() {
+    override val typeName: TypeName get() = TypeName(packageName, enumName)
 
-  data class SuperClassTypeDetail(
-    override val className: CName,
-    override val relativeName: List<String>,
-    val subClasses: List<CName>
-  ) : ClassTypeDetail() {
-    override fun toString(): String = "super class $className"
-  }
-
-  data class EnumTypeValue(val enumTypeName: CName, val enumValues: List<String>) : TypeValue() {
-    override fun toString(): String = "enum $enumTypeName"
+    override fun toString(): String = "enum $packageName:$enumName"
   }
 
   data class ListTypeValue(val elemType: TypeValue) : TypeValue() {
@@ -220,8 +216,8 @@ sealed class TypeValue : BibixValue() {
 }
 
 fun BibixValue.stringify(): String = when (this) {
-  is NDataClassInstanceValue -> this.toString()
-  is DataClassInstanceValue -> this.toString()
+  is NClassInstanceValue -> this.toString()
+  is ClassInstanceValue -> this.toString()
   is BooleanValue -> value.toString()
   is DirectoryValue -> directory.normalize().toString()
   is EnumValue -> value

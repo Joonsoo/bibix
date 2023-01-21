@@ -1,5 +1,7 @@
 package com.giyeok.bibix.base
 
+import java.nio.file.Path
+
 sealed class BuildRuleReturn {
   companion object {
     @JvmStatic
@@ -10,11 +12,17 @@ sealed class BuildRuleReturn {
     ) = EvalAndThen(ruleName, params, whenDone)
 
     @JvmStatic
-    fun getClassInfos(
-      cnames: List<CName>,
-      unames: List<String> = listOf(),
-      whenDone: (List<TypeValue.ClassTypeDetail>) -> BuildRuleReturn,
-    ) = GetClassTypeDetails(cnames, unames.map { it.split('.') }, whenDone)
+    fun eval(
+      ruleName: String,
+      params: Map<String, BibixValue>,
+    ) = EvalAndThen(ruleName, params, ::value)
+
+    @JvmStatic
+    fun getTypeDetails(
+      typeNames: List<TypeName> = listOf(),
+      relativeNames: List<String> = listOf(),
+      whenDone: (TypeDetailsMap) -> BuildRuleReturn,
+    ) = GetTypeDetails(typeNames, relativeNames, whenDone)
 
     @JvmStatic
     fun value(value: BibixValue) = ValueReturn(value)
@@ -24,6 +32,10 @@ sealed class BuildRuleReturn {
 
     @JvmStatic
     fun done() = DoneReturn
+
+    @JvmStatic
+    fun withDirectoryLock(directory: Path, withLock: () -> BuildRuleReturn) =
+      WithDirectoryLock(directory, withLock)
   }
 
   data class ValueReturn(val value: BibixValue) : BuildRuleReturn()
@@ -38,9 +50,21 @@ sealed class BuildRuleReturn {
     val whenDone: (BibixValue) -> BuildRuleReturn
   ) : BuildRuleReturn()
 
-  data class GetClassTypeDetails(
-    val cnames: List<CName>,
-    val unames: List<List<String>>,
-    val whenDone: (List<TypeValue.ClassTypeDetail>) -> BuildRuleReturn,
+  data class GetTypeDetails(
+    val typeNames: List<TypeName>,
+    val relativeNames: List<String>,
+    val whenDone: (TypeDetailsMap) -> BuildRuleReturn,
+  ) : BuildRuleReturn()
+
+  data class WithDirectoryLock(
+    val directory: Path,
+    val withLock: () -> BuildRuleReturn
   ) : BuildRuleReturn()
 }
+
+data class TypeName(val packageName: String, val typeName: String)
+
+data class TypeDetailsMap(
+  val canonicalNamed: Map<TypeName, TypeDetails>,
+  val relativeNamed: Map<String, TypeDetails>,
+)

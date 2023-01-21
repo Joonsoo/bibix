@@ -2,28 +2,21 @@ package com.giyeok.bibix.plugins.bibix
 
 import com.giyeok.bibix.base.Constants
 import com.giyeok.bibix.plugins.Classes
-import com.giyeok.bibix.plugins.BibixPlugin
+import com.giyeok.bibix.plugins.PreloadedPlugin
 
-val dollar = "\$"
-val bibixPlugin = BibixPlugin.fromScript(
+val bibixPlugin = PreloadedPlugin.fromScript(
+  "com.giyeok.bibix.plugins.bibix",
   """
     import jvm
     import curl
     
-    arg buildingBibixVersion: string = "${Constants.BUILDING_BIBIX_VERSION}"
-    arg bibixVersion: string = "${Constants.BIBIX_VERSION}"
+    version = "${Constants.BIBIX_VERSION}"
     
-    def base(
-      classpath: path = curl.download("https://github.com/Joonsoo/bibix/releases/download/${dollar}buildingBibixVersion/bibix-base-${dollar}buildingBibixVersion.jar")
-    ): jvm.ClassPkg = native:com.giyeok.bibix.plugins.bibix.Base
+    baseDownload = curl.download("https://github.com/Joonsoo/bibix/releases/download/${Constants.BIBIX_VERSION}/bibix-base-${Constants.BIBIX_VERSION}-all.jar")
+    base = jvm.ClassPkg(origin=jvm.LocalLib(baseDownload), cpinfo=jvm.JarInfo(baseDownload, none), deps=[])
     
-    def plugins(
-      tag: string = bibixVersion
-    ): GitSource = native:com.giyeok.bibix.plugins.bibix.Plugins
-    
-    def devPlugins(
-      branch: string = "main"
-    ): GitSource = native:com.giyeok.bibix.plugins.bibix.Plugins:dev
+    plugins = git("${Constants.BIBIX_PLUGINS_GIT_URL}")
+    devPlugins = git("${Constants.BIBIX_PLUGINS_GIT_URL}", branch="main")
     
     class RuleImplTemplate(implClass: file, interfaceClass: file) {
       as list<file> = [this.implClass, this.interfaceClass]
@@ -31,23 +24,21 @@ val bibixPlugin = BibixPlugin.fromScript(
     
     def genRuleImplTemplateKt(
       rules: set<buildrule>,
-      // TODO (type, string)은 뭐하려고 했던거지..? rename인가?
-      types: set<{type, (type, string)}>,
       implName: string,
       implInterfaceName: string,
     ): RuleImplTemplate = native:com.giyeok.bibix.plugins.bibix.GenRuleImplTemplateKt
     
-    def genClassesKt(
+    def genTypesKt(
       types: set<type>,
       packageName: string,
-      fileName: string = "BibixClasses.kt",
+      fileName: string = "BibixTypes.kt",
       outerClassName?: string,
-    ): file = native:com.giyeok.bibix.plugins.bibix.GenClassesKt
+    ): file = native:com.giyeok.bibix.plugins.bibix.GenTypesKt
   """.trimIndent(),
   Classes(
     Base::class.java,
     Plugins::class.java,
     GenRuleImplTemplateKt::class.java,
-    GenClassesKt::class.java,
+    GenTypesKt::class.java,
   )
 )

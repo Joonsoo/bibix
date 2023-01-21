@@ -30,7 +30,7 @@ class Library {
       "jvm.resolveClassPkgs",
       mapOf("classPkgs" to depsValue)
     ) { classPaths ->
-      val cps = (classPaths as DataClassInstanceValue)["cps"] as SetValue
+      val cps = (classPaths as ClassInstanceValue)["cps"] as SetValue
 
       val srcs = (context.arguments["srcs"]!! as SetValue).values.map { src ->
         (src as FileValue).file

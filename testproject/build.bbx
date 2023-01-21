@@ -1,0 +1,13 @@
+import git("https://github.com/Joonsoo/bibix.git", branch="newinterpreter") as newbibix
+from bibix.plugins import ktjvm
+import maven
+
+kotlinVersion = "1.8.0"
+var ktjvm.compilerVersion = "1.8.0"
+
+test1 = ktjvm.library(
+  srcs = ["src/main/kotlin/Test.kt"],
+  deps = [
+    maven.artifact("org.jetbrains.kotlin", "kotlin-stdlib", kotlinVersion),
+  ],
+)
