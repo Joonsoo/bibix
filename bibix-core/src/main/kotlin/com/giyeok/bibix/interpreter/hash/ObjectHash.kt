@@ -6,7 +6,11 @@ import com.giyeok.bibix.interpreter.expr.EvaluationResult
 import com.giyeok.bibix.utils.toHexString
 import com.google.protobuf.ByteString
 
-data class ObjectHash(val objectId: BibixIdProto.ObjectId, val hashString: ByteString) {
+data class ObjectHash(
+  val objectId: BibixIdProto.ObjectId,
+  val inputHashes: BibixIdProto.InputHashes,
+  val hashString: ByteString
+) {
   val hashHexString = hashString.toHexString()
 }
 
