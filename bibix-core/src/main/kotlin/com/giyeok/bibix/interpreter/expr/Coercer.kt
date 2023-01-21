@@ -245,8 +245,12 @@ class Coercer(
       return null
     }
     val coercedFields = value.fieldValues.mapValues { field ->
-      val fieldType = fieldDefs.getValue(field.key).type
-      tryCoerce(task, context, field.value, fieldType)
+      val fieldDef = fieldDefs.getValue(field.key)
+      if (fieldDef.optional && field.value == NoneValue) {
+        NoneValue
+      } else {
+        tryCoerce(task, context, field.value, fieldDef.type)
+      }
     }
     if (coercedFields.any { it.value == null }) {
       // 필드 중 coerce 실패하는 것이 있으면 실패
@@ -339,8 +343,9 @@ class Coercer(
                 val castType =
                   exprEvaluator.evaluateType(task, classDef.context, bodyElem.castTo())
                 if (isSubType(task, type, castType)) {
-                  val cast = exprEvaluator.evaluateExpr(task, context, bodyElem.expr(), value)
-                    .ensureValue()
+                  val cast =
+                    exprEvaluator.evaluateExpr(task, classDef.context, bodyElem.expr(), value)
+                      .ensureValue()
                   return coerce(task, context, cast, type)
                 }
               }

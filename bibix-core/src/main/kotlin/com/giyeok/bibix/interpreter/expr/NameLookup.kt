@@ -74,13 +74,9 @@ class NameLookup(
     val importSource = resolveImportSource(task, context, lookupResult, import.source())
     // lookupResult가 임포트하려던 것이 Definition을 직접 가리키고 있으면 그 definition을 등록
     val importedScope = NameLookupContext(importSource, listOf())
-    val restName = lookupResult.restName + import.importing().tokens().toKtList()
-    val definition = handleLookupResult(
-      requester,
-      context,
-      restName,
-      nameLookupTable.lookup(importedScope, restName)
-    )
+    val importingName = import.importing().tokens().toKtList()
+    val importLookup = nameLookupTable.lookup(importedScope, importingName)
+    val definition = handleLookupResult(requester, importedScope, importingName, importLookup)
     if (definition is Definition.NamespaceDef) {
       nameLookupTable.addImport(lookupResult.import.cname, NameLookupContext(definition.cname))
     } else {

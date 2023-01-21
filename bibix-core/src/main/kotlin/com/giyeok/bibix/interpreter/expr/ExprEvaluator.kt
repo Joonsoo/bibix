@@ -122,7 +122,8 @@ class ExprEvaluator(
       is Definition.ImportDef -> TODO()
       is Definition.NamespaceDef -> EvaluationResult.Namespace(NameLookupContext(definition.cname))
       is Definition.TargetDef -> {
-        val result = evaluateExpr(task, context, definition.target.value(), thisValue)
+        val defContext = NameLookupContext(definition.cname).dropLastToken()
+        val result = evaluateExpr(task, defContext, definition.target.value(), thisValue)
         if (definition.cname.sourceId == MainSourceId && result is EvaluationResult.ValueWithObjectHash) {
           interpreter.repo.linkNameToObject(definition.cname.tokens, result.objectHash)
         }

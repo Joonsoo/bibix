@@ -1,8 +1,6 @@
 package com.giyeok.bibix.interpreter.expr
 
-import com.giyeok.bibix.BibixIdProto
-import com.giyeok.bibix.argPair
-import com.giyeok.bibix.argsMap
+import com.giyeok.bibix.*
 import com.giyeok.bibix.ast.BibixAst
 import com.giyeok.bibix.base.*
 import com.giyeok.bibix.interpreter.BibixInterpreter
@@ -15,7 +13,6 @@ import com.giyeok.bibix.interpreter.hash.ObjectHash
 import com.giyeok.bibix.interpreter.hash.ObjectHasher
 import com.giyeok.bibix.interpreter.task.Task
 import com.giyeok.bibix.interpreter.task.TaskRelGraph
-import com.giyeok.bibix.objectId
 import com.giyeok.bibix.repo.extractInputHashes
 import com.giyeok.bibix.repo.hashString
 import com.giyeok.bibix.utils.await
@@ -202,25 +199,31 @@ class CallExprEvaluator(
       }.toMap()
 
       // Run concurrently
-      val paramValues = (posParamsMap + namedParams).mapValues { (_, valueExpr) ->
+      val paramValues = (posParamsMap + namedParams).mapValues { (paramName, valueExpr) ->
+        val paramDef = paramDefsMap.getValue(paramName)
         async {
-          exprEvaluator.evaluateExpr(task, context, valueExpr, thisValue, directBindings)
-            .ensureValue()
+          // string -> path로 변환할 때의 기준 디렉토리는 coercion이 일어나는 source id를 기준으로
+          val value =
+            exprEvaluator.evaluateExpr(task, context, valueExpr, thisValue, directBindings)
+              .ensureValue()
+          if (paramDef.optional && value == NoneValue) NoneValue else {
+            exprEvaluator.coerce(task, context, value, paramDef.type)
+          }
         }
       }
-      val defaultParamValues = defaultParamsMap.mapValues { (_, valueExpr) ->
+      val defaultParamValues = defaultParamsMap.mapValues { (paramName, valueExpr) ->
+        val paramDef = paramDefsMap.getValue(paramName)
         async {
           // 여기선 directBindings 사용하지 말아야 함
-          exprEvaluator.evaluateExpr(task, callable.context, valueExpr, thisValue).ensureValue()
+          val value =
+            exprEvaluator.evaluateExpr(task, callable.context, valueExpr, thisValue).ensureValue()
+          if (paramDef.optional && value == NoneValue) NoneValue else {
+            exprEvaluator.coerce(task, callable.context, value, paramDef.type)
+          }
         }
       }
 
-      val values = (paramValues + defaultParamValues).awaitAllValues()
-      val coercedValues = values.mapValues { (name, value) ->
-        val type = paramDefsMap.getValue(name).type
-        async { exprEvaluator.coerce(task, context, value, type) }
-      }.awaitAllValues()
-      coercedValues
+      (paramValues + defaultParamValues).awaitAllValues()
     }
 
   private suspend fun handlePluginReturnValue(
@@ -381,18 +384,18 @@ class CallExprEvaluator(
       this.className = buildRule.className
       this.methodName = buildRule.methodName
       this.argsMap = argsMap
-      this.inputHashes = inputHashes
     }
-    return ObjectHash(objectId, objectId.hashString())
+    return ObjectHash(objectId, inputHashes, objectId.hashString())
   }
 
   private fun protoOf(sourceId: SourceId): BibixIdProto.SourceId = when (sourceId) {
-    PreludeSourceId -> com.giyeok.bibix.sourceId { this.preloadedPlugin = "" }
-    MainSourceId -> com.giyeok.bibix.sourceId { this.mainSource = empty { } }
-    is PreloadedSourceId -> com.giyeok.bibix.sourceId { this.preloadedPlugin = sourceId.name }
-    is ExternSourceId -> {
-      // TODO
-      com.giyeok.bibix.sourceId { this.externPluginObjhash = TODO() }
+    PreludeSourceId -> sourceId { this.preloadedPlugin = "" }
+    MainSourceId -> sourceId { this.mainSource = empty { } }
+    is PreloadedSourceId -> sourceId { this.preloadedPlugin = sourceId.name }
+    is ExternSourceId -> sourceId {
+      this.externPluginObjhash = externalBibixProject {
+        // TODO
+      }
     }
   }
 
@@ -472,7 +475,7 @@ class CallExprEvaluator(
           BibixValueWithObjectHash(value, null)
         }
 
-        else -> throw IllegalStateException("TODO message")
+        else -> throw IllegalStateException("Invalid call target $expr")
       }
     }
 
