@@ -2,8 +2,8 @@ package com.giyeok.bibix.interpreter.task
 
 import com.giyeok.bibix.base.BibixValue
 import com.giyeok.bibix.interpreter.coroutine.TaskElement
-import com.giyeok.bibix.interpreter.hash.BibixValueWithObjectHash
-import com.giyeok.bibix.interpreter.hash.ObjectHash
+import com.giyeok.bibix.repo.BibixValueWithObjectHash
+import com.giyeok.bibix.repo.ObjectHash
 import com.google.common.annotations.VisibleForTesting
 import com.google.protobuf.ByteString
 import kotlinx.coroutines.CoroutineScope

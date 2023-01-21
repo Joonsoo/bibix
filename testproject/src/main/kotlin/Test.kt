@@ -4,3 +4,9 @@ object Test {
     println("Hello?")
   }
 }
+
+class TestClass {
+  fun hello() {
+    println("Hello!")
+  }
+}

@@ -1,4 +1,4 @@
-package com.giyeok.bibix.interpreter.hash
+package com.giyeok.bibix.repo
 
 import com.giyeok.bibix.BibixIdProto
 import com.giyeok.bibix.base.BibixValue

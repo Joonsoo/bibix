@@ -8,9 +8,8 @@ import com.giyeok.bibix.interpreter.RealmProvider
 import com.giyeok.bibix.interpreter.SourceManager
 import com.giyeok.bibix.interpreter.expr.EvaluationResult.RuleDef.ActionRuleDef
 import com.giyeok.bibix.interpreter.expr.EvaluationResult.RuleDef.BuildRuleDef
-import com.giyeok.bibix.interpreter.hash.BibixValueWithObjectHash
-import com.giyeok.bibix.interpreter.hash.ObjectHash
-import com.giyeok.bibix.interpreter.hash.ObjectHasher
+import com.giyeok.bibix.repo.BibixValueWithObjectHash
+import com.giyeok.bibix.repo.ObjectHash
 import com.giyeok.bibix.interpreter.task.Task
 import com.giyeok.bibix.interpreter.task.TaskRelGraph
 import com.giyeok.bibix.repo.extractInputHashes
@@ -33,8 +32,6 @@ class CallExprEvaluator(
   private val exprEvaluator: ExprEvaluator,
   private val realmProvider: RealmProvider
 ) {
-  private val objectHasher = ObjectHasher(interpreter)
-
   private suspend fun paramDefs(
     task: Task,
     context: NameLookupContext,

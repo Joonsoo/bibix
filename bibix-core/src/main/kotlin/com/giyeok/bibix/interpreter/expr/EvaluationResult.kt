@@ -2,7 +2,7 @@ package com.giyeok.bibix.interpreter.expr
 
 import com.giyeok.bibix.ast.BibixAst
 import com.giyeok.bibix.base.*
-import com.giyeok.bibix.interpreter.hash.ObjectHash
+import com.giyeok.bibix.repo.ObjectHash
 
 sealed class EvaluationResult {
 
