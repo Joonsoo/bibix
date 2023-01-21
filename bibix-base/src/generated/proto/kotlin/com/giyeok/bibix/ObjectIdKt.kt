@@ -228,30 +228,6 @@ public object ObjectIdKt {
     public fun hasArgsMap(): kotlin.Boolean {
       return _builder.hasArgsMap()
     }
-
-    /**
-     * <code>.com.giyeok.bibix.InputHashes input_hashes = 9;</code>
-     */
-    public var inputHashes: com.giyeok.bibix.BibixIdProto.InputHashes
-      @JvmName("getInputHashes")
-      get() = _builder.getInputHashes()
-      @JvmName("setInputHashes")
-      set(value) {
-        _builder.setInputHashes(value)
-      }
-    /**
-     * <code>.com.giyeok.bibix.InputHashes input_hashes = 9;</code>
-     */
-    public fun clearInputHashes() {
-      _builder.clearInputHashes()
-    }
-    /**
-     * <code>.com.giyeok.bibix.InputHashes input_hashes = 9;</code>
-     * @return Whether the inputHashes field is set.
-     */
-    public fun hasInputHashes(): kotlin.Boolean {
-      return _builder.hasInputHashes()
-    }
     public val ruleSourceCase: com.giyeok.bibix.BibixIdProto.ObjectId.RuleSourceCase
       @JvmName("getRuleSourceCase")
       get() = _builder.getRuleSourceCase()
