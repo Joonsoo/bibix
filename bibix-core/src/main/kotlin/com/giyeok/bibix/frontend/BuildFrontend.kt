@@ -22,8 +22,8 @@ class BuildFrontend(
   val buildArgsMap: Map<String, String>,
   val actionArgs: List<String>,
   val progressNotifier: ProgressNotifier,
-  prelude: PreloadedPlugin = preludePlugin,
-  preloadedPlugins: Map<String, PreloadedPlugin> = mapOf(
+  val prelude: PreloadedPlugin = preludePlugin,
+  val preloadedPlugins: Map<String, PreloadedPlugin> = mapOf(
     "bibix" to bibixPlugin,
     "curl" to curlPlugin,
     "java" to javaPlugin,
@@ -34,7 +34,7 @@ class BuildFrontend(
 ) {
   val repo = Repo.load(mainProject.projectRoot, debuggingMode = debuggingMode)
 
-  private val buildEnv = BuildEnv(getOsValue(), getArchValue())
+  val buildEnv = BuildEnv(getOsValue(), getArchValue())
 
   private val threadPool = ThreadPool(getMaxThreads(), progressNotifier)
 
