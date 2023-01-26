@@ -8,29 +8,24 @@ import com.giyeok.bibix.interpreter.RealmProvider
 import com.giyeok.bibix.interpreter.SourceManager
 import com.giyeok.bibix.interpreter.expr.EvaluationResult.RuleDef.ActionRuleDef
 import com.giyeok.bibix.interpreter.expr.EvaluationResult.RuleDef.BuildRuleDef
-import com.giyeok.bibix.repo.BibixValueWithObjectHash
-import com.giyeok.bibix.repo.ObjectHash
 import com.giyeok.bibix.interpreter.task.Task
 import com.giyeok.bibix.interpreter.task.TaskRelGraph
-import com.giyeok.bibix.repo.extractInputHashes
-import com.giyeok.bibix.repo.hashString
-import com.giyeok.bibix.utils.await
+import com.giyeok.bibix.repo.*
 import com.giyeok.bibix.utils.getOrNull
 import com.giyeok.bibix.utils.toKtList
 import com.giyeok.bibix.utils.toProto
 import com.google.protobuf.empty
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
-import java.nio.channels.AsynchronousFileChannel
 import java.nio.file.Path
-import java.nio.file.StandardOpenOption
 
 class CallExprEvaluator(
   private val interpreter: BibixInterpreter,
   private val g: TaskRelGraph,
   private val sourceManager: SourceManager,
   private val exprEvaluator: ExprEvaluator,
-  private val realmProvider: RealmProvider
+  private val realmProvider: RealmProvider,
+  private val directoryLocker: DirectoryLocker,
 ) {
   private suspend fun paramDefs(
     task: Task,
@@ -181,7 +176,9 @@ class CallExprEvaluator(
       val remainingParamDefs = paramDefs.drop(posParams.size)
 
       val unknownParams = namedParams.keys - remainingParamDefs.map { it.name }.toSet()
-      check(unknownParams.isEmpty()) { "Unknown parameters: $unknownParams at $params" }
+      check(unknownParams.isEmpty()) {
+        "Unknown parameters: $unknownParams at $params (${sourceManager.descriptionOf(context.sourceId)})"
+      }
 
       val unspecifiedParams = remainingParamDefs.map { it.name }.toSet() - namedParams.keys
       val missingParams = unspecifiedParams.filter { paramName ->
@@ -280,13 +277,7 @@ class CallExprEvaluator(
       }
 
       is BuildRuleReturn.WithDirectoryLock -> {
-        val lockFilePath = returnValue.directory.resolve("directory.lock")
-        val channel = AsynchronousFileChannel.open(
-          lockFilePath,
-          StandardOpenOption.WRITE,
-          StandardOpenOption.CREATE
-        )
-        val nextValue = channel.lock().await().use { returnValue.withLock() }
+        val nextValue = directoryLocker.withLock(returnValue.directory, returnValue.withLock)
         return handlePluginReturnValue(task, context, nextValue)
       }
 
@@ -423,7 +414,7 @@ class CallExprEvaluator(
 
       val progressIndicator = interpreter.progressIndicatorContainer.ofCurrentThread()
       val buildContext = BuildContext(
-        env = interpreter.buildEnv,
+        buildEnv = interpreter.buildEnv,
         fileSystem = interpreter.repo.fileSystem,
         mainBaseDirectory = sourceManager.getProjectRoot(MainSourceId),
         callerBaseDirectory = baseDirectoryOf(context.sourceId),
@@ -472,7 +463,9 @@ class CallExprEvaluator(
           BibixValueWithObjectHash(value, null)
         }
 
-        else -> throw IllegalStateException("Invalid call target $expr")
+        else -> throw IllegalStateException(
+          "Invalid call target $expr at ${sourceManager.descriptionOf(context.sourceId)}"
+        )
       }
     }
 

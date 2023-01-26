@@ -64,6 +64,8 @@ class ExprEvaluatorTests {
       ccc = ["hello"] + "world"
       ddd = [] + "hello"
       eee = [("hello", "world")] + ["good"]
+      fff = ["hello", "world"] as set<string> + ["everyone"]
+      ggg = ["hello", "world"] + (["everyone"] as set<string>)
     """.trimIndent()
     fs.getPath("/build.bbx").writeText(script)
 
@@ -73,14 +75,16 @@ class ExprEvaluatorTests {
     assertThat(interpreter.userBuildRequest("bbb")).isEqualTo(
       ListValue(StringValue("hello"), StringValue("world"), StringValue("everyone"))
     )
-    assertThat(interpreter.userBuildRequest("ccc")).isEqualTo(
-      ListValue(StringValue("hello"), StringValue("world"))
-    )
-    assertThat(interpreter.userBuildRequest("ddd")).isEqualTo(
-      ListValue(StringValue("hello"))
-    )
+    assertThrows<IllegalStateException> { interpreter.userBuildRequest("ccc") }
+    assertThrows<IllegalStateException> { interpreter.userBuildRequest("ddd") }
     assertThat(interpreter.userBuildRequest("eee")).isEqualTo(
       ListValue(TupleValue(StringValue("hello"), StringValue("world")), StringValue("good"))
+    )
+    assertThat(interpreter.userBuildRequest("fff")).isEqualTo(
+      SetValue(StringValue("hello"), StringValue("world"), StringValue("everyone"))
+    )
+    assertThat(interpreter.userBuildRequest("ggg")).isEqualTo(
+      ListValue(StringValue("hello"), StringValue("world"), StringValue("everyone"))
     )
   }
 

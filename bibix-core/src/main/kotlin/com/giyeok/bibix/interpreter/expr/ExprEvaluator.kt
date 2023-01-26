@@ -7,6 +7,7 @@ import com.giyeok.bibix.interpreter.RealmProvider
 import com.giyeok.bibix.interpreter.SourceManager
 import com.giyeok.bibix.interpreter.task.Task
 import com.giyeok.bibix.interpreter.task.TaskRelGraph
+import com.giyeok.bibix.repo.DirectoryLocker
 import com.giyeok.bibix.utils.getOrNull
 import com.giyeok.bibix.utils.toKtList
 import kotlinx.coroutines.async
@@ -18,9 +19,10 @@ class ExprEvaluator(
   private val sourceManager: SourceManager,
   private val varsManager: VarsManager,
   realmProvider: RealmProvider,
+  directoryLocker: DirectoryLocker,
 ) {
   private val callExprEvaluator =
-    CallExprEvaluator(interpreter, g, sourceManager, this, realmProvider)
+    CallExprEvaluator(interpreter, g, sourceManager, this, realmProvider, directoryLocker)
 
   private val coercer = Coercer(sourceManager, this)
 
@@ -50,7 +52,9 @@ class ExprEvaluator(
           when (val definition = interpreter.lookupName(task, context, name)) {
             is Definition.ClassDef -> {
               val packageName = sourceManager.getPackageName(definition.cname.sourceId)
-                ?: throw IllegalStateException("")
+                ?: throw IllegalStateException(
+                  "package name was not set for ${sourceManager.descriptionOf(definition.cname.sourceId)}"
+                )
               val className = definition.cname.tokens.joinToString(".")
               when (definition.classDef) {
                 is BibixAst.DataClassDef -> DataClassType(packageName, className)
@@ -124,10 +128,15 @@ class ExprEvaluator(
       is Definition.TargetDef -> {
         val defContext = NameLookupContext(definition.cname).dropLastToken()
         val result = evaluateExpr(task, defContext, definition.target.value(), thisValue)
-        if (definition.cname.sourceId == MainSourceId && result is EvaluationResult.ValueWithObjectHash) {
-          interpreter.repo.linkNameToObject(definition.cname.tokens, result.objectHash)
+
+        if (result is EvaluationResult.ValueWithObjectHash) {
+          if (definition.cname.sourceId == MainSourceId) {
+            interpreter.repo.linkNameToObject(definition.cname.tokens, result.objectHash)
+          }
+          EvaluationResult.Value(result.value)
+        } else {
+          result
         }
-        result
       }
 
       is Definition.ActionDef -> TODO()
@@ -198,9 +207,16 @@ class ExprEvaluator(
         else -> {}
       }
 
-      is ListValue -> return when (rhs) {
-        is ListValue -> ListValue(lhs.values + rhs.values)
-        else -> ListValue(lhs.values + rhs)
+      is ListValue -> when (rhs) {
+        is ListValue -> return ListValue(lhs.values + rhs.values)
+        is SetValue -> return ListValue(lhs.values + rhs.values)
+        else -> {}
+      }
+
+      is SetValue -> when (rhs) {
+        is ListValue -> return SetValue(lhs.values + rhs.values)
+        is SetValue -> return SetValue(lhs.values + rhs.values)
+        else -> {}
       }
 
       else -> {}
@@ -263,7 +279,13 @@ class ExprEvaluator(
               EvaluationResult.Value(EnumValue(target.packageName, target.enumName, expr.name()))
             }
 
-            else -> throw IllegalStateException("Invalid access to ${expr.name()} on ${expr.target()}")
+            else -> throw IllegalStateException(
+              "Invalid access to ${expr.name()} on ${expr.target()} at ${
+                sourceManager.descriptionOf(
+                  context.sourceId
+                )
+              }, target=$target"
+            )
           }
         }
 

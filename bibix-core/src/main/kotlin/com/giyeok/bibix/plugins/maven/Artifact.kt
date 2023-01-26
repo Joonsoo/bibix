@@ -208,23 +208,23 @@ class Artifact {
 
     override fun transferSucceeded(event: TransferEvent) {
       transferCompleted(event)
-      val resource: TransferResource = event.getResource()
-      val contentLength: Long = event.getTransferredBytes()
+      val resource: TransferResource = event.resource
+      val contentLength: Long = event.transferredBytes
       if (contentLength >= 0) {
         val type =
-          if (event.getRequestType() === TransferEvent.RequestType.PUT) "Uploaded" else "Downloaded"
+          if (event.requestType === TransferEvent.RequestType.PUT) "Uploaded" else "Downloaded"
         val len =
           if (contentLength >= 1024) toKB(contentLength).toString() + " KB" else "$contentLength B"
         var throughput = ""
-        val duration: Long = System.currentTimeMillis() - resource.getTransferStartTime()
+        val duration: Long = System.currentTimeMillis() - resource.transferStartTime
         if (duration > 0) {
-          val bytes: Long = contentLength - resource.getResumeOffset()
+          val bytes: Long = contentLength - resource.resumeOffset
           val format = DecimalFormat("0.0", DecimalFormatSymbols(Locale.ENGLISH))
           val kbPerSec = bytes / 1024.0 / (duration / 1000.0)
           throughput = " at " + format.format(kbPerSec) + " KB/sec"
         }
         out.println(
-          type + ": " + resource.getRepositoryUrl() + resource.getResourceName() + " (" + len
+          type + ": " + resource.repositoryUrl + resource.resourceName + " (" + len
             + throughput + ")"
         )
       }
@@ -232,13 +232,13 @@ class Artifact {
 
     override fun transferFailed(event: TransferEvent) {
       transferCompleted(event)
-      if (event.getException() !is MetadataNotFoundException) {
-        event.getException().printStackTrace(out)
+      if (event.exception !is MetadataNotFoundException) {
+        event.exception.printStackTrace(out)
       }
     }
 
     private fun transferCompleted(event: TransferEvent) {
-      downloads.remove(event.getResource())
+      downloads.remove(event.resource)
       val buffer = StringBuilder(64)
       pad(buffer, lastLength)
       buffer.append('\r')
@@ -246,7 +246,7 @@ class Artifact {
     }
 
     override fun transferCorrupted(event: TransferEvent) {
-      event.getException().printStackTrace(out)
+      event.exception.printStackTrace(out)
     }
 
     private fun toKB(bytes: Long): Long {
@@ -263,83 +263,83 @@ class Artifact {
     }
 
     override fun artifactDeployed(event: RepositoryEvent) {
-      out.println("Deployed " + event.getArtifact().toString() + " to " + event.getRepository())
+      out.println("Deployed " + event.artifact.toString() + " to " + event.repository)
     }
 
     override fun artifactDeploying(event: RepositoryEvent) {
-      out.println("Deploying " + event.getArtifact().toString() + " to " + event.getRepository())
+      out.println("Deploying " + event.artifact.toString() + " to " + event.repository)
     }
 
     override fun artifactDescriptorInvalid(event: RepositoryEvent) {
       out.println(
-        "Invalid artifact descriptor for " + event.getArtifact().toString() + ": "
-          + event.getException().message
+        "Invalid artifact descriptor for " + event.artifact.toString() + ": "
+          + event.exception.message
       )
     }
 
     override fun artifactDescriptorMissing(event: RepositoryEvent) {
-      out.println("Missing artifact descriptor for " + event.getArtifact())
+      out.println("Missing artifact descriptor for " + event.artifact)
     }
 
     override fun artifactInstalled(event: RepositoryEvent) {
-      out.println("Installed " + event.getArtifact().toString() + " to " + event.getFile())
+      out.println("Installed " + event.artifact.toString() + " to " + event.file)
     }
 
     override fun artifactInstalling(event: RepositoryEvent) {
-      out.println("Installing " + event.getArtifact().toString() + " to " + event.getFile())
+      out.println("Installing " + event.artifact.toString() + " to " + event.file)
     }
 
     override fun artifactResolved(event: RepositoryEvent) {
       out.println(
-        "Resolved artifact " + event.getArtifact().toString() + " from " + event.getRepository()
+        "Resolved artifact " + event.artifact.toString() + " from " + event.repository
       )
     }
 
     override fun artifactDownloading(event: RepositoryEvent) {
       out.println(
-        "Downloading artifact " + event.getArtifact().toString() + " from " + event.getRepository()
+        "Downloading artifact " + event.artifact.toString() + " from " + event.repository
       )
     }
 
     override fun artifactDownloaded(event: RepositoryEvent) {
       out.println(
-        "Downloaded artifact " + event.getArtifact().toString() + " from " + event.getRepository()
+        "Downloaded artifact " + event.artifact.toString() + " from " + event.repository
       )
     }
 
     override fun artifactResolving(event: RepositoryEvent) {
-      out.println("Resolving artifact " + event.getArtifact())
+      out.println("Resolving artifact " + event.artifact)
     }
 
     override fun metadataDeployed(event: RepositoryEvent) {
-      out.println("Deployed " + event.getMetadata().toString() + " to " + event.getRepository())
+      out.println("Deployed " + event.metadata.toString() + " to " + event.repository)
     }
 
     override fun metadataDeploying(event: RepositoryEvent) {
-      out.println("Deploying " + event.getMetadata().toString() + " to " + event.getRepository())
+      out.println("Deploying " + event.metadata.toString() + " to " + event.repository)
     }
 
     override fun metadataInstalled(event: RepositoryEvent) {
-      out.println("Installed " + event.getMetadata().toString() + " to " + event.getFile())
+      out.println("Installed " + event.metadata.toString() + " to " + event.file)
     }
 
     override fun metadataInstalling(event: RepositoryEvent) {
-      out.println("Installing " + event.getMetadata().toString() + " to " + event.getFile())
+      out.println("Installing " + event.metadata.toString() + " to " + event.file)
     }
 
     override fun metadataInvalid(event: RepositoryEvent) {
-      out.println("Invalid metadata " + event.getMetadata())
+      out.println("Invalid metadata " + event.metadata)
     }
 
     override fun metadataResolved(event: RepositoryEvent) {
       out.println(
-        "Resolved metadata " + event.getMetadata().toString() + " from " + event.getRepository()
+        "Resolved metadata ${event.metadata} from ${event.repository}"
       )
     }
 
     override fun metadataResolving(event: RepositoryEvent) {
       out.println(
-        "Resolving metadata " + event.getMetadata().toString() + " from " + event.getRepository()
+        "Resolving metadata ${event.metadata} from ${event.repository}"
       )
     }
   }

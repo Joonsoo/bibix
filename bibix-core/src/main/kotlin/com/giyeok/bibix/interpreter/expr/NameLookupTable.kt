@@ -18,6 +18,11 @@ class NameLookupTable(private val varsManager: VarsManager) {
   @VisibleForTesting
   val imports = mutableMapOf<CName, ImportedSource>()
 
+  private fun addDefinition(cname: CName, definition: Definition) {
+    // TODO check duplicate
+    definitions[cname] = definition
+  }
+
   fun add(context: NameLookupContext, defs: List<BibixAst.Def>) {
     fun traverse(scope: List<String>, defs: List<BibixAst.Def>) {
       defs.forEach { def ->
@@ -25,39 +30,39 @@ class NameLookupTable(private val varsManager: VarsManager) {
           is BibixAst.ImportDef -> {
             val name = def.scopeName()
             val cname = CName(context.sourceId, scope + name)
-            definitions[cname] = Definition.ImportDef(cname, def)
+            addDefinition(cname, Definition.ImportDef(cname, def))
           }
 
           is BibixAst.NamespaceDef -> {
             check(def.body().packageName().isEmpty) { "namespace cannot have package name" }
             val cname = CName(context.sourceId, scope + def.name())
-            definitions[cname] = Definition.NamespaceDef(cname)
+            addDefinition(cname, Definition.NamespaceDef(cname))
             traverse(scope + def.name(), def.body().defs().toKtList())
           }
 
           is BibixAst.TargetDef -> {
             val cname = CName(context.sourceId, scope + def.name())
-            definitions[cname] = Definition.TargetDef(cname, def)
+            addDefinition(cname, Definition.TargetDef(cname, def))
           }
 
           is BibixAst.ActionDef -> {
             val cname = CName(context.sourceId, scope + def.name())
-            definitions[cname] = Definition.ActionDef(cname, def)
+            addDefinition(cname, Definition.ActionDef(cname, def))
           }
 
           is BibixAst.DataClassDef -> {
             val cname = CName(context.sourceId, scope + def.name())
-            definitions[cname] = Definition.ClassDef(cname, def)
+            addDefinition(cname, Definition.ClassDef(cname, def))
           }
 
           is BibixAst.SuperClassDef -> {
             val cname = CName(context.sourceId, scope + def.name())
-            definitions[cname] = Definition.ClassDef(cname, def)
+            addDefinition(cname, Definition.ClassDef(cname, def))
           }
 
           is BibixAst.EnumDef -> {
             val cname = CName(context.sourceId, scope + def.name())
-            definitions[cname] = Definition.EnumDef(cname, def)
+            addDefinition(cname, Definition.EnumDef(cname, def))
           }
 
           is BibixAst.VarDef -> {
@@ -65,7 +70,7 @@ class NameLookupTable(private val varsManager: VarsManager) {
             val cname = CName(context.sourceId, def.name())
             val varContext = NameLookupContext(context.sourceId, scope)
             varsManager.addVarDef(cname, varContext, def)
-            definitions[cname] = Definition.VarDef(cname, def)
+            addDefinition(cname, Definition.VarDef(cname, def))
           }
 
           is BibixAst.VarRedef -> {
@@ -75,12 +80,12 @@ class NameLookupTable(private val varsManager: VarsManager) {
 
           is BibixAst.BuildRuleDef -> {
             val cname = CName(context.sourceId, scope + def.name())
-            definitions[cname] = Definition.BuildRule(cname, def)
+            addDefinition(cname, Definition.BuildRule(cname, def))
           }
 
           is BibixAst.ActionRuleDef -> {
             val cname = CName(context.sourceId, scope + def.name())
-            definitions[cname] = Definition.ActionRule(cname, def)
+            addDefinition(cname, Definition.ActionRule(cname, def))
           }
 
           else -> {}

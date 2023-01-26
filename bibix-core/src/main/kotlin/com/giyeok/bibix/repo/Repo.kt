@@ -24,6 +24,7 @@ class Repo(
   // shared - maven cache 폴더 등
   val sharedRootDirectory: Path,
   val sharedDirectoriesMap: MutableMap<String, Path>,
+  val directoryLocker: DirectoryLocker,
   val debuggingMode: Boolean = false,
 ) : BaseRepo {
   private fun now() = Timestamps.fromMillis(System.currentTimeMillis())
@@ -170,6 +171,7 @@ class Repo(
         outputsDirectory = outputsDirectory,
         sharedRootDirectory = sharedRootDirectory,
         sharedDirectoriesMap = mutableMapOf(),
+        directoryLocker = DirectoryLockerImpl(),
         debuggingMode = debuggingMode,
       )
     }

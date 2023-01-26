@@ -58,7 +58,7 @@ sealed class BuildRuleReturn {
 
   data class WithDirectoryLock(
     val directory: Path,
-    val withLock: () -> BuildRuleReturn
+    val withLock: () -> BuildRuleReturn,
   ) : BuildRuleReturn()
 }
 

@@ -7,7 +7,7 @@ import kotlin.io.path.createDirectory
 import kotlin.io.path.notExists
 
 data class BuildContext(
-  val env: BuildEnv,
+  val buildEnv: BuildEnv,
   val fileSystem: FileSystem,
   // 메인 스크립트의 베이스 디렉토리
   val mainBaseDirectory: Path,

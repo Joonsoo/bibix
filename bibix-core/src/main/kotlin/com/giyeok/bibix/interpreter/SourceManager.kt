@@ -45,16 +45,25 @@ class SourceManager {
     project: BibixProject,
     buildScript: BibixAst.BuildScript,
     nameLookupTable: NameLookupTable
-  ) {
-    projectRoots[sourceId] = project.projectRoot
+  ): SourceId {
     // script가 sourceId라는 이름으로 등록됨
     // remember that sourceId has the package name
-    // TODO Check the package name is unique
-    if (buildScript.packageName().isDefined) {
+    // It is checked by sourcePackageName whether the package name is unique
+    val usingSourceId = if (buildScript.packageName().isDefined) {
       val packageName = buildScript.packageName().get().tokens().toKtList().joinToString(".")
-      sourcePackageName[sourceId] = packageName
+      val conflict = sourcePackageName.inverse()[packageName]
+      if (conflict != null && projectRoots[conflict] == project.projectRoot) {
+        conflict
+      } else {
+        sourcePackageName[sourceId] = packageName
+        sourceId
+      }
+    } else {
+      sourceId
     }
-    nameLookupTable.add(NameLookupContext(sourceId, listOf()), buildScript.defs().toKtList())
+    projectRoots[usingSourceId] = project.projectRoot
+    nameLookupTable.add(NameLookupContext(usingSourceId, listOf()), buildScript.defs().toKtList())
+    return usingSourceId
   }
 
   suspend fun loadPrelude(prelude: PreloadedPlugin, nameLookupTable: NameLookupTable) {
@@ -86,8 +95,7 @@ class SourceManager {
       externSourceIdCounter += 1
       val sourceId = ExternSourceId(externSourceIdCounter)
       externSources[project] = sourceId
-      registerScript(sourceId, project, buildScript, nameLookupTable)
-      sourceId
+      registerScript(sourceId, project, buildScript, nameLookupTable) as ExternSourceId
     }
   }
 
@@ -114,4 +122,13 @@ class SourceManager {
 
   suspend fun getSourceIdFromPackageName(packageName: String): SourceId? =
     mutex.withLock { sourcePackageName.inverse()[packageName] }
+
+  fun descriptionOf(sourceId: SourceId): String = when (sourceId) {
+    is ExternSourceId -> {
+      val projectRoot = projectRoots[sourceId]
+      "external project at $projectRoot"
+    }
+
+    else -> "$sourceId"
+  }
 }

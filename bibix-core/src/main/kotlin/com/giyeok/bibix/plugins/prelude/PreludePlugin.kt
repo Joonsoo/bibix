@@ -37,9 +37,14 @@ val preludePlugin = PreloadedPlugin.fromScript(
     def glob(
       pattern: {string, set<string>}
     ): set<file> = native:com.giyeok.bibix.plugins.prelude.Glob
+    
+    env = currentEnv()
+    
+    def currentEnv(): Env = native:com.giyeok.bibix.plugins.prelude.CurrentEnv
   """.trimIndent(),
   Classes(
     Glob::class.java,
     Git::class.java,
+    CurrentEnv::class.java,
   )
 )

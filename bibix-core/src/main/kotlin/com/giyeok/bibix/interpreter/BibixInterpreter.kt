@@ -37,7 +37,8 @@ class BibixInterpreter(
   val sourceManager = SourceManager()
 
   @VisibleForTesting
-  val exprEvaluator = ExprEvaluator(this, g, sourceManager, varsManager, realmProvider)
+  val exprEvaluator =
+    ExprEvaluator(this, g, sourceManager, varsManager, realmProvider, repo.directoryLocker)
 
   private val nameLookup =
     NameLookup(g, nameLookupTable, preloadedPlugins, exprEvaluator, sourceManager)

@@ -16,7 +16,9 @@ class Coercer(
     value: BibixValue,
     type: BibixType
   ): BibixValue = tryCoerce(task, context, value, type)
-    ?: throw IllegalStateException("Coercion failed: $value to $type")
+    ?: throw IllegalStateException(
+      "Coercion failed: $value to $type (${sourceManager.descriptionOf(context.sourceId)})"
+    )
 
   suspend fun tryCoerce(
     task: Task,
@@ -81,14 +83,14 @@ class Coercer(
       is SetType -> {
         when (value) {
           is ListValue -> {
-            return SetValue(value.values.map {
-              coerce(task, context, it, type.elemType)
+            return SetValue(value.values.map { value ->
+              coerce(task, context, value, type.elemType)
             })
           }
 
           is SetValue -> {
-            return SetValue(value.values.map {
-              coerce(task, context, it, type.elemType)
+            return SetValue(value.values.map { value ->
+              coerce(task, context, value, type.elemType)
             })
           }
 

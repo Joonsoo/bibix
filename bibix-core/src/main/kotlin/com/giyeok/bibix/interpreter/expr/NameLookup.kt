@@ -52,7 +52,9 @@ class NameLookup(
       }
 
       LookupResult.NameNotFound ->
-        throw IllegalStateException("Name not found: ${name.joinToString(".")} from $context")
+        throw IllegalStateException(
+          "Name not found: ${name.joinToString(".")} in ${sourceManager.descriptionOf(context.sourceId)}"
+        )
     }
 
   private suspend fun resolveImportAll(
