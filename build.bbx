@@ -74,7 +74,7 @@ namespace proto {
   javaprotosrc = protobuf.java(schema)
   javagrpcsrc = grpc.java(schema)
   javalib = java.library(
-    srcs = javaprotosrc + javagrpcsrc,
+    srcs = [...javaprotosrc, ...javagrpcsrc],
     deps = [
       maven.artifact("com.google.protobuf", "protobuf-java", "3.19.4"),
       maven.artifact("io.grpc", "grpc-all", "1.46.0"),
@@ -84,7 +84,7 @@ namespace proto {
   kotlinprotosrc = protobuf.kotlin(schema)
   kotlingrpcsrc = grpc.kotlin(schema)
   kotlinlib = ktjvm.library(
-    srcs = kotlinprotosrc + kotlingrpcsrc,
+    srcs = [...kotlinprotosrc, ...kotlingrpcsrc],
     deps = [
       javalib,
       maven.artifact("com.google.protobuf", "protobuf-kotlin", "3.19.4"),
@@ -152,7 +152,7 @@ action coreTest = junit5.runTests(
   deps=[
     ktjvm.library(
       srcs = glob("bibix-core/src/test/kotlin/**/*.kt"),
-      deps = testDeps + [core],
+      deps = [core, ...testDeps],
     ),
   ]
 )

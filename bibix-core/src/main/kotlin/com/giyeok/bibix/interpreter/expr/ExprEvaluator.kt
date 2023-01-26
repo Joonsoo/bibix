@@ -301,11 +301,32 @@ class ExprEvaluator(
         is BibixAst.ListExpr -> {
           // Run concurrently
           val elemValues = expr.elems().toKtList().map { elemExpr ->
-            async {
-              evaluateExpr(task, context, elemExpr, thisValue, directBindings).ensureValue()
+            when (elemExpr) {
+              is BibixAst.EllipsisElem -> {
+                val expr = elemExpr.value()
+                async {
+                  val evaluated =
+                    evaluateExpr(task, context, expr, thisValue, directBindings).ensureValue()
+                  when (evaluated) {
+                    is ListValue -> evaluated.values
+                    is SetValue -> evaluated.values
+                    else -> throw IllegalStateException("Cannot expand $evaluated")
+                  }
+                }
+              }
+
+              is BibixAst.Expr -> {
+                async {
+                  val value =
+                    evaluateExpr(task, context, elemExpr, thisValue, directBindings).ensureValue()
+                  listOf(value)
+                }
+              }
+
+              else -> throw AssertionError()
             }
           }.awaitAll()
-          EvaluationResult.Value(ListValue(elemValues))
+          EvaluationResult.Value(ListValue(elemValues.flatten()))
         }
 
         is BibixAst.TupleExpr -> {
