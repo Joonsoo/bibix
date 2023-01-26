@@ -29,6 +29,7 @@ class ListEllipsisTests {
       ggg = [...eee] as set<string>
       hhh = [...glob("/hello/*")]
       iii = [...aaa + bbb]
+      jjj = [...aaa + bbb, ccc, ...eee]
     """.trimIndent()
     fs.getPath("/build.bbx").writeText(script)
 
@@ -71,6 +72,24 @@ class ListEllipsisTests {
         StringValue("hello"),
         StringValue("world"),
         StringValue("everyone")
+      )
+    )
+    assertThat(interpreter.userBuildRequest("jjj")).isEqualTo(
+      ListValue(
+        StringValue("hello"),
+        StringValue("world"),
+        StringValue("hello"),
+        StringValue("world"),
+        StringValue("everyone"),
+        ListValue(
+          StringValue("hello"),
+          StringValue("world"),
+          StringValue("hello"),
+          StringValue("world"),
+          StringValue("everyone")
+        ),
+        StringValue("hello"),
+        StringValue("world"),
       )
     )
   }
