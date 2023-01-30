@@ -14,13 +14,12 @@ buildscript {
 
 plugins {
     id 'java'
-    id 'scala'
     id 'org.jetbrains.kotlin.jvm'
     id 'com.github.johnrengelman.shadow' version '7.1.2'
 }
 
 group 'com.giyeok.bibix'
-version '0.0.4'
+version '0.1.1'
 
 repositories {
     mavenCentral()

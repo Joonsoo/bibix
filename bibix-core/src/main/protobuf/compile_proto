@@ -5,13 +5,13 @@ rm -rf ../../../../bibix-base/src/generated/proto/kotlin/*
 rm -rf ../../../../bibix-base/src/generated/grpc/java/*
 rm -rf ../../../../bibix-base/src/generated/grpc/kotlin/*
 
-./protoc run_config.proto values.proto ids.proto repo.proto api.proto \
+./protoc run_config.proto values.proto ids.proto repo.proto \
   --proto_path=. \
   --proto_path=./include \
   --java_out=../../../../bibix-base/src/generated/proto/java \
   --kotlin_out=../../../../bibix-base/src/generated/proto/kotlin \
 
-./protoc run_config.proto values.proto ids.proto repo.proto api.proto \
+./protoc run_config.proto values.proto ids.proto repo.proto \
   --proto_path=. \
   --proto_path=./include \
   --plugin=/home/joonsoo/Documents/workspace/bibix/bibix-core/src/main/protobuf/protoc-gen-grpc-java \

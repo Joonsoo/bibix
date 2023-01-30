@@ -1,9 +1,6 @@
 package com.giyeok.bibix.interpreter
 
-import com.giyeok.bibix.base.BibixValue
-import com.giyeok.bibix.base.BuildEnv
-import com.giyeok.bibix.base.MainSourceId
-import com.giyeok.bibix.base.NoneValue
+import com.giyeok.bibix.base.*
 import com.giyeok.bibix.interpreter.coroutine.TaskElement
 import com.giyeok.bibix.interpreter.task.Task
 import com.giyeok.bibix.interpreter.task.TaskRelGraph
@@ -91,4 +88,8 @@ class BibixInterpreter(
     context: NameLookupContext,
     name: List<String>
   ): Definition = nameLookup.lookupName(requester, context, name)
+//
+//  suspend fun listLoadedNames(): Map<CName, Definition> = nameLookupTable.definitions
+//
+//  suspend fun
 }
