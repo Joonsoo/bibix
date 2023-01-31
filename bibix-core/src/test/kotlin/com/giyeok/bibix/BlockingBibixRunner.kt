@@ -4,7 +4,7 @@ import com.giyeok.bibix.frontend.BuildFrontend
 import com.giyeok.bibix.frontend.cli.ProgressConsolePrinter
 import com.giyeok.bibix.interpreter.BibixInterpreter
 import com.giyeok.bibix.interpreter.BibixProject
-import com.giyeok.bibix.interpreter.RealmProviderImpl
+import com.giyeok.bibix.interpreter.PluginClassLoaderImpl
 import com.giyeok.bibix.interpreter.coroutine.ProgressIndicator
 import com.giyeok.bibix.interpreter.coroutine.ProgressIndicatorContainer
 import kotlinx.coroutines.async
@@ -27,7 +27,7 @@ object BlockingBibixRunner {
       buildEnv = frontend.buildEnv,
       prelude = frontend.prelude,
       preloadedPlugins = frontend.preloadedPlugins,
-      realmProvider = RealmProviderImpl(),
+      pluginClassLoader = PluginClassLoaderImpl(),
       mainProject = frontend.mainProject,
       repo = frontend.repo,
       progressIndicatorContainer = object : ProgressIndicatorContainer {

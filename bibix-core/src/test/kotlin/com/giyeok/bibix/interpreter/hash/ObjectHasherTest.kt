@@ -3,11 +3,10 @@ package com.giyeok.bibix.interpreter.hash
 import com.giyeok.bibix.*
 import com.giyeok.bibix.BibixIdProto.ObjectId
 import com.giyeok.bibix.base.*
-import com.giyeok.bibix.interpreter.FakeRealmProvider
+import com.giyeok.bibix.interpreter.FakePluginClassLoader
 import com.giyeok.bibix.interpreter.testInterpreter
 import com.giyeok.bibix.plugins.Classes
 import com.giyeok.bibix.plugins.PreloadedPlugin
-import com.giyeok.bibix.utils.toHexString
 import com.google.common.jimfs.Jimfs
 import com.google.common.truth.Truth.assertThat
 import com.google.common.truth.extensions.proto.ProtoTruth.assertThat
@@ -188,7 +187,10 @@ class ObjectHasherTest {
 
     val interpreter = testInterpreter(
       fs, "/", mapOf("jvm" to jvmPlugin),
-      realmProvider = FakeRealmProvider { classRealm })
+      pluginClassLoader = FakePluginClassLoader { _, className ->
+        val cls = classRealm.loadClass(className)
+        cls.getDeclaredConstructor().newInstance()
+      })
 
     assertThat(interpreter.userBuildRequest("aaa")).isEqualTo(StringValue("awesome!"))
     assertThat(interpreter.userBuildRequest("bbb")).isEqualTo(StringValue("awesome!"))

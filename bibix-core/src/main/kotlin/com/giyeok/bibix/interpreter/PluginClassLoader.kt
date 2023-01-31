@@ -9,11 +9,11 @@ import org.codehaus.plexus.classworlds.ClassWorld
 import org.codehaus.plexus.classworlds.realm.ClassRealm
 import kotlin.io.path.absolute
 
-interface RealmProvider {
-  suspend fun prepareRealm(cpInstance: ClassInstanceValue): ClassRealm
+interface PluginClassLoader {
+  suspend fun loadPluginInstance(cpInstance: ClassInstanceValue, className: String): Any
 }
 
-class RealmProviderImpl : RealmProvider {
+class PluginClassLoaderImpl : PluginClassLoader {
   private val classWorld = ClassWorld()
   private var realmIdCounter = 0
   private val mutex = Mutex()
@@ -24,11 +24,12 @@ class RealmProviderImpl : RealmProvider {
     newRealm
   }
 
-  override suspend fun prepareRealm(cpInstance: ClassInstanceValue): ClassRealm {
+  override suspend fun loadPluginInstance(cpInstance: ClassInstanceValue, className: String): Any {
     val realm = newRealm()
     ((cpInstance.fieldValues.getValue("cps")) as SetValue).values.forEach {
       realm.addURL((it as PathValue).path.absolute().toUri().toURL())
     }
-    return realm
+    val cls = realm.loadClass(className)
+    return cls.getDeclaredConstructor().newInstance()
   }
 }

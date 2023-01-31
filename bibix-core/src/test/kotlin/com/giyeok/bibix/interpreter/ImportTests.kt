@@ -303,9 +303,10 @@ class ImportTests {
       "/",
       mapOf("bibix" to bibixPlugin, "jvm" to jvmPlugin),
       prelude,
-      FakeRealmProvider { cpInstnace ->
+      FakePluginClassLoader { cpInstnace, className ->
         assertThat(cpInstnace.fieldValues).containsExactly("cps", SetValue())
-        classRealm
+        val cls = classRealm.loadClass(className)
+        cls.getDeclaredConstructor().newInstance()
       })
 
     assertThat(interpreter.userBuildRequest("aaa")).isEqualTo(StringValue("ktjvm successfully called"))

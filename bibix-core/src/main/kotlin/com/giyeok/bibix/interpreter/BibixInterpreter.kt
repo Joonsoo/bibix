@@ -16,7 +16,7 @@ class BibixInterpreter(
   val buildEnv: BuildEnv,
   val prelude: PreloadedPlugin,
   val preloadedPlugins: Map<String, PreloadedPlugin>,
-  val realmProvider: RealmProvider,
+  val pluginClassLoader: PluginClassLoader,
   val mainProject: BibixProject,
   val repo: Repo,
   val progressIndicatorContainer: ProgressIndicatorContainer,
@@ -35,7 +35,7 @@ class BibixInterpreter(
 
   @VisibleForTesting
   val exprEvaluator =
-    ExprEvaluator(this, g, sourceManager, varsManager, realmProvider, repo.directoryLocker)
+    ExprEvaluator(this, g, sourceManager, varsManager, pluginClassLoader, repo.directoryLocker)
 
   private val nameLookup =
     NameLookup(g, nameLookupTable, preloadedPlugins, exprEvaluator, sourceManager)

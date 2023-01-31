@@ -3,7 +3,7 @@ package com.giyeok.bibix.frontend
 import com.giyeok.bibix.base.*
 import com.giyeok.bibix.interpreter.BibixInterpreter
 import com.giyeok.bibix.interpreter.BibixProject
-import com.giyeok.bibix.interpreter.RealmProviderImpl
+import com.giyeok.bibix.interpreter.PluginClassLoaderImpl
 import com.giyeok.bibix.interpreter.coroutine.TaskElement
 import com.giyeok.bibix.interpreter.coroutine.ThreadPool
 import com.giyeok.bibix.interpreter.task.Task
@@ -42,7 +42,7 @@ class BuildFrontend(
     buildEnv = buildEnv,
     prelude = prelude,
     preloadedPlugins = preloadedPlugins,
-    realmProvider = RealmProviderImpl(),
+    pluginClassLoader = PluginClassLoaderImpl(),
     mainProject = mainProject,
     repo = repo,
     progressIndicatorContainer = threadPool,

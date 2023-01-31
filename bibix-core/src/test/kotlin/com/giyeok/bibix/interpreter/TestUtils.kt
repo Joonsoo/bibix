@@ -8,10 +8,7 @@ import com.giyeok.bibix.frontend.ThreadState
 import com.giyeok.bibix.interpreter.coroutine.FakeProgressIndicatorContainer
 import com.giyeok.bibix.plugins.Classes
 import com.giyeok.bibix.plugins.PreloadedPlugin
-import com.giyeok.bibix.plugins.prelude.preludePlugin
-import com.giyeok.bibix.repo.BibixRepoProto
 import com.giyeok.bibix.repo.Repo
-import com.giyeok.bibix.runner.RunConfigProto
 import java.nio.file.FileSystem
 
 fun testRepo(fs: FileSystem): Repo = Repo.load(fs.getPath("/"))
@@ -21,13 +18,13 @@ fun testInterpreter(
   mainPath: String,
   preloadedPlugins: Map<String, PreloadedPlugin>,
   preludePlugin: PreloadedPlugin = PreloadedPlugin("", listOf(), Classes()),
-  realmProvider: RealmProvider = FakeRealmProvider { throw NotImplementedError() },
+  pluginClassLoader: PluginClassLoader = FakePluginClassLoader { _, _ -> throw NotImplementedError() },
   actionArgs: List<String> = listOf()
 ) = BibixInterpreter(
   buildEnv = BuildEnv(OS.Linux("", ""), Architecture.X86_64),
   prelude = preludePlugin,
   preloadedPlugins = preloadedPlugins,
-  realmProvider = realmProvider,
+  pluginClassLoader = pluginClassLoader,
   mainProject = BibixProject(fs.getPath(mainPath), null),
   repo = testRepo(fs),
   progressIndicatorContainer = FakeProgressIndicatorContainer(),

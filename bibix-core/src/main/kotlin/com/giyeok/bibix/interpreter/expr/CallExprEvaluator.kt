@@ -4,7 +4,7 @@ import com.giyeok.bibix.*
 import com.giyeok.bibix.ast.BibixAst
 import com.giyeok.bibix.base.*
 import com.giyeok.bibix.interpreter.BibixInterpreter
-import com.giyeok.bibix.interpreter.RealmProvider
+import com.giyeok.bibix.interpreter.PluginClassLoader
 import com.giyeok.bibix.interpreter.SourceManager
 import com.giyeok.bibix.interpreter.expr.EvaluationResult.RuleDef.ActionRuleDef
 import com.giyeok.bibix.interpreter.expr.EvaluationResult.RuleDef.BuildRuleDef
@@ -24,7 +24,7 @@ class CallExprEvaluator(
   private val g: TaskRelGraph,
   private val sourceManager: SourceManager,
   private val exprEvaluator: ExprEvaluator,
-  private val realmProvider: RealmProvider,
+  private val pluginClassLoader: PluginClassLoader,
   private val directoryLocker: DirectoryLocker,
 ) {
   private suspend fun paramDefs(
@@ -340,13 +340,12 @@ class CallExprEvaluator(
     return coerceCpInstance(task, buildRule.context, impl)
   }
 
-  private suspend fun getRuleImplClass(task: Task, buildRule: BuildRuleDef): Class<*> =
+  private suspend fun getRuleImplInstance(task: Task, buildRule: BuildRuleDef): Any =
     when (buildRule) {
-      is BuildRuleDef.NativeBuildRuleDef -> buildRule.cls
+      is BuildRuleDef.NativeBuildRuleDef -> buildRule.cls.getDeclaredConstructor().newInstance()
       is BuildRuleDef.UserBuildRuleDef -> {
         val cpInstance = getRuleImplValue(task, buildRule)
-        val realm = realmProvider.prepareRealm(cpInstance)
-        realm.loadClass(buildRule.className)
+        pluginClassLoader.loadPluginInstance(cpInstance, buildRule.className)
       }
     }
 
@@ -408,9 +407,9 @@ class CallExprEvaluator(
     params: Map<String, BibixValue>
   ): BibixValueWithObjectHash =
     g.withMemo(hash(task, context.sourceId, buildRule, params)) { objHash ->
-      val pluginClass = getRuleImplClass(task, buildRule)
-      val pluginInstance = pluginClass.getDeclaredConstructor().newInstance()
-      val method = pluginClass.getMethod(buildRule.methodName, BuildContext::class.java)
+      val pluginInstance = getRuleImplInstance(task, buildRule)
+      val method =
+        pluginInstance::class.java.getMethod(buildRule.methodName, BuildContext::class.java)
 
       val progressIndicator = interpreter.progressIndicatorContainer.ofCurrentThread()
       val buildContext = BuildContext(
@@ -469,9 +468,11 @@ class CallExprEvaluator(
       }
     }
 
-  private suspend fun getActionImplClass(task: Task, actionRule: ActionRuleDef): Class<*> =
+  private suspend fun getActionImplInstance(task: Task, actionRule: ActionRuleDef): Any =
     when (actionRule) {
-      is ActionRuleDef.PreloadedActionRuleDef -> actionRule.cls
+      is ActionRuleDef.PreloadedActionRuleDef -> actionRule.cls.getDeclaredConstructor()
+        .newInstance()
+
       is ActionRuleDef.UserActionRuleDef -> {
         val impl = exprEvaluator.evaluateName(
           task,
@@ -479,8 +480,10 @@ class CallExprEvaluator(
           actionRule.implTarget,
           actionRule.thisValue
         ).ensureValue()
-        val realm = realmProvider.prepareRealm(coerceCpInstance(task, actionRule.context, impl))
-        realm.loadClass(actionRule.className)
+        pluginClassLoader.loadPluginInstance(
+          coerceCpInstance(task, actionRule.context, impl),
+          actionRule.className
+        )
       }
     }
 
@@ -499,9 +502,9 @@ class CallExprEvaluator(
       if (args == null) mapOf() else mapOf(args.first to ListValue(args.second.map { StringValue(it) }))
     val params = organizeParams(task, context, callTarget, expr.params(), null, directBindings)
 
-    val pluginClass = getActionImplClass(task, callTarget)
-    val pluginInstance = pluginClass.getDeclaredConstructor().newInstance()
-    val method = pluginClass.getMethod(callTarget.methodName, ActionContext::class.java)
+    val pluginInstance = getActionImplInstance(task, callTarget)
+    val method =
+      pluginInstance::class.java.getMethod(callTarget.methodName, ActionContext::class.java)
 
     val progressIndicator = interpreter.progressIndicatorContainer.ofCurrentThread()
     val actionContext = ActionContext(interpreter.buildEnv, params, progressIndicator)
