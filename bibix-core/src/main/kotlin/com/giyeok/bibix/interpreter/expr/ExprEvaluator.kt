@@ -122,63 +122,69 @@ class ExprEvaluator(
     name: List<String>,
     thisValue: BibixValue?,
   ): EvaluationResult =
-    when (val definition = interpreter.lookupName(task, context, name)) {
-      is Definition.ImportDef -> TODO()
-      is Definition.NamespaceDef -> EvaluationResult.Namespace(NameLookupContext(definition.cname))
-      is Definition.TargetDef -> {
-        val defContext = NameLookupContext(definition.cname).dropLastToken()
-        val result = evaluateExpr(task, defContext, definition.target.value(), thisValue)
+    evaluateDefinition(task, interpreter.lookupName(task, context, name), thisValue)
 
-        if (result is EvaluationResult.ValueWithObjectHash) {
-          if (definition.cname.sourceId == MainSourceId) {
-            interpreter.repo.linkNameToObject(definition.cname.tokens, result.objectHash)
-          }
-          EvaluationResult.Value(result.value)
-        } else {
-          result
+  suspend fun evaluateDefinition(
+    requester: Task,
+    definition: Definition,
+    thisValue: BibixValue?
+  ): EvaluationResult = when (definition) {
+    is Definition.ImportDef -> TODO()
+    is Definition.NamespaceDef -> EvaluationResult.Namespace(NameLookupContext(definition.cname))
+    is Definition.TargetDef -> {
+      val defContext = NameLookupContext(definition.cname).dropLastToken()
+      val result = evaluateExpr(requester, defContext, definition.target.value(), thisValue)
+
+      if (result is EvaluationResult.ValueWithObjectHash) {
+        if (definition.cname.sourceId == MainSourceId) {
+          interpreter.repo.linkNameToObject(definition.cname.tokens, result.objectHash)
         }
+        EvaluationResult.Value(result.value)
+      } else {
+        result
       }
-
-      is Definition.ActionDef -> TODO()
-      is Definition.ClassDef -> callExprEvaluator.resolveClassDef(task, definition)
-
-      is Definition.EnumDef -> {
-        val sourceId = definition.cname.sourceId
-        val packageName = sourceManager.getPackageName(sourceId)
-          ?: throw IllegalStateException("Package name for enum type ${definition.cname} not specified")
-        EvaluationResult.EnumDef(
-          sourceId,
-          packageName,
-          definition.enumDef.name(),
-          definition.enumDef.values().toKtList()
-        )
-      }
-
-      is Definition.VarDef -> {
-        val varDef = varsManager.getVarDef(definition.cname)
-        check(varDef.def == definition.varDef)
-        // TODO 프로그램 argument 지원
-        val redefines = varsManager.redefines(interpreter.nameLookupTable, definition.cname)
-        if (redefines.isNotEmpty()) {
-          // TODO redefinition이 여러개 발견되면 어떻게 처리하지..?
-          check(redefines.size == 1) { "more than one redefinition for ${definition.cname} found" }
-          val redefine = redefines.first()
-          evaluateExpr(task, redefine.redefContext, redefine.def.redefValue(), null)
-        } else {
-          val defaultValueExpr =
-            varDef.def.defaultValue().getOrNull() ?: throw IllegalStateException("???")
-          evaluateExpr(task, varDef.defContext, defaultValueExpr, null)
-        }
-      }
-
-      is Definition.VarRedef -> TODO()
-
-      is Definition.BuildRule ->
-        callExprEvaluator.resolveBuildRule(task, thisValue, definition)
-
-      is Definition.ActionRule ->
-        callExprEvaluator.resolveActionRule(task, thisValue, definition)
     }
+
+    is Definition.ActionDef -> TODO()
+    is Definition.ClassDef -> callExprEvaluator.resolveClassDef(requester, definition)
+
+    is Definition.EnumDef -> {
+      val sourceId = definition.cname.sourceId
+      val packageName = sourceManager.getPackageName(sourceId)
+        ?: throw IllegalStateException("Package name for enum type ${definition.cname} not specified")
+      EvaluationResult.EnumDef(
+        sourceId,
+        packageName,
+        definition.enumDef.name(),
+        definition.enumDef.values().toKtList()
+      )
+    }
+
+    is Definition.VarDef -> {
+      val varDef = varsManager.getVarDef(definition.cname)
+      check(varDef.def == definition.varDef)
+      // TODO 프로그램 argument 지원
+      val redefines = varsManager.redefines(interpreter.nameLookupTable, definition.cname)
+      if (redefines.isNotEmpty()) {
+        // TODO redefinition이 여러개 발견되면 어떻게 처리하지..?
+        check(redefines.size == 1) { "more than one redefinition for ${definition.cname} found" }
+        val redefine = redefines.first()
+        evaluateExpr(requester, redefine.redefContext, redefine.def.redefValue(), null)
+      } else {
+        val defaultValueExpr =
+          varDef.def.defaultValue().getOrNull() ?: throw IllegalStateException("???")
+        evaluateExpr(requester, varDef.defContext, defaultValueExpr, null)
+      }
+    }
+
+    is Definition.VarRedef -> TODO()
+
+    is Definition.BuildRule ->
+      callExprEvaluator.resolveBuildRule(requester, thisValue, definition)
+
+    is Definition.ActionRule ->
+      callExprEvaluator.resolveActionRule(requester, thisValue, definition)
+  }
 
   suspend fun findTypeDefinition(
     task: Task,

@@ -1,12 +1,6 @@
 package com.giyeok.bibix.interpreter
 
-import com.giyeok.bibix.base.Architecture
-import com.giyeok.bibix.base.BuildEnv
-import com.giyeok.bibix.base.OS
 import com.giyeok.bibix.base.StringValue
-import com.giyeok.bibix.repo.BibixRepoProto.BibixRepo
-import com.giyeok.bibix.repo.Repo
-import com.giyeok.bibix.runner.RunConfigProto
 import com.google.common.jimfs.Jimfs
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.runBlocking

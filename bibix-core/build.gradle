@@ -36,8 +36,6 @@ sourceSets {
     main {
         kotlin {
             srcDir 'src/main/kotlin'
-            srcDir 'src/generated/kotlin'
-            srcDir 'src/generated/kotlin-grpc'
         }
     }
     test {
@@ -63,8 +61,6 @@ dependencies {
     implementation group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib', version: kotlinVersion
     implementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-core', version: '1.6.0'
     implementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-jdk8', version: '1.6.0'
-
-    implementation group: 'org.scala-lang', name: 'scala-library', version: '2.13.6'
 
     implementation "com.google.protobuf:protobuf-java-util:3.19.4"
     implementation "com.google.protobuf:protobuf-java:3.19.4"

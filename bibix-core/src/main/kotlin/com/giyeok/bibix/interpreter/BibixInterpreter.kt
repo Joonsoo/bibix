@@ -88,8 +88,4 @@ class BibixInterpreter(
     context: NameLookupContext,
     name: List<String>
   ): Definition = nameLookup.lookupName(requester, context, name)
-//
-//  suspend fun listLoadedNames(): Map<CName, Definition> = nameLookupTable.definitions
-//
-//  suspend fun
 }
