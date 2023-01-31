@@ -191,6 +191,7 @@ class CallExprEvaluator(
         val paramDef = paramDefsMap.getValue(paramName)
         paramDef.defaultValue?.let { paramName to paramDef.defaultValue }
       }.toMap()
+      val noneParams = unspecifiedParams - defaultParamsMap.keys
 
       // Run concurrently
       val paramValues = (posParamsMap + namedParams).mapValues { (paramName, valueExpr) ->
@@ -217,7 +218,7 @@ class CallExprEvaluator(
         }
       }
 
-      (paramValues + defaultParamValues).awaitAllValues()
+      (paramValues + defaultParamValues).awaitAllValues() + noneParams.associateWith { NoneValue }
     }
 
   private suspend fun handlePluginReturnValue(

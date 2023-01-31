@@ -105,7 +105,9 @@ data class NClassInstanceValue(
   override fun toString(): String = "${nameTokens.joinToString(".")}($fieldValues)"
 }
 
-object NoneValue : BibixValue()
+object NoneValue : BibixValue() {
+  override fun toString(): String = "none"
+}
 
 data class BuildRuleDefValue(
   val name: CName,
