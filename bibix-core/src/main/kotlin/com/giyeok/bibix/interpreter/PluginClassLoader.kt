@@ -3,6 +3,7 @@ package com.giyeok.bibix.interpreter
 import com.giyeok.bibix.base.ClassInstanceValue
 import com.giyeok.bibix.base.PathValue
 import com.giyeok.bibix.base.SetValue
+import com.giyeok.bibix.base.SourceId
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import org.codehaus.plexus.classworlds.ClassWorld
@@ -10,7 +11,11 @@ import org.codehaus.plexus.classworlds.realm.ClassRealm
 import kotlin.io.path.absolute
 
 interface PluginClassLoader {
-  suspend fun loadPluginInstance(cpInstance: ClassInstanceValue, className: String): Any
+  suspend fun loadPluginInstance(
+    callerSourceId: SourceId,
+    cpInstance: ClassInstanceValue,
+    className: String
+  ): Any
 }
 
 class PluginClassLoaderImpl : PluginClassLoader {
@@ -24,7 +29,11 @@ class PluginClassLoaderImpl : PluginClassLoader {
     newRealm
   }
 
-  override suspend fun loadPluginInstance(cpInstance: ClassInstanceValue, className: String): Any {
+  override suspend fun loadPluginInstance(
+    callerSourceId: SourceId,
+    cpInstance: ClassInstanceValue,
+    className: String
+  ): Any {
     val realm = newRealm()
     ((cpInstance.fieldValues.getValue("cps")) as SetValue).values.forEach {
       realm.addURL((it as PathValue).path.absolute().toUri().toURL())

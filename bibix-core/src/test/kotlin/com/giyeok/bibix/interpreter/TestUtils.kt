@@ -18,7 +18,7 @@ fun testInterpreter(
   mainPath: String,
   preloadedPlugins: Map<String, PreloadedPlugin>,
   preludePlugin: PreloadedPlugin = PreloadedPlugin("", listOf(), Classes()),
-  pluginClassLoader: PluginClassLoader = FakePluginClassLoader { _, _ -> throw NotImplementedError() },
+  pluginClassLoader: PluginClassLoader = FakePluginClassLoader { _, _, _ -> throw NotImplementedError() },
   actionArgs: List<String> = listOf()
 ) = BibixInterpreter(
   buildEnv = BuildEnv(OS.Linux("", ""), Architecture.X86_64),

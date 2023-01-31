@@ -340,12 +340,16 @@ class CallExprEvaluator(
     return coerceCpInstance(task, buildRule.context, impl)
   }
 
-  private suspend fun getRuleImplInstance(task: Task, buildRule: BuildRuleDef): Any =
+  private suspend fun getRuleImplInstance(
+    callerSourceId: SourceId,
+    task: Task,
+    buildRule: BuildRuleDef
+  ): Any =
     when (buildRule) {
       is BuildRuleDef.NativeBuildRuleDef -> buildRule.cls.getDeclaredConstructor().newInstance()
       is BuildRuleDef.UserBuildRuleDef -> {
         val cpInstance = getRuleImplValue(task, buildRule)
-        pluginClassLoader.loadPluginInstance(cpInstance, buildRule.className)
+        pluginClassLoader.loadPluginInstance(callerSourceId, cpInstance, buildRule.className)
       }
     }
 
@@ -407,7 +411,7 @@ class CallExprEvaluator(
     params: Map<String, BibixValue>
   ): BibixValueWithObjectHash =
     g.withMemo(hash(task, context.sourceId, buildRule, params)) { objHash ->
-      val pluginInstance = getRuleImplInstance(task, buildRule)
+      val pluginInstance = getRuleImplInstance(context.sourceId, task, buildRule)
       val method =
         pluginInstance::class.java.getMethod(buildRule.methodName, BuildContext::class.java)
 
@@ -468,7 +472,11 @@ class CallExprEvaluator(
       }
     }
 
-  private suspend fun getActionImplInstance(task: Task, actionRule: ActionRuleDef): Any =
+  private suspend fun getActionImplInstance(
+    callerSourceId: SourceId,
+    task: Task,
+    actionRule: ActionRuleDef
+  ): Any =
     when (actionRule) {
       is ActionRuleDef.PreloadedActionRuleDef -> actionRule.cls.getDeclaredConstructor()
         .newInstance()
@@ -481,6 +489,7 @@ class CallExprEvaluator(
           actionRule.thisValue
         ).ensureValue()
         pluginClassLoader.loadPluginInstance(
+          callerSourceId,
           coerceCpInstance(task, actionRule.context, impl),
           actionRule.className
         )
@@ -502,7 +511,7 @@ class CallExprEvaluator(
       if (args == null) mapOf() else mapOf(args.first to ListValue(args.second.map { StringValue(it) }))
     val params = organizeParams(task, context, callTarget, expr.params(), null, directBindings)
 
-    val pluginInstance = getActionImplInstance(task, callTarget)
+    val pluginInstance = getActionImplInstance(context.sourceId, task, callTarget)
     val method =
       pluginInstance::class.java.getMethod(callTarget.methodName, ActionContext::class.java)
 

@@ -1,5 +1,6 @@
 import git("https://github.com/Joonsoo/bibix.git", branch="newinterpreter") as newbibix
 from bibix.plugins import ktjvm
+from bibix.plugins import scala
 import maven
 
 kotlinVersion = "1.8.0"
@@ -14,5 +15,13 @@ test2 = ktjvm.library(
 
 test1 = ktjvm.library(
   srcs = ["src/main/kotlin/Test2.kt"],
-  deps = [test2]
+  deps = [
+    test2,
+    scala.library(
+      srcs=["src/main/scala/Test3.scala"],
+      deps=[
+        maven.artifact("org.scala-lang", "scala-library", "2.13.10")
+      ],
+    ),
+  ]
 )

@@ -43,7 +43,7 @@ class ObjectLinkTests {
 
     assertThat(fs.getPath("/bbxbuild/outputs/aaa").isSymbolicLink()).isTrue()
     assertThat(fs.getPath("/bbxbuild/outputs/aaa").readSymbolicLink())
-      .isEqualTo(fs.getPath("/bbxbuild/objects/29246098a4beb0db7be38c36e090cd684af33f27"))
+      .isEqualTo(fs.getPath("/bbxbuild/objects/079dba5cf200d8844b755ca72108eedcf5fe98dc"))
     assertThat(fs.getPath("/bbxbuild/outputs/aaa/output.txt").readText()).isEqualTo("hello!")
   }
 
@@ -79,7 +79,8 @@ class ObjectLinkTests {
     assertThat(interpreter.userBuildRequest("ccc")).isEqualTo(StringValue("Great!"))
     assertThat(interpreter.userBuildRequest("ddd")).isEqualTo(StringValue("Hello!"))
 
-    assertThat(fs.getPath("/bbxbuild/outputs").listDirectoryEntries()).containsExactly(
+    val outputsEntries = fs.getPath("/bbxbuild/outputs").listDirectoryEntries()
+    assertThat(outputsEntries).containsExactly(
       fs.getPath("/bbxbuild/outputs/aaa"),
       fs.getPath("/bbxbuild/outputs/bbb"),
       fs.getPath("/bbxbuild/outputs/ccc"),
@@ -87,16 +88,16 @@ class ObjectLinkTests {
 
     assertThat(fs.getPath("/bbxbuild/outputs/aaa").isSymbolicLink()).isTrue()
     assertThat(fs.getPath("/bbxbuild/outputs/aaa").readSymbolicLink())
-      .isEqualTo(fs.getPath("/bbxbuild/objects/2cb0fb4e186ef5df52cc5a0f8f257c3ddd780ed7"))
+      .isEqualTo(fs.getPath("/bbxbuild/objects/ea3c6e081b32ed5462295912548e341b90653b9e"))
     assertThat(fs.getPath("/bbxbuild/outputs/aaa/output.txt").readText()).isEqualTo("hi!")
 
     assertThat(fs.getPath("/bbxbuild/outputs/bbb").isSymbolicLink()).isTrue()
     assertThat(fs.getPath("/bbxbuild/outputs/bbb").readSymbolicLink())
-      .isEqualTo(fs.getPath("/bbxbuild/objects/2cb0fb4e186ef5df52cc5a0f8f257c3ddd780ed7"))
+      .isEqualTo(fs.getPath("/bbxbuild/objects/ea3c6e081b32ed5462295912548e341b90653b9e"))
 
     assertThat(fs.getPath("/bbxbuild/outputs/ccc").isSymbolicLink()).isTrue()
     assertThat(fs.getPath("/bbxbuild/outputs/ccc").readSymbolicLink())
-      .isEqualTo(fs.getPath("/bbxbuild/objects/ece2b79ab7745138c7b998580f04ca8534b6c483"))
+      .isEqualTo(fs.getPath("/bbxbuild/objects/632fce9116b3be154564e1f08fe8c5e6755f4221"))
     assertThat(fs.getPath("/bbxbuild/outputs/ccc/output.txt").readText()).isEqualTo("Good!")
   }
 }

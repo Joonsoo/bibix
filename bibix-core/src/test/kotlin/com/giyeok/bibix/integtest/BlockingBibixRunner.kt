@@ -1,4 +1,4 @@
-package com.giyeok.bibix
+package com.giyeok.bibix.integtest
 
 import com.giyeok.bibix.frontend.BuildFrontend
 import com.giyeok.bibix.frontend.cli.ProgressConsolePrinter

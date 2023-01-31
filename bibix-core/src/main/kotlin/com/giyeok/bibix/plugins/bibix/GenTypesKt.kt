@@ -40,7 +40,7 @@ class GenTypesKt {
         val fieldExpr = if (!field.optional) {
           bibixValueToKt("value[\"${field.name}\"]!!", field.type)
         } else {
-          "value[\"${field.name}\"]?.let { ${bibixValueToKt("it", field.type)} }"
+          "value[\"${field.name}\"]!!.let { v -> if (v == NoneValue) null else ${bibixValueToKt("v", field.type)} }"
         }
         p.println("$indent        ${field.name}=$fieldExpr,")
       }

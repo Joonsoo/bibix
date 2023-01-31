@@ -280,7 +280,7 @@ class ImportTests {
       """
         import jvm
         
-        impl = jvm.ClassPaths([bibix.base])
+        impl = jvm.ClassPaths([])
         
         def library(): string = impl:com.giyeok.bibix.interpreter.FakeKtJvmLibraryRule
       """.trimIndent()
@@ -303,7 +303,7 @@ class ImportTests {
       "/",
       mapOf("bibix" to bibixPlugin, "jvm" to jvmPlugin),
       prelude,
-      FakePluginClassLoader { cpInstnace, className ->
+      FakePluginClassLoader { _, cpInstnace, className ->
         assertThat(cpInstnace.fieldValues).containsExactly("cps", SetValue())
         val cls = classRealm.loadClass(className)
         cls.getDeclaredConstructor().newInstance()

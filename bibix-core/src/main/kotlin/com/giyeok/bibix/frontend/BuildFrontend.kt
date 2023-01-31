@@ -3,6 +3,7 @@ package com.giyeok.bibix.frontend
 import com.giyeok.bibix.base.*
 import com.giyeok.bibix.interpreter.BibixInterpreter
 import com.giyeok.bibix.interpreter.BibixProject
+import com.giyeok.bibix.interpreter.PluginClassLoader
 import com.giyeok.bibix.interpreter.PluginClassLoaderImpl
 import com.giyeok.bibix.interpreter.coroutine.TaskElement
 import com.giyeok.bibix.interpreter.coroutine.ThreadPool
@@ -23,15 +24,20 @@ class BuildFrontend(
   val actionArgs: List<String>,
   val progressNotifier: ProgressNotifier,
   val prelude: PreloadedPlugin = preludePlugin,
-  val preloadedPlugins: Map<String, PreloadedPlugin> = mapOf(
-    "bibix" to bibixPlugin,
-    "curl" to curlPlugin,
-    "java" to javaPlugin,
-    "jvm" to jvmPlugin,
-    "maven" to mavenPlugin,
-  ),
+  val preloadedPlugins: Map<String, PreloadedPlugin> = defaultPreloadedPlugins,
+  val pluginClassLoader: PluginClassLoader = PluginClassLoaderImpl(),
   val debuggingMode: Boolean = false
 ) {
+  companion object {
+    val defaultPreloadedPlugins = mapOf(
+      "bibix" to bibixPlugin,
+      "curl" to curlPlugin,
+      "java" to javaPlugin,
+      "jvm" to jvmPlugin,
+      "maven" to mavenPlugin,
+    )
+  }
+
   val repo = Repo.load(mainProject.projectRoot, debuggingMode = debuggingMode)
 
   val buildEnv = BuildEnv(getOsValue(), getArchValue())
@@ -42,7 +48,7 @@ class BuildFrontend(
     buildEnv = buildEnv,
     prelude = prelude,
     preloadedPlugins = preloadedPlugins,
-    pluginClassLoader = PluginClassLoaderImpl(),
+    pluginClassLoader = pluginClassLoader,
     mainProject = mainProject,
     repo = repo,
     progressIndicatorContainer = threadPool,

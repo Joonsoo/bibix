@@ -56,13 +56,13 @@ class ObjectHasherTest {
     assertThat(objMemoMap1).hasSize(1)
     assertThat(objHashMap1.keys).isEqualTo(objMemoMap1.keys)
 
-    assertThat(Rule1.history.map { it.first }).containsExactly("db7000dcc00b327d87bb8eb07793ca36961b4160")
+    assertThat(Rule1.history.map { it.first }).containsExactly("fe9154991d6910cd7d9eace18b0a1fe37f5c74a1")
     assertThat(Rule1.history.map { it.second }).containsExactly(
       objectId {
         this.callingSourceId = sourceId {
           this.mainSource = empty { }
         }
-        this.bibixVersion = "0.0.4"
+        this.bibixVersion = "0.1.0"
         this.ruleSourceId = sourceId { this.preloadedPlugin = "abc" }
         this.ruleName = "rule1"
         this.className = "com.giyeok.bibix.interpreter.hash.Rule1"
@@ -92,15 +92,15 @@ class ObjectHasherTest {
     assertThat(objHashMap2.keys).isEqualTo(objMemoMap2.keys)
 
     assertThat(Rule1.history.map { it.first }).containsExactly(
-      "db7000dcc00b327d87bb8eb07793ca36961b4160",
-      "0829664783262acd474f26802263def7ca2f63cf",
+      "fe9154991d6910cd7d9eace18b0a1fe37f5c74a1",
+      "3e901314e65cd7fa81f8cfdde57118598aee21f0",
     )
     assertThat(Rule1.history.map { it.second }).containsExactly(
       objectId {
         this.callingSourceId = sourceId {
           this.mainSource = empty { }
         }
-        this.bibixVersion = "0.0.4"
+        this.bibixVersion = "0.1.0"
         this.ruleSourceId = sourceId { this.preloadedPlugin = "abc" }
         this.ruleName = "rule1"
         this.className = "com.giyeok.bibix.interpreter.hash.Rule1"
@@ -124,7 +124,7 @@ class ObjectHasherTest {
         this.callingSourceId = sourceId {
           this.preloadedPlugin = "abc"
         }
-        this.bibixVersion = "0.0.4"
+        this.bibixVersion = "0.1.0"
         this.ruleSourceId = sourceId { this.preloadedPlugin = "abc" }
         this.ruleName = "rule1"
         this.className = "com.giyeok.bibix.interpreter.hash.Rule1"
@@ -187,7 +187,7 @@ class ObjectHasherTest {
 
     val interpreter = testInterpreter(
       fs, "/", mapOf("jvm" to jvmPlugin),
-      pluginClassLoader = FakePluginClassLoader { _, className ->
+      pluginClassLoader = FakePluginClassLoader { _, _, className ->
         val cls = classRealm.loadClass(className)
         cls.getDeclaredConstructor().newInstance()
       })
@@ -202,15 +202,18 @@ class ObjectHasherTest {
     assertThat(objMemoMap1).hasSize(1)
     assertThat(objHashMap1.keys).isEqualTo(objMemoMap1.keys)
 
-    assertThat(Rule2.history.map { it.first }).containsExactly(
-      "daa07c607289197fd533ffbf5a6e81e66b3a5beb",
-    )
+    assertThat(Rule2.history.map { it.first })
+      .containsExactly("1cce93a41349885755ace4aa317b7a0d6e2a1e19")
     assertThat(Rule2.history.map { it.second }).containsExactly(
       objectId {
         this.callingSourceId = sourceId {
           this.mainSource = empty { }
         }
         this.ruleImplObjhash = ByteString.fromHex("d1247699531c349d71499a996fce0fa81c9f57ce")
+        this.ruleSourceId = sourceId {
+          this.externPluginObjhash = externalBibixProject { }
+        }
+        this.ruleName = "rule2"
         this.className = "com.giyeok.bibix.interpreter.hash.Rule2"
         this.methodName = "build"
         this.argsMap = argsMap {

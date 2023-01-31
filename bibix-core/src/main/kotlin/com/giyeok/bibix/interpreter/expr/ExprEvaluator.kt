@@ -135,14 +135,10 @@ class ExprEvaluator(
       val defContext = NameLookupContext(definition.cname).dropLastToken()
       val result = evaluateExpr(requester, defContext, definition.target.value(), thisValue)
 
-      if (result is EvaluationResult.ValueWithObjectHash) {
-        if (definition.cname.sourceId == MainSourceId) {
-          interpreter.repo.linkNameToObject(definition.cname.tokens, result.objectHash)
-        }
-        EvaluationResult.Value(result.value)
-      } else {
-        result
+      if (result is EvaluationResult.ValueWithObjectHash && definition.cname.sourceId == MainSourceId) {
+        interpreter.repo.linkNameToObject(definition.cname.tokens, result.objectHash)
       }
+      result
     }
 
     is Definition.ActionDef -> TODO()

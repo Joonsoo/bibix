@@ -261,7 +261,7 @@ class Coercer(
     return ClassInstanceValue(
       value.packageName,
       value.className,
-      coercedFields.mapValues { it.value!! })
+      coercedFields.mapValues { it.value!! } + missingFields.map { it to NoneValue })
   }
 
   private suspend fun isValidValueOf(

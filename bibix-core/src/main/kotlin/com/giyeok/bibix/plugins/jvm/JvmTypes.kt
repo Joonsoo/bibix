@@ -76,9 +76,7 @@ data class JarInfo(
 //      check(value.className.tokens == listOf("JarInfo"))
       return JarInfo(
         jar = (value["jar"]!! as FileValue).file,
-        sourceJar = value["sourceJar"]?.let {
-          if (it == NoneValue) null else (it as FileValue).file
-        },
+        sourceJar = value["sourceJar"]!!.let { v -> if (v == NoneValue) null else (v as FileValue).file },
       )
     }
   }
@@ -104,7 +102,7 @@ data class ClassesInfo(
       return ClassesInfo(
         classDirs = (value["classDirs"]!! as SetValue).values.map { (it as DirectoryValue).directory },
         resDirs = (value["resDirs"]!! as SetValue).values.map { (it as DirectoryValue).directory },
-        srcs = value["srcs"]?.let { (it as SetValue).values.map { (it as FileValue).file } },
+        srcs = value["srcs"]!!.let { v -> if (v == NoneValue) null else (v as SetValue).values.map { (it as FileValue).file } },
       )
     }
   }
