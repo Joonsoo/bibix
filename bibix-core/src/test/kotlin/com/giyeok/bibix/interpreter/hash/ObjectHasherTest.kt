@@ -5,7 +5,7 @@ import com.giyeok.bibix.BibixIdProto.ObjectId
 import com.giyeok.bibix.base.*
 import com.giyeok.bibix.interpreter.FakePluginClassLoader
 import com.giyeok.bibix.interpreter.testInterpreter
-import com.giyeok.bibix.plugins.Classes
+import com.giyeok.bibix.plugins.PluginInstanceProvider
 import com.giyeok.bibix.plugins.PreloadedPlugin
 import com.google.common.jimfs.Jimfs
 import com.google.common.truth.Truth.assertThat
@@ -41,7 +41,7 @@ class ObjectHasherTest {
         
         qqq = rule1("hello", "world")
       """.trimIndent(),
-      Classes(Rule1::class.java)
+      PluginInstanceProvider(Rule1::class.java)
     )
 
     val interpreter = testInterpreter(fs, "/", mapOf("abc" to abcPlugin))
@@ -178,7 +178,7 @@ class ObjectHasherTest {
         class ClassPaths(cps: set<path>)
         fakeClassPaths = ClassPaths([])
       """.trimIndent(),
-      Classes()
+      PluginInstanceProvider()
     )
 
     val classWorld = ClassWorld()

@@ -5,7 +5,7 @@ import com.giyeok.bibix.base.BuildContext
 import com.giyeok.bibix.base.NoneValue
 import com.giyeok.bibix.base.StringValue
 import com.giyeok.bibix.interpreter.testInterpreter
-import com.giyeok.bibix.plugins.Classes
+import com.giyeok.bibix.plugins.PluginInstanceProvider
 import com.giyeok.bibix.plugins.PreloadedPlugin
 import com.google.common.jimfs.Jimfs
 import com.google.common.truth.Truth.assertThat
@@ -38,7 +38,7 @@ class OptionalParamsTests {
           noDefault?: string,
         ): string = native:com.giyeok.bibix.interpreter.expr.OptionalParamsTestRule1
       """.trimIndent(),
-      Classes(OptionalParamsTestRule1::class.java)
+      PluginInstanceProvider(OptionalParamsTestRule1::class.java)
     )
 
     val interpreter = testInterpreter(fs, "/", mapOf("xyz" to xyzPlugin))

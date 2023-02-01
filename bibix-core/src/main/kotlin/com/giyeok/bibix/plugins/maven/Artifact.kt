@@ -1,9 +1,9 @@
 package com.giyeok.bibix.plugins.maven
 
 import com.giyeok.bibix.base.*
-import com.giyeok.bibix.plugins.ClassPkg
-import com.giyeok.bibix.plugins.JarInfo
-import com.giyeok.bibix.plugins.MavenDep
+import com.giyeok.bibix.plugins.jvm.ClassPkg
+import com.giyeok.bibix.plugins.jvm.JarInfo
+import com.giyeok.bibix.plugins.jvm.MavenDep
 import org.apache.maven.repository.internal.MavenRepositorySystemUtils
 import org.eclipse.aether.*
 import org.eclipse.aether.artifact.Artifact

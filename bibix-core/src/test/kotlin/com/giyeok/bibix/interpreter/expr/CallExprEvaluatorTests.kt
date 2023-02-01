@@ -2,7 +2,7 @@ package com.giyeok.bibix.interpreter.expr
 
 import com.giyeok.bibix.base.*
 import com.giyeok.bibix.interpreter.*
-import com.giyeok.bibix.plugins.Classes
+import com.giyeok.bibix.plugins.PluginInstanceProvider
 import com.giyeok.bibix.plugins.PreloadedPlugin
 import com.google.common.jimfs.Jimfs
 import com.google.common.truth.Truth.assertThat
@@ -32,7 +32,7 @@ class CallExprEvaluatorTests {
         def testRun2(adding: string): string =
           native:com.giyeok.bibix.interpreter.expr.TestPlugin2:build1
       """.trimIndent(),
-      Classes(
+      PluginInstanceProvider(
         TestPlugin1::class.java,
         TestPlugin2::class.java
       )
@@ -61,7 +61,7 @@ class CallExprEvaluatorTests {
         action def sayHello(helloTo: string) =
           native:com.giyeok.bibix.interpreter.expr.TestPlugin1
       """.trimIndent(),
-      Classes(
+      PluginInstanceProvider(
         TestPlugin1::class.java,
         TestPlugin2::class.java
       )
@@ -91,7 +91,7 @@ class CallExprEvaluatorTests {
         def hello3(): list<string> =
           native:com.giyeok.bibix.interpreter.expr.TestPlugin6
       """.trimIndent(),
-      Classes(
+      PluginInstanceProvider(
         TestPlugin6::class.java
       )
     )

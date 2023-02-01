@@ -6,7 +6,7 @@ import com.giyeok.bibix.base.OS
 import com.giyeok.bibix.frontend.ProgressNotifier
 import com.giyeok.bibix.frontend.ThreadState
 import com.giyeok.bibix.interpreter.coroutine.FakeProgressIndicatorContainer
-import com.giyeok.bibix.plugins.Classes
+import com.giyeok.bibix.plugins.PluginInstanceProvider
 import com.giyeok.bibix.plugins.PreloadedPlugin
 import com.giyeok.bibix.repo.Repo
 import java.nio.file.FileSystem
@@ -17,7 +17,7 @@ fun testInterpreter(
   fs: FileSystem,
   mainPath: String,
   preloadedPlugins: Map<String, PreloadedPlugin>,
-  preludePlugin: PreloadedPlugin = PreloadedPlugin("", listOf(), Classes()),
+  preludePlugin: PreloadedPlugin = PreloadedPlugin("", listOf(), PluginInstanceProvider()),
   pluginClassLoader: PluginClassLoader = FakePluginClassLoader { _, _, _ -> throw NotImplementedError() },
   actionArgs: List<String> = listOf()
 ) = BibixInterpreter(

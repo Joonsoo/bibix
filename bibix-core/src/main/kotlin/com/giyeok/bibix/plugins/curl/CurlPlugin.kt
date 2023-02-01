@@ -1,6 +1,6 @@
 package com.giyeok.bibix.plugins.curl
 
-import com.giyeok.bibix.plugins.Classes
+import com.giyeok.bibix.plugins.PluginInstanceProvider
 import com.giyeok.bibix.plugins.PreloadedPlugin
 
 val curlPlugin = PreloadedPlugin.fromScript(
@@ -11,7 +11,7 @@ val curlPlugin = PreloadedPlugin.fromScript(
       filename?: string,
     ): file = native:com.giyeok.bibix.plugins.curl.Download
   """.trimIndent(),
-  Classes(
+  PluginInstanceProvider(
     Download::class.java
   )
 )

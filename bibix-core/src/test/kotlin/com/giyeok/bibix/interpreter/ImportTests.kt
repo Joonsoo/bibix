@@ -3,7 +3,7 @@ package com.giyeok.bibix.interpreter
 import com.giyeok.bibix.base.*
 import com.giyeok.bibix.interpreter.expr.ImportedSource
 import com.giyeok.bibix.interpreter.expr.NameLookupContext
-import com.giyeok.bibix.plugins.Classes
+import com.giyeok.bibix.plugins.PluginInstanceProvider
 import com.giyeok.bibix.plugins.PreloadedPlugin
 import com.giyeok.bibix.plugins.jvm.jvmPlugin
 import com.google.common.jimfs.Jimfs
@@ -50,7 +50,7 @@ class ImportTests {
         
         def worldRule(): string = native:com.giyeok.bibix.interpreter.TestWorldRule
       """.trimIndent(),
-      Classes(TestWorldRule::class.java),
+      PluginInstanceProvider(TestWorldRule::class.java),
     )
 
     val yzaPlugin = PreloadedPlugin.fromScript(
@@ -64,7 +64,7 @@ class ImportTests {
           moon = "moon"
         }
       """.trimIndent(),
-      Classes()
+      PluginInstanceProvider()
     )
 
     val interpreter = testInterpreter(fs, "/", mapOf("xyz" to xyzPlugin, "yza" to yzaPlugin))
@@ -234,7 +234,7 @@ class ImportTests {
         
         def worldRule(): string = native:com.giyeok.bibix.interpreter.TestWorldRule
       """.trimIndent(),
-      Classes(TestWorldRule::class.java),
+      PluginInstanceProvider(TestWorldRule::class.java),
     )
 
     val interpreter = testInterpreter(fs, "/", mapOf("xyz" to xyzPlugin))
@@ -263,7 +263,7 @@ class ImportTests {
         base = baseDownload
         baseDownload = "baseFile.jar"
       """.trimIndent(),
-      Classes()
+      PluginInstanceProvider()
     )
 
     fs.getPath("/baseFile.jar").writeText("")
@@ -291,7 +291,7 @@ class ImportTests {
       """
         import bibix
       """.trimIndent(),
-      Classes()
+      PluginInstanceProvider()
     )
 
     val classWorld = ClassWorld()

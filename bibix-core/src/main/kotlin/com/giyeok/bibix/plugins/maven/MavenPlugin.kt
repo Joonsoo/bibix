@@ -1,6 +1,6 @@
 package com.giyeok.bibix.plugins.maven
 
-import com.giyeok.bibix.plugins.Classes
+import com.giyeok.bibix.plugins.PluginInstanceProvider
 import com.giyeok.bibix.plugins.PreloadedPlugin
 
 val mavenPlugin = PreloadedPlugin.fromScript(
@@ -37,7 +37,7 @@ val mavenPlugin = PreloadedPlugin.fromScript(
       gpgKey?: file,
     ) = native:com.giyeok.bibix.plugins.maven.Deploy
   """.trimIndent(),
-  Classes(
+  PluginInstanceProvider(
     Artifact::class.java,
     Deploy::class.java,
   ),

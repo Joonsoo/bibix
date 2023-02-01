@@ -49,10 +49,10 @@ sealed class EvaluationResult {
         override val context: NameLookupContext,
         override val params: List<Param>,
         override val returnType: BibixType,
-        val cls: Class<*>,
+        val implInstance: Any,
         override val methodName: String
       ) : BuildRuleDef() {
-        override val className: String get() = cls.canonicalName
+        override val className: String get() = implInstance::class.java.canonicalName
       }
 
       data class UserBuildRuleDef(
@@ -77,10 +77,10 @@ sealed class EvaluationResult {
         override val name: CName,
         override val context: NameLookupContext,
         override val params: List<Param>,
-        val cls: Class<*>,
+        val implInstance: Any,
         override val methodName: String,
       ) : ActionRuleDef() {
-        override val className: String get() = cls.canonicalName
+        override val className: String get() = implInstance::class.java.canonicalName
       }
 
       data class UserActionRuleDef(

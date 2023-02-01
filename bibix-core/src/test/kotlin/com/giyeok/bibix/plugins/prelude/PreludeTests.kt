@@ -2,7 +2,7 @@ package com.giyeok.bibix.plugins.prelude
 
 import com.giyeok.bibix.base.StringValue
 import com.giyeok.bibix.interpreter.testInterpreter
-import com.giyeok.bibix.plugins.Classes
+import com.giyeok.bibix.plugins.PluginInstanceProvider
 import com.giyeok.bibix.plugins.PreloadedPlugin
 import com.google.common.jimfs.Jimfs
 import com.google.common.truth.Truth.assertThat
@@ -25,7 +25,7 @@ class PreludeTests {
       """
         abcValue = "Hello world!"
       """.trimIndent(),
-      Classes()
+      PluginInstanceProvider()
     )
 
     val prelude = PreloadedPlugin.fromScript(
@@ -33,7 +33,7 @@ class PreludeTests {
       """
         import abc
       """.trimIndent(),
-      Classes(),
+      PluginInstanceProvider(),
     )
 
     val interpreter =

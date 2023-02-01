@@ -2,10 +2,9 @@ package com.giyeok.bibix.interpreter.expr
 
 import com.giyeok.bibix.base.*
 import com.giyeok.bibix.interpreter.testInterpreter
-import com.giyeok.bibix.plugins.Classes
+import com.giyeok.bibix.plugins.PluginInstanceProvider
 import com.giyeok.bibix.plugins.PreloadedPlugin
 import com.google.common.jimfs.Jimfs
-import com.google.common.truth.Truth
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test
@@ -33,7 +32,7 @@ class CallExprEvaluatorOrganizeParamsTests {
         
         def hello(a: string, b: path): string = native:com.giyeok.bibix.interpreter.expr.TestPlugin8
       """.trimIndent(),
-      Classes(TestPlugin8::class.java)
+      PluginInstanceProvider(TestPlugin8::class.java)
     )
 
     val interpreter = testInterpreter(fs, "/", mapOf("abc" to abcPlugin))

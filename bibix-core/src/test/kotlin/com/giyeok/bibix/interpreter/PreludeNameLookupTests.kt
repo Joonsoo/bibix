@@ -3,7 +3,7 @@ package com.giyeok.bibix.interpreter
 import com.giyeok.bibix.base.BibixValue
 import com.giyeok.bibix.base.BuildContext
 import com.giyeok.bibix.base.StringValue
-import com.giyeok.bibix.plugins.Classes
+import com.giyeok.bibix.plugins.PluginInstanceProvider
 import com.giyeok.bibix.plugins.PreloadedPlugin
 import com.google.common.jimfs.Jimfs
 import com.google.common.truth.Truth.assertThat
@@ -30,7 +30,7 @@ class PreludeNameLookupTests {
           
         preludeValue = "Hello world!"
       """.trimIndent(),
-      Classes(TestPreludePlugin::class.java)
+      PluginInstanceProvider(TestPreludePlugin::class.java)
     )
 
     val interpreter = testInterpreter(fs, "/", mapOf(), preludePlugin = prelude)

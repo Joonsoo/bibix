@@ -1,9 +1,8 @@
 package com.giyeok.bibix.interpreter.expr
 
-import com.giyeok.bibix.ast.BibixAst
 import com.giyeok.bibix.base.*
 import com.giyeok.bibix.interpreter.testInterpreter
-import com.giyeok.bibix.plugins.Classes
+import com.giyeok.bibix.plugins.PluginInstanceProvider
 import com.giyeok.bibix.plugins.PreloadedPlugin
 import com.google.common.jimfs.Jimfs
 import com.google.common.truth.Truth.assertThat
@@ -41,7 +40,7 @@ class ClassValueTests {
         class Qwe(bye: string)
         class Rty(hi: xyz.Xyz)
       """.trimIndent(),
-      Classes()
+      PluginInstanceProvider()
     )
 
     val xyzPlugin = PreloadedPlugin.fromScript(
@@ -49,7 +48,7 @@ class ClassValueTests {
       """
         class Xyz(msg: string)
       """.trimIndent(),
-      Classes()
+      PluginInstanceProvider()
     )
 
     val interpreter = testInterpreter(fs, "/", mapOf("abc" to abcPlugin, "xyz" to xyzPlugin))
@@ -112,7 +111,7 @@ class ClassValueTests {
 
         def rule1(v: string): Xyz = native:com.giyeok.bibix.interpreter.expr.TestPlugin3
       """.trimIndent(),
-      Classes(TestPlugin3::class.java)
+      PluginInstanceProvider(TestPlugin3::class.java)
     )
 
     val interpreter = testInterpreter(fs, "/", mapOf("abc" to abcPlugin))
@@ -198,7 +197,7 @@ class ClassValueTests {
           helloTo: string
         ): xyz.Sup = native:com.giyeok.bibix.interpreter.expr.TestPlugin4
       """.trimIndent(),
-      Classes(TestPlugin4::class.java)
+      PluginInstanceProvider(TestPlugin4::class.java)
     )
 
     val xyzPlugin = PreloadedPlugin.fromScript(
@@ -209,7 +208,7 @@ class ClassValueTests {
         class Sub2(another: string)
         class NotSub(haha: string)
       """.trimIndent(),
-      Classes()
+      PluginInstanceProvider()
     )
 
     val interpreter = testInterpreter(fs, "/", mapOf("abc" to abcPlugin, "xyz" to xyzPlugin))
@@ -243,7 +242,7 @@ class ClassValueTests {
         
         def hello(key: string): xyz.Class1 = native:com.giyeok.bibix.interpreter.expr.TestPlugin7
       """.trimIndent(),
-      Classes(TestPlugin7::class.java)
+      PluginInstanceProvider(TestPlugin7::class.java)
     )
 
     val xyzPlugin = PreloadedPlugin.fromScript(
@@ -252,7 +251,7 @@ class ClassValueTests {
         class Class1(v1: list<Class2>)
         class Class2(v2: list<Class1>)
       """.trimIndent(),
-      Classes()
+      PluginInstanceProvider()
     )
 
     val interpreter = testInterpreter(fs, "/", mapOf("abc" to abcPlugin, "xyz" to xyzPlugin))
@@ -322,7 +321,7 @@ class ClassValueTests {
         def ruleB(sel: string): Super2 = native:com.giyeok.bibix.interpreter.expr.TestPlugin5
         def ruleC(sel: string): Super3 = native:com.giyeok.bibix.interpreter.expr.TestPlugin5
       """.trimIndent(),
-      Classes(TestPlugin5::class.java)
+      PluginInstanceProvider(TestPlugin5::class.java)
     )
 
     val interpreter = testInterpreter(fs, "/", mapOf("abc" to abcPlugin))

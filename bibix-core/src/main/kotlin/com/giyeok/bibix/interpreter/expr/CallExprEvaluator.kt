@@ -95,13 +95,27 @@ class CallExprEvaluator(
     val methodName = buildRule.impl().methodName().getOrNull() ?: "build"
 
     if (defName.sourceId is PreloadedSourceId && implTarget == listOf("native")) {
-      val cls =
-        sourceManager.getPreloadedPluginClass(defName.sourceId as PreloadedSourceId, clsName)
-      return BuildRuleDef.NativeBuildRuleDef(defName, defCtx, params, returnType, cls, methodName)
+      val implInstance =
+        sourceManager.getPreloadedPluginInstance(defName.sourceId as PreloadedSourceId, clsName)
+      return BuildRuleDef.NativeBuildRuleDef(
+        defName,
+        defCtx,
+        params,
+        returnType,
+        implInstance,
+        methodName
+      )
     }
     if (defName.sourceId is PreludeSourceId && implTarget == listOf("native")) {
-      val cls = sourceManager.getPreludePluginClass(clsName)
-      return BuildRuleDef.NativeBuildRuleDef(defName, defCtx, params, returnType, cls, methodName)
+      val implInstance = sourceManager.getPreludePluginInstance(clsName)
+      return BuildRuleDef.NativeBuildRuleDef(
+        defName,
+        defCtx,
+        params,
+        returnType,
+        implInstance,
+        methodName
+      )
     }
 
     return BuildRuleDef.UserBuildRuleDef(
@@ -133,13 +147,25 @@ class CallExprEvaluator(
     val methodName = actionRule.impl().methodName().getOrNull() ?: "run"
 
     if (defName.sourceId is PreloadedSourceId && implTarget == listOf("native")) {
-      val cls =
-        sourceManager.getPreloadedPluginClass(defName.sourceId as PreloadedSourceId, clsName)
-      return ActionRuleDef.PreloadedActionRuleDef(defName, defContext, params, cls, methodName)
+      val implInstance =
+        sourceManager.getPreloadedPluginInstance(defName.sourceId as PreloadedSourceId, clsName)
+      return ActionRuleDef.PreloadedActionRuleDef(
+        defName,
+        defContext,
+        params,
+        implInstance,
+        methodName
+      )
     }
     if (defName.sourceId is PreludeSourceId && implTarget == listOf("native")) {
-      val cls = sourceManager.getPreludePluginClass(clsName)
-      return ActionRuleDef.PreloadedActionRuleDef(defName, defContext, params, cls, methodName)
+      val implInstance = sourceManager.getPreludePluginInstance(clsName)
+      return ActionRuleDef.PreloadedActionRuleDef(
+        defName,
+        defContext,
+        params,
+        implInstance,
+        methodName
+      )
     }
 
     return ActionRuleDef.UserActionRuleDef(
@@ -347,7 +373,7 @@ class CallExprEvaluator(
     buildRule: BuildRuleDef
   ): Any =
     when (buildRule) {
-      is BuildRuleDef.NativeBuildRuleDef -> buildRule.cls.getDeclaredConstructor().newInstance()
+      is BuildRuleDef.NativeBuildRuleDef -> buildRule.implInstance
       is BuildRuleDef.UserBuildRuleDef -> {
         val cpInstance = getRuleImplValue(task, buildRule)
         pluginClassLoader.loadPluginInstance(callerSourceId, cpInstance, buildRule.className)
@@ -479,9 +505,7 @@ class CallExprEvaluator(
     actionRule: ActionRuleDef
   ): Any =
     when (actionRule) {
-      is ActionRuleDef.PreloadedActionRuleDef -> actionRule.cls.getDeclaredConstructor()
-        .newInstance()
-
+      is ActionRuleDef.PreloadedActionRuleDef -> actionRule.implInstance
       is ActionRuleDef.UserActionRuleDef -> {
         val impl = exprEvaluator.evaluateName(
           task,

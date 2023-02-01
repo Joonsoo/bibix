@@ -2,7 +2,7 @@ package com.giyeok.bibix.interpreter.expr
 
 import com.giyeok.bibix.base.StringValue
 import com.giyeok.bibix.interpreter.testInterpreter
-import com.giyeok.bibix.plugins.Classes
+import com.giyeok.bibix.plugins.PluginInstanceProvider
 import com.giyeok.bibix.plugins.PreloadedPlugin
 import com.google.common.jimfs.Jimfs
 import com.google.common.truth.Truth.assertThat
@@ -48,7 +48,7 @@ class VarTests {
       """
         var message = "old value"
       """.trimIndent(),
-      Classes()
+      PluginInstanceProvider()
     )
 
     val interpreter = testInterpreter(fs, "/", mapOf("xyz" to xyz))

@@ -7,10 +7,10 @@ import com.giyeok.jparser.ParsingErrors
 data class PreloadedPlugin(
   val packageName: String,
   val defs: List<BibixAst.Def>,
-  val classes: Classes,
+  val pluginInstanceProvider: PluginInstanceProvider,
 ) {
   companion object {
-    fun fromScript(packageName: String, script: String, classes: Classes): PreloadedPlugin {
+    fun fromScript(packageName: String, script: String, pluginInstanceProvider: PluginInstanceProvider): PreloadedPlugin {
       val parsed = BibixAst.parseAst(script)
 
       if (parsed.isRight) {
@@ -29,7 +29,7 @@ data class PreloadedPlugin(
         throw IllegalStateException("Failed to parse build script at line $lines: ${exception.msg()} (packageName=$packageName)")
       }
       val ast = parsed.left().get()
-      return PreloadedPlugin(packageName, ast.defs().toKtList(), classes)
+      return PreloadedPlugin(packageName, ast.defs().toKtList(), pluginInstanceProvider)
     }
   }
 }

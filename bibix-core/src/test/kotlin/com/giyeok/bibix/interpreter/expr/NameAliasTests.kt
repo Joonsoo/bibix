@@ -3,7 +3,7 @@ package com.giyeok.bibix.interpreter.expr
 import com.giyeok.bibix.base.ClassInstanceValue
 import com.giyeok.bibix.base.StringValue
 import com.giyeok.bibix.interpreter.testInterpreter
-import com.giyeok.bibix.plugins.Classes
+import com.giyeok.bibix.plugins.PluginInstanceProvider
 import com.giyeok.bibix.plugins.PreloadedPlugin
 import com.google.common.jimfs.Jimfs
 import com.google.common.truth.Truth.assertThat
@@ -32,7 +32,7 @@ class NameAliasTests {
       """
         class XyzClass(message: string)
       """.trimIndent(),
-      Classes()
+      PluginInstanceProvider()
     )
 
     val interpreter = testInterpreter(fs, "/", mapOf("xyz" to xyzPlugin))
@@ -69,7 +69,7 @@ class NameAliasTests {
       """
         class XyzClass(message: string)
       """.trimIndent(),
-      Classes()
+      PluginInstanceProvider()
     )
 
     val interpreter = testInterpreter(fs, "/", mapOf("xyz" to xyzPlugin))

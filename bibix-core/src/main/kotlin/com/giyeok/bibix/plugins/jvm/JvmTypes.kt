@@ -16,7 +16,8 @@ data class ClassPaths(
     }
   }
 
-  fun toBibix(): NClassInstanceValue = NClassInstanceValue(
+  fun toBibix(): ClassInstanceValue = ClassInstanceValue(
+    "com.giyeok.bibix.plugins.jvm",
     "ClassPaths",
     mapOf(
       "cps" to SetValue(this.cps.map { PathValue(it) }),
@@ -41,7 +42,8 @@ data class ClassPkg(
     }
   }
 
-  fun toBibix(): NClassInstanceValue = NClassInstanceValue(
+  fun toBibix(): ClassInstanceValue = ClassInstanceValue(
+    "com.giyeok.bibix.plugins.jvm",
     "ClassPkg",
     mapOf(
       "origin" to this.origin.toBibix(),
@@ -63,7 +65,7 @@ sealed class CpInfo {
     }
   }
 
-  abstract fun toBibix(): NClassInstanceValue
+  abstract fun toBibix(): ClassInstanceValue
 }
 
 data class JarInfo(
@@ -81,7 +83,8 @@ data class JarInfo(
     }
   }
 
-  override fun toBibix(): NClassInstanceValue = NClassInstanceValue(
+  override fun toBibix(): ClassInstanceValue = ClassInstanceValue(
+    "com.giyeok.bibix.plugins.jvm",
     "JarInfo",
     listOfNotNull(
       "jar" to FileValue(this.jar),
@@ -107,7 +110,8 @@ data class ClassesInfo(
     }
   }
 
-  override fun toBibix(): NClassInstanceValue = NClassInstanceValue(
+  override fun toBibix(): ClassInstanceValue = ClassInstanceValue(
+    "com.giyeok.bibix.plugins.jvm",
     "ClassesInfo",
     listOfNotNull(
       "classDirs" to SetValue(this.classDirs.map { DirectoryValue(it) }),
@@ -130,7 +134,7 @@ sealed class ClassOrigin {
     }
   }
 
-  abstract fun toBibix(): NClassInstanceValue
+  abstract fun toBibix(): ClassInstanceValue
 }
 
 data class MavenDep(
@@ -152,7 +156,8 @@ data class MavenDep(
     }
   }
 
-  override fun toBibix(): NClassInstanceValue = NClassInstanceValue(
+  override fun toBibix(): ClassInstanceValue = ClassInstanceValue(
+    "com.giyeok.bibix.plugins.jvm",
     "MavenDep",
     mapOf(
       "repo" to StringValue(this.repo),
@@ -178,7 +183,8 @@ data class LocalBuilt(
     }
   }
 
-  override fun toBibix(): NClassInstanceValue = NClassInstanceValue(
+  override fun toBibix(): ClassInstanceValue = ClassInstanceValue(
+    "com.giyeok.bibix.plugins.jvm",
     "LocalBuilt",
     mapOf(
       "objHash" to StringValue(this.objHash),
@@ -200,7 +206,8 @@ data class LocalLib(
     }
   }
 
-  override fun toBibix(): NClassInstanceValue = NClassInstanceValue(
+  override fun toBibix(): ClassInstanceValue = ClassInstanceValue(
+    "com.giyeok.bibix.plugins.jvm",
     "LocalLib",
     mapOf(
       "path" to PathValue(this.path),

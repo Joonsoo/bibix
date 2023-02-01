@@ -1,9 +1,9 @@
 package com.giyeok.bibix.plugins.bibix
 
 import com.giyeok.bibix.base.*
-import com.giyeok.bibix.plugins.ClassPkg
-import com.giyeok.bibix.plugins.JarInfo
-import com.giyeok.bibix.plugins.LocalLib
+import com.giyeok.bibix.plugins.jvm.ClassPkg
+import com.giyeok.bibix.plugins.jvm.JarInfo
+import com.giyeok.bibix.plugins.jvm.LocalLib
 
 class Base {
   fun build(context: BuildContext): BibixValue {

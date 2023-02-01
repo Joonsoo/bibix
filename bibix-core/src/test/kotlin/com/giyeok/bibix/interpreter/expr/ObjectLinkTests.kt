@@ -4,7 +4,7 @@ import com.giyeok.bibix.base.BibixValue
 import com.giyeok.bibix.base.BuildContext
 import com.giyeok.bibix.base.StringValue
 import com.giyeok.bibix.interpreter.testInterpreter
-import com.giyeok.bibix.plugins.Classes
+import com.giyeok.bibix.plugins.PluginInstanceProvider
 import com.giyeok.bibix.plugins.PreloadedPlugin
 import com.google.common.jimfs.Jimfs
 import com.google.common.truth.Truth.assertThat
@@ -30,7 +30,7 @@ class ObjectLinkTests {
         def rule1(message: string): string =
           native:com.giyeok.bibix.interpreter.expr.ObjectLinkTestsPlugin1
       """.trimIndent(),
-      Classes(ObjectLinkTestsPlugin1::class.java)
+      PluginInstanceProvider(ObjectLinkTestsPlugin1::class.java)
     )
 
     val interpreter = testInterpreter(fs, "/", mapOf("abc" to abcPlugin))
@@ -70,7 +70,7 @@ class ObjectLinkTests {
         xxx = rule1("Good!")
         yyy = "Hello!"
       """.trimIndent(),
-      Classes(ObjectLinkTestsPlugin1::class.java)
+      PluginInstanceProvider(ObjectLinkTestsPlugin1::class.java)
     )
 
     val interpreter = testInterpreter(fs, "/", mapOf("abc" to abcPlugin))

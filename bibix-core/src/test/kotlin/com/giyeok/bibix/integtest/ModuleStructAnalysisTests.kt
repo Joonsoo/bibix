@@ -21,7 +21,9 @@ import kotlin.io.path.Path
 class ModuleStructAnalysisTests {
   @Test
   fun test() {
-    val modulesCollector = ModulesCollector()
+    val javaModulesCollector = ModulesCollector()
+    val ktjvmModulesCollector = ModulesCollector()
+    val scalaModulesCollector = ModulesCollector()
 
     val frontend = BuildFrontend(
       mainProject = BibixProject(Path("../testproject"), null),
@@ -30,8 +32,9 @@ class ModuleStructAnalysisTests {
       progressNotifier = ProgressConsolePrinter(),
       pluginClassLoader = OverridingPluginClassLoaderImpl(
         mapOf(
-          Pair(MainSourceId, "com.giyeok.bibix.plugins.ktjvm.Library") to modulesCollector,
-          Pair(MainSourceId, "com.giyeok.bibix.plugins.scala.Library") to modulesCollector
+          Pair(MainSourceId, "com.giyeok.bibix.plugins.java.Library") to javaModulesCollector,
+          Pair(MainSourceId, "com.giyeok.bibix.plugins.ktjvm.Library") to ktjvmModulesCollector,
+          Pair(MainSourceId, "com.giyeok.bibix.plugins.scala.Library") to scalaModulesCollector
         )
       ),
       debuggingMode = true
@@ -62,20 +65,24 @@ class ModuleStructAnalysisTests {
       }.awaitAll()
     }.toMap()
 
-    println(modulesCollector.modules)
-    println(modulesCollector)
+    println(ktjvmModulesCollector.modules)
+    println(ktjvmModulesCollector)
 
-    val test1Hash = "9de16e64c983a7569c9b95b6cae4d14a85d786d9"
-    val test2Hash = "f76fe69cfc122475be12f4a0b780402d820b3936"
-    val unnamedHash = "5d465df49efc9c5d5db4fc97ce97c7a2c087eff7"
+    val test1Hash = "3c94dd9683fccab8581ebdd52ae674f04ebc9e0d"
+    val test2Hash = "1878e68b665fdecddbb01fa825ae494a2cda49d5"
+    val unnamedHash = "fff68e8ca3236754a8bb766097be0a4ae711257b"
     assertThat(frontend.repo.repoMeta.objectNamesMap).containsExactly(
       "test1", test1Hash,
       "test2", test2Hash,
     )
-    assertThat(modulesCollector.modules.keys).containsExactly(test1Hash, test2Hash, unnamedHash)
-    val test1Module = modulesCollector.modules.getValue(test1Hash)
-    val test2Module = modulesCollector.modules.getValue(test2Hash)
-    val unnamedModule = modulesCollector.modules.getValue(unnamedHash)
+    assertThat(ktjvmModulesCollector.modules.keys).containsExactly(
+      test1Hash,
+      test2Hash,
+      unnamedHash
+    )
+    val test1Module = ktjvmModulesCollector.modules.getValue(test1Hash)
+    val test2Module = ktjvmModulesCollector.modules.getValue(test2Hash)
+    val unnamedModule = ktjvmModulesCollector.modules.getValue(unnamedHash)
     assertThat(test1Module.sources).containsExactly(
       Path("../testproject/src/main/kotlin/Test2.kt")
     )
@@ -184,7 +191,7 @@ class ModulesCollector {
       mapOf(
         "origin" to origin,
         "cpinfo" to cpinfo,
-        "deps" to SetValue()
+        "deps" to deps
       )
     )
   }

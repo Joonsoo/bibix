@@ -1,7 +1,7 @@
 package com.giyeok.bibix.interpreter
 
 import com.giyeok.bibix.base.*
-import com.giyeok.bibix.plugins.Classes
+import com.giyeok.bibix.plugins.PluginInstanceProvider
 import com.giyeok.bibix.plugins.PreloadedPlugin
 import com.google.common.jimfs.Jimfs
 import com.google.common.truth.Truth.assertThat
@@ -27,7 +27,7 @@ class ActionTests {
         action def myAction(msg: string)
           = native:com.giyeok.bibix.interpreter.ActionTestPlugin1
       """.trimIndent(),
-      Classes(ActionTestPlugin1::class.java)
+      PluginInstanceProvider(ActionTestPlugin1::class.java)
     )
 
     val interpreter = testInterpreter(fs, "/", mapOf("abc" to abcPlugin))
@@ -56,7 +56,7 @@ class ActionTests {
         action def myAction(msg: string, args: list<string>)
           = native:com.giyeok.bibix.interpreter.ActionTestPlugin2
       """.trimIndent(),
-      Classes(ActionTestPlugin2::class.java)
+      PluginInstanceProvider(ActionTestPlugin2::class.java)
     )
 
     val interpreter = testInterpreter(fs, "/", mapOf("abc" to abcPlugin))

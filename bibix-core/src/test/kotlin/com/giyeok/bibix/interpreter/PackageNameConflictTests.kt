@@ -1,6 +1,6 @@
 package com.giyeok.bibix.interpreter
 
-import com.giyeok.bibix.plugins.Classes
+import com.giyeok.bibix.plugins.PluginInstanceProvider
 import com.giyeok.bibix.plugins.PreloadedPlugin
 import com.google.common.jimfs.Jimfs
 import kotlinx.coroutines.runBlocking
@@ -26,14 +26,14 @@ class PackageNameConflictTests {
       """
         bbb = "hello "
       """.trimIndent(),
-      Classes()
+      PluginInstanceProvider()
     )
     val xyzPlugin = PreloadedPlugin.fromScript(
       "com.abc",
       """
         ccc = "world!"
       """.trimIndent(),
-      Classes()
+      PluginInstanceProvider()
     )
 
     assertThrows<IllegalStateException> {

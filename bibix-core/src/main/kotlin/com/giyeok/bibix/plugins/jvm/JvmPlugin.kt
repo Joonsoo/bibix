@@ -1,6 +1,6 @@
 package com.giyeok.bibix.plugins.jvm
 
-import com.giyeok.bibix.plugins.Classes
+import com.giyeok.bibix.plugins.PluginInstanceProvider
 import com.giyeok.bibix.plugins.PreloadedPlugin
 
 val jvmPlugin = PreloadedPlugin.fromScript(
@@ -38,7 +38,10 @@ val jvmPlugin = PreloadedPlugin.fromScript(
       classPkgs: set<ClassPkg>
     ): ClassPaths = native:com.giyeok.bibix.plugins.jvm.ResolveClassPkgs
     
-    def lib(path: path): ClassPkg = native:com.giyeok.bibix.plugins.jvm.Lib
+    def lib(
+      path: path,
+      deps: set<ClassPkg> = [],
+    ): ClassPkg = native:com.giyeok.bibix.plugins.jvm.Lib
     
     def jar(
       deps: set<ClassPkg>,
@@ -63,7 +66,7 @@ val jvmPlugin = PreloadedPlugin.fromScript(
       args: list<string> = [],
     ) = native:com.giyeok.bibix.plugins.jvm.Run
   """.trimIndent(),
-  Classes(
+  PluginInstanceProvider(
     Lib::class.java,
     Jar::class.java,
     Run::class.java,

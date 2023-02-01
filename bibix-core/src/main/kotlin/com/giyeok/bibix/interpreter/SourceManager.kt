@@ -4,7 +4,7 @@ import com.giyeok.bibix.ast.BibixAst
 import com.giyeok.bibix.base.*
 import com.giyeok.bibix.interpreter.expr.NameLookupContext
 import com.giyeok.bibix.interpreter.expr.NameLookupTable
-import com.giyeok.bibix.plugins.Classes
+import com.giyeok.bibix.plugins.PluginInstanceProvider
 import com.giyeok.bibix.plugins.PreloadedPlugin
 import com.giyeok.bibix.utils.toKtList
 import com.google.common.annotations.VisibleForTesting
@@ -24,10 +24,11 @@ class SourceManager {
   private val externSources = mutableMapOf<BibixProject, ExternSourceId>()
   private var externSourceIdCounter = 0
   private val mutex = Mutex()
-  private lateinit var preludePluginClasses: Classes
+  private lateinit var preludePluginPluginInstanceProvider: PluginInstanceProvider
   private lateinit var _mainBaseDirectory: Path
   val mainBaseDirectory get() = _mainBaseDirectory
-  private val preloadedPluginClasses = mutableMapOf<PreloadedSourceId, Classes>()
+  private val preloadedPluginPluginInstanceProvider =
+    mutableMapOf<PreloadedSourceId, PluginInstanceProvider>()
 
   private fun parseScript(project: BibixProject): BibixAst.BuildScript {
     val scriptPath = project.projectRoot.resolve(project.scriptName ?: "build.bbx")
@@ -70,7 +71,7 @@ class SourceManager {
     mutex.withLock {
       nameLookupTable.add(NameLookupContext(PreludeSourceId, listOf()), prelude.defs)
       sourcePackageName[PreludeSourceId] = prelude.packageName
-      preludePluginClasses = prelude.classes
+      preludePluginPluginInstanceProvider = prelude.pluginInstanceProvider
     }
   }
 
@@ -104,7 +105,7 @@ class SourceManager {
 
   fun registerPreloadedPluginClasses(name: String, plugin: PreloadedPlugin) {
     val sourceId = PreloadedSourceId(name)
-    preloadedPluginClasses[sourceId] = plugin.classes
+    preloadedPluginPluginInstanceProvider[sourceId] = plugin.pluginInstanceProvider
     try {
       sourcePackageName[sourceId] = plugin.packageName
     } catch (e: IllegalArgumentException) {
@@ -112,10 +113,11 @@ class SourceManager {
     }
   }
 
-  fun getPreludePluginClass(className: String): Class<*> = preludePluginClasses.getClass(className)
+  fun getPreludePluginInstance(className: String): Any =
+    preludePluginPluginInstanceProvider.getInstance(className)
 
-  fun getPreloadedPluginClass(sourceId: PreloadedSourceId, className: String): Class<*> =
-    preloadedPluginClasses.getValue(sourceId).getClass(className)
+  fun getPreloadedPluginInstance(sourceId: PreloadedSourceId, className: String): Any =
+    preloadedPluginPluginInstanceProvider.getValue(sourceId).getInstance(className)
 
   suspend fun getPackageName(sourceId: SourceId): String? =
     mutex.withLock { sourcePackageName[sourceId] }

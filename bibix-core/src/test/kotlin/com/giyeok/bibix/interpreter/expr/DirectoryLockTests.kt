@@ -4,7 +4,7 @@ import com.giyeok.bibix.base.BuildContext
 import com.giyeok.bibix.base.BuildRuleReturn
 import com.giyeok.bibix.base.StringValue
 import com.giyeok.bibix.interpreter.testInterpreter
-import com.giyeok.bibix.plugins.Classes
+import com.giyeok.bibix.plugins.PluginInstanceProvider
 import com.giyeok.bibix.plugins.PreloadedPlugin
 import com.google.common.jimfs.Jimfs
 import com.google.common.truth.Truth.assertThat
@@ -34,7 +34,7 @@ class DirectoryLockTests {
         def test1(key: string): string =
           native:com.giyeok.bibix.interpreter.expr.DirectoryLockTestRule1
       """.trimIndent(),
-      Classes(DirectoryLockTestRule1::class.java)
+      PluginInstanceProvider(DirectoryLockTestRule1::class.java)
     )
 
     val interpreter = testInterpreter(fs, "/", mapOf("abc" to abcPlugin))

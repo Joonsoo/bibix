@@ -1,6 +1,6 @@
 package com.giyeok.bibix.plugins.prelude
 
-import com.giyeok.bibix.plugins.Classes
+import com.giyeok.bibix.plugins.PluginInstanceProvider
 import com.giyeok.bibix.plugins.PreloadedPlugin
 
 val preludePlugin = PreloadedPlugin.fromScript(
@@ -42,7 +42,7 @@ val preludePlugin = PreloadedPlugin.fromScript(
     
     def currentEnv(): Env = native:com.giyeok.bibix.plugins.prelude.CurrentEnv
   """.trimIndent(),
-  Classes(
+  PluginInstanceProvider(
     Glob::class.java,
     Git::class.java,
     CurrentEnv::class.java,

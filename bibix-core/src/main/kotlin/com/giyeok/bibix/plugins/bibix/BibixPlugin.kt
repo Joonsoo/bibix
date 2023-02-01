@@ -1,7 +1,7 @@
 package com.giyeok.bibix.plugins.bibix
 
 import com.giyeok.bibix.base.Constants
-import com.giyeok.bibix.plugins.Classes
+import com.giyeok.bibix.plugins.PluginInstanceProvider
 import com.giyeok.bibix.plugins.PreloadedPlugin
 
 val bibixPlugin = PreloadedPlugin.fromScript(
@@ -35,7 +35,7 @@ val bibixPlugin = PreloadedPlugin.fromScript(
       outerClassName?: string,
     ): file = native:com.giyeok.bibix.plugins.bibix.GenTypesKt
   """.trimIndent(),
-  Classes(
+  PluginInstanceProvider(
     Base::class.java,
     Plugins::class.java,
     GenRuleImplTemplateKt::class.java,
