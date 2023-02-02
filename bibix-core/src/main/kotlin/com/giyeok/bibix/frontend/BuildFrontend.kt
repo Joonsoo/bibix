@@ -3,8 +3,8 @@ package com.giyeok.bibix.frontend
 import com.giyeok.bibix.base.*
 import com.giyeok.bibix.interpreter.BibixInterpreter
 import com.giyeok.bibix.interpreter.BibixProject
-import com.giyeok.bibix.interpreter.PluginClassLoader
-import com.giyeok.bibix.interpreter.PluginClassLoaderImpl
+import com.giyeok.bibix.interpreter.PluginImplProvider
+import com.giyeok.bibix.interpreter.PluginImplProviderImpl
 import com.giyeok.bibix.interpreter.coroutine.TaskElement
 import com.giyeok.bibix.interpreter.coroutine.ThreadPool
 import com.giyeok.bibix.interpreter.task.Task
@@ -24,7 +24,7 @@ class BuildFrontend(
   val progressNotifier: ProgressNotifier,
   val prelude: PreloadedPlugin = preludePlugin,
   val preloadedPlugins: Map<String, PreloadedPlugin> = defaultPreloadedPlugins,
-  val pluginClassLoader: PluginClassLoader = PluginClassLoaderImpl(),
+  val pluginImplProvider: PluginImplProvider = PluginImplProviderImpl(),
   val debuggingMode: Boolean = false
 ) {
   companion object {
@@ -46,7 +46,7 @@ class BuildFrontend(
     buildEnv = buildEnv,
     prelude = prelude,
     preloadedPlugins = preloadedPlugins,
-    pluginClassLoader = pluginClassLoader,
+    pluginImplProvider = pluginImplProvider,
     mainProject = mainProject,
     repo = repo,
     progressIndicatorContainer = threadPool,

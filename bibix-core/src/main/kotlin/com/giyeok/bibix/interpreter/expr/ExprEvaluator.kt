@@ -3,7 +3,7 @@ package com.giyeok.bibix.interpreter.expr
 import com.giyeok.bibix.ast.BibixAst
 import com.giyeok.bibix.base.*
 import com.giyeok.bibix.interpreter.BibixInterpreter
-import com.giyeok.bibix.interpreter.PluginClassLoader
+import com.giyeok.bibix.interpreter.PluginImplProvider
 import com.giyeok.bibix.interpreter.SourceManager
 import com.giyeok.bibix.interpreter.task.Task
 import com.giyeok.bibix.interpreter.task.TaskRelGraph
@@ -18,11 +18,11 @@ class ExprEvaluator(
   private val g: TaskRelGraph,
   private val sourceManager: SourceManager,
   private val varsManager: VarsManager,
-  pluginClassLoader: PluginClassLoader,
+  pluginImplProvider: PluginImplProvider,
   directoryLocker: DirectoryLocker,
 ) {
   private val callExprEvaluator =
-    CallExprEvaluator(interpreter, g, sourceManager, this, pluginClassLoader, directoryLocker)
+    CallExprEvaluator(interpreter, g, sourceManager, this, pluginImplProvider, directoryLocker)
 
   private val coercer = Coercer(sourceManager, this)
 

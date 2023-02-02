@@ -5,8 +5,8 @@ import com.giyeok.bibix.frontend.BuildFrontend
 import com.giyeok.bibix.frontend.cli.ProgressConsolePrinter
 import com.giyeok.bibix.interpreter.BibixInterpreter
 import com.giyeok.bibix.interpreter.BibixProject
-import com.giyeok.bibix.interpreter.PluginClassLoader
-import com.giyeok.bibix.interpreter.PluginClassLoaderImpl
+import com.giyeok.bibix.interpreter.PluginImplProvider
+import com.giyeok.bibix.interpreter.PluginImplProviderImpl
 import com.giyeok.bibix.interpreter.coroutine.ProgressIndicator
 import com.giyeok.bibix.interpreter.coroutine.ProgressIndicatorContainer
 import com.giyeok.bibix.plugins.jvm.ClassPkg
@@ -30,7 +30,7 @@ class ModuleStructAnalysisTests {
       buildArgsMap = mapOf(),
       actionArgs = listOf(),
       progressNotifier = ProgressConsolePrinter(),
-      pluginClassLoader = OverridingPluginClassLoaderImpl(
+      pluginImplProvider = OverridingPluginImplProviderImpl(
         mapOf(
           Pair(MainSourceId, "com.giyeok.bibix.plugins.java.Library") to javaModulesCollector,
           Pair(MainSourceId, "com.giyeok.bibix.plugins.ktjvm.Library") to ktjvmModulesCollector,
@@ -43,7 +43,7 @@ class ModuleStructAnalysisTests {
       buildEnv = frontend.buildEnv,
       prelude = frontend.prelude,
       preloadedPlugins = frontend.preloadedPlugins,
-      pluginClassLoader = frontend.pluginClassLoader,
+      pluginImplProvider = frontend.pluginImplProvider,
       mainProject = frontend.mainProject,
       repo = frontend.repo,
       progressIndicatorContainer = object : ProgressIndicatorContainer {
@@ -68,8 +68,8 @@ class ModuleStructAnalysisTests {
     println(ktjvmModulesCollector.modules)
     println(ktjvmModulesCollector)
 
-    val test1Hash = "3c94dd9683fccab8581ebdd52ae674f04ebc9e0d"
-    val test2Hash = "1878e68b665fdecddbb01fa825ae494a2cda49d5"
+    val test1Hash = "7fe5b2a27ad785f7acf3fb6b6187fc87fea12b68"
+    val test2Hash = "4f3cd0f105adf3a8c8e56122b0fdc4794254cd94"
     val unnamedHash = "fff68e8ca3236754a8bb766097be0a4ae711257b"
     assertThat(frontend.repo.repoMeta.objectNamesMap).containsExactly(
       "test1", test1Hash,
@@ -147,16 +147,16 @@ class ModuleStructAnalysisTests {
   }
 }
 
-class OverridingPluginClassLoaderImpl(val overridings: Map<Pair<SourceId, String>, Any>) :
-  PluginClassLoader {
-  private val impl = PluginClassLoaderImpl()
+class OverridingPluginImplProviderImpl(val overridings: Map<Pair<SourceId, String>, Any>) :
+  PluginImplProvider {
+  private val impl = PluginImplProviderImpl()
 
-  override suspend fun loadPluginInstance(
+  override suspend fun getPluginImplInstance(
     callerSourceId: SourceId,
     cpInstance: ClassInstanceValue,
     className: String
   ): Any = overridings[Pair(callerSourceId, className)]
-    ?: impl.loadPluginInstance(callerSourceId, cpInstance, className)
+    ?: impl.getPluginImplInstance(callerSourceId, cpInstance, className)
 }
 
 class ModulesCollector {

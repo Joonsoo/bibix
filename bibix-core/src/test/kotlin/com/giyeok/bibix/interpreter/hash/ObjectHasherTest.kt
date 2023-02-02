@@ -3,7 +3,7 @@ package com.giyeok.bibix.interpreter.hash
 import com.giyeok.bibix.*
 import com.giyeok.bibix.BibixIdProto.ObjectId
 import com.giyeok.bibix.base.*
-import com.giyeok.bibix.interpreter.FakePluginClassLoader
+import com.giyeok.bibix.interpreter.FakePluginImplProvider
 import com.giyeok.bibix.interpreter.testInterpreter
 import com.giyeok.bibix.plugins.PluginInstanceProvider
 import com.giyeok.bibix.plugins.PreloadedPlugin
@@ -187,7 +187,7 @@ class ObjectHasherTest {
 
     val interpreter = testInterpreter(
       fs, "/", mapOf("jvm" to jvmPlugin),
-      pluginClassLoader = FakePluginClassLoader { _, _, className ->
+      pluginImplProvider = FakePluginImplProvider { _, _, className ->
         val cls = classRealm.loadClass(className)
         cls.getDeclaredConstructor().newInstance()
       })

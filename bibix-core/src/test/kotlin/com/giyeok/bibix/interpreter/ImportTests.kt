@@ -303,7 +303,7 @@ class ImportTests {
       "/",
       mapOf("bibix" to bibixPlugin, "jvm" to jvmPlugin),
       prelude,
-      FakePluginClassLoader { _, cpInstnace, className ->
+      FakePluginImplProvider { _, cpInstnace, className ->
         assertThat(cpInstnace.fieldValues).containsExactly("cps", SetValue())
         val cls = classRealm.loadClass(className)
         cls.getDeclaredConstructor().newInstance()

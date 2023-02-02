@@ -4,7 +4,7 @@ import com.giyeok.bibix.*
 import com.giyeok.bibix.ast.BibixAst
 import com.giyeok.bibix.base.*
 import com.giyeok.bibix.interpreter.BibixInterpreter
-import com.giyeok.bibix.interpreter.PluginClassLoader
+import com.giyeok.bibix.interpreter.PluginImplProvider
 import com.giyeok.bibix.interpreter.SourceManager
 import com.giyeok.bibix.interpreter.expr.EvaluationResult.RuleDef.ActionRuleDef
 import com.giyeok.bibix.interpreter.expr.EvaluationResult.RuleDef.BuildRuleDef
@@ -24,7 +24,7 @@ class CallExprEvaluator(
   private val g: TaskRelGraph,
   private val sourceManager: SourceManager,
   private val exprEvaluator: ExprEvaluator,
-  private val pluginClassLoader: PluginClassLoader,
+  private val pluginImplProvider: PluginImplProvider,
   private val directoryLocker: DirectoryLocker,
 ) {
   private suspend fun paramDefs(
@@ -376,7 +376,7 @@ class CallExprEvaluator(
       is BuildRuleDef.NativeBuildRuleDef -> buildRule.implInstance
       is BuildRuleDef.UserBuildRuleDef -> {
         val cpInstance = getRuleImplValue(task, buildRule)
-        pluginClassLoader.loadPluginInstance(callerSourceId, cpInstance, buildRule.className)
+        pluginImplProvider.getPluginImplInstance(callerSourceId, cpInstance, buildRule.className)
       }
     }
 
@@ -513,7 +513,7 @@ class CallExprEvaluator(
           actionRule.implTarget,
           actionRule.thisValue
         ).ensureValue()
-        pluginClassLoader.loadPluginInstance(
+        pluginImplProvider.getPluginImplInstance(
           callerSourceId,
           coerceCpInstance(task, actionRule.context, impl),
           actionRule.className

@@ -10,15 +10,15 @@ import org.codehaus.plexus.classworlds.ClassWorld
 import org.codehaus.plexus.classworlds.realm.ClassRealm
 import kotlin.io.path.absolute
 
-interface PluginClassLoader {
-  suspend fun loadPluginInstance(
+interface PluginImplProvider {
+  suspend fun getPluginImplInstance(
     callerSourceId: SourceId,
     cpInstance: ClassInstanceValue,
     className: String
   ): Any
 }
 
-class PluginClassLoaderImpl : PluginClassLoader {
+class PluginImplProviderImpl : PluginImplProvider {
   private val classWorld = ClassWorld()
   private var realmIdCounter = 0
   private val mutex = Mutex()
@@ -29,7 +29,7 @@ class PluginClassLoaderImpl : PluginClassLoader {
     newRealm
   }
 
-  override suspend fun loadPluginInstance(
+  override suspend fun getPluginImplInstance(
     callerSourceId: SourceId,
     cpInstance: ClassInstanceValue,
     className: String

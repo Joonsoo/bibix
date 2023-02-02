@@ -18,13 +18,13 @@ fun testInterpreter(
   mainPath: String,
   preloadedPlugins: Map<String, PreloadedPlugin>,
   preludePlugin: PreloadedPlugin = PreloadedPlugin("", listOf(), PluginInstanceProvider()),
-  pluginClassLoader: PluginClassLoader = FakePluginClassLoader { _, _, _ -> throw NotImplementedError() },
+  pluginImplProvider: PluginImplProvider = FakePluginImplProvider { _, _, _ -> throw NotImplementedError() },
   actionArgs: List<String> = listOf()
 ) = BibixInterpreter(
   buildEnv = BuildEnv(OS.Linux("", ""), Architecture.X86_64),
   prelude = preludePlugin,
   preloadedPlugins = preloadedPlugins,
-  pluginClassLoader = pluginClassLoader,
+  pluginImplProvider = pluginImplProvider,
   mainProject = BibixProject(fs.getPath(mainPath), null),
   repo = testRepo(fs),
   progressIndicatorContainer = FakeProgressIndicatorContainer(),
