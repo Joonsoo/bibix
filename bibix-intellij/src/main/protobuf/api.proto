@@ -1,0 +1,47 @@
+syntax = "proto3";
+
+package com.giyeok.bibix.intellij;
+
+option java_outer_classname = "BibixIntellijProto";
+
+service BibixIntellijService {
+  rpc loadProject(LoadProjectReq) returns (BibixProjectInfo);
+}
+
+message LoadProjectReq {
+  string project_root = 1;
+  string script_name = 2;
+}
+
+message BibixProjectInfo {
+  string project_id = 1;
+  string project_name = 2;
+  repeated Module modules = 3;
+  repeated ExternalLibrary libraries = 4;
+}
+
+message Module {
+  string module_name = 1;
+  // java, ktjvm, scala, ...
+  string module_type = 2;
+  // module sources
+  repeated ContentRoot content_roots = 3;
+  string sdk_version = 4;
+  // dependent한 module 이름 목록
+  repeated string module_deps = 5;
+  // dependent한 라이브러리 id 목록
+  repeated string library_deps = 6;
+}
+
+message ContentRoot {
+  string content_root_name = 1;
+  string content_root_type = 2;
+  string content_root_path = 3;
+}
+
+message ExternalLibrary {
+  string library_id = 1;
+  string description = 2;
+  repeated string classpaths = 3;
+  repeated string sources = 4;
+}

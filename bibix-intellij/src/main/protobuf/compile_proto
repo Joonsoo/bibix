@@ -1,0 +1,18 @@
+echo $PWD
+
+rm -rf ../../generated/proto/java/*
+rm -rf ../../generated/proto/kotlin/*
+rm -rf ../../generated/grpc/java/*
+rm -rf ../../generated/grpc/kotlin/*
+
+./protoc api.proto \
+  --proto_path=. \
+  --java_out=../../generated/proto/java \
+  --kotlin_out=../../generated/proto/kotlin
+
+./protoc api.proto \
+  --proto_path=. \
+  --plugin=/home/joonsoo/Documents/workspace/bibix/bibix-intellij/src/main/protobuf/protoc-gen-grpc-java \
+  --grpc-java_out=../../generated/grpc/java \
+  --plugin=/home/joonsoo/Documents/workspace/bibix/bibix-intellij/src/main/protobuf/protoc-gen-grpc-kotlin \
+  --grpc-kotlin_out=../../generated/grpc/kotlin

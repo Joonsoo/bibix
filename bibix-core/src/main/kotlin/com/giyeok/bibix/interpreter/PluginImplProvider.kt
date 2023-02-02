@@ -18,14 +18,15 @@ interface PluginImplProvider {
   ): Any
 }
 
-class PluginImplProviderImpl : PluginImplProvider {
-  private val classWorld = ClassWorld()
+class PluginImplProviderImpl(
+  private val classWorld: ClassWorld = ClassWorld()
+) : PluginImplProvider {
   private var realmIdCounter = 0
   private val mutex = Mutex()
 
   private suspend fun newRealm(): ClassRealm = mutex.withLock {
     realmIdCounter += 1
-    val newRealm = classWorld.newRealm("realm-$realmIdCounter")
+    val newRealm = classWorld.newRealm("bibix-realm-$realmIdCounter")
     newRealm
   }
 
