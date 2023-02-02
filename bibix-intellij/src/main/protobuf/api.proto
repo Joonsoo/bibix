@@ -6,6 +6,10 @@ option java_outer_classname = "BibixIntellijProto";
 
 service BibixIntellijService {
   rpc loadProject(LoadProjectReq) returns (BibixProjectInfo);
+  rpc buildTargets(BuildTargetsReq) returns (BuildTargetsRes);
+  rpc buildTargetsStreaming(BuildTargetsReq) returns (stream BuildTargetsUpdate);
+  rpc executeActions(ExecuteActionsReq) returns (ExecuteActionsRes);
+  rpc executeActionsStreaming(BuildTargetsReq) returns (stream ExecuteActionUpdate);
 }
 
 message LoadProjectReq {
@@ -44,4 +48,28 @@ message ExternalLibrary {
   string description = 2;
   repeated string classpaths = 3;
   repeated string sources = 4;
+}
+
+message BuildTargetsReq {
+  string project_id = 1;
+  repeated string build_targets = 2;
+}
+
+message BuildTargetsRes {
+}
+
+message BuildTargetsUpdate {
+  // TODO
+}
+
+message ExecuteActionsReq {
+  string project_id = 1;
+  repeated string actions = 2;
+}
+
+message ExecuteActionsRes {
+}
+
+message ExecuteActionUpdate {
+  // TODO
 }

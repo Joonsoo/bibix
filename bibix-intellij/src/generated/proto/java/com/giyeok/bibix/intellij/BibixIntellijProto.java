@@ -6181,6 +6181,3270 @@ public final class BibixIntellijProto {
 
   }
 
+  public interface BuildTargetsReqOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:com.giyeok.bibix.intellij.BuildTargetsReq)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>string project_id = 1;</code>
+     * @return The projectId.
+     */
+    java.lang.String getProjectId();
+    /**
+     * <code>string project_id = 1;</code>
+     * @return The bytes for projectId.
+     */
+    com.google.protobuf.ByteString
+        getProjectIdBytes();
+
+    /**
+     * <code>repeated string build_targets = 2;</code>
+     * @return A list containing the buildTargets.
+     */
+    java.util.List<java.lang.String>
+        getBuildTargetsList();
+    /**
+     * <code>repeated string build_targets = 2;</code>
+     * @return The count of buildTargets.
+     */
+    int getBuildTargetsCount();
+    /**
+     * <code>repeated string build_targets = 2;</code>
+     * @param index The index of the element to return.
+     * @return The buildTargets at the given index.
+     */
+    java.lang.String getBuildTargets(int index);
+    /**
+     * <code>repeated string build_targets = 2;</code>
+     * @param index The index of the value to return.
+     * @return The bytes of the buildTargets at the given index.
+     */
+    com.google.protobuf.ByteString
+        getBuildTargetsBytes(int index);
+  }
+  /**
+   * Protobuf type {@code com.giyeok.bibix.intellij.BuildTargetsReq}
+   */
+  public static final class BuildTargetsReq extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:com.giyeok.bibix.intellij.BuildTargetsReq)
+      BuildTargetsReqOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use BuildTargetsReq.newBuilder() to construct.
+    private BuildTargetsReq(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private BuildTargetsReq() {
+      projectId_ = "";
+      buildTargets_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+    }
+
+    @java.lang.Override
+    @SuppressWarnings({"unused"})
+    protected java.lang.Object newInstance(
+        UnusedPrivateParameter unused) {
+      return new BuildTargetsReq();
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private BuildTargetsReq(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            case 10: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              projectId_ = s;
+              break;
+            }
+            case 18: {
+              java.lang.String s = input.readStringRequireUtf8();
+              if (!((mutable_bitField0_ & 0x00000001) != 0)) {
+                buildTargets_ = new com.google.protobuf.LazyStringArrayList();
+                mutable_bitField0_ |= 0x00000001;
+              }
+              buildTargets_.add(s);
+              break;
+            }
+            default: {
+              if (!parseUnknownField(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        if (((mutable_bitField0_ & 0x00000001) != 0)) {
+          buildTargets_ = buildTargets_.getUnmodifiableView();
+        }
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return com.giyeok.bibix.intellij.BibixIntellijProto.internal_static_com_giyeok_bibix_intellij_BuildTargetsReq_descriptor;
+    }
+
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return com.giyeok.bibix.intellij.BibixIntellijProto.internal_static_com_giyeok_bibix_intellij_BuildTargetsReq_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsReq.class, com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsReq.Builder.class);
+    }
+
+    public static final int PROJECT_ID_FIELD_NUMBER = 1;
+    private volatile java.lang.Object projectId_;
+    /**
+     * <code>string project_id = 1;</code>
+     * @return The projectId.
+     */
+    @java.lang.Override
+    public java.lang.String getProjectId() {
+      java.lang.Object ref = projectId_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        projectId_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string project_id = 1;</code>
+     * @return The bytes for projectId.
+     */
+    @java.lang.Override
+    public com.google.protobuf.ByteString
+        getProjectIdBytes() {
+      java.lang.Object ref = projectId_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        projectId_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int BUILD_TARGETS_FIELD_NUMBER = 2;
+    private com.google.protobuf.LazyStringList buildTargets_;
+    /**
+     * <code>repeated string build_targets = 2;</code>
+     * @return A list containing the buildTargets.
+     */
+    public com.google.protobuf.ProtocolStringList
+        getBuildTargetsList() {
+      return buildTargets_;
+    }
+    /**
+     * <code>repeated string build_targets = 2;</code>
+     * @return The count of buildTargets.
+     */
+    public int getBuildTargetsCount() {
+      return buildTargets_.size();
+    }
+    /**
+     * <code>repeated string build_targets = 2;</code>
+     * @param index The index of the element to return.
+     * @return The buildTargets at the given index.
+     */
+    public java.lang.String getBuildTargets(int index) {
+      return buildTargets_.get(index);
+    }
+    /**
+     * <code>repeated string build_targets = 2;</code>
+     * @param index The index of the value to return.
+     * @return The bytes of the buildTargets at the given index.
+     */
+    public com.google.protobuf.ByteString
+        getBuildTargetsBytes(int index) {
+      return buildTargets_.getByteString(index);
+    }
+
+    private byte memoizedIsInitialized = -1;
+    @java.lang.Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    @java.lang.Override
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(projectId_)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, projectId_);
+      }
+      for (int i = 0; i < buildTargets_.size(); i++) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, buildTargets_.getRaw(i));
+      }
+      unknownFields.writeTo(output);
+    }
+
+    @java.lang.Override
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(projectId_)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, projectId_);
+      }
+      {
+        int dataSize = 0;
+        for (int i = 0; i < buildTargets_.size(); i++) {
+          dataSize += computeStringSizeNoTag(buildTargets_.getRaw(i));
+        }
+        size += dataSize;
+        size += 1 * getBuildTargetsList().size();
+      }
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsReq)) {
+        return super.equals(obj);
+      }
+      com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsReq other = (com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsReq) obj;
+
+      if (!getProjectId()
+          .equals(other.getProjectId())) return false;
+      if (!getBuildTargetsList()
+          .equals(other.getBuildTargetsList())) return false;
+      if (!unknownFields.equals(other.unknownFields)) return false;
+      return true;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      hash = (37 * hash) + PROJECT_ID_FIELD_NUMBER;
+      hash = (53 * hash) + getProjectId().hashCode();
+      if (getBuildTargetsCount() > 0) {
+        hash = (37 * hash) + BUILD_TARGETS_FIELD_NUMBER;
+        hash = (53 * hash) + getBuildTargetsList().hashCode();
+      }
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsReq parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsReq parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsReq parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsReq parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsReq parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsReq parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsReq parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsReq parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsReq parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsReq parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsReq parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsReq parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    @java.lang.Override
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsReq prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @java.lang.Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code com.giyeok.bibix.intellij.BuildTargetsReq}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:com.giyeok.bibix.intellij.BuildTargetsReq)
+        com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsReqOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return com.giyeok.bibix.intellij.BibixIntellijProto.internal_static_com_giyeok_bibix_intellij_BuildTargetsReq_descriptor;
+      }
+
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return com.giyeok.bibix.intellij.BibixIntellijProto.internal_static_com_giyeok_bibix_intellij_BuildTargetsReq_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsReq.class, com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsReq.Builder.class);
+      }
+
+      // Construct using com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsReq.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+        }
+      }
+      @java.lang.Override
+      public Builder clear() {
+        super.clear();
+        projectId_ = "";
+
+        buildTargets_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000001);
+        return this;
+      }
+
+      @java.lang.Override
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return com.giyeok.bibix.intellij.BibixIntellijProto.internal_static_com_giyeok_bibix_intellij_BuildTargetsReq_descriptor;
+      }
+
+      @java.lang.Override
+      public com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsReq getDefaultInstanceForType() {
+        return com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsReq.getDefaultInstance();
+      }
+
+      @java.lang.Override
+      public com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsReq build() {
+        com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsReq result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      @java.lang.Override
+      public com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsReq buildPartial() {
+        com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsReq result = new com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsReq(this);
+        int from_bitField0_ = bitField0_;
+        result.projectId_ = projectId_;
+        if (((bitField0_ & 0x00000001) != 0)) {
+          buildTargets_ = buildTargets_.getUnmodifiableView();
+          bitField0_ = (bitField0_ & ~0x00000001);
+        }
+        result.buildTargets_ = buildTargets_;
+        onBuilt();
+        return result;
+      }
+
+      @java.lang.Override
+      public Builder clone() {
+        return super.clone();
+      }
+      @java.lang.Override
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.setField(field, value);
+      }
+      @java.lang.Override
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return super.clearField(field);
+      }
+      @java.lang.Override
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return super.clearOneof(oneof);
+      }
+      @java.lang.Override
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return super.setRepeatedField(field, index, value);
+      }
+      @java.lang.Override
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.addRepeatedField(field, value);
+      }
+      @java.lang.Override
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsReq) {
+          return mergeFrom((com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsReq)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsReq other) {
+        if (other == com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsReq.getDefaultInstance()) return this;
+        if (!other.getProjectId().isEmpty()) {
+          projectId_ = other.projectId_;
+          onChanged();
+        }
+        if (!other.buildTargets_.isEmpty()) {
+          if (buildTargets_.isEmpty()) {
+            buildTargets_ = other.buildTargets_;
+            bitField0_ = (bitField0_ & ~0x00000001);
+          } else {
+            ensureBuildTargetsIsMutable();
+            buildTargets_.addAll(other.buildTargets_);
+          }
+          onChanged();
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      @java.lang.Override
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      @java.lang.Override
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsReq parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsReq) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      private java.lang.Object projectId_ = "";
+      /**
+       * <code>string project_id = 1;</code>
+       * @return The projectId.
+       */
+      public java.lang.String getProjectId() {
+        java.lang.Object ref = projectId_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          projectId_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string project_id = 1;</code>
+       * @return The bytes for projectId.
+       */
+      public com.google.protobuf.ByteString
+          getProjectIdBytes() {
+        java.lang.Object ref = projectId_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          projectId_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string project_id = 1;</code>
+       * @param value The projectId to set.
+       * @return This builder for chaining.
+       */
+      public Builder setProjectId(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        projectId_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string project_id = 1;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearProjectId() {
+        
+        projectId_ = getDefaultInstance().getProjectId();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string project_id = 1;</code>
+       * @param value The bytes for projectId to set.
+       * @return This builder for chaining.
+       */
+      public Builder setProjectIdBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        projectId_ = value;
+        onChanged();
+        return this;
+      }
+
+      private com.google.protobuf.LazyStringList buildTargets_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      private void ensureBuildTargetsIsMutable() {
+        if (!((bitField0_ & 0x00000001) != 0)) {
+          buildTargets_ = new com.google.protobuf.LazyStringArrayList(buildTargets_);
+          bitField0_ |= 0x00000001;
+         }
+      }
+      /**
+       * <code>repeated string build_targets = 2;</code>
+       * @return A list containing the buildTargets.
+       */
+      public com.google.protobuf.ProtocolStringList
+          getBuildTargetsList() {
+        return buildTargets_.getUnmodifiableView();
+      }
+      /**
+       * <code>repeated string build_targets = 2;</code>
+       * @return The count of buildTargets.
+       */
+      public int getBuildTargetsCount() {
+        return buildTargets_.size();
+      }
+      /**
+       * <code>repeated string build_targets = 2;</code>
+       * @param index The index of the element to return.
+       * @return The buildTargets at the given index.
+       */
+      public java.lang.String getBuildTargets(int index) {
+        return buildTargets_.get(index);
+      }
+      /**
+       * <code>repeated string build_targets = 2;</code>
+       * @param index The index of the value to return.
+       * @return The bytes of the buildTargets at the given index.
+       */
+      public com.google.protobuf.ByteString
+          getBuildTargetsBytes(int index) {
+        return buildTargets_.getByteString(index);
+      }
+      /**
+       * <code>repeated string build_targets = 2;</code>
+       * @param index The index to set the value at.
+       * @param value The buildTargets to set.
+       * @return This builder for chaining.
+       */
+      public Builder setBuildTargets(
+          int index, java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureBuildTargetsIsMutable();
+        buildTargets_.set(index, value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string build_targets = 2;</code>
+       * @param value The buildTargets to add.
+       * @return This builder for chaining.
+       */
+      public Builder addBuildTargets(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureBuildTargetsIsMutable();
+        buildTargets_.add(value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string build_targets = 2;</code>
+       * @param values The buildTargets to add.
+       * @return This builder for chaining.
+       */
+      public Builder addAllBuildTargets(
+          java.lang.Iterable<java.lang.String> values) {
+        ensureBuildTargetsIsMutable();
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, buildTargets_);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string build_targets = 2;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearBuildTargets() {
+        buildTargets_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000001);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string build_targets = 2;</code>
+       * @param value The bytes of the buildTargets to add.
+       * @return This builder for chaining.
+       */
+      public Builder addBuildTargetsBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        ensureBuildTargetsIsMutable();
+        buildTargets_.add(value);
+        onChanged();
+        return this;
+      }
+      @java.lang.Override
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFields(unknownFields);
+      }
+
+      @java.lang.Override
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:com.giyeok.bibix.intellij.BuildTargetsReq)
+    }
+
+    // @@protoc_insertion_point(class_scope:com.giyeok.bibix.intellij.BuildTargetsReq)
+    private static final com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsReq DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsReq();
+    }
+
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsReq getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<BuildTargetsReq>
+        PARSER = new com.google.protobuf.AbstractParser<BuildTargetsReq>() {
+      @java.lang.Override
+      public BuildTargetsReq parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new BuildTargetsReq(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<BuildTargetsReq> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<BuildTargetsReq> getParserForType() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsReq getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
+  public interface BuildTargetsResOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:com.giyeok.bibix.intellij.BuildTargetsRes)
+      com.google.protobuf.MessageOrBuilder {
+  }
+  /**
+   * Protobuf type {@code com.giyeok.bibix.intellij.BuildTargetsRes}
+   */
+  public static final class BuildTargetsRes extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:com.giyeok.bibix.intellij.BuildTargetsRes)
+      BuildTargetsResOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use BuildTargetsRes.newBuilder() to construct.
+    private BuildTargetsRes(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private BuildTargetsRes() {
+    }
+
+    @java.lang.Override
+    @SuppressWarnings({"unused"})
+    protected java.lang.Object newInstance(
+        UnusedPrivateParameter unused) {
+      return new BuildTargetsRes();
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private BuildTargetsRes(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return com.giyeok.bibix.intellij.BibixIntellijProto.internal_static_com_giyeok_bibix_intellij_BuildTargetsRes_descriptor;
+    }
+
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return com.giyeok.bibix.intellij.BibixIntellijProto.internal_static_com_giyeok_bibix_intellij_BuildTargetsRes_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsRes.class, com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsRes.Builder.class);
+    }
+
+    private byte memoizedIsInitialized = -1;
+    @java.lang.Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    @java.lang.Override
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      unknownFields.writeTo(output);
+    }
+
+    @java.lang.Override
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsRes)) {
+        return super.equals(obj);
+      }
+      com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsRes other = (com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsRes) obj;
+
+      if (!unknownFields.equals(other.unknownFields)) return false;
+      return true;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsRes parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsRes parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsRes parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsRes parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsRes parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsRes parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsRes parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsRes parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsRes parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsRes parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsRes parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsRes parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    @java.lang.Override
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsRes prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @java.lang.Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code com.giyeok.bibix.intellij.BuildTargetsRes}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:com.giyeok.bibix.intellij.BuildTargetsRes)
+        com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsResOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return com.giyeok.bibix.intellij.BibixIntellijProto.internal_static_com_giyeok_bibix_intellij_BuildTargetsRes_descriptor;
+      }
+
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return com.giyeok.bibix.intellij.BibixIntellijProto.internal_static_com_giyeok_bibix_intellij_BuildTargetsRes_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsRes.class, com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsRes.Builder.class);
+      }
+
+      // Construct using com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsRes.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+        }
+      }
+      @java.lang.Override
+      public Builder clear() {
+        super.clear();
+        return this;
+      }
+
+      @java.lang.Override
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return com.giyeok.bibix.intellij.BibixIntellijProto.internal_static_com_giyeok_bibix_intellij_BuildTargetsRes_descriptor;
+      }
+
+      @java.lang.Override
+      public com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsRes getDefaultInstanceForType() {
+        return com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsRes.getDefaultInstance();
+      }
+
+      @java.lang.Override
+      public com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsRes build() {
+        com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsRes result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      @java.lang.Override
+      public com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsRes buildPartial() {
+        com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsRes result = new com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsRes(this);
+        onBuilt();
+        return result;
+      }
+
+      @java.lang.Override
+      public Builder clone() {
+        return super.clone();
+      }
+      @java.lang.Override
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.setField(field, value);
+      }
+      @java.lang.Override
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return super.clearField(field);
+      }
+      @java.lang.Override
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return super.clearOneof(oneof);
+      }
+      @java.lang.Override
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return super.setRepeatedField(field, index, value);
+      }
+      @java.lang.Override
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.addRepeatedField(field, value);
+      }
+      @java.lang.Override
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsRes) {
+          return mergeFrom((com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsRes)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsRes other) {
+        if (other == com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsRes.getDefaultInstance()) return this;
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      @java.lang.Override
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      @java.lang.Override
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsRes parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsRes) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      @java.lang.Override
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFields(unknownFields);
+      }
+
+      @java.lang.Override
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:com.giyeok.bibix.intellij.BuildTargetsRes)
+    }
+
+    // @@protoc_insertion_point(class_scope:com.giyeok.bibix.intellij.BuildTargetsRes)
+    private static final com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsRes DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsRes();
+    }
+
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsRes getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<BuildTargetsRes>
+        PARSER = new com.google.protobuf.AbstractParser<BuildTargetsRes>() {
+      @java.lang.Override
+      public BuildTargetsRes parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new BuildTargetsRes(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<BuildTargetsRes> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<BuildTargetsRes> getParserForType() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsRes getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
+  public interface BuildTargetsUpdateOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:com.giyeok.bibix.intellij.BuildTargetsUpdate)
+      com.google.protobuf.MessageOrBuilder {
+  }
+  /**
+   * <pre>
+   * TODO
+   * </pre>
+   *
+   * Protobuf type {@code com.giyeok.bibix.intellij.BuildTargetsUpdate}
+   */
+  public static final class BuildTargetsUpdate extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:com.giyeok.bibix.intellij.BuildTargetsUpdate)
+      BuildTargetsUpdateOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use BuildTargetsUpdate.newBuilder() to construct.
+    private BuildTargetsUpdate(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private BuildTargetsUpdate() {
+    }
+
+    @java.lang.Override
+    @SuppressWarnings({"unused"})
+    protected java.lang.Object newInstance(
+        UnusedPrivateParameter unused) {
+      return new BuildTargetsUpdate();
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private BuildTargetsUpdate(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return com.giyeok.bibix.intellij.BibixIntellijProto.internal_static_com_giyeok_bibix_intellij_BuildTargetsUpdate_descriptor;
+    }
+
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return com.giyeok.bibix.intellij.BibixIntellijProto.internal_static_com_giyeok_bibix_intellij_BuildTargetsUpdate_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsUpdate.class, com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsUpdate.Builder.class);
+    }
+
+    private byte memoizedIsInitialized = -1;
+    @java.lang.Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    @java.lang.Override
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      unknownFields.writeTo(output);
+    }
+
+    @java.lang.Override
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsUpdate)) {
+        return super.equals(obj);
+      }
+      com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsUpdate other = (com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsUpdate) obj;
+
+      if (!unknownFields.equals(other.unknownFields)) return false;
+      return true;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsUpdate parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsUpdate parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsUpdate parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsUpdate parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsUpdate parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsUpdate parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsUpdate parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsUpdate parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsUpdate parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsUpdate parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsUpdate parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsUpdate parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    @java.lang.Override
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsUpdate prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @java.lang.Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * <pre>
+     * TODO
+     * </pre>
+     *
+     * Protobuf type {@code com.giyeok.bibix.intellij.BuildTargetsUpdate}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:com.giyeok.bibix.intellij.BuildTargetsUpdate)
+        com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsUpdateOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return com.giyeok.bibix.intellij.BibixIntellijProto.internal_static_com_giyeok_bibix_intellij_BuildTargetsUpdate_descriptor;
+      }
+
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return com.giyeok.bibix.intellij.BibixIntellijProto.internal_static_com_giyeok_bibix_intellij_BuildTargetsUpdate_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsUpdate.class, com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsUpdate.Builder.class);
+      }
+
+      // Construct using com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsUpdate.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+        }
+      }
+      @java.lang.Override
+      public Builder clear() {
+        super.clear();
+        return this;
+      }
+
+      @java.lang.Override
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return com.giyeok.bibix.intellij.BibixIntellijProto.internal_static_com_giyeok_bibix_intellij_BuildTargetsUpdate_descriptor;
+      }
+
+      @java.lang.Override
+      public com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsUpdate getDefaultInstanceForType() {
+        return com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsUpdate.getDefaultInstance();
+      }
+
+      @java.lang.Override
+      public com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsUpdate build() {
+        com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsUpdate result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      @java.lang.Override
+      public com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsUpdate buildPartial() {
+        com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsUpdate result = new com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsUpdate(this);
+        onBuilt();
+        return result;
+      }
+
+      @java.lang.Override
+      public Builder clone() {
+        return super.clone();
+      }
+      @java.lang.Override
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.setField(field, value);
+      }
+      @java.lang.Override
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return super.clearField(field);
+      }
+      @java.lang.Override
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return super.clearOneof(oneof);
+      }
+      @java.lang.Override
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return super.setRepeatedField(field, index, value);
+      }
+      @java.lang.Override
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.addRepeatedField(field, value);
+      }
+      @java.lang.Override
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsUpdate) {
+          return mergeFrom((com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsUpdate)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsUpdate other) {
+        if (other == com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsUpdate.getDefaultInstance()) return this;
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      @java.lang.Override
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      @java.lang.Override
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsUpdate parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsUpdate) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      @java.lang.Override
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFields(unknownFields);
+      }
+
+      @java.lang.Override
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:com.giyeok.bibix.intellij.BuildTargetsUpdate)
+    }
+
+    // @@protoc_insertion_point(class_scope:com.giyeok.bibix.intellij.BuildTargetsUpdate)
+    private static final com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsUpdate DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsUpdate();
+    }
+
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsUpdate getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<BuildTargetsUpdate>
+        PARSER = new com.google.protobuf.AbstractParser<BuildTargetsUpdate>() {
+      @java.lang.Override
+      public BuildTargetsUpdate parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new BuildTargetsUpdate(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<BuildTargetsUpdate> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<BuildTargetsUpdate> getParserForType() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsUpdate getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
+  public interface ExecuteActionsReqOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:com.giyeok.bibix.intellij.ExecuteActionsReq)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>string project_id = 1;</code>
+     * @return The projectId.
+     */
+    java.lang.String getProjectId();
+    /**
+     * <code>string project_id = 1;</code>
+     * @return The bytes for projectId.
+     */
+    com.google.protobuf.ByteString
+        getProjectIdBytes();
+
+    /**
+     * <code>repeated string actions = 2;</code>
+     * @return A list containing the actions.
+     */
+    java.util.List<java.lang.String>
+        getActionsList();
+    /**
+     * <code>repeated string actions = 2;</code>
+     * @return The count of actions.
+     */
+    int getActionsCount();
+    /**
+     * <code>repeated string actions = 2;</code>
+     * @param index The index of the element to return.
+     * @return The actions at the given index.
+     */
+    java.lang.String getActions(int index);
+    /**
+     * <code>repeated string actions = 2;</code>
+     * @param index The index of the value to return.
+     * @return The bytes of the actions at the given index.
+     */
+    com.google.protobuf.ByteString
+        getActionsBytes(int index);
+  }
+  /**
+   * Protobuf type {@code com.giyeok.bibix.intellij.ExecuteActionsReq}
+   */
+  public static final class ExecuteActionsReq extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:com.giyeok.bibix.intellij.ExecuteActionsReq)
+      ExecuteActionsReqOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use ExecuteActionsReq.newBuilder() to construct.
+    private ExecuteActionsReq(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private ExecuteActionsReq() {
+      projectId_ = "";
+      actions_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+    }
+
+    @java.lang.Override
+    @SuppressWarnings({"unused"})
+    protected java.lang.Object newInstance(
+        UnusedPrivateParameter unused) {
+      return new ExecuteActionsReq();
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private ExecuteActionsReq(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            case 10: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              projectId_ = s;
+              break;
+            }
+            case 18: {
+              java.lang.String s = input.readStringRequireUtf8();
+              if (!((mutable_bitField0_ & 0x00000001) != 0)) {
+                actions_ = new com.google.protobuf.LazyStringArrayList();
+                mutable_bitField0_ |= 0x00000001;
+              }
+              actions_.add(s);
+              break;
+            }
+            default: {
+              if (!parseUnknownField(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        if (((mutable_bitField0_ & 0x00000001) != 0)) {
+          actions_ = actions_.getUnmodifiableView();
+        }
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return com.giyeok.bibix.intellij.BibixIntellijProto.internal_static_com_giyeok_bibix_intellij_ExecuteActionsReq_descriptor;
+    }
+
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return com.giyeok.bibix.intellij.BibixIntellijProto.internal_static_com_giyeok_bibix_intellij_ExecuteActionsReq_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsReq.class, com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsReq.Builder.class);
+    }
+
+    public static final int PROJECT_ID_FIELD_NUMBER = 1;
+    private volatile java.lang.Object projectId_;
+    /**
+     * <code>string project_id = 1;</code>
+     * @return The projectId.
+     */
+    @java.lang.Override
+    public java.lang.String getProjectId() {
+      java.lang.Object ref = projectId_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        projectId_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string project_id = 1;</code>
+     * @return The bytes for projectId.
+     */
+    @java.lang.Override
+    public com.google.protobuf.ByteString
+        getProjectIdBytes() {
+      java.lang.Object ref = projectId_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        projectId_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int ACTIONS_FIELD_NUMBER = 2;
+    private com.google.protobuf.LazyStringList actions_;
+    /**
+     * <code>repeated string actions = 2;</code>
+     * @return A list containing the actions.
+     */
+    public com.google.protobuf.ProtocolStringList
+        getActionsList() {
+      return actions_;
+    }
+    /**
+     * <code>repeated string actions = 2;</code>
+     * @return The count of actions.
+     */
+    public int getActionsCount() {
+      return actions_.size();
+    }
+    /**
+     * <code>repeated string actions = 2;</code>
+     * @param index The index of the element to return.
+     * @return The actions at the given index.
+     */
+    public java.lang.String getActions(int index) {
+      return actions_.get(index);
+    }
+    /**
+     * <code>repeated string actions = 2;</code>
+     * @param index The index of the value to return.
+     * @return The bytes of the actions at the given index.
+     */
+    public com.google.protobuf.ByteString
+        getActionsBytes(int index) {
+      return actions_.getByteString(index);
+    }
+
+    private byte memoizedIsInitialized = -1;
+    @java.lang.Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    @java.lang.Override
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(projectId_)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, projectId_);
+      }
+      for (int i = 0; i < actions_.size(); i++) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, actions_.getRaw(i));
+      }
+      unknownFields.writeTo(output);
+    }
+
+    @java.lang.Override
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(projectId_)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, projectId_);
+      }
+      {
+        int dataSize = 0;
+        for (int i = 0; i < actions_.size(); i++) {
+          dataSize += computeStringSizeNoTag(actions_.getRaw(i));
+        }
+        size += dataSize;
+        size += 1 * getActionsList().size();
+      }
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsReq)) {
+        return super.equals(obj);
+      }
+      com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsReq other = (com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsReq) obj;
+
+      if (!getProjectId()
+          .equals(other.getProjectId())) return false;
+      if (!getActionsList()
+          .equals(other.getActionsList())) return false;
+      if (!unknownFields.equals(other.unknownFields)) return false;
+      return true;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      hash = (37 * hash) + PROJECT_ID_FIELD_NUMBER;
+      hash = (53 * hash) + getProjectId().hashCode();
+      if (getActionsCount() > 0) {
+        hash = (37 * hash) + ACTIONS_FIELD_NUMBER;
+        hash = (53 * hash) + getActionsList().hashCode();
+      }
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsReq parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsReq parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsReq parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsReq parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsReq parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsReq parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsReq parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsReq parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsReq parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsReq parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsReq parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsReq parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    @java.lang.Override
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsReq prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @java.lang.Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code com.giyeok.bibix.intellij.ExecuteActionsReq}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:com.giyeok.bibix.intellij.ExecuteActionsReq)
+        com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsReqOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return com.giyeok.bibix.intellij.BibixIntellijProto.internal_static_com_giyeok_bibix_intellij_ExecuteActionsReq_descriptor;
+      }
+
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return com.giyeok.bibix.intellij.BibixIntellijProto.internal_static_com_giyeok_bibix_intellij_ExecuteActionsReq_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsReq.class, com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsReq.Builder.class);
+      }
+
+      // Construct using com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsReq.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+        }
+      }
+      @java.lang.Override
+      public Builder clear() {
+        super.clear();
+        projectId_ = "";
+
+        actions_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000001);
+        return this;
+      }
+
+      @java.lang.Override
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return com.giyeok.bibix.intellij.BibixIntellijProto.internal_static_com_giyeok_bibix_intellij_ExecuteActionsReq_descriptor;
+      }
+
+      @java.lang.Override
+      public com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsReq getDefaultInstanceForType() {
+        return com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsReq.getDefaultInstance();
+      }
+
+      @java.lang.Override
+      public com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsReq build() {
+        com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsReq result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      @java.lang.Override
+      public com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsReq buildPartial() {
+        com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsReq result = new com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsReq(this);
+        int from_bitField0_ = bitField0_;
+        result.projectId_ = projectId_;
+        if (((bitField0_ & 0x00000001) != 0)) {
+          actions_ = actions_.getUnmodifiableView();
+          bitField0_ = (bitField0_ & ~0x00000001);
+        }
+        result.actions_ = actions_;
+        onBuilt();
+        return result;
+      }
+
+      @java.lang.Override
+      public Builder clone() {
+        return super.clone();
+      }
+      @java.lang.Override
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.setField(field, value);
+      }
+      @java.lang.Override
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return super.clearField(field);
+      }
+      @java.lang.Override
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return super.clearOneof(oneof);
+      }
+      @java.lang.Override
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return super.setRepeatedField(field, index, value);
+      }
+      @java.lang.Override
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.addRepeatedField(field, value);
+      }
+      @java.lang.Override
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsReq) {
+          return mergeFrom((com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsReq)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsReq other) {
+        if (other == com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsReq.getDefaultInstance()) return this;
+        if (!other.getProjectId().isEmpty()) {
+          projectId_ = other.projectId_;
+          onChanged();
+        }
+        if (!other.actions_.isEmpty()) {
+          if (actions_.isEmpty()) {
+            actions_ = other.actions_;
+            bitField0_ = (bitField0_ & ~0x00000001);
+          } else {
+            ensureActionsIsMutable();
+            actions_.addAll(other.actions_);
+          }
+          onChanged();
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      @java.lang.Override
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      @java.lang.Override
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsReq parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsReq) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      private java.lang.Object projectId_ = "";
+      /**
+       * <code>string project_id = 1;</code>
+       * @return The projectId.
+       */
+      public java.lang.String getProjectId() {
+        java.lang.Object ref = projectId_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          projectId_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string project_id = 1;</code>
+       * @return The bytes for projectId.
+       */
+      public com.google.protobuf.ByteString
+          getProjectIdBytes() {
+        java.lang.Object ref = projectId_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          projectId_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string project_id = 1;</code>
+       * @param value The projectId to set.
+       * @return This builder for chaining.
+       */
+      public Builder setProjectId(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        projectId_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string project_id = 1;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearProjectId() {
+        
+        projectId_ = getDefaultInstance().getProjectId();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string project_id = 1;</code>
+       * @param value The bytes for projectId to set.
+       * @return This builder for chaining.
+       */
+      public Builder setProjectIdBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        projectId_ = value;
+        onChanged();
+        return this;
+      }
+
+      private com.google.protobuf.LazyStringList actions_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      private void ensureActionsIsMutable() {
+        if (!((bitField0_ & 0x00000001) != 0)) {
+          actions_ = new com.google.protobuf.LazyStringArrayList(actions_);
+          bitField0_ |= 0x00000001;
+         }
+      }
+      /**
+       * <code>repeated string actions = 2;</code>
+       * @return A list containing the actions.
+       */
+      public com.google.protobuf.ProtocolStringList
+          getActionsList() {
+        return actions_.getUnmodifiableView();
+      }
+      /**
+       * <code>repeated string actions = 2;</code>
+       * @return The count of actions.
+       */
+      public int getActionsCount() {
+        return actions_.size();
+      }
+      /**
+       * <code>repeated string actions = 2;</code>
+       * @param index The index of the element to return.
+       * @return The actions at the given index.
+       */
+      public java.lang.String getActions(int index) {
+        return actions_.get(index);
+      }
+      /**
+       * <code>repeated string actions = 2;</code>
+       * @param index The index of the value to return.
+       * @return The bytes of the actions at the given index.
+       */
+      public com.google.protobuf.ByteString
+          getActionsBytes(int index) {
+        return actions_.getByteString(index);
+      }
+      /**
+       * <code>repeated string actions = 2;</code>
+       * @param index The index to set the value at.
+       * @param value The actions to set.
+       * @return This builder for chaining.
+       */
+      public Builder setActions(
+          int index, java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureActionsIsMutable();
+        actions_.set(index, value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string actions = 2;</code>
+       * @param value The actions to add.
+       * @return This builder for chaining.
+       */
+      public Builder addActions(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureActionsIsMutable();
+        actions_.add(value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string actions = 2;</code>
+       * @param values The actions to add.
+       * @return This builder for chaining.
+       */
+      public Builder addAllActions(
+          java.lang.Iterable<java.lang.String> values) {
+        ensureActionsIsMutable();
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, actions_);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string actions = 2;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearActions() {
+        actions_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000001);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string actions = 2;</code>
+       * @param value The bytes of the actions to add.
+       * @return This builder for chaining.
+       */
+      public Builder addActionsBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        ensureActionsIsMutable();
+        actions_.add(value);
+        onChanged();
+        return this;
+      }
+      @java.lang.Override
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFields(unknownFields);
+      }
+
+      @java.lang.Override
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:com.giyeok.bibix.intellij.ExecuteActionsReq)
+    }
+
+    // @@protoc_insertion_point(class_scope:com.giyeok.bibix.intellij.ExecuteActionsReq)
+    private static final com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsReq DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsReq();
+    }
+
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsReq getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<ExecuteActionsReq>
+        PARSER = new com.google.protobuf.AbstractParser<ExecuteActionsReq>() {
+      @java.lang.Override
+      public ExecuteActionsReq parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new ExecuteActionsReq(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<ExecuteActionsReq> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<ExecuteActionsReq> getParserForType() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsReq getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
+  public interface ExecuteActionsResOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:com.giyeok.bibix.intellij.ExecuteActionsRes)
+      com.google.protobuf.MessageOrBuilder {
+  }
+  /**
+   * Protobuf type {@code com.giyeok.bibix.intellij.ExecuteActionsRes}
+   */
+  public static final class ExecuteActionsRes extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:com.giyeok.bibix.intellij.ExecuteActionsRes)
+      ExecuteActionsResOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use ExecuteActionsRes.newBuilder() to construct.
+    private ExecuteActionsRes(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private ExecuteActionsRes() {
+    }
+
+    @java.lang.Override
+    @SuppressWarnings({"unused"})
+    protected java.lang.Object newInstance(
+        UnusedPrivateParameter unused) {
+      return new ExecuteActionsRes();
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private ExecuteActionsRes(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return com.giyeok.bibix.intellij.BibixIntellijProto.internal_static_com_giyeok_bibix_intellij_ExecuteActionsRes_descriptor;
+    }
+
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return com.giyeok.bibix.intellij.BibixIntellijProto.internal_static_com_giyeok_bibix_intellij_ExecuteActionsRes_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsRes.class, com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsRes.Builder.class);
+    }
+
+    private byte memoizedIsInitialized = -1;
+    @java.lang.Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    @java.lang.Override
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      unknownFields.writeTo(output);
+    }
+
+    @java.lang.Override
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsRes)) {
+        return super.equals(obj);
+      }
+      com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsRes other = (com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsRes) obj;
+
+      if (!unknownFields.equals(other.unknownFields)) return false;
+      return true;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsRes parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsRes parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsRes parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsRes parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsRes parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsRes parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsRes parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsRes parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsRes parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsRes parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsRes parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsRes parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    @java.lang.Override
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsRes prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @java.lang.Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code com.giyeok.bibix.intellij.ExecuteActionsRes}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:com.giyeok.bibix.intellij.ExecuteActionsRes)
+        com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsResOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return com.giyeok.bibix.intellij.BibixIntellijProto.internal_static_com_giyeok_bibix_intellij_ExecuteActionsRes_descriptor;
+      }
+
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return com.giyeok.bibix.intellij.BibixIntellijProto.internal_static_com_giyeok_bibix_intellij_ExecuteActionsRes_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsRes.class, com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsRes.Builder.class);
+      }
+
+      // Construct using com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsRes.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+        }
+      }
+      @java.lang.Override
+      public Builder clear() {
+        super.clear();
+        return this;
+      }
+
+      @java.lang.Override
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return com.giyeok.bibix.intellij.BibixIntellijProto.internal_static_com_giyeok_bibix_intellij_ExecuteActionsRes_descriptor;
+      }
+
+      @java.lang.Override
+      public com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsRes getDefaultInstanceForType() {
+        return com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsRes.getDefaultInstance();
+      }
+
+      @java.lang.Override
+      public com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsRes build() {
+        com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsRes result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      @java.lang.Override
+      public com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsRes buildPartial() {
+        com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsRes result = new com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsRes(this);
+        onBuilt();
+        return result;
+      }
+
+      @java.lang.Override
+      public Builder clone() {
+        return super.clone();
+      }
+      @java.lang.Override
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.setField(field, value);
+      }
+      @java.lang.Override
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return super.clearField(field);
+      }
+      @java.lang.Override
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return super.clearOneof(oneof);
+      }
+      @java.lang.Override
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return super.setRepeatedField(field, index, value);
+      }
+      @java.lang.Override
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.addRepeatedField(field, value);
+      }
+      @java.lang.Override
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsRes) {
+          return mergeFrom((com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsRes)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsRes other) {
+        if (other == com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsRes.getDefaultInstance()) return this;
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      @java.lang.Override
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      @java.lang.Override
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsRes parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsRes) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      @java.lang.Override
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFields(unknownFields);
+      }
+
+      @java.lang.Override
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:com.giyeok.bibix.intellij.ExecuteActionsRes)
+    }
+
+    // @@protoc_insertion_point(class_scope:com.giyeok.bibix.intellij.ExecuteActionsRes)
+    private static final com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsRes DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsRes();
+    }
+
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsRes getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<ExecuteActionsRes>
+        PARSER = new com.google.protobuf.AbstractParser<ExecuteActionsRes>() {
+      @java.lang.Override
+      public ExecuteActionsRes parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new ExecuteActionsRes(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<ExecuteActionsRes> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<ExecuteActionsRes> getParserForType() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsRes getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
+  public interface ExecuteActionUpdateOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:com.giyeok.bibix.intellij.ExecuteActionUpdate)
+      com.google.protobuf.MessageOrBuilder {
+  }
+  /**
+   * <pre>
+   * TODO
+   * </pre>
+   *
+   * Protobuf type {@code com.giyeok.bibix.intellij.ExecuteActionUpdate}
+   */
+  public static final class ExecuteActionUpdate extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:com.giyeok.bibix.intellij.ExecuteActionUpdate)
+      ExecuteActionUpdateOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use ExecuteActionUpdate.newBuilder() to construct.
+    private ExecuteActionUpdate(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private ExecuteActionUpdate() {
+    }
+
+    @java.lang.Override
+    @SuppressWarnings({"unused"})
+    protected java.lang.Object newInstance(
+        UnusedPrivateParameter unused) {
+      return new ExecuteActionUpdate();
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private ExecuteActionUpdate(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return com.giyeok.bibix.intellij.BibixIntellijProto.internal_static_com_giyeok_bibix_intellij_ExecuteActionUpdate_descriptor;
+    }
+
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return com.giyeok.bibix.intellij.BibixIntellijProto.internal_static_com_giyeok_bibix_intellij_ExecuteActionUpdate_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionUpdate.class, com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionUpdate.Builder.class);
+    }
+
+    private byte memoizedIsInitialized = -1;
+    @java.lang.Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    @java.lang.Override
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      unknownFields.writeTo(output);
+    }
+
+    @java.lang.Override
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionUpdate)) {
+        return super.equals(obj);
+      }
+      com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionUpdate other = (com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionUpdate) obj;
+
+      if (!unknownFields.equals(other.unknownFields)) return false;
+      return true;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionUpdate parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionUpdate parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionUpdate parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionUpdate parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionUpdate parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionUpdate parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionUpdate parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionUpdate parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionUpdate parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionUpdate parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionUpdate parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionUpdate parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    @java.lang.Override
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionUpdate prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @java.lang.Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * <pre>
+     * TODO
+     * </pre>
+     *
+     * Protobuf type {@code com.giyeok.bibix.intellij.ExecuteActionUpdate}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:com.giyeok.bibix.intellij.ExecuteActionUpdate)
+        com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionUpdateOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return com.giyeok.bibix.intellij.BibixIntellijProto.internal_static_com_giyeok_bibix_intellij_ExecuteActionUpdate_descriptor;
+      }
+
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return com.giyeok.bibix.intellij.BibixIntellijProto.internal_static_com_giyeok_bibix_intellij_ExecuteActionUpdate_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionUpdate.class, com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionUpdate.Builder.class);
+      }
+
+      // Construct using com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionUpdate.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+        }
+      }
+      @java.lang.Override
+      public Builder clear() {
+        super.clear();
+        return this;
+      }
+
+      @java.lang.Override
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return com.giyeok.bibix.intellij.BibixIntellijProto.internal_static_com_giyeok_bibix_intellij_ExecuteActionUpdate_descriptor;
+      }
+
+      @java.lang.Override
+      public com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionUpdate getDefaultInstanceForType() {
+        return com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionUpdate.getDefaultInstance();
+      }
+
+      @java.lang.Override
+      public com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionUpdate build() {
+        com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionUpdate result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      @java.lang.Override
+      public com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionUpdate buildPartial() {
+        com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionUpdate result = new com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionUpdate(this);
+        onBuilt();
+        return result;
+      }
+
+      @java.lang.Override
+      public Builder clone() {
+        return super.clone();
+      }
+      @java.lang.Override
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.setField(field, value);
+      }
+      @java.lang.Override
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return super.clearField(field);
+      }
+      @java.lang.Override
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return super.clearOneof(oneof);
+      }
+      @java.lang.Override
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return super.setRepeatedField(field, index, value);
+      }
+      @java.lang.Override
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.addRepeatedField(field, value);
+      }
+      @java.lang.Override
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionUpdate) {
+          return mergeFrom((com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionUpdate)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionUpdate other) {
+        if (other == com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionUpdate.getDefaultInstance()) return this;
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      @java.lang.Override
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      @java.lang.Override
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionUpdate parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionUpdate) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      @java.lang.Override
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFields(unknownFields);
+      }
+
+      @java.lang.Override
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:com.giyeok.bibix.intellij.ExecuteActionUpdate)
+    }
+
+    // @@protoc_insertion_point(class_scope:com.giyeok.bibix.intellij.ExecuteActionUpdate)
+    private static final com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionUpdate DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionUpdate();
+    }
+
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionUpdate getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<ExecuteActionUpdate>
+        PARSER = new com.google.protobuf.AbstractParser<ExecuteActionUpdate>() {
+      @java.lang.Override
+      public ExecuteActionUpdate parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new ExecuteActionUpdate(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<ExecuteActionUpdate> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<ExecuteActionUpdate> getParserForType() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionUpdate getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_com_giyeok_bibix_intellij_LoadProjectReq_descriptor;
   private static final 
@@ -6206,6 +9470,36 @@ public final class BibixIntellijProto {
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_com_giyeok_bibix_intellij_ExternalLibrary_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_com_giyeok_bibix_intellij_BuildTargetsReq_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_com_giyeok_bibix_intellij_BuildTargetsReq_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_com_giyeok_bibix_intellij_BuildTargetsRes_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_com_giyeok_bibix_intellij_BuildTargetsRes_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_com_giyeok_bibix_intellij_BuildTargetsUpdate_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_com_giyeok_bibix_intellij_BuildTargetsUpdate_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_com_giyeok_bibix_intellij_ExecuteActionsReq_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_com_giyeok_bibix_intellij_ExecuteActionsReq_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_com_giyeok_bibix_intellij_ExecuteActionsRes_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_com_giyeok_bibix_intellij_ExecuteActionsRes_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_com_giyeok_bibix_intellij_ExecuteActionUpdate_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_com_giyeok_bibix_intellij_ExecuteActionUpdate_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -6231,11 +9525,27 @@ public final class BibixIntellijProto {
       "\030\002 \001(\t\022\031\n\021content_root_path\030\003 \001(\t\"_\n\017Ext" +
       "ernalLibrary\022\022\n\nlibrary_id\030\001 \001(\t\022\023\n\013desc" +
       "ription\030\002 \001(\t\022\022\n\nclasspaths\030\003 \003(\t\022\017\n\007sou" +
-      "rces\030\004 \003(\t2}\n\024BibixIntellijService\022e\n\013lo" +
-      "adProject\022).com.giyeok.bibix.intellij.Lo" +
-      "adProjectReq\032+.com.giyeok.bibix.intellij" +
-      ".BibixProjectInfoB\024B\022BibixIntellijProtob" +
-      "\006proto3"
+      "rces\030\004 \003(\t\"<\n\017BuildTargetsReq\022\022\n\nproject" +
+      "_id\030\001 \001(\t\022\025\n\rbuild_targets\030\002 \003(\t\"\021\n\017Buil" +
+      "dTargetsRes\"\024\n\022BuildTargetsUpdate\"8\n\021Exe" +
+      "cuteActionsReq\022\022\n\nproject_id\030\001 \001(\t\022\017\n\007ac" +
+      "tions\030\002 \003(\t\"\023\n\021ExecuteActionsRes\"\025\n\023Exec" +
+      "uteActionUpdate2\302\004\n\024BibixIntellijService" +
+      "\022e\n\013loadProject\022).com.giyeok.bibix.intel" +
+      "lij.LoadProjectReq\032+.com.giyeok.bibix.in" +
+      "tellij.BibixProjectInfo\022f\n\014buildTargets\022" +
+      "*.com.giyeok.bibix.intellij.BuildTargets" +
+      "Req\032*.com.giyeok.bibix.intellij.BuildTar" +
+      "getsRes\022t\n\025buildTargetsStreaming\022*.com.g" +
+      "iyeok.bibix.intellij.BuildTargetsReq\032-.c" +
+      "om.giyeok.bibix.intellij.BuildTargetsUpd" +
+      "ate0\001\022l\n\016executeActions\022,.com.giyeok.bib" +
+      "ix.intellij.ExecuteActionsReq\032,.com.giye" +
+      "ok.bibix.intellij.ExecuteActionsRes\022w\n\027e" +
+      "xecuteActionsStreaming\022*.com.giyeok.bibi" +
+      "x.intellij.BuildTargetsReq\032..com.giyeok." +
+      "bibix.intellij.ExecuteActionUpdate0\001B\024B\022" +
+      "BibixIntellijProtob\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -6271,6 +9581,42 @@ public final class BibixIntellijProto {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_giyeok_bibix_intellij_ExternalLibrary_descriptor,
         new java.lang.String[] { "LibraryId", "Description", "Classpaths", "Sources", });
+    internal_static_com_giyeok_bibix_intellij_BuildTargetsReq_descriptor =
+      getDescriptor().getMessageTypes().get(5);
+    internal_static_com_giyeok_bibix_intellij_BuildTargetsReq_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_com_giyeok_bibix_intellij_BuildTargetsReq_descriptor,
+        new java.lang.String[] { "ProjectId", "BuildTargets", });
+    internal_static_com_giyeok_bibix_intellij_BuildTargetsRes_descriptor =
+      getDescriptor().getMessageTypes().get(6);
+    internal_static_com_giyeok_bibix_intellij_BuildTargetsRes_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_com_giyeok_bibix_intellij_BuildTargetsRes_descriptor,
+        new java.lang.String[] { });
+    internal_static_com_giyeok_bibix_intellij_BuildTargetsUpdate_descriptor =
+      getDescriptor().getMessageTypes().get(7);
+    internal_static_com_giyeok_bibix_intellij_BuildTargetsUpdate_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_com_giyeok_bibix_intellij_BuildTargetsUpdate_descriptor,
+        new java.lang.String[] { });
+    internal_static_com_giyeok_bibix_intellij_ExecuteActionsReq_descriptor =
+      getDescriptor().getMessageTypes().get(8);
+    internal_static_com_giyeok_bibix_intellij_ExecuteActionsReq_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_com_giyeok_bibix_intellij_ExecuteActionsReq_descriptor,
+        new java.lang.String[] { "ProjectId", "Actions", });
+    internal_static_com_giyeok_bibix_intellij_ExecuteActionsRes_descriptor =
+      getDescriptor().getMessageTypes().get(9);
+    internal_static_com_giyeok_bibix_intellij_ExecuteActionsRes_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_com_giyeok_bibix_intellij_ExecuteActionsRes_descriptor,
+        new java.lang.String[] { });
+    internal_static_com_giyeok_bibix_intellij_ExecuteActionUpdate_descriptor =
+      getDescriptor().getMessageTypes().get(10);
+    internal_static_com_giyeok_bibix_intellij_ExecuteActionUpdate_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_com_giyeok_bibix_intellij_ExecuteActionUpdate_descriptor,
+        new java.lang.String[] { });
   }
 
   // @@protoc_insertion_point(outer_class_scope)
