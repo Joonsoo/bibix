@@ -27,7 +27,6 @@ class BibixInterpreter(
 
   private val varsManager = VarsManager()
 
-  @VisibleForTesting
   val nameLookupTable = NameLookupTable(varsManager)
 
   @VisibleForTesting

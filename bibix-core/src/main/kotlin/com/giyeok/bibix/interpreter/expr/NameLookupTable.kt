@@ -9,7 +9,6 @@ import com.giyeok.bibix.utils.toKtList
 import com.google.common.annotations.VisibleForTesting
 
 class NameLookupTable(private val varsManager: VarsManager) {
-  @VisibleForTesting
   val definitions = mutableMapOf<CName, Definition>()
 
   // 메인 스크립트에서 "jparser"란 이름으로 임포트한 것은 RemoteSourceId(1)에서 "asdf"

@@ -26,3 +26,12 @@ test1 = ktjvm.library(
     ),
   ]
 )
+
+namespace mytest {
+  test1 = ktjvm.library(
+    srcs = ["src/main/kotlin/Test.kt"],
+    deps = [
+      maven.artifact("org.jetbrains.kotlin", "kotlin-stdlib", kotlinVersion),
+    ],
+  )
+}

@@ -100,5 +100,8 @@ class BuildFrontend(
     }
   }
 
-  // TODO list main script build targets
+  // Returns the list of the name definitions in the main script
+  fun mainScriptDefinitions() = interpreter.nameLookupTable.definitions
+    .filterKeys { cname -> cname.sourceId == MainSourceId }
+    .mapKeys { (cname, _) -> cname.tokens.joinToString(".") }
 }
