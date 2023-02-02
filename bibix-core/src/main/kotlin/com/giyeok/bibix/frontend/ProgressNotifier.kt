@@ -10,3 +10,9 @@ interface ProgressNotifier {
 data class ThreadState(val task: Task, val isActive: Boolean, val lastMessage: ProgressMessage)
 
 data class ProgressMessage(val time: Instant, val level: String, val message: String)
+
+class NoopProgressNotifier : ProgressNotifier {
+  override fun notifyProgresses(progressesFunc: () -> List<ThreadState?>) {
+    // Do nothing
+  }
+}

@@ -2,6 +2,8 @@ package com.giyeok.bibix.interpreter.coroutine
 
 import com.giyeok.bibix.base.ListValue
 import com.giyeok.bibix.base.StringValue
+import com.giyeok.bibix.frontend.ThreadPool
+import com.giyeok.bibix.frontend.ThreadPoolEvent
 import com.giyeok.bibix.interpreter.NopeProgressNotifier
 import com.giyeok.bibix.interpreter.task.Task
 import com.giyeok.bibix.interpreter.testInterpreter

@@ -1,6 +1,8 @@
-package com.giyeok.bibix.interpreter.coroutine
+package com.giyeok.bibix.frontend
 
-import com.giyeok.bibix.frontend.ProgressNotifier
+import com.giyeok.bibix.interpreter.coroutine.ProgressIndicator
+import com.giyeok.bibix.interpreter.coroutine.ProgressIndicatorContainer
+import com.giyeok.bibix.interpreter.coroutine.TaskElement
 import com.giyeok.bibix.interpreter.task.Task
 import com.google.common.annotations.VisibleForTesting
 import kotlinx.coroutines.*
@@ -17,6 +19,7 @@ class ThreadPool(
   private val listener: (ThreadPoolEvent) -> Unit = {}
 ) : CoroutineDispatcher(), ProgressIndicatorContainer, Closeable {
 
+  private val localProgressIndicator = ProgressIndicator(this, -1)
   private val progressIndicators = List(numThreads) { idx -> ProgressIndicator(this, idx) }
   private val progressIndicatorThreadLocal = ThreadLocal<ProgressIndicator>()
 
@@ -35,6 +38,12 @@ class ThreadPool(
 
   @VisibleForTesting
   val queue = LinkedBlockingQueue<TaskBlock>()
+
+  fun setLocalProgressIndicator() {
+    val existing = progressIndicatorThreadLocal.get()
+    check(existing == null || existing === localProgressIndicator)
+    progressIndicatorThreadLocal.set(localProgressIndicator)
+  }
 
   override fun dispatch(context: CoroutineContext, block: Runnable) {
     val job = context[Job]!!

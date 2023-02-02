@@ -6,7 +6,6 @@ import com.giyeok.bibix.interpreter.BibixProject
 import com.giyeok.bibix.interpreter.PluginImplProvider
 import com.giyeok.bibix.interpreter.PluginImplProviderImpl
 import com.giyeok.bibix.interpreter.coroutine.TaskElement
-import com.giyeok.bibix.interpreter.coroutine.ThreadPool
 import com.giyeok.bibix.interpreter.task.Task
 import com.giyeok.bibix.plugins.PreloadedPlugin
 import com.giyeok.bibix.plugins.bibix.bibixPlugin
@@ -42,7 +41,7 @@ class BuildFrontend(
 
   private val threadPool = ThreadPool(getMaxThreads(), progressNotifier)
 
-  val interpreter = BibixInterpreter(
+  private val interpreter = BibixInterpreter(
     buildEnv = buildEnv,
     prelude = prelude,
     preloadedPlugins = preloadedPlugins,
@@ -91,4 +90,15 @@ class BuildFrontend(
 
     return runBlocking { deferred.await().toMap() }
   }
+
+  fun blockingBuildTargets(targetNames: List<String>): Map<String, BibixValue> {
+    threadPool.setLocalProgressIndicator()
+    return runBlocking {
+      targetNames.associateWith { targetName ->
+        interpreter.userBuildRequest(targetName)
+      }
+    }
+  }
+
+  // TODO list main script build targets
 }

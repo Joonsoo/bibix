@@ -2,18 +2,12 @@ package com.giyeok.bibix.integtest
 
 import com.giyeok.bibix.base.*
 import com.giyeok.bibix.frontend.BuildFrontend
-import com.giyeok.bibix.frontend.cli.ProgressConsolePrinter
-import com.giyeok.bibix.interpreter.BibixInterpreter
+import com.giyeok.bibix.frontend.NoopProgressNotifier
 import com.giyeok.bibix.interpreter.BibixProject
 import com.giyeok.bibix.interpreter.PluginImplProvider
 import com.giyeok.bibix.interpreter.PluginImplProviderImpl
-import com.giyeok.bibix.interpreter.coroutine.ProgressIndicator
-import com.giyeok.bibix.interpreter.coroutine.ProgressIndicatorContainer
 import com.giyeok.bibix.plugins.jvm.ClassPkg
 import com.google.common.truth.Truth.assertThat
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test
 import java.nio.file.Path
 import kotlin.io.path.Path
@@ -29,7 +23,7 @@ class ModuleStructAnalysisTests {
       mainProject = BibixProject(Path("../testproject"), null),
       buildArgsMap = mapOf(),
       actionArgs = listOf(),
-      progressNotifier = ProgressConsolePrinter(),
+      progressNotifier = NoopProgressNotifier(),
       pluginImplProvider = OverridingPluginImplProviderImpl(
         mapOf(
           Pair(MainSourceId, "com.giyeok.bibix.plugins.java.Library") to javaModulesCollector,
@@ -39,31 +33,8 @@ class ModuleStructAnalysisTests {
       ),
       debuggingMode = true
     )
-    val interpreter = BibixInterpreter(
-      buildEnv = frontend.buildEnv,
-      prelude = frontend.prelude,
-      preloadedPlugins = frontend.preloadedPlugins,
-      pluginImplProvider = frontend.pluginImplProvider,
-      mainProject = frontend.mainProject,
-      repo = frontend.repo,
-      progressIndicatorContainer = object : ProgressIndicatorContainer {
-        override fun notifyUpdated(progressIndicator: ProgressIndicator) {
-          // Do nothing
-        }
 
-        override fun ofCurrentThread(): ProgressIndicator {
-          return ProgressIndicator(this, 0)
-        }
-      },
-      actionArgs = listOf()
-    )
-
-    val targetNames = listOf("test1")
-    runBlocking {
-      targetNames.map { targetName ->
-        async { targetName to interpreter.userBuildRequest(targetName) }
-      }.awaitAll()
-    }.toMap()
+    val results = frontend.blockingBuildTargets(listOf("test1"))
 
     println(ktjvmModulesCollector.modules)
     println(ktjvmModulesCollector)
