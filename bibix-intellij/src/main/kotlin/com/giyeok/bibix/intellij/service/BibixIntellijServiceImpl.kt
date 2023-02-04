@@ -3,14 +3,13 @@ package com.giyeok.bibix.intellij.service
 import com.giyeok.bibix.base.MainSourceId
 import com.giyeok.bibix.frontend.BuildFrontend
 import com.giyeok.bibix.frontend.NoopProgressNotifier
-import com.giyeok.bibix.intellij.BibixIntellijProto.BibixProjectInfo
-import com.giyeok.bibix.intellij.BibixIntellijProto.LoadProjectReq
+import com.giyeok.bibix.intellij.BibixIntellijProto.*
 import com.giyeok.bibix.intellij.BibixIntellijServiceGrpcKt.BibixIntellijServiceCoroutineImplBase
 import com.giyeok.bibix.intellij.bibixProjectInfo
 import com.giyeok.bibix.intellij.module
 import com.giyeok.bibix.interpreter.BibixProject
 import com.giyeok.bibix.interpreter.expr.Definition
-import com.google.common.collect.HashBiMap
+import kotlinx.coroutines.flow.Flow
 import java.nio.file.FileSystem
 import java.nio.file.FileSystems
 import java.nio.file.Path
@@ -62,5 +61,21 @@ class BibixIntellijServiceImpl(
     val projectRoot = fileSystem.getPath(request.projectRoot).normalize().absolute()
 
     return loadProject(projectRoot, request.scriptName.ifEmpty { null })
+  }
+
+  override suspend fun buildTargets(request: BuildTargetsReq): BuildTargetsRes {
+    return super.buildTargets(request)
+  }
+
+  override fun buildTargetsStreaming(request: BuildTargetsReq): Flow<BuildTargetsUpdate> {
+    return super.buildTargetsStreaming(request)
+  }
+
+  override suspend fun executeActions(request: ExecuteActionsReq): ExecuteActionsRes {
+    return super.executeActions(request)
+  }
+
+  override fun executeActionsStreaming(request: BuildTargetsReq): Flow<ExecuteActionUpdate> {
+    return super.executeActionsStreaming(request)
   }
 }

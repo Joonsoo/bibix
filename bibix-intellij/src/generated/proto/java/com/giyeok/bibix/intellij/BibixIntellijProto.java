@@ -785,27 +785,27 @@ public final class BibixIntellijProto {
         int index);
 
     /**
-     * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary libraries = 4;</code>
+     * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary external_libraries = 4;</code>
      */
     java.util.List<com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary> 
-        getLibrariesList();
+        getExternalLibrariesList();
     /**
-     * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary libraries = 4;</code>
+     * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary external_libraries = 4;</code>
      */
-    com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary getLibraries(int index);
+    com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary getExternalLibraries(int index);
     /**
-     * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary libraries = 4;</code>
+     * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary external_libraries = 4;</code>
      */
-    int getLibrariesCount();
+    int getExternalLibrariesCount();
     /**
-     * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary libraries = 4;</code>
+     * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary external_libraries = 4;</code>
      */
     java.util.List<? extends com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibraryOrBuilder> 
-        getLibrariesOrBuilderList();
+        getExternalLibrariesOrBuilderList();
     /**
-     * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary libraries = 4;</code>
+     * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary external_libraries = 4;</code>
      */
-    com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibraryOrBuilder getLibrariesOrBuilder(
+    com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibraryOrBuilder getExternalLibrariesOrBuilder(
         int index);
   }
   /**
@@ -824,7 +824,7 @@ public final class BibixIntellijProto {
       projectId_ = "";
       projectName_ = "";
       modules_ = java.util.Collections.emptyList();
-      libraries_ = java.util.Collections.emptyList();
+      externalLibraries_ = java.util.Collections.emptyList();
     }
 
     @java.lang.Override
@@ -881,10 +881,10 @@ public final class BibixIntellijProto {
             }
             case 34: {
               if (!((mutable_bitField0_ & 0x00000002) != 0)) {
-                libraries_ = new java.util.ArrayList<com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary>();
+                externalLibraries_ = new java.util.ArrayList<com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary>();
                 mutable_bitField0_ |= 0x00000002;
               }
-              libraries_.add(
+              externalLibraries_.add(
                   input.readMessage(com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary.parser(), extensionRegistry));
               break;
             }
@@ -907,7 +907,7 @@ public final class BibixIntellijProto {
           modules_ = java.util.Collections.unmodifiableList(modules_);
         }
         if (((mutable_bitField0_ & 0x00000002) != 0)) {
-          libraries_ = java.util.Collections.unmodifiableList(libraries_);
+          externalLibraries_ = java.util.Collections.unmodifiableList(externalLibraries_);
         }
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
@@ -1042,44 +1042,44 @@ public final class BibixIntellijProto {
       return modules_.get(index);
     }
 
-    public static final int LIBRARIES_FIELD_NUMBER = 4;
-    private java.util.List<com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary> libraries_;
+    public static final int EXTERNAL_LIBRARIES_FIELD_NUMBER = 4;
+    private java.util.List<com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary> externalLibraries_;
     /**
-     * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary libraries = 4;</code>
+     * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary external_libraries = 4;</code>
      */
     @java.lang.Override
-    public java.util.List<com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary> getLibrariesList() {
-      return libraries_;
+    public java.util.List<com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary> getExternalLibrariesList() {
+      return externalLibraries_;
     }
     /**
-     * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary libraries = 4;</code>
+     * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary external_libraries = 4;</code>
      */
     @java.lang.Override
     public java.util.List<? extends com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibraryOrBuilder> 
-        getLibrariesOrBuilderList() {
-      return libraries_;
+        getExternalLibrariesOrBuilderList() {
+      return externalLibraries_;
     }
     /**
-     * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary libraries = 4;</code>
+     * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary external_libraries = 4;</code>
      */
     @java.lang.Override
-    public int getLibrariesCount() {
-      return libraries_.size();
+    public int getExternalLibrariesCount() {
+      return externalLibraries_.size();
     }
     /**
-     * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary libraries = 4;</code>
+     * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary external_libraries = 4;</code>
      */
     @java.lang.Override
-    public com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary getLibraries(int index) {
-      return libraries_.get(index);
+    public com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary getExternalLibraries(int index) {
+      return externalLibraries_.get(index);
     }
     /**
-     * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary libraries = 4;</code>
+     * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary external_libraries = 4;</code>
      */
     @java.lang.Override
-    public com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibraryOrBuilder getLibrariesOrBuilder(
+    public com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibraryOrBuilder getExternalLibrariesOrBuilder(
         int index) {
-      return libraries_.get(index);
+      return externalLibraries_.get(index);
     }
 
     private byte memoizedIsInitialized = -1;
@@ -1105,8 +1105,8 @@ public final class BibixIntellijProto {
       for (int i = 0; i < modules_.size(); i++) {
         output.writeMessage(3, modules_.get(i));
       }
-      for (int i = 0; i < libraries_.size(); i++) {
-        output.writeMessage(4, libraries_.get(i));
+      for (int i = 0; i < externalLibraries_.size(); i++) {
+        output.writeMessage(4, externalLibraries_.get(i));
       }
       unknownFields.writeTo(output);
     }
@@ -1127,9 +1127,9 @@ public final class BibixIntellijProto {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(3, modules_.get(i));
       }
-      for (int i = 0; i < libraries_.size(); i++) {
+      for (int i = 0; i < externalLibraries_.size(); i++) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(4, libraries_.get(i));
+          .computeMessageSize(4, externalLibraries_.get(i));
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -1152,8 +1152,8 @@ public final class BibixIntellijProto {
           .equals(other.getProjectName())) return false;
       if (!getModulesList()
           .equals(other.getModulesList())) return false;
-      if (!getLibrariesList()
-          .equals(other.getLibrariesList())) return false;
+      if (!getExternalLibrariesList()
+          .equals(other.getExternalLibrariesList())) return false;
       if (!unknownFields.equals(other.unknownFields)) return false;
       return true;
     }
@@ -1173,9 +1173,9 @@ public final class BibixIntellijProto {
         hash = (37 * hash) + MODULES_FIELD_NUMBER;
         hash = (53 * hash) + getModulesList().hashCode();
       }
-      if (getLibrariesCount() > 0) {
-        hash = (37 * hash) + LIBRARIES_FIELD_NUMBER;
-        hash = (53 * hash) + getLibrariesList().hashCode();
+      if (getExternalLibrariesCount() > 0) {
+        hash = (37 * hash) + EXTERNAL_LIBRARIES_FIELD_NUMBER;
+        hash = (53 * hash) + getExternalLibrariesList().hashCode();
       }
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
@@ -1306,7 +1306,7 @@ public final class BibixIntellijProto {
         if (com.google.protobuf.GeneratedMessageV3
                 .alwaysUseFieldBuilders) {
           getModulesFieldBuilder();
-          getLibrariesFieldBuilder();
+          getExternalLibrariesFieldBuilder();
         }
       }
       @java.lang.Override
@@ -1322,11 +1322,11 @@ public final class BibixIntellijProto {
         } else {
           modulesBuilder_.clear();
         }
-        if (librariesBuilder_ == null) {
-          libraries_ = java.util.Collections.emptyList();
+        if (externalLibrariesBuilder_ == null) {
+          externalLibraries_ = java.util.Collections.emptyList();
           bitField0_ = (bitField0_ & ~0x00000002);
         } else {
-          librariesBuilder_.clear();
+          externalLibrariesBuilder_.clear();
         }
         return this;
       }
@@ -1366,14 +1366,14 @@ public final class BibixIntellijProto {
         } else {
           result.modules_ = modulesBuilder_.build();
         }
-        if (librariesBuilder_ == null) {
+        if (externalLibrariesBuilder_ == null) {
           if (((bitField0_ & 0x00000002) != 0)) {
-            libraries_ = java.util.Collections.unmodifiableList(libraries_);
+            externalLibraries_ = java.util.Collections.unmodifiableList(externalLibraries_);
             bitField0_ = (bitField0_ & ~0x00000002);
           }
-          result.libraries_ = libraries_;
+          result.externalLibraries_ = externalLibraries_;
         } else {
-          result.libraries_ = librariesBuilder_.build();
+          result.externalLibraries_ = externalLibrariesBuilder_.build();
         }
         onBuilt();
         return result;
@@ -1457,29 +1457,29 @@ public final class BibixIntellijProto {
             }
           }
         }
-        if (librariesBuilder_ == null) {
-          if (!other.libraries_.isEmpty()) {
-            if (libraries_.isEmpty()) {
-              libraries_ = other.libraries_;
+        if (externalLibrariesBuilder_ == null) {
+          if (!other.externalLibraries_.isEmpty()) {
+            if (externalLibraries_.isEmpty()) {
+              externalLibraries_ = other.externalLibraries_;
               bitField0_ = (bitField0_ & ~0x00000002);
             } else {
-              ensureLibrariesIsMutable();
-              libraries_.addAll(other.libraries_);
+              ensureExternalLibrariesIsMutable();
+              externalLibraries_.addAll(other.externalLibraries_);
             }
             onChanged();
           }
         } else {
-          if (!other.libraries_.isEmpty()) {
-            if (librariesBuilder_.isEmpty()) {
-              librariesBuilder_.dispose();
-              librariesBuilder_ = null;
-              libraries_ = other.libraries_;
+          if (!other.externalLibraries_.isEmpty()) {
+            if (externalLibrariesBuilder_.isEmpty()) {
+              externalLibrariesBuilder_.dispose();
+              externalLibrariesBuilder_ = null;
+              externalLibraries_ = other.externalLibraries_;
               bitField0_ = (bitField0_ & ~0x00000002);
-              librariesBuilder_ = 
+              externalLibrariesBuilder_ = 
                 com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
-                   getLibrariesFieldBuilder() : null;
+                   getExternalLibrariesFieldBuilder() : null;
             } else {
-              librariesBuilder_.addAllMessages(other.libraries_);
+              externalLibrariesBuilder_.addAllMessages(other.externalLibraries_);
             }
           }
         }
@@ -1905,244 +1905,244 @@ public final class BibixIntellijProto {
         return modulesBuilder_;
       }
 
-      private java.util.List<com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary> libraries_ =
+      private java.util.List<com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary> externalLibraries_ =
         java.util.Collections.emptyList();
-      private void ensureLibrariesIsMutable() {
+      private void ensureExternalLibrariesIsMutable() {
         if (!((bitField0_ & 0x00000002) != 0)) {
-          libraries_ = new java.util.ArrayList<com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary>(libraries_);
+          externalLibraries_ = new java.util.ArrayList<com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary>(externalLibraries_);
           bitField0_ |= 0x00000002;
          }
       }
 
       private com.google.protobuf.RepeatedFieldBuilderV3<
-          com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary, com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary.Builder, com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibraryOrBuilder> librariesBuilder_;
+          com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary, com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary.Builder, com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibraryOrBuilder> externalLibrariesBuilder_;
 
       /**
-       * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary libraries = 4;</code>
+       * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary external_libraries = 4;</code>
        */
-      public java.util.List<com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary> getLibrariesList() {
-        if (librariesBuilder_ == null) {
-          return java.util.Collections.unmodifiableList(libraries_);
+      public java.util.List<com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary> getExternalLibrariesList() {
+        if (externalLibrariesBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(externalLibraries_);
         } else {
-          return librariesBuilder_.getMessageList();
+          return externalLibrariesBuilder_.getMessageList();
         }
       }
       /**
-       * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary libraries = 4;</code>
+       * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary external_libraries = 4;</code>
        */
-      public int getLibrariesCount() {
-        if (librariesBuilder_ == null) {
-          return libraries_.size();
+      public int getExternalLibrariesCount() {
+        if (externalLibrariesBuilder_ == null) {
+          return externalLibraries_.size();
         } else {
-          return librariesBuilder_.getCount();
+          return externalLibrariesBuilder_.getCount();
         }
       }
       /**
-       * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary libraries = 4;</code>
+       * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary external_libraries = 4;</code>
        */
-      public com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary getLibraries(int index) {
-        if (librariesBuilder_ == null) {
-          return libraries_.get(index);
+      public com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary getExternalLibraries(int index) {
+        if (externalLibrariesBuilder_ == null) {
+          return externalLibraries_.get(index);
         } else {
-          return librariesBuilder_.getMessage(index);
+          return externalLibrariesBuilder_.getMessage(index);
         }
       }
       /**
-       * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary libraries = 4;</code>
+       * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary external_libraries = 4;</code>
        */
-      public Builder setLibraries(
+      public Builder setExternalLibraries(
           int index, com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary value) {
-        if (librariesBuilder_ == null) {
+        if (externalLibrariesBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
           }
-          ensureLibrariesIsMutable();
-          libraries_.set(index, value);
+          ensureExternalLibrariesIsMutable();
+          externalLibraries_.set(index, value);
           onChanged();
         } else {
-          librariesBuilder_.setMessage(index, value);
+          externalLibrariesBuilder_.setMessage(index, value);
         }
         return this;
       }
       /**
-       * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary libraries = 4;</code>
+       * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary external_libraries = 4;</code>
        */
-      public Builder setLibraries(
+      public Builder setExternalLibraries(
           int index, com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary.Builder builderForValue) {
-        if (librariesBuilder_ == null) {
-          ensureLibrariesIsMutable();
-          libraries_.set(index, builderForValue.build());
+        if (externalLibrariesBuilder_ == null) {
+          ensureExternalLibrariesIsMutable();
+          externalLibraries_.set(index, builderForValue.build());
           onChanged();
         } else {
-          librariesBuilder_.setMessage(index, builderForValue.build());
+          externalLibrariesBuilder_.setMessage(index, builderForValue.build());
         }
         return this;
       }
       /**
-       * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary libraries = 4;</code>
+       * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary external_libraries = 4;</code>
        */
-      public Builder addLibraries(com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary value) {
-        if (librariesBuilder_ == null) {
+      public Builder addExternalLibraries(com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary value) {
+        if (externalLibrariesBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
           }
-          ensureLibrariesIsMutable();
-          libraries_.add(value);
+          ensureExternalLibrariesIsMutable();
+          externalLibraries_.add(value);
           onChanged();
         } else {
-          librariesBuilder_.addMessage(value);
+          externalLibrariesBuilder_.addMessage(value);
         }
         return this;
       }
       /**
-       * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary libraries = 4;</code>
+       * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary external_libraries = 4;</code>
        */
-      public Builder addLibraries(
+      public Builder addExternalLibraries(
           int index, com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary value) {
-        if (librariesBuilder_ == null) {
+        if (externalLibrariesBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
           }
-          ensureLibrariesIsMutable();
-          libraries_.add(index, value);
+          ensureExternalLibrariesIsMutable();
+          externalLibraries_.add(index, value);
           onChanged();
         } else {
-          librariesBuilder_.addMessage(index, value);
+          externalLibrariesBuilder_.addMessage(index, value);
         }
         return this;
       }
       /**
-       * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary libraries = 4;</code>
+       * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary external_libraries = 4;</code>
        */
-      public Builder addLibraries(
+      public Builder addExternalLibraries(
           com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary.Builder builderForValue) {
-        if (librariesBuilder_ == null) {
-          ensureLibrariesIsMutable();
-          libraries_.add(builderForValue.build());
+        if (externalLibrariesBuilder_ == null) {
+          ensureExternalLibrariesIsMutable();
+          externalLibraries_.add(builderForValue.build());
           onChanged();
         } else {
-          librariesBuilder_.addMessage(builderForValue.build());
+          externalLibrariesBuilder_.addMessage(builderForValue.build());
         }
         return this;
       }
       /**
-       * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary libraries = 4;</code>
+       * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary external_libraries = 4;</code>
        */
-      public Builder addLibraries(
+      public Builder addExternalLibraries(
           int index, com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary.Builder builderForValue) {
-        if (librariesBuilder_ == null) {
-          ensureLibrariesIsMutable();
-          libraries_.add(index, builderForValue.build());
+        if (externalLibrariesBuilder_ == null) {
+          ensureExternalLibrariesIsMutable();
+          externalLibraries_.add(index, builderForValue.build());
           onChanged();
         } else {
-          librariesBuilder_.addMessage(index, builderForValue.build());
+          externalLibrariesBuilder_.addMessage(index, builderForValue.build());
         }
         return this;
       }
       /**
-       * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary libraries = 4;</code>
+       * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary external_libraries = 4;</code>
        */
-      public Builder addAllLibraries(
+      public Builder addAllExternalLibraries(
           java.lang.Iterable<? extends com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary> values) {
-        if (librariesBuilder_ == null) {
-          ensureLibrariesIsMutable();
+        if (externalLibrariesBuilder_ == null) {
+          ensureExternalLibrariesIsMutable();
           com.google.protobuf.AbstractMessageLite.Builder.addAll(
-              values, libraries_);
+              values, externalLibraries_);
           onChanged();
         } else {
-          librariesBuilder_.addAllMessages(values);
+          externalLibrariesBuilder_.addAllMessages(values);
         }
         return this;
       }
       /**
-       * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary libraries = 4;</code>
+       * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary external_libraries = 4;</code>
        */
-      public Builder clearLibraries() {
-        if (librariesBuilder_ == null) {
-          libraries_ = java.util.Collections.emptyList();
+      public Builder clearExternalLibraries() {
+        if (externalLibrariesBuilder_ == null) {
+          externalLibraries_ = java.util.Collections.emptyList();
           bitField0_ = (bitField0_ & ~0x00000002);
           onChanged();
         } else {
-          librariesBuilder_.clear();
+          externalLibrariesBuilder_.clear();
         }
         return this;
       }
       /**
-       * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary libraries = 4;</code>
+       * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary external_libraries = 4;</code>
        */
-      public Builder removeLibraries(int index) {
-        if (librariesBuilder_ == null) {
-          ensureLibrariesIsMutable();
-          libraries_.remove(index);
+      public Builder removeExternalLibraries(int index) {
+        if (externalLibrariesBuilder_ == null) {
+          ensureExternalLibrariesIsMutable();
+          externalLibraries_.remove(index);
           onChanged();
         } else {
-          librariesBuilder_.remove(index);
+          externalLibrariesBuilder_.remove(index);
         }
         return this;
       }
       /**
-       * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary libraries = 4;</code>
+       * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary external_libraries = 4;</code>
        */
-      public com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary.Builder getLibrariesBuilder(
+      public com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary.Builder getExternalLibrariesBuilder(
           int index) {
-        return getLibrariesFieldBuilder().getBuilder(index);
+        return getExternalLibrariesFieldBuilder().getBuilder(index);
       }
       /**
-       * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary libraries = 4;</code>
+       * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary external_libraries = 4;</code>
        */
-      public com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibraryOrBuilder getLibrariesOrBuilder(
+      public com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibraryOrBuilder getExternalLibrariesOrBuilder(
           int index) {
-        if (librariesBuilder_ == null) {
-          return libraries_.get(index);  } else {
-          return librariesBuilder_.getMessageOrBuilder(index);
+        if (externalLibrariesBuilder_ == null) {
+          return externalLibraries_.get(index);  } else {
+          return externalLibrariesBuilder_.getMessageOrBuilder(index);
         }
       }
       /**
-       * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary libraries = 4;</code>
+       * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary external_libraries = 4;</code>
        */
       public java.util.List<? extends com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibraryOrBuilder> 
-           getLibrariesOrBuilderList() {
-        if (librariesBuilder_ != null) {
-          return librariesBuilder_.getMessageOrBuilderList();
+           getExternalLibrariesOrBuilderList() {
+        if (externalLibrariesBuilder_ != null) {
+          return externalLibrariesBuilder_.getMessageOrBuilderList();
         } else {
-          return java.util.Collections.unmodifiableList(libraries_);
+          return java.util.Collections.unmodifiableList(externalLibraries_);
         }
       }
       /**
-       * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary libraries = 4;</code>
+       * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary external_libraries = 4;</code>
        */
-      public com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary.Builder addLibrariesBuilder() {
-        return getLibrariesFieldBuilder().addBuilder(
+      public com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary.Builder addExternalLibrariesBuilder() {
+        return getExternalLibrariesFieldBuilder().addBuilder(
             com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary.getDefaultInstance());
       }
       /**
-       * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary libraries = 4;</code>
+       * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary external_libraries = 4;</code>
        */
-      public com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary.Builder addLibrariesBuilder(
+      public com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary.Builder addExternalLibrariesBuilder(
           int index) {
-        return getLibrariesFieldBuilder().addBuilder(
+        return getExternalLibrariesFieldBuilder().addBuilder(
             index, com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary.getDefaultInstance());
       }
       /**
-       * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary libraries = 4;</code>
+       * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary external_libraries = 4;</code>
        */
       public java.util.List<com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary.Builder> 
-           getLibrariesBuilderList() {
-        return getLibrariesFieldBuilder().getBuilderList();
+           getExternalLibrariesBuilderList() {
+        return getExternalLibrariesFieldBuilder().getBuilderList();
       }
       private com.google.protobuf.RepeatedFieldBuilderV3<
           com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary, com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary.Builder, com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibraryOrBuilder> 
-          getLibrariesFieldBuilder() {
-        if (librariesBuilder_ == null) {
-          librariesBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+          getExternalLibrariesFieldBuilder() {
+        if (externalLibrariesBuilder_ == null) {
+          externalLibrariesBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
               com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary, com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary.Builder, com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibraryOrBuilder>(
-                  libraries_,
+                  externalLibraries_,
                   ((bitField0_ & 0x00000002) != 0),
                   getParentForChildren(),
                   isClean());
-          libraries_ = null;
+          externalLibraries_ = null;
         }
-        return librariesBuilder_;
+        return externalLibrariesBuilder_;
       }
       @java.lang.Override
       public final Builder setUnknownFields(
@@ -9511,41 +9511,41 @@ public final class BibixIntellijProto {
     java.lang.String[] descriptorData = {
       "\n\tapi.proto\022\031com.giyeok.bibix.intellij\";" +
       "\n\016LoadProjectReq\022\024\n\014project_root\030\001 \001(\t\022\023" +
-      "\n\013script_name\030\002 \001(\t\"\257\001\n\020BibixProjectInfo" +
+      "\n\013script_name\030\002 \001(\t\"\270\001\n\020BibixProjectInfo" +
       "\022\022\n\nproject_id\030\001 \001(\t\022\024\n\014project_name\030\002 \001" +
       "(\t\0222\n\007modules\030\003 \003(\0132!.com.giyeok.bibix.i" +
-      "ntellij.Module\022=\n\tlibraries\030\004 \003(\0132*.com." +
-      "giyeok.bibix.intellij.ExternalLibrary\"\261\001" +
-      "\n\006Module\022\023\n\013module_name\030\001 \001(\t\022\023\n\013module_" +
-      "type\030\002 \001(\t\022=\n\rcontent_roots\030\003 \003(\0132&.com." +
-      "giyeok.bibix.intellij.ContentRoot\022\023\n\013sdk" +
-      "_version\030\004 \001(\t\022\023\n\013module_deps\030\005 \003(\t\022\024\n\014l" +
-      "ibrary_deps\030\006 \003(\t\"^\n\013ContentRoot\022\031\n\021cont" +
-      "ent_root_name\030\001 \001(\t\022\031\n\021content_root_type" +
-      "\030\002 \001(\t\022\031\n\021content_root_path\030\003 \001(\t\"_\n\017Ext" +
-      "ernalLibrary\022\022\n\nlibrary_id\030\001 \001(\t\022\023\n\013desc" +
-      "ription\030\002 \001(\t\022\022\n\nclasspaths\030\003 \003(\t\022\017\n\007sou" +
-      "rces\030\004 \003(\t\"<\n\017BuildTargetsReq\022\022\n\nproject" +
-      "_id\030\001 \001(\t\022\025\n\rbuild_targets\030\002 \003(\t\"\021\n\017Buil" +
-      "dTargetsRes\"\024\n\022BuildTargetsUpdate\"8\n\021Exe" +
-      "cuteActionsReq\022\022\n\nproject_id\030\001 \001(\t\022\017\n\007ac" +
-      "tions\030\002 \003(\t\"\023\n\021ExecuteActionsRes\"\025\n\023Exec" +
-      "uteActionUpdate2\302\004\n\024BibixIntellijService" +
-      "\022e\n\013loadProject\022).com.giyeok.bibix.intel" +
-      "lij.LoadProjectReq\032+.com.giyeok.bibix.in" +
-      "tellij.BibixProjectInfo\022f\n\014buildTargets\022" +
-      "*.com.giyeok.bibix.intellij.BuildTargets" +
-      "Req\032*.com.giyeok.bibix.intellij.BuildTar" +
-      "getsRes\022t\n\025buildTargetsStreaming\022*.com.g" +
-      "iyeok.bibix.intellij.BuildTargetsReq\032-.c" +
-      "om.giyeok.bibix.intellij.BuildTargetsUpd" +
-      "ate0\001\022l\n\016executeActions\022,.com.giyeok.bib" +
-      "ix.intellij.ExecuteActionsReq\032,.com.giye" +
-      "ok.bibix.intellij.ExecuteActionsRes\022w\n\027e" +
-      "xecuteActionsStreaming\022*.com.giyeok.bibi" +
-      "x.intellij.BuildTargetsReq\032..com.giyeok." +
-      "bibix.intellij.ExecuteActionUpdate0\001B\024B\022" +
-      "BibixIntellijProtob\006proto3"
+      "ntellij.Module\022F\n\022external_libraries\030\004 \003" +
+      "(\0132*.com.giyeok.bibix.intellij.ExternalL" +
+      "ibrary\"\261\001\n\006Module\022\023\n\013module_name\030\001 \001(\t\022\023" +
+      "\n\013module_type\030\002 \001(\t\022=\n\rcontent_roots\030\003 \003" +
+      "(\0132&.com.giyeok.bibix.intellij.ContentRo" +
+      "ot\022\023\n\013sdk_version\030\004 \001(\t\022\023\n\013module_deps\030\005" +
+      " \003(\t\022\024\n\014library_deps\030\006 \003(\t\"^\n\013ContentRoo" +
+      "t\022\031\n\021content_root_name\030\001 \001(\t\022\031\n\021content_" +
+      "root_type\030\002 \001(\t\022\031\n\021content_root_path\030\003 \001" +
+      "(\t\"_\n\017ExternalLibrary\022\022\n\nlibrary_id\030\001 \001(" +
+      "\t\022\023\n\013description\030\002 \001(\t\022\022\n\nclasspaths\030\003 \003" +
+      "(\t\022\017\n\007sources\030\004 \003(\t\"<\n\017BuildTargetsReq\022\022" +
+      "\n\nproject_id\030\001 \001(\t\022\025\n\rbuild_targets\030\002 \003(" +
+      "\t\"\021\n\017BuildTargetsRes\"\024\n\022BuildTargetsUpda" +
+      "te\"8\n\021ExecuteActionsReq\022\022\n\nproject_id\030\001 " +
+      "\001(\t\022\017\n\007actions\030\002 \003(\t\"\023\n\021ExecuteActionsRe" +
+      "s\"\025\n\023ExecuteActionUpdate2\302\004\n\024BibixIntell" +
+      "ijService\022e\n\013loadProject\022).com.giyeok.bi" +
+      "bix.intellij.LoadProjectReq\032+.com.giyeok" +
+      ".bibix.intellij.BibixProjectInfo\022f\n\014buil" +
+      "dTargets\022*.com.giyeok.bibix.intellij.Bui" +
+      "ldTargetsReq\032*.com.giyeok.bibix.intellij" +
+      ".BuildTargetsRes\022t\n\025buildTargetsStreamin" +
+      "g\022*.com.giyeok.bibix.intellij.BuildTarge" +
+      "tsReq\032-.com.giyeok.bibix.intellij.BuildT" +
+      "argetsUpdate0\001\022l\n\016executeActions\022,.com.g" +
+      "iyeok.bibix.intellij.ExecuteActionsReq\032," +
+      ".com.giyeok.bibix.intellij.ExecuteAction" +
+      "sRes\022w\n\027executeActionsStreaming\022*.com.gi" +
+      "yeok.bibix.intellij.BuildTargetsReq\032..co" +
+      "m.giyeok.bibix.intellij.ExecuteActionUpd" +
+      "ate0\001B\024B\022BibixIntellijProtob\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -9562,7 +9562,7 @@ public final class BibixIntellijProto {
     internal_static_com_giyeok_bibix_intellij_BibixProjectInfo_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_giyeok_bibix_intellij_BibixProjectInfo_descriptor,
-        new java.lang.String[] { "ProjectId", "ProjectName", "Modules", "Libraries", });
+        new java.lang.String[] { "ProjectId", "ProjectName", "Modules", "ExternalLibraries", });
     internal_static_com_giyeok_bibix_intellij_Module_descriptor =
       getDescriptor().getMessageTypes().get(2);
     internal_static_com_giyeok_bibix_intellij_Module_fieldAccessorTable = new

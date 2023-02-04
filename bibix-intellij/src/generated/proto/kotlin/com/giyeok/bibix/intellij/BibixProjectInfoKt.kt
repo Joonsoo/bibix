@@ -126,65 +126,65 @@ public object BibixProjectInfoKt {
      * generics.
      */
     @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
-    public class LibrariesProxy private constructor() : com.google.protobuf.kotlin.DslProxy()
+    public class ExternalLibrariesProxy private constructor() : com.google.protobuf.kotlin.DslProxy()
     /**
-     * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary libraries = 4;</code>
+     * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary external_libraries = 4;</code>
      */
-     public val libraries: com.google.protobuf.kotlin.DslList<com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary, LibrariesProxy>
+     public val externalLibraries: com.google.protobuf.kotlin.DslList<com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary, ExternalLibrariesProxy>
       @kotlin.jvm.JvmSynthetic
       get() = com.google.protobuf.kotlin.DslList(
-        _builder.getLibrariesList()
+        _builder.getExternalLibrariesList()
       )
     /**
-     * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary libraries = 4;</code>
-     * @param value The libraries to add.
+     * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary external_libraries = 4;</code>
+     * @param value The externalLibraries to add.
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("addLibraries")
-    public fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary, LibrariesProxy>.add(value: com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary) {
-      _builder.addLibraries(value)
+    @kotlin.jvm.JvmName("addExternalLibraries")
+    public fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary, ExternalLibrariesProxy>.add(value: com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary) {
+      _builder.addExternalLibraries(value)
     }/**
-     * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary libraries = 4;</code>
-     * @param value The libraries to add.
+     * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary external_libraries = 4;</code>
+     * @param value The externalLibraries to add.
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("plusAssignLibraries")
+    @kotlin.jvm.JvmName("plusAssignExternalLibraries")
     @Suppress("NOTHING_TO_INLINE")
-    public inline operator fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary, LibrariesProxy>.plusAssign(value: com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary) {
+    public inline operator fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary, ExternalLibrariesProxy>.plusAssign(value: com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary) {
       add(value)
     }/**
-     * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary libraries = 4;</code>
-     * @param values The libraries to add.
+     * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary external_libraries = 4;</code>
+     * @param values The externalLibraries to add.
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("addAllLibraries")
-    public fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary, LibrariesProxy>.addAll(values: kotlin.collections.Iterable<com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary>) {
-      _builder.addAllLibraries(values)
+    @kotlin.jvm.JvmName("addAllExternalLibraries")
+    public fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary, ExternalLibrariesProxy>.addAll(values: kotlin.collections.Iterable<com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary>) {
+      _builder.addAllExternalLibraries(values)
     }/**
-     * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary libraries = 4;</code>
-     * @param values The libraries to add.
+     * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary external_libraries = 4;</code>
+     * @param values The externalLibraries to add.
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("plusAssignAllLibraries")
+    @kotlin.jvm.JvmName("plusAssignAllExternalLibraries")
     @Suppress("NOTHING_TO_INLINE")
-    public inline operator fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary, LibrariesProxy>.plusAssign(values: kotlin.collections.Iterable<com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary>) {
+    public inline operator fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary, ExternalLibrariesProxy>.plusAssign(values: kotlin.collections.Iterable<com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary>) {
       addAll(values)
     }/**
-     * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary libraries = 4;</code>
+     * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary external_libraries = 4;</code>
      * @param index The index to set the value at.
-     * @param value The libraries to set.
+     * @param value The externalLibraries to set.
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("setLibraries")
-    public operator fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary, LibrariesProxy>.set(index: kotlin.Int, value: com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary) {
-      _builder.setLibraries(index, value)
+    @kotlin.jvm.JvmName("setExternalLibraries")
+    public operator fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary, ExternalLibrariesProxy>.set(index: kotlin.Int, value: com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary) {
+      _builder.setExternalLibraries(index, value)
     }/**
-     * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary libraries = 4;</code>
+     * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary external_libraries = 4;</code>
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("clearLibraries")
-    public fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary, LibrariesProxy>.clear() {
-      _builder.clearLibraries()
+    @kotlin.jvm.JvmName("clearExternalLibraries")
+    public fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary, ExternalLibrariesProxy>.clear() {
+      _builder.clearExternalLibraries()
     }}
 }
 @kotlin.jvm.JvmSynthetic

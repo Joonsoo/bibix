@@ -21,7 +21,7 @@ message BibixProjectInfo {
   string project_id = 1;
   string project_name = 2;
   repeated Module modules = 3;
-  repeated ExternalLibrary libraries = 4;
+  repeated ExternalLibrary external_libraries = 4;
 }
 
 message Module {
