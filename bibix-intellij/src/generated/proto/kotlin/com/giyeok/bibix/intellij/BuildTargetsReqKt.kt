@@ -3,16 +3,16 @@
 
 package com.giyeok.bibix.intellij;
 
-@kotlin.jvm.JvmSynthetic
-public inline fun buildTargetsReq(block: com.giyeok.bibix.intellij.BuildTargetsReqKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsReq =
+@kotlin.jvm.JvmName("-initializebuildTargetsReq")
+inline fun buildTargetsReq(block: com.giyeok.bibix.intellij.BuildTargetsReqKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsReq =
   com.giyeok.bibix.intellij.BuildTargetsReqKt.Dsl._create(com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsReq.newBuilder()).apply { block() }._build()
-public object BuildTargetsReqKt {
+object BuildTargetsReqKt {
   @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
   @com.google.protobuf.kotlin.ProtoDslMarker
-  public class Dsl private constructor(
+  class Dsl private constructor(
     private val _builder: com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsReq.Builder
   ) {
-    public companion object {
+    companion object {
       @kotlin.jvm.JvmSynthetic
       @kotlin.PublishedApi
       internal fun _create(builder: com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsReq.Builder): Dsl = Dsl(builder)
@@ -25,7 +25,7 @@ public object BuildTargetsReqKt {
     /**
      * <code>string project_id = 1;</code>
      */
-    public var projectId: kotlin.String
+    var projectId: kotlin.String
       @JvmName("getProjectId")
       get() = _builder.getProjectId()
       @JvmName("setProjectId")
@@ -35,7 +35,7 @@ public object BuildTargetsReqKt {
     /**
      * <code>string project_id = 1;</code>
      */
-    public fun clearProjectId() {
+    fun clearProjectId() {
       _builder.clearProjectId()
     }
 
@@ -44,12 +44,12 @@ public object BuildTargetsReqKt {
      * generics.
      */
     @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
-    public class BuildTargetsProxy private constructor() : com.google.protobuf.kotlin.DslProxy()
+    class BuildTargetsProxy private constructor() : com.google.protobuf.kotlin.DslProxy()
     /**
      * <code>repeated string build_targets = 2;</code>
      * @return A list containing the buildTargets.
      */
-    public val buildTargets: com.google.protobuf.kotlin.DslList<kotlin.String, BuildTargetsProxy>
+     val buildTargets: com.google.protobuf.kotlin.DslList<kotlin.String, BuildTargetsProxy>
       @kotlin.jvm.JvmSynthetic
       get() = com.google.protobuf.kotlin.DslList(
         _builder.getBuildTargetsList()
@@ -60,7 +60,7 @@ public object BuildTargetsReqKt {
      */
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("addBuildTargets")
-    public fun com.google.protobuf.kotlin.DslList<kotlin.String, BuildTargetsProxy>.add(value: kotlin.String) {
+    fun com.google.protobuf.kotlin.DslList<kotlin.String, BuildTargetsProxy>.add(value: kotlin.String) {
       _builder.addBuildTargets(value)
     }
     /**
@@ -70,7 +70,7 @@ public object BuildTargetsReqKt {
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("plusAssignBuildTargets")
     @Suppress("NOTHING_TO_INLINE")
-    public inline operator fun com.google.protobuf.kotlin.DslList<kotlin.String, BuildTargetsProxy>.plusAssign(value: kotlin.String) {
+    inline operator fun com.google.protobuf.kotlin.DslList<kotlin.String, BuildTargetsProxy>.plusAssign(value: kotlin.String) {
       add(value)
     }
     /**
@@ -79,7 +79,7 @@ public object BuildTargetsReqKt {
      */
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("addAllBuildTargets")
-    public fun com.google.protobuf.kotlin.DslList<kotlin.String, BuildTargetsProxy>.addAll(values: kotlin.collections.Iterable<kotlin.String>) {
+    fun com.google.protobuf.kotlin.DslList<kotlin.String, BuildTargetsProxy>.addAll(values: kotlin.collections.Iterable<kotlin.String>) {
       _builder.addAllBuildTargets(values)
     }
     /**
@@ -89,7 +89,7 @@ public object BuildTargetsReqKt {
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("plusAssignAllBuildTargets")
     @Suppress("NOTHING_TO_INLINE")
-    public inline operator fun com.google.protobuf.kotlin.DslList<kotlin.String, BuildTargetsProxy>.plusAssign(values: kotlin.collections.Iterable<kotlin.String>) {
+    inline operator fun com.google.protobuf.kotlin.DslList<kotlin.String, BuildTargetsProxy>.plusAssign(values: kotlin.collections.Iterable<kotlin.String>) {
       addAll(values)
     }
     /**
@@ -99,17 +99,18 @@ public object BuildTargetsReqKt {
      */
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("setBuildTargets")
-    public operator fun com.google.protobuf.kotlin.DslList<kotlin.String, BuildTargetsProxy>.set(index: kotlin.Int, value: kotlin.String) {
+    operator fun com.google.protobuf.kotlin.DslList<kotlin.String, BuildTargetsProxy>.set(index: kotlin.Int, value: kotlin.String) {
       _builder.setBuildTargets(index, value)
     }/**
      * <code>repeated string build_targets = 2;</code>
      */
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("clearBuildTargets")
-    public fun com.google.protobuf.kotlin.DslList<kotlin.String, BuildTargetsProxy>.clear() {
+    fun com.google.protobuf.kotlin.DslList<kotlin.String, BuildTargetsProxy>.clear() {
       _builder.clearBuildTargets()
     }}
 }
 @kotlin.jvm.JvmSynthetic
-public inline fun com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsReq.copy(block: com.giyeok.bibix.intellij.BuildTargetsReqKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsReq =
+inline fun com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsReq.copy(block: com.giyeok.bibix.intellij.BuildTargetsReqKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsReq =
   com.giyeok.bibix.intellij.BuildTargetsReqKt.Dsl._create(this.toBuilder()).apply { block() }._build()
+

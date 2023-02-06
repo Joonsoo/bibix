@@ -3,16 +3,16 @@
 
 package com.giyeok.bibix.intellij;
 
-@kotlin.jvm.JvmSynthetic
-public inline fun executeActionsRes(block: com.giyeok.bibix.intellij.ExecuteActionsResKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsRes =
+@kotlin.jvm.JvmName("-initializeexecuteActionsRes")
+inline fun executeActionsRes(block: com.giyeok.bibix.intellij.ExecuteActionsResKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsRes =
   com.giyeok.bibix.intellij.ExecuteActionsResKt.Dsl._create(com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsRes.newBuilder()).apply { block() }._build()
-public object ExecuteActionsResKt {
+object ExecuteActionsResKt {
   @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
   @com.google.protobuf.kotlin.ProtoDslMarker
-  public class Dsl private constructor(
+  class Dsl private constructor(
     private val _builder: com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsRes.Builder
   ) {
-    public companion object {
+    companion object {
       @kotlin.jvm.JvmSynthetic
       @kotlin.PublishedApi
       internal fun _create(builder: com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsRes.Builder): Dsl = Dsl(builder)
@@ -24,5 +24,6 @@ public object ExecuteActionsResKt {
   }
 }
 @kotlin.jvm.JvmSynthetic
-public inline fun com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsRes.copy(block: com.giyeok.bibix.intellij.ExecuteActionsResKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsRes =
+inline fun com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsRes.copy(block: com.giyeok.bibix.intellij.ExecuteActionsResKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsRes =
   com.giyeok.bibix.intellij.ExecuteActionsResKt.Dsl._create(this.toBuilder()).apply { block() }._build()
+

@@ -15,6 +15,7 @@ service BibixIntellijService {
 message LoadProjectReq {
   string project_root = 1;
   string script_name = 2;
+  bool force_reload = 3;
 }
 
 message BibixProjectInfo {

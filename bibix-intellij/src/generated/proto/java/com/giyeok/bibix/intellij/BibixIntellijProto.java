@@ -41,6 +41,12 @@ public final class BibixIntellijProto {
      */
     com.google.protobuf.ByteString
         getScriptNameBytes();
+
+    /**
+     * <code>bool force_reload = 3;</code>
+     * @return The forceReload.
+     */
+    boolean getForceReload();
   }
   /**
    * Protobuf type {@code com.giyeok.bibix.intellij.LoadProjectReq}
@@ -101,6 +107,11 @@ public final class BibixIntellijProto {
               scriptName_ = s;
               break;
             }
+            case 24: {
+
+              forceReload_ = input.readBool();
+              break;
+            }
             default: {
               if (!parseUnknownField(
                   input, unknownFields, extensionRegistry, tag)) {
@@ -112,6 +123,8 @@ public final class BibixIntellijProto {
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
         throw e.setUnfinishedMessage(this);
+      } catch (com.google.protobuf.UninitializedMessageException e) {
+        throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
       } catch (java.io.IOException e) {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e).setUnfinishedMessage(this);
@@ -209,6 +222,17 @@ public final class BibixIntellijProto {
       }
     }
 
+    public static final int FORCE_RELOAD_FIELD_NUMBER = 3;
+    private boolean forceReload_;
+    /**
+     * <code>bool force_reload = 3;</code>
+     * @return The forceReload.
+     */
+    @java.lang.Override
+    public boolean getForceReload() {
+      return forceReload_;
+    }
+
     private byte memoizedIsInitialized = -1;
     @java.lang.Override
     public final boolean isInitialized() {
@@ -229,6 +253,9 @@ public final class BibixIntellijProto {
       if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(scriptName_)) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 2, scriptName_);
       }
+      if (forceReload_ != false) {
+        output.writeBool(3, forceReload_);
+      }
       unknownFields.writeTo(output);
     }
 
@@ -243,6 +270,10 @@ public final class BibixIntellijProto {
       }
       if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(scriptName_)) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, scriptName_);
+      }
+      if (forceReload_ != false) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(3, forceReload_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -263,6 +294,8 @@ public final class BibixIntellijProto {
           .equals(other.getProjectRoot())) return false;
       if (!getScriptName()
           .equals(other.getScriptName())) return false;
+      if (getForceReload()
+          != other.getForceReload()) return false;
       if (!unknownFields.equals(other.unknownFields)) return false;
       return true;
     }
@@ -278,6 +311,9 @@ public final class BibixIntellijProto {
       hash = (53 * hash) + getProjectRoot().hashCode();
       hash = (37 * hash) + SCRIPT_NAME_FIELD_NUMBER;
       hash = (53 * hash) + getScriptName().hashCode();
+      hash = (37 * hash) + FORCE_RELOAD_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+          getForceReload());
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -415,6 +451,8 @@ public final class BibixIntellijProto {
 
         scriptName_ = "";
 
+        forceReload_ = false;
+
         return this;
       }
 
@@ -443,6 +481,7 @@ public final class BibixIntellijProto {
         com.giyeok.bibix.intellij.BibixIntellijProto.LoadProjectReq result = new com.giyeok.bibix.intellij.BibixIntellijProto.LoadProjectReq(this);
         result.projectRoot_ = projectRoot_;
         result.scriptName_ = scriptName_;
+        result.forceReload_ = forceReload_;
         onBuilt();
         return result;
       }
@@ -498,6 +537,9 @@ public final class BibixIntellijProto {
         if (!other.getScriptName().isEmpty()) {
           scriptName_ = other.scriptName_;
           onChanged();
+        }
+        if (other.getForceReload() != false) {
+          setForceReload(other.getForceReload());
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -676,6 +718,37 @@ public final class BibixIntellijProto {
   checkByteStringIsUtf8(value);
         
         scriptName_ = value;
+        onChanged();
+        return this;
+      }
+
+      private boolean forceReload_ ;
+      /**
+       * <code>bool force_reload = 3;</code>
+       * @return The forceReload.
+       */
+      @java.lang.Override
+      public boolean getForceReload() {
+        return forceReload_;
+      }
+      /**
+       * <code>bool force_reload = 3;</code>
+       * @param value The forceReload to set.
+       * @return This builder for chaining.
+       */
+      public Builder setForceReload(boolean value) {
+        
+        forceReload_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>bool force_reload = 3;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearForceReload() {
+        
+        forceReload_ = false;
         onChanged();
         return this;
       }
@@ -899,6 +972,8 @@ public final class BibixIntellijProto {
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
         throw e.setUnfinishedMessage(this);
+      } catch (com.google.protobuf.UninitializedMessageException e) {
+        throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
       } catch (java.io.IOException e) {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e).setUnfinishedMessage(this);
@@ -2479,6 +2554,8 @@ public final class BibixIntellijProto {
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
         throw e.setUnfinishedMessage(this);
+      } catch (com.google.protobuf.UninitializedMessageException e) {
+        throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
       } catch (java.io.IOException e) {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e).setUnfinishedMessage(this);
@@ -4275,6 +4352,8 @@ public final class BibixIntellijProto {
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
         throw e.setUnfinishedMessage(this);
+      } catch (com.google.protobuf.UninitializedMessageException e) {
+        throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
       } catch (java.io.IOException e) {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e).setUnfinishedMessage(this);
@@ -5195,6 +5274,8 @@ public final class BibixIntellijProto {
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
         throw e.setUnfinishedMessage(this);
+      } catch (com.google.protobuf.UninitializedMessageException e) {
+        throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
       } catch (java.io.IOException e) {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e).setUnfinishedMessage(this);
@@ -6296,6 +6377,8 @@ public final class BibixIntellijProto {
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
         throw e.setUnfinishedMessage(this);
+      } catch (com.google.protobuf.UninitializedMessageException e) {
+        throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
       } catch (java.io.IOException e) {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e).setUnfinishedMessage(this);
@@ -7029,6 +7112,8 @@ public final class BibixIntellijProto {
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
         throw e.setUnfinishedMessage(this);
+      } catch (com.google.protobuf.UninitializedMessageException e) {
+        throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
       } catch (java.io.IOException e) {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e).setUnfinishedMessage(this);
@@ -7451,6 +7536,8 @@ public final class BibixIntellijProto {
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
         throw e.setUnfinishedMessage(this);
+      } catch (com.google.protobuf.UninitializedMessageException e) {
+        throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
       } catch (java.io.IOException e) {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e).setUnfinishedMessage(this);
@@ -7928,6 +8015,8 @@ public final class BibixIntellijProto {
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
         throw e.setUnfinishedMessage(this);
+      } catch (com.google.protobuf.UninitializedMessageException e) {
+        throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
       } catch (java.io.IOException e) {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e).setUnfinishedMessage(this);
@@ -8661,6 +8750,8 @@ public final class BibixIntellijProto {
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
         throw e.setUnfinishedMessage(this);
+      } catch (com.google.protobuf.UninitializedMessageException e) {
+        throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
       } catch (java.io.IOException e) {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e).setUnfinishedMessage(this);
@@ -9083,6 +9174,8 @@ public final class BibixIntellijProto {
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
         throw e.setUnfinishedMessage(this);
+      } catch (com.google.protobuf.UninitializedMessageException e) {
+        throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
       } catch (java.io.IOException e) {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e).setUnfinishedMessage(this);
@@ -9509,43 +9602,44 @@ public final class BibixIntellijProto {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\tapi.proto\022\031com.giyeok.bibix.intellij\";" +
+      "\n\tapi.proto\022\031com.giyeok.bibix.intellij\"Q" +
       "\n\016LoadProjectReq\022\024\n\014project_root\030\001 \001(\t\022\023" +
-      "\n\013script_name\030\002 \001(\t\"\270\001\n\020BibixProjectInfo" +
-      "\022\022\n\nproject_id\030\001 \001(\t\022\024\n\014project_name\030\002 \001" +
-      "(\t\0222\n\007modules\030\003 \003(\0132!.com.giyeok.bibix.i" +
-      "ntellij.Module\022F\n\022external_libraries\030\004 \003" +
-      "(\0132*.com.giyeok.bibix.intellij.ExternalL" +
-      "ibrary\"\261\001\n\006Module\022\023\n\013module_name\030\001 \001(\t\022\023" +
-      "\n\013module_type\030\002 \001(\t\022=\n\rcontent_roots\030\003 \003" +
-      "(\0132&.com.giyeok.bibix.intellij.ContentRo" +
-      "ot\022\023\n\013sdk_version\030\004 \001(\t\022\023\n\013module_deps\030\005" +
-      " \003(\t\022\024\n\014library_deps\030\006 \003(\t\"^\n\013ContentRoo" +
-      "t\022\031\n\021content_root_name\030\001 \001(\t\022\031\n\021content_" +
-      "root_type\030\002 \001(\t\022\031\n\021content_root_path\030\003 \001" +
-      "(\t\"_\n\017ExternalLibrary\022\022\n\nlibrary_id\030\001 \001(" +
-      "\t\022\023\n\013description\030\002 \001(\t\022\022\n\nclasspaths\030\003 \003" +
-      "(\t\022\017\n\007sources\030\004 \003(\t\"<\n\017BuildTargetsReq\022\022" +
-      "\n\nproject_id\030\001 \001(\t\022\025\n\rbuild_targets\030\002 \003(" +
-      "\t\"\021\n\017BuildTargetsRes\"\024\n\022BuildTargetsUpda" +
-      "te\"8\n\021ExecuteActionsReq\022\022\n\nproject_id\030\001 " +
-      "\001(\t\022\017\n\007actions\030\002 \003(\t\"\023\n\021ExecuteActionsRe" +
-      "s\"\025\n\023ExecuteActionUpdate2\302\004\n\024BibixIntell" +
-      "ijService\022e\n\013loadProject\022).com.giyeok.bi" +
-      "bix.intellij.LoadProjectReq\032+.com.giyeok" +
-      ".bibix.intellij.BibixProjectInfo\022f\n\014buil" +
-      "dTargets\022*.com.giyeok.bibix.intellij.Bui" +
-      "ldTargetsReq\032*.com.giyeok.bibix.intellij" +
-      ".BuildTargetsRes\022t\n\025buildTargetsStreamin" +
-      "g\022*.com.giyeok.bibix.intellij.BuildTarge" +
-      "tsReq\032-.com.giyeok.bibix.intellij.BuildT" +
-      "argetsUpdate0\001\022l\n\016executeActions\022,.com.g" +
-      "iyeok.bibix.intellij.ExecuteActionsReq\032," +
-      ".com.giyeok.bibix.intellij.ExecuteAction" +
-      "sRes\022w\n\027executeActionsStreaming\022*.com.gi" +
-      "yeok.bibix.intellij.BuildTargetsReq\032..co" +
-      "m.giyeok.bibix.intellij.ExecuteActionUpd" +
-      "ate0\001B\024B\022BibixIntellijProtob\006proto3"
+      "\n\013script_name\030\002 \001(\t\022\024\n\014force_reload\030\003 \001(" +
+      "\010\"\270\001\n\020BibixProjectInfo\022\022\n\nproject_id\030\001 \001" +
+      "(\t\022\024\n\014project_name\030\002 \001(\t\0222\n\007modules\030\003 \003(" +
+      "\0132!.com.giyeok.bibix.intellij.Module\022F\n\022" +
+      "external_libraries\030\004 \003(\0132*.com.giyeok.bi" +
+      "bix.intellij.ExternalLibrary\"\261\001\n\006Module\022" +
+      "\023\n\013module_name\030\001 \001(\t\022\023\n\013module_type\030\002 \001(" +
+      "\t\022=\n\rcontent_roots\030\003 \003(\0132&.com.giyeok.bi" +
+      "bix.intellij.ContentRoot\022\023\n\013sdk_version\030" +
+      "\004 \001(\t\022\023\n\013module_deps\030\005 \003(\t\022\024\n\014library_de" +
+      "ps\030\006 \003(\t\"^\n\013ContentRoot\022\031\n\021content_root_" +
+      "name\030\001 \001(\t\022\031\n\021content_root_type\030\002 \001(\t\022\031\n" +
+      "\021content_root_path\030\003 \001(\t\"_\n\017ExternalLibr" +
+      "ary\022\022\n\nlibrary_id\030\001 \001(\t\022\023\n\013description\030\002" +
+      " \001(\t\022\022\n\nclasspaths\030\003 \003(\t\022\017\n\007sources\030\004 \003(" +
+      "\t\"<\n\017BuildTargetsReq\022\022\n\nproject_id\030\001 \001(\t" +
+      "\022\025\n\rbuild_targets\030\002 \003(\t\"\021\n\017BuildTargetsR" +
+      "es\"\024\n\022BuildTargetsUpdate\"8\n\021ExecuteActio" +
+      "nsReq\022\022\n\nproject_id\030\001 \001(\t\022\017\n\007actions\030\002 \003" +
+      "(\t\"\023\n\021ExecuteActionsRes\"\025\n\023ExecuteAction" +
+      "Update2\302\004\n\024BibixIntellijService\022e\n\013loadP" +
+      "roject\022).com.giyeok.bibix.intellij.LoadP" +
+      "rojectReq\032+.com.giyeok.bibix.intellij.Bi" +
+      "bixProjectInfo\022f\n\014buildTargets\022*.com.giy" +
+      "eok.bibix.intellij.BuildTargetsReq\032*.com" +
+      ".giyeok.bibix.intellij.BuildTargetsRes\022t" +
+      "\n\025buildTargetsStreaming\022*.com.giyeok.bib" +
+      "ix.intellij.BuildTargetsReq\032-.com.giyeok" +
+      ".bibix.intellij.BuildTargetsUpdate0\001\022l\n\016" +
+      "executeActions\022,.com.giyeok.bibix.intell" +
+      "ij.ExecuteActionsReq\032,.com.giyeok.bibix." +
+      "intellij.ExecuteActionsRes\022w\n\027executeAct" +
+      "ionsStreaming\022*.com.giyeok.bibix.intelli" +
+      "j.BuildTargetsReq\032..com.giyeok.bibix.int" +
+      "ellij.ExecuteActionUpdate0\001B\024B\022BibixInte" +
+      "llijProtob\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -9556,7 +9650,7 @@ public final class BibixIntellijProto {
     internal_static_com_giyeok_bibix_intellij_LoadProjectReq_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_giyeok_bibix_intellij_LoadProjectReq_descriptor,
-        new java.lang.String[] { "ProjectRoot", "ScriptName", });
+        new java.lang.String[] { "ProjectRoot", "ScriptName", "ForceReload", });
     internal_static_com_giyeok_bibix_intellij_BibixProjectInfo_descriptor =
       getDescriptor().getMessageTypes().get(1);
     internal_static_com_giyeok_bibix_intellij_BibixProjectInfo_fieldAccessorTable = new

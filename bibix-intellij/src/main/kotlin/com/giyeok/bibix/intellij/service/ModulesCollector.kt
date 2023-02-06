@@ -19,7 +19,8 @@ class ModulesCollector(val languageType: String) {
       languageType,
       origin,
       srcs.values.map { (it as FileValue).file }.toSet(),
-      deps.values.map { ClassPkg.fromBibix(it) }
+      deps.values.map { ClassPkg.fromBibix(it) },
+      context.arguments
     )
     val cpinfo = ClassInstanceValue(
       "com.giyeok.bibix.plugins.jvm",
@@ -46,5 +47,6 @@ data class ModuleData(
   val languageType: String,
   val origin: LocalBuilt,
   val sources: Set<Path>,
-  val dependencies: List<ClassPkg>
+  val dependencies: List<ClassPkg>,
+  val allArgs: Map<String, BibixValue>
 )

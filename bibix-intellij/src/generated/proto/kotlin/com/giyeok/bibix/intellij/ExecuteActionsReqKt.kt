@@ -3,16 +3,16 @@
 
 package com.giyeok.bibix.intellij;
 
-@kotlin.jvm.JvmSynthetic
-public inline fun executeActionsReq(block: com.giyeok.bibix.intellij.ExecuteActionsReqKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsReq =
+@kotlin.jvm.JvmName("-initializeexecuteActionsReq")
+inline fun executeActionsReq(block: com.giyeok.bibix.intellij.ExecuteActionsReqKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsReq =
   com.giyeok.bibix.intellij.ExecuteActionsReqKt.Dsl._create(com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsReq.newBuilder()).apply { block() }._build()
-public object ExecuteActionsReqKt {
+object ExecuteActionsReqKt {
   @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
   @com.google.protobuf.kotlin.ProtoDslMarker
-  public class Dsl private constructor(
+  class Dsl private constructor(
     private val _builder: com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsReq.Builder
   ) {
-    public companion object {
+    companion object {
       @kotlin.jvm.JvmSynthetic
       @kotlin.PublishedApi
       internal fun _create(builder: com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsReq.Builder): Dsl = Dsl(builder)
@@ -25,7 +25,7 @@ public object ExecuteActionsReqKt {
     /**
      * <code>string project_id = 1;</code>
      */
-    public var projectId: kotlin.String
+    var projectId: kotlin.String
       @JvmName("getProjectId")
       get() = _builder.getProjectId()
       @JvmName("setProjectId")
@@ -35,7 +35,7 @@ public object ExecuteActionsReqKt {
     /**
      * <code>string project_id = 1;</code>
      */
-    public fun clearProjectId() {
+    fun clearProjectId() {
       _builder.clearProjectId()
     }
 
@@ -44,12 +44,12 @@ public object ExecuteActionsReqKt {
      * generics.
      */
     @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
-    public class ActionsProxy private constructor() : com.google.protobuf.kotlin.DslProxy()
+    class ActionsProxy private constructor() : com.google.protobuf.kotlin.DslProxy()
     /**
      * <code>repeated string actions = 2;</code>
      * @return A list containing the actions.
      */
-    public val actions: com.google.protobuf.kotlin.DslList<kotlin.String, ActionsProxy>
+     val actions: com.google.protobuf.kotlin.DslList<kotlin.String, ActionsProxy>
       @kotlin.jvm.JvmSynthetic
       get() = com.google.protobuf.kotlin.DslList(
         _builder.getActionsList()
@@ -60,7 +60,7 @@ public object ExecuteActionsReqKt {
      */
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("addActions")
-    public fun com.google.protobuf.kotlin.DslList<kotlin.String, ActionsProxy>.add(value: kotlin.String) {
+    fun com.google.protobuf.kotlin.DslList<kotlin.String, ActionsProxy>.add(value: kotlin.String) {
       _builder.addActions(value)
     }
     /**
@@ -70,7 +70,7 @@ public object ExecuteActionsReqKt {
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("plusAssignActions")
     @Suppress("NOTHING_TO_INLINE")
-    public inline operator fun com.google.protobuf.kotlin.DslList<kotlin.String, ActionsProxy>.plusAssign(value: kotlin.String) {
+    inline operator fun com.google.protobuf.kotlin.DslList<kotlin.String, ActionsProxy>.plusAssign(value: kotlin.String) {
       add(value)
     }
     /**
@@ -79,7 +79,7 @@ public object ExecuteActionsReqKt {
      */
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("addAllActions")
-    public fun com.google.protobuf.kotlin.DslList<kotlin.String, ActionsProxy>.addAll(values: kotlin.collections.Iterable<kotlin.String>) {
+    fun com.google.protobuf.kotlin.DslList<kotlin.String, ActionsProxy>.addAll(values: kotlin.collections.Iterable<kotlin.String>) {
       _builder.addAllActions(values)
     }
     /**
@@ -89,7 +89,7 @@ public object ExecuteActionsReqKt {
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("plusAssignAllActions")
     @Suppress("NOTHING_TO_INLINE")
-    public inline operator fun com.google.protobuf.kotlin.DslList<kotlin.String, ActionsProxy>.plusAssign(values: kotlin.collections.Iterable<kotlin.String>) {
+    inline operator fun com.google.protobuf.kotlin.DslList<kotlin.String, ActionsProxy>.plusAssign(values: kotlin.collections.Iterable<kotlin.String>) {
       addAll(values)
     }
     /**
@@ -99,17 +99,18 @@ public object ExecuteActionsReqKt {
      */
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("setActions")
-    public operator fun com.google.protobuf.kotlin.DslList<kotlin.String, ActionsProxy>.set(index: kotlin.Int, value: kotlin.String) {
+    operator fun com.google.protobuf.kotlin.DslList<kotlin.String, ActionsProxy>.set(index: kotlin.Int, value: kotlin.String) {
       _builder.setActions(index, value)
     }/**
      * <code>repeated string actions = 2;</code>
      */
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("clearActions")
-    public fun com.google.protobuf.kotlin.DslList<kotlin.String, ActionsProxy>.clear() {
+    fun com.google.protobuf.kotlin.DslList<kotlin.String, ActionsProxy>.clear() {
       _builder.clearActions()
     }}
 }
 @kotlin.jvm.JvmSynthetic
-public inline fun com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsReq.copy(block: com.giyeok.bibix.intellij.ExecuteActionsReqKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsReq =
+inline fun com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsReq.copy(block: com.giyeok.bibix.intellij.ExecuteActionsReqKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsReq =
   com.giyeok.bibix.intellij.ExecuteActionsReqKt.Dsl._create(this.toBuilder()).apply { block() }._build()
+

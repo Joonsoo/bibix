@@ -3,16 +3,16 @@
 
 package com.giyeok.bibix.intellij;
 
-@kotlin.jvm.JvmSynthetic
-public inline fun buildTargetsRes(block: com.giyeok.bibix.intellij.BuildTargetsResKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsRes =
+@kotlin.jvm.JvmName("-initializebuildTargetsRes")
+inline fun buildTargetsRes(block: com.giyeok.bibix.intellij.BuildTargetsResKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsRes =
   com.giyeok.bibix.intellij.BuildTargetsResKt.Dsl._create(com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsRes.newBuilder()).apply { block() }._build()
-public object BuildTargetsResKt {
+object BuildTargetsResKt {
   @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
   @com.google.protobuf.kotlin.ProtoDslMarker
-  public class Dsl private constructor(
+  class Dsl private constructor(
     private val _builder: com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsRes.Builder
   ) {
-    public companion object {
+    companion object {
       @kotlin.jvm.JvmSynthetic
       @kotlin.PublishedApi
       internal fun _create(builder: com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsRes.Builder): Dsl = Dsl(builder)
@@ -24,5 +24,6 @@ public object BuildTargetsResKt {
   }
 }
 @kotlin.jvm.JvmSynthetic
-public inline fun com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsRes.copy(block: com.giyeok.bibix.intellij.BuildTargetsResKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsRes =
+inline fun com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsRes.copy(block: com.giyeok.bibix.intellij.BuildTargetsResKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsRes =
   com.giyeok.bibix.intellij.BuildTargetsResKt.Dsl._create(this.toBuilder()).apply { block() }._build()
+

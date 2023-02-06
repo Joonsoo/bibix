@@ -3,16 +3,16 @@
 
 package com.giyeok.bibix.intellij;
 
-@kotlin.jvm.JvmSynthetic
-public inline fun loadProjectReq(block: com.giyeok.bibix.intellij.LoadProjectReqKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.intellij.BibixIntellijProto.LoadProjectReq =
+@kotlin.jvm.JvmName("-initializeloadProjectReq")
+inline fun loadProjectReq(block: com.giyeok.bibix.intellij.LoadProjectReqKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.intellij.BibixIntellijProto.LoadProjectReq =
   com.giyeok.bibix.intellij.LoadProjectReqKt.Dsl._create(com.giyeok.bibix.intellij.BibixIntellijProto.LoadProjectReq.newBuilder()).apply { block() }._build()
-public object LoadProjectReqKt {
+object LoadProjectReqKt {
   @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
   @com.google.protobuf.kotlin.ProtoDslMarker
-  public class Dsl private constructor(
+  class Dsl private constructor(
     private val _builder: com.giyeok.bibix.intellij.BibixIntellijProto.LoadProjectReq.Builder
   ) {
-    public companion object {
+    companion object {
       @kotlin.jvm.JvmSynthetic
       @kotlin.PublishedApi
       internal fun _create(builder: com.giyeok.bibix.intellij.BibixIntellijProto.LoadProjectReq.Builder): Dsl = Dsl(builder)
@@ -25,7 +25,7 @@ public object LoadProjectReqKt {
     /**
      * <code>string project_root = 1;</code>
      */
-    public var projectRoot: kotlin.String
+    var projectRoot: kotlin.String
       @JvmName("getProjectRoot")
       get() = _builder.getProjectRoot()
       @JvmName("setProjectRoot")
@@ -35,14 +35,14 @@ public object LoadProjectReqKt {
     /**
      * <code>string project_root = 1;</code>
      */
-    public fun clearProjectRoot() {
+    fun clearProjectRoot() {
       _builder.clearProjectRoot()
     }
 
     /**
      * <code>string script_name = 2;</code>
      */
-    public var scriptName: kotlin.String
+    var scriptName: kotlin.String
       @JvmName("getScriptName")
       get() = _builder.getScriptName()
       @JvmName("setScriptName")
@@ -52,11 +52,29 @@ public object LoadProjectReqKt {
     /**
      * <code>string script_name = 2;</code>
      */
-    public fun clearScriptName() {
+    fun clearScriptName() {
       _builder.clearScriptName()
+    }
+
+    /**
+     * <code>bool force_reload = 3;</code>
+     */
+    var forceReload: kotlin.Boolean
+      @JvmName("getForceReload")
+      get() = _builder.getForceReload()
+      @JvmName("setForceReload")
+      set(value) {
+        _builder.setForceReload(value)
+      }
+    /**
+     * <code>bool force_reload = 3;</code>
+     */
+    fun clearForceReload() {
+      _builder.clearForceReload()
     }
   }
 }
 @kotlin.jvm.JvmSynthetic
-public inline fun com.giyeok.bibix.intellij.BibixIntellijProto.LoadProjectReq.copy(block: com.giyeok.bibix.intellij.LoadProjectReqKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.intellij.BibixIntellijProto.LoadProjectReq =
+inline fun com.giyeok.bibix.intellij.BibixIntellijProto.LoadProjectReq.copy(block: com.giyeok.bibix.intellij.LoadProjectReqKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.intellij.BibixIntellijProto.LoadProjectReq =
   com.giyeok.bibix.intellij.LoadProjectReqKt.Dsl._create(this.toBuilder()).apply { block() }._build()
+

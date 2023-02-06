@@ -3,16 +3,16 @@
 
 package com.giyeok.bibix.intellij;
 
-@kotlin.jvm.JvmSynthetic
-public inline fun executeActionUpdate(block: com.giyeok.bibix.intellij.ExecuteActionUpdateKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionUpdate =
+@kotlin.jvm.JvmName("-initializeexecuteActionUpdate")
+inline fun executeActionUpdate(block: com.giyeok.bibix.intellij.ExecuteActionUpdateKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionUpdate =
   com.giyeok.bibix.intellij.ExecuteActionUpdateKt.Dsl._create(com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionUpdate.newBuilder()).apply { block() }._build()
-public object ExecuteActionUpdateKt {
+object ExecuteActionUpdateKt {
   @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
   @com.google.protobuf.kotlin.ProtoDslMarker
-  public class Dsl private constructor(
+  class Dsl private constructor(
     private val _builder: com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionUpdate.Builder
   ) {
-    public companion object {
+    companion object {
       @kotlin.jvm.JvmSynthetic
       @kotlin.PublishedApi
       internal fun _create(builder: com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionUpdate.Builder): Dsl = Dsl(builder)
@@ -24,5 +24,6 @@ public object ExecuteActionUpdateKt {
   }
 }
 @kotlin.jvm.JvmSynthetic
-public inline fun com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionUpdate.copy(block: com.giyeok.bibix.intellij.ExecuteActionUpdateKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionUpdate =
+inline fun com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionUpdate.copy(block: com.giyeok.bibix.intellij.ExecuteActionUpdateKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionUpdate =
   com.giyeok.bibix.intellij.ExecuteActionUpdateKt.Dsl._create(this.toBuilder()).apply { block() }._build()
+
