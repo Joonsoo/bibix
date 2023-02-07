@@ -14,13 +14,44 @@ import com.google.common.annotations.VisibleForTesting
 import java.lang.AssertionError
 import java.nio.file.Path
 import kotlin.io.path.absolutePathString
+import kotlin.io.path.bufferedReader
+import kotlin.io.path.isRegularFile
 import kotlin.io.path.name
 
 object ProjectStructureExtractor {
+  fun commonAncestorsOf(paths: Set<Path>): Set<Path> {
+    // TODO implement
+    return paths
+  }
+
   @VisibleForTesting
   fun getContentRoots(sources: Set<Path>): List<BibixIntellijProto.ContentRoot> {
     // TODO 공통 ancestor directory 및 각 파일의 package 이름을 고려해서 content root
-    return sources.map { source ->
+    val sourceCodeRoots = sources.associate { sourcePath ->
+      val sourcePackage = sourcePath.bufferedReader().use {
+        SourceCodePackageNameReader.readPackageName(it)
+      }
+      if (sourcePackage != null) {
+        var path = sourcePath.normalize()
+        if (path.isRegularFile()) {
+          path = path.parent
+        }
+        for (pkgToken in sourcePackage.asReversed()) {
+          if (pkgToken == path.name) {
+            path = path.parent
+          } else {
+            break
+          }
+        }
+        sourcePath to path
+      } else {
+        sourcePath to sourcePath
+      }
+    }
+
+    val roots = commonAncestorsOf(sourceCodeRoots.values.toSet())
+
+    return roots.map { source ->
       contentRoot {
         this.contentRootName = "Sources"
         this.contentRootType = "src"
