@@ -26,7 +26,7 @@ object ProjectStructureExtractor {
 
   @VisibleForTesting
   fun getContentRoots(sources: Set<Path>): List<BibixIntellijProto.ContentRoot> {
-    // TODO 공통 ancestor directory 및 각 파일의 package 이름을 고려해서 content root
+    // 공통 ancestor directory 및 각 파일의 package 이름을 고려해서 content root
     val sourceCodeRoots = sources.associate { sourcePath ->
       val sourcePackage = sourcePath.bufferedReader().use {
         SourceCodePackageNameReader.readPackageName(it)

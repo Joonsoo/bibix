@@ -12,9 +12,9 @@ class ContentRootsTests {
   fun test() {
     val fs = Jimfs.newFileSystem()
 
-    fs.getPath("/testproject/src/main/kotlin/com/giyeok/bibix").createDirectories()
+    fs.getPath("/testproject/src/main/kotlin/com/giyeok/bibix/intellij").createDirectories()
     val file1 = fs.getPath("/testproject/src/main/kotlin/com/giyeok/bibix/File1.kt")
-    val file2 = fs.getPath("/testproject/src/main/kotlin/com/giyeok/bibix/File2.kt")
+    val file2 = fs.getPath("/testproject/src/main/kotlin/com/giyeok/bibix/intellij/File2.kt")
 
     file1.writeText(
       """
@@ -23,7 +23,7 @@ class ContentRootsTests {
     )
     file2.writeText(
       """
-      package com.giyeok.bibix
+      package com.giyeok.bibix.intellij
     """.trimIndent()
     )
 
