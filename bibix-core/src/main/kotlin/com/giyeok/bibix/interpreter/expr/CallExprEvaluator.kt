@@ -225,7 +225,7 @@ class CallExprEvaluator(
         async {
           // string -> path로 변환할 때의 기준 디렉토리는 coercion이 일어나는 source id를 기준으로
           val value =
-            exprEvaluator.evaluateExpr(task, context, valueExpr, thisValue, directBindings)
+            exprEvaluator.evaluateExpr(task, context, valueExpr, thisValue, directBindings, setOf())
               .ensureValue()
           if (paramDef.optional && value == NoneValue) NoneValue else {
             exprEvaluator.coerce(task, context, value, paramDef.type)
@@ -237,7 +237,8 @@ class CallExprEvaluator(
         async {
           // 여기선 directBindings 사용하지 말아야 함
           val value =
-            exprEvaluator.evaluateExpr(task, callable.context, valueExpr, thisValue).ensureValue()
+            exprEvaluator.evaluateExpr(task, callable.context, valueExpr, thisValue, setOf())
+              .ensureValue()
           if (paramDef.optional && value == NoneValue) NoneValue else {
             exprEvaluator.coerce(task, callable.context, value, paramDef.type)
           }
@@ -266,9 +267,10 @@ class CallExprEvaluator(
         throw IllegalStateException("Done is not allowed for build rule")
 
       is BuildRuleReturn.EvalAndThen -> {
-        val name = exprEvaluator.evaluateName(task, context, returnValue.ruleName.split('.'), null)
+        val name =
+          exprEvaluator.evaluateName(task, context, returnValue.ruleName.split('.'), null, setOf())
         check(name is BuildRuleDef) { "" }
-        val result = callBuildRule(task, context, name, returnValue.params).value
+        val result = callBuildRule(task, context, name, returnValue.params, setOf()).value
         return handlePluginReturnValue(task, context, returnValue.whenDone(result))
       }
 
@@ -295,8 +297,8 @@ class CallExprEvaluator(
           evalResult?.let { convertEvaluationResult(evalResult)?.let { typeName to it } }
         }.toMap()
         val relativeNamedTypes = returnValue.relativeNames.mapNotNull { typeName ->
-          val evalResult =
-            exprEvaluator.evaluateName(task, context, typeName.split('.').map { it.trim() }, null)
+          val typeNameTokens = typeName.split('.').map { it.trim() }
+          val evalResult = exprEvaluator.evaluateName(task, context, typeNameTokens, null, setOf())
           convertEvaluationResult(evalResult)?.let { typeName to it }
         }.toMap()
         val typeDetailsMap = TypeDetailsMap(types, relativeNamedTypes)
@@ -318,7 +320,7 @@ class CallExprEvaluator(
     value: BibixValue
   ): BibixValue = when (value) {
     is NClassInstanceValue -> {
-      val classType = exprEvaluator.evaluateName(task, context, value.nameTokens, null)
+      val classType = exprEvaluator.evaluateName(task, context, value.nameTokens, null, setOf())
       check(classType is EvaluationResult.DataClassDef) { "Invalid NClassInstanceValue: $value" }
       val fieldValues = value.fieldValues.mapValues { (_, value) ->
         handleNClassInstanceValue(task, context, value)
@@ -362,7 +364,8 @@ class CallExprEvaluator(
       task,
       buildRule.context,
       buildRule.implTarget,
-      buildRule.thisValue
+      buildRule.thisValue,
+      setOf()
     ).ensureValue()
     return coerceCpInstance(task, buildRule.context, impl)
   }
@@ -435,9 +438,12 @@ class CallExprEvaluator(
     task: Task,
     context: NameLookupContext,
     buildRule: BuildRuleDef,
-    params: Map<String, BibixValue>
-  ): BibixValueWithObjectHash =
-    g.withMemo(hash(task, context.sourceId, buildRule, params)) { objHash ->
+    params: Map<String, BibixValue>,
+    outputNames: Set<CName>,
+  ): BibixValueWithObjectHash {
+    val objHash = hash(task, context.sourceId, buildRule, params)
+
+    val result = g.withMemo(objHash) { objHash ->
       val pluginInstance = getRuleImplInstance(context.sourceId, task, buildRule)
       val method =
         pluginInstance::class.java.getMethod(buildRule.methodName, BuildContext::class.java)
@@ -469,21 +475,33 @@ class CallExprEvaluator(
       progressIndicator.logInfo("Continuing from ${buildRule.context}...")
 
       val finalValue = handlePluginReturnValue(task, buildRule.context, returnValue)
+
       exprEvaluator.coerce(task, buildRule.context, finalValue, buildRule.returnType)
     }
+
+    outputNames.filter { it.sourceId == MainSourceId }.forEach { outputName ->
+      if (g.addOutputMemo(outputName, objHash)) {
+        interpreter.repo.linkNameToObject(outputName.tokens, objHash)
+      }
+    }
+
+    return result
+  }
 
   suspend fun evaluateCallExpr(
     requester: Task,
     context: NameLookupContext,
     expr: BibixAst.CallExpr,
     thisValue: BibixValue?,
+    outputNames: Set<CName>,
   ): BibixValueWithObjectHash =
     g.withTask(requester, Task.EvalCallExpr(context.sourceId, expr.id(), thisValue)) { task ->
-      when (val callTarget = exprEvaluator.evaluateName(task, context, expr.name(), null)) {
+      when (val callTarget =
+        exprEvaluator.evaluateName(task, context, expr.name(), null, outputNames)) {
         is BuildRuleDef -> {
           val params =
             organizeParams(task, context, callTarget, expr.params(), thisValue)
-          callBuildRule(task, context, callTarget, params)
+          callBuildRule(task, context, callTarget, params, outputNames)
         }
 
         is EvaluationResult.DataClassDef -> {
@@ -511,7 +529,8 @@ class CallExprEvaluator(
           task,
           actionRule.context,
           actionRule.implTarget,
-          actionRule.thisValue
+          actionRule.thisValue,
+          setOf(),
         ).ensureValue()
         pluginImplProvider.getPluginImplInstance(
           callerSourceId,
@@ -528,7 +547,7 @@ class CallExprEvaluator(
     args: Pair<String, List<String>>?
   ): Unit = g.withTask(requester, Task.ExecuteActionCall(context.sourceId, expr.id())) { task ->
     // TODO handle actionArgs
-    val callTarget = exprEvaluator.evaluateName(task, context, expr.name(), null)
+    val callTarget = exprEvaluator.evaluateName(task, context, expr.name(), null, setOf())
 
     check(callTarget is ActionRuleDef) { "TODO message" }
 

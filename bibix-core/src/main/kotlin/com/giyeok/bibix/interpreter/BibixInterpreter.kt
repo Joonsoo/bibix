@@ -58,12 +58,13 @@ class BibixInterpreter(
       val mainContext = NameLookupContext(MainSourceId, listOf())
       val definition = lookupName(task, mainContext, nameTokens)
       // task가 targetDef이면 evaluateExpr, action def이면 executeAction, 그 외의 다른 것이면 오류
+      val defName = definition.cname
 
-      val defContext = NameLookupContext(definition.cname).dropLastToken()
+      val defContext = NameLookupContext(defName).dropLastToken()
 
       when (definition) {
         is Definition.TargetDef ->
-          exprEvaluator.evaluateName(task, defContext, definition.cname.tokens, null)
+          exprEvaluator.evaluateName(task, defContext, defName.tokens, null, setOf())
             .ensureValue()
 
         is Definition.ActionDef -> {

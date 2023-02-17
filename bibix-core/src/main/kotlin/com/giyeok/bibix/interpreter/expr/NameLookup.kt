@@ -109,7 +109,8 @@ class NameLookup(
         }
       }
 
-      val sourceValue = exprEvaluator.evaluateExpr(task, context, importSource, null).ensureValue()
+      val sourceValue =
+        exprEvaluator.evaluateExpr(task, context, importSource, null, setOf()).ensureValue()
       val importedProject = if (sourceValue is ClassInstanceValue) {
         BibixProject.fromBibixValue(sourceValue)
           ?: throw IllegalStateException("import source was not a BibixProject class value: $sourceValue")

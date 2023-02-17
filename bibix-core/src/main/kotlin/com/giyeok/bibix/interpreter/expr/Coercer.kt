@@ -219,7 +219,7 @@ class Coercer(
       listOf()
     )
     val classDef =
-      exprEvaluator.evaluateName(task, typeDefinedContext, className.split('.'), null)
+      exprEvaluator.evaluateName(task, typeDefinedContext, className.split('.'), null, setOf())
     check(classDef is EvaluationResult.DataClassDef)
     return classDef
   }
@@ -298,8 +298,8 @@ class Coercer(
     )
 
     suspend fun traverse(superClassName: String): Boolean {
-      val superClassDef =
-        exprEvaluator.evaluateName(task, typContext, superClassNamespace + superClassName, null)
+      val className = superClassNamespace + superClassName
+      val superClassDef = exprEvaluator.evaluateName(task, typContext, className, null, setOf())
       if (superClassDef !is EvaluationResult.SuperClassDef) {
         return false
       }
@@ -346,8 +346,13 @@ class Coercer(
                   exprEvaluator.evaluateType(task, classDef.context, bodyElem.castTo())
                 if (isSubType(task, type, castType)) {
                   val cast =
-                    exprEvaluator.evaluateExpr(task, classDef.context, bodyElem.expr(), value)
-                      .ensureValue()
+                    exprEvaluator.evaluateExpr(
+                      task,
+                      classDef.context,
+                      bodyElem.expr(),
+                      value,
+                      setOf()
+                    ).ensureValue()
                   return coerce(task, context, cast, type)
                 }
               }

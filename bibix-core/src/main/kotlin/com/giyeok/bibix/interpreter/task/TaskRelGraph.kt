@@ -1,6 +1,7 @@
 package com.giyeok.bibix.interpreter.task
 
 import com.giyeok.bibix.base.BibixValue
+import com.giyeok.bibix.base.CName
 import com.giyeok.bibix.interpreter.coroutine.TaskElement
 import com.giyeok.bibix.repo.BibixValueWithObjectHash
 import com.giyeok.bibix.repo.ObjectHash
@@ -73,11 +74,18 @@ class TaskRelGraph {
   private val objMemoMap = mutableMapOf<ByteString, MutableStateFlow<BibixValueWithObjectHash?>>()
   private val memoMutex = Mutex()
 
+  private val outputNames = mutableMapOf<CName, ObjectHash>()
+
   @VisibleForTesting
   suspend fun getObjHashMap() = memoMutex.withLock { objHashMap }
 
   @VisibleForTesting
   suspend fun getObjMemoMap() = memoMutex.withLock { objMemoMap }
+
+  suspend fun addOutputMemo(name: CName, objectHash: ObjectHash): Boolean =
+    memoMutex.withLock {
+      outputNames.putIfAbsent(name, objectHash) == null
+    }
 
   suspend fun withMemo(
     objId: ObjectHash,
