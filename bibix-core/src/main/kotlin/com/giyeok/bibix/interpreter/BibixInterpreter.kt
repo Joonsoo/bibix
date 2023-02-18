@@ -1,5 +1,6 @@
 package com.giyeok.bibix.interpreter
 
+import com.giyeok.bibix.ast.BibixAst
 import com.giyeok.bibix.base.*
 import com.giyeok.bibix.interpreter.coroutine.TaskElement
 import com.giyeok.bibix.interpreter.task.Task
@@ -9,6 +10,7 @@ import com.giyeok.bibix.repo.Repo
 import com.giyeok.bibix.interpreter.coroutine.ProgressIndicatorContainer
 import com.giyeok.bibix.interpreter.expr.*
 import com.giyeok.bibix.utils.getOrNull
+import com.giyeok.bibix.utils.toKtList
 import com.google.common.annotations.VisibleForTesting
 import kotlinx.coroutines.*
 
@@ -68,13 +70,23 @@ class BibixInterpreter(
             .ensureValue()
 
         is Definition.ActionDef -> {
-          val actionExpr = definition.action.expr()
-          val argName = definition.action.argsName().getOrNull()
-          if (argName == null && actionArgs.isNotEmpty()) {
-            throw IllegalStateException("action args is not used")
+          suspend fun executeActionExpr(actionExpr: BibixAst.CallExpr) {
+            val argName = definition.action.argsName().getOrNull()
+            if (argName == null && actionArgs.isNotEmpty()) {
+              throw IllegalStateException("action args is not used")
+            }
+            val args = if (argName == null) null else Pair(argName, actionArgs)
+            exprEvaluator.executeAction(task, defContext, actionExpr, args)
           }
-          val args = if (argName == null) null else Pair(argName, actionArgs)
-          exprEvaluator.executeAction(task, defContext, actionExpr, args)
+
+          when (val body = definition.action.body()) {
+            is BibixAst.SingleCallAction -> executeActionExpr(body.expr())
+            is BibixAst.MultiCallActions -> body.exprs().toKtList().forEach { expr ->
+              executeActionExpr(expr)
+            }
+
+            else -> throw AssertionError()
+          }
           NoneValue
         }
 
