@@ -29,19 +29,28 @@ message Module {
   string module_name = 1;
   // java, ktjvm, scala, ...
   string module_type = 2;
+  string module_root_path = 3;
   // module sources
-  repeated ContentRoot content_roots = 3;
-  string sdk_version = 4;
+  repeated ContentRoot content_roots = 4;
+  repeated ModuleSdk module_sdks = 5;
   // dependent한 module 이름 목록
-  repeated string module_deps = 5;
+  repeated string module_deps = 6;
   // dependent한 라이브러리 id 목록
-  repeated string library_deps = 6;
+  repeated string library_deps = 7;
 }
 
 message ContentRoot {
   string content_root_name = 1;
   string content_root_type = 2;
   string content_root_path = 3;
+}
+
+message ModuleSdk {
+  oneof sdk {
+    string jdk_version = 1;
+    string ktjvm_sdk_version = 2;
+    string scala_sdk_version = 3;
+  }
 }
 
 message ExternalLibrary {

@@ -65,6 +65,23 @@ object ModuleKt {
     }
 
     /**
+     * <code>string module_root_path = 3;</code>
+     */
+    var moduleRootPath: kotlin.String
+      @JvmName("getModuleRootPath")
+      get() = _builder.getModuleRootPath()
+      @JvmName("setModuleRootPath")
+      set(value) {
+        _builder.setModuleRootPath(value)
+      }
+    /**
+     * <code>string module_root_path = 3;</code>
+     */
+    fun clearModuleRootPath() {
+      _builder.clearModuleRootPath()
+    }
+
+    /**
      * An uninstantiable, behaviorless type to represent the field in
      * generics.
      */
@@ -75,7 +92,7 @@ object ModuleKt {
      * module sources
      * </pre>
      *
-     * <code>repeated .com.giyeok.bibix.intellij.ContentRoot content_roots = 3;</code>
+     * <code>repeated .com.giyeok.bibix.intellij.ContentRoot content_roots = 4;</code>
      */
      val contentRoots: com.google.protobuf.kotlin.DslList<com.giyeok.bibix.intellij.BibixIntellijProto.ContentRoot, ContentRootsProxy>
       @kotlin.jvm.JvmSynthetic
@@ -87,7 +104,7 @@ object ModuleKt {
      * module sources
      * </pre>
      *
-     * <code>repeated .com.giyeok.bibix.intellij.ContentRoot content_roots = 3;</code>
+     * <code>repeated .com.giyeok.bibix.intellij.ContentRoot content_roots = 4;</code>
      * @param value The contentRoots to add.
      */
     @kotlin.jvm.JvmSynthetic
@@ -100,7 +117,7 @@ object ModuleKt {
      * module sources
      * </pre>
      *
-     * <code>repeated .com.giyeok.bibix.intellij.ContentRoot content_roots = 3;</code>
+     * <code>repeated .com.giyeok.bibix.intellij.ContentRoot content_roots = 4;</code>
      * @param value The contentRoots to add.
      */
     @kotlin.jvm.JvmSynthetic
@@ -114,7 +131,7 @@ object ModuleKt {
      * module sources
      * </pre>
      *
-     * <code>repeated .com.giyeok.bibix.intellij.ContentRoot content_roots = 3;</code>
+     * <code>repeated .com.giyeok.bibix.intellij.ContentRoot content_roots = 4;</code>
      * @param values The contentRoots to add.
      */
     @kotlin.jvm.JvmSynthetic
@@ -127,7 +144,7 @@ object ModuleKt {
      * module sources
      * </pre>
      *
-     * <code>repeated .com.giyeok.bibix.intellij.ContentRoot content_roots = 3;</code>
+     * <code>repeated .com.giyeok.bibix.intellij.ContentRoot content_roots = 4;</code>
      * @param values The contentRoots to add.
      */
     @kotlin.jvm.JvmSynthetic
@@ -141,7 +158,7 @@ object ModuleKt {
      * module sources
      * </pre>
      *
-     * <code>repeated .com.giyeok.bibix.intellij.ContentRoot content_roots = 3;</code>
+     * <code>repeated .com.giyeok.bibix.intellij.ContentRoot content_roots = 4;</code>
      * @param index The index to set the value at.
      * @param value The contentRoots to set.
      */
@@ -155,7 +172,7 @@ object ModuleKt {
      * module sources
      * </pre>
      *
-     * <code>repeated .com.giyeok.bibix.intellij.ContentRoot content_roots = 3;</code>
+     * <code>repeated .com.giyeok.bibix.intellij.ContentRoot content_roots = 4;</code>
      */
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("clearContentRoots")
@@ -165,21 +182,76 @@ object ModuleKt {
 
 
     /**
-     * <code>string sdk_version = 4;</code>
+     * An uninstantiable, behaviorless type to represent the field in
+     * generics.
      */
-    var sdkVersion: kotlin.String
-      @JvmName("getSdkVersion")
-      get() = _builder.getSdkVersion()
-      @JvmName("setSdkVersion")
-      set(value) {
-        _builder.setSdkVersion(value)
-      }
+    @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
+    class ModuleSdksProxy private constructor() : com.google.protobuf.kotlin.DslProxy()
     /**
-     * <code>string sdk_version = 4;</code>
+     * <code>repeated .com.giyeok.bibix.intellij.ModuleSdk module_sdks = 5;</code>
      */
-    fun clearSdkVersion() {
-      _builder.clearSdkVersion()
+     val moduleSdks: com.google.protobuf.kotlin.DslList<com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk, ModuleSdksProxy>
+      @kotlin.jvm.JvmSynthetic
+      get() = com.google.protobuf.kotlin.DslList(
+        _builder.getModuleSdksList()
+      )
+    /**
+     * <code>repeated .com.giyeok.bibix.intellij.ModuleSdk module_sdks = 5;</code>
+     * @param value The moduleSdks to add.
+     */
+    @kotlin.jvm.JvmSynthetic
+    @kotlin.jvm.JvmName("addModuleSdks")
+    fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk, ModuleSdksProxy>.add(value: com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk) {
+      _builder.addModuleSdks(value)
     }
+    /**
+     * <code>repeated .com.giyeok.bibix.intellij.ModuleSdk module_sdks = 5;</code>
+     * @param value The moduleSdks to add.
+     */
+    @kotlin.jvm.JvmSynthetic
+    @kotlin.jvm.JvmName("plusAssignModuleSdks")
+    @Suppress("NOTHING_TO_INLINE")
+    inline operator fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk, ModuleSdksProxy>.plusAssign(value: com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk) {
+      add(value)
+    }
+    /**
+     * <code>repeated .com.giyeok.bibix.intellij.ModuleSdk module_sdks = 5;</code>
+     * @param values The moduleSdks to add.
+     */
+    @kotlin.jvm.JvmSynthetic
+    @kotlin.jvm.JvmName("addAllModuleSdks")
+    fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk, ModuleSdksProxy>.addAll(values: kotlin.collections.Iterable<com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk>) {
+      _builder.addAllModuleSdks(values)
+    }
+    /**
+     * <code>repeated .com.giyeok.bibix.intellij.ModuleSdk module_sdks = 5;</code>
+     * @param values The moduleSdks to add.
+     */
+    @kotlin.jvm.JvmSynthetic
+    @kotlin.jvm.JvmName("plusAssignAllModuleSdks")
+    @Suppress("NOTHING_TO_INLINE")
+    inline operator fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk, ModuleSdksProxy>.plusAssign(values: kotlin.collections.Iterable<com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk>) {
+      addAll(values)
+    }
+    /**
+     * <code>repeated .com.giyeok.bibix.intellij.ModuleSdk module_sdks = 5;</code>
+     * @param index The index to set the value at.
+     * @param value The moduleSdks to set.
+     */
+    @kotlin.jvm.JvmSynthetic
+    @kotlin.jvm.JvmName("setModuleSdks")
+    operator fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk, ModuleSdksProxy>.set(index: kotlin.Int, value: com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk) {
+      _builder.setModuleSdks(index, value)
+    }
+    /**
+     * <code>repeated .com.giyeok.bibix.intellij.ModuleSdk module_sdks = 5;</code>
+     */
+    @kotlin.jvm.JvmSynthetic
+    @kotlin.jvm.JvmName("clearModuleSdks")
+    fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk, ModuleSdksProxy>.clear() {
+      _builder.clearModuleSdks()
+    }
+
 
     /**
      * An uninstantiable, behaviorless type to represent the field in
@@ -192,7 +264,7 @@ object ModuleKt {
      * dependent한 module 이름 목록
      * </pre>
      *
-     * <code>repeated string module_deps = 5;</code>
+     * <code>repeated string module_deps = 6;</code>
      * @return A list containing the moduleDeps.
      */
      val moduleDeps: com.google.protobuf.kotlin.DslList<kotlin.String, ModuleDepsProxy>
@@ -205,7 +277,7 @@ object ModuleKt {
      * dependent한 module 이름 목록
      * </pre>
      *
-     * <code>repeated string module_deps = 5;</code>
+     * <code>repeated string module_deps = 6;</code>
      * @param value The moduleDeps to add.
      */
     @kotlin.jvm.JvmSynthetic
@@ -218,7 +290,7 @@ object ModuleKt {
      * dependent한 module 이름 목록
      * </pre>
      *
-     * <code>repeated string module_deps = 5;</code>
+     * <code>repeated string module_deps = 6;</code>
      * @param value The moduleDeps to add.
      */
     @kotlin.jvm.JvmSynthetic
@@ -232,7 +304,7 @@ object ModuleKt {
      * dependent한 module 이름 목록
      * </pre>
      *
-     * <code>repeated string module_deps = 5;</code>
+     * <code>repeated string module_deps = 6;</code>
      * @param values The moduleDeps to add.
      */
     @kotlin.jvm.JvmSynthetic
@@ -245,7 +317,7 @@ object ModuleKt {
      * dependent한 module 이름 목록
      * </pre>
      *
-     * <code>repeated string module_deps = 5;</code>
+     * <code>repeated string module_deps = 6;</code>
      * @param values The moduleDeps to add.
      */
     @kotlin.jvm.JvmSynthetic
@@ -259,7 +331,7 @@ object ModuleKt {
      * dependent한 module 이름 목록
      * </pre>
      *
-     * <code>repeated string module_deps = 5;</code>
+     * <code>repeated string module_deps = 6;</code>
      * @param index The index to set the value at.
      * @param value The moduleDeps to set.
      */
@@ -272,7 +344,7 @@ object ModuleKt {
      * dependent한 module 이름 목록
      * </pre>
      *
-     * <code>repeated string module_deps = 5;</code>
+     * <code>repeated string module_deps = 6;</code>
      */
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("clearModuleDeps")
@@ -290,7 +362,7 @@ object ModuleKt {
      * dependent한 라이브러리 id 목록
      * </pre>
      *
-     * <code>repeated string library_deps = 6;</code>
+     * <code>repeated string library_deps = 7;</code>
      * @return A list containing the libraryDeps.
      */
      val libraryDeps: com.google.protobuf.kotlin.DslList<kotlin.String, LibraryDepsProxy>
@@ -303,7 +375,7 @@ object ModuleKt {
      * dependent한 라이브러리 id 목록
      * </pre>
      *
-     * <code>repeated string library_deps = 6;</code>
+     * <code>repeated string library_deps = 7;</code>
      * @param value The libraryDeps to add.
      */
     @kotlin.jvm.JvmSynthetic
@@ -316,7 +388,7 @@ object ModuleKt {
      * dependent한 라이브러리 id 목록
      * </pre>
      *
-     * <code>repeated string library_deps = 6;</code>
+     * <code>repeated string library_deps = 7;</code>
      * @param value The libraryDeps to add.
      */
     @kotlin.jvm.JvmSynthetic
@@ -330,7 +402,7 @@ object ModuleKt {
      * dependent한 라이브러리 id 목록
      * </pre>
      *
-     * <code>repeated string library_deps = 6;</code>
+     * <code>repeated string library_deps = 7;</code>
      * @param values The libraryDeps to add.
      */
     @kotlin.jvm.JvmSynthetic
@@ -343,7 +415,7 @@ object ModuleKt {
      * dependent한 라이브러리 id 목록
      * </pre>
      *
-     * <code>repeated string library_deps = 6;</code>
+     * <code>repeated string library_deps = 7;</code>
      * @param values The libraryDeps to add.
      */
     @kotlin.jvm.JvmSynthetic
@@ -357,7 +429,7 @@ object ModuleKt {
      * dependent한 라이브러리 id 목록
      * </pre>
      *
-     * <code>repeated string library_deps = 6;</code>
+     * <code>repeated string library_deps = 7;</code>
      * @param index The index to set the value at.
      * @param value The libraryDeps to set.
      */
@@ -370,7 +442,7 @@ object ModuleKt {
      * dependent한 라이브러리 id 목록
      * </pre>
      *
-     * <code>repeated string library_deps = 6;</code>
+     * <code>repeated string library_deps = 7;</code>
      */
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("clearLibraryDeps")

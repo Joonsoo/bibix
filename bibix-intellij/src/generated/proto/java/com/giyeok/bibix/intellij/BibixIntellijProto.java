@@ -2309,11 +2309,23 @@ public final class BibixIntellijProto {
         getModuleTypeBytes();
 
     /**
+     * <code>string module_root_path = 3;</code>
+     * @return The moduleRootPath.
+     */
+    java.lang.String getModuleRootPath();
+    /**
+     * <code>string module_root_path = 3;</code>
+     * @return The bytes for moduleRootPath.
+     */
+    com.google.protobuf.ByteString
+        getModuleRootPathBytes();
+
+    /**
      * <pre>
      * module sources
      * </pre>
      *
-     * <code>repeated .com.giyeok.bibix.intellij.ContentRoot content_roots = 3;</code>
+     * <code>repeated .com.giyeok.bibix.intellij.ContentRoot content_roots = 4;</code>
      */
     java.util.List<com.giyeok.bibix.intellij.BibixIntellijProto.ContentRoot> 
         getContentRootsList();
@@ -2322,7 +2334,7 @@ public final class BibixIntellijProto {
      * module sources
      * </pre>
      *
-     * <code>repeated .com.giyeok.bibix.intellij.ContentRoot content_roots = 3;</code>
+     * <code>repeated .com.giyeok.bibix.intellij.ContentRoot content_roots = 4;</code>
      */
     com.giyeok.bibix.intellij.BibixIntellijProto.ContentRoot getContentRoots(int index);
     /**
@@ -2330,7 +2342,7 @@ public final class BibixIntellijProto {
      * module sources
      * </pre>
      *
-     * <code>repeated .com.giyeok.bibix.intellij.ContentRoot content_roots = 3;</code>
+     * <code>repeated .com.giyeok.bibix.intellij.ContentRoot content_roots = 4;</code>
      */
     int getContentRootsCount();
     /**
@@ -2338,7 +2350,7 @@ public final class BibixIntellijProto {
      * module sources
      * </pre>
      *
-     * <code>repeated .com.giyeok.bibix.intellij.ContentRoot content_roots = 3;</code>
+     * <code>repeated .com.giyeok.bibix.intellij.ContentRoot content_roots = 4;</code>
      */
     java.util.List<? extends com.giyeok.bibix.intellij.BibixIntellijProto.ContentRootOrBuilder> 
         getContentRootsOrBuilderList();
@@ -2347,29 +2359,41 @@ public final class BibixIntellijProto {
      * module sources
      * </pre>
      *
-     * <code>repeated .com.giyeok.bibix.intellij.ContentRoot content_roots = 3;</code>
+     * <code>repeated .com.giyeok.bibix.intellij.ContentRoot content_roots = 4;</code>
      */
     com.giyeok.bibix.intellij.BibixIntellijProto.ContentRootOrBuilder getContentRootsOrBuilder(
         int index);
 
     /**
-     * <code>string sdk_version = 4;</code>
-     * @return The sdkVersion.
+     * <code>repeated .com.giyeok.bibix.intellij.ModuleSdk module_sdks = 5;</code>
      */
-    java.lang.String getSdkVersion();
+    java.util.List<com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk> 
+        getModuleSdksList();
     /**
-     * <code>string sdk_version = 4;</code>
-     * @return The bytes for sdkVersion.
+     * <code>repeated .com.giyeok.bibix.intellij.ModuleSdk module_sdks = 5;</code>
      */
-    com.google.protobuf.ByteString
-        getSdkVersionBytes();
+    com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk getModuleSdks(int index);
+    /**
+     * <code>repeated .com.giyeok.bibix.intellij.ModuleSdk module_sdks = 5;</code>
+     */
+    int getModuleSdksCount();
+    /**
+     * <code>repeated .com.giyeok.bibix.intellij.ModuleSdk module_sdks = 5;</code>
+     */
+    java.util.List<? extends com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdkOrBuilder> 
+        getModuleSdksOrBuilderList();
+    /**
+     * <code>repeated .com.giyeok.bibix.intellij.ModuleSdk module_sdks = 5;</code>
+     */
+    com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdkOrBuilder getModuleSdksOrBuilder(
+        int index);
 
     /**
      * <pre>
      * dependent한 module 이름 목록
      * </pre>
      *
-     * <code>repeated string module_deps = 5;</code>
+     * <code>repeated string module_deps = 6;</code>
      * @return A list containing the moduleDeps.
      */
     java.util.List<java.lang.String>
@@ -2379,7 +2403,7 @@ public final class BibixIntellijProto {
      * dependent한 module 이름 목록
      * </pre>
      *
-     * <code>repeated string module_deps = 5;</code>
+     * <code>repeated string module_deps = 6;</code>
      * @return The count of moduleDeps.
      */
     int getModuleDepsCount();
@@ -2388,7 +2412,7 @@ public final class BibixIntellijProto {
      * dependent한 module 이름 목록
      * </pre>
      *
-     * <code>repeated string module_deps = 5;</code>
+     * <code>repeated string module_deps = 6;</code>
      * @param index The index of the element to return.
      * @return The moduleDeps at the given index.
      */
@@ -2398,7 +2422,7 @@ public final class BibixIntellijProto {
      * dependent한 module 이름 목록
      * </pre>
      *
-     * <code>repeated string module_deps = 5;</code>
+     * <code>repeated string module_deps = 6;</code>
      * @param index The index of the value to return.
      * @return The bytes of the moduleDeps at the given index.
      */
@@ -2410,7 +2434,7 @@ public final class BibixIntellijProto {
      * dependent한 라이브러리 id 목록
      * </pre>
      *
-     * <code>repeated string library_deps = 6;</code>
+     * <code>repeated string library_deps = 7;</code>
      * @return A list containing the libraryDeps.
      */
     java.util.List<java.lang.String>
@@ -2420,7 +2444,7 @@ public final class BibixIntellijProto {
      * dependent한 라이브러리 id 목록
      * </pre>
      *
-     * <code>repeated string library_deps = 6;</code>
+     * <code>repeated string library_deps = 7;</code>
      * @return The count of libraryDeps.
      */
     int getLibraryDepsCount();
@@ -2429,7 +2453,7 @@ public final class BibixIntellijProto {
      * dependent한 라이브러리 id 목록
      * </pre>
      *
-     * <code>repeated string library_deps = 6;</code>
+     * <code>repeated string library_deps = 7;</code>
      * @param index The index of the element to return.
      * @return The libraryDeps at the given index.
      */
@@ -2439,7 +2463,7 @@ public final class BibixIntellijProto {
      * dependent한 라이브러리 id 목록
      * </pre>
      *
-     * <code>repeated string library_deps = 6;</code>
+     * <code>repeated string library_deps = 7;</code>
      * @param index The index of the value to return.
      * @return The bytes of the libraryDeps at the given index.
      */
@@ -2461,8 +2485,9 @@ public final class BibixIntellijProto {
     private Module() {
       moduleName_ = "";
       moduleType_ = "";
+      moduleRootPath_ = "";
       contentRoots_ = java.util.Collections.emptyList();
-      sdkVersion_ = "";
+      moduleSdks_ = java.util.Collections.emptyList();
       moduleDeps_ = com.google.protobuf.LazyStringArrayList.EMPTY;
       libraryDeps_ = com.google.protobuf.LazyStringArrayList.EMPTY;
     }
@@ -2511,6 +2536,12 @@ public final class BibixIntellijProto {
               break;
             }
             case 26: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              moduleRootPath_ = s;
+              break;
+            }
+            case 34: {
               if (!((mutable_bitField0_ & 0x00000001) != 0)) {
                 contentRoots_ = new java.util.ArrayList<com.giyeok.bibix.intellij.BibixIntellijProto.ContentRoot>();
                 mutable_bitField0_ |= 0x00000001;
@@ -2519,26 +2550,29 @@ public final class BibixIntellijProto {
                   input.readMessage(com.giyeok.bibix.intellij.BibixIntellijProto.ContentRoot.parser(), extensionRegistry));
               break;
             }
-            case 34: {
-              java.lang.String s = input.readStringRequireUtf8();
-
-              sdkVersion_ = s;
-              break;
-            }
             case 42: {
-              java.lang.String s = input.readStringRequireUtf8();
               if (!((mutable_bitField0_ & 0x00000002) != 0)) {
-                moduleDeps_ = new com.google.protobuf.LazyStringArrayList();
+                moduleSdks_ = new java.util.ArrayList<com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk>();
                 mutable_bitField0_ |= 0x00000002;
               }
-              moduleDeps_.add(s);
+              moduleSdks_.add(
+                  input.readMessage(com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk.parser(), extensionRegistry));
               break;
             }
             case 50: {
               java.lang.String s = input.readStringRequireUtf8();
               if (!((mutable_bitField0_ & 0x00000004) != 0)) {
-                libraryDeps_ = new com.google.protobuf.LazyStringArrayList();
+                moduleDeps_ = new com.google.protobuf.LazyStringArrayList();
                 mutable_bitField0_ |= 0x00000004;
+              }
+              moduleDeps_.add(s);
+              break;
+            }
+            case 58: {
+              java.lang.String s = input.readStringRequireUtf8();
+              if (!((mutable_bitField0_ & 0x00000008) != 0)) {
+                libraryDeps_ = new com.google.protobuf.LazyStringArrayList();
+                mutable_bitField0_ |= 0x00000008;
               }
               libraryDeps_.add(s);
               break;
@@ -2564,9 +2598,12 @@ public final class BibixIntellijProto {
           contentRoots_ = java.util.Collections.unmodifiableList(contentRoots_);
         }
         if (((mutable_bitField0_ & 0x00000002) != 0)) {
-          moduleDeps_ = moduleDeps_.getUnmodifiableView();
+          moduleSdks_ = java.util.Collections.unmodifiableList(moduleSdks_);
         }
         if (((mutable_bitField0_ & 0x00000004) != 0)) {
+          moduleDeps_ = moduleDeps_.getUnmodifiableView();
+        }
+        if (((mutable_bitField0_ & 0x00000008) != 0)) {
           libraryDeps_ = libraryDeps_.getUnmodifiableView();
         }
         this.unknownFields = unknownFields.build();
@@ -2670,14 +2707,52 @@ public final class BibixIntellijProto {
       }
     }
 
-    public static final int CONTENT_ROOTS_FIELD_NUMBER = 3;
+    public static final int MODULE_ROOT_PATH_FIELD_NUMBER = 3;
+    private volatile java.lang.Object moduleRootPath_;
+    /**
+     * <code>string module_root_path = 3;</code>
+     * @return The moduleRootPath.
+     */
+    @java.lang.Override
+    public java.lang.String getModuleRootPath() {
+      java.lang.Object ref = moduleRootPath_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        moduleRootPath_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string module_root_path = 3;</code>
+     * @return The bytes for moduleRootPath.
+     */
+    @java.lang.Override
+    public com.google.protobuf.ByteString
+        getModuleRootPathBytes() {
+      java.lang.Object ref = moduleRootPath_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        moduleRootPath_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int CONTENT_ROOTS_FIELD_NUMBER = 4;
     private java.util.List<com.giyeok.bibix.intellij.BibixIntellijProto.ContentRoot> contentRoots_;
     /**
      * <pre>
      * module sources
      * </pre>
      *
-     * <code>repeated .com.giyeok.bibix.intellij.ContentRoot content_roots = 3;</code>
+     * <code>repeated .com.giyeok.bibix.intellij.ContentRoot content_roots = 4;</code>
      */
     @java.lang.Override
     public java.util.List<com.giyeok.bibix.intellij.BibixIntellijProto.ContentRoot> getContentRootsList() {
@@ -2688,7 +2763,7 @@ public final class BibixIntellijProto {
      * module sources
      * </pre>
      *
-     * <code>repeated .com.giyeok.bibix.intellij.ContentRoot content_roots = 3;</code>
+     * <code>repeated .com.giyeok.bibix.intellij.ContentRoot content_roots = 4;</code>
      */
     @java.lang.Override
     public java.util.List<? extends com.giyeok.bibix.intellij.BibixIntellijProto.ContentRootOrBuilder> 
@@ -2700,7 +2775,7 @@ public final class BibixIntellijProto {
      * module sources
      * </pre>
      *
-     * <code>repeated .com.giyeok.bibix.intellij.ContentRoot content_roots = 3;</code>
+     * <code>repeated .com.giyeok.bibix.intellij.ContentRoot content_roots = 4;</code>
      */
     @java.lang.Override
     public int getContentRootsCount() {
@@ -2711,7 +2786,7 @@ public final class BibixIntellijProto {
      * module sources
      * </pre>
      *
-     * <code>repeated .com.giyeok.bibix.intellij.ContentRoot content_roots = 3;</code>
+     * <code>repeated .com.giyeok.bibix.intellij.ContentRoot content_roots = 4;</code>
      */
     @java.lang.Override
     public com.giyeok.bibix.intellij.BibixIntellijProto.ContentRoot getContentRoots(int index) {
@@ -2722,7 +2797,7 @@ public final class BibixIntellijProto {
      * module sources
      * </pre>
      *
-     * <code>repeated .com.giyeok.bibix.intellij.ContentRoot content_roots = 3;</code>
+     * <code>repeated .com.giyeok.bibix.intellij.ContentRoot content_roots = 4;</code>
      */
     @java.lang.Override
     public com.giyeok.bibix.intellij.BibixIntellijProto.ContentRootOrBuilder getContentRootsOrBuilder(
@@ -2730,52 +2805,54 @@ public final class BibixIntellijProto {
       return contentRoots_.get(index);
     }
 
-    public static final int SDK_VERSION_FIELD_NUMBER = 4;
-    private volatile java.lang.Object sdkVersion_;
+    public static final int MODULE_SDKS_FIELD_NUMBER = 5;
+    private java.util.List<com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk> moduleSdks_;
     /**
-     * <code>string sdk_version = 4;</code>
-     * @return The sdkVersion.
+     * <code>repeated .com.giyeok.bibix.intellij.ModuleSdk module_sdks = 5;</code>
      */
     @java.lang.Override
-    public java.lang.String getSdkVersion() {
-      java.lang.Object ref = sdkVersion_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        sdkVersion_ = s;
-        return s;
-      }
+    public java.util.List<com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk> getModuleSdksList() {
+      return moduleSdks_;
     }
     /**
-     * <code>string sdk_version = 4;</code>
-     * @return The bytes for sdkVersion.
+     * <code>repeated .com.giyeok.bibix.intellij.ModuleSdk module_sdks = 5;</code>
      */
     @java.lang.Override
-    public com.google.protobuf.ByteString
-        getSdkVersionBytes() {
-      java.lang.Object ref = sdkVersion_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        sdkVersion_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
+    public java.util.List<? extends com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdkOrBuilder> 
+        getModuleSdksOrBuilderList() {
+      return moduleSdks_;
+    }
+    /**
+     * <code>repeated .com.giyeok.bibix.intellij.ModuleSdk module_sdks = 5;</code>
+     */
+    @java.lang.Override
+    public int getModuleSdksCount() {
+      return moduleSdks_.size();
+    }
+    /**
+     * <code>repeated .com.giyeok.bibix.intellij.ModuleSdk module_sdks = 5;</code>
+     */
+    @java.lang.Override
+    public com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk getModuleSdks(int index) {
+      return moduleSdks_.get(index);
+    }
+    /**
+     * <code>repeated .com.giyeok.bibix.intellij.ModuleSdk module_sdks = 5;</code>
+     */
+    @java.lang.Override
+    public com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdkOrBuilder getModuleSdksOrBuilder(
+        int index) {
+      return moduleSdks_.get(index);
     }
 
-    public static final int MODULE_DEPS_FIELD_NUMBER = 5;
+    public static final int MODULE_DEPS_FIELD_NUMBER = 6;
     private com.google.protobuf.LazyStringList moduleDeps_;
     /**
      * <pre>
      * dependent한 module 이름 목록
      * </pre>
      *
-     * <code>repeated string module_deps = 5;</code>
+     * <code>repeated string module_deps = 6;</code>
      * @return A list containing the moduleDeps.
      */
     public com.google.protobuf.ProtocolStringList
@@ -2787,7 +2864,7 @@ public final class BibixIntellijProto {
      * dependent한 module 이름 목록
      * </pre>
      *
-     * <code>repeated string module_deps = 5;</code>
+     * <code>repeated string module_deps = 6;</code>
      * @return The count of moduleDeps.
      */
     public int getModuleDepsCount() {
@@ -2798,7 +2875,7 @@ public final class BibixIntellijProto {
      * dependent한 module 이름 목록
      * </pre>
      *
-     * <code>repeated string module_deps = 5;</code>
+     * <code>repeated string module_deps = 6;</code>
      * @param index The index of the element to return.
      * @return The moduleDeps at the given index.
      */
@@ -2810,7 +2887,7 @@ public final class BibixIntellijProto {
      * dependent한 module 이름 목록
      * </pre>
      *
-     * <code>repeated string module_deps = 5;</code>
+     * <code>repeated string module_deps = 6;</code>
      * @param index The index of the value to return.
      * @return The bytes of the moduleDeps at the given index.
      */
@@ -2819,14 +2896,14 @@ public final class BibixIntellijProto {
       return moduleDeps_.getByteString(index);
     }
 
-    public static final int LIBRARY_DEPS_FIELD_NUMBER = 6;
+    public static final int LIBRARY_DEPS_FIELD_NUMBER = 7;
     private com.google.protobuf.LazyStringList libraryDeps_;
     /**
      * <pre>
      * dependent한 라이브러리 id 목록
      * </pre>
      *
-     * <code>repeated string library_deps = 6;</code>
+     * <code>repeated string library_deps = 7;</code>
      * @return A list containing the libraryDeps.
      */
     public com.google.protobuf.ProtocolStringList
@@ -2838,7 +2915,7 @@ public final class BibixIntellijProto {
      * dependent한 라이브러리 id 목록
      * </pre>
      *
-     * <code>repeated string library_deps = 6;</code>
+     * <code>repeated string library_deps = 7;</code>
      * @return The count of libraryDeps.
      */
     public int getLibraryDepsCount() {
@@ -2849,7 +2926,7 @@ public final class BibixIntellijProto {
      * dependent한 라이브러리 id 목록
      * </pre>
      *
-     * <code>repeated string library_deps = 6;</code>
+     * <code>repeated string library_deps = 7;</code>
      * @param index The index of the element to return.
      * @return The libraryDeps at the given index.
      */
@@ -2861,7 +2938,7 @@ public final class BibixIntellijProto {
      * dependent한 라이브러리 id 목록
      * </pre>
      *
-     * <code>repeated string library_deps = 6;</code>
+     * <code>repeated string library_deps = 7;</code>
      * @param index The index of the value to return.
      * @return The bytes of the libraryDeps at the given index.
      */
@@ -2890,17 +2967,20 @@ public final class BibixIntellijProto {
       if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(moduleType_)) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 2, moduleType_);
       }
-      for (int i = 0; i < contentRoots_.size(); i++) {
-        output.writeMessage(3, contentRoots_.get(i));
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(moduleRootPath_)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 3, moduleRootPath_);
       }
-      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(sdkVersion_)) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 4, sdkVersion_);
+      for (int i = 0; i < contentRoots_.size(); i++) {
+        output.writeMessage(4, contentRoots_.get(i));
+      }
+      for (int i = 0; i < moduleSdks_.size(); i++) {
+        output.writeMessage(5, moduleSdks_.get(i));
       }
       for (int i = 0; i < moduleDeps_.size(); i++) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 5, moduleDeps_.getRaw(i));
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 6, moduleDeps_.getRaw(i));
       }
       for (int i = 0; i < libraryDeps_.size(); i++) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 6, libraryDeps_.getRaw(i));
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 7, libraryDeps_.getRaw(i));
       }
       unknownFields.writeTo(output);
     }
@@ -2917,12 +2997,16 @@ public final class BibixIntellijProto {
       if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(moduleType_)) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, moduleType_);
       }
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(moduleRootPath_)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, moduleRootPath_);
+      }
       for (int i = 0; i < contentRoots_.size(); i++) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(3, contentRoots_.get(i));
+          .computeMessageSize(4, contentRoots_.get(i));
       }
-      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(sdkVersion_)) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, sdkVersion_);
+      for (int i = 0; i < moduleSdks_.size(); i++) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(5, moduleSdks_.get(i));
       }
       {
         int dataSize = 0;
@@ -2959,10 +3043,12 @@ public final class BibixIntellijProto {
           .equals(other.getModuleName())) return false;
       if (!getModuleType()
           .equals(other.getModuleType())) return false;
+      if (!getModuleRootPath()
+          .equals(other.getModuleRootPath())) return false;
       if (!getContentRootsList()
           .equals(other.getContentRootsList())) return false;
-      if (!getSdkVersion()
-          .equals(other.getSdkVersion())) return false;
+      if (!getModuleSdksList()
+          .equals(other.getModuleSdksList())) return false;
       if (!getModuleDepsList()
           .equals(other.getModuleDepsList())) return false;
       if (!getLibraryDepsList()
@@ -2982,12 +3068,16 @@ public final class BibixIntellijProto {
       hash = (53 * hash) + getModuleName().hashCode();
       hash = (37 * hash) + MODULE_TYPE_FIELD_NUMBER;
       hash = (53 * hash) + getModuleType().hashCode();
+      hash = (37 * hash) + MODULE_ROOT_PATH_FIELD_NUMBER;
+      hash = (53 * hash) + getModuleRootPath().hashCode();
       if (getContentRootsCount() > 0) {
         hash = (37 * hash) + CONTENT_ROOTS_FIELD_NUMBER;
         hash = (53 * hash) + getContentRootsList().hashCode();
       }
-      hash = (37 * hash) + SDK_VERSION_FIELD_NUMBER;
-      hash = (53 * hash) + getSdkVersion().hashCode();
+      if (getModuleSdksCount() > 0) {
+        hash = (37 * hash) + MODULE_SDKS_FIELD_NUMBER;
+        hash = (53 * hash) + getModuleSdksList().hashCode();
+      }
       if (getModuleDepsCount() > 0) {
         hash = (37 * hash) + MODULE_DEPS_FIELD_NUMBER;
         hash = (53 * hash) + getModuleDepsList().hashCode();
@@ -3125,6 +3215,7 @@ public final class BibixIntellijProto {
         if (com.google.protobuf.GeneratedMessageV3
                 .alwaysUseFieldBuilders) {
           getContentRootsFieldBuilder();
+          getModuleSdksFieldBuilder();
         }
       }
       @java.lang.Override
@@ -3134,18 +3225,24 @@ public final class BibixIntellijProto {
 
         moduleType_ = "";
 
+        moduleRootPath_ = "";
+
         if (contentRootsBuilder_ == null) {
           contentRoots_ = java.util.Collections.emptyList();
           bitField0_ = (bitField0_ & ~0x00000001);
         } else {
           contentRootsBuilder_.clear();
         }
-        sdkVersion_ = "";
-
+        if (moduleSdksBuilder_ == null) {
+          moduleSdks_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000002);
+        } else {
+          moduleSdksBuilder_.clear();
+        }
         moduleDeps_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-        bitField0_ = (bitField0_ & ~0x00000002);
-        libraryDeps_ = com.google.protobuf.LazyStringArrayList.EMPTY;
         bitField0_ = (bitField0_ & ~0x00000004);
+        libraryDeps_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000008);
         return this;
       }
 
@@ -3175,6 +3272,7 @@ public final class BibixIntellijProto {
         int from_bitField0_ = bitField0_;
         result.moduleName_ = moduleName_;
         result.moduleType_ = moduleType_;
+        result.moduleRootPath_ = moduleRootPath_;
         if (contentRootsBuilder_ == null) {
           if (((bitField0_ & 0x00000001) != 0)) {
             contentRoots_ = java.util.Collections.unmodifiableList(contentRoots_);
@@ -3184,15 +3282,23 @@ public final class BibixIntellijProto {
         } else {
           result.contentRoots_ = contentRootsBuilder_.build();
         }
-        result.sdkVersion_ = sdkVersion_;
-        if (((bitField0_ & 0x00000002) != 0)) {
+        if (moduleSdksBuilder_ == null) {
+          if (((bitField0_ & 0x00000002) != 0)) {
+            moduleSdks_ = java.util.Collections.unmodifiableList(moduleSdks_);
+            bitField0_ = (bitField0_ & ~0x00000002);
+          }
+          result.moduleSdks_ = moduleSdks_;
+        } else {
+          result.moduleSdks_ = moduleSdksBuilder_.build();
+        }
+        if (((bitField0_ & 0x00000004) != 0)) {
           moduleDeps_ = moduleDeps_.getUnmodifiableView();
-          bitField0_ = (bitField0_ & ~0x00000002);
+          bitField0_ = (bitField0_ & ~0x00000004);
         }
         result.moduleDeps_ = moduleDeps_;
-        if (((bitField0_ & 0x00000004) != 0)) {
+        if (((bitField0_ & 0x00000008) != 0)) {
           libraryDeps_ = libraryDeps_.getUnmodifiableView();
-          bitField0_ = (bitField0_ & ~0x00000004);
+          bitField0_ = (bitField0_ & ~0x00000008);
         }
         result.libraryDeps_ = libraryDeps_;
         onBuilt();
@@ -3251,6 +3357,10 @@ public final class BibixIntellijProto {
           moduleType_ = other.moduleType_;
           onChanged();
         }
+        if (!other.getModuleRootPath().isEmpty()) {
+          moduleRootPath_ = other.moduleRootPath_;
+          onChanged();
+        }
         if (contentRootsBuilder_ == null) {
           if (!other.contentRoots_.isEmpty()) {
             if (contentRoots_.isEmpty()) {
@@ -3277,14 +3387,36 @@ public final class BibixIntellijProto {
             }
           }
         }
-        if (!other.getSdkVersion().isEmpty()) {
-          sdkVersion_ = other.sdkVersion_;
-          onChanged();
+        if (moduleSdksBuilder_ == null) {
+          if (!other.moduleSdks_.isEmpty()) {
+            if (moduleSdks_.isEmpty()) {
+              moduleSdks_ = other.moduleSdks_;
+              bitField0_ = (bitField0_ & ~0x00000002);
+            } else {
+              ensureModuleSdksIsMutable();
+              moduleSdks_.addAll(other.moduleSdks_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.moduleSdks_.isEmpty()) {
+            if (moduleSdksBuilder_.isEmpty()) {
+              moduleSdksBuilder_.dispose();
+              moduleSdksBuilder_ = null;
+              moduleSdks_ = other.moduleSdks_;
+              bitField0_ = (bitField0_ & ~0x00000002);
+              moduleSdksBuilder_ = 
+                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                   getModuleSdksFieldBuilder() : null;
+            } else {
+              moduleSdksBuilder_.addAllMessages(other.moduleSdks_);
+            }
+          }
         }
         if (!other.moduleDeps_.isEmpty()) {
           if (moduleDeps_.isEmpty()) {
             moduleDeps_ = other.moduleDeps_;
-            bitField0_ = (bitField0_ & ~0x00000002);
+            bitField0_ = (bitField0_ & ~0x00000004);
           } else {
             ensureModuleDepsIsMutable();
             moduleDeps_.addAll(other.moduleDeps_);
@@ -3294,7 +3426,7 @@ public final class BibixIntellijProto {
         if (!other.libraryDeps_.isEmpty()) {
           if (libraryDeps_.isEmpty()) {
             libraryDeps_ = other.libraryDeps_;
-            bitField0_ = (bitField0_ & ~0x00000004);
+            bitField0_ = (bitField0_ & ~0x00000008);
           } else {
             ensureLibraryDepsIsMutable();
             libraryDeps_.addAll(other.libraryDeps_);
@@ -3503,6 +3635,82 @@ public final class BibixIntellijProto {
         return this;
       }
 
+      private java.lang.Object moduleRootPath_ = "";
+      /**
+       * <code>string module_root_path = 3;</code>
+       * @return The moduleRootPath.
+       */
+      public java.lang.String getModuleRootPath() {
+        java.lang.Object ref = moduleRootPath_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          moduleRootPath_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string module_root_path = 3;</code>
+       * @return The bytes for moduleRootPath.
+       */
+      public com.google.protobuf.ByteString
+          getModuleRootPathBytes() {
+        java.lang.Object ref = moduleRootPath_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          moduleRootPath_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string module_root_path = 3;</code>
+       * @param value The moduleRootPath to set.
+       * @return This builder for chaining.
+       */
+      public Builder setModuleRootPath(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        moduleRootPath_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string module_root_path = 3;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearModuleRootPath() {
+        
+        moduleRootPath_ = getDefaultInstance().getModuleRootPath();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string module_root_path = 3;</code>
+       * @param value The bytes for moduleRootPath to set.
+       * @return This builder for chaining.
+       */
+      public Builder setModuleRootPathBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        moduleRootPath_ = value;
+        onChanged();
+        return this;
+      }
+
       private java.util.List<com.giyeok.bibix.intellij.BibixIntellijProto.ContentRoot> contentRoots_ =
         java.util.Collections.emptyList();
       private void ensureContentRootsIsMutable() {
@@ -3520,7 +3728,7 @@ public final class BibixIntellijProto {
        * module sources
        * </pre>
        *
-       * <code>repeated .com.giyeok.bibix.intellij.ContentRoot content_roots = 3;</code>
+       * <code>repeated .com.giyeok.bibix.intellij.ContentRoot content_roots = 4;</code>
        */
       public java.util.List<com.giyeok.bibix.intellij.BibixIntellijProto.ContentRoot> getContentRootsList() {
         if (contentRootsBuilder_ == null) {
@@ -3534,7 +3742,7 @@ public final class BibixIntellijProto {
        * module sources
        * </pre>
        *
-       * <code>repeated .com.giyeok.bibix.intellij.ContentRoot content_roots = 3;</code>
+       * <code>repeated .com.giyeok.bibix.intellij.ContentRoot content_roots = 4;</code>
        */
       public int getContentRootsCount() {
         if (contentRootsBuilder_ == null) {
@@ -3548,7 +3756,7 @@ public final class BibixIntellijProto {
        * module sources
        * </pre>
        *
-       * <code>repeated .com.giyeok.bibix.intellij.ContentRoot content_roots = 3;</code>
+       * <code>repeated .com.giyeok.bibix.intellij.ContentRoot content_roots = 4;</code>
        */
       public com.giyeok.bibix.intellij.BibixIntellijProto.ContentRoot getContentRoots(int index) {
         if (contentRootsBuilder_ == null) {
@@ -3562,7 +3770,7 @@ public final class BibixIntellijProto {
        * module sources
        * </pre>
        *
-       * <code>repeated .com.giyeok.bibix.intellij.ContentRoot content_roots = 3;</code>
+       * <code>repeated .com.giyeok.bibix.intellij.ContentRoot content_roots = 4;</code>
        */
       public Builder setContentRoots(
           int index, com.giyeok.bibix.intellij.BibixIntellijProto.ContentRoot value) {
@@ -3583,7 +3791,7 @@ public final class BibixIntellijProto {
        * module sources
        * </pre>
        *
-       * <code>repeated .com.giyeok.bibix.intellij.ContentRoot content_roots = 3;</code>
+       * <code>repeated .com.giyeok.bibix.intellij.ContentRoot content_roots = 4;</code>
        */
       public Builder setContentRoots(
           int index, com.giyeok.bibix.intellij.BibixIntellijProto.ContentRoot.Builder builderForValue) {
@@ -3601,7 +3809,7 @@ public final class BibixIntellijProto {
        * module sources
        * </pre>
        *
-       * <code>repeated .com.giyeok.bibix.intellij.ContentRoot content_roots = 3;</code>
+       * <code>repeated .com.giyeok.bibix.intellij.ContentRoot content_roots = 4;</code>
        */
       public Builder addContentRoots(com.giyeok.bibix.intellij.BibixIntellijProto.ContentRoot value) {
         if (contentRootsBuilder_ == null) {
@@ -3621,7 +3829,7 @@ public final class BibixIntellijProto {
        * module sources
        * </pre>
        *
-       * <code>repeated .com.giyeok.bibix.intellij.ContentRoot content_roots = 3;</code>
+       * <code>repeated .com.giyeok.bibix.intellij.ContentRoot content_roots = 4;</code>
        */
       public Builder addContentRoots(
           int index, com.giyeok.bibix.intellij.BibixIntellijProto.ContentRoot value) {
@@ -3642,7 +3850,7 @@ public final class BibixIntellijProto {
        * module sources
        * </pre>
        *
-       * <code>repeated .com.giyeok.bibix.intellij.ContentRoot content_roots = 3;</code>
+       * <code>repeated .com.giyeok.bibix.intellij.ContentRoot content_roots = 4;</code>
        */
       public Builder addContentRoots(
           com.giyeok.bibix.intellij.BibixIntellijProto.ContentRoot.Builder builderForValue) {
@@ -3660,7 +3868,7 @@ public final class BibixIntellijProto {
        * module sources
        * </pre>
        *
-       * <code>repeated .com.giyeok.bibix.intellij.ContentRoot content_roots = 3;</code>
+       * <code>repeated .com.giyeok.bibix.intellij.ContentRoot content_roots = 4;</code>
        */
       public Builder addContentRoots(
           int index, com.giyeok.bibix.intellij.BibixIntellijProto.ContentRoot.Builder builderForValue) {
@@ -3678,7 +3886,7 @@ public final class BibixIntellijProto {
        * module sources
        * </pre>
        *
-       * <code>repeated .com.giyeok.bibix.intellij.ContentRoot content_roots = 3;</code>
+       * <code>repeated .com.giyeok.bibix.intellij.ContentRoot content_roots = 4;</code>
        */
       public Builder addAllContentRoots(
           java.lang.Iterable<? extends com.giyeok.bibix.intellij.BibixIntellijProto.ContentRoot> values) {
@@ -3697,7 +3905,7 @@ public final class BibixIntellijProto {
        * module sources
        * </pre>
        *
-       * <code>repeated .com.giyeok.bibix.intellij.ContentRoot content_roots = 3;</code>
+       * <code>repeated .com.giyeok.bibix.intellij.ContentRoot content_roots = 4;</code>
        */
       public Builder clearContentRoots() {
         if (contentRootsBuilder_ == null) {
@@ -3714,7 +3922,7 @@ public final class BibixIntellijProto {
        * module sources
        * </pre>
        *
-       * <code>repeated .com.giyeok.bibix.intellij.ContentRoot content_roots = 3;</code>
+       * <code>repeated .com.giyeok.bibix.intellij.ContentRoot content_roots = 4;</code>
        */
       public Builder removeContentRoots(int index) {
         if (contentRootsBuilder_ == null) {
@@ -3731,7 +3939,7 @@ public final class BibixIntellijProto {
        * module sources
        * </pre>
        *
-       * <code>repeated .com.giyeok.bibix.intellij.ContentRoot content_roots = 3;</code>
+       * <code>repeated .com.giyeok.bibix.intellij.ContentRoot content_roots = 4;</code>
        */
       public com.giyeok.bibix.intellij.BibixIntellijProto.ContentRoot.Builder getContentRootsBuilder(
           int index) {
@@ -3742,7 +3950,7 @@ public final class BibixIntellijProto {
        * module sources
        * </pre>
        *
-       * <code>repeated .com.giyeok.bibix.intellij.ContentRoot content_roots = 3;</code>
+       * <code>repeated .com.giyeok.bibix.intellij.ContentRoot content_roots = 4;</code>
        */
       public com.giyeok.bibix.intellij.BibixIntellijProto.ContentRootOrBuilder getContentRootsOrBuilder(
           int index) {
@@ -3756,7 +3964,7 @@ public final class BibixIntellijProto {
        * module sources
        * </pre>
        *
-       * <code>repeated .com.giyeok.bibix.intellij.ContentRoot content_roots = 3;</code>
+       * <code>repeated .com.giyeok.bibix.intellij.ContentRoot content_roots = 4;</code>
        */
       public java.util.List<? extends com.giyeok.bibix.intellij.BibixIntellijProto.ContentRootOrBuilder> 
            getContentRootsOrBuilderList() {
@@ -3771,7 +3979,7 @@ public final class BibixIntellijProto {
        * module sources
        * </pre>
        *
-       * <code>repeated .com.giyeok.bibix.intellij.ContentRoot content_roots = 3;</code>
+       * <code>repeated .com.giyeok.bibix.intellij.ContentRoot content_roots = 4;</code>
        */
       public com.giyeok.bibix.intellij.BibixIntellijProto.ContentRoot.Builder addContentRootsBuilder() {
         return getContentRootsFieldBuilder().addBuilder(
@@ -3782,7 +3990,7 @@ public final class BibixIntellijProto {
        * module sources
        * </pre>
        *
-       * <code>repeated .com.giyeok.bibix.intellij.ContentRoot content_roots = 3;</code>
+       * <code>repeated .com.giyeok.bibix.intellij.ContentRoot content_roots = 4;</code>
        */
       public com.giyeok.bibix.intellij.BibixIntellijProto.ContentRoot.Builder addContentRootsBuilder(
           int index) {
@@ -3794,7 +4002,7 @@ public final class BibixIntellijProto {
        * module sources
        * </pre>
        *
-       * <code>repeated .com.giyeok.bibix.intellij.ContentRoot content_roots = 3;</code>
+       * <code>repeated .com.giyeok.bibix.intellij.ContentRoot content_roots = 4;</code>
        */
       public java.util.List<com.giyeok.bibix.intellij.BibixIntellijProto.ContentRoot.Builder> 
            getContentRootsBuilderList() {
@@ -3815,87 +4023,251 @@ public final class BibixIntellijProto {
         return contentRootsBuilder_;
       }
 
-      private java.lang.Object sdkVersion_ = "";
+      private java.util.List<com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk> moduleSdks_ =
+        java.util.Collections.emptyList();
+      private void ensureModuleSdksIsMutable() {
+        if (!((bitField0_ & 0x00000002) != 0)) {
+          moduleSdks_ = new java.util.ArrayList<com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk>(moduleSdks_);
+          bitField0_ |= 0x00000002;
+         }
+      }
+
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk, com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk.Builder, com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdkOrBuilder> moduleSdksBuilder_;
+
       /**
-       * <code>string sdk_version = 4;</code>
-       * @return The sdkVersion.
+       * <code>repeated .com.giyeok.bibix.intellij.ModuleSdk module_sdks = 5;</code>
        */
-      public java.lang.String getSdkVersion() {
-        java.lang.Object ref = sdkVersion_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          sdkVersion_ = s;
-          return s;
+      public java.util.List<com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk> getModuleSdksList() {
+        if (moduleSdksBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(moduleSdks_);
         } else {
-          return (java.lang.String) ref;
+          return moduleSdksBuilder_.getMessageList();
         }
       }
       /**
-       * <code>string sdk_version = 4;</code>
-       * @return The bytes for sdkVersion.
+       * <code>repeated .com.giyeok.bibix.intellij.ModuleSdk module_sdks = 5;</code>
        */
-      public com.google.protobuf.ByteString
-          getSdkVersionBytes() {
-        java.lang.Object ref = sdkVersion_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          sdkVersion_ = b;
-          return b;
+      public int getModuleSdksCount() {
+        if (moduleSdksBuilder_ == null) {
+          return moduleSdks_.size();
         } else {
-          return (com.google.protobuf.ByteString) ref;
+          return moduleSdksBuilder_.getCount();
         }
       }
       /**
-       * <code>string sdk_version = 4;</code>
-       * @param value The sdkVersion to set.
-       * @return This builder for chaining.
+       * <code>repeated .com.giyeok.bibix.intellij.ModuleSdk module_sdks = 5;</code>
        */
-      public Builder setSdkVersion(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
-        sdkVersion_ = value;
-        onChanged();
+      public com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk getModuleSdks(int index) {
+        if (moduleSdksBuilder_ == null) {
+          return moduleSdks_.get(index);
+        } else {
+          return moduleSdksBuilder_.getMessage(index);
+        }
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.intellij.ModuleSdk module_sdks = 5;</code>
+       */
+      public Builder setModuleSdks(
+          int index, com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk value) {
+        if (moduleSdksBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureModuleSdksIsMutable();
+          moduleSdks_.set(index, value);
+          onChanged();
+        } else {
+          moduleSdksBuilder_.setMessage(index, value);
+        }
         return this;
       }
       /**
-       * <code>string sdk_version = 4;</code>
-       * @return This builder for chaining.
+       * <code>repeated .com.giyeok.bibix.intellij.ModuleSdk module_sdks = 5;</code>
        */
-      public Builder clearSdkVersion() {
-        
-        sdkVersion_ = getDefaultInstance().getSdkVersion();
-        onChanged();
+      public Builder setModuleSdks(
+          int index, com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk.Builder builderForValue) {
+        if (moduleSdksBuilder_ == null) {
+          ensureModuleSdksIsMutable();
+          moduleSdks_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          moduleSdksBuilder_.setMessage(index, builderForValue.build());
+        }
         return this;
       }
       /**
-       * <code>string sdk_version = 4;</code>
-       * @param value The bytes for sdkVersion to set.
-       * @return This builder for chaining.
+       * <code>repeated .com.giyeok.bibix.intellij.ModuleSdk module_sdks = 5;</code>
        */
-      public Builder setSdkVersionBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
-        sdkVersion_ = value;
-        onChanged();
+      public Builder addModuleSdks(com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk value) {
+        if (moduleSdksBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureModuleSdksIsMutable();
+          moduleSdks_.add(value);
+          onChanged();
+        } else {
+          moduleSdksBuilder_.addMessage(value);
+        }
         return this;
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.intellij.ModuleSdk module_sdks = 5;</code>
+       */
+      public Builder addModuleSdks(
+          int index, com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk value) {
+        if (moduleSdksBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureModuleSdksIsMutable();
+          moduleSdks_.add(index, value);
+          onChanged();
+        } else {
+          moduleSdksBuilder_.addMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.intellij.ModuleSdk module_sdks = 5;</code>
+       */
+      public Builder addModuleSdks(
+          com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk.Builder builderForValue) {
+        if (moduleSdksBuilder_ == null) {
+          ensureModuleSdksIsMutable();
+          moduleSdks_.add(builderForValue.build());
+          onChanged();
+        } else {
+          moduleSdksBuilder_.addMessage(builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.intellij.ModuleSdk module_sdks = 5;</code>
+       */
+      public Builder addModuleSdks(
+          int index, com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk.Builder builderForValue) {
+        if (moduleSdksBuilder_ == null) {
+          ensureModuleSdksIsMutable();
+          moduleSdks_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          moduleSdksBuilder_.addMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.intellij.ModuleSdk module_sdks = 5;</code>
+       */
+      public Builder addAllModuleSdks(
+          java.lang.Iterable<? extends com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk> values) {
+        if (moduleSdksBuilder_ == null) {
+          ensureModuleSdksIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, moduleSdks_);
+          onChanged();
+        } else {
+          moduleSdksBuilder_.addAllMessages(values);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.intellij.ModuleSdk module_sdks = 5;</code>
+       */
+      public Builder clearModuleSdks() {
+        if (moduleSdksBuilder_ == null) {
+          moduleSdks_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000002);
+          onChanged();
+        } else {
+          moduleSdksBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.intellij.ModuleSdk module_sdks = 5;</code>
+       */
+      public Builder removeModuleSdks(int index) {
+        if (moduleSdksBuilder_ == null) {
+          ensureModuleSdksIsMutable();
+          moduleSdks_.remove(index);
+          onChanged();
+        } else {
+          moduleSdksBuilder_.remove(index);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.intellij.ModuleSdk module_sdks = 5;</code>
+       */
+      public com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk.Builder getModuleSdksBuilder(
+          int index) {
+        return getModuleSdksFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.intellij.ModuleSdk module_sdks = 5;</code>
+       */
+      public com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdkOrBuilder getModuleSdksOrBuilder(
+          int index) {
+        if (moduleSdksBuilder_ == null) {
+          return moduleSdks_.get(index);  } else {
+          return moduleSdksBuilder_.getMessageOrBuilder(index);
+        }
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.intellij.ModuleSdk module_sdks = 5;</code>
+       */
+      public java.util.List<? extends com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdkOrBuilder> 
+           getModuleSdksOrBuilderList() {
+        if (moduleSdksBuilder_ != null) {
+          return moduleSdksBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(moduleSdks_);
+        }
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.intellij.ModuleSdk module_sdks = 5;</code>
+       */
+      public com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk.Builder addModuleSdksBuilder() {
+        return getModuleSdksFieldBuilder().addBuilder(
+            com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.intellij.ModuleSdk module_sdks = 5;</code>
+       */
+      public com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk.Builder addModuleSdksBuilder(
+          int index) {
+        return getModuleSdksFieldBuilder().addBuilder(
+            index, com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.intellij.ModuleSdk module_sdks = 5;</code>
+       */
+      public java.util.List<com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk.Builder> 
+           getModuleSdksBuilderList() {
+        return getModuleSdksFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk, com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk.Builder, com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdkOrBuilder> 
+          getModuleSdksFieldBuilder() {
+        if (moduleSdksBuilder_ == null) {
+          moduleSdksBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+              com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk, com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk.Builder, com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdkOrBuilder>(
+                  moduleSdks_,
+                  ((bitField0_ & 0x00000002) != 0),
+                  getParentForChildren(),
+                  isClean());
+          moduleSdks_ = null;
+        }
+        return moduleSdksBuilder_;
       }
 
       private com.google.protobuf.LazyStringList moduleDeps_ = com.google.protobuf.LazyStringArrayList.EMPTY;
       private void ensureModuleDepsIsMutable() {
-        if (!((bitField0_ & 0x00000002) != 0)) {
+        if (!((bitField0_ & 0x00000004) != 0)) {
           moduleDeps_ = new com.google.protobuf.LazyStringArrayList(moduleDeps_);
-          bitField0_ |= 0x00000002;
+          bitField0_ |= 0x00000004;
          }
       }
       /**
@@ -3903,7 +4275,7 @@ public final class BibixIntellijProto {
        * dependent한 module 이름 목록
        * </pre>
        *
-       * <code>repeated string module_deps = 5;</code>
+       * <code>repeated string module_deps = 6;</code>
        * @return A list containing the moduleDeps.
        */
       public com.google.protobuf.ProtocolStringList
@@ -3915,7 +4287,7 @@ public final class BibixIntellijProto {
        * dependent한 module 이름 목록
        * </pre>
        *
-       * <code>repeated string module_deps = 5;</code>
+       * <code>repeated string module_deps = 6;</code>
        * @return The count of moduleDeps.
        */
       public int getModuleDepsCount() {
@@ -3926,7 +4298,7 @@ public final class BibixIntellijProto {
        * dependent한 module 이름 목록
        * </pre>
        *
-       * <code>repeated string module_deps = 5;</code>
+       * <code>repeated string module_deps = 6;</code>
        * @param index The index of the element to return.
        * @return The moduleDeps at the given index.
        */
@@ -3938,7 +4310,7 @@ public final class BibixIntellijProto {
        * dependent한 module 이름 목록
        * </pre>
        *
-       * <code>repeated string module_deps = 5;</code>
+       * <code>repeated string module_deps = 6;</code>
        * @param index The index of the value to return.
        * @return The bytes of the moduleDeps at the given index.
        */
@@ -3951,7 +4323,7 @@ public final class BibixIntellijProto {
        * dependent한 module 이름 목록
        * </pre>
        *
-       * <code>repeated string module_deps = 5;</code>
+       * <code>repeated string module_deps = 6;</code>
        * @param index The index to set the value at.
        * @param value The moduleDeps to set.
        * @return This builder for chaining.
@@ -3971,7 +4343,7 @@ public final class BibixIntellijProto {
        * dependent한 module 이름 목록
        * </pre>
        *
-       * <code>repeated string module_deps = 5;</code>
+       * <code>repeated string module_deps = 6;</code>
        * @param value The moduleDeps to add.
        * @return This builder for chaining.
        */
@@ -3990,7 +4362,7 @@ public final class BibixIntellijProto {
        * dependent한 module 이름 목록
        * </pre>
        *
-       * <code>repeated string module_deps = 5;</code>
+       * <code>repeated string module_deps = 6;</code>
        * @param values The moduleDeps to add.
        * @return This builder for chaining.
        */
@@ -4007,12 +4379,12 @@ public final class BibixIntellijProto {
        * dependent한 module 이름 목록
        * </pre>
        *
-       * <code>repeated string module_deps = 5;</code>
+       * <code>repeated string module_deps = 6;</code>
        * @return This builder for chaining.
        */
       public Builder clearModuleDeps() {
         moduleDeps_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-        bitField0_ = (bitField0_ & ~0x00000002);
+        bitField0_ = (bitField0_ & ~0x00000004);
         onChanged();
         return this;
       }
@@ -4021,7 +4393,7 @@ public final class BibixIntellijProto {
        * dependent한 module 이름 목록
        * </pre>
        *
-       * <code>repeated string module_deps = 5;</code>
+       * <code>repeated string module_deps = 6;</code>
        * @param value The bytes of the moduleDeps to add.
        * @return This builder for chaining.
        */
@@ -4039,9 +4411,9 @@ public final class BibixIntellijProto {
 
       private com.google.protobuf.LazyStringList libraryDeps_ = com.google.protobuf.LazyStringArrayList.EMPTY;
       private void ensureLibraryDepsIsMutable() {
-        if (!((bitField0_ & 0x00000004) != 0)) {
+        if (!((bitField0_ & 0x00000008) != 0)) {
           libraryDeps_ = new com.google.protobuf.LazyStringArrayList(libraryDeps_);
-          bitField0_ |= 0x00000004;
+          bitField0_ |= 0x00000008;
          }
       }
       /**
@@ -4049,7 +4421,7 @@ public final class BibixIntellijProto {
        * dependent한 라이브러리 id 목록
        * </pre>
        *
-       * <code>repeated string library_deps = 6;</code>
+       * <code>repeated string library_deps = 7;</code>
        * @return A list containing the libraryDeps.
        */
       public com.google.protobuf.ProtocolStringList
@@ -4061,7 +4433,7 @@ public final class BibixIntellijProto {
        * dependent한 라이브러리 id 목록
        * </pre>
        *
-       * <code>repeated string library_deps = 6;</code>
+       * <code>repeated string library_deps = 7;</code>
        * @return The count of libraryDeps.
        */
       public int getLibraryDepsCount() {
@@ -4072,7 +4444,7 @@ public final class BibixIntellijProto {
        * dependent한 라이브러리 id 목록
        * </pre>
        *
-       * <code>repeated string library_deps = 6;</code>
+       * <code>repeated string library_deps = 7;</code>
        * @param index The index of the element to return.
        * @return The libraryDeps at the given index.
        */
@@ -4084,7 +4456,7 @@ public final class BibixIntellijProto {
        * dependent한 라이브러리 id 목록
        * </pre>
        *
-       * <code>repeated string library_deps = 6;</code>
+       * <code>repeated string library_deps = 7;</code>
        * @param index The index of the value to return.
        * @return The bytes of the libraryDeps at the given index.
        */
@@ -4097,7 +4469,7 @@ public final class BibixIntellijProto {
        * dependent한 라이브러리 id 목록
        * </pre>
        *
-       * <code>repeated string library_deps = 6;</code>
+       * <code>repeated string library_deps = 7;</code>
        * @param index The index to set the value at.
        * @param value The libraryDeps to set.
        * @return This builder for chaining.
@@ -4117,7 +4489,7 @@ public final class BibixIntellijProto {
        * dependent한 라이브러리 id 목록
        * </pre>
        *
-       * <code>repeated string library_deps = 6;</code>
+       * <code>repeated string library_deps = 7;</code>
        * @param value The libraryDeps to add.
        * @return This builder for chaining.
        */
@@ -4136,7 +4508,7 @@ public final class BibixIntellijProto {
        * dependent한 라이브러리 id 목록
        * </pre>
        *
-       * <code>repeated string library_deps = 6;</code>
+       * <code>repeated string library_deps = 7;</code>
        * @param values The libraryDeps to add.
        * @return This builder for chaining.
        */
@@ -4153,12 +4525,12 @@ public final class BibixIntellijProto {
        * dependent한 라이브러리 id 목록
        * </pre>
        *
-       * <code>repeated string library_deps = 6;</code>
+       * <code>repeated string library_deps = 7;</code>
        * @return This builder for chaining.
        */
       public Builder clearLibraryDeps() {
         libraryDeps_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-        bitField0_ = (bitField0_ & ~0x00000004);
+        bitField0_ = (bitField0_ & ~0x00000008);
         onChanged();
         return this;
       }
@@ -4167,7 +4539,7 @@ public final class BibixIntellijProto {
        * dependent한 라이브러리 id 목록
        * </pre>
        *
-       * <code>repeated string library_deps = 6;</code>
+       * <code>repeated string library_deps = 7;</code>
        * @param value The bytes of the libraryDeps to add.
        * @return This builder for chaining.
        */
@@ -5100,6 +5472,1088 @@ public final class BibixIntellijProto {
 
     @java.lang.Override
     public com.giyeok.bibix.intellij.BibixIntellijProto.ContentRoot getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
+  public interface ModuleSdkOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:com.giyeok.bibix.intellij.ModuleSdk)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>string jdk_version = 1;</code>
+     * @return Whether the jdkVersion field is set.
+     */
+    boolean hasJdkVersion();
+    /**
+     * <code>string jdk_version = 1;</code>
+     * @return The jdkVersion.
+     */
+    java.lang.String getJdkVersion();
+    /**
+     * <code>string jdk_version = 1;</code>
+     * @return The bytes for jdkVersion.
+     */
+    com.google.protobuf.ByteString
+        getJdkVersionBytes();
+
+    /**
+     * <code>string ktjvm_sdk_version = 2;</code>
+     * @return Whether the ktjvmSdkVersion field is set.
+     */
+    boolean hasKtjvmSdkVersion();
+    /**
+     * <code>string ktjvm_sdk_version = 2;</code>
+     * @return The ktjvmSdkVersion.
+     */
+    java.lang.String getKtjvmSdkVersion();
+    /**
+     * <code>string ktjvm_sdk_version = 2;</code>
+     * @return The bytes for ktjvmSdkVersion.
+     */
+    com.google.protobuf.ByteString
+        getKtjvmSdkVersionBytes();
+
+    /**
+     * <code>string scala_sdk_version = 3;</code>
+     * @return Whether the scalaSdkVersion field is set.
+     */
+    boolean hasScalaSdkVersion();
+    /**
+     * <code>string scala_sdk_version = 3;</code>
+     * @return The scalaSdkVersion.
+     */
+    java.lang.String getScalaSdkVersion();
+    /**
+     * <code>string scala_sdk_version = 3;</code>
+     * @return The bytes for scalaSdkVersion.
+     */
+    com.google.protobuf.ByteString
+        getScalaSdkVersionBytes();
+
+    public com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk.SdkCase getSdkCase();
+  }
+  /**
+   * Protobuf type {@code com.giyeok.bibix.intellij.ModuleSdk}
+   */
+  public static final class ModuleSdk extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:com.giyeok.bibix.intellij.ModuleSdk)
+      ModuleSdkOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use ModuleSdk.newBuilder() to construct.
+    private ModuleSdk(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private ModuleSdk() {
+    }
+
+    @java.lang.Override
+    @SuppressWarnings({"unused"})
+    protected java.lang.Object newInstance(
+        UnusedPrivateParameter unused) {
+      return new ModuleSdk();
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private ModuleSdk(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            case 10: {
+              java.lang.String s = input.readStringRequireUtf8();
+              sdkCase_ = 1;
+              sdk_ = s;
+              break;
+            }
+            case 18: {
+              java.lang.String s = input.readStringRequireUtf8();
+              sdkCase_ = 2;
+              sdk_ = s;
+              break;
+            }
+            case 26: {
+              java.lang.String s = input.readStringRequireUtf8();
+              sdkCase_ = 3;
+              sdk_ = s;
+              break;
+            }
+            default: {
+              if (!parseUnknownField(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (com.google.protobuf.UninitializedMessageException e) {
+        throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return com.giyeok.bibix.intellij.BibixIntellijProto.internal_static_com_giyeok_bibix_intellij_ModuleSdk_descriptor;
+    }
+
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return com.giyeok.bibix.intellij.BibixIntellijProto.internal_static_com_giyeok_bibix_intellij_ModuleSdk_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk.class, com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk.Builder.class);
+    }
+
+    private int sdkCase_ = 0;
+    private java.lang.Object sdk_;
+    public enum SdkCase
+        implements com.google.protobuf.Internal.EnumLite,
+            com.google.protobuf.AbstractMessage.InternalOneOfEnum {
+      JDK_VERSION(1),
+      KTJVM_SDK_VERSION(2),
+      SCALA_SDK_VERSION(3),
+      SDK_NOT_SET(0);
+      private final int value;
+      private SdkCase(int value) {
+        this.value = value;
+      }
+      /**
+       * @param value The number of the enum to look for.
+       * @return The enum associated with the given number.
+       * @deprecated Use {@link #forNumber(int)} instead.
+       */
+      @java.lang.Deprecated
+      public static SdkCase valueOf(int value) {
+        return forNumber(value);
+      }
+
+      public static SdkCase forNumber(int value) {
+        switch (value) {
+          case 1: return JDK_VERSION;
+          case 2: return KTJVM_SDK_VERSION;
+          case 3: return SCALA_SDK_VERSION;
+          case 0: return SDK_NOT_SET;
+          default: return null;
+        }
+      }
+      public int getNumber() {
+        return this.value;
+      }
+    };
+
+    public SdkCase
+    getSdkCase() {
+      return SdkCase.forNumber(
+          sdkCase_);
+    }
+
+    public static final int JDK_VERSION_FIELD_NUMBER = 1;
+    /**
+     * <code>string jdk_version = 1;</code>
+     * @return Whether the jdkVersion field is set.
+     */
+    public boolean hasJdkVersion() {
+      return sdkCase_ == 1;
+    }
+    /**
+     * <code>string jdk_version = 1;</code>
+     * @return The jdkVersion.
+     */
+    public java.lang.String getJdkVersion() {
+      java.lang.Object ref = "";
+      if (sdkCase_ == 1) {
+        ref = sdk_;
+      }
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (sdkCase_ == 1) {
+          sdk_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>string jdk_version = 1;</code>
+     * @return The bytes for jdkVersion.
+     */
+    public com.google.protobuf.ByteString
+        getJdkVersionBytes() {
+      java.lang.Object ref = "";
+      if (sdkCase_ == 1) {
+        ref = sdk_;
+      }
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        if (sdkCase_ == 1) {
+          sdk_ = b;
+        }
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int KTJVM_SDK_VERSION_FIELD_NUMBER = 2;
+    /**
+     * <code>string ktjvm_sdk_version = 2;</code>
+     * @return Whether the ktjvmSdkVersion field is set.
+     */
+    public boolean hasKtjvmSdkVersion() {
+      return sdkCase_ == 2;
+    }
+    /**
+     * <code>string ktjvm_sdk_version = 2;</code>
+     * @return The ktjvmSdkVersion.
+     */
+    public java.lang.String getKtjvmSdkVersion() {
+      java.lang.Object ref = "";
+      if (sdkCase_ == 2) {
+        ref = sdk_;
+      }
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (sdkCase_ == 2) {
+          sdk_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>string ktjvm_sdk_version = 2;</code>
+     * @return The bytes for ktjvmSdkVersion.
+     */
+    public com.google.protobuf.ByteString
+        getKtjvmSdkVersionBytes() {
+      java.lang.Object ref = "";
+      if (sdkCase_ == 2) {
+        ref = sdk_;
+      }
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        if (sdkCase_ == 2) {
+          sdk_ = b;
+        }
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int SCALA_SDK_VERSION_FIELD_NUMBER = 3;
+    /**
+     * <code>string scala_sdk_version = 3;</code>
+     * @return Whether the scalaSdkVersion field is set.
+     */
+    public boolean hasScalaSdkVersion() {
+      return sdkCase_ == 3;
+    }
+    /**
+     * <code>string scala_sdk_version = 3;</code>
+     * @return The scalaSdkVersion.
+     */
+    public java.lang.String getScalaSdkVersion() {
+      java.lang.Object ref = "";
+      if (sdkCase_ == 3) {
+        ref = sdk_;
+      }
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (sdkCase_ == 3) {
+          sdk_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>string scala_sdk_version = 3;</code>
+     * @return The bytes for scalaSdkVersion.
+     */
+    public com.google.protobuf.ByteString
+        getScalaSdkVersionBytes() {
+      java.lang.Object ref = "";
+      if (sdkCase_ == 3) {
+        ref = sdk_;
+      }
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        if (sdkCase_ == 3) {
+          sdk_ = b;
+        }
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    private byte memoizedIsInitialized = -1;
+    @java.lang.Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    @java.lang.Override
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      if (sdkCase_ == 1) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, sdk_);
+      }
+      if (sdkCase_ == 2) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, sdk_);
+      }
+      if (sdkCase_ == 3) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 3, sdk_);
+      }
+      unknownFields.writeTo(output);
+    }
+
+    @java.lang.Override
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (sdkCase_ == 1) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, sdk_);
+      }
+      if (sdkCase_ == 2) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, sdk_);
+      }
+      if (sdkCase_ == 3) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, sdk_);
+      }
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk)) {
+        return super.equals(obj);
+      }
+      com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk other = (com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk) obj;
+
+      if (!getSdkCase().equals(other.getSdkCase())) return false;
+      switch (sdkCase_) {
+        case 1:
+          if (!getJdkVersion()
+              .equals(other.getJdkVersion())) return false;
+          break;
+        case 2:
+          if (!getKtjvmSdkVersion()
+              .equals(other.getKtjvmSdkVersion())) return false;
+          break;
+        case 3:
+          if (!getScalaSdkVersion()
+              .equals(other.getScalaSdkVersion())) return false;
+          break;
+        case 0:
+        default:
+      }
+      if (!unknownFields.equals(other.unknownFields)) return false;
+      return true;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      switch (sdkCase_) {
+        case 1:
+          hash = (37 * hash) + JDK_VERSION_FIELD_NUMBER;
+          hash = (53 * hash) + getJdkVersion().hashCode();
+          break;
+        case 2:
+          hash = (37 * hash) + KTJVM_SDK_VERSION_FIELD_NUMBER;
+          hash = (53 * hash) + getKtjvmSdkVersion().hashCode();
+          break;
+        case 3:
+          hash = (37 * hash) + SCALA_SDK_VERSION_FIELD_NUMBER;
+          hash = (53 * hash) + getScalaSdkVersion().hashCode();
+          break;
+        case 0:
+        default:
+      }
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    @java.lang.Override
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @java.lang.Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code com.giyeok.bibix.intellij.ModuleSdk}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:com.giyeok.bibix.intellij.ModuleSdk)
+        com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdkOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return com.giyeok.bibix.intellij.BibixIntellijProto.internal_static_com_giyeok_bibix_intellij_ModuleSdk_descriptor;
+      }
+
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return com.giyeok.bibix.intellij.BibixIntellijProto.internal_static_com_giyeok_bibix_intellij_ModuleSdk_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk.class, com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk.Builder.class);
+      }
+
+      // Construct using com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+        }
+      }
+      @java.lang.Override
+      public Builder clear() {
+        super.clear();
+        sdkCase_ = 0;
+        sdk_ = null;
+        return this;
+      }
+
+      @java.lang.Override
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return com.giyeok.bibix.intellij.BibixIntellijProto.internal_static_com_giyeok_bibix_intellij_ModuleSdk_descriptor;
+      }
+
+      @java.lang.Override
+      public com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk getDefaultInstanceForType() {
+        return com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk.getDefaultInstance();
+      }
+
+      @java.lang.Override
+      public com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk build() {
+        com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      @java.lang.Override
+      public com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk buildPartial() {
+        com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk result = new com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk(this);
+        if (sdkCase_ == 1) {
+          result.sdk_ = sdk_;
+        }
+        if (sdkCase_ == 2) {
+          result.sdk_ = sdk_;
+        }
+        if (sdkCase_ == 3) {
+          result.sdk_ = sdk_;
+        }
+        result.sdkCase_ = sdkCase_;
+        onBuilt();
+        return result;
+      }
+
+      @java.lang.Override
+      public Builder clone() {
+        return super.clone();
+      }
+      @java.lang.Override
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.setField(field, value);
+      }
+      @java.lang.Override
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return super.clearField(field);
+      }
+      @java.lang.Override
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return super.clearOneof(oneof);
+      }
+      @java.lang.Override
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return super.setRepeatedField(field, index, value);
+      }
+      @java.lang.Override
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.addRepeatedField(field, value);
+      }
+      @java.lang.Override
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk) {
+          return mergeFrom((com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk other) {
+        if (other == com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk.getDefaultInstance()) return this;
+        switch (other.getSdkCase()) {
+          case JDK_VERSION: {
+            sdkCase_ = 1;
+            sdk_ = other.sdk_;
+            onChanged();
+            break;
+          }
+          case KTJVM_SDK_VERSION: {
+            sdkCase_ = 2;
+            sdk_ = other.sdk_;
+            onChanged();
+            break;
+          }
+          case SCALA_SDK_VERSION: {
+            sdkCase_ = 3;
+            sdk_ = other.sdk_;
+            onChanged();
+            break;
+          }
+          case SDK_NOT_SET: {
+            break;
+          }
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      @java.lang.Override
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      @java.lang.Override
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int sdkCase_ = 0;
+      private java.lang.Object sdk_;
+      public SdkCase
+          getSdkCase() {
+        return SdkCase.forNumber(
+            sdkCase_);
+      }
+
+      public Builder clearSdk() {
+        sdkCase_ = 0;
+        sdk_ = null;
+        onChanged();
+        return this;
+      }
+
+
+      /**
+       * <code>string jdk_version = 1;</code>
+       * @return Whether the jdkVersion field is set.
+       */
+      @java.lang.Override
+      public boolean hasJdkVersion() {
+        return sdkCase_ == 1;
+      }
+      /**
+       * <code>string jdk_version = 1;</code>
+       * @return The jdkVersion.
+       */
+      @java.lang.Override
+      public java.lang.String getJdkVersion() {
+        java.lang.Object ref = "";
+        if (sdkCase_ == 1) {
+          ref = sdk_;
+        }
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (sdkCase_ == 1) {
+            sdk_ = s;
+          }
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string jdk_version = 1;</code>
+       * @return The bytes for jdkVersion.
+       */
+      @java.lang.Override
+      public com.google.protobuf.ByteString
+          getJdkVersionBytes() {
+        java.lang.Object ref = "";
+        if (sdkCase_ == 1) {
+          ref = sdk_;
+        }
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          if (sdkCase_ == 1) {
+            sdk_ = b;
+          }
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string jdk_version = 1;</code>
+       * @param value The jdkVersion to set.
+       * @return This builder for chaining.
+       */
+      public Builder setJdkVersion(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  sdkCase_ = 1;
+        sdk_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string jdk_version = 1;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearJdkVersion() {
+        if (sdkCase_ == 1) {
+          sdkCase_ = 0;
+          sdk_ = null;
+          onChanged();
+        }
+        return this;
+      }
+      /**
+       * <code>string jdk_version = 1;</code>
+       * @param value The bytes for jdkVersion to set.
+       * @return This builder for chaining.
+       */
+      public Builder setJdkVersionBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        sdkCase_ = 1;
+        sdk_ = value;
+        onChanged();
+        return this;
+      }
+
+      /**
+       * <code>string ktjvm_sdk_version = 2;</code>
+       * @return Whether the ktjvmSdkVersion field is set.
+       */
+      @java.lang.Override
+      public boolean hasKtjvmSdkVersion() {
+        return sdkCase_ == 2;
+      }
+      /**
+       * <code>string ktjvm_sdk_version = 2;</code>
+       * @return The ktjvmSdkVersion.
+       */
+      @java.lang.Override
+      public java.lang.String getKtjvmSdkVersion() {
+        java.lang.Object ref = "";
+        if (sdkCase_ == 2) {
+          ref = sdk_;
+        }
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (sdkCase_ == 2) {
+            sdk_ = s;
+          }
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string ktjvm_sdk_version = 2;</code>
+       * @return The bytes for ktjvmSdkVersion.
+       */
+      @java.lang.Override
+      public com.google.protobuf.ByteString
+          getKtjvmSdkVersionBytes() {
+        java.lang.Object ref = "";
+        if (sdkCase_ == 2) {
+          ref = sdk_;
+        }
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          if (sdkCase_ == 2) {
+            sdk_ = b;
+          }
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string ktjvm_sdk_version = 2;</code>
+       * @param value The ktjvmSdkVersion to set.
+       * @return This builder for chaining.
+       */
+      public Builder setKtjvmSdkVersion(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  sdkCase_ = 2;
+        sdk_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string ktjvm_sdk_version = 2;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearKtjvmSdkVersion() {
+        if (sdkCase_ == 2) {
+          sdkCase_ = 0;
+          sdk_ = null;
+          onChanged();
+        }
+        return this;
+      }
+      /**
+       * <code>string ktjvm_sdk_version = 2;</code>
+       * @param value The bytes for ktjvmSdkVersion to set.
+       * @return This builder for chaining.
+       */
+      public Builder setKtjvmSdkVersionBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        sdkCase_ = 2;
+        sdk_ = value;
+        onChanged();
+        return this;
+      }
+
+      /**
+       * <code>string scala_sdk_version = 3;</code>
+       * @return Whether the scalaSdkVersion field is set.
+       */
+      @java.lang.Override
+      public boolean hasScalaSdkVersion() {
+        return sdkCase_ == 3;
+      }
+      /**
+       * <code>string scala_sdk_version = 3;</code>
+       * @return The scalaSdkVersion.
+       */
+      @java.lang.Override
+      public java.lang.String getScalaSdkVersion() {
+        java.lang.Object ref = "";
+        if (sdkCase_ == 3) {
+          ref = sdk_;
+        }
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (sdkCase_ == 3) {
+            sdk_ = s;
+          }
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string scala_sdk_version = 3;</code>
+       * @return The bytes for scalaSdkVersion.
+       */
+      @java.lang.Override
+      public com.google.protobuf.ByteString
+          getScalaSdkVersionBytes() {
+        java.lang.Object ref = "";
+        if (sdkCase_ == 3) {
+          ref = sdk_;
+        }
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          if (sdkCase_ == 3) {
+            sdk_ = b;
+          }
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string scala_sdk_version = 3;</code>
+       * @param value The scalaSdkVersion to set.
+       * @return This builder for chaining.
+       */
+      public Builder setScalaSdkVersion(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  sdkCase_ = 3;
+        sdk_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string scala_sdk_version = 3;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearScalaSdkVersion() {
+        if (sdkCase_ == 3) {
+          sdkCase_ = 0;
+          sdk_ = null;
+          onChanged();
+        }
+        return this;
+      }
+      /**
+       * <code>string scala_sdk_version = 3;</code>
+       * @param value The bytes for scalaSdkVersion to set.
+       * @return This builder for chaining.
+       */
+      public Builder setScalaSdkVersionBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        sdkCase_ = 3;
+        sdk_ = value;
+        onChanged();
+        return this;
+      }
+      @java.lang.Override
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFields(unknownFields);
+      }
+
+      @java.lang.Override
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:com.giyeok.bibix.intellij.ModuleSdk)
+    }
+
+    // @@protoc_insertion_point(class_scope:com.giyeok.bibix.intellij.ModuleSdk)
+    private static final com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk();
+    }
+
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<ModuleSdk>
+        PARSER = new com.google.protobuf.AbstractParser<ModuleSdk>() {
+      @java.lang.Override
+      public ModuleSdk parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new ModuleSdk(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<ModuleSdk> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<ModuleSdk> getParserForType() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -9559,6 +11013,11 @@ public final class BibixIntellijProto {
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_com_giyeok_bibix_intellij_ContentRoot_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_com_giyeok_bibix_intellij_ModuleSdk_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_com_giyeok_bibix_intellij_ModuleSdk_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_com_giyeok_bibix_intellij_ExternalLibrary_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
@@ -9609,37 +11068,41 @@ public final class BibixIntellijProto {
       "(\t\022\024\n\014project_name\030\002 \001(\t\0222\n\007modules\030\003 \003(" +
       "\0132!.com.giyeok.bibix.intellij.Module\022F\n\022" +
       "external_libraries\030\004 \003(\0132*.com.giyeok.bi" +
-      "bix.intellij.ExternalLibrary\"\261\001\n\006Module\022" +
+      "bix.intellij.ExternalLibrary\"\361\001\n\006Module\022" +
       "\023\n\013module_name\030\001 \001(\t\022\023\n\013module_type\030\002 \001(" +
-      "\t\022=\n\rcontent_roots\030\003 \003(\0132&.com.giyeok.bi" +
-      "bix.intellij.ContentRoot\022\023\n\013sdk_version\030" +
-      "\004 \001(\t\022\023\n\013module_deps\030\005 \003(\t\022\024\n\014library_de" +
-      "ps\030\006 \003(\t\"^\n\013ContentRoot\022\031\n\021content_root_" +
-      "name\030\001 \001(\t\022\031\n\021content_root_type\030\002 \001(\t\022\031\n" +
-      "\021content_root_path\030\003 \001(\t\"_\n\017ExternalLibr" +
-      "ary\022\022\n\nlibrary_id\030\001 \001(\t\022\023\n\013description\030\002" +
-      " \001(\t\022\022\n\nclasspaths\030\003 \003(\t\022\017\n\007sources\030\004 \003(" +
-      "\t\"<\n\017BuildTargetsReq\022\022\n\nproject_id\030\001 \001(\t" +
-      "\022\025\n\rbuild_targets\030\002 \003(\t\"\021\n\017BuildTargetsR" +
-      "es\"\024\n\022BuildTargetsUpdate\"8\n\021ExecuteActio" +
-      "nsReq\022\022\n\nproject_id\030\001 \001(\t\022\017\n\007actions\030\002 \003" +
-      "(\t\"\023\n\021ExecuteActionsRes\"\025\n\023ExecuteAction" +
-      "Update2\302\004\n\024BibixIntellijService\022e\n\013loadP" +
-      "roject\022).com.giyeok.bibix.intellij.LoadP" +
-      "rojectReq\032+.com.giyeok.bibix.intellij.Bi" +
-      "bixProjectInfo\022f\n\014buildTargets\022*.com.giy" +
-      "eok.bibix.intellij.BuildTargetsReq\032*.com" +
-      ".giyeok.bibix.intellij.BuildTargetsRes\022t" +
-      "\n\025buildTargetsStreaming\022*.com.giyeok.bib" +
-      "ix.intellij.BuildTargetsReq\032-.com.giyeok" +
-      ".bibix.intellij.BuildTargetsUpdate0\001\022l\n\016" +
-      "executeActions\022,.com.giyeok.bibix.intell" +
-      "ij.ExecuteActionsReq\032,.com.giyeok.bibix." +
-      "intellij.ExecuteActionsRes\022w\n\027executeAct" +
-      "ionsStreaming\022*.com.giyeok.bibix.intelli" +
-      "j.BuildTargetsReq\032..com.giyeok.bibix.int" +
-      "ellij.ExecuteActionUpdate0\001B\024B\022BibixInte" +
-      "llijProtob\006proto3"
+      "\t\022\030\n\020module_root_path\030\003 \001(\t\022=\n\rcontent_r" +
+      "oots\030\004 \003(\0132&.com.giyeok.bibix.intellij.C" +
+      "ontentRoot\0229\n\013module_sdks\030\005 \003(\0132$.com.gi" +
+      "yeok.bibix.intellij.ModuleSdk\022\023\n\013module_" +
+      "deps\030\006 \003(\t\022\024\n\014library_deps\030\007 \003(\t\"^\n\013Cont" +
+      "entRoot\022\031\n\021content_root_name\030\001 \001(\t\022\031\n\021co" +
+      "ntent_root_type\030\002 \001(\t\022\031\n\021content_root_pa" +
+      "th\030\003 \001(\t\"c\n\tModuleSdk\022\025\n\013jdk_version\030\001 \001" +
+      "(\tH\000\022\033\n\021ktjvm_sdk_version\030\002 \001(\tH\000\022\033\n\021sca" +
+      "la_sdk_version\030\003 \001(\tH\000B\005\n\003sdk\"_\n\017Externa" +
+      "lLibrary\022\022\n\nlibrary_id\030\001 \001(\t\022\023\n\013descript" +
+      "ion\030\002 \001(\t\022\022\n\nclasspaths\030\003 \003(\t\022\017\n\007sources" +
+      "\030\004 \003(\t\"<\n\017BuildTargetsReq\022\022\n\nproject_id\030" +
+      "\001 \001(\t\022\025\n\rbuild_targets\030\002 \003(\t\"\021\n\017BuildTar" +
+      "getsRes\"\024\n\022BuildTargetsUpdate\"8\n\021Execute" +
+      "ActionsReq\022\022\n\nproject_id\030\001 \001(\t\022\017\n\007action" +
+      "s\030\002 \003(\t\"\023\n\021ExecuteActionsRes\"\025\n\023ExecuteA" +
+      "ctionUpdate2\302\004\n\024BibixIntellijService\022e\n\013" +
+      "loadProject\022).com.giyeok.bibix.intellij." +
+      "LoadProjectReq\032+.com.giyeok.bibix.intell" +
+      "ij.BibixProjectInfo\022f\n\014buildTargets\022*.co" +
+      "m.giyeok.bibix.intellij.BuildTargetsReq\032" +
+      "*.com.giyeok.bibix.intellij.BuildTargets" +
+      "Res\022t\n\025buildTargetsStreaming\022*.com.giyeo" +
+      "k.bibix.intellij.BuildTargetsReq\032-.com.g" +
+      "iyeok.bibix.intellij.BuildTargetsUpdate0" +
+      "\001\022l\n\016executeActions\022,.com.giyeok.bibix.i" +
+      "ntellij.ExecuteActionsReq\032,.com.giyeok.b" +
+      "ibix.intellij.ExecuteActionsRes\022w\n\027execu" +
+      "teActionsStreaming\022*.com.giyeok.bibix.in" +
+      "tellij.BuildTargetsReq\032..com.giyeok.bibi" +
+      "x.intellij.ExecuteActionUpdate0\001B\024B\022Bibi" +
+      "xIntellijProtob\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -9662,51 +11125,57 @@ public final class BibixIntellijProto {
     internal_static_com_giyeok_bibix_intellij_Module_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_giyeok_bibix_intellij_Module_descriptor,
-        new java.lang.String[] { "ModuleName", "ModuleType", "ContentRoots", "SdkVersion", "ModuleDeps", "LibraryDeps", });
+        new java.lang.String[] { "ModuleName", "ModuleType", "ModuleRootPath", "ContentRoots", "ModuleSdks", "ModuleDeps", "LibraryDeps", });
     internal_static_com_giyeok_bibix_intellij_ContentRoot_descriptor =
       getDescriptor().getMessageTypes().get(3);
     internal_static_com_giyeok_bibix_intellij_ContentRoot_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_giyeok_bibix_intellij_ContentRoot_descriptor,
         new java.lang.String[] { "ContentRootName", "ContentRootType", "ContentRootPath", });
-    internal_static_com_giyeok_bibix_intellij_ExternalLibrary_descriptor =
+    internal_static_com_giyeok_bibix_intellij_ModuleSdk_descriptor =
       getDescriptor().getMessageTypes().get(4);
+    internal_static_com_giyeok_bibix_intellij_ModuleSdk_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_com_giyeok_bibix_intellij_ModuleSdk_descriptor,
+        new java.lang.String[] { "JdkVersion", "KtjvmSdkVersion", "ScalaSdkVersion", "Sdk", });
+    internal_static_com_giyeok_bibix_intellij_ExternalLibrary_descriptor =
+      getDescriptor().getMessageTypes().get(5);
     internal_static_com_giyeok_bibix_intellij_ExternalLibrary_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_giyeok_bibix_intellij_ExternalLibrary_descriptor,
         new java.lang.String[] { "LibraryId", "Description", "Classpaths", "Sources", });
     internal_static_com_giyeok_bibix_intellij_BuildTargetsReq_descriptor =
-      getDescriptor().getMessageTypes().get(5);
+      getDescriptor().getMessageTypes().get(6);
     internal_static_com_giyeok_bibix_intellij_BuildTargetsReq_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_giyeok_bibix_intellij_BuildTargetsReq_descriptor,
         new java.lang.String[] { "ProjectId", "BuildTargets", });
     internal_static_com_giyeok_bibix_intellij_BuildTargetsRes_descriptor =
-      getDescriptor().getMessageTypes().get(6);
+      getDescriptor().getMessageTypes().get(7);
     internal_static_com_giyeok_bibix_intellij_BuildTargetsRes_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_giyeok_bibix_intellij_BuildTargetsRes_descriptor,
         new java.lang.String[] { });
     internal_static_com_giyeok_bibix_intellij_BuildTargetsUpdate_descriptor =
-      getDescriptor().getMessageTypes().get(7);
+      getDescriptor().getMessageTypes().get(8);
     internal_static_com_giyeok_bibix_intellij_BuildTargetsUpdate_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_giyeok_bibix_intellij_BuildTargetsUpdate_descriptor,
         new java.lang.String[] { });
     internal_static_com_giyeok_bibix_intellij_ExecuteActionsReq_descriptor =
-      getDescriptor().getMessageTypes().get(8);
+      getDescriptor().getMessageTypes().get(9);
     internal_static_com_giyeok_bibix_intellij_ExecuteActionsReq_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_giyeok_bibix_intellij_ExecuteActionsReq_descriptor,
         new java.lang.String[] { "ProjectId", "Actions", });
     internal_static_com_giyeok_bibix_intellij_ExecuteActionsRes_descriptor =
-      getDescriptor().getMessageTypes().get(9);
+      getDescriptor().getMessageTypes().get(10);
     internal_static_com_giyeok_bibix_intellij_ExecuteActionsRes_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_giyeok_bibix_intellij_ExecuteActionsRes_descriptor,
         new java.lang.String[] { });
     internal_static_com_giyeok_bibix_intellij_ExecuteActionUpdate_descriptor =
-      getDescriptor().getMessageTypes().get(10);
+      getDescriptor().getMessageTypes().get(11);
     internal_static_com_giyeok_bibix_intellij_ExecuteActionUpdate_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_giyeok_bibix_intellij_ExecuteActionUpdate_descriptor,

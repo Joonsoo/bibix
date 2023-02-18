@@ -3,31 +3,21 @@ package com.giyeok.bibix.intellij.service
 import com.giyeok.bibix.base.MainSourceId
 import com.giyeok.bibix.frontend.BuildFrontend
 import com.giyeok.bibix.frontend.NoopProgressNotifier
-import com.giyeok.bibix.intellij.BibixIntellijProto
-import com.giyeok.bibix.intellij.bibixProjectInfo
-import com.giyeok.bibix.intellij.contentRoot
-import com.giyeok.bibix.intellij.externalLibrary
+import com.giyeok.bibix.intellij.*
 import com.giyeok.bibix.interpreter.BibixProject
 import com.giyeok.bibix.interpreter.expr.Definition
 import com.giyeok.bibix.plugins.jvm.*
 import com.google.common.annotations.VisibleForTesting
 import java.lang.AssertionError
 import java.nio.file.Path
-import kotlin.io.path.absolutePathString
-import kotlin.io.path.bufferedReader
-import kotlin.io.path.isRegularFile
-import kotlin.io.path.name
+import java.nio.file.Paths
+import kotlin.io.path.*
 
 object ProjectStructureExtractor {
-  fun commonAncestorsOf(paths: Set<Path>): Set<Path> {
-    // TODO implement
-    return paths
-  }
-
   @VisibleForTesting
-  fun getContentRoots(sources: Set<Path>): List<BibixIntellijProto.ContentRoot> {
+  fun getContentRoots(module: ModuleData): List<BibixIntellijProto.ContentRoot> {
     // 공통 ancestor directory 및 각 파일의 package 이름을 고려해서 content root
-    val sourceCodeRoots = sources.associate { sourcePath ->
+    val sourceCodeRoots = module.sources.associate { sourcePath ->
       val sourcePackage = sourcePath.bufferedReader().use {
         SourceCodePackageNameReader.readPackageName(it)
       }
@@ -49,15 +39,112 @@ object ProjectStructureExtractor {
       }
     }
 
-    val roots = commonAncestorsOf(sourceCodeRoots.values.toSet())
-
-    return roots.map { source ->
+    val srcRoots = sourceCodeRoots.values.map { source ->
       contentRoot {
         this.contentRootName = "Sources"
         this.contentRootType = "src"
         this.contentRootPath = source.absolutePathString()
       }
     }
+
+    val resRoots = module.resourceDirs.map { resDir ->
+      contentRoot {
+        this.contentRootName = "Resources"
+        this.contentRootType = "res"
+        this.contentRootPath = resDir.absolutePathString()
+      }
+    }
+
+    return srcRoots + resRoots
+  }
+
+  fun commonAncestorOfPaths(paths: Set<Path>): Path {
+    fun parentsOf(path: Path): List<Path> {
+      val list = mutableListOf<Path>()
+      var path = path
+      while (path.nameCount > 0) {
+        list.add(path)
+        path = path.parent
+      }
+      list.add(path)
+      return list.reversed()
+    }
+
+    fun commonAncestorOf(a: Path, b: Path): Path =
+      when {
+        a.startsWith(b) -> b
+        b.startsWith(a) -> a
+        else -> {
+          val aParents = parentsOf(a)
+          val bParents = parentsOf(b)
+          check(aParents.first() == bParents.first()) // 모두 루트
+          var lastCommon = 0
+          while (lastCommon < aParents.size && lastCommon < bParents.size) {
+            if (aParents[lastCommon] != bParents[lastCommon]) break
+            lastCommon += 1
+          }
+          aParents[lastCommon - 1]
+        }
+      }
+
+    fun merge(path: Path, rest: List<Path>): Path =
+      if (rest.isEmpty()) {
+        path
+      } else {
+        merge(commonAncestorOf(path, rest.first()), rest.drop(1))
+      }
+
+    val pathsList = paths.toList().map { it.absolute().normalize() }
+    return merge(pathsList.first(), pathsList.drop(1))
+  }
+
+  @VisibleForTesting
+  fun assignModuleRoots(
+    projectRoot: Path,
+    moduleContentRoots: Map<LocalBuilt, List<BibixIntellijProto.ContentRoot>>
+  ): Map<LocalBuilt, Path> {
+    val moduleContentRootAncestors = moduleContentRoots
+      .filterValues { it.isNotEmpty() }
+      .mapValues { (_, contentRoots) ->
+        commonAncestorOfPaths(contentRoots.map { Path(it.contentRootPath) }.toSet())
+      }
+    // projectRoot에서부터 아래로 내려가면서 점유된 모듈이 하나뿐인 서브디렉토리를 해당 모듈의 루트로 지정
+
+    val moduleRoots = mutableMapOf<LocalBuilt, Path>()
+    val occupants = mutableMapOf<Path, MutableSet<LocalBuilt>>()
+
+    moduleContentRootAncestors.forEach { (moduleId, rootAncestor) ->
+      if (!rootAncestor.startsWith(projectRoot)) {
+        moduleRoots[moduleId] = rootAncestor
+      } else {
+        var path = rootAncestor
+        while (path.startsWith(projectRoot)) {
+          occupants.getOrPut(path) { mutableSetOf() }.add(moduleId)
+          path = path.parent
+        }
+      }
+    }
+
+    fun traverse(path: Path) {
+      val occup = occupants[path]
+      if (occup != null) {
+        if (occup.size == 1) {
+          moduleRoots[occup.first()] = path
+        } else {
+          path.listDirectoryEntries().forEach { child ->
+            traverse(child)
+          }
+        }
+      }
+    }
+    traverse(projectRoot)
+
+    // module root가 할당되지 않은 경우엔 그냥 content root ancestor로 설정
+    (moduleContentRootAncestors.keys - moduleRoots.keys).forEach { moduleId ->
+      moduleRoots[moduleId] = moduleContentRootAncestors.getValue(moduleId)
+    }
+
+    return moduleRoots
   }
 
   @VisibleForTesting
@@ -129,12 +216,22 @@ object ProjectStructureExtractor {
       }
     }
 
-    val projectModules = pkgGraph.modules.values.map { module ->
-      com.giyeok.bibix.intellij.module {
+    val moduleContentRoots = pkgGraph.modules.mapValues { (moduleId, module) ->
+      getContentRoots(module)
+    }
+
+    val moduleRoots = assignModuleRoots(projectRoot, moduleContentRoots)
+
+    val projectModules = pkgGraph.modules.map { (moduleId, module) ->
+      val moduleRoot = moduleRoots[moduleId]?.absolutePathString()
+      module {
         this.moduleName = moduleName(module.origin.objHash)
         this.moduleType = module.languageType
-        this.contentRoots.addAll(getContentRoots(module.sources))
-        this.sdkVersion = "21"
+        this.moduleRootPath = moduleRoot ?: ""
+        this.contentRoots.addAll(moduleContentRoots.getValue(moduleId))
+        this.moduleSdks.add(moduleSdk {
+          this.jdkVersion = "21"
+        })
         val deps = pkgGraph.dependentNodesOf(module.origin)
         this.moduleDeps.addAll(deps.filterIsInstance<LocalBuilt>().map { moduleName(it.objHash) })
         this.libraryDeps.addAll(deps.filter { it !is LocalBuilt }.map { libIdFromOrigin(it) })

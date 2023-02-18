@@ -3,6 +3,8 @@ package com.giyeok.bibix.intellij.service
 import com.giyeok.bibix.intellij.BibixIntellijProto.*
 import com.giyeok.bibix.intellij.BibixIntellijServiceGrpcKt.BibixIntellijServiceCoroutineImplBase
 import com.google.common.flogger.FluentLogger
+import io.grpc.Status
+import io.grpc.StatusException
 import kotlinx.coroutines.flow.Flow
 import java.nio.file.FileSystem
 import java.nio.file.FileSystems
@@ -18,9 +20,13 @@ class BibixIntellijServiceImpl(
 
   override suspend fun loadProject(request: LoadProjectReq): BibixProjectInfo {
     logger.atFine().log("loadProject: $request")
+    println("loadProject: $request")
+
     val projectRoot = fileSystem.getPath(request.projectRoot).normalize().absolute()
     val scriptName = request.scriptName.ifEmpty { null }
     val key = Pair(projectRoot, scriptName)
+
+    println(key)
 
     if (!request.forceReload) {
       val existing = memos[key]
@@ -29,8 +35,15 @@ class BibixIntellijServiceImpl(
       }
     }
 
-    val loaded = ProjectStructureExtractor.loadProject(projectRoot, scriptName)
+    val loaded = try {
+      ProjectStructureExtractor.loadProject(projectRoot, scriptName)
+    } catch (e: Exception) {
+      e.printStackTrace()
+      throw StatusException(Status.FAILED_PRECONDITION)
+    }
     memos[key] = loaded
+
+    println(loaded)
 
     return loaded
   }

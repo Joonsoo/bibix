@@ -13,12 +13,17 @@ class ModulesCollector(val languageType: String) {
 
   fun build(context: BuildContext): BibixValue {
     val srcs = context.arguments.getValue("srcs") as SetValue
+    val resources = context.arguments["resources"] as? SetValue ?: SetValue(listOf())
+    val resDirs =
+      ResourceDirectoryExtractor.findResourceDirectoriesOf(resources.values.map { (it as FileValue).file })
     val deps = context.arguments.getValue("deps") as SetValue
-    val origin = LocalBuilt(context.objectIdHash, "ModulesCollectr")
+    val origin = LocalBuilt(context.objectIdHash, "ModulesCollector")
+
     _modules[context.objectIdHash] = ModuleData(
       languageType,
       origin,
       srcs.values.map { (it as FileValue).file }.toSet(),
+      resDirs,
       deps.values.map { ClassPkg.fromBibix(it) },
       context.arguments
     )
@@ -47,6 +52,7 @@ data class ModuleData(
   val languageType: String,
   val origin: LocalBuilt,
   val sources: Set<Path>,
+  val resourceDirs: Set<Path>,
   val dependencies: List<ClassPkg>,
   val allArgs: Map<String, BibixValue>
 )
