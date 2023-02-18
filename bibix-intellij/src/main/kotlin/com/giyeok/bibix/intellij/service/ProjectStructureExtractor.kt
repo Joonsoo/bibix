@@ -175,6 +175,8 @@ object ProjectStructureExtractor {
       pluginImplProvider = overridingPluginImplProvider
     )
 
+    val rootModuleName = projectRoot.name
+
     val mainTargets = buildFrontend.mainScriptDefinitions()
       .filterValues { it is Definition.TargetDef }
     buildFrontend.blockingBuildTargets(mainTargets.keys.toList())
@@ -193,7 +195,8 @@ object ProjectStructureExtractor {
 
     val pkgGraph = PackageGraph.create(modules.values)
 
-    fun moduleName(objHash: String): String = objectNamesMap[objHash] ?: objHash
+    fun moduleName(objHash: String): String =
+      "$rootModuleName." + (objectNamesMap[objHash] ?: objHash)
 
     val externalLibraries = pkgGraph.nonModulePkgs.values.map { pkg ->
       externalLibrary {
@@ -271,6 +274,21 @@ object ProjectStructureExtractor {
     return bibixProjectInfo {
       this.projectId = "--"
       this.projectName = projectRoot.name
+      this.modules.add(module {
+        this.moduleName = rootModuleName
+        this.moduleType = "root"
+        this.moduleRootPath = projectRoot.absolutePathString()
+        this.contentRoots.add(contentRoot {
+          this.contentRootName = rootModuleName
+          this.contentRootType = "root"
+          this.contentRootPath = projectRoot.absolutePathString()
+        })
+        this.contentRoots.add(contentRoot {
+          this.contentRootName = "bbxbuild"
+          this.contentRootType = "excluded"
+          this.contentRootPath = projectRoot.resolve("bbxbuild").absolutePathString()
+        })
+      })
       this.modules.addAll(projectModules)
       this.externalLibraries.addAll(externalLibraries)
       this.sdks = sdks
