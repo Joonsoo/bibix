@@ -23,6 +23,7 @@ message BibixProjectInfo {
   string project_name = 2;
   repeated Module modules = 3;
   repeated ExternalLibrary external_libraries = 4;
+  Sdks sdks = 5;
 }
 
 message Module {
@@ -58,6 +59,23 @@ message ExternalLibrary {
   string description = 2;
   repeated string classpaths = 3;
   repeated string sources = 4;
+}
+
+message Sdks {
+  repeated KotlinJvmSdk ktjvm_sdks = 1;
+  repeated ScalaSdk scala_sdks = 2;
+}
+
+message KotlinJvmSdk {
+  string version = 1;
+  repeated string sdk_library_ids = 2;
+}
+
+message ScalaSdk {
+  string version = 1;
+  string scala_language_version = 2;
+  repeated string compiler_classpaths = 3;
+  repeated string sdk_library_ids = 4;
 }
 
 message BuildTargetsReq {

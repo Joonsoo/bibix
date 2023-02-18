@@ -248,6 +248,57 @@ class CallExprEvaluator(
       (paramValues + defaultParamValues).awaitAllValues() + noneParams.associateWith { NoneValue }
     }
 
+  // TODO organizeParams와 겹치는 코드 리팩토링
+  private suspend fun organizeParamsFromPlugin(
+    requester: Task,
+    context: NameLookupContext,
+    callable: EvaluationResult.Callable,
+    namedParamsMap: Map<String, BibixValue>,
+    thisValue: BibixValue?,
+  ): Map<String, BibixValue> =
+    g.withTask(requester, Task.PluginRequestedCallExpr(context.sourceId, -1)) { task ->
+      val paramDefsMap = callable.params.associateBy { it.name }
+
+      val unknownParams = namedParamsMap.keys - paramDefsMap.keys
+      check(unknownParams.isEmpty()) { "Unknown parameters: $unknownParams by plugin" }
+
+      val unspecifiedParams = paramDefsMap.keys - namedParamsMap.keys
+      val missingParams = unspecifiedParams.filter { paramName ->
+        val paramDef = paramDefsMap.getValue(paramName)
+        !paramDef.optional && paramDef.defaultValue == null
+      }
+      check(missingParams.isEmpty()) { "Required parameters $missingParams not specified by plugin" }
+
+      val defaultParamsMap = unspecifiedParams.mapNotNull { paramName ->
+        val paramDef = paramDefsMap.getValue(paramName)
+        paramDef.defaultValue?.let { paramName to paramDef.defaultValue }
+      }.toMap()
+      val noneParams = unspecifiedParams - defaultParamsMap.keys
+
+      val paramValues = namedParamsMap.mapValues { (paramName, value) ->
+        val paramDef = paramDefsMap.getValue(paramName)
+        async {
+          if (paramDef.optional && value == NoneValue) NoneValue else {
+            exprEvaluator.coerce(task, context, value, paramDef.type)
+          }
+        }
+      }
+      val defaultParamValues = defaultParamsMap.mapValues { (paramName, valueExpr) ->
+        val paramDef = paramDefsMap.getValue(paramName)
+        async {
+          // 여기선 directBindings 사용하지 말아야 함
+          val value =
+            exprEvaluator.evaluateExpr(task, callable.context, valueExpr, thisValue, setOf())
+              .ensureValue()
+          if (paramDef.optional && value == NoneValue) NoneValue else {
+            exprEvaluator.coerce(task, callable.context, value, paramDef.type)
+          }
+        }
+      }
+
+      (paramValues + defaultParamValues).awaitAllValues() + noneParams.associateWith { NoneValue }
+    }
+
   private suspend fun handlePluginReturnValue(
     task: Task,
     context: NameLookupContext,
@@ -270,7 +321,8 @@ class CallExprEvaluator(
         val name =
           exprEvaluator.evaluateName(task, context, returnValue.ruleName.split('.'), null, setOf())
         check(name is BuildRuleDef) { "" }
-        val result = callBuildRule(task, context, name, returnValue.params, setOf()).value
+        val params = organizeParamsFromPlugin(task, context, name, returnValue.params, null)
+        val result = callBuildRule(task, context, name, params, setOf()).value
         return handlePluginReturnValue(task, context, returnValue.whenDone(result))
       }
 

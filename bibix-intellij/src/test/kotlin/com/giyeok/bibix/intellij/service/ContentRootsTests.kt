@@ -27,7 +27,7 @@ class ContentRootsTests {
     """.trimIndent()
     )
 
-    val root = ProjectStructureExtractor.getContentRoots(setOf(file1, file2))
+    val root = ProjectStructureExtractor.commonAncestorOfPaths(setOf(file1, file2))
     assertThat(root).containsExactly(contentRoot {
       this.contentRootName = "Sources"
       this.contentRootType = "src"

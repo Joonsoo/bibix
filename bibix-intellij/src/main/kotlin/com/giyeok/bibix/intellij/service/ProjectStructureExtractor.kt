@@ -1,16 +1,16 @@
 package com.giyeok.bibix.intellij.service
 
 import com.giyeok.bibix.base.MainSourceId
+import com.giyeok.bibix.base.StringValue
 import com.giyeok.bibix.frontend.BuildFrontend
 import com.giyeok.bibix.frontend.NoopProgressNotifier
 import com.giyeok.bibix.intellij.*
 import com.giyeok.bibix.interpreter.BibixProject
 import com.giyeok.bibix.interpreter.expr.Definition
 import com.giyeok.bibix.plugins.jvm.*
+import com.giyeok.bibix.plugins.maven.Artifact
 import com.google.common.annotations.VisibleForTesting
-import java.lang.AssertionError
 import java.nio.file.Path
-import java.nio.file.Paths
 import kotlin.io.path.*
 
 object ProjectStructureExtractor {
@@ -147,11 +147,19 @@ object ProjectStructureExtractor {
     return moduleRoots
   }
 
+  fun libIdFromOrigin(origin: ClassOrigin): String = when (origin) {
+    is LocalBuilt -> throw AssertionError()
+    is LocalLib -> "local: ${origin.path.absolutePathString()}"
+    is MavenDep -> "maven: ${origin.group}:${origin.artifact}:${origin.version}"
+  }
+
   @VisibleForTesting
   fun loadProject(projectRoot: Path, scriptName: String?): BibixIntellijProto.BibixProjectInfo {
-    val javaModulesCollector = ModulesCollector("java")
-    val ktjvmModulesCollector = ModulesCollector("ktjvm")
-    val scalaModulesCollector = ModulesCollector("scala")
+    val javaModulesCollector = ModulesCollector("java", null)
+    val ktjvmModulesCollector =
+      ModulesCollector("ktjvm", Pair("org.jetbrains.kotlin", "kotlin-stdlib"))
+    val scalaModulesCollector =
+      ModulesCollector("scala", Pair("org.scala-lang", "scala-library"))
     val overridingPluginImplProvider = OverridingPluginImplProviderImpl(
       mapOf(
         Pair(MainSourceId, "com.giyeok.bibix.plugins.java.Library") to javaModulesCollector,
@@ -184,12 +192,6 @@ object ProjectStructureExtractor {
     }
 
     val pkgGraph = PackageGraph.create(modules.values)
-
-    fun libIdFromOrigin(origin: ClassOrigin): String = when (origin) {
-      is LocalBuilt -> throw AssertionError()
-      is LocalLib -> "local: ${origin.path.absolutePathString()}"
-      is MavenDep -> "maven: ${origin.group}:${origin.artifact}:${origin.version}"
-    }
 
     fun moduleName(objHash: String): String = objectNamesMap[objHash] ?: objHash
 
@@ -229,20 +231,115 @@ object ProjectStructureExtractor {
         this.moduleType = module.languageType
         this.moduleRootPath = moduleRoot ?: ""
         this.contentRoots.addAll(moduleContentRoots.getValue(moduleId))
-        this.moduleSdks.add(moduleSdk {
-          this.jdkVersion = "21"
-        })
+        when (module.languageType) {
+          "ktjvm" -> {
+            this.moduleSdks.add(moduleSdk {
+              val sdkVersion = (module.allArgs["sdkVersion"] as StringValue).value
+              this.ktjvmSdkVersion = sdkVersion
+            })
+            this.moduleSdks.add(moduleSdk {
+              val jdkVersion = (module.allArgs["outVersion"] as StringValue).value
+              this.jdkVersion = jdkVersion
+            })
+          }
+
+          "scala" -> {
+            this.moduleSdks.add(moduleSdk {
+              val sdkVersion = (module.allArgs["sdkVersion"] as StringValue).value
+              this.scalaSdkVersion = sdkVersion
+            })
+            this.moduleSdks.add(moduleSdk {
+              val jdkVersion = (module.allArgs["outVersion"] as StringValue).value
+              this.jdkVersion = jdkVersion
+            })
+          }
+
+          else -> this.moduleSdks.add(moduleSdk {
+            // assuming java
+            val jdkVersion = (module.allArgs["jdkVersion"] as StringValue).value
+            this.jdkVersion = jdkVersion
+          })
+        }
         val deps = pkgGraph.dependentNodesOf(module.origin)
         this.moduleDeps.addAll(deps.filterIsInstance<LocalBuilt>().map { moduleName(it.objHash) })
         this.libraryDeps.addAll(deps.filter { it !is LocalBuilt }.map { libIdFromOrigin(it) })
       }
     }
 
+    val sdks = getSdksForModules(buildFrontend, pkgGraph.modules)
+
     return bibixProjectInfo {
       this.projectId = "--"
       this.projectName = projectRoot.name
       this.modules.addAll(projectModules)
       this.externalLibraries.addAll(externalLibraries)
+      this.sdks = sdks
+    }
+  }
+
+  private fun getSdksForModules(
+    buildFrontend: BuildFrontend,
+    modules: Map<LocalBuilt, ModuleData>
+  ): BibixIntellijProto.Sdks {
+    val ktjvmModules = modules.filterValues { it.languageType == "ktjvm" }
+    val scalaModules = modules.filterValues { it.languageType == "scala" }
+
+    val kotlinSdkVersions = ktjvmModules.values.mapNotNull { it.sdk }.distinctBy { it.first }
+    val scalaSdkVersions = scalaModules.values.mapNotNull { it.sdk }.distinctBy { it.first }
+
+    val scalaCompilers = scalaSdkVersions.associate { (scalaVersion, _) ->
+      val compiler = Artifact.resolveArtifact(
+        buildFrontend.repo.prepareSharedDirectory(Artifact.sharedRepoName),
+        groupId = "org.scala-lang",
+        artifactId = "scala-compiler",
+        extension = "jar",
+        version = scalaVersion,
+        scope = "compile",
+        javaScope = "jar",
+        repos = listOf()
+      )
+      val reflect = Artifact.resolveArtifact(
+        buildFrontend.repo.prepareSharedDirectory(Artifact.sharedRepoName),
+        groupId = "org.scala-lang",
+        artifactId = "scala-reflect",
+        extension = "jar",
+        version = scalaVersion,
+        scope = "compile",
+        javaScope = "jar",
+        repos = listOf()
+      )
+      val library = Artifact.resolveArtifact(
+        buildFrontend.repo.prepareSharedDirectory(Artifact.sharedRepoName),
+        groupId = "org.scala-lang",
+        artifactId = "scala-reflect",
+        extension = "jar",
+        version = scalaVersion,
+        scope = "compile",
+        javaScope = "jar",
+        repos = listOf()
+      )
+      scalaVersion to listOf(compiler, reflect, library)
+    }
+    val scalaCompilerClasspaths = scalaCompilers.mapValues { (_, classPkgs) ->
+      ResolveClassPkgs.resolveClassPkgs(classPkgs).map { it.absolutePathString() }
+    }
+
+    return sdks {
+      kotlinSdkVersions.forEach { (sdkVersion, sdkArtifact) ->
+        this.ktjvmSdks.add(kotlinJvmSdk {
+          this.version = sdkVersion
+          this.sdkLibraryIds.add(libIdFromOrigin(sdkArtifact.origin))
+        })
+      }
+      scalaSdkVersions.forEach { (scalaVersion, sdkArtifact) ->
+        val scalaLangVersion = scalaVersion.split('.').take(2).joinToString(".")
+        this.scalaSdks.add(scalaSdk {
+          this.version = scalaVersion
+          this.scalaLanguageVersion = scalaLangVersion
+          this.compilerClasspaths.addAll(scalaCompilerClasspaths[scalaVersion] ?: setOf())
+          this.sdkLibraryIds.add(libIdFromOrigin(sdkArtifact.origin))
+        })
+      }
     }
   }
 }

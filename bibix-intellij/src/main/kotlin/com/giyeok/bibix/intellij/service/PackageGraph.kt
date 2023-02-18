@@ -19,6 +19,9 @@ class PackageGraph(
       nodes.add(module.origin)
       modules[module.origin] = module
       module.dependencies.forEach { traverseDependency(module.origin, it) }
+      if (module.sdk != null) {
+        traverseDependency(module.origin, module.sdk.second)
+      }
     }
 
     private fun traverseDependency(parent: ClassOrigin, pkg: ClassPkg) {

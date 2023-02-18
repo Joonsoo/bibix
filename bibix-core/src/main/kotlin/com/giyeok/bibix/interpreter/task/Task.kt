@@ -16,6 +16,8 @@ sealed class Task {
   data class EvalExpr(val sourceId: SourceId, val exprId: Int, val thisValue: BibixValue?) :
     Task()
 
+  data class PluginRequestedCallExpr(val sourceId: SourceId, val id: Int) : Task()
+
   data class EvalCallExpr(val sourceId: SourceId, val exprId: Int, val thisValue: BibixValue?) :
     Task()
 

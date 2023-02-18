@@ -3,16 +3,16 @@
 
 package com.giyeok.bibix.intellij;
 
-@kotlin.jvm.JvmName("-initializemoduleSdk")
-inline fun moduleSdk(block: com.giyeok.bibix.intellij.ModuleSdkKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk =
+@kotlin.jvm.JvmSynthetic
+public inline fun moduleSdk(block: com.giyeok.bibix.intellij.ModuleSdkKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk =
   com.giyeok.bibix.intellij.ModuleSdkKt.Dsl._create(com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk.newBuilder()).apply { block() }._build()
-object ModuleSdkKt {
+public object ModuleSdkKt {
   @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
   @com.google.protobuf.kotlin.ProtoDslMarker
-  class Dsl private constructor(
+  public class Dsl private constructor(
     private val _builder: com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk.Builder
   ) {
-    companion object {
+    public companion object {
       @kotlin.jvm.JvmSynthetic
       @kotlin.PublishedApi
       internal fun _create(builder: com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk.Builder): Dsl = Dsl(builder)
@@ -25,7 +25,7 @@ object ModuleSdkKt {
     /**
      * <code>string jdk_version = 1;</code>
      */
-    var jdkVersion: kotlin.String
+    public var jdkVersion: kotlin.String
       @JvmName("getJdkVersion")
       get() = _builder.getJdkVersion()
       @JvmName("setJdkVersion")
@@ -35,21 +35,21 @@ object ModuleSdkKt {
     /**
      * <code>string jdk_version = 1;</code>
      */
-    fun clearJdkVersion() {
+    public fun clearJdkVersion() {
       _builder.clearJdkVersion()
     }
     /**
      * <code>string jdk_version = 1;</code>
      * @return Whether the jdkVersion field is set.
      */
-    fun hasJdkVersion(): kotlin.Boolean {
+    public fun hasJdkVersion(): kotlin.Boolean {
       return _builder.hasJdkVersion()
     }
 
     /**
      * <code>string ktjvm_sdk_version = 2;</code>
      */
-    var ktjvmSdkVersion: kotlin.String
+    public var ktjvmSdkVersion: kotlin.String
       @JvmName("getKtjvmSdkVersion")
       get() = _builder.getKtjvmSdkVersion()
       @JvmName("setKtjvmSdkVersion")
@@ -59,21 +59,21 @@ object ModuleSdkKt {
     /**
      * <code>string ktjvm_sdk_version = 2;</code>
      */
-    fun clearKtjvmSdkVersion() {
+    public fun clearKtjvmSdkVersion() {
       _builder.clearKtjvmSdkVersion()
     }
     /**
      * <code>string ktjvm_sdk_version = 2;</code>
      * @return Whether the ktjvmSdkVersion field is set.
      */
-    fun hasKtjvmSdkVersion(): kotlin.Boolean {
+    public fun hasKtjvmSdkVersion(): kotlin.Boolean {
       return _builder.hasKtjvmSdkVersion()
     }
 
     /**
      * <code>string scala_sdk_version = 3;</code>
      */
-    var scalaSdkVersion: kotlin.String
+    public var scalaSdkVersion: kotlin.String
       @JvmName("getScalaSdkVersion")
       get() = _builder.getScalaSdkVersion()
       @JvmName("setScalaSdkVersion")
@@ -83,26 +83,25 @@ object ModuleSdkKt {
     /**
      * <code>string scala_sdk_version = 3;</code>
      */
-    fun clearScalaSdkVersion() {
+    public fun clearScalaSdkVersion() {
       _builder.clearScalaSdkVersion()
     }
     /**
      * <code>string scala_sdk_version = 3;</code>
      * @return Whether the scalaSdkVersion field is set.
      */
-    fun hasScalaSdkVersion(): kotlin.Boolean {
+    public fun hasScalaSdkVersion(): kotlin.Boolean {
       return _builder.hasScalaSdkVersion()
     }
-    val sdkCase: com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk.SdkCase
+    public val sdkCase: com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk.SdkCase
       @JvmName("getSdkCase")
       get() = _builder.getSdkCase()
 
-    fun clearSdk() {
+    public fun clearSdk() {
       _builder.clearSdk()
     }
   }
 }
 @kotlin.jvm.JvmSynthetic
-inline fun com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk.copy(block: com.giyeok.bibix.intellij.ModuleSdkKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk =
+public inline fun com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk.copy(block: com.giyeok.bibix.intellij.ModuleSdkKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk =
   com.giyeok.bibix.intellij.ModuleSdkKt.Dsl._create(this.toBuilder()).apply { block() }._build()
-

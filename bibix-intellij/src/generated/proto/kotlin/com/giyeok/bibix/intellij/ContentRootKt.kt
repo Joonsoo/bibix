@@ -3,16 +3,16 @@
 
 package com.giyeok.bibix.intellij;
 
-@kotlin.jvm.JvmName("-initializecontentRoot")
-inline fun contentRoot(block: com.giyeok.bibix.intellij.ContentRootKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.intellij.BibixIntellijProto.ContentRoot =
+@kotlin.jvm.JvmSynthetic
+public inline fun contentRoot(block: com.giyeok.bibix.intellij.ContentRootKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.intellij.BibixIntellijProto.ContentRoot =
   com.giyeok.bibix.intellij.ContentRootKt.Dsl._create(com.giyeok.bibix.intellij.BibixIntellijProto.ContentRoot.newBuilder()).apply { block() }._build()
-object ContentRootKt {
+public object ContentRootKt {
   @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
   @com.google.protobuf.kotlin.ProtoDslMarker
-  class Dsl private constructor(
+  public class Dsl private constructor(
     private val _builder: com.giyeok.bibix.intellij.BibixIntellijProto.ContentRoot.Builder
   ) {
-    companion object {
+    public companion object {
       @kotlin.jvm.JvmSynthetic
       @kotlin.PublishedApi
       internal fun _create(builder: com.giyeok.bibix.intellij.BibixIntellijProto.ContentRoot.Builder): Dsl = Dsl(builder)
@@ -25,7 +25,7 @@ object ContentRootKt {
     /**
      * <code>string content_root_name = 1;</code>
      */
-    var contentRootName: kotlin.String
+    public var contentRootName: kotlin.String
       @JvmName("getContentRootName")
       get() = _builder.getContentRootName()
       @JvmName("setContentRootName")
@@ -35,14 +35,14 @@ object ContentRootKt {
     /**
      * <code>string content_root_name = 1;</code>
      */
-    fun clearContentRootName() {
+    public fun clearContentRootName() {
       _builder.clearContentRootName()
     }
 
     /**
      * <code>string content_root_type = 2;</code>
      */
-    var contentRootType: kotlin.String
+    public var contentRootType: kotlin.String
       @JvmName("getContentRootType")
       get() = _builder.getContentRootType()
       @JvmName("setContentRootType")
@@ -52,14 +52,14 @@ object ContentRootKt {
     /**
      * <code>string content_root_type = 2;</code>
      */
-    fun clearContentRootType() {
+    public fun clearContentRootType() {
       _builder.clearContentRootType()
     }
 
     /**
      * <code>string content_root_path = 3;</code>
      */
-    var contentRootPath: kotlin.String
+    public var contentRootPath: kotlin.String
       @JvmName("getContentRootPath")
       get() = _builder.getContentRootPath()
       @JvmName("setContentRootPath")
@@ -69,12 +69,11 @@ object ContentRootKt {
     /**
      * <code>string content_root_path = 3;</code>
      */
-    fun clearContentRootPath() {
+    public fun clearContentRootPath() {
       _builder.clearContentRootPath()
     }
   }
 }
 @kotlin.jvm.JvmSynthetic
-inline fun com.giyeok.bibix.intellij.BibixIntellijProto.ContentRoot.copy(block: com.giyeok.bibix.intellij.ContentRootKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.intellij.BibixIntellijProto.ContentRoot =
+public inline fun com.giyeok.bibix.intellij.BibixIntellijProto.ContentRoot.copy(block: com.giyeok.bibix.intellij.ContentRootKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.intellij.BibixIntellijProto.ContentRoot =
   com.giyeok.bibix.intellij.ContentRootKt.Dsl._create(this.toBuilder()).apply { block() }._build()
-
