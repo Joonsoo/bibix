@@ -299,7 +299,55 @@ class CallExprEvaluator(
       (paramValues + defaultParamValues).awaitAllValues() + noneParams.associateWith { NoneValue }
     }
 
-  private suspend fun handlePluginReturnValue(
+  private suspend fun getTypeDetails(
+    task: Task,
+    context: NameLookupContext,
+    typeNames: List<TypeName>,
+    relativeNames: List<String>
+  ): TypeDetailsMap {
+    fun convertEvaluationResult(result: EvaluationResult): TypeDetails? =
+      when (result) {
+        is EvaluationResult.DataClassDef -> {
+          val fields = result.params.map { it.toRuleParamValue() }
+          DataClassTypeDetails(result.packageName, result.className, fields)
+        }
+
+        is EvaluationResult.SuperClassDef ->
+          SuperClassTypeDetails(result.packageName, result.className, result.subClasses)
+
+        is EvaluationResult.EnumDef ->
+          EnumTypeDetails(result.packageName, result.enumName, result.enumValues)
+
+        else -> null
+      }
+
+    val types = typeNames.mapNotNull { typeName ->
+      val evalResult =
+        exprEvaluator.findTypeDefinition(task, typeName.packageName, typeName.typeName)
+      evalResult?.let { convertEvaluationResult(evalResult)?.let { typeName to it } }
+    }.toMap()
+    val relativeNamedTypes = relativeNames.mapNotNull { typeName ->
+      val typeNameTokens = typeName.split('.').map { it.trim() }
+      val evalResult = exprEvaluator.evaluateName(task, context, typeNameTokens, null, setOf())
+      convertEvaluationResult(evalResult)?.let { typeName to it }
+    }.toMap()
+    return TypeDetailsMap(types, relativeNamedTypes)
+  }
+
+  private suspend fun callBuildRuleFromPlugin(
+    task: Task,
+    context: NameLookupContext,
+    ruleName: String,
+    params: Map<String, BibixValue>,
+  ): BibixValue {
+    val name =
+      exprEvaluator.evaluateName(task, context, ruleName.split('.'), null, setOf())
+    check(name is BuildRuleDef) { "" }
+    val params = organizeParamsFromPlugin(task, context, name, params, null)
+    return callBuildRule(task, context, name, params, setOf()).value
+  }
+
+  private suspend fun handleBuildRuleReturnValue(
     task: Task,
     context: NameLookupContext,
     returnValue: Any,
@@ -318,48 +366,20 @@ class CallExprEvaluator(
         throw IllegalStateException("Done is not allowed for build rule")
 
       is BuildRuleReturn.EvalAndThen -> {
-        val name =
-          exprEvaluator.evaluateName(task, context, returnValue.ruleName.split('.'), null, setOf())
-        check(name is BuildRuleDef) { "" }
-        val params = organizeParamsFromPlugin(task, context, name, returnValue.params, null)
-        val result = callBuildRule(task, context, name, params, setOf()).value
-        return handlePluginReturnValue(task, context, returnValue.whenDone(result))
+        val result =
+          callBuildRuleFromPlugin(task, context, returnValue.ruleName, returnValue.params)
+        return handleBuildRuleReturnValue(task, context, returnValue.whenDone(result))
       }
 
       is BuildRuleReturn.GetTypeDetails -> {
-        fun convertEvaluationResult(result: EvaluationResult): TypeDetails? =
-          when (result) {
-            is EvaluationResult.DataClassDef -> {
-              val fields = result.params.map { it.toRuleParamValue() }
-              DataClassTypeDetails(result.packageName, result.className, fields)
-            }
-
-            is EvaluationResult.SuperClassDef ->
-              SuperClassTypeDetails(result.packageName, result.className, result.subClasses)
-
-            is EvaluationResult.EnumDef ->
-              EnumTypeDetails(result.packageName, result.enumName, result.enumValues)
-
-            else -> null
-          }
-
-        val types = returnValue.typeNames.mapNotNull { typeName ->
-          val evalResult =
-            exprEvaluator.findTypeDefinition(task, typeName.packageName, typeName.typeName)
-          evalResult?.let { convertEvaluationResult(evalResult)?.let { typeName to it } }
-        }.toMap()
-        val relativeNamedTypes = returnValue.relativeNames.mapNotNull { typeName ->
-          val typeNameTokens = typeName.split('.').map { it.trim() }
-          val evalResult = exprEvaluator.evaluateName(task, context, typeNameTokens, null, setOf())
-          convertEvaluationResult(evalResult)?.let { typeName to it }
-        }.toMap()
-        val typeDetailsMap = TypeDetailsMap(types, relativeNamedTypes)
-        return handlePluginReturnValue(task, context, returnValue.whenDone(typeDetailsMap))
+        val typeDetailsMap =
+          getTypeDetails(task, context, returnValue.typeNames, returnValue.relativeNames)
+        return handleBuildRuleReturnValue(task, context, returnValue.whenDone(typeDetailsMap))
       }
 
       is BuildRuleReturn.WithDirectoryLock -> {
         val nextValue = directoryLocker.withLock(returnValue.directory, returnValue.withLock)
-        return handlePluginReturnValue(task, context, nextValue)
+        return handleBuildRuleReturnValue(task, context, nextValue)
       }
 
       else -> throw IllegalStateException("Unknown return value: $returnValue")
@@ -526,7 +546,7 @@ class CallExprEvaluator(
       }
       progressIndicator.logInfo("Continuing from ${buildRule.context}...")
 
-      val finalValue = handlePluginReturnValue(task, buildRule.context, returnValue)
+      val finalValue = handleBuildRuleReturnValue(task, buildRule.context, returnValue)
 
       exprEvaluator.coerce(task, buildRule.context, finalValue, buildRule.returnType)
     }
@@ -592,6 +612,43 @@ class CallExprEvaluator(
       }
     }
 
+  private suspend fun handleActionReturnValue(
+    task: Task,
+    context: NameLookupContext,
+    returnValue: Any,
+  ) {
+    when (returnValue) {
+      is BibixValue, is BuildRuleReturn.ValueReturn ->
+        throw IllegalStateException("Value return is not allowed for action rule")
+
+      is BuildRuleReturn.FailedReturn ->
+        throw returnValue.exception
+
+      is BuildRuleReturn.DoneReturn -> {
+        // Do nothing
+      }
+
+      is BuildRuleReturn.EvalAndThen -> {
+        val result =
+          callBuildRuleFromPlugin(task, context, returnValue.ruleName, returnValue.params)
+        handleActionReturnValue(task, context, returnValue.whenDone(result))
+      }
+
+      is BuildRuleReturn.GetTypeDetails -> {
+        val typeDetailsMap =
+          getTypeDetails(task, context, returnValue.typeNames, returnValue.relativeNames)
+        handleActionReturnValue(task, context, returnValue.whenDone(typeDetailsMap))
+      }
+
+      is BuildRuleReturn.WithDirectoryLock -> {
+        val nextValue = directoryLocker.withLock(returnValue.directory, returnValue.withLock)
+        handleActionReturnValue(task, context, nextValue)
+      }
+
+      else -> throw IllegalStateException("Unknown return value: $returnValue")
+    }
+  }
+
   suspend fun executeActionCallExpr(
     requester: Task,
     context: NameLookupContext,
@@ -615,11 +672,22 @@ class CallExprEvaluator(
     val actionContext = ActionContext(interpreter.buildEnv, params, progressIndicator)
 
     progressIndicator.logInfo("Calling ${callTarget.context}...")
-    try {
-      method.invoke(pluginInstance, actionContext)
-    } catch (e: Exception) {
-      throw IllegalStateException("Error from the plugin", e)
+
+    if (method.returnType == Void::class.java) {
+      try {
+        method.invoke(pluginInstance, actionContext)
+      } catch (e: Exception) {
+        throw IllegalStateException("Error from the plugin", e)
+      }
+    } else {
+      val returnValue = try {
+        method.invoke(pluginInstance, actionContext)
+      } catch (e: Exception) {
+        throw IllegalStateException("Error from the plugin", e)
+      }
+      handleActionReturnValue(task, callTarget.context, returnValue)
     }
+
     progressIndicator.logInfo("Continuing from ${callTarget.context}...")
   }
 }

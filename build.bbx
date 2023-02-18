@@ -59,7 +59,7 @@ ast0 = scala.library(
 
 ast0Jar = jvm.jar(deps=[ast0], jarFileName="bibix-ast-0.0.3.jar")
 
-namespace proto {
+proto {
   schema = protobuf.schema(
     srcs = [
       "bibix-core/src/main/protobuf/ids.proto",

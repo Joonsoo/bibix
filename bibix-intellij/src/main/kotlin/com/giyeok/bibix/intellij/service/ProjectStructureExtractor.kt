@@ -329,7 +329,7 @@ object ProjectStructureExtractor {
       val library = Artifact.resolveArtifact(
         buildFrontend.repo.prepareSharedDirectory(Artifact.sharedRepoName),
         groupId = "org.scala-lang",
-        artifactId = "scala-reflect",
+        artifactId = "scala-library",
         extension = "jar",
         version = scalaVersion,
         scope = "compile",
