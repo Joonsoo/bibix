@@ -39,9 +39,9 @@ class ModuleStructAnalysisTests {
     println(ktjvmModulesCollector.modules)
     println(ktjvmModulesCollector)
 
-    val test1Hash = "7fe5b2a27ad785f7acf3fb6b6187fc87fea12b68"
-    val test2Hash = "4f3cd0f105adf3a8c8e56122b0fdc4794254cd94"
-    val unnamedHash = "fff68e8ca3236754a8bb766097be0a4ae711257b"
+    val test1Hash = "6fc4cbc1888d29fbd07702bbcfcabff3272cbd40"
+    val test2Hash = "999e8279e9d5b7292876e677cbf00e82022fba09"
+    val unnamedHash = "79ddffbbe76151febe15febde8c6c66cd7661fd4"
     assertThat(frontend.repo.repoMeta.objectNamesMap).containsExactly(
       "test1", test1Hash,
       "test2", test2Hash,

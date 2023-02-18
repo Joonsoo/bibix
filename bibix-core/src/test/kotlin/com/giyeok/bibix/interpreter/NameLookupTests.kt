@@ -18,9 +18,9 @@ class NameLookupTests {
       
       xyz = abc
       
-      namespace qwe {
+      qwe {
         rty = xyz
-        namespace uio {
+        uio {
           zxc = "world!"
         }
       }

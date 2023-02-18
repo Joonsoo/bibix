@@ -673,7 +673,7 @@ class CallExprEvaluator(
 
     progressIndicator.logInfo("Calling ${callTarget.context}...")
 
-    if (method.returnType == Void::class.java) {
+    if (method.returnType == Void.TYPE) {
       try {
         method.invoke(pluginInstance, actionContext)
       } catch (e: Exception) {

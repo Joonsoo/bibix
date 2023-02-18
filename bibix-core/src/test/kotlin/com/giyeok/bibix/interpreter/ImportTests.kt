@@ -60,7 +60,7 @@ class ImportTests {
         
         planet = "earth"
         
-        namespace satellite {
+        satellite {
           moon = "moon"
         }
       """.trimIndent(),
@@ -146,7 +146,7 @@ class ImportTests {
       import "subproject2" as yyy
       planet = "earth!"
       
-      namespace qqq {
+      qqq {
         universe = "huge"
         ccc = yyy.earth
       }
@@ -214,7 +214,7 @@ class ImportTests {
     val fs = Jimfs.newFileSystem()
 
     val script = """
-      namespace aaa {
+      aaa {
         import xyz
         abc = xyz.hello
       }

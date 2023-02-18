@@ -98,6 +98,18 @@ class ActionTests {
       )
     ).inOrder()
   }
+
+  @Test
+  fun testReturn(): Unit = runBlocking {
+    // TODO action impl이 BuildRuleReturn을 반환하는 경우 테스트
+    TODO()
+  }
+
+  @Test
+  fun testMultiCall(): Unit = runBlocking {
+    // TODO multi call action 테스트
+    TODO()
+  }
 }
 
 class ActionTestPlugin1 {
