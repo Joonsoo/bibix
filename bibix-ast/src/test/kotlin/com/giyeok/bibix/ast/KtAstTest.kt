@@ -8,13 +8,19 @@ class KtAstTest {
     val code = "str = \"hello \$fgh\""
     val result = `BibixAst0$`.`MODULE$`.parse(code)
     println(result.left().get().trees().size())
-    val parsed = BibixAst.parseAst(code)
+    val parsed = BibixAst.parse(code)
+    println(parsed)
+  }
+
+  fun test3() {
+    val code = "a = this"
+    val parsed = BibixAst.parse(code)
     println(parsed)
   }
 
   @Test
   fun test() {
-    val parsed = BibixAst.parseAst(
+    val parsed = BibixAst.parse(
       """
       class ClassPaths(cps: set<path>)
 

@@ -1,41 +1,35 @@
 package com.giyeok.bibix.ast
 
 import com.giyeok.jparser.Inputs
-import com.giyeok.jparser.ParsingErrors.ParsingError
 import com.giyeok.jparser.ktlib.*
-import com.giyeok.jparser.milestone.MilestoneParser
-import com.giyeok.jparser.milestone.`MilestoneParser$`
-import com.giyeok.jparser.proto.MilestoneParserDataProto
-import com.giyeok.jparser.proto.MilestoneParserProtobufConverter
-
-fun <T> scala.collection.immutable.List<T>.toKtList(): List<T> =
-  List<T>(this.size()) { idx -> this.apply(idx) }
+import com.giyeok.jparser.milestone2.MilestoneParser
+import com.giyeok.jparser.proto.`MilestoneParser2ProtobufConverter$`
+import com.giyeok.jparser.proto.MilestoneParserDataProto.Milestone2ParserData
 
 class BibixAst(
   val inputs: List<Inputs.Input>,
   val history: List<KernelSet>,
   val idIssuer: IdIssuer = IdIssuerImpl(0)
 ) {
-  data class ParsingException(val parsingError: ParsingError) :
-    Exception("Parsing failed: $parsingError")
-
   companion object {
-    val milestoneParserData = MilestoneParserProtobufConverter.convertProtoToMilestoneParserData(
-      MilestoneParserDataProto.MilestoneParserData.parseFrom(this::class.java.getResourceAsStream("/parserdata.pb"))
+    fun <T> scala.collection.immutable.List<T>.toKtList(): List<T> =
+      List<T>(this.size()) { idx -> this.apply(idx) }
+
+    fun <T> scala.collection.immutable.Set<T>.toKtSet(): Set<T> =
+      this.toList().toKtList().toSet()
+
+    val parser = MilestoneParser(
+      `MilestoneParser2ProtobufConverter$`.`MODULE$`.fromProto(
+        Milestone2ParserData.parseFrom(this::class.java.getResourceAsStream("/bibix2-parserdata.pb"))
+      )
     )
 
-    val milestoneParser = MilestoneParser(milestoneParserData, false)
-
-    fun parseAst(source: String): BuildScript {
+    fun parse(source: String): BuildScript {
       val inputs = Inputs.fromString(source)
-
-      val result = milestoneParser.parse(inputs)
-      if (result.isRight) {
-        throw ParsingException(result.right().get())
+      val finalContext = parser.parseOrThrow(inputs)
+      val history = parser.kernelsHistory(finalContext).toKtList().map {
+        KernelSet(it.toKtSet())
       }
-      val finalCtx = result.left().get()
-      val history = `MilestoneParser$`.`MODULE$`.getKernelsHistory(milestoneParserData, finalCtx)
-        .toKtList().map { KernelSet(it.toKtList().toSet()) }
       return BibixAst(inputs.toKtList(), history).matchStart()
     }
   }
@@ -437,9 +431,9 @@ class BibixAst(
 
   fun matchStart(): BuildScript {
     val lastGen = inputs.size
-    val kernel = history[lastGen].filter {
-      it.symbolId() == 2 && it.pointer() == 1 && it.endGen() == lastGen
-    }.checkSingle()
+    val kernel = history[lastGen]
+      .filter { it.symbolId() == 2 && it.pointer() == 1 && it.endGen() == lastGen }
+      .checkSingle()
     return matchBuildScript(kernel.beginGen(), kernel.endGen())
   }
 
@@ -806,7 +800,7 @@ class BibixAst(
       }
     }
     val var129 = var133
-    return var129 ?: listOf()
+    return (var129 ?: listOf())
   }
 
   fun matchTypeParams(beginGen: Int, endGen: Int): TypeParams {
@@ -939,7 +933,7 @@ class BibixAst(
       }
     }
     val var189 = var192
-    val var195 = DataClassDef(var187, var188, var189 ?: listOf(), nextId(), beginGen, endGen)
+    val var195 = DataClassDef(var187, var188, (var189 ?: listOf()), nextId(), beginGen, endGen)
     return var195
   }
 
@@ -1142,7 +1136,7 @@ class BibixAst(
           }
         }
         val var263 = var267
-        val var273 = ListExpr(var263 ?: listOf(), nextId(), beginGen, endGen)
+        val var273 = ListExpr((var263 ?: listOf()), nextId(), beginGen, endGen)
         var273
       }
 
@@ -1222,7 +1216,7 @@ class BibixAst(
           }
         }
         val var286 = var290
-        val var296 = NamedTupleExpr(var286 ?: listOf(), nextId(), beginGen, endGen)
+        val var296 = NamedTupleExpr((var286 ?: listOf()), nextId(), beginGen, endGen)
         var296
       }
 

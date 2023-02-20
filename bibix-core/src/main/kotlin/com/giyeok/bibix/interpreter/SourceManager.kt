@@ -6,13 +6,12 @@ import com.giyeok.bibix.interpreter.expr.NameLookupContext
 import com.giyeok.bibix.interpreter.expr.NameLookupTable
 import com.giyeok.bibix.plugins.PluginInstanceProvider
 import com.giyeok.bibix.plugins.PreloadedPlugin
-import com.giyeok.bibix.utils.toKtList
+import com.giyeok.jparser.ParsingErrors
 import com.google.common.annotations.VisibleForTesting
 import com.google.common.collect.BiMap
 import com.google.common.collect.HashBiMap
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
-import java.lang.IllegalArgumentException
 import java.nio.file.Path
 import kotlin.io.path.readText
 
@@ -34,8 +33,8 @@ class SourceManager {
     val scriptPath = project.projectRoot.resolve(project.scriptName ?: "build.bbx")
 
     return try {
-      BibixAst.parseAst(scriptPath.readText())
-    } catch (e: BibixAst.ParsingException) {
+      BibixAst.parse(scriptPath.readText())
+    } catch (e: ParsingErrors.ParsingError) {
       throw IllegalStateException("Failed to parse script: $project (${e.message})", e)
     }
   }

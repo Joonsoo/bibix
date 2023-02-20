@@ -38,12 +38,19 @@ sourceSets {
 }
 
 dependencies {
-    implementation group: 'com.giyeok.jparser', name: 'jparser-base', version: jparserVersion
+    // implementation group: 'com.giyeok.jparser', name: 'jparser-base', version: jparserVersion
     // implementation group: 'com.giyeok.jparser', name: 'jparser-fast', version: jparserVersion
-    implementation files("../lib/jparser-naive-0.2.5.jar")
-    implementation files("../lib/jparser-fast-0.2.5.jar")
-    implementation files("../lib/jparser-fast-proto-0.2.5.jar")
-    implementation files("../lib/jparser-utils-0.2.5.jar")
+    implementation files("../lib/jparser-base-0.3.1.jar")
+    implementation files("../lib/jparser-base-proto-0.3.1.jar")
+    implementation files("../lib/jparser-naive-0.3.1.jar")
+    implementation files("../lib/jparser-fast-0.3.1.jar")
+    implementation files("../lib/jparser-fast-proto-0.3.1.jar")
+    implementation files("../lib/jparser-utils-0.3.1.jar")
+    implementation files("../lib/jparser-ktlib-0.3.1.jar")
+
+    implementation "com.google.protobuf:protobuf-java-util:3.22.0"
+    implementation "com.google.protobuf:protobuf-java:3.22.0"
+    implementation 'com.google.protobuf:protobuf-kotlin:3.22.0'
 
     implementation group: 'org.scala-lang', name: 'scala-library', version: '2.13.10'
 

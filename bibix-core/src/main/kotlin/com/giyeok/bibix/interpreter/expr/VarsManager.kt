@@ -4,7 +4,6 @@ import com.giyeok.bibix.ast.BibixAst
 import com.giyeok.bibix.base.CName
 import com.giyeok.bibix.interpreter.BibixInterpreter
 import com.giyeok.bibix.interpreter.task.Task
-import com.giyeok.bibix.utils.toKtList
 
 class VarsManager(private val interpreter: BibixInterpreter) {
   companion object {
