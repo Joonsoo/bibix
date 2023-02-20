@@ -343,13 +343,13 @@ class Coercer(
               is BibixAst.ActionRuleDef -> {}
               is BibixAst.ClassCastDef -> {
                 val castType =
-                  exprEvaluator.evaluateType(task, classDef.context, bodyElem.castTo())
+                  exprEvaluator.evaluateType(task, classDef.context, bodyElem.castTo)
                 if (isSubType(task, type, castType)) {
                   val cast =
                     exprEvaluator.evaluateExpr(
                       task,
                       classDef.context,
-                      bodyElem.expr(),
+                      bodyElem.expr,
                       value,
                       setOf()
                     ).ensureValue()

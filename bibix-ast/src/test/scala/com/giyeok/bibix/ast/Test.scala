@@ -4,8 +4,13 @@ import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
 
 class Test extends AnyFlatSpec with should.Matchers {
+  "Parser" should "work" in {
+    val x = BibixAst0.parse("str = \"hello $fgh\"")
+    println(x)
+  }
+
   "Parser" should "parse" in {
-    val x = BibixAst.parseAst(
+    val x = BibixAst0.parseAst(
       """class ClassPaths(cps: set<path>)
         |
         |class ClassPkg(origin: ClassOrigin, cpinfo: CpInfo, deps: set<ClassPkg>) {

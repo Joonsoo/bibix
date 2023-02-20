@@ -4,8 +4,6 @@ import com.giyeok.bibix.ast.BibixAst
 import com.giyeok.bibix.base.CName
 import com.giyeok.bibix.base.PreludeSourceId
 import com.giyeok.bibix.base.SourceId
-import com.giyeok.bibix.utils.getOrNull
-import com.giyeok.bibix.utils.toKtList
 import com.google.common.annotations.VisibleForTesting
 
 class NameLookupTable(private val varsManager: VarsManager) {
@@ -33,59 +31,59 @@ class NameLookupTable(private val varsManager: VarsManager) {
           }
 
           is BibixAst.NamespaceDef -> {
-            check(def.body().packageName().isEmpty) { "namespace cannot have package name" }
-            val cname = CName(context.sourceId, scope + def.name())
+            check(def.body.packageName == null) { "namespace cannot have package name" }
+            val cname = CName(context.sourceId, scope + def.name)
             addDefinition(cname, Definition.NamespaceDef(cname))
-            traverse(scope + def.name(), def.body().defs().toKtList())
+            traverse(scope + def.name, def.body.defs)
           }
 
           is BibixAst.TargetDef -> {
-            val cname = CName(context.sourceId, scope + def.name())
+            val cname = CName(context.sourceId, scope + def.name)
             addDefinition(cname, Definition.TargetDef(cname, def))
           }
 
           is BibixAst.ActionDef -> {
-            val cname = CName(context.sourceId, scope + def.name())
+            val cname = CName(context.sourceId, scope + def.name)
             addDefinition(cname, Definition.ActionDef(cname, def))
           }
 
           is BibixAst.DataClassDef -> {
-            val cname = CName(context.sourceId, scope + def.name())
+            val cname = CName(context.sourceId, scope + def.name)
             addDefinition(cname, Definition.ClassDef(cname, def))
           }
 
           is BibixAst.SuperClassDef -> {
-            val cname = CName(context.sourceId, scope + def.name())
+            val cname = CName(context.sourceId, scope + def.name)
             addDefinition(cname, Definition.ClassDef(cname, def))
           }
 
           is BibixAst.EnumDef -> {
-            val cname = CName(context.sourceId, scope + def.name())
+            val cname = CName(context.sourceId, scope + def.name)
             addDefinition(cname, Definition.EnumDef(cname, def))
           }
 
           is BibixAst.VarDef -> {
             check(scope.isEmpty()) { "var must be in the root scope of the script" }
-            val cname = CName(context.sourceId, def.name())
+            val cname = CName(context.sourceId, def.name)
             val varContext = NameLookupContext(context.sourceId, scope)
             varsManager.addVarDef(cname, varContext, def)
             addDefinition(cname, Definition.VarDef(cname, def))
           }
 
           is BibixAst.VarRedefs -> {
-            def.redefs().toKtList().forEach { redef ->
+            def.redefs.forEach { redef ->
               val redefContext = NameLookupContext(context.sourceId, scope)
               varsManager.addVarRedef(redefContext, redef)
             }
           }
 
           is BibixAst.BuildRuleDef -> {
-            val cname = CName(context.sourceId, scope + def.name())
+            val cname = CName(context.sourceId, scope + def.name)
             addDefinition(cname, Definition.BuildRule(cname, def))
           }
 
           is BibixAst.ActionRuleDef -> {
-            val cname = CName(context.sourceId, scope + def.name())
+            val cname = CName(context.sourceId, scope + def.name)
             addDefinition(cname, Definition.ActionRule(cname, def))
           }
 
@@ -195,17 +193,16 @@ sealed class ImportedSource {
 
 fun BibixAst.ImportDef.scopeName(): String = when (this) {
   is BibixAst.ImportAll -> {
-    val defaultName = when (val importSource = this.source()) {
-      is BibixAst.NameRef -> importSource.name()
-      is BibixAst.MemberAccess -> importSource.name()
+    val defaultName = when (val importSource = this.source) {
+      is BibixAst.NameRef -> importSource.name
+      is BibixAst.MemberAccess -> importSource.name
       else -> null
     }
-    (this.rename().getOrNull() ?: defaultName)
+    (this.rename ?: defaultName)
       ?: throw IllegalStateException("Cannot infer the default name for import $this")
   }
 
-  is BibixAst.ImportFrom ->
-    this.rename().getOrNull() ?: this.importing().tokens().last()
+  is BibixAst.ImportFrom -> this.rename ?: this.importing.tokens.last()
 
   else -> throw AssertionError()
 }

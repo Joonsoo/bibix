@@ -11,8 +11,6 @@ import com.giyeok.bibix.interpreter.expr.EvaluationResult.RuleDef.BuildRuleDef
 import com.giyeok.bibix.interpreter.task.Task
 import com.giyeok.bibix.interpreter.task.TaskRelGraph
 import com.giyeok.bibix.repo.*
-import com.giyeok.bibix.utils.getOrNull
-import com.giyeok.bibix.utils.toKtList
 import com.giyeok.bibix.utils.toProto
 import com.google.protobuf.empty
 import kotlinx.coroutines.Deferred
@@ -33,12 +31,12 @@ class CallExprEvaluator(
     params: List<BibixAst.ParamDef>
   ): List<EvaluationResult.Param> =
     params.map { param ->
-      check(param.typ().isDefined) { "$param type not set" }
+      checkNotNull(param.typ) { "$param type not set" }
       EvaluationResult.Param(
-        param.name(),
-        param.optional(),
-        exprEvaluator.evaluateType(task, context, param.typ().get()),
-        param.defaultValue().getOrNull()
+        param.name,
+        param.optional,
+        exprEvaluator.evaluateType(task, context, param.typ!!),
+        param.defaultValue
       )
     }
 
@@ -62,14 +60,14 @@ class CallExprEvaluator(
     val className = definition.cname.tokens.joinToString(".")
     return when (definition.classDef) {
       is BibixAst.DataClassDef -> {
-        val fields = paramDefs(task, context, definition.classDef.fields().toKtList())
+        val fields = paramDefs(task, context, definition.classDef.fields)
         // TODO handle definition.classDef.body()
-        val bodyElems = definition.classDef.body().toKtList()
+        val bodyElems = definition.classDef.body
         EvaluationResult.DataClassDef(context, packageName, className, fields, bodyElems)
       }
 
       is BibixAst.SuperClassDef -> {
-        val subTypes = definition.classDef.subs().toKtList()
+        val subTypes = definition.classDef.subs
         EvaluationResult.SuperClassDef(context, packageName, className, subTypes)
       }
 
@@ -87,12 +85,12 @@ class CallExprEvaluator(
     val defName = definition.cname
     val defCtx = NameLookupContext(defName).dropLastToken()
 
-    val params = paramDefs(task, defCtx, buildRule.params().toKtList())
-    val returnType = exprEvaluator.evaluateType(task, defCtx, buildRule.returnType())
+    val params = paramDefs(task, defCtx, buildRule.params)
+    val returnType = exprEvaluator.evaluateType(task, defCtx, buildRule.returnType)
 
-    val implTarget = buildRule.impl().targetName().tokens().toKtList()
-    val clsName = buildRule.impl().className().tokens().mkString(".")
-    val methodName = buildRule.impl().methodName().getOrNull() ?: "build"
+    val implTarget = buildRule.impl.targetName.tokens
+    val clsName = buildRule.impl.className.tokens.joinToString(".")
+    val methodName = buildRule.impl.methodName ?: "build"
 
     if (defName.sourceId is PreloadedSourceId && implTarget == listOf("native")) {
       val implInstance =
@@ -140,11 +138,11 @@ class CallExprEvaluator(
 
     val defContext = NameLookupContext(defName).dropLastToken()
 
-    val params = paramDefs(task, defContext, actionRule.params().toKtList())
+    val params = paramDefs(task, defContext, actionRule.params)
 
-    val implTarget = actionRule.impl().targetName().tokens().toKtList()
-    val clsName = actionRule.impl().className().tokens().mkString(".")
-    val methodName = actionRule.impl().methodName().getOrNull() ?: "run"
+    val implTarget = actionRule.impl.targetName.tokens
+    val clsName = actionRule.impl.className.tokens.joinToString(".")
+    val methodName = actionRule.impl.methodName ?: "run"
 
     if (defName.sourceId is PreloadedSourceId && implTarget == listOf("native")) {
       val implInstance =
@@ -190,12 +188,12 @@ class CallExprEvaluator(
     thisValue: BibixValue?,
     directBindings: Map<String, BibixValue> = mapOf(),
   ): Map<String, BibixValue> =
-    g.withTask(requester, Task.EvalExpr(context.sourceId, params.id(), thisValue)) { task ->
+    g.withTask(requester, Task.EvalExpr(context.sourceId, params.nodeId, thisValue)) { task ->
       val paramDefs = callable.params
       val paramDefsMap = callable.params.associateBy { it.name }
 
-      val posParams = params.posParams().toKtList()
-      val namedParams = params.namedParams().toKtList().associate { it.name() to it.value() }
+      val posParams = params.posParams
+      val namedParams = params.namedParams.associate { it.name to it.value }
 
       val posParamsMap = paramDefs.zip(posParams).associate { it.first.name to it.second }
       check(posParams.size <= paramDefs.size) { "Unknown positional parameters" }
@@ -567,18 +565,18 @@ class CallExprEvaluator(
     thisValue: BibixValue?,
     outputNames: Set<CName>,
   ): BibixValueWithObjectHash =
-    g.withTask(requester, Task.EvalCallExpr(context.sourceId, expr.id(), thisValue)) { task ->
+    g.withTask(requester, Task.EvalCallExpr(context.sourceId, expr.nodeId, thisValue)) { task ->
       when (val callTarget =
-        exprEvaluator.evaluateName(task, context, expr.name(), null, outputNames)) {
+        exprEvaluator.evaluateName(task, context, expr.name, null, outputNames)) {
         is BuildRuleDef -> {
           val params =
-            organizeParams(task, context, callTarget, expr.params(), thisValue)
+            organizeParams(task, context, callTarget, expr.params, thisValue)
           callBuildRule(task, context, callTarget, params, outputNames)
         }
 
         is EvaluationResult.DataClassDef -> {
           val params =
-            organizeParams(task, context, callTarget, expr.params(), thisValue)
+            organizeParams(task, context, callTarget, expr.params, thisValue)
           val value = ClassInstanceValue(callTarget.packageName, callTarget.className, params)
           BibixValueWithObjectHash(value, null)
         }
@@ -654,15 +652,15 @@ class CallExprEvaluator(
     context: NameLookupContext,
     expr: BibixAst.CallExpr,
     args: Pair<String, List<String>>?
-  ): Unit = g.withTask(requester, Task.ExecuteActionCall(context.sourceId, expr.id())) { task ->
+  ): Unit = g.withTask(requester, Task.ExecuteActionCall(context.sourceId, expr.nodeId)) { task ->
     // TODO handle actionArgs
-    val callTarget = exprEvaluator.evaluateName(task, context, expr.name(), null, setOf())
+    val callTarget = exprEvaluator.evaluateName(task, context, expr.name, null, setOf())
 
     check(callTarget is ActionRuleDef) { "TODO message" }
 
     val directBindings =
       if (args == null) mapOf() else mapOf(args.first to ListValue(args.second.map { StringValue(it) }))
-    val params = organizeParams(task, context, callTarget, expr.params(), null, directBindings)
+    val params = organizeParams(task, context, callTarget, expr.params, null, directBindings)
 
     val pluginInstance = getActionImplInstance(context.sourceId, task, callTarget)
     val method =

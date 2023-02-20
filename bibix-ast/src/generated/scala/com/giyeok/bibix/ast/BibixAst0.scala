@@ -1,13 +1,13 @@
 package com.giyeok.bibix.ast
 
-import com.giyeok.bibix.ast.BibixAst._
+import com.giyeok.bibix.ast.BibixAst0._
 import com.giyeok.jparser.ParseResultTree._
 import com.giyeok.jparser.{Inputs, ParseForest, ParsingErrors}
 import com.giyeok.jparser.milestone.MilestoneParser
 import com.giyeok.jparser.nparser.ParseTreeUtil.{unrollRepeat0, unrollRepeat1}
 import com.giyeok.jparser.proto.{MilestoneParserDataProto, MilestoneParserProtobufConverter}
 
-object BibixAst {
+object BibixAst0 {
 
   sealed trait WithIdAndParseNode {
     val id: Int;
@@ -149,14 +149,14 @@ object BibixAst {
 
   def parseAst(text: String): Either[BuildScript, ParsingErrors.ParsingError] =
     parse(text) match {
-      case Left(forest) => Left(new BibixAst().matchStart(forest.trees.head))
+      case Left(forest) => Left(new BibixAst0().matchStart(forest.trees.head))
       case Right(error) => Right(error)
     }
 
 
 }
 
-class BibixAst {
+class BibixAst0 {
   private var idCounter = 0
 
   def nextId(): Int = {

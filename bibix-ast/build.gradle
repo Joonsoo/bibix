@@ -6,6 +6,7 @@ buildscript {
 
 plugins {
     id 'scala'
+    id 'org.jetbrains.kotlin.jvm'
 }
 
 group 'com.giyeok.bibix'
@@ -24,6 +25,9 @@ repositories {
 
 sourceSets {
     main {
+        kotlin {
+            srcDir 'src/generated/kotlin'
+        }
         scala {
             srcDir 'src/generated/scala'
         }
@@ -35,10 +39,37 @@ sourceSets {
 
 dependencies {
     implementation group: 'com.giyeok.jparser', name: 'jparser-base', version: jparserVersion
-    implementation group: 'com.giyeok.jparser', name: 'jparser-fast', version: jparserVersion
+    // implementation group: 'com.giyeok.jparser', name: 'jparser-fast', version: jparserVersion
+    implementation files("../lib/jparser-naive-0.2.5.jar")
+    implementation files("../lib/jparser-fast-0.2.5.jar")
+    implementation files("../lib/jparser-fast-proto-0.2.5.jar")
+    implementation files("../lib/jparser-utils-0.2.5.jar")
 
     implementation group: 'org.scala-lang', name: 'scala-library', version: '2.13.10'
 
     // https://mvnrepository.com/artifact/org.scalatest/scalatest
     testImplementation group: 'org.scalatest', name: 'scalatest_2.13', version: '3.2.14'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
+}
+
+compileKotlin {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}
+compileTestKotlin {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}
+
+test {
+    useJUnitPlatform()
+}
+
+jar {
+    duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
 }

@@ -2,7 +2,6 @@ package com.giyeok.bibix.interpreter.expr
 
 import com.giyeok.bibix.ast.BibixAst
 import com.giyeok.bibix.base.CName
-import com.giyeok.bibix.utils.toKtList
 
 class VarsManager {
   companion object {
@@ -28,7 +27,7 @@ class VarsManager {
   fun redefines(lookupTable: NameLookupTable, cname: CName): List<VarRedef> {
     // TODO 모든 redef를 뒤지지 않는 방법이 없을까?
     return varRedefs.filter { redef ->
-      val lookup = lookupTable.lookup(redef.redefContext, redef.def.nameTokens().toKtList())
+      val lookup = lookupTable.lookup(redef.redefContext, redef.def.nameTokens)
       lookup is LookupResult.DefinitionFound && lookup.definition.cname == cname
     }
   }
