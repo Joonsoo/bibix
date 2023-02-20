@@ -1,5 +1,6 @@
 package com.giyeok.bibix.interpreter.expr
 
+import com.giyeok.bibix.base.ListValue
 import com.giyeok.bibix.base.StringValue
 import com.giyeok.bibix.interpreter.testInterpreter
 import com.giyeok.bibix.plugins.PluginInstanceProvider
@@ -54,6 +55,34 @@ class VarTests {
     val interpreter = testInterpreter(fs, "/", mapOf("xyz" to xyz))
 
     assertThat(interpreter.userBuildRequest("msg")).isEqualTo(StringValue("new value"))
+  }
+
+  @Test
+  fun testMultiRedef(): Unit = runBlocking {
+    val fs = Jimfs.newFileSystem()
+
+    val script = """
+      import xyz
+      
+      var xyz.message = "new value", xyz.msg2 = "another new value"
+      
+      msg = [xyz.message, xyz.msg2]
+    """.trimIndent()
+    fs.getPath("/build.bbx").writeText(script)
+
+    val xyz = PreloadedPlugin.fromScript(
+      "abc.xyz",
+      """
+        var message = "old value"
+        var msg2 = "another old value"
+      """.trimIndent(),
+      PluginInstanceProvider()
+    )
+
+    val interpreter = testInterpreter(fs, "/", mapOf("xyz" to xyz))
+
+    assertThat(interpreter.userBuildRequest("msg"))
+      .isEqualTo(ListValue(StringValue("new value"), StringValue("another new value")))
   }
 
   @Test

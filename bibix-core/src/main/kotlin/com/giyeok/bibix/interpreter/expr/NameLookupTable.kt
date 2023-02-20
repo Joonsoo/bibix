@@ -72,9 +72,11 @@ class NameLookupTable(private val varsManager: VarsManager) {
             addDefinition(cname, Definition.VarDef(cname, def))
           }
 
-          is BibixAst.VarRedef -> {
-            val redefContext = NameLookupContext(context.sourceId, scope)
-            varsManager.addVarRedef(redefContext, def)
+          is BibixAst.VarRedefs -> {
+            def.redefs().toKtList().forEach { redef ->
+              val redefContext = NameLookupContext(context.sourceId, scope)
+              varsManager.addVarRedef(redefContext, redef)
+            }
           }
 
           is BibixAst.BuildRuleDef -> {

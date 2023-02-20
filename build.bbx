@@ -16,10 +16,14 @@ jparserlib = jvm.lib("lib/jparser-base-0.2.3.jar")
 jparserVersion = "0.5"
 
 var kotlinVersion: string = "1.8.0"
-var jvmVersion: string = "20"
 var ktjvm.kotlinVersion = kotlinVersion
-var ktjvm.outputJvmVersion = jvmVersion
-var java.outputJvmVersion = jvmVersion
+
+var jdkVersion: string = "19"
+var ktjvm.outVersion = jdkVersion
+var scala.outVersion = jdkVersion
+var java.jdkVersion = jdkVersion
+var java.srcVersion = jdkVersion
+var java.outVersion = jdkVersion
 // -> ktjvm.kotlinVersion arg의 기본값을 변경. 이렇게 해도 여전히 cli에서 값 변경 가능
 // -> 다만 ktjvm.kotlinVersion과 kotlinVersion을 동시에 설정하면 오류 발생
 
