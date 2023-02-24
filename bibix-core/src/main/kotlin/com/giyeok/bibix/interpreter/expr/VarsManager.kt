@@ -2,12 +2,14 @@ package com.giyeok.bibix.interpreter.expr
 
 import com.giyeok.bibix.ast.BibixAst
 import com.giyeok.bibix.base.CName
+import com.giyeok.bibix.interpreter.BibixInterpreter
+import com.giyeok.bibix.interpreter.task.Task
 import com.giyeok.bibix.utils.toKtList
 
-class VarsManager {
+class VarsManager(private val interpreter: BibixInterpreter) {
   companion object {
     fun fromArgs(args: Map<String, String>): VarsManager {
-      return VarsManager()
+      TODO()
     }
   }
 
@@ -25,11 +27,12 @@ class VarsManager {
     varRedefs.add(VarRedef(redefContext, def))
   }
 
-  fun redefines(lookupTable: NameLookupTable, cname: CName): List<VarRedef> {
+  suspend fun redefines(task: Task, cname: CName): List<VarRedef> {
     // TODO 모든 redef를 뒤지지 않는 방법이 없을까?
     return varRedefs.filter { redef ->
-      val lookup = lookupTable.lookup(redef.redefContext, redef.def.nameTokens().toKtList())
-      lookup is LookupResult.DefinitionFound && lookup.definition.cname == cname
+      val lookup =
+        interpreter.lookupName(task, redef.redefContext, redef.def.nameTokens().toKtList())
+      lookup.cname == cname
     }
   }
 

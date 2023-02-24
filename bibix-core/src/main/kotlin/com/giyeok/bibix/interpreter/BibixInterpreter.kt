@@ -27,7 +27,7 @@ class BibixInterpreter(
   @VisibleForTesting
   val g = TaskRelGraph()
 
-  private val varsManager = VarsManager()
+  private val varsManager = VarsManager(this)
 
   val nameLookupTable = NameLookupTable(varsManager)
 

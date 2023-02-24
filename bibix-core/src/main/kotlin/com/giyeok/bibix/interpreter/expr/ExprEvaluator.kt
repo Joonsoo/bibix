@@ -160,7 +160,7 @@ class ExprEvaluator(
       val varDef = varsManager.getVarDef(definition.cname)
       check(varDef.def == definition.varDef)
       // TODO 프로그램 argument 지원
-      val redefines = varsManager.redefines(interpreter.nameLookupTable, definition.cname)
+      val redefines = varsManager.redefines(requester, definition.cname)
       if (redefines.isNotEmpty()) {
         // TODO redefinition이 여러개 발견되면 어떻게 처리하지..?
         check(redefines.size == 1) { "more than one redefinition for ${definition.cname} found" }

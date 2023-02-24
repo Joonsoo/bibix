@@ -20,7 +20,7 @@ plugins {
 }
 
 group 'com.giyeok.bibix'
-version '0.1.1'
+version '0.2.0'
 
 repositories {
     mavenCentral()
@@ -63,9 +63,9 @@ dependencies {
     implementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-core', version: '1.6.0'
     implementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-jdk8', version: '1.6.0'
 
-    implementation "com.google.protobuf:protobuf-java-util:3.19.4"
-    implementation "com.google.protobuf:protobuf-java:3.19.4"
-    implementation 'com.google.protobuf:protobuf-kotlin:3.19.4'
+    implementation "com.google.protobuf:protobuf-java-util:3.22.0"
+    implementation "com.google.protobuf:protobuf-java:3.22.0"
+    implementation 'com.google.protobuf:protobuf-kotlin:3.22.0'
 
     implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.14.1'
     implementation group: 'com.fasterxml.jackson.module', name: 'jackson-module-kotlin', version: '2.14.1'

@@ -39,7 +39,7 @@ object ProjectStructureExtractor {
       }
     }
 
-    val srcRoots = sourceCodeRoots.values.map { source ->
+    val srcRoots = sourceCodeRoots.values.distinct().map { source ->
       contentRoot {
         this.contentRootName = "Sources"
         this.contentRootType = "src"

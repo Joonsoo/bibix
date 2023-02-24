@@ -44,6 +44,11 @@ fun String.hexToByteStringOrNull(): ByteString? = try {
   null
 }
 
+object BibixValueComparator : Comparator<BibixValueProto.BibixValue> {
+  override fun compare(p0: BibixValueProto.BibixValue, p1: BibixValueProto.BibixValue): Int =
+    p0.toString().compareTo(p1.toString())
+}
+
 fun BibixValue.toProto(): BibixValueProto.BibixValue = when (val value = this) {
   is BooleanValue -> bibixValue { this.booleanValue = value.value }
   is StringValue -> bibixValue { this.stringValue = value.value }
@@ -59,13 +64,13 @@ fun BibixValue.toProto(): BibixValueProto.BibixValue = when (val value = this) {
 
   is ListValue -> bibixValue {
     this.listValue = listValue {
-      this.values.addAll(value.values.map { it.toProto() })
+      this.values.addAll(value.values.map { it.toProto() }.sortedWith(BibixValueComparator))
     }
   }
 
   is SetValue -> bibixValue {
     this.setValue = setValue {
-      this.values.addAll(value.values.map { it.toProto() })
+      this.values.addAll(value.values.map { it.toProto() }.sortedWith(BibixValueComparator))
     }
   }
 
@@ -88,7 +93,7 @@ fun BibixValue.toProto(): BibixValueProto.BibixValue = when (val value = this) {
 
   is ClassInstanceValue -> bibixValue {
     this.dataClassInstanceValue = dataClassInstanceValue {
-      this.classCname = value.className.toString()
+      this.classCname = "${value.packageName}:${value.className}"
       value.fieldValues.entries.sortedBy { it.key }.forEach { entry ->
         this.fields.add(dataClassField {
           this.name = entry.key
