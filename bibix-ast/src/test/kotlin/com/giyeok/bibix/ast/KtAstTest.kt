@@ -4,16 +4,17 @@ import org.junit.jupiter.api.Test
 
 class KtAstTest {
   @Test
-  fun test2() {
-    val code = "str = \"hello \$fgh\""
-    val result = `BibixAst0$`.`MODULE$`.parse(code)
-    println(result.left().get().trees().size())
+  fun test3() {
+    val code = "a = this"
     val parsed = BibixAst.parse(code)
     println(parsed)
   }
 
-  fun test3() {
-    val code = "a = this"
+  @Test
+  fun test2() {
+    val code = "str = \"hello \$fgh\""
+    val result = `BibixAst0$`.`MODULE$`.parse(code)
+    println(result.left().get().trees().size())
     val parsed = BibixAst.parse(code)
     println(parsed)
   }

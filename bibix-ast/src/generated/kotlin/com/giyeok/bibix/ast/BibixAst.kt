@@ -51,13 +51,13 @@ class BibixAst(
   ) : AstNode
 
   data class This(
+
     override val nodeId: Int,
     override val start: Int,
     override val end: Int,
   ) : Primary, AstNode
 
   sealed interface ClassBodyElem : AstNode
-
   data class ImportFrom(
     val source: Expr,
     val importing: Name,
@@ -112,7 +112,6 @@ class BibixAst(
   ) : StringElem, AstNode
 
   sealed interface NoUnionType : TypeExpr, AstNode
-
   data class TupleExpr(
     val elems: List<Expr>,
     override val nodeId: Int,
@@ -121,7 +120,6 @@ class BibixAst(
   ) : Primary, AstNode
 
   sealed interface MergeOpOrPrimary : Expr, AstNode
-
   data class ActionRuleDef(
     val name: String,
     val params: List<ParamDef>,
