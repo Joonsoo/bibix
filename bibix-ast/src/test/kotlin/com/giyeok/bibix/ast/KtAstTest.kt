@@ -4,6 +4,17 @@ import org.junit.jupiter.api.Test
 
 class KtAstTest {
   @Test
+  fun test4() {
+    val code = """
+      a = "abc" + "def" as file
+      b = ("abc" + "def") as file
+      c = "abc" + ("def" as file)
+    """.trimIndent()
+    val parsed = BibixAst.parse(code)
+    println(parsed)
+  }
+
+  @Test
   fun test3() {
     val code = "a = this"
     val parsed = BibixAst.parse(code)

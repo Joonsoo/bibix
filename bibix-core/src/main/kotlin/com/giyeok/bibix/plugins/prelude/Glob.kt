@@ -1,9 +1,11 @@
 package com.giyeok.bibix.plugins.prelude
 
-import com.giyeok.bibix.base.*
+import com.giyeok.bibix.base.BuildContext
+import com.giyeok.bibix.base.PathValue
+import com.giyeok.bibix.base.SetValue
+import com.giyeok.bibix.base.StringValue
 import java.nio.file.Files
 import kotlin.io.path.absolute
-import kotlin.io.path.absolutePathString
 import kotlin.io.path.pathString
 
 class Glob {

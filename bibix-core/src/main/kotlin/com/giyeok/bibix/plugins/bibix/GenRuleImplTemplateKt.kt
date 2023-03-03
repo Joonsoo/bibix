@@ -3,6 +3,8 @@ package com.giyeok.bibix.plugins.bibix
 import com.giyeok.bibix.base.*
 import java.io.PrintWriter
 import java.nio.file.Files
+import java.nio.file.Path
+import kotlin.io.path.createDirectories
 import kotlin.io.path.deleteIfExists
 
 class GenRuleImplTemplateKt {
@@ -47,8 +49,25 @@ class GenRuleImplTemplateKt {
     val implInterfaceClassName = implInterfaceName.last()
     val implInterfaceClassPkg = implInterfaceName.dropLast(1)
 
-    val implClassFile = context.destDirectory.resolve("$ruleClassName.kt")
-    val implInterfaceFile = context.destDirectory.resolve("$implInterfaceClassName.kt")
+    val implClassTargetDir: Path = implClassPkg.fold(context.destDirectory) { path, name ->
+      path.resolve(name)
+    }
+    try {
+      implClassTargetDir.createDirectories()
+    } catch (e: FileAlreadyExistsException) {
+      // ignore
+    }
+    val implInterfaceTargetDir: Path =
+      implInterfaceClassPkg.fold(context.destDirectory) { path, name ->
+        path.resolve(name)
+      }
+    try {
+      implInterfaceTargetDir.createDirectories()
+    } catch (e: FileAlreadyExistsException) {
+      // ignore
+    }
+    val implClassFile = implClassTargetDir.resolve("$ruleClassName.kt")
+    val implInterfaceFile = implInterfaceTargetDir.resolve("$implInterfaceClassName.kt")
 
     implClassFile.deleteIfExists()
     implInterfaceFile.deleteIfExists()

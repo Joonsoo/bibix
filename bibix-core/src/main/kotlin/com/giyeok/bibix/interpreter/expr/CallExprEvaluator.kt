@@ -16,6 +16,7 @@ import com.google.protobuf.empty
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import java.nio.file.Path
+import kotlin.io.path.absolutePathString
 
 class CallExprEvaluator(
   private val interpreter: BibixInterpreter,
@@ -479,12 +480,13 @@ class CallExprEvaluator(
     return ObjectHash(objectId, inputHashes, objectId.hashString())
   }
 
-  private fun protoOf(sourceId: SourceId): BibixIdProto.SourceId = when (sourceId) {
+  private suspend fun protoOf(sourceId: SourceId): BibixIdProto.SourceId = when (sourceId) {
     PreludeSourceId -> sourceId { this.preloadedPlugin = "" }
     MainSourceId -> sourceId { this.mainSource = empty { } }
     is PreloadedSourceId -> sourceId { this.preloadedPlugin = sourceId.name }
     is ExternSourceId -> sourceId {
       this.externPluginObjhash = externalBibixProject {
+        this.rootDirectory = sourceManager.getProjectRoot(sourceId).absolutePathString()
         // TODO
       }
     }
