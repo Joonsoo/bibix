@@ -140,7 +140,7 @@ object BibixAst0 {
 
 
   val milestoneParserData = MilestoneParserProtobufConverter.convertProtoToMilestoneParserData(
-    MilestoneParserDataProto.MilestoneParserData.parseFrom(getClass.getResourceAsStream("/parserdata.pb")))
+    MilestoneParserDataProto.MilestoneParserData.parseFrom(getClass.getResourceAsStream("/bibix2-parserdata.pb")))
 
   val milestoneParser = new MilestoneParser(milestoneParserData)
 

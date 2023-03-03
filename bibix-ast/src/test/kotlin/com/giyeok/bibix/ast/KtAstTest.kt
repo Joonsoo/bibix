@@ -4,17 +4,22 @@ import org.junit.jupiter.api.Test
 
 class KtAstTest {
   @Test
+  fun test3() {
+    val code = "a = this"
+    val parsed = BibixAst.parse(code)
+    println(parsed)
+  }
+
+  @Test
   fun test2() {
     val code = "str = \"hello \$fgh\""
-    val result = `BibixAst0$`.`MODULE$`.parse(code)
-    println(result.left().get().trees().size())
-    val parsed = BibixAst.parseAst(code)
+    val parsed = BibixAst.parse(code)
     println(parsed)
   }
 
   @Test
   fun test() {
-    val parsed = BibixAst.parseAst(
+    val parsed = BibixAst.parse(
       """
       class ClassPaths(cps: set<path>)
 

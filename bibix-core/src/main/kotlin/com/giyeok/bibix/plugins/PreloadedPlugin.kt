@@ -16,13 +16,13 @@ data class PreloadedPlugin(
       pluginInstanceProvider: PluginInstanceProvider
     ): PreloadedPlugin {
       val parsed = try {
-        BibixAst.parseAst(script)
-      } catch (e: BibixAst.ParsingException) {
-        val location = when (val exception = e.parsingError) {
-          is ParsingErrors.UnexpectedInput -> exception.location()
-          is ParsingErrors.UnexpectedInputByTermGroups -> exception.location()
-          is ParsingErrors.UnexpectedEOF -> exception.location()
-          is ParsingErrors.UnexpectedEOFByTermGroups -> exception.location()
+        BibixAst.parse(script)
+      } catch (e: ParsingErrors.ParsingError) {
+        val location = when (e) {
+          is ParsingErrors.UnexpectedInput -> e.location()
+          is ParsingErrors.UnexpectedInputByTermGroups -> e.location()
+          is ParsingErrors.UnexpectedEOF -> e.location()
+          is ParsingErrors.UnexpectedEOFByTermGroups -> e.location()
           else -> null
         }
 
