@@ -64,7 +64,7 @@ class BuildFrontend(
     val os = System.getProperty("os.name").lowercase()
     return when {
       os.contains("nix") || os.contains("nux") || os.contains("aix") -> OS.Linux("", "")
-      os.contains("mac") -> OS.MacOS("", "")
+      os.contains("mac") -> OS.MacOSX("", "")
       os.contains("win") -> OS.Windows("", "")
       else -> OS.Unknown
     }

@@ -14,13 +14,6 @@ version '0.0.1-SNAPSHOT'
 
 repositories {
     mavenCentral()
-    maven {
-        url = uri("https://maven.pkg.github.com/Joonsoo/giyeok-maven-repo")
-        credentials {
-            username = "Joonsoo"
-            password = "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"
-        }
-    }
 }
 
 sourceSets {
@@ -38,8 +31,6 @@ sourceSets {
 }
 
 dependencies {
-    // implementation group: 'com.giyeok.jparser', name: 'jparser-base', version: jparserVersion
-    // implementation group: 'com.giyeok.jparser', name: 'jparser-fast', version: jparserVersion
     implementation files("../lib/jparser-base-0.3.1.jar")
     implementation files("../lib/jparser-base-proto-0.3.1.jar")
     implementation files("../lib/jparser-naive-0.3.1.jar")

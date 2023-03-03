@@ -102,6 +102,9 @@ class Artifact {
       artifactRequest.artifact = artifact
       artifactRequest.repositories = repositories
 
+      val resolved = system.resolveArtifact(session, artifactRequest)
+      println(resolved)
+
       val collectRequest = CollectRequest()
       collectRequest.root = Dependency(artifact, javaScope)
       collectRequest.repositories = repositories
@@ -150,7 +153,7 @@ class Artifact {
       system: RepositorySystem
     ): DefaultRepositorySystemSession {
       val session = MavenRepositorySystemUtils.newSession()
-      // TODO repo 위치 수정 - build rule 사이에 공유 가능한 위치가 필요하네..
+
       val localRepo = LocalRepository(localRepoBaseDirectory.toFile())
       session.localRepositoryManager = system.newLocalRepositoryManager(session, localRepo)
       session.transferListener = ConsoleTransferListener()

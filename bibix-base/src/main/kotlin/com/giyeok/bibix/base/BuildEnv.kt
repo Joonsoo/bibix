@@ -8,7 +8,7 @@ data class BuildEnv(
 sealed class OS {
   data class Linux(val distributeName: String, val version: String) : OS()
   data class Windows(val distributeName: String, val version: String) : OS()
-  data class MacOS(val distributeName: String, val version: String) : OS()
+  data class MacOSX(val distributeName: String, val version: String) : OS()
   object Unknown : OS()
 }
 
