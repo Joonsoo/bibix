@@ -75,6 +75,5 @@ dependencies {
 }
 
 jar {
-    manifest {
-    }
+    duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
 }

@@ -1,18 +1,21 @@
 package com.giyeok.bibix.interpreter
 
 import com.giyeok.bibix.ast.BibixAst
-import com.giyeok.bibix.base.*
+import com.giyeok.bibix.base.BibixValue
+import com.giyeok.bibix.base.BuildEnv
+import com.giyeok.bibix.base.MainSourceId
+import com.giyeok.bibix.base.NoneValue
+import com.giyeok.bibix.interpreter.coroutine.ProgressIndicatorContainer
 import com.giyeok.bibix.interpreter.coroutine.TaskElement
+import com.giyeok.bibix.interpreter.expr.*
 import com.giyeok.bibix.interpreter.task.Task
 import com.giyeok.bibix.interpreter.task.TaskRelGraph
 import com.giyeok.bibix.plugins.PreloadedPlugin
 import com.giyeok.bibix.repo.Repo
-import com.giyeok.bibix.interpreter.coroutine.ProgressIndicatorContainer
-import com.giyeok.bibix.interpreter.expr.*
-import com.giyeok.bibix.utils.getOrNull
-import com.giyeok.bibix.utils.toKtList
 import com.google.common.annotations.VisibleForTesting
-import kotlinx.coroutines.*
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 
 class BibixInterpreter(
   val buildEnv: BuildEnv,
@@ -71,7 +74,7 @@ class BibixInterpreter(
 
         is Definition.ActionDef -> {
           suspend fun executeActionExpr(actionExpr: BibixAst.CallExpr) {
-            val argName = definition.action.argsName().getOrNull()
+            val argName = definition.action.argsName
             if (argName == null && actionArgs.isNotEmpty()) {
               throw IllegalStateException("action args is not used")
             }
@@ -79,9 +82,9 @@ class BibixInterpreter(
             exprEvaluator.executeAction(task, defContext, actionExpr, args)
           }
 
-          when (val body = definition.action.body()) {
-            is BibixAst.SingleCallAction -> executeActionExpr(body.expr())
-            is BibixAst.MultiCallActions -> body.exprs().toKtList().forEach { expr ->
+          when (val body = definition.action.body) {
+            is BibixAst.SingleCallAction -> executeActionExpr(body.expr)
+            is BibixAst.MultiCallActions -> body.exprs.forEach { expr ->
               executeActionExpr(expr)
             }
 

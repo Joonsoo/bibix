@@ -33,12 +33,11 @@ class SourceManager {
   private fun parseScript(project: BibixProject): BibixAst.BuildScript {
     val scriptPath = project.projectRoot.resolve(project.scriptName ?: "build.bbx")
 
-    val script = BibixAst.parseAst(scriptPath.readText())
-    if (script.isRight) {
-      throw IllegalStateException("Failed to parse script: $project (${script.right().get()})")
+    return try {
+      BibixAst.parseAst(scriptPath.readText())
+    } catch (e: BibixAst.ParsingException) {
+      throw IllegalStateException("Failed to parse script: $project (${e.message})", e)
     }
-
-    return script.left().get()
   }
 
   private fun registerScript(
@@ -50,8 +49,8 @@ class SourceManager {
     // script가 sourceId라는 이름으로 등록됨
     // remember that sourceId has the package name
     // It is checked by sourcePackageName whether the package name is unique
-    val usingSourceId = if (buildScript.packageName().isDefined) {
-      val packageName = buildScript.packageName().get().tokens().toKtList().joinToString(".")
+    val usingSourceId = if (buildScript.packageName != null) {
+      val packageName = buildScript.packageName!!.tokens.joinToString(".")
       val conflict = sourcePackageName.inverse()[packageName]
       if (conflict != null && projectRoots[conflict] == project.projectRoot) {
         conflict
@@ -63,7 +62,7 @@ class SourceManager {
       sourceId
     }
     projectRoots[usingSourceId] = project.projectRoot
-    nameLookupTable.add(NameLookupContext(usingSourceId, listOf()), buildScript.defs().toKtList())
+    nameLookupTable.add(NameLookupContext(usingSourceId, listOf()), buildScript.defs)
     return usingSourceId
   }
 

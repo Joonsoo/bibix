@@ -89,6 +89,8 @@ dependencies {
 }
 
 jar {
+    duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
+
     manifest {
         attributes 'Main-Class': 'com.giyeok.bibix.frontend.cli.BibixCli'
     }

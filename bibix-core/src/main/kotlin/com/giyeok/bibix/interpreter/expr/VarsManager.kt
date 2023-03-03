@@ -30,8 +30,7 @@ class VarsManager(private val interpreter: BibixInterpreter) {
   suspend fun redefines(task: Task, cname: CName): List<VarRedef> {
     // TODO 모든 redef를 뒤지지 않는 방법이 없을까?
     return varRedefs.filter { redef ->
-      val lookup =
-        interpreter.lookupName(task, redef.redefContext, redef.def.nameTokens().toKtList())
+      val lookup = interpreter.lookupName(task, redef.redefContext, redef.def.nameTokens)
       lookup.cname == cname
     }
   }

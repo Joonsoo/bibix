@@ -3,13 +3,10 @@ package com.giyeok.bibix.interpreter.expr
 import com.giyeok.bibix.ast.BibixAst
 import com.giyeok.bibix.base.*
 import com.giyeok.bibix.interpreter.BibixProject
-import com.giyeok.bibix.base.DirectoryType
-import com.giyeok.bibix.base.PreloadedSourceId
 import com.giyeok.bibix.interpreter.SourceManager
 import com.giyeok.bibix.interpreter.task.Task
 import com.giyeok.bibix.interpreter.task.TaskRelGraph
 import com.giyeok.bibix.plugins.PreloadedPlugin
-import com.giyeok.bibix.utils.toKtList
 
 class NameLookup(
   private val g: TaskRelGraph,
@@ -62,8 +59,8 @@ class NameLookup(
     context: NameLookupContext,
     lookupResult: LookupResult.ImportRequired,
     import: BibixAst.ImportAll
-  ): Unit = g.withTask(requester, Task.ResolveImport(context.sourceId, import.id())) { task ->
-    val importSource = resolveImportSource(task, context, lookupResult, import.source())
+  ): Unit = g.withTask(requester, Task.ResolveImport(context.sourceId, import.nodeId)) { task ->
+    val importSource = resolveImportSource(task, context, lookupResult, import.source)
     nameLookupTable.addImport(lookupResult.import.cname, NameLookupContext(importSource, listOf()))
   }
 
@@ -72,11 +69,11 @@ class NameLookup(
     context: NameLookupContext,
     lookupResult: LookupResult.ImportRequired,
     import: BibixAst.ImportFrom
-  ): Unit = g.withTask(requester, Task.ResolveImport(context.sourceId, import.id())) { task ->
-    val importSource = resolveImportSource(task, context, lookupResult, import.source())
+  ): Unit = g.withTask(requester, Task.ResolveImport(context.sourceId, import.nodeId)) { task ->
+    val importSource = resolveImportSource(task, context, lookupResult, import.source)
     // lookupResult가 임포트하려던 것이 Definition을 직접 가리키고 있으면 그 definition을 등록
     val importedScope = NameLookupContext(importSource, listOf())
-    val importingName = import.importing().tokens().toKtList()
+    val importingName = import.importing.tokens
     val importLookup = nameLookupTable.lookup(importedScope, importingName)
     val definition = handleLookupResult(requester, importedScope, importingName, importLookup)
     if (definition is Definition.NamespaceDef) {
@@ -99,9 +96,9 @@ class NameLookup(
         // TODO .bibixrc같은데서 source를 따로 정의하는 기능을 넣게 된다면 그땐 여기서 처리해야겠지
         // 일단은 기본 import는 SimpleName만 되도록..
         // TODO 이렇게 되면 preloaded plugin이 우선순위가 높아지는데.. 괜찮을까? 보통은 상관 없긴 할텐데
-        val plugin = preloadedPlugins[importSource.name()]
+        val plugin = preloadedPlugins[importSource.name]
         if (plugin != null) {
-          val sourceId = PreloadedSourceId(importSource.name())
+          val sourceId = PreloadedSourceId(importSource.name)
           val importedContext = NameLookupContext(sourceId, listOf())
           nameLookupTable.add(importedContext, plugin.defs)
           nameLookupTable.addImport(lookupResult.import.cname, importedContext)
@@ -126,7 +123,7 @@ class NameLookup(
 
     return g.withTask(
       requester,
-      Task.ResolveImportSource(context.sourceId, importSource.id()),
+      Task.ResolveImportSource(context.sourceId, importSource.nodeId),
     ) { task -> process(task) }
   }
 }
