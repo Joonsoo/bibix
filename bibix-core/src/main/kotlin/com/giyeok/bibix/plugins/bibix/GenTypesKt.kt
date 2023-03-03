@@ -2,6 +2,7 @@ package com.giyeok.bibix.plugins.bibix
 
 import com.giyeok.bibix.base.*
 import java.io.PrintWriter
+import java.nio.file.Files
 import java.nio.file.Path
 import kotlin.io.path.bufferedWriter
 import kotlin.io.path.createDirectories
@@ -40,7 +41,8 @@ class GenTypesKt {
         val fieldExpr = if (!field.optional) {
           bibixValueToKt("value[\"${field.name}\"]!!", field.type)
         } else {
-          "value[\"${field.name}\"]!!.let { v -> if (v == NoneValue) null else ${bibixValueToKt("v", field.type)} }"
+          val bibixToKt = bibixValueToKt("v", field.type)
+          "value[\"${field.name}\"]!!.let { v -> if (v == NoneValue) null else $bibixToKt }"
         }
         p.println("$indent        ${field.name}=$fieldExpr,")
       }
@@ -156,8 +158,11 @@ class GenTypesKt {
     val targetFile = targetDir.resolve(fileName)
 
     if (context.hashChanged) {
-      targetDir.deleteIfExists()
-      targetDir.createDirectories()
+      try {
+        targetDir.createDirectories()
+      } catch (e: FileAlreadyExistsException) {
+        // Ignore
+      }
 
       val classTypes = types.filterIsInstance<TypeValue.PackageNamed>()
       return BuildRuleReturn.getTypeDetails(classTypes.map { it.typeName }) { classTypeDetails ->
