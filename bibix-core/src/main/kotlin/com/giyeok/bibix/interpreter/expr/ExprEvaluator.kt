@@ -243,7 +243,7 @@ class ExprEvaluator(
     directBindings: Map<String, BibixValue>,
     outputNames: Set<CName>,
   ): EvaluationResult =
-    g.withTask(requester, Task.EvalExpr(context.sourceId, expr.nodeId, thisValue)) { task ->
+    g.withTask(requester, g.evalExprTask(context.sourceId, expr, thisValue)) { task ->
       when (expr) {
         is BibixAst.CastExpr -> {
           // Run concurrently

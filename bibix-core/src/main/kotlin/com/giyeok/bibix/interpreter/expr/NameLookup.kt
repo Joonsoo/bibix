@@ -48,10 +48,16 @@ class NameLookup(
         lookupName(requester, context, name)
       }
 
-      LookupResult.NameNotFound ->
+      LookupResult.NameNotFound -> {
+        println(requester)
+        val upstreamPaths = g.upstreamPathsTo(requester)
+        upstreamPaths.forEach { path ->
+          println(path)
+        }
         throw IllegalStateException(
           "Name not found: ${name.joinToString(".")} in ${sourceManager.descriptionOf(context.sourceId)}"
         )
+      }
     }
 
   private suspend fun resolveImportAll(

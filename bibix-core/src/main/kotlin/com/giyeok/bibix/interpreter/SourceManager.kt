@@ -13,10 +13,13 @@ import com.google.common.collect.HashBiMap
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import java.nio.file.Path
+import kotlin.io.path.absolute
 import kotlin.io.path.readText
 
 class SourceManager {
   private val projectRoots = mutableMapOf<SourceId, Path>()
+
+  private val sourceScripts = mutableMapOf<SourceId, String>()
 
   @VisibleForTesting
   val sourcePackageName: BiMap<SourceId, String> = HashBiMap.create<SourceId, String>()
@@ -29,11 +32,13 @@ class SourceManager {
   private val preloadedPluginPluginInstanceProvider =
     mutableMapOf<PreloadedSourceId, PluginInstanceProvider>()
 
-  private fun parseScript(project: BibixProject): BibixAst.BuildScript {
+  private fun parseScript(project: BibixProject): Pair<String, BibixAst.BuildScript> {
     val scriptPath = project.projectRoot.resolve(project.scriptName ?: "build.bbx")
 
     return try {
-      BibixAst.parse(scriptPath.readText())
+      val scriptText = scriptPath.readText()
+      val parsed = BibixAst.parse(scriptText)
+      Pair(scriptText, parsed)
     } catch (e: ParsingErrors.ParsingError) {
       throw IllegalStateException("Failed to parse script: $project (${e.message})", e)
     }
@@ -42,6 +47,7 @@ class SourceManager {
   private fun registerScript(
     sourceId: SourceId,
     project: BibixProject,
+    scriptText: String,
     buildScript: BibixAst.BuildScript,
     nameLookupTable: NameLookupTable
   ): SourceId {
@@ -60,7 +66,8 @@ class SourceManager {
     } else {
       sourceId
     }
-    projectRoots[usingSourceId] = project.projectRoot
+    projectRoots[usingSourceId] = project.projectRoot.absolute()
+    sourceScripts[usingSourceId] = scriptText
     nameLookupTable.add(NameLookupContext(usingSourceId, listOf()), buildScript.defs)
     return usingSourceId
   }
@@ -74,11 +81,11 @@ class SourceManager {
   }
 
   suspend fun loadMainSource(project: BibixProject, nameLookupTable: NameLookupTable) {
-    val buildScript = parseScript(project)
+    val (scriptText, buildScript) = parseScript(project)
 
     mutex.withLock {
       _mainBaseDirectory = project.projectRoot
-      registerScript(MainSourceId, project, buildScript, nameLookupTable)
+      registerScript(MainSourceId, project, scriptText, buildScript, nameLookupTable)
     }
   }
 
@@ -88,18 +95,19 @@ class SourceManager {
       return existing
     }
 
-    val buildScript = parseScript(project)
+    val (scriptText, buildScript) = parseScript(project)
 
     return mutex.withLock {
       externSourceIdCounter += 1
       val sourceId = ExternSourceId(externSourceIdCounter)
       externSources[project] = sourceId
-      registerScript(sourceId, project, buildScript, nameLookupTable) as ExternSourceId
+      registerScript(sourceId, project, scriptText, buildScript, nameLookupTable) as ExternSourceId
     }
   }
 
-  suspend fun getProjectRoot(sourceId: SourceId): Path =
-    mutex.withLock { projectRoots.getValue(sourceId) }
+  suspend fun getProjectRoot(sourceId: SourceId): Path? = mutex.withLock {
+    projectRoots[sourceId]
+  }
 
   fun registerPreloadedPluginClasses(name: String, plugin: PreloadedPlugin) {
     val sourceId = PreloadedSourceId(name)
@@ -130,5 +138,9 @@ class SourceManager {
     }
 
     else -> "$sourceId"
+  }
+
+  suspend fun sourceText(sourceId: SourceId, astNode: BibixAst.AstNode): String? = mutex.withLock {
+    sourceScripts[sourceId]?.substring(astNode.start, astNode.end)
   }
 }

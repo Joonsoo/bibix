@@ -1,7 +1,9 @@
 package com.giyeok.bibix.interpreter.task
 
+import com.giyeok.bibix.ast.BibixAst
 import com.giyeok.bibix.base.BibixValue
 import com.giyeok.bibix.base.CName
+import com.giyeok.bibix.base.SourceId
 import com.giyeok.bibix.interpreter.coroutine.TaskElement
 import com.giyeok.bibix.repo.BibixValueWithObjectHash
 import com.giyeok.bibix.repo.ObjectHash
@@ -21,13 +23,19 @@ import java.util.concurrent.ConcurrentHashMap
 // 태스크 사이의 관계를 저장해서 싸이클을 찾아내는 클래스
 class TaskRelGraph {
   @VisibleForTesting
-  val deps = ConcurrentHashMap<Task, MutableSet<Task>>()
+  val downstream = mutableMapOf<Task, MutableList<Task>>()
+
+  @VisibleForTesting
+  val upstream = mutableMapOf<Task, MutableList<Task>>()
 
   private val depsMutex = Mutex()
 
+  private val referredNodes = ConcurrentHashMap<Pair<SourceId, Int>, BibixAst.AstNode>()
+
   private suspend fun add(requester: Task, task: Task): Task {
     depsMutex.withLock {
-      deps.getOrPut(requester) { mutableSetOf() }.add(task)
+      downstream.getOrPut(requester) { mutableListOf() }.add(task)
+      upstream.getOrPut(task) { mutableListOf() }.add(requester)
     }
     return task
   }
@@ -37,7 +45,7 @@ class TaskRelGraph {
       if (task == start) {
         return path
       }
-      val outgoing = deps[task] ?: setOf()
+      val outgoing = downstream[task] ?: setOf()
       outgoing.forEach { next ->
         val found = traverse(next, path + next)
         if (found != null) {
@@ -46,7 +54,7 @@ class TaskRelGraph {
       }
       return null
     }
-    deps[start]?.forEach { next ->
+    downstream[start]?.forEach { next ->
       val found = traverse(next, listOf(start, next))
       if (found != null) {
         return found
@@ -69,6 +77,27 @@ class TaskRelGraph {
 
     return withContext(currentCoroutineContext() + TaskElement(task)) { body(task) }
   }
+
+  fun evalExprTask(
+    sourceId: SourceId,
+    astNode: BibixAst.AstNode,
+    thisValue: BibixValue?
+  ): Task.EvalExpr {
+    referredNodes[Pair(sourceId, astNode.nodeId)] = astNode
+    return Task.EvalExpr(sourceId, astNode.nodeId, thisValue)
+  }
+
+  fun evalCallExprTask(
+    sourceId: SourceId,
+    astNode: BibixAst.AstNode,
+    thisValue: BibixValue?
+  ): Task {
+    referredNodes[Pair(sourceId, astNode.nodeId)] = astNode
+    return Task.EvalCallExpr(sourceId, astNode.nodeId, thisValue)
+  }
+
+  fun getReferredNodeById(sourceId: SourceId, nodeId: Int): BibixAst.AstNode? =
+    referredNodes[Pair(sourceId, nodeId)]
 
   private val objHashMap = mutableMapOf<ByteString, ObjectHash>()
   private val objMemoMap = mutableMapOf<ByteString, MutableStateFlow<BibixValueWithObjectHash?>>()
@@ -112,5 +141,17 @@ class TaskRelGraph {
     } else {
       stateFlow.filterNotNull().first()
     }
+  }
+
+  fun upstreamPathsTo(task: Task): List<List<Task>> {
+    fun traverse(task: Task, path: List<Task>): List<List<Task>> {
+      val ups = upstream[task]?.toList() ?: listOf()
+      return if (ups.isEmpty()) listOf(path) else {
+        ups.flatMap { up ->
+          traverse(up, path + up)
+        }
+      }
+    }
+    return traverse(task, listOf(task))
   }
 }

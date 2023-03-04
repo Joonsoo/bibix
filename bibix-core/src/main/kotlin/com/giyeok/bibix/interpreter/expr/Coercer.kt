@@ -206,7 +206,7 @@ class Coercer(
   }
 
   private suspend fun fileFromString(sourceId: SourceId, path: String): Path {
-    return sourceManager.getProjectRoot(sourceId).resolve(path).normalize()
+    return sourceManager.getProjectRoot(sourceId)!!.resolve(path).normalize()
   }
 
   private suspend fun findDataClassDef(

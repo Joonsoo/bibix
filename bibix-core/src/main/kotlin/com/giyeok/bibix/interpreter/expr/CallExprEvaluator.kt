@@ -189,7 +189,7 @@ class CallExprEvaluator(
     thisValue: BibixValue?,
     directBindings: Map<String, BibixValue> = mapOf(),
   ): Map<String, BibixValue> =
-    g.withTask(requester, Task.EvalExpr(context.sourceId, params.nodeId, thisValue)) { task ->
+    g.withTask(requester, g.evalExprTask(context.sourceId, params, thisValue)) { task ->
       val paramDefs = callable.params
       val paramDefsMap = callable.params.associateBy { it.name }
 
@@ -423,7 +423,7 @@ class CallExprEvaluator(
 
   private suspend fun baseDirectoryOf(sourceId: SourceId): Path =
     when (sourceId) {
-      is ExternSourceId -> sourceManager.getProjectRoot(sourceId)
+      is ExternSourceId -> sourceManager.getProjectRoot(sourceId)!!
       else -> sourceManager.mainBaseDirectory
     }
 
@@ -486,7 +486,7 @@ class CallExprEvaluator(
     is PreloadedSourceId -> sourceId { this.preloadedPlugin = sourceId.name }
     is ExternSourceId -> sourceId {
       this.externPluginObjhash = externalBibixProject {
-        this.rootDirectory = sourceManager.getProjectRoot(sourceId).absolutePathString()
+        this.rootDirectory = sourceManager.getProjectRoot(sourceId)!!.absolutePathString()
         // TODO
       }
     }
@@ -524,7 +524,7 @@ class CallExprEvaluator(
       val buildContext = BuildContext(
         buildEnv = interpreter.buildEnv,
         fileSystem = interpreter.repo.fileSystem,
-        mainBaseDirectory = sourceManager.getProjectRoot(MainSourceId),
+        mainBaseDirectory = sourceManager.getProjectRoot(MainSourceId)!!,
         callerBaseDirectory = baseDirectoryOf(context.sourceId),
         ruleDefinedDirectory = baseDirectoryOf(buildRule.context.sourceId),
         arguments = params,
@@ -567,7 +567,7 @@ class CallExprEvaluator(
     thisValue: BibixValue?,
     outputNames: Set<CName>,
   ): BibixValueWithObjectHash =
-    g.withTask(requester, Task.EvalCallExpr(context.sourceId, expr.nodeId, thisValue)) { task ->
+    g.withTask(requester, g.evalCallExprTask(context.sourceId, expr, thisValue)) { task ->
       when (val callTarget =
         exprEvaluator.evaluateName(task, context, expr.name, null, outputNames)) {
         is BuildRuleDef -> {

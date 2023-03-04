@@ -26,6 +26,7 @@ class ThreadPool(
   private val runningTasks: MutableList<Task?> = MutableList(numThreads) { null }
   private val freeThreadIds = LinkedBlockingQueue((0 until numThreads).toList())
 
+  private val progressLoggerExecutor = Executors.newSingleThreadExecutor()
   private val executors = List(numThreads) { idx ->
     val executor = Executors.newSingleThreadExecutor()
     executor.execute {
@@ -87,7 +88,7 @@ class ThreadPool(
 
   fun processTasks(rootJob: Job) {
     while (!rootJob.isCompleted || queue.isNotEmpty()) {
-      val nextBlock = queue.poll(1, TimeUnit.SECONDS)
+      val nextBlock = queue.poll(10, TimeUnit.SECONDS)
       if (nextBlock != null) {
         var assignedThreadIdx = findAndAssignThread()
         while (assignedThreadIdx == null) {
@@ -106,8 +107,10 @@ class ThreadPool(
   override fun ofCurrentThread(): ProgressIndicator = progressIndicatorThreadLocal.get()
 
   private fun notifyProgresses() {
-    progressNotifier.notifyProgresses {
-      progressIndicators.map { it.toThreadState() }
+    progressLoggerExecutor.execute {
+      progressNotifier.notifyProgresses {
+        progressIndicators.map { it.toThreadState() }
+      }
     }
   }
 

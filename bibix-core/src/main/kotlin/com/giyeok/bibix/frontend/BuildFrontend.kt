@@ -52,6 +52,10 @@ class BuildFrontend(
     actionArgs = actionArgs
   )
 
+  init {
+    progressNotifier.setInterpreter(interpreter)
+  }
+
   private fun getMaxThreads(): Int {
     val maxThreads = repo.runConfig.maxThreads
     if (maxThreads <= 0) {
