@@ -40,9 +40,6 @@ fun BibixIdProto.ArgsMap.hashString(): ByteString {
   return digest.digest().toByteString()
 }
 
-fun BibixIdProto.ObjectId.hashString(): ByteString =
-  sha1Hash(this.toByteArray())
-
 fun BibixIdProto.SourceId.hashString(): ByteString =
   sha1Hash(this.toByteArray())
 

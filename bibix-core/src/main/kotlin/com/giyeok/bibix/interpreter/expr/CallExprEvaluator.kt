@@ -1,6 +1,7 @@
 package com.giyeok.bibix.interpreter.expr
 
 import com.giyeok.bibix.*
+import com.giyeok.bibix.BibixIdProto.TargetIdData
 import com.giyeok.bibix.ast.BibixAst
 import com.giyeok.bibix.base.*
 import com.giyeok.bibix.interpreter.BibixInterpreter
@@ -454,38 +455,12 @@ class CallExprEvaluator(
       }
     }
 
-  suspend fun hash(
-    task: Task,
-    callingSourceId: SourceId,
-    buildRule: BuildRuleDef,
-    params: Map<String, BibixValue>
-  ): ObjectHash {
-    val argsMap = params.toArgsMapProto()
-    val inputHashes = argsMap.extractInputHashes()
-    val objectId = objectId {
-      this.callingSourceId = protoOf(callingSourceId)
-      when (buildRule) {
-        is BuildRuleDef.NativeBuildRuleDef ->
-          this.bibixVersion = Constants.BIBIX_VERSION
-
-        is BuildRuleDef.UserBuildRuleDef ->
-          this.ruleImplObjhash = getRuleImplValue(task, buildRule).hashString()
-      }
-      this.ruleSourceId = protoOf(buildRule.name.sourceId)
-      this.ruleName = buildRule.name.tokens.joinToString(".")
-      this.className = buildRule.className
-      this.methodName = buildRule.methodName
-      this.argsMap = argsMap
-    }
-    return ObjectHash(objectId, inputHashes, objectId.hashString())
-  }
-
   private suspend fun protoOf(sourceId: SourceId): BibixIdProto.SourceId = when (sourceId) {
-    PreludeSourceId -> sourceId { this.preloadedPlugin = "" }
+    PreludeSourceId -> sourceId { this.preludeSource = empty {} }
     MainSourceId -> sourceId { this.mainSource = empty { } }
     is PreloadedSourceId -> sourceId { this.preloadedPlugin = sourceId.name }
     is ExternSourceId -> sourceId {
-      this.externPluginObjhash = externalBibixProject {
+      this.externalPluginObjhash = externalBibixProject {
         this.rootDirectory = sourceManager.getProjectRoot(sourceId)!!.absolutePathString()
         // TODO
       }
@@ -513,10 +488,61 @@ class CallExprEvaluator(
     params: Map<String, BibixValue>,
     outputNames: Set<CName>,
   ): BibixValueWithObjectHash {
-    val objHash = hash(task, context.sourceId, buildRule, params)
+    val argsMap = params.toArgsMapProto()
+    val inputHashes = argsMap.extractInputHashes()
 
-    val result = g.withMemo(objHash) { objHash ->
-      val pluginInstance = getRuleImplInstance(context.sourceId, task, buildRule)
+    val pluginInstance: Any
+
+    val targetIdDataBuilder = TargetIdData.newBuilder().also {
+      it.sourceId = protoOf(context.sourceId)
+      it.buildRuleSourceId = protoOf(buildRule.context.sourceId)
+      // it.targetName = "??"
+      // it.buildRule will be set afterward
+      it.buildRuleClassName = buildRule.className
+      it.buildRuleMethodName = buildRule.methodName
+      it.argsMap = argsMap
+    }
+
+    when (buildRule) {
+      is BuildRuleDef.NativeBuildRuleDef -> {
+        pluginInstance = buildRule.implInstance
+        targetIdDataBuilder.nativeImpl = empty {}
+      }
+
+      is BuildRuleDef.UserBuildRuleDef -> {
+        val impl = exprEvaluator.evaluateName(
+          task,
+          buildRule.context,
+          buildRule.implTarget,
+          buildRule.thisValue,
+          setOf()
+        ) as EvaluationResult.ValueWithObjectHash
+        val cpInstance = coerceCpInstance(task, buildRule.context, impl.ensureValue())
+
+        pluginInstance = pluginImplProvider.getPluginImplInstance(
+          context.sourceId,
+          cpInstance,
+          buildRule.className
+        )
+
+        targetIdDataBuilder.buildRuleImplId = buildRuleImplId {
+          this.sourceId = protoOf(buildRule.name.sourceId)
+          this.targetId = impl.objectHash.targetId.targetIdBytes
+        }
+      }
+    }
+
+    val targetId = TargetId(targetIdDataBuilder.build())
+    val objHash = ObjectHash(targetId, inputHashes)
+
+    interpreter.repo.putObjectHash(objHash)
+
+    val targetIdBytes = objHash.targetId.targetIdBytes
+    val prevInputHashes = interpreter.repo.getPrevInputHashesOf(targetIdBytes)
+
+    val result = g.withMemo(objHash) {
+      interpreter.repo.startBuildingTarget(targetIdBytes)
+
       val method =
         pluginInstance::class.java.getMethod(buildRule.methodName, BuildContext::class.java)
 
@@ -528,10 +554,10 @@ class CallExprEvaluator(
         callerBaseDirectory = baseDirectoryOf(context.sourceId),
         ruleDefinedDirectory = baseDirectoryOf(buildRule.context.sourceId),
         arguments = params,
-        hashChanged = true, // TODO
-        objectId = objHash.objectId,
-        objectIdHash = objHash.hashHexString,
-        destDirectoryPath = interpreter.repo.objectsDirectory.resolve(objHash.hashHexString),
+        hashChanged = prevInputHashes == null || prevInputHashes != objHash.inputHashes,
+        targetIdData = objHash.targetId.targetIdData,
+        targetId = objHash.targetId.targetIdHex,
+        destDirectoryPath = interpreter.repo.objectsDirectory.resolve(objHash.targetId.targetIdHex),
         progressLogger = progressIndicator,
         repo = interpreter.repo,
       )
@@ -542,6 +568,7 @@ class CallExprEvaluator(
       val returnValue = try {
         method.invoke(pluginInstance, buildContext)
       } catch (e: Exception) {
+        interpreter.repo.targetBuildingFailed(targetIdBytes, e.message ?: "")
         throw IllegalStateException("Error from the plugin", e)
       }
       progressIndicator.logInfo("Continuing from ${buildRule.context}...")
@@ -550,6 +577,8 @@ class CallExprEvaluator(
 
       exprEvaluator.coerce(task, buildRule.context, finalValue, buildRule.returnType)
     }
+
+    interpreter.repo.targetBuildingSucceeded(targetIdBytes, result.value)
 
     outputNames.filter { it.sourceId == MainSourceId }.forEach { outputName ->
       if (g.addOutputMemo(outputName, objHash)) {

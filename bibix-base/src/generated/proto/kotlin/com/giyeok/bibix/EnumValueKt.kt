@@ -3,16 +3,16 @@
 
 package com.giyeok.bibix;
 
-@kotlin.jvm.JvmSynthetic
-public inline fun enumValue(block: com.giyeok.bibix.EnumValueKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.BibixValueProto.EnumValue =
+@kotlin.jvm.JvmName("-initializeenumValue")
+inline fun enumValue(block: com.giyeok.bibix.EnumValueKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.BibixValueProto.EnumValue =
   com.giyeok.bibix.EnumValueKt.Dsl._create(com.giyeok.bibix.BibixValueProto.EnumValue.newBuilder()).apply { block() }._build()
-public object EnumValueKt {
+object EnumValueKt {
   @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
   @com.google.protobuf.kotlin.ProtoDslMarker
-  public class Dsl private constructor(
+  class Dsl private constructor(
     private val _builder: com.giyeok.bibix.BibixValueProto.EnumValue.Builder
   ) {
-    public companion object {
+    companion object {
       @kotlin.jvm.JvmSynthetic
       @kotlin.PublishedApi
       internal fun _create(builder: com.giyeok.bibix.BibixValueProto.EnumValue.Builder): Dsl = Dsl(builder)
@@ -25,7 +25,7 @@ public object EnumValueKt {
     /**
      * <code>string enum_type = 1;</code>
      */
-    public var enumType: kotlin.String
+    var enumType: kotlin.String
       @JvmName("getEnumType")
       get() = _builder.getEnumType()
       @JvmName("setEnumType")
@@ -35,14 +35,14 @@ public object EnumValueKt {
     /**
      * <code>string enum_type = 1;</code>
      */
-    public fun clearEnumType() {
+    fun clearEnumType() {
       _builder.clearEnumType()
     }
 
     /**
      * <code>string value = 2;</code>
      */
-    public var value: kotlin.String
+    var value: kotlin.String
       @JvmName("getValue")
       get() = _builder.getValue()
       @JvmName("setValue")
@@ -52,11 +52,12 @@ public object EnumValueKt {
     /**
      * <code>string value = 2;</code>
      */
-    public fun clearValue() {
+    fun clearValue() {
       _builder.clearValue()
     }
   }
 }
 @kotlin.jvm.JvmSynthetic
-public inline fun com.giyeok.bibix.BibixValueProto.EnumValue.copy(block: com.giyeok.bibix.EnumValueKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.BibixValueProto.EnumValue =
+inline fun com.giyeok.bibix.BibixValueProto.EnumValue.copy(block: com.giyeok.bibix.EnumValueKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.BibixValueProto.EnumValue =
   com.giyeok.bibix.EnumValueKt.Dsl._create(this.toBuilder()).apply { block() }._build()
+

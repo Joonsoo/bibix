@@ -3,16 +3,16 @@
 
 package com.giyeok.bibix;
 
-@kotlin.jvm.JvmSynthetic
-public inline fun namedValue(block: com.giyeok.bibix.NamedValueKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.BibixValueProto.NamedValue =
+@kotlin.jvm.JvmName("-initializenamedValue")
+inline fun namedValue(block: com.giyeok.bibix.NamedValueKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.BibixValueProto.NamedValue =
   com.giyeok.bibix.NamedValueKt.Dsl._create(com.giyeok.bibix.BibixValueProto.NamedValue.newBuilder()).apply { block() }._build()
-public object NamedValueKt {
+object NamedValueKt {
   @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
   @com.google.protobuf.kotlin.ProtoDslMarker
-  public class Dsl private constructor(
+  class Dsl private constructor(
     private val _builder: com.giyeok.bibix.BibixValueProto.NamedValue.Builder
   ) {
-    public companion object {
+    companion object {
       @kotlin.jvm.JvmSynthetic
       @kotlin.PublishedApi
       internal fun _create(builder: com.giyeok.bibix.BibixValueProto.NamedValue.Builder): Dsl = Dsl(builder)
@@ -25,7 +25,7 @@ public object NamedValueKt {
     /**
      * <code>string name = 1;</code>
      */
-    public var name: kotlin.String
+    var name: kotlin.String
       @JvmName("getName")
       get() = _builder.getName()
       @JvmName("setName")
@@ -35,14 +35,14 @@ public object NamedValueKt {
     /**
      * <code>string name = 1;</code>
      */
-    public fun clearName() {
+    fun clearName() {
       _builder.clearName()
     }
 
     /**
      * <code>.com.giyeok.bibix.BibixValue value = 2;</code>
      */
-    public var value: com.giyeok.bibix.BibixValueProto.BibixValue
+    var value: com.giyeok.bibix.BibixValueProto.BibixValue
       @JvmName("getValue")
       get() = _builder.getValue()
       @JvmName("setValue")
@@ -52,18 +52,22 @@ public object NamedValueKt {
     /**
      * <code>.com.giyeok.bibix.BibixValue value = 2;</code>
      */
-    public fun clearValue() {
+    fun clearValue() {
       _builder.clearValue()
     }
     /**
      * <code>.com.giyeok.bibix.BibixValue value = 2;</code>
      * @return Whether the value field is set.
      */
-    public fun hasValue(): kotlin.Boolean {
+    fun hasValue(): kotlin.Boolean {
       return _builder.hasValue()
     }
   }
 }
 @kotlin.jvm.JvmSynthetic
-public inline fun com.giyeok.bibix.BibixValueProto.NamedValue.copy(block: com.giyeok.bibix.NamedValueKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.BibixValueProto.NamedValue =
+inline fun com.giyeok.bibix.BibixValueProto.NamedValue.copy(block: com.giyeok.bibix.NamedValueKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.BibixValueProto.NamedValue =
   com.giyeok.bibix.NamedValueKt.Dsl._create(this.toBuilder()).apply { block() }._build()
+
+val com.giyeok.bibix.BibixValueProto.NamedValueOrBuilder.valueOrNull: com.giyeok.bibix.BibixValueProto.BibixValue?
+  get() = if (hasValue()) getValue() else null
+

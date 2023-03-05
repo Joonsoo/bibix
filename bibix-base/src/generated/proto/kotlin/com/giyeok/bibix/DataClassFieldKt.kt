@@ -3,16 +3,16 @@
 
 package com.giyeok.bibix;
 
-@kotlin.jvm.JvmSynthetic
-public inline fun dataClassField(block: com.giyeok.bibix.DataClassFieldKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.BibixValueProto.DataClassField =
+@kotlin.jvm.JvmName("-initializedataClassField")
+inline fun dataClassField(block: com.giyeok.bibix.DataClassFieldKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.BibixValueProto.DataClassField =
   com.giyeok.bibix.DataClassFieldKt.Dsl._create(com.giyeok.bibix.BibixValueProto.DataClassField.newBuilder()).apply { block() }._build()
-public object DataClassFieldKt {
+object DataClassFieldKt {
   @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
   @com.google.protobuf.kotlin.ProtoDslMarker
-  public class Dsl private constructor(
+  class Dsl private constructor(
     private val _builder: com.giyeok.bibix.BibixValueProto.DataClassField.Builder
   ) {
-    public companion object {
+    companion object {
       @kotlin.jvm.JvmSynthetic
       @kotlin.PublishedApi
       internal fun _create(builder: com.giyeok.bibix.BibixValueProto.DataClassField.Builder): Dsl = Dsl(builder)
@@ -25,7 +25,7 @@ public object DataClassFieldKt {
     /**
      * <code>string name = 1;</code>
      */
-    public var name: kotlin.String
+    var name: kotlin.String
       @JvmName("getName")
       get() = _builder.getName()
       @JvmName("setName")
@@ -35,14 +35,14 @@ public object DataClassFieldKt {
     /**
      * <code>string name = 1;</code>
      */
-    public fun clearName() {
+    fun clearName() {
       _builder.clearName()
     }
 
     /**
      * <code>.com.giyeok.bibix.BibixValue value = 2;</code>
      */
-    public var value: com.giyeok.bibix.BibixValueProto.BibixValue
+    var value: com.giyeok.bibix.BibixValueProto.BibixValue
       @JvmName("getValue")
       get() = _builder.getValue()
       @JvmName("setValue")
@@ -52,18 +52,22 @@ public object DataClassFieldKt {
     /**
      * <code>.com.giyeok.bibix.BibixValue value = 2;</code>
      */
-    public fun clearValue() {
+    fun clearValue() {
       _builder.clearValue()
     }
     /**
      * <code>.com.giyeok.bibix.BibixValue value = 2;</code>
      * @return Whether the value field is set.
      */
-    public fun hasValue(): kotlin.Boolean {
+    fun hasValue(): kotlin.Boolean {
       return _builder.hasValue()
     }
   }
 }
 @kotlin.jvm.JvmSynthetic
-public inline fun com.giyeok.bibix.BibixValueProto.DataClassField.copy(block: com.giyeok.bibix.DataClassFieldKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.BibixValueProto.DataClassField =
+inline fun com.giyeok.bibix.BibixValueProto.DataClassField.copy(block: com.giyeok.bibix.DataClassFieldKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.BibixValueProto.DataClassField =
   com.giyeok.bibix.DataClassFieldKt.Dsl._create(this.toBuilder()).apply { block() }._build()
+
+val com.giyeok.bibix.BibixValueProto.DataClassFieldOrBuilder.valueOrNull: com.giyeok.bibix.BibixValueProto.BibixValue?
+  get() = if (hasValue()) getValue() else null
+

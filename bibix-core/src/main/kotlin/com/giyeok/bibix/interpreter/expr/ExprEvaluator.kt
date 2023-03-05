@@ -34,79 +34,81 @@ class ExprEvaluator(
   ): BibixValue = coercer.coerce(task, context, value, type)
 
   suspend fun evaluateType(
-    task: Task,
+    requester: Task,
     context: NameLookupContext,
     type: BibixAst.TypeExpr,
-  ): BibixType = when (type) {
-    is BibixAst.Name -> {
-      when (val name = type.tokens) {
-        listOf("boolean") -> BooleanType
-        listOf("string") -> StringType
-        listOf("file") -> FileType
-        listOf("directory") -> DirectoryType
-        listOf("path") -> PathType
-        listOf("buildrule") -> BuildRuleDefType
-        listOf("actionrule") -> ActionRuleDefType
-        listOf("type") -> TypeType
-        else -> {
-          when (val definition = interpreter.lookupName(task, context, name)) {
-            is Definition.ClassDef -> {
-              val packageName = sourceManager.getPackageName(definition.cname.sourceId)
-                ?: throw IllegalStateException(
-                  "package name was not set for ${sourceManager.descriptionOf(definition.cname.sourceId)}"
-                )
-              val className = definition.cname.tokens.joinToString(".")
-              when (definition.classDef) {
-                is BibixAst.DataClassDef -> DataClassType(packageName, className)
-                is BibixAst.SuperClassDef -> SuperClassType(packageName, className)
-                else -> throw AssertionError()
+  ): BibixType = g.withTask(requester, g.evalTypeTask(context.sourceId, type)) { task ->
+    when (type) {
+      is BibixAst.Name -> {
+        when (val name = type.tokens) {
+          listOf("boolean") -> BooleanType
+          listOf("string") -> StringType
+          listOf("file") -> FileType
+          listOf("directory") -> DirectoryType
+          listOf("path") -> PathType
+          listOf("buildrule") -> BuildRuleDefType
+          listOf("actionrule") -> ActionRuleDefType
+          listOf("type") -> TypeType
+          else -> {
+            when (val definition = interpreter.lookupName(task, context, name)) {
+              is Definition.ClassDef -> {
+                val packageName = sourceManager.getPackageName(definition.cname.sourceId)
+                  ?: throw IllegalStateException(
+                    "package name was not set for ${sourceManager.descriptionOf(definition.cname.sourceId)}"
+                  )
+                val className = definition.cname.tokens.joinToString(".")
+                when (definition.classDef) {
+                  is BibixAst.DataClassDef -> DataClassType(packageName, className)
+                  is BibixAst.SuperClassDef -> SuperClassType(packageName, className)
+                  else -> throw AssertionError()
+                }
               }
-            }
 
-            is Definition.EnumDef -> {
-              val packageName = sourceManager.getPackageName(definition.cname.sourceId)
-                ?: throw IllegalStateException("")
-              val className = definition.cname.tokens.joinToString(".")
-              EnumType(packageName, className)
-            }
+              is Definition.EnumDef -> {
+                val packageName = sourceManager.getPackageName(definition.cname.sourceId)
+                  ?: throw IllegalStateException("")
+                val className = definition.cname.tokens.joinToString(".")
+                EnumType(packageName, className)
+              }
 
-            else -> throw AssertionError()
+              else -> throw AssertionError()
+            }
           }
         }
       }
-    }
 
-    is BibixAst.NoneType -> NoneType
-    is BibixAst.CollectionType -> {
-      val typeParams = type.typeParams.params
-      check(typeParams.size == 1) { "Invalid number of type parameters" }
-      when (type.name) {
-        "set" -> SetType(evaluateType(task, context, typeParams.first()))
-        "list" -> ListType(evaluateType(task, context, typeParams.first()))
-        else -> throw IllegalStateException("Unknown colleciton type: ${type.name}")
+      is BibixAst.NoneType -> NoneType
+      is BibixAst.CollectionType -> {
+        val typeParams = type.typeParams.params
+        check(typeParams.size == 1) { "Invalid number of type parameters" }
+        when (type.name) {
+          "set" -> SetType(evaluateType(task, context, typeParams.first()))
+          "list" -> ListType(evaluateType(task, context, typeParams.first()))
+          else -> throw IllegalStateException("Unknown colleciton type: ${type.name}")
+        }
       }
-    }
 
-    is BibixAst.TupleType -> {
-      val elemTypes = type.elems.map { elemTypeElem ->
-        evaluateType(task, context, elemTypeElem)
+      is BibixAst.TupleType -> {
+        val elemTypes = type.elems.map { elemTypeElem ->
+          evaluateType(task, context, elemTypeElem)
+        }
+        TupleType(elemTypes)
       }
-      TupleType(elemTypes)
-    }
 
-    is BibixAst.NamedTupleType -> {
-      val elemTypes = type.elems.map { pair ->
-        pair.name to evaluateType(task, context, pair.typ)
+      is BibixAst.NamedTupleType -> {
+        val elemTypes = type.elems.map { pair ->
+          pair.name to evaluateType(task, context, pair.typ)
+        }
+        NamedTupleType(elemTypes)
       }
-      NamedTupleType(elemTypes)
-    }
 
-    is BibixAst.UnionType -> {
-      val candTypes = type.elems.map { evaluateType(task, context, it) }
-      UnionType(candTypes)
-    }
+      is BibixAst.UnionType -> {
+        val candTypes = type.elems.map { evaluateType(task, context, it) }
+        UnionType(candTypes)
+      }
 
-    else -> throw AssertionError()
+      else -> throw AssertionError()
+    }
   }
 
   suspend fun evaluateName(
@@ -119,13 +121,15 @@ class ExprEvaluator(
     evaluateName(task, context, name.tokens, thisValue, outputNames)
 
   suspend fun evaluateName(
-    task: Task,
+    requester: Task,
     context: NameLookupContext,
     name: List<String>,
     thisValue: BibixValue?,
     outputNames: Set<CName>,
   ): EvaluationResult =
-    evaluateDefinition(task, interpreter.lookupName(task, context, name), thisValue, outputNames)
+    g.withTask(requester, g.evalNameTask(context, name, thisValue)) { task ->
+      evaluateDefinition(task, interpreter.lookupName(task, context, name), thisValue, outputNames)
+    }
 
   suspend fun evaluateDefinition(
     requester: Task,

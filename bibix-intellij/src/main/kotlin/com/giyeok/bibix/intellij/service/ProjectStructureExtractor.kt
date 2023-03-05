@@ -9,6 +9,7 @@ import com.giyeok.bibix.interpreter.BibixProject
 import com.giyeok.bibix.interpreter.expr.Definition
 import com.giyeok.bibix.plugins.jvm.*
 import com.giyeok.bibix.plugins.maven.Artifact
+import com.giyeok.bibix.utils.toHexString
 import com.google.common.annotations.VisibleForTesting
 import java.nio.file.Path
 import kotlin.io.path.*
@@ -183,7 +184,7 @@ object ProjectStructureExtractor {
 
     val modules =
       javaModulesCollector.modules + ktjvmModulesCollector.modules + scalaModulesCollector.modules
-    val namesMap = buildFrontend.repo.repoMeta.objectNamesMap
+    val namesMap = buildFrontend.repo.outputNames.mapValues { it.value.toHexString() }
 
     val objectNamesMap = mutableMapOf<String, String>()
     namesMap.forEach { (objHash, name) ->

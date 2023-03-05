@@ -3,16 +3,16 @@
 
 package com.giyeok.bibix;
 
-@kotlin.jvm.JvmSynthetic
-public inline fun sourceId(block: com.giyeok.bibix.SourceIdKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.BibixIdProto.SourceId =
+@kotlin.jvm.JvmName("-initializesourceId")
+inline fun sourceId(block: com.giyeok.bibix.SourceIdKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.BibixIdProto.SourceId =
   com.giyeok.bibix.SourceIdKt.Dsl._create(com.giyeok.bibix.BibixIdProto.SourceId.newBuilder()).apply { block() }._build()
-public object SourceIdKt {
+object SourceIdKt {
   @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
   @com.google.protobuf.kotlin.ProtoDslMarker
-  public class Dsl private constructor(
+  class Dsl private constructor(
     private val _builder: com.giyeok.bibix.BibixIdProto.SourceId.Builder
   ) {
-    public companion object {
+    companion object {
       @kotlin.jvm.JvmSynthetic
       @kotlin.PublishedApi
       internal fun _create(builder: com.giyeok.bibix.BibixIdProto.SourceId.Builder): Dsl = Dsl(builder)
@@ -23,9 +23,69 @@ public object SourceIdKt {
     internal fun _build(): com.giyeok.bibix.BibixIdProto.SourceId = _builder.build()
 
     /**
-     * <code>.google.protobuf.Empty main_source = 1;</code>
+     * <pre>
+     * external_plugin_objhash 인 경우를 제외하고는 비빅스 버전을 적어야 함
+     * </pre>
+     *
+     * <code>optional string bibix_version = 1;</code>
      */
-    public var mainSource: com.google.protobuf.Empty
+    var bibixVersion: kotlin.String
+      @JvmName("getBibixVersion")
+      get() = _builder.getBibixVersion()
+      @JvmName("setBibixVersion")
+      set(value) {
+        _builder.setBibixVersion(value)
+      }
+    /**
+     * <pre>
+     * external_plugin_objhash 인 경우를 제외하고는 비빅스 버전을 적어야 함
+     * </pre>
+     *
+     * <code>optional string bibix_version = 1;</code>
+     */
+    fun clearBibixVersion() {
+      _builder.clearBibixVersion()
+    }
+    /**
+     * <pre>
+     * external_plugin_objhash 인 경우를 제외하고는 비빅스 버전을 적어야 함
+     * </pre>
+     *
+     * <code>optional string bibix_version = 1;</code>
+     * @return Whether the bibixVersion field is set.
+     */
+    fun hasBibixVersion(): kotlin.Boolean {
+      return _builder.hasBibixVersion()
+    }
+
+    /**
+     * <code>.google.protobuf.Empty prelude_source = 2;</code>
+     */
+    var preludeSource: com.google.protobuf.Empty
+      @JvmName("getPreludeSource")
+      get() = _builder.getPreludeSource()
+      @JvmName("setPreludeSource")
+      set(value) {
+        _builder.setPreludeSource(value)
+      }
+    /**
+     * <code>.google.protobuf.Empty prelude_source = 2;</code>
+     */
+    fun clearPreludeSource() {
+      _builder.clearPreludeSource()
+    }
+    /**
+     * <code>.google.protobuf.Empty prelude_source = 2;</code>
+     * @return Whether the preludeSource field is set.
+     */
+    fun hasPreludeSource(): kotlin.Boolean {
+      return _builder.hasPreludeSource()
+    }
+
+    /**
+     * <code>.google.protobuf.Empty main_source = 3;</code>
+     */
+    var mainSource: com.google.protobuf.Empty
       @JvmName("getMainSource")
       get() = _builder.getMainSource()
       @JvmName("setMainSource")
@@ -33,23 +93,23 @@ public object SourceIdKt {
         _builder.setMainSource(value)
       }
     /**
-     * <code>.google.protobuf.Empty main_source = 1;</code>
+     * <code>.google.protobuf.Empty main_source = 3;</code>
      */
-    public fun clearMainSource() {
+    fun clearMainSource() {
       _builder.clearMainSource()
     }
     /**
-     * <code>.google.protobuf.Empty main_source = 1;</code>
+     * <code>.google.protobuf.Empty main_source = 3;</code>
      * @return Whether the mainSource field is set.
      */
-    public fun hasMainSource(): kotlin.Boolean {
+    fun hasMainSource(): kotlin.Boolean {
       return _builder.hasMainSource()
     }
 
     /**
-     * <code>string preloaded_plugin = 2;</code>
+     * <code>string preloaded_plugin = 4;</code>
      */
-    public var preloadedPlugin: kotlin.String
+    var preloadedPlugin: kotlin.String
       @JvmName("getPreloadedPlugin")
       get() = _builder.getPreloadedPlugin()
       @JvmName("setPreloadedPlugin")
@@ -57,51 +117,61 @@ public object SourceIdKt {
         _builder.setPreloadedPlugin(value)
       }
     /**
-     * <code>string preloaded_plugin = 2;</code>
+     * <code>string preloaded_plugin = 4;</code>
      */
-    public fun clearPreloadedPlugin() {
+    fun clearPreloadedPlugin() {
       _builder.clearPreloadedPlugin()
     }
     /**
-     * <code>string preloaded_plugin = 2;</code>
+     * <code>string preloaded_plugin = 4;</code>
      * @return Whether the preloadedPlugin field is set.
      */
-    public fun hasPreloadedPlugin(): kotlin.Boolean {
+    fun hasPreloadedPlugin(): kotlin.Boolean {
       return _builder.hasPreloadedPlugin()
     }
 
     /**
-     * <code>.com.giyeok.bibix.ExternalBibixProject extern_plugin_objhash = 3;</code>
+     * <code>.com.giyeok.bibix.ExternalBibixProject external_plugin_objhash = 5;</code>
      */
-    public var externPluginObjhash: com.giyeok.bibix.BibixIdProto.ExternalBibixProject
-      @JvmName("getExternPluginObjhash")
-      get() = _builder.getExternPluginObjhash()
-      @JvmName("setExternPluginObjhash")
+    var externalPluginObjhash: com.giyeok.bibix.BibixIdProto.ExternalBibixProject
+      @JvmName("getExternalPluginObjhash")
+      get() = _builder.getExternalPluginObjhash()
+      @JvmName("setExternalPluginObjhash")
       set(value) {
-        _builder.setExternPluginObjhash(value)
+        _builder.setExternalPluginObjhash(value)
       }
     /**
-     * <code>.com.giyeok.bibix.ExternalBibixProject extern_plugin_objhash = 3;</code>
+     * <code>.com.giyeok.bibix.ExternalBibixProject external_plugin_objhash = 5;</code>
      */
-    public fun clearExternPluginObjhash() {
-      _builder.clearExternPluginObjhash()
+    fun clearExternalPluginObjhash() {
+      _builder.clearExternalPluginObjhash()
     }
     /**
-     * <code>.com.giyeok.bibix.ExternalBibixProject extern_plugin_objhash = 3;</code>
-     * @return Whether the externPluginObjhash field is set.
+     * <code>.com.giyeok.bibix.ExternalBibixProject external_plugin_objhash = 5;</code>
+     * @return Whether the externalPluginObjhash field is set.
      */
-    public fun hasExternPluginObjhash(): kotlin.Boolean {
-      return _builder.hasExternPluginObjhash()
+    fun hasExternalPluginObjhash(): kotlin.Boolean {
+      return _builder.hasExternalPluginObjhash()
     }
-    public val sourceCase: com.giyeok.bibix.BibixIdProto.SourceId.SourceCase
+    val sourceCase: com.giyeok.bibix.BibixIdProto.SourceId.SourceCase
       @JvmName("getSourceCase")
       get() = _builder.getSourceCase()
 
-    public fun clearSource() {
+    fun clearSource() {
       _builder.clearSource()
     }
   }
 }
 @kotlin.jvm.JvmSynthetic
-public inline fun com.giyeok.bibix.BibixIdProto.SourceId.copy(block: com.giyeok.bibix.SourceIdKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.BibixIdProto.SourceId =
+inline fun com.giyeok.bibix.BibixIdProto.SourceId.copy(block: com.giyeok.bibix.SourceIdKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.BibixIdProto.SourceId =
   com.giyeok.bibix.SourceIdKt.Dsl._create(this.toBuilder()).apply { block() }._build()
+
+val com.giyeok.bibix.BibixIdProto.SourceIdOrBuilder.preludeSourceOrNull: com.google.protobuf.Empty?
+  get() = if (hasPreludeSource()) getPreludeSource() else null
+
+val com.giyeok.bibix.BibixIdProto.SourceIdOrBuilder.mainSourceOrNull: com.google.protobuf.Empty?
+  get() = if (hasMainSource()) getMainSource() else null
+
+val com.giyeok.bibix.BibixIdProto.SourceIdOrBuilder.externalPluginObjhashOrNull: com.giyeok.bibix.BibixIdProto.ExternalBibixProject?
+  get() = if (hasExternalPluginObjhash()) getExternalPluginObjhash() else null
+

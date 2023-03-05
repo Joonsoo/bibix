@@ -32,6 +32,10 @@ fun testInterpreter(
 )
 
 class NopeProgressNotifier : ProgressNotifier {
+  override fun setInterpreter(interpreter: BibixInterpreter) {
+    // do nothing
+  }
+
   override fun notifyProgresses(progresses: () -> List<ThreadState?>) {
     // do nothing
   }

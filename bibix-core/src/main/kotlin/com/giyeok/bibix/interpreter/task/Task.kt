@@ -2,6 +2,7 @@ package com.giyeok.bibix.interpreter.task
 
 import com.giyeok.bibix.base.BibixValue
 import com.giyeok.bibix.base.SourceId
+import com.giyeok.bibix.interpreter.expr.NameLookupContext
 
 sealed class Task {
   object RootTask : Task()
@@ -15,6 +16,16 @@ sealed class Task {
 
   data class EvalExpr(val sourceId: SourceId, val exprId: Int, val thisValue: BibixValue?) :
     Task()
+
+  data class EvalType(val sourceId: SourceId, val typeExprId: Int) : Task()
+
+  data class EvalName(
+    val nameLookupContext: NameLookupContext,
+    val name: List<String>,
+    val thisValue: BibixValue?
+  ) : Task()
+
+  data class LookupName(val nameLookupContext: NameLookupContext, val name: List<String>) : Task()
 
   data class PluginRequestedCallExpr(val sourceId: SourceId, val id: Int) : Task()
 

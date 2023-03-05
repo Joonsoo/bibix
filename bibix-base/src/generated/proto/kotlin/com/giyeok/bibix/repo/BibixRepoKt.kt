@@ -3,16 +3,16 @@
 
 package com.giyeok.bibix.repo;
 
-@kotlin.jvm.JvmSynthetic
-public inline fun bibixRepo(block: com.giyeok.bibix.repo.BibixRepoKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.repo.BibixRepoProto.BibixRepo =
+@kotlin.jvm.JvmName("-initializebibixRepo")
+inline fun bibixRepo(block: com.giyeok.bibix.repo.BibixRepoKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.repo.BibixRepoProto.BibixRepo =
   com.giyeok.bibix.repo.BibixRepoKt.Dsl._create(com.giyeok.bibix.repo.BibixRepoProto.BibixRepo.newBuilder()).apply { block() }._build()
-public object BibixRepoKt {
+object BibixRepoKt {
   @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
   @com.google.protobuf.kotlin.ProtoDslMarker
-  public class Dsl private constructor(
+  class Dsl private constructor(
     private val _builder: com.giyeok.bibix.repo.BibixRepoProto.BibixRepo.Builder
   ) {
-    public companion object {
+    companion object {
       @kotlin.jvm.JvmSynthetic
       @kotlin.PublishedApi
       internal fun _create(builder: com.giyeok.bibix.repo.BibixRepoProto.BibixRepo.Builder): Dsl = Dsl(builder)
@@ -23,338 +23,207 @@ public object BibixRepoKt {
     internal fun _build(): com.giyeok.bibix.repo.BibixRepoProto.BibixRepo = _builder.build()
 
     /**
-     * <pre>
-     * source id hash -&gt; source id
-     * target id hash -&gt; target id(including args map &amp; input hashes)
-     * </pre>
-     *
-     * <code>string repo_schema_version = 1;</code>
+     * An uninstantiable, behaviorless type to represent the field in
+     * generics.
      */
-    public var repoSchemaVersion: kotlin.String
-      @JvmName("getRepoSchemaVersion")
-      get() = _builder.getRepoSchemaVersion()
-      @JvmName("setRepoSchemaVersion")
-      set(value) {
-        _builder.setRepoSchemaVersion(value)
-      }
+    @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
+    class TargetsProxy private constructor() : com.google.protobuf.kotlin.DslProxy()
     /**
      * <pre>
-     * source id hash -&gt; source id
-     * target id hash -&gt; target id(including args map &amp; input hashes)
+     * target id hex -&gt; target data
      * </pre>
      *
-     * <code>string repo_schema_version = 1;</code>
+     * <code>repeated .com.giyeok.bibix.repo.TargetData targets = 1;</code>
      */
-    public fun clearRepoSchemaVersion() {
-      _builder.clearRepoSchemaVersion()
+     val targets: com.google.protobuf.kotlin.DslList<com.giyeok.bibix.repo.BibixRepoProto.TargetData, TargetsProxy>
+      @kotlin.jvm.JvmSynthetic
+      get() = com.google.protobuf.kotlin.DslList(
+        _builder.getTargetsList()
+      )
+    /**
+     * <pre>
+     * target id hex -&gt; target data
+     * </pre>
+     *
+     * <code>repeated .com.giyeok.bibix.repo.TargetData targets = 1;</code>
+     * @param value The targets to add.
+     */
+    @kotlin.jvm.JvmSynthetic
+    @kotlin.jvm.JvmName("addTargets")
+    fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.repo.BibixRepoProto.TargetData, TargetsProxy>.add(value: com.giyeok.bibix.repo.BibixRepoProto.TargetData) {
+      _builder.addTargets(value)
+    }
+    /**
+     * <pre>
+     * target id hex -&gt; target data
+     * </pre>
+     *
+     * <code>repeated .com.giyeok.bibix.repo.TargetData targets = 1;</code>
+     * @param value The targets to add.
+     */
+    @kotlin.jvm.JvmSynthetic
+    @kotlin.jvm.JvmName("plusAssignTargets")
+    @Suppress("NOTHING_TO_INLINE")
+    inline operator fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.repo.BibixRepoProto.TargetData, TargetsProxy>.plusAssign(value: com.giyeok.bibix.repo.BibixRepoProto.TargetData) {
+      add(value)
+    }
+    /**
+     * <pre>
+     * target id hex -&gt; target data
+     * </pre>
+     *
+     * <code>repeated .com.giyeok.bibix.repo.TargetData targets = 1;</code>
+     * @param values The targets to add.
+     */
+    @kotlin.jvm.JvmSynthetic
+    @kotlin.jvm.JvmName("addAllTargets")
+    fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.repo.BibixRepoProto.TargetData, TargetsProxy>.addAll(values: kotlin.collections.Iterable<com.giyeok.bibix.repo.BibixRepoProto.TargetData>) {
+      _builder.addAllTargets(values)
+    }
+    /**
+     * <pre>
+     * target id hex -&gt; target data
+     * </pre>
+     *
+     * <code>repeated .com.giyeok.bibix.repo.TargetData targets = 1;</code>
+     * @param values The targets to add.
+     */
+    @kotlin.jvm.JvmSynthetic
+    @kotlin.jvm.JvmName("plusAssignAllTargets")
+    @Suppress("NOTHING_TO_INLINE")
+    inline operator fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.repo.BibixRepoProto.TargetData, TargetsProxy>.plusAssign(values: kotlin.collections.Iterable<com.giyeok.bibix.repo.BibixRepoProto.TargetData>) {
+      addAll(values)
+    }
+    /**
+     * <pre>
+     * target id hex -&gt; target data
+     * </pre>
+     *
+     * <code>repeated .com.giyeok.bibix.repo.TargetData targets = 1;</code>
+     * @param index The index to set the value at.
+     * @param value The targets to set.
+     */
+    @kotlin.jvm.JvmSynthetic
+    @kotlin.jvm.JvmName("setTargets")
+    operator fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.repo.BibixRepoProto.TargetData, TargetsProxy>.set(index: kotlin.Int, value: com.giyeok.bibix.repo.BibixRepoProto.TargetData) {
+      _builder.setTargets(index, value)
+    }
+    /**
+     * <pre>
+     * target id hex -&gt; target data
+     * </pre>
+     *
+     * <code>repeated .com.giyeok.bibix.repo.TargetData targets = 1;</code>
+     */
+    @kotlin.jvm.JvmSynthetic
+    @kotlin.jvm.JvmName("clearTargets")
+    fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.repo.BibixRepoProto.TargetData, TargetsProxy>.clear() {
+      _builder.clearTargets()
     }
 
-    /**
-     * An uninstantiable, behaviorless type to represent the field in
-     * generics.
-     */
-    @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
-    public class ObjectsProxy private constructor() : com.google.protobuf.kotlin.DslProxy()
-    /**
-     * <code>map&lt;string, .com.giyeok.bibix.repo.ObjectInfo&gt; objects = 2;</code>
-     */
-     public val objects: com.google.protobuf.kotlin.DslMap<kotlin.String, com.giyeok.bibix.repo.BibixRepoProto.ObjectInfo, ObjectsProxy>
-      @kotlin.jvm.JvmSynthetic
-      @JvmName("getObjectsMap")
-      get() = com.google.protobuf.kotlin.DslMap(
-        _builder.getObjectsMap()
-      )
-    /**
-     * <code>map&lt;string, .com.giyeok.bibix.repo.ObjectInfo&gt; objects = 2;</code>
-     */
-    @JvmName("putObjects")
-    public fun com.google.protobuf.kotlin.DslMap<kotlin.String, com.giyeok.bibix.repo.BibixRepoProto.ObjectInfo, ObjectsProxy>
-      .put(key: kotlin.String, value: com.giyeok.bibix.repo.BibixRepoProto.ObjectInfo) {
-         _builder.putObjects(key, value)
-       }
-    /**
-     * <code>map&lt;string, .com.giyeok.bibix.repo.ObjectInfo&gt; objects = 2;</code>
-     */
-    @kotlin.jvm.JvmSynthetic
-    @JvmName("setObjects")
-    @Suppress("NOTHING_TO_INLINE")
-    public inline operator fun com.google.protobuf.kotlin.DslMap<kotlin.String, com.giyeok.bibix.repo.BibixRepoProto.ObjectInfo, ObjectsProxy>
-      .set(key: kotlin.String, value: com.giyeok.bibix.repo.BibixRepoProto.ObjectInfo) {
-         put(key, value)
-       }
-    /**
-     * <code>map&lt;string, .com.giyeok.bibix.repo.ObjectInfo&gt; objects = 2;</code>
-     */
-    @kotlin.jvm.JvmSynthetic
-    @JvmName("removeObjects")
-    public fun com.google.protobuf.kotlin.DslMap<kotlin.String, com.giyeok.bibix.repo.BibixRepoProto.ObjectInfo, ObjectsProxy>
-      .remove(key: kotlin.String) {
-         _builder.removeObjects(key)
-       }
-    /**
-     * <code>map&lt;string, .com.giyeok.bibix.repo.ObjectInfo&gt; objects = 2;</code>
-     */
-    @kotlin.jvm.JvmSynthetic
-    @JvmName("putAllObjects")
-    public fun com.google.protobuf.kotlin.DslMap<kotlin.String, com.giyeok.bibix.repo.BibixRepoProto.ObjectInfo, ObjectsProxy>
-      .putAll(map: kotlin.collections.Map<kotlin.String, com.giyeok.bibix.repo.BibixRepoProto.ObjectInfo>) {
-         _builder.putAllObjects(map)
-       }
-    /**
-     * <code>map&lt;string, .com.giyeok.bibix.repo.ObjectInfo&gt; objects = 2;</code>
-     */
-    @kotlin.jvm.JvmSynthetic
-    @JvmName("clearObjects")
-    public fun com.google.protobuf.kotlin.DslMap<kotlin.String, com.giyeok.bibix.repo.BibixRepoProto.ObjectInfo, ObjectsProxy>
-      .clear() {
-         _builder.clearObjects()
-       }
 
     /**
      * An uninstantiable, behaviorless type to represent the field in
      * generics.
      */
     @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
-    public class BuildingTargetsProxy private constructor() : com.google.protobuf.kotlin.DslProxy()
+    class OutputNamesProxy private constructor() : com.google.protobuf.kotlin.DslProxy()
     /**
-     * <code>map&lt;string, bool&gt; building_targets = 3;</code>
+     * <pre>
+     * user defined output name -&gt; target id
+     * </pre>
+     *
+     * <code>repeated .com.giyeok.bibix.repo.OutputName output_names = 2;</code>
      */
-     public val buildingTargets: com.google.protobuf.kotlin.DslMap<kotlin.String, kotlin.Boolean, BuildingTargetsProxy>
+     val outputNames: com.google.protobuf.kotlin.DslList<com.giyeok.bibix.repo.BibixRepoProto.OutputName, OutputNamesProxy>
       @kotlin.jvm.JvmSynthetic
-      @JvmName("getBuildingTargetsMap")
-      get() = com.google.protobuf.kotlin.DslMap(
-        _builder.getBuildingTargetsMap()
+      get() = com.google.protobuf.kotlin.DslList(
+        _builder.getOutputNamesList()
       )
     /**
-     * <code>map&lt;string, bool&gt; building_targets = 3;</code>
-     */
-    @JvmName("putBuildingTargets")
-    public fun com.google.protobuf.kotlin.DslMap<kotlin.String, kotlin.Boolean, BuildingTargetsProxy>
-      .put(key: kotlin.String, value: kotlin.Boolean) {
-         _builder.putBuildingTargets(key, value)
-       }
-    /**
-     * <code>map&lt;string, bool&gt; building_targets = 3;</code>
+     * <pre>
+     * user defined output name -&gt; target id
+     * </pre>
+     *
+     * <code>repeated .com.giyeok.bibix.repo.OutputName output_names = 2;</code>
+     * @param value The outputNames to add.
      */
     @kotlin.jvm.JvmSynthetic
-    @JvmName("setBuildingTargets")
+    @kotlin.jvm.JvmName("addOutputNames")
+    fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.repo.BibixRepoProto.OutputName, OutputNamesProxy>.add(value: com.giyeok.bibix.repo.BibixRepoProto.OutputName) {
+      _builder.addOutputNames(value)
+    }
+    /**
+     * <pre>
+     * user defined output name -&gt; target id
+     * </pre>
+     *
+     * <code>repeated .com.giyeok.bibix.repo.OutputName output_names = 2;</code>
+     * @param value The outputNames to add.
+     */
+    @kotlin.jvm.JvmSynthetic
+    @kotlin.jvm.JvmName("plusAssignOutputNames")
     @Suppress("NOTHING_TO_INLINE")
-    public inline operator fun com.google.protobuf.kotlin.DslMap<kotlin.String, kotlin.Boolean, BuildingTargetsProxy>
-      .set(key: kotlin.String, value: kotlin.Boolean) {
-         put(key, value)
-       }
+    inline operator fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.repo.BibixRepoProto.OutputName, OutputNamesProxy>.plusAssign(value: com.giyeok.bibix.repo.BibixRepoProto.OutputName) {
+      add(value)
+    }
     /**
-     * <code>map&lt;string, bool&gt; building_targets = 3;</code>
+     * <pre>
+     * user defined output name -&gt; target id
+     * </pre>
+     *
+     * <code>repeated .com.giyeok.bibix.repo.OutputName output_names = 2;</code>
+     * @param values The outputNames to add.
      */
     @kotlin.jvm.JvmSynthetic
-    @JvmName("removeBuildingTargets")
-    public fun com.google.protobuf.kotlin.DslMap<kotlin.String, kotlin.Boolean, BuildingTargetsProxy>
-      .remove(key: kotlin.String) {
-         _builder.removeBuildingTargets(key)
-       }
+    @kotlin.jvm.JvmName("addAllOutputNames")
+    fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.repo.BibixRepoProto.OutputName, OutputNamesProxy>.addAll(values: kotlin.collections.Iterable<com.giyeok.bibix.repo.BibixRepoProto.OutputName>) {
+      _builder.addAllOutputNames(values)
+    }
     /**
-     * <code>map&lt;string, bool&gt; building_targets = 3;</code>
+     * <pre>
+     * user defined output name -&gt; target id
+     * </pre>
+     *
+     * <code>repeated .com.giyeok.bibix.repo.OutputName output_names = 2;</code>
+     * @param values The outputNames to add.
      */
     @kotlin.jvm.JvmSynthetic
-    @JvmName("putAllBuildingTargets")
-    public fun com.google.protobuf.kotlin.DslMap<kotlin.String, kotlin.Boolean, BuildingTargetsProxy>
-      .putAll(map: kotlin.collections.Map<kotlin.String, kotlin.Boolean>) {
-         _builder.putAllBuildingTargets(map)
-       }
+    @kotlin.jvm.JvmName("plusAssignAllOutputNames")
+    @Suppress("NOTHING_TO_INLINE")
+    inline operator fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.repo.BibixRepoProto.OutputName, OutputNamesProxy>.plusAssign(values: kotlin.collections.Iterable<com.giyeok.bibix.repo.BibixRepoProto.OutputName>) {
+      addAll(values)
+    }
     /**
-     * <code>map&lt;string, bool&gt; building_targets = 3;</code>
+     * <pre>
+     * user defined output name -&gt; target id
+     * </pre>
+     *
+     * <code>repeated .com.giyeok.bibix.repo.OutputName output_names = 2;</code>
+     * @param index The index to set the value at.
+     * @param value The outputNames to set.
      */
     @kotlin.jvm.JvmSynthetic
-    @JvmName("clearBuildingTargets")
-    public fun com.google.protobuf.kotlin.DslMap<kotlin.String, kotlin.Boolean, BuildingTargetsProxy>
-      .clear() {
-         _builder.clearBuildingTargets()
-       }
+    @kotlin.jvm.JvmName("setOutputNames")
+    operator fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.repo.BibixRepoProto.OutputName, OutputNamesProxy>.set(index: kotlin.Int, value: com.giyeok.bibix.repo.BibixRepoProto.OutputName) {
+      _builder.setOutputNames(index, value)
+    }
+    /**
+     * <pre>
+     * user defined output name -&gt; target id
+     * </pre>
+     *
+     * <code>repeated .com.giyeok.bibix.repo.OutputName output_names = 2;</code>
+     */
+    @kotlin.jvm.JvmSynthetic
+    @kotlin.jvm.JvmName("clearOutputNames")
+    fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.repo.BibixRepoProto.OutputName, OutputNamesProxy>.clear() {
+      _builder.clearOutputNames()
+    }
 
-    /**
-     * An uninstantiable, behaviorless type to represent the field in
-     * generics.
-     */
-    @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
-    public class ObjectNamesProxy private constructor() : com.google.protobuf.kotlin.DslProxy()
-    /**
-     * <code>map&lt;string, string&gt; object_names = 4;</code>
-     */
-     public val objectNames: com.google.protobuf.kotlin.DslMap<kotlin.String, kotlin.String, ObjectNamesProxy>
-      @kotlin.jvm.JvmSynthetic
-      @JvmName("getObjectNamesMap")
-      get() = com.google.protobuf.kotlin.DslMap(
-        _builder.getObjectNamesMap()
-      )
-    /**
-     * <code>map&lt;string, string&gt; object_names = 4;</code>
-     */
-    @JvmName("putObjectNames")
-    public fun com.google.protobuf.kotlin.DslMap<kotlin.String, kotlin.String, ObjectNamesProxy>
-      .put(key: kotlin.String, value: kotlin.String) {
-         _builder.putObjectNames(key, value)
-       }
-    /**
-     * <code>map&lt;string, string&gt; object_names = 4;</code>
-     */
-    @kotlin.jvm.JvmSynthetic
-    @JvmName("setObjectNames")
-    @Suppress("NOTHING_TO_INLINE")
-    public inline operator fun com.google.protobuf.kotlin.DslMap<kotlin.String, kotlin.String, ObjectNamesProxy>
-      .set(key: kotlin.String, value: kotlin.String) {
-         put(key, value)
-       }
-    /**
-     * <code>map&lt;string, string&gt; object_names = 4;</code>
-     */
-    @kotlin.jvm.JvmSynthetic
-    @JvmName("removeObjectNames")
-    public fun com.google.protobuf.kotlin.DslMap<kotlin.String, kotlin.String, ObjectNamesProxy>
-      .remove(key: kotlin.String) {
-         _builder.removeObjectNames(key)
-       }
-    /**
-     * <code>map&lt;string, string&gt; object_names = 4;</code>
-     */
-    @kotlin.jvm.JvmSynthetic
-    @JvmName("putAllObjectNames")
-    public fun com.google.protobuf.kotlin.DslMap<kotlin.String, kotlin.String, ObjectNamesProxy>
-      .putAll(map: kotlin.collections.Map<kotlin.String, kotlin.String>) {
-         _builder.putAllObjectNames(map)
-       }
-    /**
-     * <code>map&lt;string, string&gt; object_names = 4;</code>
-     */
-    @kotlin.jvm.JvmSynthetic
-    @JvmName("clearObjectNames")
-    public fun com.google.protobuf.kotlin.DslMap<kotlin.String, kotlin.String, ObjectNamesProxy>
-      .clear() {
-         _builder.clearObjectNames()
-       }
-
-    /**
-     * An uninstantiable, behaviorless type to represent the field in
-     * generics.
-     */
-    @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
-    public class SourcesProxy private constructor() : com.google.protobuf.kotlin.DslProxy()
-    /**
-     * <code>map&lt;string, .com.giyeok.bibix.SourceId&gt; sources = 5;</code>
-     */
-     public val sources: com.google.protobuf.kotlin.DslMap<kotlin.String, com.giyeok.bibix.BibixIdProto.SourceId, SourcesProxy>
-      @kotlin.jvm.JvmSynthetic
-      @JvmName("getSourcesMap")
-      get() = com.google.protobuf.kotlin.DslMap(
-        _builder.getSourcesMap()
-      )
-    /**
-     * <code>map&lt;string, .com.giyeok.bibix.SourceId&gt; sources = 5;</code>
-     */
-    @JvmName("putSources")
-    public fun com.google.protobuf.kotlin.DslMap<kotlin.String, com.giyeok.bibix.BibixIdProto.SourceId, SourcesProxy>
-      .put(key: kotlin.String, value: com.giyeok.bibix.BibixIdProto.SourceId) {
-         _builder.putSources(key, value)
-       }
-    /**
-     * <code>map&lt;string, .com.giyeok.bibix.SourceId&gt; sources = 5;</code>
-     */
-    @kotlin.jvm.JvmSynthetic
-    @JvmName("setSources")
-    @Suppress("NOTHING_TO_INLINE")
-    public inline operator fun com.google.protobuf.kotlin.DslMap<kotlin.String, com.giyeok.bibix.BibixIdProto.SourceId, SourcesProxy>
-      .set(key: kotlin.String, value: com.giyeok.bibix.BibixIdProto.SourceId) {
-         put(key, value)
-       }
-    /**
-     * <code>map&lt;string, .com.giyeok.bibix.SourceId&gt; sources = 5;</code>
-     */
-    @kotlin.jvm.JvmSynthetic
-    @JvmName("removeSources")
-    public fun com.google.protobuf.kotlin.DslMap<kotlin.String, com.giyeok.bibix.BibixIdProto.SourceId, SourcesProxy>
-      .remove(key: kotlin.String) {
-         _builder.removeSources(key)
-       }
-    /**
-     * <code>map&lt;string, .com.giyeok.bibix.SourceId&gt; sources = 5;</code>
-     */
-    @kotlin.jvm.JvmSynthetic
-    @JvmName("putAllSources")
-    public fun com.google.protobuf.kotlin.DslMap<kotlin.String, com.giyeok.bibix.BibixIdProto.SourceId, SourcesProxy>
-      .putAll(map: kotlin.collections.Map<kotlin.String, com.giyeok.bibix.BibixIdProto.SourceId>) {
-         _builder.putAllSources(map)
-       }
-    /**
-     * <code>map&lt;string, .com.giyeok.bibix.SourceId&gt; sources = 5;</code>
-     */
-    @kotlin.jvm.JvmSynthetic
-    @JvmName("clearSources")
-    public fun com.google.protobuf.kotlin.DslMap<kotlin.String, com.giyeok.bibix.BibixIdProto.SourceId, SourcesProxy>
-      .clear() {
-         _builder.clearSources()
-       }
-
-    /**
-     * An uninstantiable, behaviorless type to represent the field in
-     * generics.
-     */
-    @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
-    public class ObjectIdsProxy private constructor() : com.google.protobuf.kotlin.DslProxy()
-    /**
-     * <code>map&lt;string, .com.giyeok.bibix.ObjectId&gt; object_ids = 6;</code>
-     */
-     public val objectIds: com.google.protobuf.kotlin.DslMap<kotlin.String, com.giyeok.bibix.BibixIdProto.ObjectId, ObjectIdsProxy>
-      @kotlin.jvm.JvmSynthetic
-      @JvmName("getObjectIdsMap")
-      get() = com.google.protobuf.kotlin.DslMap(
-        _builder.getObjectIdsMap()
-      )
-    /**
-     * <code>map&lt;string, .com.giyeok.bibix.ObjectId&gt; object_ids = 6;</code>
-     */
-    @JvmName("putObjectIds")
-    public fun com.google.protobuf.kotlin.DslMap<kotlin.String, com.giyeok.bibix.BibixIdProto.ObjectId, ObjectIdsProxy>
-      .put(key: kotlin.String, value: com.giyeok.bibix.BibixIdProto.ObjectId) {
-         _builder.putObjectIds(key, value)
-       }
-    /**
-     * <code>map&lt;string, .com.giyeok.bibix.ObjectId&gt; object_ids = 6;</code>
-     */
-    @kotlin.jvm.JvmSynthetic
-    @JvmName("setObjectIds")
-    @Suppress("NOTHING_TO_INLINE")
-    public inline operator fun com.google.protobuf.kotlin.DslMap<kotlin.String, com.giyeok.bibix.BibixIdProto.ObjectId, ObjectIdsProxy>
-      .set(key: kotlin.String, value: com.giyeok.bibix.BibixIdProto.ObjectId) {
-         put(key, value)
-       }
-    /**
-     * <code>map&lt;string, .com.giyeok.bibix.ObjectId&gt; object_ids = 6;</code>
-     */
-    @kotlin.jvm.JvmSynthetic
-    @JvmName("removeObjectIds")
-    public fun com.google.protobuf.kotlin.DslMap<kotlin.String, com.giyeok.bibix.BibixIdProto.ObjectId, ObjectIdsProxy>
-      .remove(key: kotlin.String) {
-         _builder.removeObjectIds(key)
-       }
-    /**
-     * <code>map&lt;string, .com.giyeok.bibix.ObjectId&gt; object_ids = 6;</code>
-     */
-    @kotlin.jvm.JvmSynthetic
-    @JvmName("putAllObjectIds")
-    public fun com.google.protobuf.kotlin.DslMap<kotlin.String, com.giyeok.bibix.BibixIdProto.ObjectId, ObjectIdsProxy>
-      .putAll(map: kotlin.collections.Map<kotlin.String, com.giyeok.bibix.BibixIdProto.ObjectId>) {
-         _builder.putAllObjectIds(map)
-       }
-    /**
-     * <code>map&lt;string, .com.giyeok.bibix.ObjectId&gt; object_ids = 6;</code>
-     */
-    @kotlin.jvm.JvmSynthetic
-    @JvmName("clearObjectIds")
-    public fun com.google.protobuf.kotlin.DslMap<kotlin.String, com.giyeok.bibix.BibixIdProto.ObjectId, ObjectIdsProxy>
-      .clear() {
-         _builder.clearObjectIds()
-       }
   }
 }
 @kotlin.jvm.JvmSynthetic
-public inline fun com.giyeok.bibix.repo.BibixRepoProto.BibixRepo.copy(block: com.giyeok.bibix.repo.BibixRepoKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.repo.BibixRepoProto.BibixRepo =
+inline fun com.giyeok.bibix.repo.BibixRepoProto.BibixRepo.copy(block: com.giyeok.bibix.repo.BibixRepoKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.repo.BibixRepoProto.BibixRepo =
   com.giyeok.bibix.repo.BibixRepoKt.Dsl._create(this.toBuilder()).apply { block() }._build()
+

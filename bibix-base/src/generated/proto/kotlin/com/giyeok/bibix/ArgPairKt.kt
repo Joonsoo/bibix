@@ -3,16 +3,16 @@
 
 package com.giyeok.bibix;
 
-@kotlin.jvm.JvmSynthetic
-public inline fun argPair(block: com.giyeok.bibix.ArgPairKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.BibixIdProto.ArgPair =
+@kotlin.jvm.JvmName("-initializeargPair")
+inline fun argPair(block: com.giyeok.bibix.ArgPairKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.BibixIdProto.ArgPair =
   com.giyeok.bibix.ArgPairKt.Dsl._create(com.giyeok.bibix.BibixIdProto.ArgPair.newBuilder()).apply { block() }._build()
-public object ArgPairKt {
+object ArgPairKt {
   @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
   @com.google.protobuf.kotlin.ProtoDslMarker
-  public class Dsl private constructor(
+  class Dsl private constructor(
     private val _builder: com.giyeok.bibix.BibixIdProto.ArgPair.Builder
   ) {
-    public companion object {
+    companion object {
       @kotlin.jvm.JvmSynthetic
       @kotlin.PublishedApi
       internal fun _create(builder: com.giyeok.bibix.BibixIdProto.ArgPair.Builder): Dsl = Dsl(builder)
@@ -25,7 +25,7 @@ public object ArgPairKt {
     /**
      * <code>string name = 1;</code>
      */
-    public var name: kotlin.String
+    var name: kotlin.String
       @JvmName("getName")
       get() = _builder.getName()
       @JvmName("setName")
@@ -35,14 +35,14 @@ public object ArgPairKt {
     /**
      * <code>string name = 1;</code>
      */
-    public fun clearName() {
+    fun clearName() {
       _builder.clearName()
     }
 
     /**
      * <code>.com.giyeok.bibix.BibixValue value = 2;</code>
      */
-    public var value: com.giyeok.bibix.BibixValueProto.BibixValue
+    var value: com.giyeok.bibix.BibixValueProto.BibixValue
       @JvmName("getValue")
       get() = _builder.getValue()
       @JvmName("setValue")
@@ -52,18 +52,22 @@ public object ArgPairKt {
     /**
      * <code>.com.giyeok.bibix.BibixValue value = 2;</code>
      */
-    public fun clearValue() {
+    fun clearValue() {
       _builder.clearValue()
     }
     /**
      * <code>.com.giyeok.bibix.BibixValue value = 2;</code>
      * @return Whether the value field is set.
      */
-    public fun hasValue(): kotlin.Boolean {
+    fun hasValue(): kotlin.Boolean {
       return _builder.hasValue()
     }
   }
 }
 @kotlin.jvm.JvmSynthetic
-public inline fun com.giyeok.bibix.BibixIdProto.ArgPair.copy(block: com.giyeok.bibix.ArgPairKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.BibixIdProto.ArgPair =
+inline fun com.giyeok.bibix.BibixIdProto.ArgPair.copy(block: com.giyeok.bibix.ArgPairKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.BibixIdProto.ArgPair =
   com.giyeok.bibix.ArgPairKt.Dsl._create(this.toBuilder()).apply { block() }._build()
+
+val com.giyeok.bibix.BibixIdProto.ArgPairOrBuilder.valueOrNull: com.giyeok.bibix.BibixValueProto.BibixValue?
+  get() = if (hasValue()) getValue() else null
+

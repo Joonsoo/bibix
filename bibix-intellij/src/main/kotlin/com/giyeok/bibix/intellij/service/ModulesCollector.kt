@@ -17,9 +17,9 @@ class ModulesCollector(val languageType: String, val sdkArtifactName: Pair<Strin
     val resDirs =
       ResourceDirectoryExtractor.findResourceDirectoriesOf(resources.values.map { (it as FileValue).file })
     val deps = context.arguments.getValue("deps") as SetValue
-    val origin = LocalBuilt(context.objectIdHash, "ModulesCollector")
+    val origin = LocalBuilt(context.targetId, "ModulesCollector")
 
-    _modules[context.objectIdHash] = ModuleData(
+    _modules[context.targetId] = ModuleData(
       languageType,
       origin,
       srcs.values.map { (it as FileValue).file }.toSet(),

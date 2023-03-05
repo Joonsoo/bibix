@@ -37,7 +37,7 @@ class Git {
     val gitRepos = context.getSharedDirectory("com.giyeok.bibix.plugins.bibix.git")
 
     return BuildRuleReturn.withDirectoryLock(gitRepos) {
-      val gitDirectory = gitRepos.resolve(context.objectIdHash)
+      val gitDirectory = gitRepos.resolve(context.targetId)
 
       val existingRepo = try {
         JGit.open(gitDirectory.toFile())

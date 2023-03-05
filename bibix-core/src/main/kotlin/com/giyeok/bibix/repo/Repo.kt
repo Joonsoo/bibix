@@ -1,10 +1,18 @@
 package com.giyeok.bibix.repo
 
+import com.giyeok.bibix.BibixIdProto.InputHashes
 import com.giyeok.bibix.base.BaseRepo
+import com.giyeok.bibix.base.BibixValue
+import com.giyeok.bibix.repo.BibixRepoProto.BibixRepo
+import com.giyeok.bibix.repo.BibixRepoProto.TargetData
 import com.giyeok.bibix.runner.RunConfigProto
+import com.giyeok.bibix.utils.toProto
 import com.google.protobuf.ByteString
 import com.google.protobuf.util.JsonFormat
 import com.google.protobuf.util.Timestamps
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
+import java.io.IOException
 import java.nio.file.FileSystem
 import java.nio.file.Files
 import java.nio.file.Path
@@ -16,8 +24,10 @@ class Repo(
   val projectRoot: Path,
   val bbxbuildDirectory: Path,
   val runConfig: RunConfigProto.RunConfig,
-  val repoMetaFile: Path,
-  val repoMeta: BibixRepoProto.BibixRepo.Builder,
+  // repo data
+  val repoDataFile: Path,
+  val targets: MutableMap<ByteString, TargetData.Builder>,
+  val outputNames: MutableMap<String, ByteString>,
   // targets
   val objectsDirectory: Path,
   val outputsDirectory: Path,
@@ -28,6 +38,8 @@ class Repo(
   val debuggingMode: Boolean = false,
 ) : BaseRepo {
   private fun now() = Timestamps.fromMillis(System.currentTimeMillis())
+
+  private val mutex = Mutex()
 
   data class ObjectDirectory(
     val objectIdHash: ByteString,
@@ -97,27 +109,97 @@ class Repo(
 //    commitRepoMeta()
 //  }
 
-  private fun commitRepoMeta() = synchronized(this) {
-    repoMetaFile.writeText(JsonFormat.printer().print(repoMeta))
+  private suspend fun commitRepoData() {
+    repoDataFile.writeText(JsonFormat.printer().print(createRepoData()))
+  }
+
+  private suspend fun createRepoData(): BibixRepo = mutex.withLock {
+    BibixRepo.newBuilder().also { builder ->
+      targets.forEach { (_, targetData) ->
+        builder.addTargets(targetData)
+      }
+      outputNames.forEach { (outputName, targetId) ->
+        builder.addOutputNames(outputName {
+          this.outputName = outputName
+          this.targetId = targetId
+        })
+      }
+    }.build()
+  }
+
+  private suspend fun repoDataUpdated() {
+    // TODO 매번 저장하지 말고 적당한 시점에 저장하도록
+    commitRepoData()
+  }
+
+  private suspend fun getTargetData(targetId: ByteString): TargetData.Builder? =
+    mutex.withLock { targets[targetId] }
+
+  private suspend fun updateTargetData(
+    targetId: ByteString,
+    updater: (TargetData.Builder) -> Unit
+  ) {
+    mutex.withLock {
+      val builder = targets.getOrPut(targetId) {
+        TargetData.newBuilder()
+          .setTargetId(targetId)
+      }
+
+      updater(builder)
+    }
+    repoDataUpdated()
+  }
+
+  suspend fun putObjectHash(objectHash: ObjectHash) {
+    val targetId = objectHash.targetId.targetIdBytes
+
+    updateTargetData(targetId) { builder ->
+      builder.targetIdData = objectHash.targetId.targetIdData
+      builder.latestInputHashes = objectHash.inputHashes
+      builder.latestObjectId = objectHash.objectId.objectIdBytes
+    }
+  }
+
+  suspend fun startBuildingTarget(targetIdBytes: ByteString) {
+    updateTargetData(targetIdBytes) { builder ->
+      builder.stateBuilder.buildStartTime = now()
+    }
+  }
+
+  suspend fun targetBuildingFailed(targetIdBytes: ByteString, message: String) {
+    updateTargetData(targetIdBytes) { builder ->
+      builder.stateBuilder.buildFailedBuilder.buildFailTime = now()
+      builder.stateBuilder.buildFailedBuilder.errorMessage = message
+    }
+  }
+
+  suspend fun targetBuildingSucceeded(targetIdBytes: ByteString, resultValue: BibixValue) {
+    updateTargetData(targetIdBytes) { builder ->
+      builder.stateBuilder.buildSucceededBuilder.buildEndTime = now()
+      builder.stateBuilder.buildSucceededBuilder.resultValue = resultValue.toProto()
+    }
   }
 
   suspend fun linkNameToObject(nameTokens: List<String>, objectHash: ObjectHash) {
     val name = nameTokens.joinToString(".")
     val linkFile = outputsDirectory.resolve(name)
     linkFile.deleteIfExists()
-    val targetDirectory = objectsDirectory.resolve(objectHash.hashHexString).absolute()
+    val targetDirectory = objectsDirectory.resolve(objectHash.targetId.targetIdHex).absolute()
     if (targetDirectory.exists()) {
       linkFile.createSymbolicLinkPointingTo(targetDirectory)
     }
-    synchronized(this) {
-      repoMeta.putObjectNames(name, objectHash.hashHexString)
+    mutex.withLock {
+      outputNames[name] = objectHash.targetId.targetIdBytes
     }
-    commitRepoMeta()
+    repoDataUpdated()
   }
 
-  fun finalize() {
-    commitRepoMeta()
+  suspend fun shutdown() {
+    commitRepoData()
   }
+
+  suspend fun getPrevInputHashesOf(targetId: ByteString): InputHashes? =
+    getTargetData(targetId)?.latestInputHashesBuilder?.build()
 
   companion object {
     fun load(mainDirectory: Path, debuggingMode: Boolean = false): Repo {
@@ -135,19 +217,35 @@ class Repo(
         runConfig.maxThreads = 3
         runConfigFile.writeText(JsonFormat.printer().print(runConfig))
       }
-      val repoMetaFile = bbxbuildDirectory.resolve("repo.json")
-      val repoMeta = BibixRepoProto.BibixRepo.newBuilder()
-      if (repoMetaFile.exists()) {
-        repoMetaFile.bufferedReader().use { reader ->
-          JsonFormat.parser().merge(reader, repoMeta)
+      val repoDataFile = bbxbuildDirectory.resolve("repo.json")
+      val repoData = BibixRepo.newBuilder()
+      if (repoDataFile.exists()) {
+        try {
+          repoDataFile.bufferedReader().use { reader ->
+            JsonFormat.parser().merge(reader, repoData)
+          }
+        } catch (e: IOException) {
+          repoDataFile.writeText("{}")
+          repoData.clearTargets()
+          repoData.clearOutputNames()
         }
         // TODO 파싱하다 오류 생기면 클리어하고 다시 시도
       } else {
-        repoMetaFile.writeText("{}")
+        repoDataFile.writeText("{}")
       }
-      if (!debuggingMode) {
-        repoMeta.clearObjectIds()
+//      if (!debuggingMode) {
+//        repoData.clearTargets()
+//      }
+
+      val targets = mutableMapOf<ByteString, TargetData.Builder>()
+      repoData.targetsList.forEach { targetData ->
+        targets[targetData.targetId] = targetData.toBuilder()
       }
+      val outputNames = mutableMapOf<String, ByteString>()
+      repoData.outputNamesList.forEach { outputName ->
+        outputNames[outputName.outputName] = outputName.targetId
+      }
+
       val objectsDirectory = bbxbuildDirectory.resolve("objects")
       if (objectsDirectory.notExists()) {
         objectsDirectory.createDirectory()
@@ -165,8 +263,9 @@ class Repo(
         projectRoot = mainDirectory,
         bbxbuildDirectory = bbxbuildDirectory,
         runConfig = runConfig.build(),
-        repoMetaFile = repoMetaFile,
-        repoMeta = repoMeta,
+        repoDataFile = repoDataFile,
+        targets = targets,
+        outputNames = outputNames,
         objectsDirectory = objectsDirectory,
         outputsDirectory = outputsDirectory,
         sharedRootDirectory = sharedRootDirectory,

@@ -4,9 +4,12 @@ import com.giyeok.bibix.ast.BibixAst
 import com.giyeok.bibix.base.*
 import com.giyeok.bibix.interpreter.BibixProject
 import com.giyeok.bibix.interpreter.SourceManager
+import com.giyeok.bibix.interpreter.TaskDescriptor
 import com.giyeok.bibix.interpreter.task.Task
 import com.giyeok.bibix.interpreter.task.TaskRelGraph
 import com.giyeok.bibix.plugins.PreloadedPlugin
+import java.io.PrintWriter
+import java.io.StringWriter
 
 class NameLookup(
   private val g: TaskRelGraph,
@@ -19,13 +22,13 @@ class NameLookup(
     requester: Task,
     context: NameLookupContext,
     name: List<String>
-  ): Definition {
+  ): Definition = g.withTask(requester, g.lookupNameTask(context, name)) { task ->
     val lookupResult = nameLookupTable.lookup(context, name)
-    return handleLookupResult(requester, context, name, lookupResult)
+    handleLookupResult(task, context, name, lookupResult)
   }
 
   private suspend fun handleLookupResult(
-    requester: Task,
+    task: Task,
     context: NameLookupContext,
     name: List<String>,
     lookupResult: LookupResult
@@ -40,22 +43,28 @@ class NameLookup(
         check(!nameLookupTable.isImported(context.sourceId, import.scopeName()))
 
         when (import) {
-          is BibixAst.ImportAll -> resolveImportAll(requester, context, lookupResult, import)
-          is BibixAst.ImportFrom -> resolveImportFrom(requester, context, lookupResult, import)
+          is BibixAst.ImportAll -> resolveImportAll(task, context, lookupResult, import)
+          is BibixAst.ImportFrom -> resolveImportFrom(task, context, lookupResult, import)
           else -> TODO()
         }
 
-        lookupName(requester, context, name)
+        val nextLookupResult = nameLookupTable.lookup(context, name)
+        handleLookupResult(task, context, name, nextLookupResult)
       }
 
       LookupResult.NameNotFound -> {
-        println(requester)
-        val upstreamPaths = g.upstreamPathsTo(requester)
-        upstreamPaths.forEach { path ->
-          println(path)
+        println(task)
+        val upstreamPath = g.upstreamPathTo(task)
+        val writer = StringWriter()
+        val pwriter = PrintWriter(writer)
+        pwriter.println("upstream path (${upstreamPath.size}):")
+        upstreamPath.forEach { task ->
+          pwriter.println(task)
+          TaskDescriptor(g, sourceManager).printTaskDescription(task, pwriter)
         }
+        pwriter.println("===")
         throw IllegalStateException(
-          "Name not found: ${name.joinToString(".")} in ${sourceManager.descriptionOf(context.sourceId)}"
+          "Name not found: ${name.joinToString(".")} in ${sourceManager.descriptionOf(context.sourceId)}\n" + writer.toString()
         )
       }
     }
@@ -81,7 +90,7 @@ class NameLookup(
     val importedScope = NameLookupContext(importSource, listOf())
     val importingName = import.importing.tokens
     val importLookup = nameLookupTable.lookup(importedScope, importingName)
-    val definition = handleLookupResult(requester, importedScope, importingName, importLookup)
+    val definition = handleLookupResult(task, importedScope, importingName, importLookup)
     if (definition is Definition.NamespaceDef) {
       nameLookupTable.addImport(lookupResult.import.cname, NameLookupContext(definition.cname))
     } else {

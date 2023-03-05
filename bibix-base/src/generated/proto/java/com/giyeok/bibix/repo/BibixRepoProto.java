@@ -20,197 +20,98 @@ public final class BibixRepoProto {
 
     /**
      * <pre>
-     * source id hash -&gt; source id
-     * target id hash -&gt; target id(including args map &amp; input hashes)
+     * target id hex -&gt; target data
      * </pre>
      *
-     * <code>string repo_schema_version = 1;</code>
-     * @return The repoSchemaVersion.
+     * <code>repeated .com.giyeok.bibix.repo.TargetData targets = 1;</code>
      */
-    java.lang.String getRepoSchemaVersion();
+    java.util.List<com.giyeok.bibix.repo.BibixRepoProto.TargetData> 
+        getTargetsList();
     /**
      * <pre>
-     * source id hash -&gt; source id
-     * target id hash -&gt; target id(including args map &amp; input hashes)
+     * target id hex -&gt; target data
      * </pre>
      *
-     * <code>string repo_schema_version = 1;</code>
-     * @return The bytes for repoSchemaVersion.
+     * <code>repeated .com.giyeok.bibix.repo.TargetData targets = 1;</code>
      */
-    com.google.protobuf.ByteString
-        getRepoSchemaVersionBytes();
+    com.giyeok.bibix.repo.BibixRepoProto.TargetData getTargets(int index);
+    /**
+     * <pre>
+     * target id hex -&gt; target data
+     * </pre>
+     *
+     * <code>repeated .com.giyeok.bibix.repo.TargetData targets = 1;</code>
+     */
+    int getTargetsCount();
+    /**
+     * <pre>
+     * target id hex -&gt; target data
+     * </pre>
+     *
+     * <code>repeated .com.giyeok.bibix.repo.TargetData targets = 1;</code>
+     */
+    java.util.List<? extends com.giyeok.bibix.repo.BibixRepoProto.TargetDataOrBuilder> 
+        getTargetsOrBuilderList();
+    /**
+     * <pre>
+     * target id hex -&gt; target data
+     * </pre>
+     *
+     * <code>repeated .com.giyeok.bibix.repo.TargetData targets = 1;</code>
+     */
+    com.giyeok.bibix.repo.BibixRepoProto.TargetDataOrBuilder getTargetsOrBuilder(
+        int index);
 
     /**
-     * <code>map&lt;string, .com.giyeok.bibix.repo.ObjectInfo&gt; objects = 2;</code>
+     * <pre>
+     * user defined output name -&gt; target id
+     * </pre>
+     *
+     * <code>repeated .com.giyeok.bibix.repo.OutputName output_names = 2;</code>
      */
-    int getObjectsCount();
+    java.util.List<com.giyeok.bibix.repo.BibixRepoProto.OutputName> 
+        getOutputNamesList();
     /**
-     * <code>map&lt;string, .com.giyeok.bibix.repo.ObjectInfo&gt; objects = 2;</code>
+     * <pre>
+     * user defined output name -&gt; target id
+     * </pre>
+     *
+     * <code>repeated .com.giyeok.bibix.repo.OutputName output_names = 2;</code>
      */
-    boolean containsObjects(
-        java.lang.String key);
+    com.giyeok.bibix.repo.BibixRepoProto.OutputName getOutputNames(int index);
     /**
-     * Use {@link #getObjectsMap()} instead.
+     * <pre>
+     * user defined output name -&gt; target id
+     * </pre>
+     *
+     * <code>repeated .com.giyeok.bibix.repo.OutputName output_names = 2;</code>
      */
-    @java.lang.Deprecated
-    java.util.Map<java.lang.String, com.giyeok.bibix.repo.BibixRepoProto.ObjectInfo>
-    getObjects();
+    int getOutputNamesCount();
     /**
-     * <code>map&lt;string, .com.giyeok.bibix.repo.ObjectInfo&gt; objects = 2;</code>
+     * <pre>
+     * user defined output name -&gt; target id
+     * </pre>
+     *
+     * <code>repeated .com.giyeok.bibix.repo.OutputName output_names = 2;</code>
      */
-    java.util.Map<java.lang.String, com.giyeok.bibix.repo.BibixRepoProto.ObjectInfo>
-    getObjectsMap();
+    java.util.List<? extends com.giyeok.bibix.repo.BibixRepoProto.OutputNameOrBuilder> 
+        getOutputNamesOrBuilderList();
     /**
-     * <code>map&lt;string, .com.giyeok.bibix.repo.ObjectInfo&gt; objects = 2;</code>
+     * <pre>
+     * user defined output name -&gt; target id
+     * </pre>
+     *
+     * <code>repeated .com.giyeok.bibix.repo.OutputName output_names = 2;</code>
      */
-
-    com.giyeok.bibix.repo.BibixRepoProto.ObjectInfo getObjectsOrDefault(
-        java.lang.String key,
-        com.giyeok.bibix.repo.BibixRepoProto.ObjectInfo defaultValue);
-    /**
-     * <code>map&lt;string, .com.giyeok.bibix.repo.ObjectInfo&gt; objects = 2;</code>
-     */
-
-    com.giyeok.bibix.repo.BibixRepoProto.ObjectInfo getObjectsOrThrow(
-        java.lang.String key);
-
-    /**
-     * <code>map&lt;string, bool&gt; building_targets = 3;</code>
-     */
-    int getBuildingTargetsCount();
-    /**
-     * <code>map&lt;string, bool&gt; building_targets = 3;</code>
-     */
-    boolean containsBuildingTargets(
-        java.lang.String key);
-    /**
-     * Use {@link #getBuildingTargetsMap()} instead.
-     */
-    @java.lang.Deprecated
-    java.util.Map<java.lang.String, java.lang.Boolean>
-    getBuildingTargets();
-    /**
-     * <code>map&lt;string, bool&gt; building_targets = 3;</code>
-     */
-    java.util.Map<java.lang.String, java.lang.Boolean>
-    getBuildingTargetsMap();
-    /**
-     * <code>map&lt;string, bool&gt; building_targets = 3;</code>
-     */
-
-    boolean getBuildingTargetsOrDefault(
-        java.lang.String key,
-        boolean defaultValue);
-    /**
-     * <code>map&lt;string, bool&gt; building_targets = 3;</code>
-     */
-
-    boolean getBuildingTargetsOrThrow(
-        java.lang.String key);
-
-    /**
-     * <code>map&lt;string, string&gt; object_names = 4;</code>
-     */
-    int getObjectNamesCount();
-    /**
-     * <code>map&lt;string, string&gt; object_names = 4;</code>
-     */
-    boolean containsObjectNames(
-        java.lang.String key);
-    /**
-     * Use {@link #getObjectNamesMap()} instead.
-     */
-    @java.lang.Deprecated
-    java.util.Map<java.lang.String, java.lang.String>
-    getObjectNames();
-    /**
-     * <code>map&lt;string, string&gt; object_names = 4;</code>
-     */
-    java.util.Map<java.lang.String, java.lang.String>
-    getObjectNamesMap();
-    /**
-     * <code>map&lt;string, string&gt; object_names = 4;</code>
-     */
-
-    java.lang.String getObjectNamesOrDefault(
-        java.lang.String key,
-        java.lang.String defaultValue);
-    /**
-     * <code>map&lt;string, string&gt; object_names = 4;</code>
-     */
-
-    java.lang.String getObjectNamesOrThrow(
-        java.lang.String key);
-
-    /**
-     * <code>map&lt;string, .com.giyeok.bibix.SourceId&gt; sources = 5;</code>
-     */
-    int getSourcesCount();
-    /**
-     * <code>map&lt;string, .com.giyeok.bibix.SourceId&gt; sources = 5;</code>
-     */
-    boolean containsSources(
-        java.lang.String key);
-    /**
-     * Use {@link #getSourcesMap()} instead.
-     */
-    @java.lang.Deprecated
-    java.util.Map<java.lang.String, com.giyeok.bibix.BibixIdProto.SourceId>
-    getSources();
-    /**
-     * <code>map&lt;string, .com.giyeok.bibix.SourceId&gt; sources = 5;</code>
-     */
-    java.util.Map<java.lang.String, com.giyeok.bibix.BibixIdProto.SourceId>
-    getSourcesMap();
-    /**
-     * <code>map&lt;string, .com.giyeok.bibix.SourceId&gt; sources = 5;</code>
-     */
-
-    com.giyeok.bibix.BibixIdProto.SourceId getSourcesOrDefault(
-        java.lang.String key,
-        com.giyeok.bibix.BibixIdProto.SourceId defaultValue);
-    /**
-     * <code>map&lt;string, .com.giyeok.bibix.SourceId&gt; sources = 5;</code>
-     */
-
-    com.giyeok.bibix.BibixIdProto.SourceId getSourcesOrThrow(
-        java.lang.String key);
-
-    /**
-     * <code>map&lt;string, .com.giyeok.bibix.ObjectId&gt; object_ids = 6;</code>
-     */
-    int getObjectIdsCount();
-    /**
-     * <code>map&lt;string, .com.giyeok.bibix.ObjectId&gt; object_ids = 6;</code>
-     */
-    boolean containsObjectIds(
-        java.lang.String key);
-    /**
-     * Use {@link #getObjectIdsMap()} instead.
-     */
-    @java.lang.Deprecated
-    java.util.Map<java.lang.String, com.giyeok.bibix.BibixIdProto.ObjectId>
-    getObjectIds();
-    /**
-     * <code>map&lt;string, .com.giyeok.bibix.ObjectId&gt; object_ids = 6;</code>
-     */
-    java.util.Map<java.lang.String, com.giyeok.bibix.BibixIdProto.ObjectId>
-    getObjectIdsMap();
-    /**
-     * <code>map&lt;string, .com.giyeok.bibix.ObjectId&gt; object_ids = 6;</code>
-     */
-
-    com.giyeok.bibix.BibixIdProto.ObjectId getObjectIdsOrDefault(
-        java.lang.String key,
-        com.giyeok.bibix.BibixIdProto.ObjectId defaultValue);
-    /**
-     * <code>map&lt;string, .com.giyeok.bibix.ObjectId&gt; object_ids = 6;</code>
-     */
-
-    com.giyeok.bibix.BibixIdProto.ObjectId getObjectIdsOrThrow(
-        java.lang.String key);
+    com.giyeok.bibix.repo.BibixRepoProto.OutputNameOrBuilder getOutputNamesOrBuilder(
+        int index);
   }
   /**
+   * <pre>
+   * source id hash -&gt; source id
+   * target id hash -&gt; target id(including args map &amp; input hashes)
+   * </pre>
+   *
    * Protobuf type {@code com.giyeok.bibix.repo.BibixRepo}
    */
   public static final class BibixRepo extends
@@ -223,7 +124,8 @@ public final class BibixRepoProto {
       super(builder);
     }
     private BibixRepo() {
-      repoSchemaVersion_ = "";
+      targets_ = java.util.Collections.emptyList();
+      outputNames_ = java.util.Collections.emptyList();
     }
 
     @java.lang.Override
@@ -258,74 +160,21 @@ public final class BibixRepoProto {
               done = true;
               break;
             case 10: {
-              java.lang.String s = input.readStringRequireUtf8();
-
-              repoSchemaVersion_ = s;
+              if (!((mutable_bitField0_ & 0x00000001) != 0)) {
+                targets_ = new java.util.ArrayList<com.giyeok.bibix.repo.BibixRepoProto.TargetData>();
+                mutable_bitField0_ |= 0x00000001;
+              }
+              targets_.add(
+                  input.readMessage(com.giyeok.bibix.repo.BibixRepoProto.TargetData.parser(), extensionRegistry));
               break;
             }
             case 18: {
-              if (!((mutable_bitField0_ & 0x00000001) != 0)) {
-                objects_ = com.google.protobuf.MapField.newMapField(
-                    ObjectsDefaultEntryHolder.defaultEntry);
-                mutable_bitField0_ |= 0x00000001;
-              }
-              com.google.protobuf.MapEntry<java.lang.String, com.giyeok.bibix.repo.BibixRepoProto.ObjectInfo>
-              objects__ = input.readMessage(
-                  ObjectsDefaultEntryHolder.defaultEntry.getParserForType(), extensionRegistry);
-              objects_.getMutableMap().put(
-                  objects__.getKey(), objects__.getValue());
-              break;
-            }
-            case 26: {
               if (!((mutable_bitField0_ & 0x00000002) != 0)) {
-                buildingTargets_ = com.google.protobuf.MapField.newMapField(
-                    BuildingTargetsDefaultEntryHolder.defaultEntry);
+                outputNames_ = new java.util.ArrayList<com.giyeok.bibix.repo.BibixRepoProto.OutputName>();
                 mutable_bitField0_ |= 0x00000002;
               }
-              com.google.protobuf.MapEntry<java.lang.String, java.lang.Boolean>
-              buildingTargets__ = input.readMessage(
-                  BuildingTargetsDefaultEntryHolder.defaultEntry.getParserForType(), extensionRegistry);
-              buildingTargets_.getMutableMap().put(
-                  buildingTargets__.getKey(), buildingTargets__.getValue());
-              break;
-            }
-            case 34: {
-              if (!((mutable_bitField0_ & 0x00000004) != 0)) {
-                objectNames_ = com.google.protobuf.MapField.newMapField(
-                    ObjectNamesDefaultEntryHolder.defaultEntry);
-                mutable_bitField0_ |= 0x00000004;
-              }
-              com.google.protobuf.MapEntry<java.lang.String, java.lang.String>
-              objectNames__ = input.readMessage(
-                  ObjectNamesDefaultEntryHolder.defaultEntry.getParserForType(), extensionRegistry);
-              objectNames_.getMutableMap().put(
-                  objectNames__.getKey(), objectNames__.getValue());
-              break;
-            }
-            case 42: {
-              if (!((mutable_bitField0_ & 0x00000008) != 0)) {
-                sources_ = com.google.protobuf.MapField.newMapField(
-                    SourcesDefaultEntryHolder.defaultEntry);
-                mutable_bitField0_ |= 0x00000008;
-              }
-              com.google.protobuf.MapEntry<java.lang.String, com.giyeok.bibix.BibixIdProto.SourceId>
-              sources__ = input.readMessage(
-                  SourcesDefaultEntryHolder.defaultEntry.getParserForType(), extensionRegistry);
-              sources_.getMutableMap().put(
-                  sources__.getKey(), sources__.getValue());
-              break;
-            }
-            case 50: {
-              if (!((mutable_bitField0_ & 0x00000010) != 0)) {
-                objectIds_ = com.google.protobuf.MapField.newMapField(
-                    ObjectIdsDefaultEntryHolder.defaultEntry);
-                mutable_bitField0_ |= 0x00000010;
-              }
-              com.google.protobuf.MapEntry<java.lang.String, com.giyeok.bibix.BibixIdProto.ObjectId>
-              objectIds__ = input.readMessage(
-                  ObjectIdsDefaultEntryHolder.defaultEntry.getParserForType(), extensionRegistry);
-              objectIds_.getMutableMap().put(
-                  objectIds__.getKey(), objectIds__.getValue());
+              outputNames_.add(
+                  input.readMessage(com.giyeok.bibix.repo.BibixRepoProto.OutputName.parser(), extensionRegistry));
               break;
             }
             default: {
@@ -339,10 +188,18 @@ public final class BibixRepoProto {
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
         throw e.setUnfinishedMessage(this);
+      } catch (com.google.protobuf.UninitializedMessageException e) {
+        throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
       } catch (java.io.IOException e) {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e).setUnfinishedMessage(this);
       } finally {
+        if (((mutable_bitField0_ & 0x00000001) != 0)) {
+          targets_ = java.util.Collections.unmodifiableList(targets_);
+        }
+        if (((mutable_bitField0_ & 0x00000002) != 0)) {
+          outputNames_ = java.util.Collections.unmodifiableList(outputNames_);
+        }
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
       }
@@ -352,26 +209,6 @@ public final class BibixRepoProto {
       return com.giyeok.bibix.repo.BibixRepoProto.internal_static_com_giyeok_bibix_repo_BibixRepo_descriptor;
     }
 
-    @SuppressWarnings({"rawtypes"})
-    @java.lang.Override
-    protected com.google.protobuf.MapField internalGetMapField(
-        int number) {
-      switch (number) {
-        case 2:
-          return internalGetObjects();
-        case 3:
-          return internalGetBuildingTargets();
-        case 4:
-          return internalGetObjectNames();
-        case 5:
-          return internalGetSources();
-        case 6:
-          return internalGetObjectIds();
-        default:
-          throw new RuntimeException(
-              "Invalid map field number: " + number);
-      }
-    }
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
@@ -380,457 +217,124 @@ public final class BibixRepoProto {
               com.giyeok.bibix.repo.BibixRepoProto.BibixRepo.class, com.giyeok.bibix.repo.BibixRepoProto.BibixRepo.Builder.class);
     }
 
-    public static final int REPO_SCHEMA_VERSION_FIELD_NUMBER = 1;
-    private volatile java.lang.Object repoSchemaVersion_;
+    public static final int TARGETS_FIELD_NUMBER = 1;
+    private java.util.List<com.giyeok.bibix.repo.BibixRepoProto.TargetData> targets_;
     /**
      * <pre>
-     * source id hash -&gt; source id
-     * target id hash -&gt; target id(including args map &amp; input hashes)
+     * target id hex -&gt; target data
      * </pre>
      *
-     * <code>string repo_schema_version = 1;</code>
-     * @return The repoSchemaVersion.
+     * <code>repeated .com.giyeok.bibix.repo.TargetData targets = 1;</code>
      */
     @java.lang.Override
-    public java.lang.String getRepoSchemaVersion() {
-      java.lang.Object ref = repoSchemaVersion_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        repoSchemaVersion_ = s;
-        return s;
-      }
+    public java.util.List<com.giyeok.bibix.repo.BibixRepoProto.TargetData> getTargetsList() {
+      return targets_;
     }
     /**
      * <pre>
-     * source id hash -&gt; source id
-     * target id hash -&gt; target id(including args map &amp; input hashes)
+     * target id hex -&gt; target data
      * </pre>
      *
-     * <code>string repo_schema_version = 1;</code>
-     * @return The bytes for repoSchemaVersion.
+     * <code>repeated .com.giyeok.bibix.repo.TargetData targets = 1;</code>
      */
     @java.lang.Override
-    public com.google.protobuf.ByteString
-        getRepoSchemaVersionBytes() {
-      java.lang.Object ref = repoSchemaVersion_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        repoSchemaVersion_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-
-    public static final int OBJECTS_FIELD_NUMBER = 2;
-    private static final class ObjectsDefaultEntryHolder {
-      static final com.google.protobuf.MapEntry<
-          java.lang.String, com.giyeok.bibix.repo.BibixRepoProto.ObjectInfo> defaultEntry =
-              com.google.protobuf.MapEntry
-              .<java.lang.String, com.giyeok.bibix.repo.BibixRepoProto.ObjectInfo>newDefaultInstance(
-                  com.giyeok.bibix.repo.BibixRepoProto.internal_static_com_giyeok_bibix_repo_BibixRepo_ObjectsEntry_descriptor, 
-                  com.google.protobuf.WireFormat.FieldType.STRING,
-                  "",
-                  com.google.protobuf.WireFormat.FieldType.MESSAGE,
-                  com.giyeok.bibix.repo.BibixRepoProto.ObjectInfo.getDefaultInstance());
-    }
-    private com.google.protobuf.MapField<
-        java.lang.String, com.giyeok.bibix.repo.BibixRepoProto.ObjectInfo> objects_;
-    private com.google.protobuf.MapField<java.lang.String, com.giyeok.bibix.repo.BibixRepoProto.ObjectInfo>
-    internalGetObjects() {
-      if (objects_ == null) {
-        return com.google.protobuf.MapField.emptyMapField(
-            ObjectsDefaultEntryHolder.defaultEntry);
-      }
-      return objects_;
-    }
-
-    public int getObjectsCount() {
-      return internalGetObjects().getMap().size();
+    public java.util.List<? extends com.giyeok.bibix.repo.BibixRepoProto.TargetDataOrBuilder> 
+        getTargetsOrBuilderList() {
+      return targets_;
     }
     /**
-     * <code>map&lt;string, .com.giyeok.bibix.repo.ObjectInfo&gt; objects = 2;</code>
+     * <pre>
+     * target id hex -&gt; target data
+     * </pre>
+     *
+     * <code>repeated .com.giyeok.bibix.repo.TargetData targets = 1;</code>
      */
-
     @java.lang.Override
-    public boolean containsObjects(
-        java.lang.String key) {
-      if (key == null) { throw new NullPointerException("map key"); }
-      return internalGetObjects().getMap().containsKey(key);
+    public int getTargetsCount() {
+      return targets_.size();
     }
     /**
-     * Use {@link #getObjectsMap()} instead.
+     * <pre>
+     * target id hex -&gt; target data
+     * </pre>
+     *
+     * <code>repeated .com.giyeok.bibix.repo.TargetData targets = 1;</code>
      */
     @java.lang.Override
-    @java.lang.Deprecated
-    public java.util.Map<java.lang.String, com.giyeok.bibix.repo.BibixRepoProto.ObjectInfo> getObjects() {
-      return getObjectsMap();
+    public com.giyeok.bibix.repo.BibixRepoProto.TargetData getTargets(int index) {
+      return targets_.get(index);
     }
     /**
-     * <code>map&lt;string, .com.giyeok.bibix.repo.ObjectInfo&gt; objects = 2;</code>
+     * <pre>
+     * target id hex -&gt; target data
+     * </pre>
+     *
+     * <code>repeated .com.giyeok.bibix.repo.TargetData targets = 1;</code>
      */
     @java.lang.Override
+    public com.giyeok.bibix.repo.BibixRepoProto.TargetDataOrBuilder getTargetsOrBuilder(
+        int index) {
+      return targets_.get(index);
+    }
 
-    public java.util.Map<java.lang.String, com.giyeok.bibix.repo.BibixRepoProto.ObjectInfo> getObjectsMap() {
-      return internalGetObjects().getMap();
+    public static final int OUTPUT_NAMES_FIELD_NUMBER = 2;
+    private java.util.List<com.giyeok.bibix.repo.BibixRepoProto.OutputName> outputNames_;
+    /**
+     * <pre>
+     * user defined output name -&gt; target id
+     * </pre>
+     *
+     * <code>repeated .com.giyeok.bibix.repo.OutputName output_names = 2;</code>
+     */
+    @java.lang.Override
+    public java.util.List<com.giyeok.bibix.repo.BibixRepoProto.OutputName> getOutputNamesList() {
+      return outputNames_;
     }
     /**
-     * <code>map&lt;string, .com.giyeok.bibix.repo.ObjectInfo&gt; objects = 2;</code>
+     * <pre>
+     * user defined output name -&gt; target id
+     * </pre>
+     *
+     * <code>repeated .com.giyeok.bibix.repo.OutputName output_names = 2;</code>
      */
     @java.lang.Override
-
-    public com.giyeok.bibix.repo.BibixRepoProto.ObjectInfo getObjectsOrDefault(
-        java.lang.String key,
-        com.giyeok.bibix.repo.BibixRepoProto.ObjectInfo defaultValue) {
-      if (key == null) { throw new NullPointerException("map key"); }
-      java.util.Map<java.lang.String, com.giyeok.bibix.repo.BibixRepoProto.ObjectInfo> map =
-          internalGetObjects().getMap();
-      return map.containsKey(key) ? map.get(key) : defaultValue;
+    public java.util.List<? extends com.giyeok.bibix.repo.BibixRepoProto.OutputNameOrBuilder> 
+        getOutputNamesOrBuilderList() {
+      return outputNames_;
     }
     /**
-     * <code>map&lt;string, .com.giyeok.bibix.repo.ObjectInfo&gt; objects = 2;</code>
+     * <pre>
+     * user defined output name -&gt; target id
+     * </pre>
+     *
+     * <code>repeated .com.giyeok.bibix.repo.OutputName output_names = 2;</code>
      */
     @java.lang.Override
-
-    public com.giyeok.bibix.repo.BibixRepoProto.ObjectInfo getObjectsOrThrow(
-        java.lang.String key) {
-      if (key == null) { throw new NullPointerException("map key"); }
-      java.util.Map<java.lang.String, com.giyeok.bibix.repo.BibixRepoProto.ObjectInfo> map =
-          internalGetObjects().getMap();
-      if (!map.containsKey(key)) {
-        throw new java.lang.IllegalArgumentException();
-      }
-      return map.get(key);
-    }
-
-    public static final int BUILDING_TARGETS_FIELD_NUMBER = 3;
-    private static final class BuildingTargetsDefaultEntryHolder {
-      static final com.google.protobuf.MapEntry<
-          java.lang.String, java.lang.Boolean> defaultEntry =
-              com.google.protobuf.MapEntry
-              .<java.lang.String, java.lang.Boolean>newDefaultInstance(
-                  com.giyeok.bibix.repo.BibixRepoProto.internal_static_com_giyeok_bibix_repo_BibixRepo_BuildingTargetsEntry_descriptor, 
-                  com.google.protobuf.WireFormat.FieldType.STRING,
-                  "",
-                  com.google.protobuf.WireFormat.FieldType.BOOL,
-                  false);
-    }
-    private com.google.protobuf.MapField<
-        java.lang.String, java.lang.Boolean> buildingTargets_;
-    private com.google.protobuf.MapField<java.lang.String, java.lang.Boolean>
-    internalGetBuildingTargets() {
-      if (buildingTargets_ == null) {
-        return com.google.protobuf.MapField.emptyMapField(
-            BuildingTargetsDefaultEntryHolder.defaultEntry);
-      }
-      return buildingTargets_;
-    }
-
-    public int getBuildingTargetsCount() {
-      return internalGetBuildingTargets().getMap().size();
+    public int getOutputNamesCount() {
+      return outputNames_.size();
     }
     /**
-     * <code>map&lt;string, bool&gt; building_targets = 3;</code>
+     * <pre>
+     * user defined output name -&gt; target id
+     * </pre>
+     *
+     * <code>repeated .com.giyeok.bibix.repo.OutputName output_names = 2;</code>
      */
-
     @java.lang.Override
-    public boolean containsBuildingTargets(
-        java.lang.String key) {
-      if (key == null) { throw new NullPointerException("map key"); }
-      return internalGetBuildingTargets().getMap().containsKey(key);
+    public com.giyeok.bibix.repo.BibixRepoProto.OutputName getOutputNames(int index) {
+      return outputNames_.get(index);
     }
     /**
-     * Use {@link #getBuildingTargetsMap()} instead.
+     * <pre>
+     * user defined output name -&gt; target id
+     * </pre>
+     *
+     * <code>repeated .com.giyeok.bibix.repo.OutputName output_names = 2;</code>
      */
     @java.lang.Override
-    @java.lang.Deprecated
-    public java.util.Map<java.lang.String, java.lang.Boolean> getBuildingTargets() {
-      return getBuildingTargetsMap();
-    }
-    /**
-     * <code>map&lt;string, bool&gt; building_targets = 3;</code>
-     */
-    @java.lang.Override
-
-    public java.util.Map<java.lang.String, java.lang.Boolean> getBuildingTargetsMap() {
-      return internalGetBuildingTargets().getMap();
-    }
-    /**
-     * <code>map&lt;string, bool&gt; building_targets = 3;</code>
-     */
-    @java.lang.Override
-
-    public boolean getBuildingTargetsOrDefault(
-        java.lang.String key,
-        boolean defaultValue) {
-      if (key == null) { throw new NullPointerException("map key"); }
-      java.util.Map<java.lang.String, java.lang.Boolean> map =
-          internalGetBuildingTargets().getMap();
-      return map.containsKey(key) ? map.get(key) : defaultValue;
-    }
-    /**
-     * <code>map&lt;string, bool&gt; building_targets = 3;</code>
-     */
-    @java.lang.Override
-
-    public boolean getBuildingTargetsOrThrow(
-        java.lang.String key) {
-      if (key == null) { throw new NullPointerException("map key"); }
-      java.util.Map<java.lang.String, java.lang.Boolean> map =
-          internalGetBuildingTargets().getMap();
-      if (!map.containsKey(key)) {
-        throw new java.lang.IllegalArgumentException();
-      }
-      return map.get(key);
-    }
-
-    public static final int OBJECT_NAMES_FIELD_NUMBER = 4;
-    private static final class ObjectNamesDefaultEntryHolder {
-      static final com.google.protobuf.MapEntry<
-          java.lang.String, java.lang.String> defaultEntry =
-              com.google.protobuf.MapEntry
-              .<java.lang.String, java.lang.String>newDefaultInstance(
-                  com.giyeok.bibix.repo.BibixRepoProto.internal_static_com_giyeok_bibix_repo_BibixRepo_ObjectNamesEntry_descriptor, 
-                  com.google.protobuf.WireFormat.FieldType.STRING,
-                  "",
-                  com.google.protobuf.WireFormat.FieldType.STRING,
-                  "");
-    }
-    private com.google.protobuf.MapField<
-        java.lang.String, java.lang.String> objectNames_;
-    private com.google.protobuf.MapField<java.lang.String, java.lang.String>
-    internalGetObjectNames() {
-      if (objectNames_ == null) {
-        return com.google.protobuf.MapField.emptyMapField(
-            ObjectNamesDefaultEntryHolder.defaultEntry);
-      }
-      return objectNames_;
-    }
-
-    public int getObjectNamesCount() {
-      return internalGetObjectNames().getMap().size();
-    }
-    /**
-     * <code>map&lt;string, string&gt; object_names = 4;</code>
-     */
-
-    @java.lang.Override
-    public boolean containsObjectNames(
-        java.lang.String key) {
-      if (key == null) { throw new NullPointerException("map key"); }
-      return internalGetObjectNames().getMap().containsKey(key);
-    }
-    /**
-     * Use {@link #getObjectNamesMap()} instead.
-     */
-    @java.lang.Override
-    @java.lang.Deprecated
-    public java.util.Map<java.lang.String, java.lang.String> getObjectNames() {
-      return getObjectNamesMap();
-    }
-    /**
-     * <code>map&lt;string, string&gt; object_names = 4;</code>
-     */
-    @java.lang.Override
-
-    public java.util.Map<java.lang.String, java.lang.String> getObjectNamesMap() {
-      return internalGetObjectNames().getMap();
-    }
-    /**
-     * <code>map&lt;string, string&gt; object_names = 4;</code>
-     */
-    @java.lang.Override
-
-    public java.lang.String getObjectNamesOrDefault(
-        java.lang.String key,
-        java.lang.String defaultValue) {
-      if (key == null) { throw new NullPointerException("map key"); }
-      java.util.Map<java.lang.String, java.lang.String> map =
-          internalGetObjectNames().getMap();
-      return map.containsKey(key) ? map.get(key) : defaultValue;
-    }
-    /**
-     * <code>map&lt;string, string&gt; object_names = 4;</code>
-     */
-    @java.lang.Override
-
-    public java.lang.String getObjectNamesOrThrow(
-        java.lang.String key) {
-      if (key == null) { throw new NullPointerException("map key"); }
-      java.util.Map<java.lang.String, java.lang.String> map =
-          internalGetObjectNames().getMap();
-      if (!map.containsKey(key)) {
-        throw new java.lang.IllegalArgumentException();
-      }
-      return map.get(key);
-    }
-
-    public static final int SOURCES_FIELD_NUMBER = 5;
-    private static final class SourcesDefaultEntryHolder {
-      static final com.google.protobuf.MapEntry<
-          java.lang.String, com.giyeok.bibix.BibixIdProto.SourceId> defaultEntry =
-              com.google.protobuf.MapEntry
-              .<java.lang.String, com.giyeok.bibix.BibixIdProto.SourceId>newDefaultInstance(
-                  com.giyeok.bibix.repo.BibixRepoProto.internal_static_com_giyeok_bibix_repo_BibixRepo_SourcesEntry_descriptor, 
-                  com.google.protobuf.WireFormat.FieldType.STRING,
-                  "",
-                  com.google.protobuf.WireFormat.FieldType.MESSAGE,
-                  com.giyeok.bibix.BibixIdProto.SourceId.getDefaultInstance());
-    }
-    private com.google.protobuf.MapField<
-        java.lang.String, com.giyeok.bibix.BibixIdProto.SourceId> sources_;
-    private com.google.protobuf.MapField<java.lang.String, com.giyeok.bibix.BibixIdProto.SourceId>
-    internalGetSources() {
-      if (sources_ == null) {
-        return com.google.protobuf.MapField.emptyMapField(
-            SourcesDefaultEntryHolder.defaultEntry);
-      }
-      return sources_;
-    }
-
-    public int getSourcesCount() {
-      return internalGetSources().getMap().size();
-    }
-    /**
-     * <code>map&lt;string, .com.giyeok.bibix.SourceId&gt; sources = 5;</code>
-     */
-
-    @java.lang.Override
-    public boolean containsSources(
-        java.lang.String key) {
-      if (key == null) { throw new NullPointerException("map key"); }
-      return internalGetSources().getMap().containsKey(key);
-    }
-    /**
-     * Use {@link #getSourcesMap()} instead.
-     */
-    @java.lang.Override
-    @java.lang.Deprecated
-    public java.util.Map<java.lang.String, com.giyeok.bibix.BibixIdProto.SourceId> getSources() {
-      return getSourcesMap();
-    }
-    /**
-     * <code>map&lt;string, .com.giyeok.bibix.SourceId&gt; sources = 5;</code>
-     */
-    @java.lang.Override
-
-    public java.util.Map<java.lang.String, com.giyeok.bibix.BibixIdProto.SourceId> getSourcesMap() {
-      return internalGetSources().getMap();
-    }
-    /**
-     * <code>map&lt;string, .com.giyeok.bibix.SourceId&gt; sources = 5;</code>
-     */
-    @java.lang.Override
-
-    public com.giyeok.bibix.BibixIdProto.SourceId getSourcesOrDefault(
-        java.lang.String key,
-        com.giyeok.bibix.BibixIdProto.SourceId defaultValue) {
-      if (key == null) { throw new NullPointerException("map key"); }
-      java.util.Map<java.lang.String, com.giyeok.bibix.BibixIdProto.SourceId> map =
-          internalGetSources().getMap();
-      return map.containsKey(key) ? map.get(key) : defaultValue;
-    }
-    /**
-     * <code>map&lt;string, .com.giyeok.bibix.SourceId&gt; sources = 5;</code>
-     */
-    @java.lang.Override
-
-    public com.giyeok.bibix.BibixIdProto.SourceId getSourcesOrThrow(
-        java.lang.String key) {
-      if (key == null) { throw new NullPointerException("map key"); }
-      java.util.Map<java.lang.String, com.giyeok.bibix.BibixIdProto.SourceId> map =
-          internalGetSources().getMap();
-      if (!map.containsKey(key)) {
-        throw new java.lang.IllegalArgumentException();
-      }
-      return map.get(key);
-    }
-
-    public static final int OBJECT_IDS_FIELD_NUMBER = 6;
-    private static final class ObjectIdsDefaultEntryHolder {
-      static final com.google.protobuf.MapEntry<
-          java.lang.String, com.giyeok.bibix.BibixIdProto.ObjectId> defaultEntry =
-              com.google.protobuf.MapEntry
-              .<java.lang.String, com.giyeok.bibix.BibixIdProto.ObjectId>newDefaultInstance(
-                  com.giyeok.bibix.repo.BibixRepoProto.internal_static_com_giyeok_bibix_repo_BibixRepo_ObjectIdsEntry_descriptor, 
-                  com.google.protobuf.WireFormat.FieldType.STRING,
-                  "",
-                  com.google.protobuf.WireFormat.FieldType.MESSAGE,
-                  com.giyeok.bibix.BibixIdProto.ObjectId.getDefaultInstance());
-    }
-    private com.google.protobuf.MapField<
-        java.lang.String, com.giyeok.bibix.BibixIdProto.ObjectId> objectIds_;
-    private com.google.protobuf.MapField<java.lang.String, com.giyeok.bibix.BibixIdProto.ObjectId>
-    internalGetObjectIds() {
-      if (objectIds_ == null) {
-        return com.google.protobuf.MapField.emptyMapField(
-            ObjectIdsDefaultEntryHolder.defaultEntry);
-      }
-      return objectIds_;
-    }
-
-    public int getObjectIdsCount() {
-      return internalGetObjectIds().getMap().size();
-    }
-    /**
-     * <code>map&lt;string, .com.giyeok.bibix.ObjectId&gt; object_ids = 6;</code>
-     */
-
-    @java.lang.Override
-    public boolean containsObjectIds(
-        java.lang.String key) {
-      if (key == null) { throw new NullPointerException("map key"); }
-      return internalGetObjectIds().getMap().containsKey(key);
-    }
-    /**
-     * Use {@link #getObjectIdsMap()} instead.
-     */
-    @java.lang.Override
-    @java.lang.Deprecated
-    public java.util.Map<java.lang.String, com.giyeok.bibix.BibixIdProto.ObjectId> getObjectIds() {
-      return getObjectIdsMap();
-    }
-    /**
-     * <code>map&lt;string, .com.giyeok.bibix.ObjectId&gt; object_ids = 6;</code>
-     */
-    @java.lang.Override
-
-    public java.util.Map<java.lang.String, com.giyeok.bibix.BibixIdProto.ObjectId> getObjectIdsMap() {
-      return internalGetObjectIds().getMap();
-    }
-    /**
-     * <code>map&lt;string, .com.giyeok.bibix.ObjectId&gt; object_ids = 6;</code>
-     */
-    @java.lang.Override
-
-    public com.giyeok.bibix.BibixIdProto.ObjectId getObjectIdsOrDefault(
-        java.lang.String key,
-        com.giyeok.bibix.BibixIdProto.ObjectId defaultValue) {
-      if (key == null) { throw new NullPointerException("map key"); }
-      java.util.Map<java.lang.String, com.giyeok.bibix.BibixIdProto.ObjectId> map =
-          internalGetObjectIds().getMap();
-      return map.containsKey(key) ? map.get(key) : defaultValue;
-    }
-    /**
-     * <code>map&lt;string, .com.giyeok.bibix.ObjectId&gt; object_ids = 6;</code>
-     */
-    @java.lang.Override
-
-    public com.giyeok.bibix.BibixIdProto.ObjectId getObjectIdsOrThrow(
-        java.lang.String key) {
-      if (key == null) { throw new NullPointerException("map key"); }
-      java.util.Map<java.lang.String, com.giyeok.bibix.BibixIdProto.ObjectId> map =
-          internalGetObjectIds().getMap();
-      if (!map.containsKey(key)) {
-        throw new java.lang.IllegalArgumentException();
-      }
-      return map.get(key);
+    public com.giyeok.bibix.repo.BibixRepoProto.OutputNameOrBuilder getOutputNamesOrBuilder(
+        int index) {
+      return outputNames_.get(index);
     }
 
     private byte memoizedIsInitialized = -1;
@@ -847,39 +351,12 @@ public final class BibixRepoProto {
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
-      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(repoSchemaVersion_)) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, repoSchemaVersion_);
+      for (int i = 0; i < targets_.size(); i++) {
+        output.writeMessage(1, targets_.get(i));
       }
-      com.google.protobuf.GeneratedMessageV3
-        .serializeStringMapTo(
-          output,
-          internalGetObjects(),
-          ObjectsDefaultEntryHolder.defaultEntry,
-          2);
-      com.google.protobuf.GeneratedMessageV3
-        .serializeStringMapTo(
-          output,
-          internalGetBuildingTargets(),
-          BuildingTargetsDefaultEntryHolder.defaultEntry,
-          3);
-      com.google.protobuf.GeneratedMessageV3
-        .serializeStringMapTo(
-          output,
-          internalGetObjectNames(),
-          ObjectNamesDefaultEntryHolder.defaultEntry,
-          4);
-      com.google.protobuf.GeneratedMessageV3
-        .serializeStringMapTo(
-          output,
-          internalGetSources(),
-          SourcesDefaultEntryHolder.defaultEntry,
-          5);
-      com.google.protobuf.GeneratedMessageV3
-        .serializeStringMapTo(
-          output,
-          internalGetObjectIds(),
-          ObjectIdsDefaultEntryHolder.defaultEntry,
-          6);
+      for (int i = 0; i < outputNames_.size(); i++) {
+        output.writeMessage(2, outputNames_.get(i));
+      }
       unknownFields.writeTo(output);
     }
 
@@ -889,58 +366,13 @@ public final class BibixRepoProto {
       if (size != -1) return size;
 
       size = 0;
-      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(repoSchemaVersion_)) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, repoSchemaVersion_);
-      }
-      for (java.util.Map.Entry<java.lang.String, com.giyeok.bibix.repo.BibixRepoProto.ObjectInfo> entry
-           : internalGetObjects().getMap().entrySet()) {
-        com.google.protobuf.MapEntry<java.lang.String, com.giyeok.bibix.repo.BibixRepoProto.ObjectInfo>
-        objects__ = ObjectsDefaultEntryHolder.defaultEntry.newBuilderForType()
-            .setKey(entry.getKey())
-            .setValue(entry.getValue())
-            .build();
+      for (int i = 0; i < targets_.size(); i++) {
         size += com.google.protobuf.CodedOutputStream
-            .computeMessageSize(2, objects__);
+          .computeMessageSize(1, targets_.get(i));
       }
-      for (java.util.Map.Entry<java.lang.String, java.lang.Boolean> entry
-           : internalGetBuildingTargets().getMap().entrySet()) {
-        com.google.protobuf.MapEntry<java.lang.String, java.lang.Boolean>
-        buildingTargets__ = BuildingTargetsDefaultEntryHolder.defaultEntry.newBuilderForType()
-            .setKey(entry.getKey())
-            .setValue(entry.getValue())
-            .build();
+      for (int i = 0; i < outputNames_.size(); i++) {
         size += com.google.protobuf.CodedOutputStream
-            .computeMessageSize(3, buildingTargets__);
-      }
-      for (java.util.Map.Entry<java.lang.String, java.lang.String> entry
-           : internalGetObjectNames().getMap().entrySet()) {
-        com.google.protobuf.MapEntry<java.lang.String, java.lang.String>
-        objectNames__ = ObjectNamesDefaultEntryHolder.defaultEntry.newBuilderForType()
-            .setKey(entry.getKey())
-            .setValue(entry.getValue())
-            .build();
-        size += com.google.protobuf.CodedOutputStream
-            .computeMessageSize(4, objectNames__);
-      }
-      for (java.util.Map.Entry<java.lang.String, com.giyeok.bibix.BibixIdProto.SourceId> entry
-           : internalGetSources().getMap().entrySet()) {
-        com.google.protobuf.MapEntry<java.lang.String, com.giyeok.bibix.BibixIdProto.SourceId>
-        sources__ = SourcesDefaultEntryHolder.defaultEntry.newBuilderForType()
-            .setKey(entry.getKey())
-            .setValue(entry.getValue())
-            .build();
-        size += com.google.protobuf.CodedOutputStream
-            .computeMessageSize(5, sources__);
-      }
-      for (java.util.Map.Entry<java.lang.String, com.giyeok.bibix.BibixIdProto.ObjectId> entry
-           : internalGetObjectIds().getMap().entrySet()) {
-        com.google.protobuf.MapEntry<java.lang.String, com.giyeok.bibix.BibixIdProto.ObjectId>
-        objectIds__ = ObjectIdsDefaultEntryHolder.defaultEntry.newBuilderForType()
-            .setKey(entry.getKey())
-            .setValue(entry.getValue())
-            .build();
-        size += com.google.protobuf.CodedOutputStream
-            .computeMessageSize(6, objectIds__);
+          .computeMessageSize(2, outputNames_.get(i));
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -957,18 +389,10 @@ public final class BibixRepoProto {
       }
       com.giyeok.bibix.repo.BibixRepoProto.BibixRepo other = (com.giyeok.bibix.repo.BibixRepoProto.BibixRepo) obj;
 
-      if (!getRepoSchemaVersion()
-          .equals(other.getRepoSchemaVersion())) return false;
-      if (!internalGetObjects().equals(
-          other.internalGetObjects())) return false;
-      if (!internalGetBuildingTargets().equals(
-          other.internalGetBuildingTargets())) return false;
-      if (!internalGetObjectNames().equals(
-          other.internalGetObjectNames())) return false;
-      if (!internalGetSources().equals(
-          other.internalGetSources())) return false;
-      if (!internalGetObjectIds().equals(
-          other.internalGetObjectIds())) return false;
+      if (!getTargetsList()
+          .equals(other.getTargetsList())) return false;
+      if (!getOutputNamesList()
+          .equals(other.getOutputNamesList())) return false;
       if (!unknownFields.equals(other.unknownFields)) return false;
       return true;
     }
@@ -980,27 +404,13 @@ public final class BibixRepoProto {
       }
       int hash = 41;
       hash = (19 * hash) + getDescriptor().hashCode();
-      hash = (37 * hash) + REPO_SCHEMA_VERSION_FIELD_NUMBER;
-      hash = (53 * hash) + getRepoSchemaVersion().hashCode();
-      if (!internalGetObjects().getMap().isEmpty()) {
-        hash = (37 * hash) + OBJECTS_FIELD_NUMBER;
-        hash = (53 * hash) + internalGetObjects().hashCode();
+      if (getTargetsCount() > 0) {
+        hash = (37 * hash) + TARGETS_FIELD_NUMBER;
+        hash = (53 * hash) + getTargetsList().hashCode();
       }
-      if (!internalGetBuildingTargets().getMap().isEmpty()) {
-        hash = (37 * hash) + BUILDING_TARGETS_FIELD_NUMBER;
-        hash = (53 * hash) + internalGetBuildingTargets().hashCode();
-      }
-      if (!internalGetObjectNames().getMap().isEmpty()) {
-        hash = (37 * hash) + OBJECT_NAMES_FIELD_NUMBER;
-        hash = (53 * hash) + internalGetObjectNames().hashCode();
-      }
-      if (!internalGetSources().getMap().isEmpty()) {
-        hash = (37 * hash) + SOURCES_FIELD_NUMBER;
-        hash = (53 * hash) + internalGetSources().hashCode();
-      }
-      if (!internalGetObjectIds().getMap().isEmpty()) {
-        hash = (37 * hash) + OBJECT_IDS_FIELD_NUMBER;
-        hash = (53 * hash) + internalGetObjectIds().hashCode();
+      if (getOutputNamesCount() > 0) {
+        hash = (37 * hash) + OUTPUT_NAMES_FIELD_NUMBER;
+        hash = (53 * hash) + getOutputNamesList().hashCode();
       }
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
@@ -1098,6 +508,11 @@ public final class BibixRepoProto {
       return builder;
     }
     /**
+     * <pre>
+     * source id hash -&gt; source id
+     * target id hash -&gt; target id(including args map &amp; input hashes)
+     * </pre>
+     *
      * Protobuf type {@code com.giyeok.bibix.repo.BibixRepo}
      */
     public static final class Builder extends
@@ -1109,44 +524,6 @@ public final class BibixRepoProto {
         return com.giyeok.bibix.repo.BibixRepoProto.internal_static_com_giyeok_bibix_repo_BibixRepo_descriptor;
       }
 
-      @SuppressWarnings({"rawtypes"})
-      protected com.google.protobuf.MapField internalGetMapField(
-          int number) {
-        switch (number) {
-          case 2:
-            return internalGetObjects();
-          case 3:
-            return internalGetBuildingTargets();
-          case 4:
-            return internalGetObjectNames();
-          case 5:
-            return internalGetSources();
-          case 6:
-            return internalGetObjectIds();
-          default:
-            throw new RuntimeException(
-                "Invalid map field number: " + number);
-        }
-      }
-      @SuppressWarnings({"rawtypes"})
-      protected com.google.protobuf.MapField internalGetMutableMapField(
-          int number) {
-        switch (number) {
-          case 2:
-            return internalGetMutableObjects();
-          case 3:
-            return internalGetMutableBuildingTargets();
-          case 4:
-            return internalGetMutableObjectNames();
-          case 5:
-            return internalGetMutableSources();
-          case 6:
-            return internalGetMutableObjectIds();
-          default:
-            throw new RuntimeException(
-                "Invalid map field number: " + number);
-        }
-      }
       @java.lang.Override
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
@@ -1168,18 +545,25 @@ public final class BibixRepoProto {
       private void maybeForceBuilderInitialization() {
         if (com.google.protobuf.GeneratedMessageV3
                 .alwaysUseFieldBuilders) {
+          getTargetsFieldBuilder();
+          getOutputNamesFieldBuilder();
         }
       }
       @java.lang.Override
       public Builder clear() {
         super.clear();
-        repoSchemaVersion_ = "";
-
-        internalGetMutableObjects().clear();
-        internalGetMutableBuildingTargets().clear();
-        internalGetMutableObjectNames().clear();
-        internalGetMutableSources().clear();
-        internalGetMutableObjectIds().clear();
+        if (targetsBuilder_ == null) {
+          targets_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000001);
+        } else {
+          targetsBuilder_.clear();
+        }
+        if (outputNamesBuilder_ == null) {
+          outputNames_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000002);
+        } else {
+          outputNamesBuilder_.clear();
+        }
         return this;
       }
 
@@ -1207,17 +591,24 @@ public final class BibixRepoProto {
       public com.giyeok.bibix.repo.BibixRepoProto.BibixRepo buildPartial() {
         com.giyeok.bibix.repo.BibixRepoProto.BibixRepo result = new com.giyeok.bibix.repo.BibixRepoProto.BibixRepo(this);
         int from_bitField0_ = bitField0_;
-        result.repoSchemaVersion_ = repoSchemaVersion_;
-        result.objects_ = internalGetObjects();
-        result.objects_.makeImmutable();
-        result.buildingTargets_ = internalGetBuildingTargets();
-        result.buildingTargets_.makeImmutable();
-        result.objectNames_ = internalGetObjectNames();
-        result.objectNames_.makeImmutable();
-        result.sources_ = internalGetSources();
-        result.sources_.makeImmutable();
-        result.objectIds_ = internalGetObjectIds();
-        result.objectIds_.makeImmutable();
+        if (targetsBuilder_ == null) {
+          if (((bitField0_ & 0x00000001) != 0)) {
+            targets_ = java.util.Collections.unmodifiableList(targets_);
+            bitField0_ = (bitField0_ & ~0x00000001);
+          }
+          result.targets_ = targets_;
+        } else {
+          result.targets_ = targetsBuilder_.build();
+        }
+        if (outputNamesBuilder_ == null) {
+          if (((bitField0_ & 0x00000002) != 0)) {
+            outputNames_ = java.util.Collections.unmodifiableList(outputNames_);
+            bitField0_ = (bitField0_ & ~0x00000002);
+          }
+          result.outputNames_ = outputNames_;
+        } else {
+          result.outputNames_ = outputNamesBuilder_.build();
+        }
         onBuilt();
         return result;
       }
@@ -1266,20 +657,58 @@ public final class BibixRepoProto {
 
       public Builder mergeFrom(com.giyeok.bibix.repo.BibixRepoProto.BibixRepo other) {
         if (other == com.giyeok.bibix.repo.BibixRepoProto.BibixRepo.getDefaultInstance()) return this;
-        if (!other.getRepoSchemaVersion().isEmpty()) {
-          repoSchemaVersion_ = other.repoSchemaVersion_;
-          onChanged();
+        if (targetsBuilder_ == null) {
+          if (!other.targets_.isEmpty()) {
+            if (targets_.isEmpty()) {
+              targets_ = other.targets_;
+              bitField0_ = (bitField0_ & ~0x00000001);
+            } else {
+              ensureTargetsIsMutable();
+              targets_.addAll(other.targets_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.targets_.isEmpty()) {
+            if (targetsBuilder_.isEmpty()) {
+              targetsBuilder_.dispose();
+              targetsBuilder_ = null;
+              targets_ = other.targets_;
+              bitField0_ = (bitField0_ & ~0x00000001);
+              targetsBuilder_ = 
+                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                   getTargetsFieldBuilder() : null;
+            } else {
+              targetsBuilder_.addAllMessages(other.targets_);
+            }
+          }
         }
-        internalGetMutableObjects().mergeFrom(
-            other.internalGetObjects());
-        internalGetMutableBuildingTargets().mergeFrom(
-            other.internalGetBuildingTargets());
-        internalGetMutableObjectNames().mergeFrom(
-            other.internalGetObjectNames());
-        internalGetMutableSources().mergeFrom(
-            other.internalGetSources());
-        internalGetMutableObjectIds().mergeFrom(
-            other.internalGetObjectIds());
+        if (outputNamesBuilder_ == null) {
+          if (!other.outputNames_.isEmpty()) {
+            if (outputNames_.isEmpty()) {
+              outputNames_ = other.outputNames_;
+              bitField0_ = (bitField0_ & ~0x00000002);
+            } else {
+              ensureOutputNamesIsMutable();
+              outputNames_.addAll(other.outputNames_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.outputNames_.isEmpty()) {
+            if (outputNamesBuilder_.isEmpty()) {
+              outputNamesBuilder_.dispose();
+              outputNamesBuilder_ = null;
+              outputNames_ = other.outputNames_;
+              bitField0_ = (bitField0_ & ~0x00000002);
+              outputNamesBuilder_ = 
+                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                   getOutputNamesFieldBuilder() : null;
+            } else {
+              outputNamesBuilder_.addAllMessages(other.outputNames_);
+            }
+          }
+        }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
         return this;
@@ -1310,757 +739,628 @@ public final class BibixRepoProto {
       }
       private int bitField0_;
 
-      private java.lang.Object repoSchemaVersion_ = "";
+      private java.util.List<com.giyeok.bibix.repo.BibixRepoProto.TargetData> targets_ =
+        java.util.Collections.emptyList();
+      private void ensureTargetsIsMutable() {
+        if (!((bitField0_ & 0x00000001) != 0)) {
+          targets_ = new java.util.ArrayList<com.giyeok.bibix.repo.BibixRepoProto.TargetData>(targets_);
+          bitField0_ |= 0x00000001;
+         }
+      }
+
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          com.giyeok.bibix.repo.BibixRepoProto.TargetData, com.giyeok.bibix.repo.BibixRepoProto.TargetData.Builder, com.giyeok.bibix.repo.BibixRepoProto.TargetDataOrBuilder> targetsBuilder_;
+
       /**
        * <pre>
-       * source id hash -&gt; source id
-       * target id hash -&gt; target id(including args map &amp; input hashes)
+       * target id hex -&gt; target data
        * </pre>
        *
-       * <code>string repo_schema_version = 1;</code>
-       * @return The repoSchemaVersion.
+       * <code>repeated .com.giyeok.bibix.repo.TargetData targets = 1;</code>
        */
-      public java.lang.String getRepoSchemaVersion() {
-        java.lang.Object ref = repoSchemaVersion_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          repoSchemaVersion_ = s;
-          return s;
+      public java.util.List<com.giyeok.bibix.repo.BibixRepoProto.TargetData> getTargetsList() {
+        if (targetsBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(targets_);
         } else {
-          return (java.lang.String) ref;
+          return targetsBuilder_.getMessageList();
         }
       }
       /**
        * <pre>
-       * source id hash -&gt; source id
-       * target id hash -&gt; target id(including args map &amp; input hashes)
+       * target id hex -&gt; target data
        * </pre>
        *
-       * <code>string repo_schema_version = 1;</code>
-       * @return The bytes for repoSchemaVersion.
+       * <code>repeated .com.giyeok.bibix.repo.TargetData targets = 1;</code>
        */
-      public com.google.protobuf.ByteString
-          getRepoSchemaVersionBytes() {
-        java.lang.Object ref = repoSchemaVersion_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          repoSchemaVersion_ = b;
-          return b;
+      public int getTargetsCount() {
+        if (targetsBuilder_ == null) {
+          return targets_.size();
         } else {
-          return (com.google.protobuf.ByteString) ref;
+          return targetsBuilder_.getCount();
         }
       }
       /**
        * <pre>
-       * source id hash -&gt; source id
-       * target id hash -&gt; target id(including args map &amp; input hashes)
+       * target id hex -&gt; target data
        * </pre>
        *
-       * <code>string repo_schema_version = 1;</code>
-       * @param value The repoSchemaVersion to set.
-       * @return This builder for chaining.
+       * <code>repeated .com.giyeok.bibix.repo.TargetData targets = 1;</code>
        */
-      public Builder setRepoSchemaVersion(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
-        repoSchemaVersion_ = value;
-        onChanged();
+      public com.giyeok.bibix.repo.BibixRepoProto.TargetData getTargets(int index) {
+        if (targetsBuilder_ == null) {
+          return targets_.get(index);
+        } else {
+          return targetsBuilder_.getMessage(index);
+        }
+      }
+      /**
+       * <pre>
+       * target id hex -&gt; target data
+       * </pre>
+       *
+       * <code>repeated .com.giyeok.bibix.repo.TargetData targets = 1;</code>
+       */
+      public Builder setTargets(
+          int index, com.giyeok.bibix.repo.BibixRepoProto.TargetData value) {
+        if (targetsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureTargetsIsMutable();
+          targets_.set(index, value);
+          onChanged();
+        } else {
+          targetsBuilder_.setMessage(index, value);
+        }
         return this;
       }
       /**
        * <pre>
-       * source id hash -&gt; source id
-       * target id hash -&gt; target id(including args map &amp; input hashes)
+       * target id hex -&gt; target data
        * </pre>
        *
-       * <code>string repo_schema_version = 1;</code>
-       * @return This builder for chaining.
+       * <code>repeated .com.giyeok.bibix.repo.TargetData targets = 1;</code>
        */
-      public Builder clearRepoSchemaVersion() {
-        
-        repoSchemaVersion_ = getDefaultInstance().getRepoSchemaVersion();
-        onChanged();
+      public Builder setTargets(
+          int index, com.giyeok.bibix.repo.BibixRepoProto.TargetData.Builder builderForValue) {
+        if (targetsBuilder_ == null) {
+          ensureTargetsIsMutable();
+          targets_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          targetsBuilder_.setMessage(index, builderForValue.build());
+        }
         return this;
       }
       /**
        * <pre>
-       * source id hash -&gt; source id
-       * target id hash -&gt; target id(including args map &amp; input hashes)
+       * target id hex -&gt; target data
        * </pre>
        *
-       * <code>string repo_schema_version = 1;</code>
-       * @param value The bytes for repoSchemaVersion to set.
-       * @return This builder for chaining.
+       * <code>repeated .com.giyeok.bibix.repo.TargetData targets = 1;</code>
        */
-      public Builder setRepoSchemaVersionBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
-        repoSchemaVersion_ = value;
-        onChanged();
-        return this;
-      }
-
-      private com.google.protobuf.MapField<
-          java.lang.String, com.giyeok.bibix.repo.BibixRepoProto.ObjectInfo> objects_;
-      private com.google.protobuf.MapField<java.lang.String, com.giyeok.bibix.repo.BibixRepoProto.ObjectInfo>
-      internalGetObjects() {
-        if (objects_ == null) {
-          return com.google.protobuf.MapField.emptyMapField(
-              ObjectsDefaultEntryHolder.defaultEntry);
+      public Builder addTargets(com.giyeok.bibix.repo.BibixRepoProto.TargetData value) {
+        if (targetsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureTargetsIsMutable();
+          targets_.add(value);
+          onChanged();
+        } else {
+          targetsBuilder_.addMessage(value);
         }
-        return objects_;
+        return this;
       }
-      private com.google.protobuf.MapField<java.lang.String, com.giyeok.bibix.repo.BibixRepoProto.ObjectInfo>
-      internalGetMutableObjects() {
-        onChanged();;
-        if (objects_ == null) {
-          objects_ = com.google.protobuf.MapField.newMapField(
-              ObjectsDefaultEntryHolder.defaultEntry);
+      /**
+       * <pre>
+       * target id hex -&gt; target data
+       * </pre>
+       *
+       * <code>repeated .com.giyeok.bibix.repo.TargetData targets = 1;</code>
+       */
+      public Builder addTargets(
+          int index, com.giyeok.bibix.repo.BibixRepoProto.TargetData value) {
+        if (targetsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureTargetsIsMutable();
+          targets_.add(index, value);
+          onChanged();
+        } else {
+          targetsBuilder_.addMessage(index, value);
         }
-        if (!objects_.isMutable()) {
-          objects_ = objects_.copy();
+        return this;
+      }
+      /**
+       * <pre>
+       * target id hex -&gt; target data
+       * </pre>
+       *
+       * <code>repeated .com.giyeok.bibix.repo.TargetData targets = 1;</code>
+       */
+      public Builder addTargets(
+          com.giyeok.bibix.repo.BibixRepoProto.TargetData.Builder builderForValue) {
+        if (targetsBuilder_ == null) {
+          ensureTargetsIsMutable();
+          targets_.add(builderForValue.build());
+          onChanged();
+        } else {
+          targetsBuilder_.addMessage(builderForValue.build());
         }
-        return objects_;
-      }
-
-      public int getObjectsCount() {
-        return internalGetObjects().getMap().size();
+        return this;
       }
       /**
-       * <code>map&lt;string, .com.giyeok.bibix.repo.ObjectInfo&gt; objects = 2;</code>
+       * <pre>
+       * target id hex -&gt; target data
+       * </pre>
+       *
+       * <code>repeated .com.giyeok.bibix.repo.TargetData targets = 1;</code>
        */
-
-      @java.lang.Override
-      public boolean containsObjects(
-          java.lang.String key) {
-        if (key == null) { throw new NullPointerException("map key"); }
-        return internalGetObjects().getMap().containsKey(key);
-      }
-      /**
-       * Use {@link #getObjectsMap()} instead.
-       */
-      @java.lang.Override
-      @java.lang.Deprecated
-      public java.util.Map<java.lang.String, com.giyeok.bibix.repo.BibixRepoProto.ObjectInfo> getObjects() {
-        return getObjectsMap();
-      }
-      /**
-       * <code>map&lt;string, .com.giyeok.bibix.repo.ObjectInfo&gt; objects = 2;</code>
-       */
-      @java.lang.Override
-
-      public java.util.Map<java.lang.String, com.giyeok.bibix.repo.BibixRepoProto.ObjectInfo> getObjectsMap() {
-        return internalGetObjects().getMap();
-      }
-      /**
-       * <code>map&lt;string, .com.giyeok.bibix.repo.ObjectInfo&gt; objects = 2;</code>
-       */
-      @java.lang.Override
-
-      public com.giyeok.bibix.repo.BibixRepoProto.ObjectInfo getObjectsOrDefault(
-          java.lang.String key,
-          com.giyeok.bibix.repo.BibixRepoProto.ObjectInfo defaultValue) {
-        if (key == null) { throw new NullPointerException("map key"); }
-        java.util.Map<java.lang.String, com.giyeok.bibix.repo.BibixRepoProto.ObjectInfo> map =
-            internalGetObjects().getMap();
-        return map.containsKey(key) ? map.get(key) : defaultValue;
-      }
-      /**
-       * <code>map&lt;string, .com.giyeok.bibix.repo.ObjectInfo&gt; objects = 2;</code>
-       */
-      @java.lang.Override
-
-      public com.giyeok.bibix.repo.BibixRepoProto.ObjectInfo getObjectsOrThrow(
-          java.lang.String key) {
-        if (key == null) { throw new NullPointerException("map key"); }
-        java.util.Map<java.lang.String, com.giyeok.bibix.repo.BibixRepoProto.ObjectInfo> map =
-            internalGetObjects().getMap();
-        if (!map.containsKey(key)) {
-          throw new java.lang.IllegalArgumentException();
+      public Builder addTargets(
+          int index, com.giyeok.bibix.repo.BibixRepoProto.TargetData.Builder builderForValue) {
+        if (targetsBuilder_ == null) {
+          ensureTargetsIsMutable();
+          targets_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          targetsBuilder_.addMessage(index, builderForValue.build());
         }
-        return map.get(key);
-      }
-
-      public Builder clearObjects() {
-        internalGetMutableObjects().getMutableMap()
-            .clear();
         return this;
       }
       /**
-       * <code>map&lt;string, .com.giyeok.bibix.repo.ObjectInfo&gt; objects = 2;</code>
+       * <pre>
+       * target id hex -&gt; target data
+       * </pre>
+       *
+       * <code>repeated .com.giyeok.bibix.repo.TargetData targets = 1;</code>
        */
-
-      public Builder removeObjects(
-          java.lang.String key) {
-        if (key == null) { throw new NullPointerException("map key"); }
-        internalGetMutableObjects().getMutableMap()
-            .remove(key);
-        return this;
-      }
-      /**
-       * Use alternate mutation accessors instead.
-       */
-      @java.lang.Deprecated
-      public java.util.Map<java.lang.String, com.giyeok.bibix.repo.BibixRepoProto.ObjectInfo>
-      getMutableObjects() {
-        return internalGetMutableObjects().getMutableMap();
-      }
-      /**
-       * <code>map&lt;string, .com.giyeok.bibix.repo.ObjectInfo&gt; objects = 2;</code>
-       */
-      public Builder putObjects(
-          java.lang.String key,
-          com.giyeok.bibix.repo.BibixRepoProto.ObjectInfo value) {
-        if (key == null) { throw new NullPointerException("map key"); }
-        if (value == null) {
-  throw new NullPointerException("map value");
-}
-
-        internalGetMutableObjects().getMutableMap()
-            .put(key, value);
-        return this;
-      }
-      /**
-       * <code>map&lt;string, .com.giyeok.bibix.repo.ObjectInfo&gt; objects = 2;</code>
-       */
-
-      public Builder putAllObjects(
-          java.util.Map<java.lang.String, com.giyeok.bibix.repo.BibixRepoProto.ObjectInfo> values) {
-        internalGetMutableObjects().getMutableMap()
-            .putAll(values);
-        return this;
-      }
-
-      private com.google.protobuf.MapField<
-          java.lang.String, java.lang.Boolean> buildingTargets_;
-      private com.google.protobuf.MapField<java.lang.String, java.lang.Boolean>
-      internalGetBuildingTargets() {
-        if (buildingTargets_ == null) {
-          return com.google.protobuf.MapField.emptyMapField(
-              BuildingTargetsDefaultEntryHolder.defaultEntry);
+      public Builder addAllTargets(
+          java.lang.Iterable<? extends com.giyeok.bibix.repo.BibixRepoProto.TargetData> values) {
+        if (targetsBuilder_ == null) {
+          ensureTargetsIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, targets_);
+          onChanged();
+        } else {
+          targetsBuilder_.addAllMessages(values);
         }
-        return buildingTargets_;
+        return this;
       }
-      private com.google.protobuf.MapField<java.lang.String, java.lang.Boolean>
-      internalGetMutableBuildingTargets() {
-        onChanged();;
-        if (buildingTargets_ == null) {
-          buildingTargets_ = com.google.protobuf.MapField.newMapField(
-              BuildingTargetsDefaultEntryHolder.defaultEntry);
+      /**
+       * <pre>
+       * target id hex -&gt; target data
+       * </pre>
+       *
+       * <code>repeated .com.giyeok.bibix.repo.TargetData targets = 1;</code>
+       */
+      public Builder clearTargets() {
+        if (targetsBuilder_ == null) {
+          targets_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000001);
+          onChanged();
+        } else {
+          targetsBuilder_.clear();
         }
-        if (!buildingTargets_.isMutable()) {
-          buildingTargets_ = buildingTargets_.copy();
+        return this;
+      }
+      /**
+       * <pre>
+       * target id hex -&gt; target data
+       * </pre>
+       *
+       * <code>repeated .com.giyeok.bibix.repo.TargetData targets = 1;</code>
+       */
+      public Builder removeTargets(int index) {
+        if (targetsBuilder_ == null) {
+          ensureTargetsIsMutable();
+          targets_.remove(index);
+          onChanged();
+        } else {
+          targetsBuilder_.remove(index);
         }
-        return buildingTargets_;
-      }
-
-      public int getBuildingTargetsCount() {
-        return internalGetBuildingTargets().getMap().size();
+        return this;
       }
       /**
-       * <code>map&lt;string, bool&gt; building_targets = 3;</code>
+       * <pre>
+       * target id hex -&gt; target data
+       * </pre>
+       *
+       * <code>repeated .com.giyeok.bibix.repo.TargetData targets = 1;</code>
        */
-
-      @java.lang.Override
-      public boolean containsBuildingTargets(
-          java.lang.String key) {
-        if (key == null) { throw new NullPointerException("map key"); }
-        return internalGetBuildingTargets().getMap().containsKey(key);
+      public com.giyeok.bibix.repo.BibixRepoProto.TargetData.Builder getTargetsBuilder(
+          int index) {
+        return getTargetsFieldBuilder().getBuilder(index);
       }
       /**
-       * Use {@link #getBuildingTargetsMap()} instead.
+       * <pre>
+       * target id hex -&gt; target data
+       * </pre>
+       *
+       * <code>repeated .com.giyeok.bibix.repo.TargetData targets = 1;</code>
        */
-      @java.lang.Override
-      @java.lang.Deprecated
-      public java.util.Map<java.lang.String, java.lang.Boolean> getBuildingTargets() {
-        return getBuildingTargetsMap();
-      }
-      /**
-       * <code>map&lt;string, bool&gt; building_targets = 3;</code>
-       */
-      @java.lang.Override
-
-      public java.util.Map<java.lang.String, java.lang.Boolean> getBuildingTargetsMap() {
-        return internalGetBuildingTargets().getMap();
-      }
-      /**
-       * <code>map&lt;string, bool&gt; building_targets = 3;</code>
-       */
-      @java.lang.Override
-
-      public boolean getBuildingTargetsOrDefault(
-          java.lang.String key,
-          boolean defaultValue) {
-        if (key == null) { throw new NullPointerException("map key"); }
-        java.util.Map<java.lang.String, java.lang.Boolean> map =
-            internalGetBuildingTargets().getMap();
-        return map.containsKey(key) ? map.get(key) : defaultValue;
-      }
-      /**
-       * <code>map&lt;string, bool&gt; building_targets = 3;</code>
-       */
-      @java.lang.Override
-
-      public boolean getBuildingTargetsOrThrow(
-          java.lang.String key) {
-        if (key == null) { throw new NullPointerException("map key"); }
-        java.util.Map<java.lang.String, java.lang.Boolean> map =
-            internalGetBuildingTargets().getMap();
-        if (!map.containsKey(key)) {
-          throw new java.lang.IllegalArgumentException();
+      public com.giyeok.bibix.repo.BibixRepoProto.TargetDataOrBuilder getTargetsOrBuilder(
+          int index) {
+        if (targetsBuilder_ == null) {
+          return targets_.get(index);  } else {
+          return targetsBuilder_.getMessageOrBuilder(index);
         }
-        return map.get(key);
-      }
-
-      public Builder clearBuildingTargets() {
-        internalGetMutableBuildingTargets().getMutableMap()
-            .clear();
-        return this;
       }
       /**
-       * <code>map&lt;string, bool&gt; building_targets = 3;</code>
+       * <pre>
+       * target id hex -&gt; target data
+       * </pre>
+       *
+       * <code>repeated .com.giyeok.bibix.repo.TargetData targets = 1;</code>
        */
-
-      public Builder removeBuildingTargets(
-          java.lang.String key) {
-        if (key == null) { throw new NullPointerException("map key"); }
-        internalGetMutableBuildingTargets().getMutableMap()
-            .remove(key);
-        return this;
-      }
-      /**
-       * Use alternate mutation accessors instead.
-       */
-      @java.lang.Deprecated
-      public java.util.Map<java.lang.String, java.lang.Boolean>
-      getMutableBuildingTargets() {
-        return internalGetMutableBuildingTargets().getMutableMap();
-      }
-      /**
-       * <code>map&lt;string, bool&gt; building_targets = 3;</code>
-       */
-      public Builder putBuildingTargets(
-          java.lang.String key,
-          boolean value) {
-        if (key == null) { throw new NullPointerException("map key"); }
-        
-        internalGetMutableBuildingTargets().getMutableMap()
-            .put(key, value);
-        return this;
-      }
-      /**
-       * <code>map&lt;string, bool&gt; building_targets = 3;</code>
-       */
-
-      public Builder putAllBuildingTargets(
-          java.util.Map<java.lang.String, java.lang.Boolean> values) {
-        internalGetMutableBuildingTargets().getMutableMap()
-            .putAll(values);
-        return this;
-      }
-
-      private com.google.protobuf.MapField<
-          java.lang.String, java.lang.String> objectNames_;
-      private com.google.protobuf.MapField<java.lang.String, java.lang.String>
-      internalGetObjectNames() {
-        if (objectNames_ == null) {
-          return com.google.protobuf.MapField.emptyMapField(
-              ObjectNamesDefaultEntryHolder.defaultEntry);
+      public java.util.List<? extends com.giyeok.bibix.repo.BibixRepoProto.TargetDataOrBuilder> 
+           getTargetsOrBuilderList() {
+        if (targetsBuilder_ != null) {
+          return targetsBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(targets_);
         }
-        return objectNames_;
       }
-      private com.google.protobuf.MapField<java.lang.String, java.lang.String>
-      internalGetMutableObjectNames() {
-        onChanged();;
-        if (objectNames_ == null) {
-          objectNames_ = com.google.protobuf.MapField.newMapField(
-              ObjectNamesDefaultEntryHolder.defaultEntry);
+      /**
+       * <pre>
+       * target id hex -&gt; target data
+       * </pre>
+       *
+       * <code>repeated .com.giyeok.bibix.repo.TargetData targets = 1;</code>
+       */
+      public com.giyeok.bibix.repo.BibixRepoProto.TargetData.Builder addTargetsBuilder() {
+        return getTargetsFieldBuilder().addBuilder(
+            com.giyeok.bibix.repo.BibixRepoProto.TargetData.getDefaultInstance());
+      }
+      /**
+       * <pre>
+       * target id hex -&gt; target data
+       * </pre>
+       *
+       * <code>repeated .com.giyeok.bibix.repo.TargetData targets = 1;</code>
+       */
+      public com.giyeok.bibix.repo.BibixRepoProto.TargetData.Builder addTargetsBuilder(
+          int index) {
+        return getTargetsFieldBuilder().addBuilder(
+            index, com.giyeok.bibix.repo.BibixRepoProto.TargetData.getDefaultInstance());
+      }
+      /**
+       * <pre>
+       * target id hex -&gt; target data
+       * </pre>
+       *
+       * <code>repeated .com.giyeok.bibix.repo.TargetData targets = 1;</code>
+       */
+      public java.util.List<com.giyeok.bibix.repo.BibixRepoProto.TargetData.Builder> 
+           getTargetsBuilderList() {
+        return getTargetsFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          com.giyeok.bibix.repo.BibixRepoProto.TargetData, com.giyeok.bibix.repo.BibixRepoProto.TargetData.Builder, com.giyeok.bibix.repo.BibixRepoProto.TargetDataOrBuilder> 
+          getTargetsFieldBuilder() {
+        if (targetsBuilder_ == null) {
+          targetsBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+              com.giyeok.bibix.repo.BibixRepoProto.TargetData, com.giyeok.bibix.repo.BibixRepoProto.TargetData.Builder, com.giyeok.bibix.repo.BibixRepoProto.TargetDataOrBuilder>(
+                  targets_,
+                  ((bitField0_ & 0x00000001) != 0),
+                  getParentForChildren(),
+                  isClean());
+          targets_ = null;
         }
-        if (!objectNames_.isMutable()) {
-          objectNames_ = objectNames_.copy();
+        return targetsBuilder_;
+      }
+
+      private java.util.List<com.giyeok.bibix.repo.BibixRepoProto.OutputName> outputNames_ =
+        java.util.Collections.emptyList();
+      private void ensureOutputNamesIsMutable() {
+        if (!((bitField0_ & 0x00000002) != 0)) {
+          outputNames_ = new java.util.ArrayList<com.giyeok.bibix.repo.BibixRepoProto.OutputName>(outputNames_);
+          bitField0_ |= 0x00000002;
+         }
+      }
+
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          com.giyeok.bibix.repo.BibixRepoProto.OutputName, com.giyeok.bibix.repo.BibixRepoProto.OutputName.Builder, com.giyeok.bibix.repo.BibixRepoProto.OutputNameOrBuilder> outputNamesBuilder_;
+
+      /**
+       * <pre>
+       * user defined output name -&gt; target id
+       * </pre>
+       *
+       * <code>repeated .com.giyeok.bibix.repo.OutputName output_names = 2;</code>
+       */
+      public java.util.List<com.giyeok.bibix.repo.BibixRepoProto.OutputName> getOutputNamesList() {
+        if (outputNamesBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(outputNames_);
+        } else {
+          return outputNamesBuilder_.getMessageList();
         }
-        return objectNames_;
-      }
-
-      public int getObjectNamesCount() {
-        return internalGetObjectNames().getMap().size();
       }
       /**
-       * <code>map&lt;string, string&gt; object_names = 4;</code>
+       * <pre>
+       * user defined output name -&gt; target id
+       * </pre>
+       *
+       * <code>repeated .com.giyeok.bibix.repo.OutputName output_names = 2;</code>
        */
-
-      @java.lang.Override
-      public boolean containsObjectNames(
-          java.lang.String key) {
-        if (key == null) { throw new NullPointerException("map key"); }
-        return internalGetObjectNames().getMap().containsKey(key);
-      }
-      /**
-       * Use {@link #getObjectNamesMap()} instead.
-       */
-      @java.lang.Override
-      @java.lang.Deprecated
-      public java.util.Map<java.lang.String, java.lang.String> getObjectNames() {
-        return getObjectNamesMap();
-      }
-      /**
-       * <code>map&lt;string, string&gt; object_names = 4;</code>
-       */
-      @java.lang.Override
-
-      public java.util.Map<java.lang.String, java.lang.String> getObjectNamesMap() {
-        return internalGetObjectNames().getMap();
-      }
-      /**
-       * <code>map&lt;string, string&gt; object_names = 4;</code>
-       */
-      @java.lang.Override
-
-      public java.lang.String getObjectNamesOrDefault(
-          java.lang.String key,
-          java.lang.String defaultValue) {
-        if (key == null) { throw new NullPointerException("map key"); }
-        java.util.Map<java.lang.String, java.lang.String> map =
-            internalGetObjectNames().getMap();
-        return map.containsKey(key) ? map.get(key) : defaultValue;
-      }
-      /**
-       * <code>map&lt;string, string&gt; object_names = 4;</code>
-       */
-      @java.lang.Override
-
-      public java.lang.String getObjectNamesOrThrow(
-          java.lang.String key) {
-        if (key == null) { throw new NullPointerException("map key"); }
-        java.util.Map<java.lang.String, java.lang.String> map =
-            internalGetObjectNames().getMap();
-        if (!map.containsKey(key)) {
-          throw new java.lang.IllegalArgumentException();
+      public int getOutputNamesCount() {
+        if (outputNamesBuilder_ == null) {
+          return outputNames_.size();
+        } else {
+          return outputNamesBuilder_.getCount();
         }
-        return map.get(key);
-      }
-
-      public Builder clearObjectNames() {
-        internalGetMutableObjectNames().getMutableMap()
-            .clear();
-        return this;
       }
       /**
-       * <code>map&lt;string, string&gt; object_names = 4;</code>
+       * <pre>
+       * user defined output name -&gt; target id
+       * </pre>
+       *
+       * <code>repeated .com.giyeok.bibix.repo.OutputName output_names = 2;</code>
        */
-
-      public Builder removeObjectNames(
-          java.lang.String key) {
-        if (key == null) { throw new NullPointerException("map key"); }
-        internalGetMutableObjectNames().getMutableMap()
-            .remove(key);
-        return this;
-      }
-      /**
-       * Use alternate mutation accessors instead.
-       */
-      @java.lang.Deprecated
-      public java.util.Map<java.lang.String, java.lang.String>
-      getMutableObjectNames() {
-        return internalGetMutableObjectNames().getMutableMap();
-      }
-      /**
-       * <code>map&lt;string, string&gt; object_names = 4;</code>
-       */
-      public Builder putObjectNames(
-          java.lang.String key,
-          java.lang.String value) {
-        if (key == null) { throw new NullPointerException("map key"); }
-        if (value == null) {
-  throw new NullPointerException("map value");
-}
-
-        internalGetMutableObjectNames().getMutableMap()
-            .put(key, value);
-        return this;
-      }
-      /**
-       * <code>map&lt;string, string&gt; object_names = 4;</code>
-       */
-
-      public Builder putAllObjectNames(
-          java.util.Map<java.lang.String, java.lang.String> values) {
-        internalGetMutableObjectNames().getMutableMap()
-            .putAll(values);
-        return this;
-      }
-
-      private com.google.protobuf.MapField<
-          java.lang.String, com.giyeok.bibix.BibixIdProto.SourceId> sources_;
-      private com.google.protobuf.MapField<java.lang.String, com.giyeok.bibix.BibixIdProto.SourceId>
-      internalGetSources() {
-        if (sources_ == null) {
-          return com.google.protobuf.MapField.emptyMapField(
-              SourcesDefaultEntryHolder.defaultEntry);
+      public com.giyeok.bibix.repo.BibixRepoProto.OutputName getOutputNames(int index) {
+        if (outputNamesBuilder_ == null) {
+          return outputNames_.get(index);
+        } else {
+          return outputNamesBuilder_.getMessage(index);
         }
-        return sources_;
       }
-      private com.google.protobuf.MapField<java.lang.String, com.giyeok.bibix.BibixIdProto.SourceId>
-      internalGetMutableSources() {
-        onChanged();;
-        if (sources_ == null) {
-          sources_ = com.google.protobuf.MapField.newMapField(
-              SourcesDefaultEntryHolder.defaultEntry);
+      /**
+       * <pre>
+       * user defined output name -&gt; target id
+       * </pre>
+       *
+       * <code>repeated .com.giyeok.bibix.repo.OutputName output_names = 2;</code>
+       */
+      public Builder setOutputNames(
+          int index, com.giyeok.bibix.repo.BibixRepoProto.OutputName value) {
+        if (outputNamesBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureOutputNamesIsMutable();
+          outputNames_.set(index, value);
+          onChanged();
+        } else {
+          outputNamesBuilder_.setMessage(index, value);
         }
-        if (!sources_.isMutable()) {
-          sources_ = sources_.copy();
+        return this;
+      }
+      /**
+       * <pre>
+       * user defined output name -&gt; target id
+       * </pre>
+       *
+       * <code>repeated .com.giyeok.bibix.repo.OutputName output_names = 2;</code>
+       */
+      public Builder setOutputNames(
+          int index, com.giyeok.bibix.repo.BibixRepoProto.OutputName.Builder builderForValue) {
+        if (outputNamesBuilder_ == null) {
+          ensureOutputNamesIsMutable();
+          outputNames_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          outputNamesBuilder_.setMessage(index, builderForValue.build());
         }
-        return sources_;
-      }
-
-      public int getSourcesCount() {
-        return internalGetSources().getMap().size();
+        return this;
       }
       /**
-       * <code>map&lt;string, .com.giyeok.bibix.SourceId&gt; sources = 5;</code>
+       * <pre>
+       * user defined output name -&gt; target id
+       * </pre>
+       *
+       * <code>repeated .com.giyeok.bibix.repo.OutputName output_names = 2;</code>
        */
-
-      @java.lang.Override
-      public boolean containsSources(
-          java.lang.String key) {
-        if (key == null) { throw new NullPointerException("map key"); }
-        return internalGetSources().getMap().containsKey(key);
-      }
-      /**
-       * Use {@link #getSourcesMap()} instead.
-       */
-      @java.lang.Override
-      @java.lang.Deprecated
-      public java.util.Map<java.lang.String, com.giyeok.bibix.BibixIdProto.SourceId> getSources() {
-        return getSourcesMap();
-      }
-      /**
-       * <code>map&lt;string, .com.giyeok.bibix.SourceId&gt; sources = 5;</code>
-       */
-      @java.lang.Override
-
-      public java.util.Map<java.lang.String, com.giyeok.bibix.BibixIdProto.SourceId> getSourcesMap() {
-        return internalGetSources().getMap();
-      }
-      /**
-       * <code>map&lt;string, .com.giyeok.bibix.SourceId&gt; sources = 5;</code>
-       */
-      @java.lang.Override
-
-      public com.giyeok.bibix.BibixIdProto.SourceId getSourcesOrDefault(
-          java.lang.String key,
-          com.giyeok.bibix.BibixIdProto.SourceId defaultValue) {
-        if (key == null) { throw new NullPointerException("map key"); }
-        java.util.Map<java.lang.String, com.giyeok.bibix.BibixIdProto.SourceId> map =
-            internalGetSources().getMap();
-        return map.containsKey(key) ? map.get(key) : defaultValue;
-      }
-      /**
-       * <code>map&lt;string, .com.giyeok.bibix.SourceId&gt; sources = 5;</code>
-       */
-      @java.lang.Override
-
-      public com.giyeok.bibix.BibixIdProto.SourceId getSourcesOrThrow(
-          java.lang.String key) {
-        if (key == null) { throw new NullPointerException("map key"); }
-        java.util.Map<java.lang.String, com.giyeok.bibix.BibixIdProto.SourceId> map =
-            internalGetSources().getMap();
-        if (!map.containsKey(key)) {
-          throw new java.lang.IllegalArgumentException();
+      public Builder addOutputNames(com.giyeok.bibix.repo.BibixRepoProto.OutputName value) {
+        if (outputNamesBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureOutputNamesIsMutable();
+          outputNames_.add(value);
+          onChanged();
+        } else {
+          outputNamesBuilder_.addMessage(value);
         }
-        return map.get(key);
-      }
-
-      public Builder clearSources() {
-        internalGetMutableSources().getMutableMap()
-            .clear();
         return this;
       }
       /**
-       * <code>map&lt;string, .com.giyeok.bibix.SourceId&gt; sources = 5;</code>
+       * <pre>
+       * user defined output name -&gt; target id
+       * </pre>
+       *
+       * <code>repeated .com.giyeok.bibix.repo.OutputName output_names = 2;</code>
        */
-
-      public Builder removeSources(
-          java.lang.String key) {
-        if (key == null) { throw new NullPointerException("map key"); }
-        internalGetMutableSources().getMutableMap()
-            .remove(key);
-        return this;
-      }
-      /**
-       * Use alternate mutation accessors instead.
-       */
-      @java.lang.Deprecated
-      public java.util.Map<java.lang.String, com.giyeok.bibix.BibixIdProto.SourceId>
-      getMutableSources() {
-        return internalGetMutableSources().getMutableMap();
-      }
-      /**
-       * <code>map&lt;string, .com.giyeok.bibix.SourceId&gt; sources = 5;</code>
-       */
-      public Builder putSources(
-          java.lang.String key,
-          com.giyeok.bibix.BibixIdProto.SourceId value) {
-        if (key == null) { throw new NullPointerException("map key"); }
-        if (value == null) {
-  throw new NullPointerException("map value");
-}
-
-        internalGetMutableSources().getMutableMap()
-            .put(key, value);
-        return this;
-      }
-      /**
-       * <code>map&lt;string, .com.giyeok.bibix.SourceId&gt; sources = 5;</code>
-       */
-
-      public Builder putAllSources(
-          java.util.Map<java.lang.String, com.giyeok.bibix.BibixIdProto.SourceId> values) {
-        internalGetMutableSources().getMutableMap()
-            .putAll(values);
-        return this;
-      }
-
-      private com.google.protobuf.MapField<
-          java.lang.String, com.giyeok.bibix.BibixIdProto.ObjectId> objectIds_;
-      private com.google.protobuf.MapField<java.lang.String, com.giyeok.bibix.BibixIdProto.ObjectId>
-      internalGetObjectIds() {
-        if (objectIds_ == null) {
-          return com.google.protobuf.MapField.emptyMapField(
-              ObjectIdsDefaultEntryHolder.defaultEntry);
+      public Builder addOutputNames(
+          int index, com.giyeok.bibix.repo.BibixRepoProto.OutputName value) {
+        if (outputNamesBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureOutputNamesIsMutable();
+          outputNames_.add(index, value);
+          onChanged();
+        } else {
+          outputNamesBuilder_.addMessage(index, value);
         }
-        return objectIds_;
+        return this;
       }
-      private com.google.protobuf.MapField<java.lang.String, com.giyeok.bibix.BibixIdProto.ObjectId>
-      internalGetMutableObjectIds() {
-        onChanged();;
-        if (objectIds_ == null) {
-          objectIds_ = com.google.protobuf.MapField.newMapField(
-              ObjectIdsDefaultEntryHolder.defaultEntry);
+      /**
+       * <pre>
+       * user defined output name -&gt; target id
+       * </pre>
+       *
+       * <code>repeated .com.giyeok.bibix.repo.OutputName output_names = 2;</code>
+       */
+      public Builder addOutputNames(
+          com.giyeok.bibix.repo.BibixRepoProto.OutputName.Builder builderForValue) {
+        if (outputNamesBuilder_ == null) {
+          ensureOutputNamesIsMutable();
+          outputNames_.add(builderForValue.build());
+          onChanged();
+        } else {
+          outputNamesBuilder_.addMessage(builderForValue.build());
         }
-        if (!objectIds_.isMutable()) {
-          objectIds_ = objectIds_.copy();
+        return this;
+      }
+      /**
+       * <pre>
+       * user defined output name -&gt; target id
+       * </pre>
+       *
+       * <code>repeated .com.giyeok.bibix.repo.OutputName output_names = 2;</code>
+       */
+      public Builder addOutputNames(
+          int index, com.giyeok.bibix.repo.BibixRepoProto.OutputName.Builder builderForValue) {
+        if (outputNamesBuilder_ == null) {
+          ensureOutputNamesIsMutable();
+          outputNames_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          outputNamesBuilder_.addMessage(index, builderForValue.build());
         }
-        return objectIds_;
-      }
-
-      public int getObjectIdsCount() {
-        return internalGetObjectIds().getMap().size();
+        return this;
       }
       /**
-       * <code>map&lt;string, .com.giyeok.bibix.ObjectId&gt; object_ids = 6;</code>
+       * <pre>
+       * user defined output name -&gt; target id
+       * </pre>
+       *
+       * <code>repeated .com.giyeok.bibix.repo.OutputName output_names = 2;</code>
        */
-
-      @java.lang.Override
-      public boolean containsObjectIds(
-          java.lang.String key) {
-        if (key == null) { throw new NullPointerException("map key"); }
-        return internalGetObjectIds().getMap().containsKey(key);
-      }
-      /**
-       * Use {@link #getObjectIdsMap()} instead.
-       */
-      @java.lang.Override
-      @java.lang.Deprecated
-      public java.util.Map<java.lang.String, com.giyeok.bibix.BibixIdProto.ObjectId> getObjectIds() {
-        return getObjectIdsMap();
-      }
-      /**
-       * <code>map&lt;string, .com.giyeok.bibix.ObjectId&gt; object_ids = 6;</code>
-       */
-      @java.lang.Override
-
-      public java.util.Map<java.lang.String, com.giyeok.bibix.BibixIdProto.ObjectId> getObjectIdsMap() {
-        return internalGetObjectIds().getMap();
-      }
-      /**
-       * <code>map&lt;string, .com.giyeok.bibix.ObjectId&gt; object_ids = 6;</code>
-       */
-      @java.lang.Override
-
-      public com.giyeok.bibix.BibixIdProto.ObjectId getObjectIdsOrDefault(
-          java.lang.String key,
-          com.giyeok.bibix.BibixIdProto.ObjectId defaultValue) {
-        if (key == null) { throw new NullPointerException("map key"); }
-        java.util.Map<java.lang.String, com.giyeok.bibix.BibixIdProto.ObjectId> map =
-            internalGetObjectIds().getMap();
-        return map.containsKey(key) ? map.get(key) : defaultValue;
-      }
-      /**
-       * <code>map&lt;string, .com.giyeok.bibix.ObjectId&gt; object_ids = 6;</code>
-       */
-      @java.lang.Override
-
-      public com.giyeok.bibix.BibixIdProto.ObjectId getObjectIdsOrThrow(
-          java.lang.String key) {
-        if (key == null) { throw new NullPointerException("map key"); }
-        java.util.Map<java.lang.String, com.giyeok.bibix.BibixIdProto.ObjectId> map =
-            internalGetObjectIds().getMap();
-        if (!map.containsKey(key)) {
-          throw new java.lang.IllegalArgumentException();
+      public Builder addAllOutputNames(
+          java.lang.Iterable<? extends com.giyeok.bibix.repo.BibixRepoProto.OutputName> values) {
+        if (outputNamesBuilder_ == null) {
+          ensureOutputNamesIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, outputNames_);
+          onChanged();
+        } else {
+          outputNamesBuilder_.addAllMessages(values);
         }
-        return map.get(key);
-      }
-
-      public Builder clearObjectIds() {
-        internalGetMutableObjectIds().getMutableMap()
-            .clear();
         return this;
       }
       /**
-       * <code>map&lt;string, .com.giyeok.bibix.ObjectId&gt; object_ids = 6;</code>
+       * <pre>
+       * user defined output name -&gt; target id
+       * </pre>
+       *
+       * <code>repeated .com.giyeok.bibix.repo.OutputName output_names = 2;</code>
        */
-
-      public Builder removeObjectIds(
-          java.lang.String key) {
-        if (key == null) { throw new NullPointerException("map key"); }
-        internalGetMutableObjectIds().getMutableMap()
-            .remove(key);
+      public Builder clearOutputNames() {
+        if (outputNamesBuilder_ == null) {
+          outputNames_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000002);
+          onChanged();
+        } else {
+          outputNamesBuilder_.clear();
+        }
         return this;
       }
       /**
-       * Use alternate mutation accessors instead.
+       * <pre>
+       * user defined output name -&gt; target id
+       * </pre>
+       *
+       * <code>repeated .com.giyeok.bibix.repo.OutputName output_names = 2;</code>
        */
-      @java.lang.Deprecated
-      public java.util.Map<java.lang.String, com.giyeok.bibix.BibixIdProto.ObjectId>
-      getMutableObjectIds() {
-        return internalGetMutableObjectIds().getMutableMap();
-      }
-      /**
-       * <code>map&lt;string, .com.giyeok.bibix.ObjectId&gt; object_ids = 6;</code>
-       */
-      public Builder putObjectIds(
-          java.lang.String key,
-          com.giyeok.bibix.BibixIdProto.ObjectId value) {
-        if (key == null) { throw new NullPointerException("map key"); }
-        if (value == null) {
-  throw new NullPointerException("map value");
-}
-
-        internalGetMutableObjectIds().getMutableMap()
-            .put(key, value);
+      public Builder removeOutputNames(int index) {
+        if (outputNamesBuilder_ == null) {
+          ensureOutputNamesIsMutable();
+          outputNames_.remove(index);
+          onChanged();
+        } else {
+          outputNamesBuilder_.remove(index);
+        }
         return this;
       }
       /**
-       * <code>map&lt;string, .com.giyeok.bibix.ObjectId&gt; object_ids = 6;</code>
+       * <pre>
+       * user defined output name -&gt; target id
+       * </pre>
+       *
+       * <code>repeated .com.giyeok.bibix.repo.OutputName output_names = 2;</code>
        */
-
-      public Builder putAllObjectIds(
-          java.util.Map<java.lang.String, com.giyeok.bibix.BibixIdProto.ObjectId> values) {
-        internalGetMutableObjectIds().getMutableMap()
-            .putAll(values);
-        return this;
+      public com.giyeok.bibix.repo.BibixRepoProto.OutputName.Builder getOutputNamesBuilder(
+          int index) {
+        return getOutputNamesFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <pre>
+       * user defined output name -&gt; target id
+       * </pre>
+       *
+       * <code>repeated .com.giyeok.bibix.repo.OutputName output_names = 2;</code>
+       */
+      public com.giyeok.bibix.repo.BibixRepoProto.OutputNameOrBuilder getOutputNamesOrBuilder(
+          int index) {
+        if (outputNamesBuilder_ == null) {
+          return outputNames_.get(index);  } else {
+          return outputNamesBuilder_.getMessageOrBuilder(index);
+        }
+      }
+      /**
+       * <pre>
+       * user defined output name -&gt; target id
+       * </pre>
+       *
+       * <code>repeated .com.giyeok.bibix.repo.OutputName output_names = 2;</code>
+       */
+      public java.util.List<? extends com.giyeok.bibix.repo.BibixRepoProto.OutputNameOrBuilder> 
+           getOutputNamesOrBuilderList() {
+        if (outputNamesBuilder_ != null) {
+          return outputNamesBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(outputNames_);
+        }
+      }
+      /**
+       * <pre>
+       * user defined output name -&gt; target id
+       * </pre>
+       *
+       * <code>repeated .com.giyeok.bibix.repo.OutputName output_names = 2;</code>
+       */
+      public com.giyeok.bibix.repo.BibixRepoProto.OutputName.Builder addOutputNamesBuilder() {
+        return getOutputNamesFieldBuilder().addBuilder(
+            com.giyeok.bibix.repo.BibixRepoProto.OutputName.getDefaultInstance());
+      }
+      /**
+       * <pre>
+       * user defined output name -&gt; target id
+       * </pre>
+       *
+       * <code>repeated .com.giyeok.bibix.repo.OutputName output_names = 2;</code>
+       */
+      public com.giyeok.bibix.repo.BibixRepoProto.OutputName.Builder addOutputNamesBuilder(
+          int index) {
+        return getOutputNamesFieldBuilder().addBuilder(
+            index, com.giyeok.bibix.repo.BibixRepoProto.OutputName.getDefaultInstance());
+      }
+      /**
+       * <pre>
+       * user defined output name -&gt; target id
+       * </pre>
+       *
+       * <code>repeated .com.giyeok.bibix.repo.OutputName output_names = 2;</code>
+       */
+      public java.util.List<com.giyeok.bibix.repo.BibixRepoProto.OutputName.Builder> 
+           getOutputNamesBuilderList() {
+        return getOutputNamesFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          com.giyeok.bibix.repo.BibixRepoProto.OutputName, com.giyeok.bibix.repo.BibixRepoProto.OutputName.Builder, com.giyeok.bibix.repo.BibixRepoProto.OutputNameOrBuilder> 
+          getOutputNamesFieldBuilder() {
+        if (outputNamesBuilder_ == null) {
+          outputNamesBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+              com.giyeok.bibix.repo.BibixRepoProto.OutputName, com.giyeok.bibix.repo.BibixRepoProto.OutputName.Builder, com.giyeok.bibix.repo.BibixRepoProto.OutputNameOrBuilder>(
+                  outputNames_,
+                  ((bitField0_ & 0x00000002) != 0),
+                  getParentForChildren(),
+                  isClean());
+          outputNames_ = null;
+        }
+        return outputNamesBuilder_;
       }
       @java.lang.Override
       public final Builder setUnknownFields(
@@ -2115,86 +1415,89 @@ public final class BibixRepoProto {
 
   }
 
-  public interface ObjectInfoOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:com.giyeok.bibix.repo.ObjectInfo)
+  public interface TargetDataOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:com.giyeok.bibix.repo.TargetData)
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <pre>
-     * object 자체에 대한 정보는 별로 필요 없을것 같은데
-     * </pre>
-     *
-     * <code>bytes inputs_hash = 1;</code>
-     * @return The inputsHash.
+     * <code>bytes target_id = 1;</code>
+     * @return The targetId.
      */
-    com.google.protobuf.ByteString getInputsHash();
+    com.google.protobuf.ByteString getTargetId();
 
     /**
-     * <code>.google.protobuf.Timestamp start_time = 2;</code>
-     * @return Whether the startTime field is set.
+     * <code>.com.giyeok.bibix.TargetIdData target_id_data = 2;</code>
+     * @return Whether the targetIdData field is set.
      */
-    boolean hasStartTime();
+    boolean hasTargetIdData();
     /**
-     * <code>.google.protobuf.Timestamp start_time = 2;</code>
-     * @return The startTime.
+     * <code>.com.giyeok.bibix.TargetIdData target_id_data = 2;</code>
+     * @return The targetIdData.
      */
-    com.google.protobuf.Timestamp getStartTime();
+    com.giyeok.bibix.BibixIdProto.TargetIdData getTargetIdData();
     /**
-     * <code>.google.protobuf.Timestamp start_time = 2;</code>
+     * <code>.com.giyeok.bibix.TargetIdData target_id_data = 2;</code>
      */
-    com.google.protobuf.TimestampOrBuilder getStartTimeOrBuilder();
+    com.giyeok.bibix.BibixIdProto.TargetIdDataOrBuilder getTargetIdDataOrBuilder();
 
     /**
-     * <code>.google.protobuf.Timestamp end_time = 3;</code>
-     * @return Whether the endTime field is set.
+     * <code>.com.giyeok.bibix.InputHashes latest_input_hashes = 3;</code>
+     * @return Whether the latestInputHashes field is set.
      */
-    boolean hasEndTime();
+    boolean hasLatestInputHashes();
     /**
-     * <code>.google.protobuf.Timestamp end_time = 3;</code>
-     * @return The endTime.
+     * <code>.com.giyeok.bibix.InputHashes latest_input_hashes = 3;</code>
+     * @return The latestInputHashes.
      */
-    com.google.protobuf.Timestamp getEndTime();
+    com.giyeok.bibix.BibixIdProto.InputHashes getLatestInputHashes();
     /**
-     * <code>.google.protobuf.Timestamp end_time = 3;</code>
+     * <code>.com.giyeok.bibix.InputHashes latest_input_hashes = 3;</code>
      */
-    com.google.protobuf.TimestampOrBuilder getEndTimeOrBuilder();
+    com.giyeok.bibix.BibixIdProto.InputHashesOrBuilder getLatestInputHashesOrBuilder();
 
     /**
-     * <code>.google.protobuf.Duration duration = 4;</code>
-     * @return Whether the duration field is set.
+     * <code>bytes latest_object_id = 4;</code>
+     * @return The latestObjectId.
      */
-    boolean hasDuration();
+    com.google.protobuf.ByteString getLatestObjectId();
+
     /**
-     * <code>.google.protobuf.Duration duration = 4;</code>
-     * @return The duration.
+     * <code>optional .com.giyeok.bibix.repo.TargetState state = 5;</code>
+     * @return Whether the state field is set.
      */
-    com.google.protobuf.Duration getDuration();
+    boolean hasState();
     /**
-     * <code>.google.protobuf.Duration duration = 4;</code>
+     * <code>optional .com.giyeok.bibix.repo.TargetState state = 5;</code>
+     * @return The state.
      */
-    com.google.protobuf.DurationOrBuilder getDurationOrBuilder();
+    com.giyeok.bibix.repo.BibixRepoProto.TargetState getState();
+    /**
+     * <code>optional .com.giyeok.bibix.repo.TargetState state = 5;</code>
+     */
+    com.giyeok.bibix.repo.BibixRepoProto.TargetStateOrBuilder getStateOrBuilder();
   }
   /**
-   * Protobuf type {@code com.giyeok.bibix.repo.ObjectInfo}
+   * Protobuf type {@code com.giyeok.bibix.repo.TargetData}
    */
-  public static final class ObjectInfo extends
+  public static final class TargetData extends
       com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:com.giyeok.bibix.repo.ObjectInfo)
-      ObjectInfoOrBuilder {
+      // @@protoc_insertion_point(message_implements:com.giyeok.bibix.repo.TargetData)
+      TargetDataOrBuilder {
   private static final long serialVersionUID = 0L;
-    // Use ObjectInfo.newBuilder() to construct.
-    private ObjectInfo(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+    // Use TargetData.newBuilder() to construct.
+    private TargetData(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
       super(builder);
     }
-    private ObjectInfo() {
-      inputsHash_ = com.google.protobuf.ByteString.EMPTY;
+    private TargetData() {
+      targetId_ = com.google.protobuf.ByteString.EMPTY;
+      latestObjectId_ = com.google.protobuf.ByteString.EMPTY;
     }
 
     @java.lang.Override
     @SuppressWarnings({"unused"})
     protected java.lang.Object newInstance(
         UnusedPrivateParameter unused) {
-      return new ObjectInfo();
+      return new TargetData();
     }
 
     @java.lang.Override
@@ -2202,7 +1505,7 @@ public final class BibixRepoProto {
     getUnknownFields() {
       return this.unknownFields;
     }
-    private ObjectInfo(
+    private TargetData(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
@@ -2210,6 +1513,7 @@ public final class BibixRepoProto {
       if (extensionRegistry == null) {
         throw new java.lang.NullPointerException();
       }
+      int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
       try {
@@ -2222,46 +1526,51 @@ public final class BibixRepoProto {
               break;
             case 10: {
 
-              inputsHash_ = input.readBytes();
+              targetId_ = input.readBytes();
               break;
             }
             case 18: {
-              com.google.protobuf.Timestamp.Builder subBuilder = null;
-              if (startTime_ != null) {
-                subBuilder = startTime_.toBuilder();
+              com.giyeok.bibix.BibixIdProto.TargetIdData.Builder subBuilder = null;
+              if (targetIdData_ != null) {
+                subBuilder = targetIdData_.toBuilder();
               }
-              startTime_ = input.readMessage(com.google.protobuf.Timestamp.parser(), extensionRegistry);
+              targetIdData_ = input.readMessage(com.giyeok.bibix.BibixIdProto.TargetIdData.parser(), extensionRegistry);
               if (subBuilder != null) {
-                subBuilder.mergeFrom(startTime_);
-                startTime_ = subBuilder.buildPartial();
+                subBuilder.mergeFrom(targetIdData_);
+                targetIdData_ = subBuilder.buildPartial();
               }
 
               break;
             }
             case 26: {
-              com.google.protobuf.Timestamp.Builder subBuilder = null;
-              if (endTime_ != null) {
-                subBuilder = endTime_.toBuilder();
+              com.giyeok.bibix.BibixIdProto.InputHashes.Builder subBuilder = null;
+              if (latestInputHashes_ != null) {
+                subBuilder = latestInputHashes_.toBuilder();
               }
-              endTime_ = input.readMessage(com.google.protobuf.Timestamp.parser(), extensionRegistry);
+              latestInputHashes_ = input.readMessage(com.giyeok.bibix.BibixIdProto.InputHashes.parser(), extensionRegistry);
               if (subBuilder != null) {
-                subBuilder.mergeFrom(endTime_);
-                endTime_ = subBuilder.buildPartial();
+                subBuilder.mergeFrom(latestInputHashes_);
+                latestInputHashes_ = subBuilder.buildPartial();
               }
 
               break;
             }
             case 34: {
-              com.google.protobuf.Duration.Builder subBuilder = null;
-              if (duration_ != null) {
-                subBuilder = duration_.toBuilder();
-              }
-              duration_ = input.readMessage(com.google.protobuf.Duration.parser(), extensionRegistry);
-              if (subBuilder != null) {
-                subBuilder.mergeFrom(duration_);
-                duration_ = subBuilder.buildPartial();
-              }
 
+              latestObjectId_ = input.readBytes();
+              break;
+            }
+            case 42: {
+              com.giyeok.bibix.repo.BibixRepoProto.TargetState.Builder subBuilder = null;
+              if (((bitField0_ & 0x00000001) != 0)) {
+                subBuilder = state_.toBuilder();
+              }
+              state_ = input.readMessage(com.giyeok.bibix.repo.BibixRepoProto.TargetState.parser(), extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(state_);
+                state_ = subBuilder.buildPartial();
+              }
+              bitField0_ |= 0x00000001;
               break;
             }
             default: {
@@ -2275,6 +1584,8 @@ public final class BibixRepoProto {
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
         throw e.setUnfinishedMessage(this);
+      } catch (com.google.protobuf.UninitializedMessageException e) {
+        throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
       } catch (java.io.IOException e) {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e).setUnfinishedMessage(this);
@@ -2285,108 +1596,116 @@ public final class BibixRepoProto {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return com.giyeok.bibix.repo.BibixRepoProto.internal_static_com_giyeok_bibix_repo_ObjectInfo_descriptor;
+      return com.giyeok.bibix.repo.BibixRepoProto.internal_static_com_giyeok_bibix_repo_TargetData_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return com.giyeok.bibix.repo.BibixRepoProto.internal_static_com_giyeok_bibix_repo_ObjectInfo_fieldAccessorTable
+      return com.giyeok.bibix.repo.BibixRepoProto.internal_static_com_giyeok_bibix_repo_TargetData_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              com.giyeok.bibix.repo.BibixRepoProto.ObjectInfo.class, com.giyeok.bibix.repo.BibixRepoProto.ObjectInfo.Builder.class);
+              com.giyeok.bibix.repo.BibixRepoProto.TargetData.class, com.giyeok.bibix.repo.BibixRepoProto.TargetData.Builder.class);
     }
 
-    public static final int INPUTS_HASH_FIELD_NUMBER = 1;
-    private com.google.protobuf.ByteString inputsHash_;
+    private int bitField0_;
+    public static final int TARGET_ID_FIELD_NUMBER = 1;
+    private com.google.protobuf.ByteString targetId_;
     /**
-     * <pre>
-     * object 자체에 대한 정보는 별로 필요 없을것 같은데
-     * </pre>
-     *
-     * <code>bytes inputs_hash = 1;</code>
-     * @return The inputsHash.
+     * <code>bytes target_id = 1;</code>
+     * @return The targetId.
      */
     @java.lang.Override
-    public com.google.protobuf.ByteString getInputsHash() {
-      return inputsHash_;
+    public com.google.protobuf.ByteString getTargetId() {
+      return targetId_;
     }
 
-    public static final int START_TIME_FIELD_NUMBER = 2;
-    private com.google.protobuf.Timestamp startTime_;
+    public static final int TARGET_ID_DATA_FIELD_NUMBER = 2;
+    private com.giyeok.bibix.BibixIdProto.TargetIdData targetIdData_;
     /**
-     * <code>.google.protobuf.Timestamp start_time = 2;</code>
-     * @return Whether the startTime field is set.
+     * <code>.com.giyeok.bibix.TargetIdData target_id_data = 2;</code>
+     * @return Whether the targetIdData field is set.
      */
     @java.lang.Override
-    public boolean hasStartTime() {
-      return startTime_ != null;
+    public boolean hasTargetIdData() {
+      return targetIdData_ != null;
     }
     /**
-     * <code>.google.protobuf.Timestamp start_time = 2;</code>
-     * @return The startTime.
+     * <code>.com.giyeok.bibix.TargetIdData target_id_data = 2;</code>
+     * @return The targetIdData.
      */
     @java.lang.Override
-    public com.google.protobuf.Timestamp getStartTime() {
-      return startTime_ == null ? com.google.protobuf.Timestamp.getDefaultInstance() : startTime_;
+    public com.giyeok.bibix.BibixIdProto.TargetIdData getTargetIdData() {
+      return targetIdData_ == null ? com.giyeok.bibix.BibixIdProto.TargetIdData.getDefaultInstance() : targetIdData_;
     }
     /**
-     * <code>.google.protobuf.Timestamp start_time = 2;</code>
+     * <code>.com.giyeok.bibix.TargetIdData target_id_data = 2;</code>
      */
     @java.lang.Override
-    public com.google.protobuf.TimestampOrBuilder getStartTimeOrBuilder() {
-      return getStartTime();
-    }
-
-    public static final int END_TIME_FIELD_NUMBER = 3;
-    private com.google.protobuf.Timestamp endTime_;
-    /**
-     * <code>.google.protobuf.Timestamp end_time = 3;</code>
-     * @return Whether the endTime field is set.
-     */
-    @java.lang.Override
-    public boolean hasEndTime() {
-      return endTime_ != null;
-    }
-    /**
-     * <code>.google.protobuf.Timestamp end_time = 3;</code>
-     * @return The endTime.
-     */
-    @java.lang.Override
-    public com.google.protobuf.Timestamp getEndTime() {
-      return endTime_ == null ? com.google.protobuf.Timestamp.getDefaultInstance() : endTime_;
-    }
-    /**
-     * <code>.google.protobuf.Timestamp end_time = 3;</code>
-     */
-    @java.lang.Override
-    public com.google.protobuf.TimestampOrBuilder getEndTimeOrBuilder() {
-      return getEndTime();
+    public com.giyeok.bibix.BibixIdProto.TargetIdDataOrBuilder getTargetIdDataOrBuilder() {
+      return getTargetIdData();
     }
 
-    public static final int DURATION_FIELD_NUMBER = 4;
-    private com.google.protobuf.Duration duration_;
+    public static final int LATEST_INPUT_HASHES_FIELD_NUMBER = 3;
+    private com.giyeok.bibix.BibixIdProto.InputHashes latestInputHashes_;
     /**
-     * <code>.google.protobuf.Duration duration = 4;</code>
-     * @return Whether the duration field is set.
+     * <code>.com.giyeok.bibix.InputHashes latest_input_hashes = 3;</code>
+     * @return Whether the latestInputHashes field is set.
      */
     @java.lang.Override
-    public boolean hasDuration() {
-      return duration_ != null;
+    public boolean hasLatestInputHashes() {
+      return latestInputHashes_ != null;
     }
     /**
-     * <code>.google.protobuf.Duration duration = 4;</code>
-     * @return The duration.
+     * <code>.com.giyeok.bibix.InputHashes latest_input_hashes = 3;</code>
+     * @return The latestInputHashes.
      */
     @java.lang.Override
-    public com.google.protobuf.Duration getDuration() {
-      return duration_ == null ? com.google.protobuf.Duration.getDefaultInstance() : duration_;
+    public com.giyeok.bibix.BibixIdProto.InputHashes getLatestInputHashes() {
+      return latestInputHashes_ == null ? com.giyeok.bibix.BibixIdProto.InputHashes.getDefaultInstance() : latestInputHashes_;
     }
     /**
-     * <code>.google.protobuf.Duration duration = 4;</code>
+     * <code>.com.giyeok.bibix.InputHashes latest_input_hashes = 3;</code>
      */
     @java.lang.Override
-    public com.google.protobuf.DurationOrBuilder getDurationOrBuilder() {
-      return getDuration();
+    public com.giyeok.bibix.BibixIdProto.InputHashesOrBuilder getLatestInputHashesOrBuilder() {
+      return getLatestInputHashes();
+    }
+
+    public static final int LATEST_OBJECT_ID_FIELD_NUMBER = 4;
+    private com.google.protobuf.ByteString latestObjectId_;
+    /**
+     * <code>bytes latest_object_id = 4;</code>
+     * @return The latestObjectId.
+     */
+    @java.lang.Override
+    public com.google.protobuf.ByteString getLatestObjectId() {
+      return latestObjectId_;
+    }
+
+    public static final int STATE_FIELD_NUMBER = 5;
+    private com.giyeok.bibix.repo.BibixRepoProto.TargetState state_;
+    /**
+     * <code>optional .com.giyeok.bibix.repo.TargetState state = 5;</code>
+     * @return Whether the state field is set.
+     */
+    @java.lang.Override
+    public boolean hasState() {
+      return ((bitField0_ & 0x00000001) != 0);
+    }
+    /**
+     * <code>optional .com.giyeok.bibix.repo.TargetState state = 5;</code>
+     * @return The state.
+     */
+    @java.lang.Override
+    public com.giyeok.bibix.repo.BibixRepoProto.TargetState getState() {
+      return state_ == null ? com.giyeok.bibix.repo.BibixRepoProto.TargetState.getDefaultInstance() : state_;
+    }
+    /**
+     * <code>optional .com.giyeok.bibix.repo.TargetState state = 5;</code>
+     */
+    @java.lang.Override
+    public com.giyeok.bibix.repo.BibixRepoProto.TargetStateOrBuilder getStateOrBuilder() {
+      return state_ == null ? com.giyeok.bibix.repo.BibixRepoProto.TargetState.getDefaultInstance() : state_;
     }
 
     private byte memoizedIsInitialized = -1;
@@ -2403,17 +1722,20 @@ public final class BibixRepoProto {
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
-      if (!inputsHash_.isEmpty()) {
-        output.writeBytes(1, inputsHash_);
+      if (!targetId_.isEmpty()) {
+        output.writeBytes(1, targetId_);
       }
-      if (startTime_ != null) {
-        output.writeMessage(2, getStartTime());
+      if (targetIdData_ != null) {
+        output.writeMessage(2, getTargetIdData());
       }
-      if (endTime_ != null) {
-        output.writeMessage(3, getEndTime());
+      if (latestInputHashes_ != null) {
+        output.writeMessage(3, getLatestInputHashes());
       }
-      if (duration_ != null) {
-        output.writeMessage(4, getDuration());
+      if (!latestObjectId_.isEmpty()) {
+        output.writeBytes(4, latestObjectId_);
+      }
+      if (((bitField0_ & 0x00000001) != 0)) {
+        output.writeMessage(5, getState());
       }
       unknownFields.writeTo(output);
     }
@@ -2424,21 +1746,25 @@ public final class BibixRepoProto {
       if (size != -1) return size;
 
       size = 0;
-      if (!inputsHash_.isEmpty()) {
+      if (!targetId_.isEmpty()) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(1, inputsHash_);
+          .computeBytesSize(1, targetId_);
       }
-      if (startTime_ != null) {
+      if (targetIdData_ != null) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(2, getStartTime());
+          .computeMessageSize(2, getTargetIdData());
       }
-      if (endTime_ != null) {
+      if (latestInputHashes_ != null) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(3, getEndTime());
+          .computeMessageSize(3, getLatestInputHashes());
       }
-      if (duration_ != null) {
+      if (!latestObjectId_.isEmpty()) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(4, getDuration());
+          .computeBytesSize(4, latestObjectId_);
+      }
+      if (((bitField0_ & 0x00000001) != 0)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(5, getState());
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -2450,27 +1776,29 @@ public final class BibixRepoProto {
       if (obj == this) {
        return true;
       }
-      if (!(obj instanceof com.giyeok.bibix.repo.BibixRepoProto.ObjectInfo)) {
+      if (!(obj instanceof com.giyeok.bibix.repo.BibixRepoProto.TargetData)) {
         return super.equals(obj);
       }
-      com.giyeok.bibix.repo.BibixRepoProto.ObjectInfo other = (com.giyeok.bibix.repo.BibixRepoProto.ObjectInfo) obj;
+      com.giyeok.bibix.repo.BibixRepoProto.TargetData other = (com.giyeok.bibix.repo.BibixRepoProto.TargetData) obj;
 
-      if (!getInputsHash()
-          .equals(other.getInputsHash())) return false;
-      if (hasStartTime() != other.hasStartTime()) return false;
-      if (hasStartTime()) {
-        if (!getStartTime()
-            .equals(other.getStartTime())) return false;
+      if (!getTargetId()
+          .equals(other.getTargetId())) return false;
+      if (hasTargetIdData() != other.hasTargetIdData()) return false;
+      if (hasTargetIdData()) {
+        if (!getTargetIdData()
+            .equals(other.getTargetIdData())) return false;
       }
-      if (hasEndTime() != other.hasEndTime()) return false;
-      if (hasEndTime()) {
-        if (!getEndTime()
-            .equals(other.getEndTime())) return false;
+      if (hasLatestInputHashes() != other.hasLatestInputHashes()) return false;
+      if (hasLatestInputHashes()) {
+        if (!getLatestInputHashes()
+            .equals(other.getLatestInputHashes())) return false;
       }
-      if (hasDuration() != other.hasDuration()) return false;
-      if (hasDuration()) {
-        if (!getDuration()
-            .equals(other.getDuration())) return false;
+      if (!getLatestObjectId()
+          .equals(other.getLatestObjectId())) return false;
+      if (hasState() != other.hasState()) return false;
+      if (hasState()) {
+        if (!getState()
+            .equals(other.getState())) return false;
       }
       if (!unknownFields.equals(other.unknownFields)) return false;
       return true;
@@ -2483,88 +1811,90 @@ public final class BibixRepoProto {
       }
       int hash = 41;
       hash = (19 * hash) + getDescriptor().hashCode();
-      hash = (37 * hash) + INPUTS_HASH_FIELD_NUMBER;
-      hash = (53 * hash) + getInputsHash().hashCode();
-      if (hasStartTime()) {
-        hash = (37 * hash) + START_TIME_FIELD_NUMBER;
-        hash = (53 * hash) + getStartTime().hashCode();
+      hash = (37 * hash) + TARGET_ID_FIELD_NUMBER;
+      hash = (53 * hash) + getTargetId().hashCode();
+      if (hasTargetIdData()) {
+        hash = (37 * hash) + TARGET_ID_DATA_FIELD_NUMBER;
+        hash = (53 * hash) + getTargetIdData().hashCode();
       }
-      if (hasEndTime()) {
-        hash = (37 * hash) + END_TIME_FIELD_NUMBER;
-        hash = (53 * hash) + getEndTime().hashCode();
+      if (hasLatestInputHashes()) {
+        hash = (37 * hash) + LATEST_INPUT_HASHES_FIELD_NUMBER;
+        hash = (53 * hash) + getLatestInputHashes().hashCode();
       }
-      if (hasDuration()) {
-        hash = (37 * hash) + DURATION_FIELD_NUMBER;
-        hash = (53 * hash) + getDuration().hashCode();
+      hash = (37 * hash) + LATEST_OBJECT_ID_FIELD_NUMBER;
+      hash = (53 * hash) + getLatestObjectId().hashCode();
+      if (hasState()) {
+        hash = (37 * hash) + STATE_FIELD_NUMBER;
+        hash = (53 * hash) + getState().hashCode();
       }
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
     }
 
-    public static com.giyeok.bibix.repo.BibixRepoProto.ObjectInfo parseFrom(
+    public static com.giyeok.bibix.repo.BibixRepoProto.TargetData parseFrom(
         java.nio.ByteBuffer data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static com.giyeok.bibix.repo.BibixRepoProto.ObjectInfo parseFrom(
+    public static com.giyeok.bibix.repo.BibixRepoProto.TargetData parseFrom(
         java.nio.ByteBuffer data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static com.giyeok.bibix.repo.BibixRepoProto.ObjectInfo parseFrom(
+    public static com.giyeok.bibix.repo.BibixRepoProto.TargetData parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static com.giyeok.bibix.repo.BibixRepoProto.ObjectInfo parseFrom(
+    public static com.giyeok.bibix.repo.BibixRepoProto.TargetData parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static com.giyeok.bibix.repo.BibixRepoProto.ObjectInfo parseFrom(byte[] data)
+    public static com.giyeok.bibix.repo.BibixRepoProto.TargetData parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static com.giyeok.bibix.repo.BibixRepoProto.ObjectInfo parseFrom(
+    public static com.giyeok.bibix.repo.BibixRepoProto.TargetData parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static com.giyeok.bibix.repo.BibixRepoProto.ObjectInfo parseFrom(java.io.InputStream input)
+    public static com.giyeok.bibix.repo.BibixRepoProto.TargetData parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static com.giyeok.bibix.repo.BibixRepoProto.ObjectInfo parseFrom(
+    public static com.giyeok.bibix.repo.BibixRepoProto.TargetData parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
-    public static com.giyeok.bibix.repo.BibixRepoProto.ObjectInfo parseDelimitedFrom(java.io.InputStream input)
+    public static com.giyeok.bibix.repo.BibixRepoProto.TargetData parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input);
     }
-    public static com.giyeok.bibix.repo.BibixRepoProto.ObjectInfo parseDelimitedFrom(
+    public static com.giyeok.bibix.repo.BibixRepoProto.TargetData parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
-    public static com.giyeok.bibix.repo.BibixRepoProto.ObjectInfo parseFrom(
+    public static com.giyeok.bibix.repo.BibixRepoProto.TargetData parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static com.giyeok.bibix.repo.BibixRepoProto.ObjectInfo parseFrom(
+    public static com.giyeok.bibix.repo.BibixRepoProto.TargetData parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -2577,7 +1907,7 @@ public final class BibixRepoProto {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(com.giyeok.bibix.repo.BibixRepoProto.ObjectInfo prototype) {
+    public static Builder newBuilder(com.giyeok.bibix.repo.BibixRepoProto.TargetData prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     @java.lang.Override
@@ -2593,26 +1923,26 @@ public final class BibixRepoProto {
       return builder;
     }
     /**
-     * Protobuf type {@code com.giyeok.bibix.repo.ObjectInfo}
+     * Protobuf type {@code com.giyeok.bibix.repo.TargetData}
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:com.giyeok.bibix.repo.ObjectInfo)
-        com.giyeok.bibix.repo.BibixRepoProto.ObjectInfoOrBuilder {
+        // @@protoc_insertion_point(builder_implements:com.giyeok.bibix.repo.TargetData)
+        com.giyeok.bibix.repo.BibixRepoProto.TargetDataOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return com.giyeok.bibix.repo.BibixRepoProto.internal_static_com_giyeok_bibix_repo_ObjectInfo_descriptor;
+        return com.giyeok.bibix.repo.BibixRepoProto.internal_static_com_giyeok_bibix_repo_TargetData_descriptor;
       }
 
       @java.lang.Override
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return com.giyeok.bibix.repo.BibixRepoProto.internal_static_com_giyeok_bibix_repo_ObjectInfo_fieldAccessorTable
+        return com.giyeok.bibix.repo.BibixRepoProto.internal_static_com_giyeok_bibix_repo_TargetData_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                com.giyeok.bibix.repo.BibixRepoProto.ObjectInfo.class, com.giyeok.bibix.repo.BibixRepoProto.ObjectInfo.Builder.class);
+                com.giyeok.bibix.repo.BibixRepoProto.TargetData.class, com.giyeok.bibix.repo.BibixRepoProto.TargetData.Builder.class);
       }
 
-      // Construct using com.giyeok.bibix.repo.BibixRepoProto.ObjectInfo.newBuilder()
+      // Construct using com.giyeok.bibix.repo.BibixRepoProto.TargetData.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -2625,48 +1955,51 @@ public final class BibixRepoProto {
       private void maybeForceBuilderInitialization() {
         if (com.google.protobuf.GeneratedMessageV3
                 .alwaysUseFieldBuilders) {
+          getStateFieldBuilder();
         }
       }
       @java.lang.Override
       public Builder clear() {
         super.clear();
-        inputsHash_ = com.google.protobuf.ByteString.EMPTY;
+        targetId_ = com.google.protobuf.ByteString.EMPTY;
 
-        if (startTimeBuilder_ == null) {
-          startTime_ = null;
+        if (targetIdDataBuilder_ == null) {
+          targetIdData_ = null;
         } else {
-          startTime_ = null;
-          startTimeBuilder_ = null;
+          targetIdData_ = null;
+          targetIdDataBuilder_ = null;
         }
-        if (endTimeBuilder_ == null) {
-          endTime_ = null;
+        if (latestInputHashesBuilder_ == null) {
+          latestInputHashes_ = null;
         } else {
-          endTime_ = null;
-          endTimeBuilder_ = null;
+          latestInputHashes_ = null;
+          latestInputHashesBuilder_ = null;
         }
-        if (durationBuilder_ == null) {
-          duration_ = null;
+        latestObjectId_ = com.google.protobuf.ByteString.EMPTY;
+
+        if (stateBuilder_ == null) {
+          state_ = null;
         } else {
-          duration_ = null;
-          durationBuilder_ = null;
+          stateBuilder_.clear();
         }
+        bitField0_ = (bitField0_ & ~0x00000001);
         return this;
       }
 
       @java.lang.Override
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return com.giyeok.bibix.repo.BibixRepoProto.internal_static_com_giyeok_bibix_repo_ObjectInfo_descriptor;
+        return com.giyeok.bibix.repo.BibixRepoProto.internal_static_com_giyeok_bibix_repo_TargetData_descriptor;
       }
 
       @java.lang.Override
-      public com.giyeok.bibix.repo.BibixRepoProto.ObjectInfo getDefaultInstanceForType() {
-        return com.giyeok.bibix.repo.BibixRepoProto.ObjectInfo.getDefaultInstance();
+      public com.giyeok.bibix.repo.BibixRepoProto.TargetData getDefaultInstanceForType() {
+        return com.giyeok.bibix.repo.BibixRepoProto.TargetData.getDefaultInstance();
       }
 
       @java.lang.Override
-      public com.giyeok.bibix.repo.BibixRepoProto.ObjectInfo build() {
-        com.giyeok.bibix.repo.BibixRepoProto.ObjectInfo result = buildPartial();
+      public com.giyeok.bibix.repo.BibixRepoProto.TargetData build() {
+        com.giyeok.bibix.repo.BibixRepoProto.TargetData result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
@@ -2674,24 +2007,31 @@ public final class BibixRepoProto {
       }
 
       @java.lang.Override
-      public com.giyeok.bibix.repo.BibixRepoProto.ObjectInfo buildPartial() {
-        com.giyeok.bibix.repo.BibixRepoProto.ObjectInfo result = new com.giyeok.bibix.repo.BibixRepoProto.ObjectInfo(this);
-        result.inputsHash_ = inputsHash_;
-        if (startTimeBuilder_ == null) {
-          result.startTime_ = startTime_;
+      public com.giyeok.bibix.repo.BibixRepoProto.TargetData buildPartial() {
+        com.giyeok.bibix.repo.BibixRepoProto.TargetData result = new com.giyeok.bibix.repo.BibixRepoProto.TargetData(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        result.targetId_ = targetId_;
+        if (targetIdDataBuilder_ == null) {
+          result.targetIdData_ = targetIdData_;
         } else {
-          result.startTime_ = startTimeBuilder_.build();
+          result.targetIdData_ = targetIdDataBuilder_.build();
         }
-        if (endTimeBuilder_ == null) {
-          result.endTime_ = endTime_;
+        if (latestInputHashesBuilder_ == null) {
+          result.latestInputHashes_ = latestInputHashes_;
         } else {
-          result.endTime_ = endTimeBuilder_.build();
+          result.latestInputHashes_ = latestInputHashesBuilder_.build();
         }
-        if (durationBuilder_ == null) {
-          result.duration_ = duration_;
-        } else {
-          result.duration_ = durationBuilder_.build();
+        result.latestObjectId_ = latestObjectId_;
+        if (((from_bitField0_ & 0x00000001) != 0)) {
+          if (stateBuilder_ == null) {
+            result.state_ = state_;
+          } else {
+            result.state_ = stateBuilder_.build();
+          }
+          to_bitField0_ |= 0x00000001;
         }
+        result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
       }
@@ -2730,27 +2070,30 @@ public final class BibixRepoProto {
       }
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof com.giyeok.bibix.repo.BibixRepoProto.ObjectInfo) {
-          return mergeFrom((com.giyeok.bibix.repo.BibixRepoProto.ObjectInfo)other);
+        if (other instanceof com.giyeok.bibix.repo.BibixRepoProto.TargetData) {
+          return mergeFrom((com.giyeok.bibix.repo.BibixRepoProto.TargetData)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(com.giyeok.bibix.repo.BibixRepoProto.ObjectInfo other) {
-        if (other == com.giyeok.bibix.repo.BibixRepoProto.ObjectInfo.getDefaultInstance()) return this;
-        if (other.getInputsHash() != com.google.protobuf.ByteString.EMPTY) {
-          setInputsHash(other.getInputsHash());
+      public Builder mergeFrom(com.giyeok.bibix.repo.BibixRepoProto.TargetData other) {
+        if (other == com.giyeok.bibix.repo.BibixRepoProto.TargetData.getDefaultInstance()) return this;
+        if (other.getTargetId() != com.google.protobuf.ByteString.EMPTY) {
+          setTargetId(other.getTargetId());
         }
-        if (other.hasStartTime()) {
-          mergeStartTime(other.getStartTime());
+        if (other.hasTargetIdData()) {
+          mergeTargetIdData(other.getTargetIdData());
         }
-        if (other.hasEndTime()) {
-          mergeEndTime(other.getEndTime());
+        if (other.hasLatestInputHashes()) {
+          mergeLatestInputHashes(other.getLatestInputHashes());
         }
-        if (other.hasDuration()) {
-          mergeDuration(other.getDuration());
+        if (other.getLatestObjectId() != com.google.protobuf.ByteString.EMPTY) {
+          setLatestObjectId(other.getLatestObjectId());
+        }
+        if (other.hasState()) {
+          mergeState(other.getState());
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -2767,11 +2110,11 @@ public final class BibixRepoProto {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        com.giyeok.bibix.repo.BibixRepoProto.ObjectInfo parsedMessage = null;
+        com.giyeok.bibix.repo.BibixRepoProto.TargetData parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (com.giyeok.bibix.repo.BibixRepoProto.ObjectInfo) e.getUnfinishedMessage();
+          parsedMessage = (com.giyeok.bibix.repo.BibixRepoProto.TargetData) e.getUnfinishedMessage();
           throw e.unwrapIOException();
         } finally {
           if (parsedMessage != null) {
@@ -2780,408 +2123,432 @@ public final class BibixRepoProto {
         }
         return this;
       }
+      private int bitField0_;
 
-      private com.google.protobuf.ByteString inputsHash_ = com.google.protobuf.ByteString.EMPTY;
+      private com.google.protobuf.ByteString targetId_ = com.google.protobuf.ByteString.EMPTY;
       /**
-       * <pre>
-       * object 자체에 대한 정보는 별로 필요 없을것 같은데
-       * </pre>
-       *
-       * <code>bytes inputs_hash = 1;</code>
-       * @return The inputsHash.
+       * <code>bytes target_id = 1;</code>
+       * @return The targetId.
        */
       @java.lang.Override
-      public com.google.protobuf.ByteString getInputsHash() {
-        return inputsHash_;
+      public com.google.protobuf.ByteString getTargetId() {
+        return targetId_;
       }
       /**
-       * <pre>
-       * object 자체에 대한 정보는 별로 필요 없을것 같은데
-       * </pre>
-       *
-       * <code>bytes inputs_hash = 1;</code>
-       * @param value The inputsHash to set.
+       * <code>bytes target_id = 1;</code>
+       * @param value The targetId to set.
        * @return This builder for chaining.
        */
-      public Builder setInputsHash(com.google.protobuf.ByteString value) {
+      public Builder setTargetId(com.google.protobuf.ByteString value) {
         if (value == null) {
     throw new NullPointerException();
   }
   
-        inputsHash_ = value;
+        targetId_ = value;
         onChanged();
         return this;
       }
       /**
-       * <pre>
-       * object 자체에 대한 정보는 별로 필요 없을것 같은데
-       * </pre>
-       *
-       * <code>bytes inputs_hash = 1;</code>
+       * <code>bytes target_id = 1;</code>
        * @return This builder for chaining.
        */
-      public Builder clearInputsHash() {
+      public Builder clearTargetId() {
         
-        inputsHash_ = getDefaultInstance().getInputsHash();
+        targetId_ = getDefaultInstance().getTargetId();
         onChanged();
         return this;
       }
 
-      private com.google.protobuf.Timestamp startTime_;
+      private com.giyeok.bibix.BibixIdProto.TargetIdData targetIdData_;
       private com.google.protobuf.SingleFieldBuilderV3<
-          com.google.protobuf.Timestamp, com.google.protobuf.Timestamp.Builder, com.google.protobuf.TimestampOrBuilder> startTimeBuilder_;
+          com.giyeok.bibix.BibixIdProto.TargetIdData, com.giyeok.bibix.BibixIdProto.TargetIdData.Builder, com.giyeok.bibix.BibixIdProto.TargetIdDataOrBuilder> targetIdDataBuilder_;
       /**
-       * <code>.google.protobuf.Timestamp start_time = 2;</code>
-       * @return Whether the startTime field is set.
+       * <code>.com.giyeok.bibix.TargetIdData target_id_data = 2;</code>
+       * @return Whether the targetIdData field is set.
        */
-      public boolean hasStartTime() {
-        return startTimeBuilder_ != null || startTime_ != null;
+      public boolean hasTargetIdData() {
+        return targetIdDataBuilder_ != null || targetIdData_ != null;
       }
       /**
-       * <code>.google.protobuf.Timestamp start_time = 2;</code>
-       * @return The startTime.
+       * <code>.com.giyeok.bibix.TargetIdData target_id_data = 2;</code>
+       * @return The targetIdData.
        */
-      public com.google.protobuf.Timestamp getStartTime() {
-        if (startTimeBuilder_ == null) {
-          return startTime_ == null ? com.google.protobuf.Timestamp.getDefaultInstance() : startTime_;
+      public com.giyeok.bibix.BibixIdProto.TargetIdData getTargetIdData() {
+        if (targetIdDataBuilder_ == null) {
+          return targetIdData_ == null ? com.giyeok.bibix.BibixIdProto.TargetIdData.getDefaultInstance() : targetIdData_;
         } else {
-          return startTimeBuilder_.getMessage();
+          return targetIdDataBuilder_.getMessage();
         }
       }
       /**
-       * <code>.google.protobuf.Timestamp start_time = 2;</code>
+       * <code>.com.giyeok.bibix.TargetIdData target_id_data = 2;</code>
        */
-      public Builder setStartTime(com.google.protobuf.Timestamp value) {
-        if (startTimeBuilder_ == null) {
+      public Builder setTargetIdData(com.giyeok.bibix.BibixIdProto.TargetIdData value) {
+        if (targetIdDataBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
           }
-          startTime_ = value;
+          targetIdData_ = value;
           onChanged();
         } else {
-          startTimeBuilder_.setMessage(value);
+          targetIdDataBuilder_.setMessage(value);
         }
 
         return this;
       }
       /**
-       * <code>.google.protobuf.Timestamp start_time = 2;</code>
+       * <code>.com.giyeok.bibix.TargetIdData target_id_data = 2;</code>
        */
-      public Builder setStartTime(
-          com.google.protobuf.Timestamp.Builder builderForValue) {
-        if (startTimeBuilder_ == null) {
-          startTime_ = builderForValue.build();
+      public Builder setTargetIdData(
+          com.giyeok.bibix.BibixIdProto.TargetIdData.Builder builderForValue) {
+        if (targetIdDataBuilder_ == null) {
+          targetIdData_ = builderForValue.build();
           onChanged();
         } else {
-          startTimeBuilder_.setMessage(builderForValue.build());
+          targetIdDataBuilder_.setMessage(builderForValue.build());
         }
 
         return this;
       }
       /**
-       * <code>.google.protobuf.Timestamp start_time = 2;</code>
+       * <code>.com.giyeok.bibix.TargetIdData target_id_data = 2;</code>
        */
-      public Builder mergeStartTime(com.google.protobuf.Timestamp value) {
-        if (startTimeBuilder_ == null) {
-          if (startTime_ != null) {
-            startTime_ =
-              com.google.protobuf.Timestamp.newBuilder(startTime_).mergeFrom(value).buildPartial();
+      public Builder mergeTargetIdData(com.giyeok.bibix.BibixIdProto.TargetIdData value) {
+        if (targetIdDataBuilder_ == null) {
+          if (targetIdData_ != null) {
+            targetIdData_ =
+              com.giyeok.bibix.BibixIdProto.TargetIdData.newBuilder(targetIdData_).mergeFrom(value).buildPartial();
           } else {
-            startTime_ = value;
+            targetIdData_ = value;
           }
           onChanged();
         } else {
-          startTimeBuilder_.mergeFrom(value);
+          targetIdDataBuilder_.mergeFrom(value);
         }
 
         return this;
       }
       /**
-       * <code>.google.protobuf.Timestamp start_time = 2;</code>
+       * <code>.com.giyeok.bibix.TargetIdData target_id_data = 2;</code>
        */
-      public Builder clearStartTime() {
-        if (startTimeBuilder_ == null) {
-          startTime_ = null;
+      public Builder clearTargetIdData() {
+        if (targetIdDataBuilder_ == null) {
+          targetIdData_ = null;
           onChanged();
         } else {
-          startTime_ = null;
-          startTimeBuilder_ = null;
+          targetIdData_ = null;
+          targetIdDataBuilder_ = null;
         }
 
         return this;
       }
       /**
-       * <code>.google.protobuf.Timestamp start_time = 2;</code>
+       * <code>.com.giyeok.bibix.TargetIdData target_id_data = 2;</code>
        */
-      public com.google.protobuf.Timestamp.Builder getStartTimeBuilder() {
+      public com.giyeok.bibix.BibixIdProto.TargetIdData.Builder getTargetIdDataBuilder() {
         
         onChanged();
-        return getStartTimeFieldBuilder().getBuilder();
+        return getTargetIdDataFieldBuilder().getBuilder();
       }
       /**
-       * <code>.google.protobuf.Timestamp start_time = 2;</code>
+       * <code>.com.giyeok.bibix.TargetIdData target_id_data = 2;</code>
        */
-      public com.google.protobuf.TimestampOrBuilder getStartTimeOrBuilder() {
-        if (startTimeBuilder_ != null) {
-          return startTimeBuilder_.getMessageOrBuilder();
+      public com.giyeok.bibix.BibixIdProto.TargetIdDataOrBuilder getTargetIdDataOrBuilder() {
+        if (targetIdDataBuilder_ != null) {
+          return targetIdDataBuilder_.getMessageOrBuilder();
         } else {
-          return startTime_ == null ?
-              com.google.protobuf.Timestamp.getDefaultInstance() : startTime_;
+          return targetIdData_ == null ?
+              com.giyeok.bibix.BibixIdProto.TargetIdData.getDefaultInstance() : targetIdData_;
         }
       }
       /**
-       * <code>.google.protobuf.Timestamp start_time = 2;</code>
+       * <code>.com.giyeok.bibix.TargetIdData target_id_data = 2;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
-          com.google.protobuf.Timestamp, com.google.protobuf.Timestamp.Builder, com.google.protobuf.TimestampOrBuilder> 
-          getStartTimeFieldBuilder() {
-        if (startTimeBuilder_ == null) {
-          startTimeBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-              com.google.protobuf.Timestamp, com.google.protobuf.Timestamp.Builder, com.google.protobuf.TimestampOrBuilder>(
-                  getStartTime(),
+          com.giyeok.bibix.BibixIdProto.TargetIdData, com.giyeok.bibix.BibixIdProto.TargetIdData.Builder, com.giyeok.bibix.BibixIdProto.TargetIdDataOrBuilder> 
+          getTargetIdDataFieldBuilder() {
+        if (targetIdDataBuilder_ == null) {
+          targetIdDataBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              com.giyeok.bibix.BibixIdProto.TargetIdData, com.giyeok.bibix.BibixIdProto.TargetIdData.Builder, com.giyeok.bibix.BibixIdProto.TargetIdDataOrBuilder>(
+                  getTargetIdData(),
                   getParentForChildren(),
                   isClean());
-          startTime_ = null;
+          targetIdData_ = null;
         }
-        return startTimeBuilder_;
+        return targetIdDataBuilder_;
       }
 
-      private com.google.protobuf.Timestamp endTime_;
+      private com.giyeok.bibix.BibixIdProto.InputHashes latestInputHashes_;
       private com.google.protobuf.SingleFieldBuilderV3<
-          com.google.protobuf.Timestamp, com.google.protobuf.Timestamp.Builder, com.google.protobuf.TimestampOrBuilder> endTimeBuilder_;
+          com.giyeok.bibix.BibixIdProto.InputHashes, com.giyeok.bibix.BibixIdProto.InputHashes.Builder, com.giyeok.bibix.BibixIdProto.InputHashesOrBuilder> latestInputHashesBuilder_;
       /**
-       * <code>.google.protobuf.Timestamp end_time = 3;</code>
-       * @return Whether the endTime field is set.
+       * <code>.com.giyeok.bibix.InputHashes latest_input_hashes = 3;</code>
+       * @return Whether the latestInputHashes field is set.
        */
-      public boolean hasEndTime() {
-        return endTimeBuilder_ != null || endTime_ != null;
+      public boolean hasLatestInputHashes() {
+        return latestInputHashesBuilder_ != null || latestInputHashes_ != null;
       }
       /**
-       * <code>.google.protobuf.Timestamp end_time = 3;</code>
-       * @return The endTime.
+       * <code>.com.giyeok.bibix.InputHashes latest_input_hashes = 3;</code>
+       * @return The latestInputHashes.
        */
-      public com.google.protobuf.Timestamp getEndTime() {
-        if (endTimeBuilder_ == null) {
-          return endTime_ == null ? com.google.protobuf.Timestamp.getDefaultInstance() : endTime_;
+      public com.giyeok.bibix.BibixIdProto.InputHashes getLatestInputHashes() {
+        if (latestInputHashesBuilder_ == null) {
+          return latestInputHashes_ == null ? com.giyeok.bibix.BibixIdProto.InputHashes.getDefaultInstance() : latestInputHashes_;
         } else {
-          return endTimeBuilder_.getMessage();
+          return latestInputHashesBuilder_.getMessage();
         }
       }
       /**
-       * <code>.google.protobuf.Timestamp end_time = 3;</code>
+       * <code>.com.giyeok.bibix.InputHashes latest_input_hashes = 3;</code>
        */
-      public Builder setEndTime(com.google.protobuf.Timestamp value) {
-        if (endTimeBuilder_ == null) {
+      public Builder setLatestInputHashes(com.giyeok.bibix.BibixIdProto.InputHashes value) {
+        if (latestInputHashesBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
           }
-          endTime_ = value;
+          latestInputHashes_ = value;
           onChanged();
         } else {
-          endTimeBuilder_.setMessage(value);
+          latestInputHashesBuilder_.setMessage(value);
         }
 
         return this;
       }
       /**
-       * <code>.google.protobuf.Timestamp end_time = 3;</code>
+       * <code>.com.giyeok.bibix.InputHashes latest_input_hashes = 3;</code>
        */
-      public Builder setEndTime(
-          com.google.protobuf.Timestamp.Builder builderForValue) {
-        if (endTimeBuilder_ == null) {
-          endTime_ = builderForValue.build();
+      public Builder setLatestInputHashes(
+          com.giyeok.bibix.BibixIdProto.InputHashes.Builder builderForValue) {
+        if (latestInputHashesBuilder_ == null) {
+          latestInputHashes_ = builderForValue.build();
           onChanged();
         } else {
-          endTimeBuilder_.setMessage(builderForValue.build());
+          latestInputHashesBuilder_.setMessage(builderForValue.build());
         }
 
         return this;
       }
       /**
-       * <code>.google.protobuf.Timestamp end_time = 3;</code>
+       * <code>.com.giyeok.bibix.InputHashes latest_input_hashes = 3;</code>
        */
-      public Builder mergeEndTime(com.google.protobuf.Timestamp value) {
-        if (endTimeBuilder_ == null) {
-          if (endTime_ != null) {
-            endTime_ =
-              com.google.protobuf.Timestamp.newBuilder(endTime_).mergeFrom(value).buildPartial();
+      public Builder mergeLatestInputHashes(com.giyeok.bibix.BibixIdProto.InputHashes value) {
+        if (latestInputHashesBuilder_ == null) {
+          if (latestInputHashes_ != null) {
+            latestInputHashes_ =
+              com.giyeok.bibix.BibixIdProto.InputHashes.newBuilder(latestInputHashes_).mergeFrom(value).buildPartial();
           } else {
-            endTime_ = value;
+            latestInputHashes_ = value;
           }
           onChanged();
         } else {
-          endTimeBuilder_.mergeFrom(value);
+          latestInputHashesBuilder_.mergeFrom(value);
         }
 
         return this;
       }
       /**
-       * <code>.google.protobuf.Timestamp end_time = 3;</code>
+       * <code>.com.giyeok.bibix.InputHashes latest_input_hashes = 3;</code>
        */
-      public Builder clearEndTime() {
-        if (endTimeBuilder_ == null) {
-          endTime_ = null;
+      public Builder clearLatestInputHashes() {
+        if (latestInputHashesBuilder_ == null) {
+          latestInputHashes_ = null;
           onChanged();
         } else {
-          endTime_ = null;
-          endTimeBuilder_ = null;
+          latestInputHashes_ = null;
+          latestInputHashesBuilder_ = null;
         }
 
         return this;
       }
       /**
-       * <code>.google.protobuf.Timestamp end_time = 3;</code>
+       * <code>.com.giyeok.bibix.InputHashes latest_input_hashes = 3;</code>
        */
-      public com.google.protobuf.Timestamp.Builder getEndTimeBuilder() {
+      public com.giyeok.bibix.BibixIdProto.InputHashes.Builder getLatestInputHashesBuilder() {
         
         onChanged();
-        return getEndTimeFieldBuilder().getBuilder();
+        return getLatestInputHashesFieldBuilder().getBuilder();
       }
       /**
-       * <code>.google.protobuf.Timestamp end_time = 3;</code>
+       * <code>.com.giyeok.bibix.InputHashes latest_input_hashes = 3;</code>
        */
-      public com.google.protobuf.TimestampOrBuilder getEndTimeOrBuilder() {
-        if (endTimeBuilder_ != null) {
-          return endTimeBuilder_.getMessageOrBuilder();
+      public com.giyeok.bibix.BibixIdProto.InputHashesOrBuilder getLatestInputHashesOrBuilder() {
+        if (latestInputHashesBuilder_ != null) {
+          return latestInputHashesBuilder_.getMessageOrBuilder();
         } else {
-          return endTime_ == null ?
-              com.google.protobuf.Timestamp.getDefaultInstance() : endTime_;
+          return latestInputHashes_ == null ?
+              com.giyeok.bibix.BibixIdProto.InputHashes.getDefaultInstance() : latestInputHashes_;
         }
       }
       /**
-       * <code>.google.protobuf.Timestamp end_time = 3;</code>
+       * <code>.com.giyeok.bibix.InputHashes latest_input_hashes = 3;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
-          com.google.protobuf.Timestamp, com.google.protobuf.Timestamp.Builder, com.google.protobuf.TimestampOrBuilder> 
-          getEndTimeFieldBuilder() {
-        if (endTimeBuilder_ == null) {
-          endTimeBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-              com.google.protobuf.Timestamp, com.google.protobuf.Timestamp.Builder, com.google.protobuf.TimestampOrBuilder>(
-                  getEndTime(),
+          com.giyeok.bibix.BibixIdProto.InputHashes, com.giyeok.bibix.BibixIdProto.InputHashes.Builder, com.giyeok.bibix.BibixIdProto.InputHashesOrBuilder> 
+          getLatestInputHashesFieldBuilder() {
+        if (latestInputHashesBuilder_ == null) {
+          latestInputHashesBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              com.giyeok.bibix.BibixIdProto.InputHashes, com.giyeok.bibix.BibixIdProto.InputHashes.Builder, com.giyeok.bibix.BibixIdProto.InputHashesOrBuilder>(
+                  getLatestInputHashes(),
                   getParentForChildren(),
                   isClean());
-          endTime_ = null;
+          latestInputHashes_ = null;
         }
-        return endTimeBuilder_;
+        return latestInputHashesBuilder_;
       }
 
-      private com.google.protobuf.Duration duration_;
-      private com.google.protobuf.SingleFieldBuilderV3<
-          com.google.protobuf.Duration, com.google.protobuf.Duration.Builder, com.google.protobuf.DurationOrBuilder> durationBuilder_;
+      private com.google.protobuf.ByteString latestObjectId_ = com.google.protobuf.ByteString.EMPTY;
       /**
-       * <code>.google.protobuf.Duration duration = 4;</code>
-       * @return Whether the duration field is set.
+       * <code>bytes latest_object_id = 4;</code>
+       * @return The latestObjectId.
        */
-      public boolean hasDuration() {
-        return durationBuilder_ != null || duration_ != null;
+      @java.lang.Override
+      public com.google.protobuf.ByteString getLatestObjectId() {
+        return latestObjectId_;
       }
       /**
-       * <code>.google.protobuf.Duration duration = 4;</code>
-       * @return The duration.
+       * <code>bytes latest_object_id = 4;</code>
+       * @param value The latestObjectId to set.
+       * @return This builder for chaining.
        */
-      public com.google.protobuf.Duration getDuration() {
-        if (durationBuilder_ == null) {
-          return duration_ == null ? com.google.protobuf.Duration.getDefaultInstance() : duration_;
+      public Builder setLatestObjectId(com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        latestObjectId_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>bytes latest_object_id = 4;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearLatestObjectId() {
+        
+        latestObjectId_ = getDefaultInstance().getLatestObjectId();
+        onChanged();
+        return this;
+      }
+
+      private com.giyeok.bibix.repo.BibixRepoProto.TargetState state_;
+      private com.google.protobuf.SingleFieldBuilderV3<
+          com.giyeok.bibix.repo.BibixRepoProto.TargetState, com.giyeok.bibix.repo.BibixRepoProto.TargetState.Builder, com.giyeok.bibix.repo.BibixRepoProto.TargetStateOrBuilder> stateBuilder_;
+      /**
+       * <code>optional .com.giyeok.bibix.repo.TargetState state = 5;</code>
+       * @return Whether the state field is set.
+       */
+      public boolean hasState() {
+        return ((bitField0_ & 0x00000001) != 0);
+      }
+      /**
+       * <code>optional .com.giyeok.bibix.repo.TargetState state = 5;</code>
+       * @return The state.
+       */
+      public com.giyeok.bibix.repo.BibixRepoProto.TargetState getState() {
+        if (stateBuilder_ == null) {
+          return state_ == null ? com.giyeok.bibix.repo.BibixRepoProto.TargetState.getDefaultInstance() : state_;
         } else {
-          return durationBuilder_.getMessage();
+          return stateBuilder_.getMessage();
         }
       }
       /**
-       * <code>.google.protobuf.Duration duration = 4;</code>
+       * <code>optional .com.giyeok.bibix.repo.TargetState state = 5;</code>
        */
-      public Builder setDuration(com.google.protobuf.Duration value) {
-        if (durationBuilder_ == null) {
+      public Builder setState(com.giyeok.bibix.repo.BibixRepoProto.TargetState value) {
+        if (stateBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
           }
-          duration_ = value;
+          state_ = value;
           onChanged();
         } else {
-          durationBuilder_.setMessage(value);
+          stateBuilder_.setMessage(value);
         }
-
+        bitField0_ |= 0x00000001;
         return this;
       }
       /**
-       * <code>.google.protobuf.Duration duration = 4;</code>
+       * <code>optional .com.giyeok.bibix.repo.TargetState state = 5;</code>
        */
-      public Builder setDuration(
-          com.google.protobuf.Duration.Builder builderForValue) {
-        if (durationBuilder_ == null) {
-          duration_ = builderForValue.build();
+      public Builder setState(
+          com.giyeok.bibix.repo.BibixRepoProto.TargetState.Builder builderForValue) {
+        if (stateBuilder_ == null) {
+          state_ = builderForValue.build();
           onChanged();
         } else {
-          durationBuilder_.setMessage(builderForValue.build());
+          stateBuilder_.setMessage(builderForValue.build());
         }
-
+        bitField0_ |= 0x00000001;
         return this;
       }
       /**
-       * <code>.google.protobuf.Duration duration = 4;</code>
+       * <code>optional .com.giyeok.bibix.repo.TargetState state = 5;</code>
        */
-      public Builder mergeDuration(com.google.protobuf.Duration value) {
-        if (durationBuilder_ == null) {
-          if (duration_ != null) {
-            duration_ =
-              com.google.protobuf.Duration.newBuilder(duration_).mergeFrom(value).buildPartial();
+      public Builder mergeState(com.giyeok.bibix.repo.BibixRepoProto.TargetState value) {
+        if (stateBuilder_ == null) {
+          if (((bitField0_ & 0x00000001) != 0) &&
+              state_ != null &&
+              state_ != com.giyeok.bibix.repo.BibixRepoProto.TargetState.getDefaultInstance()) {
+            state_ =
+              com.giyeok.bibix.repo.BibixRepoProto.TargetState.newBuilder(state_).mergeFrom(value).buildPartial();
           } else {
-            duration_ = value;
+            state_ = value;
           }
           onChanged();
         } else {
-          durationBuilder_.mergeFrom(value);
+          stateBuilder_.mergeFrom(value);
         }
-
+        bitField0_ |= 0x00000001;
         return this;
       }
       /**
-       * <code>.google.protobuf.Duration duration = 4;</code>
+       * <code>optional .com.giyeok.bibix.repo.TargetState state = 5;</code>
        */
-      public Builder clearDuration() {
-        if (durationBuilder_ == null) {
-          duration_ = null;
+      public Builder clearState() {
+        if (stateBuilder_ == null) {
+          state_ = null;
           onChanged();
         } else {
-          duration_ = null;
-          durationBuilder_ = null;
+          stateBuilder_.clear();
         }
-
+        bitField0_ = (bitField0_ & ~0x00000001);
         return this;
       }
       /**
-       * <code>.google.protobuf.Duration duration = 4;</code>
+       * <code>optional .com.giyeok.bibix.repo.TargetState state = 5;</code>
        */
-      public com.google.protobuf.Duration.Builder getDurationBuilder() {
-        
+      public com.giyeok.bibix.repo.BibixRepoProto.TargetState.Builder getStateBuilder() {
+        bitField0_ |= 0x00000001;
         onChanged();
-        return getDurationFieldBuilder().getBuilder();
+        return getStateFieldBuilder().getBuilder();
       }
       /**
-       * <code>.google.protobuf.Duration duration = 4;</code>
+       * <code>optional .com.giyeok.bibix.repo.TargetState state = 5;</code>
        */
-      public com.google.protobuf.DurationOrBuilder getDurationOrBuilder() {
-        if (durationBuilder_ != null) {
-          return durationBuilder_.getMessageOrBuilder();
+      public com.giyeok.bibix.repo.BibixRepoProto.TargetStateOrBuilder getStateOrBuilder() {
+        if (stateBuilder_ != null) {
+          return stateBuilder_.getMessageOrBuilder();
         } else {
-          return duration_ == null ?
-              com.google.protobuf.Duration.getDefaultInstance() : duration_;
+          return state_ == null ?
+              com.giyeok.bibix.repo.BibixRepoProto.TargetState.getDefaultInstance() : state_;
         }
       }
       /**
-       * <code>.google.protobuf.Duration duration = 4;</code>
+       * <code>optional .com.giyeok.bibix.repo.TargetState state = 5;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
-          com.google.protobuf.Duration, com.google.protobuf.Duration.Builder, com.google.protobuf.DurationOrBuilder> 
-          getDurationFieldBuilder() {
-        if (durationBuilder_ == null) {
-          durationBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-              com.google.protobuf.Duration, com.google.protobuf.Duration.Builder, com.google.protobuf.DurationOrBuilder>(
-                  getDuration(),
+          com.giyeok.bibix.repo.BibixRepoProto.TargetState, com.giyeok.bibix.repo.BibixRepoProto.TargetState.Builder, com.giyeok.bibix.repo.BibixRepoProto.TargetStateOrBuilder> 
+          getStateFieldBuilder() {
+        if (stateBuilder_ == null) {
+          stateBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              com.giyeok.bibix.repo.BibixRepoProto.TargetState, com.giyeok.bibix.repo.BibixRepoProto.TargetState.Builder, com.giyeok.bibix.repo.BibixRepoProto.TargetStateOrBuilder>(
+                  getState(),
                   getParentForChildren(),
                   isClean());
-          duration_ = null;
+          state_ = null;
         }
-        return durationBuilder_;
+        return stateBuilder_;
       }
       @java.lang.Override
       public final Builder setUnknownFields(
@@ -3196,41 +2563,3668 @@ public final class BibixRepoProto {
       }
 
 
-      // @@protoc_insertion_point(builder_scope:com.giyeok.bibix.repo.ObjectInfo)
+      // @@protoc_insertion_point(builder_scope:com.giyeok.bibix.repo.TargetData)
     }
 
-    // @@protoc_insertion_point(class_scope:com.giyeok.bibix.repo.ObjectInfo)
-    private static final com.giyeok.bibix.repo.BibixRepoProto.ObjectInfo DEFAULT_INSTANCE;
+    // @@protoc_insertion_point(class_scope:com.giyeok.bibix.repo.TargetData)
+    private static final com.giyeok.bibix.repo.BibixRepoProto.TargetData DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new com.giyeok.bibix.repo.BibixRepoProto.ObjectInfo();
+      DEFAULT_INSTANCE = new com.giyeok.bibix.repo.BibixRepoProto.TargetData();
     }
 
-    public static com.giyeok.bibix.repo.BibixRepoProto.ObjectInfo getDefaultInstance() {
+    public static com.giyeok.bibix.repo.BibixRepoProto.TargetData getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
-    private static final com.google.protobuf.Parser<ObjectInfo>
-        PARSER = new com.google.protobuf.AbstractParser<ObjectInfo>() {
+    private static final com.google.protobuf.Parser<TargetData>
+        PARSER = new com.google.protobuf.AbstractParser<TargetData>() {
       @java.lang.Override
-      public ObjectInfo parsePartialFrom(
+      public TargetData parsePartialFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return new ObjectInfo(input, extensionRegistry);
+        return new TargetData(input, extensionRegistry);
       }
     };
 
-    public static com.google.protobuf.Parser<ObjectInfo> parser() {
+    public static com.google.protobuf.Parser<TargetData> parser() {
       return PARSER;
     }
 
     @java.lang.Override
-    public com.google.protobuf.Parser<ObjectInfo> getParserForType() {
+    public com.google.protobuf.Parser<TargetData> getParserForType() {
       return PARSER;
     }
 
     @java.lang.Override
-    public com.giyeok.bibix.repo.BibixRepoProto.ObjectInfo getDefaultInstanceForType() {
+    public com.giyeok.bibix.repo.BibixRepoProto.TargetData getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
+  public interface OutputNameOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:com.giyeok.bibix.repo.OutputName)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>string output_name = 1;</code>
+     * @return The outputName.
+     */
+    java.lang.String getOutputName();
+    /**
+     * <code>string output_name = 1;</code>
+     * @return The bytes for outputName.
+     */
+    com.google.protobuf.ByteString
+        getOutputNameBytes();
+
+    /**
+     * <code>bytes target_id = 2;</code>
+     * @return The targetId.
+     */
+    com.google.protobuf.ByteString getTargetId();
+  }
+  /**
+   * Protobuf type {@code com.giyeok.bibix.repo.OutputName}
+   */
+  public static final class OutputName extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:com.giyeok.bibix.repo.OutputName)
+      OutputNameOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use OutputName.newBuilder() to construct.
+    private OutputName(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private OutputName() {
+      outputName_ = "";
+      targetId_ = com.google.protobuf.ByteString.EMPTY;
+    }
+
+    @java.lang.Override
+    @SuppressWarnings({"unused"})
+    protected java.lang.Object newInstance(
+        UnusedPrivateParameter unused) {
+      return new OutputName();
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private OutputName(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            case 10: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              outputName_ = s;
+              break;
+            }
+            case 18: {
+
+              targetId_ = input.readBytes();
+              break;
+            }
+            default: {
+              if (!parseUnknownField(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (com.google.protobuf.UninitializedMessageException e) {
+        throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return com.giyeok.bibix.repo.BibixRepoProto.internal_static_com_giyeok_bibix_repo_OutputName_descriptor;
+    }
+
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return com.giyeok.bibix.repo.BibixRepoProto.internal_static_com_giyeok_bibix_repo_OutputName_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              com.giyeok.bibix.repo.BibixRepoProto.OutputName.class, com.giyeok.bibix.repo.BibixRepoProto.OutputName.Builder.class);
+    }
+
+    public static final int OUTPUT_NAME_FIELD_NUMBER = 1;
+    private volatile java.lang.Object outputName_;
+    /**
+     * <code>string output_name = 1;</code>
+     * @return The outputName.
+     */
+    @java.lang.Override
+    public java.lang.String getOutputName() {
+      java.lang.Object ref = outputName_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        outputName_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string output_name = 1;</code>
+     * @return The bytes for outputName.
+     */
+    @java.lang.Override
+    public com.google.protobuf.ByteString
+        getOutputNameBytes() {
+      java.lang.Object ref = outputName_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        outputName_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int TARGET_ID_FIELD_NUMBER = 2;
+    private com.google.protobuf.ByteString targetId_;
+    /**
+     * <code>bytes target_id = 2;</code>
+     * @return The targetId.
+     */
+    @java.lang.Override
+    public com.google.protobuf.ByteString getTargetId() {
+      return targetId_;
+    }
+
+    private byte memoizedIsInitialized = -1;
+    @java.lang.Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    @java.lang.Override
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(outputName_)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, outputName_);
+      }
+      if (!targetId_.isEmpty()) {
+        output.writeBytes(2, targetId_);
+      }
+      unknownFields.writeTo(output);
+    }
+
+    @java.lang.Override
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(outputName_)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, outputName_);
+      }
+      if (!targetId_.isEmpty()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(2, targetId_);
+      }
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof com.giyeok.bibix.repo.BibixRepoProto.OutputName)) {
+        return super.equals(obj);
+      }
+      com.giyeok.bibix.repo.BibixRepoProto.OutputName other = (com.giyeok.bibix.repo.BibixRepoProto.OutputName) obj;
+
+      if (!getOutputName()
+          .equals(other.getOutputName())) return false;
+      if (!getTargetId()
+          .equals(other.getTargetId())) return false;
+      if (!unknownFields.equals(other.unknownFields)) return false;
+      return true;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      hash = (37 * hash) + OUTPUT_NAME_FIELD_NUMBER;
+      hash = (53 * hash) + getOutputName().hashCode();
+      hash = (37 * hash) + TARGET_ID_FIELD_NUMBER;
+      hash = (53 * hash) + getTargetId().hashCode();
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static com.giyeok.bibix.repo.BibixRepoProto.OutputName parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.giyeok.bibix.repo.BibixRepoProto.OutputName parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.giyeok.bibix.repo.BibixRepoProto.OutputName parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.giyeok.bibix.repo.BibixRepoProto.OutputName parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.giyeok.bibix.repo.BibixRepoProto.OutputName parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.giyeok.bibix.repo.BibixRepoProto.OutputName parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.giyeok.bibix.repo.BibixRepoProto.OutputName parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.giyeok.bibix.repo.BibixRepoProto.OutputName parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.giyeok.bibix.repo.BibixRepoProto.OutputName parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static com.giyeok.bibix.repo.BibixRepoProto.OutputName parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.giyeok.bibix.repo.BibixRepoProto.OutputName parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.giyeok.bibix.repo.BibixRepoProto.OutputName parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    @java.lang.Override
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(com.giyeok.bibix.repo.BibixRepoProto.OutputName prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @java.lang.Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code com.giyeok.bibix.repo.OutputName}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:com.giyeok.bibix.repo.OutputName)
+        com.giyeok.bibix.repo.BibixRepoProto.OutputNameOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return com.giyeok.bibix.repo.BibixRepoProto.internal_static_com_giyeok_bibix_repo_OutputName_descriptor;
+      }
+
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return com.giyeok.bibix.repo.BibixRepoProto.internal_static_com_giyeok_bibix_repo_OutputName_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                com.giyeok.bibix.repo.BibixRepoProto.OutputName.class, com.giyeok.bibix.repo.BibixRepoProto.OutputName.Builder.class);
+      }
+
+      // Construct using com.giyeok.bibix.repo.BibixRepoProto.OutputName.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+        }
+      }
+      @java.lang.Override
+      public Builder clear() {
+        super.clear();
+        outputName_ = "";
+
+        targetId_ = com.google.protobuf.ByteString.EMPTY;
+
+        return this;
+      }
+
+      @java.lang.Override
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return com.giyeok.bibix.repo.BibixRepoProto.internal_static_com_giyeok_bibix_repo_OutputName_descriptor;
+      }
+
+      @java.lang.Override
+      public com.giyeok.bibix.repo.BibixRepoProto.OutputName getDefaultInstanceForType() {
+        return com.giyeok.bibix.repo.BibixRepoProto.OutputName.getDefaultInstance();
+      }
+
+      @java.lang.Override
+      public com.giyeok.bibix.repo.BibixRepoProto.OutputName build() {
+        com.giyeok.bibix.repo.BibixRepoProto.OutputName result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      @java.lang.Override
+      public com.giyeok.bibix.repo.BibixRepoProto.OutputName buildPartial() {
+        com.giyeok.bibix.repo.BibixRepoProto.OutputName result = new com.giyeok.bibix.repo.BibixRepoProto.OutputName(this);
+        result.outputName_ = outputName_;
+        result.targetId_ = targetId_;
+        onBuilt();
+        return result;
+      }
+
+      @java.lang.Override
+      public Builder clone() {
+        return super.clone();
+      }
+      @java.lang.Override
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.setField(field, value);
+      }
+      @java.lang.Override
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return super.clearField(field);
+      }
+      @java.lang.Override
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return super.clearOneof(oneof);
+      }
+      @java.lang.Override
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return super.setRepeatedField(field, index, value);
+      }
+      @java.lang.Override
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.addRepeatedField(field, value);
+      }
+      @java.lang.Override
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof com.giyeok.bibix.repo.BibixRepoProto.OutputName) {
+          return mergeFrom((com.giyeok.bibix.repo.BibixRepoProto.OutputName)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(com.giyeok.bibix.repo.BibixRepoProto.OutputName other) {
+        if (other == com.giyeok.bibix.repo.BibixRepoProto.OutputName.getDefaultInstance()) return this;
+        if (!other.getOutputName().isEmpty()) {
+          outputName_ = other.outputName_;
+          onChanged();
+        }
+        if (other.getTargetId() != com.google.protobuf.ByteString.EMPTY) {
+          setTargetId(other.getTargetId());
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      @java.lang.Override
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      @java.lang.Override
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.giyeok.bibix.repo.BibixRepoProto.OutputName parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (com.giyeok.bibix.repo.BibixRepoProto.OutputName) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+
+      private java.lang.Object outputName_ = "";
+      /**
+       * <code>string output_name = 1;</code>
+       * @return The outputName.
+       */
+      public java.lang.String getOutputName() {
+        java.lang.Object ref = outputName_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          outputName_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string output_name = 1;</code>
+       * @return The bytes for outputName.
+       */
+      public com.google.protobuf.ByteString
+          getOutputNameBytes() {
+        java.lang.Object ref = outputName_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          outputName_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string output_name = 1;</code>
+       * @param value The outputName to set.
+       * @return This builder for chaining.
+       */
+      public Builder setOutputName(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        outputName_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string output_name = 1;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearOutputName() {
+        
+        outputName_ = getDefaultInstance().getOutputName();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string output_name = 1;</code>
+       * @param value The bytes for outputName to set.
+       * @return This builder for chaining.
+       */
+      public Builder setOutputNameBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        outputName_ = value;
+        onChanged();
+        return this;
+      }
+
+      private com.google.protobuf.ByteString targetId_ = com.google.protobuf.ByteString.EMPTY;
+      /**
+       * <code>bytes target_id = 2;</code>
+       * @return The targetId.
+       */
+      @java.lang.Override
+      public com.google.protobuf.ByteString getTargetId() {
+        return targetId_;
+      }
+      /**
+       * <code>bytes target_id = 2;</code>
+       * @param value The targetId to set.
+       * @return This builder for chaining.
+       */
+      public Builder setTargetId(com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        targetId_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>bytes target_id = 2;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearTargetId() {
+        
+        targetId_ = getDefaultInstance().getTargetId();
+        onChanged();
+        return this;
+      }
+      @java.lang.Override
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFields(unknownFields);
+      }
+
+      @java.lang.Override
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:com.giyeok.bibix.repo.OutputName)
+    }
+
+    // @@protoc_insertion_point(class_scope:com.giyeok.bibix.repo.OutputName)
+    private static final com.giyeok.bibix.repo.BibixRepoProto.OutputName DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new com.giyeok.bibix.repo.BibixRepoProto.OutputName();
+    }
+
+    public static com.giyeok.bibix.repo.BibixRepoProto.OutputName getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<OutputName>
+        PARSER = new com.google.protobuf.AbstractParser<OutputName>() {
+      @java.lang.Override
+      public OutputName parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new OutputName(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<OutputName> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<OutputName> getParserForType() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.giyeok.bibix.repo.BibixRepoProto.OutputName getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
+  public interface TargetStateOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:com.giyeok.bibix.repo.TargetState)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>.google.protobuf.Timestamp build_start_time = 1;</code>
+     * @return Whether the buildStartTime field is set.
+     */
+    boolean hasBuildStartTime();
+    /**
+     * <code>.google.protobuf.Timestamp build_start_time = 1;</code>
+     * @return The buildStartTime.
+     */
+    com.google.protobuf.Timestamp getBuildStartTime();
+    /**
+     * <code>.google.protobuf.Timestamp build_start_time = 1;</code>
+     */
+    com.google.protobuf.TimestampOrBuilder getBuildStartTimeOrBuilder();
+
+    /**
+     * <code>.google.protobuf.Empty build_started = 2;</code>
+     * @return Whether the buildStarted field is set.
+     */
+    boolean hasBuildStarted();
+    /**
+     * <code>.google.protobuf.Empty build_started = 2;</code>
+     * @return The buildStarted.
+     */
+    com.google.protobuf.Empty getBuildStarted();
+    /**
+     * <code>.google.protobuf.Empty build_started = 2;</code>
+     */
+    com.google.protobuf.EmptyOrBuilder getBuildStartedOrBuilder();
+
+    /**
+     * <code>.com.giyeok.bibix.repo.TargetState.BuildSucceeded build_succeeded = 3;</code>
+     * @return Whether the buildSucceeded field is set.
+     */
+    boolean hasBuildSucceeded();
+    /**
+     * <code>.com.giyeok.bibix.repo.TargetState.BuildSucceeded build_succeeded = 3;</code>
+     * @return The buildSucceeded.
+     */
+    com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded getBuildSucceeded();
+    /**
+     * <code>.com.giyeok.bibix.repo.TargetState.BuildSucceeded build_succeeded = 3;</code>
+     */
+    com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceededOrBuilder getBuildSucceededOrBuilder();
+
+    /**
+     * <code>.com.giyeok.bibix.repo.TargetState.BuildFailed build_failed = 4;</code>
+     * @return Whether the buildFailed field is set.
+     */
+    boolean hasBuildFailed();
+    /**
+     * <code>.com.giyeok.bibix.repo.TargetState.BuildFailed build_failed = 4;</code>
+     * @return The buildFailed.
+     */
+    com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed getBuildFailed();
+    /**
+     * <code>.com.giyeok.bibix.repo.TargetState.BuildFailed build_failed = 4;</code>
+     */
+    com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailedOrBuilder getBuildFailedOrBuilder();
+
+    public com.giyeok.bibix.repo.BibixRepoProto.TargetState.StateCase getStateCase();
+  }
+  /**
+   * Protobuf type {@code com.giyeok.bibix.repo.TargetState}
+   */
+  public static final class TargetState extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:com.giyeok.bibix.repo.TargetState)
+      TargetStateOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use TargetState.newBuilder() to construct.
+    private TargetState(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private TargetState() {
+    }
+
+    @java.lang.Override
+    @SuppressWarnings({"unused"})
+    protected java.lang.Object newInstance(
+        UnusedPrivateParameter unused) {
+      return new TargetState();
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private TargetState(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            case 10: {
+              com.google.protobuf.Timestamp.Builder subBuilder = null;
+              if (buildStartTime_ != null) {
+                subBuilder = buildStartTime_.toBuilder();
+              }
+              buildStartTime_ = input.readMessage(com.google.protobuf.Timestamp.parser(), extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(buildStartTime_);
+                buildStartTime_ = subBuilder.buildPartial();
+              }
+
+              break;
+            }
+            case 18: {
+              com.google.protobuf.Empty.Builder subBuilder = null;
+              if (stateCase_ == 2) {
+                subBuilder = ((com.google.protobuf.Empty) state_).toBuilder();
+              }
+              state_ =
+                  input.readMessage(com.google.protobuf.Empty.parser(), extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom((com.google.protobuf.Empty) state_);
+                state_ = subBuilder.buildPartial();
+              }
+              stateCase_ = 2;
+              break;
+            }
+            case 26: {
+              com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded.Builder subBuilder = null;
+              if (stateCase_ == 3) {
+                subBuilder = ((com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded) state_).toBuilder();
+              }
+              state_ =
+                  input.readMessage(com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded.parser(), extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom((com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded) state_);
+                state_ = subBuilder.buildPartial();
+              }
+              stateCase_ = 3;
+              break;
+            }
+            case 34: {
+              com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed.Builder subBuilder = null;
+              if (stateCase_ == 4) {
+                subBuilder = ((com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed) state_).toBuilder();
+              }
+              state_ =
+                  input.readMessage(com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed.parser(), extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom((com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed) state_);
+                state_ = subBuilder.buildPartial();
+              }
+              stateCase_ = 4;
+              break;
+            }
+            default: {
+              if (!parseUnknownField(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (com.google.protobuf.UninitializedMessageException e) {
+        throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return com.giyeok.bibix.repo.BibixRepoProto.internal_static_com_giyeok_bibix_repo_TargetState_descriptor;
+    }
+
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return com.giyeok.bibix.repo.BibixRepoProto.internal_static_com_giyeok_bibix_repo_TargetState_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              com.giyeok.bibix.repo.BibixRepoProto.TargetState.class, com.giyeok.bibix.repo.BibixRepoProto.TargetState.Builder.class);
+    }
+
+    public interface BuildSucceededOrBuilder extends
+        // @@protoc_insertion_point(interface_extends:com.giyeok.bibix.repo.TargetState.BuildSucceeded)
+        com.google.protobuf.MessageOrBuilder {
+
+      /**
+       * <code>.google.protobuf.Timestamp build_end_time = 1;</code>
+       * @return Whether the buildEndTime field is set.
+       */
+      boolean hasBuildEndTime();
+      /**
+       * <code>.google.protobuf.Timestamp build_end_time = 1;</code>
+       * @return The buildEndTime.
+       */
+      com.google.protobuf.Timestamp getBuildEndTime();
+      /**
+       * <code>.google.protobuf.Timestamp build_end_time = 1;</code>
+       */
+      com.google.protobuf.TimestampOrBuilder getBuildEndTimeOrBuilder();
+
+      /**
+       * <code>.com.giyeok.bibix.BibixValue result_value = 2;</code>
+       * @return Whether the resultValue field is set.
+       */
+      boolean hasResultValue();
+      /**
+       * <code>.com.giyeok.bibix.BibixValue result_value = 2;</code>
+       * @return The resultValue.
+       */
+      com.giyeok.bibix.BibixValueProto.BibixValue getResultValue();
+      /**
+       * <code>.com.giyeok.bibix.BibixValue result_value = 2;</code>
+       */
+      com.giyeok.bibix.BibixValueProto.BibixValueOrBuilder getResultValueOrBuilder();
+    }
+    /**
+     * Protobuf type {@code com.giyeok.bibix.repo.TargetState.BuildSucceeded}
+     */
+    public static final class BuildSucceeded extends
+        com.google.protobuf.GeneratedMessageV3 implements
+        // @@protoc_insertion_point(message_implements:com.giyeok.bibix.repo.TargetState.BuildSucceeded)
+        BuildSucceededOrBuilder {
+    private static final long serialVersionUID = 0L;
+      // Use BuildSucceeded.newBuilder() to construct.
+      private BuildSucceeded(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+        super(builder);
+      }
+      private BuildSucceeded() {
+      }
+
+      @java.lang.Override
+      @SuppressWarnings({"unused"})
+      protected java.lang.Object newInstance(
+          UnusedPrivateParameter unused) {
+        return new BuildSucceeded();
+      }
+
+      @java.lang.Override
+      public final com.google.protobuf.UnknownFieldSet
+      getUnknownFields() {
+        return this.unknownFields;
+      }
+      private BuildSucceeded(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        this();
+        if (extensionRegistry == null) {
+          throw new java.lang.NullPointerException();
+        }
+        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+            com.google.protobuf.UnknownFieldSet.newBuilder();
+        try {
+          boolean done = false;
+          while (!done) {
+            int tag = input.readTag();
+            switch (tag) {
+              case 0:
+                done = true;
+                break;
+              case 10: {
+                com.google.protobuf.Timestamp.Builder subBuilder = null;
+                if (buildEndTime_ != null) {
+                  subBuilder = buildEndTime_.toBuilder();
+                }
+                buildEndTime_ = input.readMessage(com.google.protobuf.Timestamp.parser(), extensionRegistry);
+                if (subBuilder != null) {
+                  subBuilder.mergeFrom(buildEndTime_);
+                  buildEndTime_ = subBuilder.buildPartial();
+                }
+
+                break;
+              }
+              case 18: {
+                com.giyeok.bibix.BibixValueProto.BibixValue.Builder subBuilder = null;
+                if (resultValue_ != null) {
+                  subBuilder = resultValue_.toBuilder();
+                }
+                resultValue_ = input.readMessage(com.giyeok.bibix.BibixValueProto.BibixValue.parser(), extensionRegistry);
+                if (subBuilder != null) {
+                  subBuilder.mergeFrom(resultValue_);
+                  resultValue_ = subBuilder.buildPartial();
+                }
+
+                break;
+              }
+              default: {
+                if (!parseUnknownField(
+                    input, unknownFields, extensionRegistry, tag)) {
+                  done = true;
+                }
+                break;
+              }
+            }
+          }
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          throw e.setUnfinishedMessage(this);
+        } catch (com.google.protobuf.UninitializedMessageException e) {
+          throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
+        } catch (java.io.IOException e) {
+          throw new com.google.protobuf.InvalidProtocolBufferException(
+              e).setUnfinishedMessage(this);
+        } finally {
+          this.unknownFields = unknownFields.build();
+          makeExtensionsImmutable();
+        }
+      }
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return com.giyeok.bibix.repo.BibixRepoProto.internal_static_com_giyeok_bibix_repo_TargetState_BuildSucceeded_descriptor;
+      }
+
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return com.giyeok.bibix.repo.BibixRepoProto.internal_static_com_giyeok_bibix_repo_TargetState_BuildSucceeded_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded.class, com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded.Builder.class);
+      }
+
+      public static final int BUILD_END_TIME_FIELD_NUMBER = 1;
+      private com.google.protobuf.Timestamp buildEndTime_;
+      /**
+       * <code>.google.protobuf.Timestamp build_end_time = 1;</code>
+       * @return Whether the buildEndTime field is set.
+       */
+      @java.lang.Override
+      public boolean hasBuildEndTime() {
+        return buildEndTime_ != null;
+      }
+      /**
+       * <code>.google.protobuf.Timestamp build_end_time = 1;</code>
+       * @return The buildEndTime.
+       */
+      @java.lang.Override
+      public com.google.protobuf.Timestamp getBuildEndTime() {
+        return buildEndTime_ == null ? com.google.protobuf.Timestamp.getDefaultInstance() : buildEndTime_;
+      }
+      /**
+       * <code>.google.protobuf.Timestamp build_end_time = 1;</code>
+       */
+      @java.lang.Override
+      public com.google.protobuf.TimestampOrBuilder getBuildEndTimeOrBuilder() {
+        return getBuildEndTime();
+      }
+
+      public static final int RESULT_VALUE_FIELD_NUMBER = 2;
+      private com.giyeok.bibix.BibixValueProto.BibixValue resultValue_;
+      /**
+       * <code>.com.giyeok.bibix.BibixValue result_value = 2;</code>
+       * @return Whether the resultValue field is set.
+       */
+      @java.lang.Override
+      public boolean hasResultValue() {
+        return resultValue_ != null;
+      }
+      /**
+       * <code>.com.giyeok.bibix.BibixValue result_value = 2;</code>
+       * @return The resultValue.
+       */
+      @java.lang.Override
+      public com.giyeok.bibix.BibixValueProto.BibixValue getResultValue() {
+        return resultValue_ == null ? com.giyeok.bibix.BibixValueProto.BibixValue.getDefaultInstance() : resultValue_;
+      }
+      /**
+       * <code>.com.giyeok.bibix.BibixValue result_value = 2;</code>
+       */
+      @java.lang.Override
+      public com.giyeok.bibix.BibixValueProto.BibixValueOrBuilder getResultValueOrBuilder() {
+        return getResultValue();
+      }
+
+      private byte memoizedIsInitialized = -1;
+      @java.lang.Override
+      public final boolean isInitialized() {
+        byte isInitialized = memoizedIsInitialized;
+        if (isInitialized == 1) return true;
+        if (isInitialized == 0) return false;
+
+        memoizedIsInitialized = 1;
+        return true;
+      }
+
+      @java.lang.Override
+      public void writeTo(com.google.protobuf.CodedOutputStream output)
+                          throws java.io.IOException {
+        if (buildEndTime_ != null) {
+          output.writeMessage(1, getBuildEndTime());
+        }
+        if (resultValue_ != null) {
+          output.writeMessage(2, getResultValue());
+        }
+        unknownFields.writeTo(output);
+      }
+
+      @java.lang.Override
+      public int getSerializedSize() {
+        int size = memoizedSize;
+        if (size != -1) return size;
+
+        size = 0;
+        if (buildEndTime_ != null) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeMessageSize(1, getBuildEndTime());
+        }
+        if (resultValue_ != null) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeMessageSize(2, getResultValue());
+        }
+        size += unknownFields.getSerializedSize();
+        memoizedSize = size;
+        return size;
+      }
+
+      @java.lang.Override
+      public boolean equals(final java.lang.Object obj) {
+        if (obj == this) {
+         return true;
+        }
+        if (!(obj instanceof com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded)) {
+          return super.equals(obj);
+        }
+        com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded other = (com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded) obj;
+
+        if (hasBuildEndTime() != other.hasBuildEndTime()) return false;
+        if (hasBuildEndTime()) {
+          if (!getBuildEndTime()
+              .equals(other.getBuildEndTime())) return false;
+        }
+        if (hasResultValue() != other.hasResultValue()) return false;
+        if (hasResultValue()) {
+          if (!getResultValue()
+              .equals(other.getResultValue())) return false;
+        }
+        if (!unknownFields.equals(other.unknownFields)) return false;
+        return true;
+      }
+
+      @java.lang.Override
+      public int hashCode() {
+        if (memoizedHashCode != 0) {
+          return memoizedHashCode;
+        }
+        int hash = 41;
+        hash = (19 * hash) + getDescriptor().hashCode();
+        if (hasBuildEndTime()) {
+          hash = (37 * hash) + BUILD_END_TIME_FIELD_NUMBER;
+          hash = (53 * hash) + getBuildEndTime().hashCode();
+        }
+        if (hasResultValue()) {
+          hash = (37 * hash) + RESULT_VALUE_FIELD_NUMBER;
+          hash = (53 * hash) + getResultValue().hashCode();
+        }
+        hash = (29 * hash) + unknownFields.hashCode();
+        memoizedHashCode = hash;
+        return hash;
+      }
+
+      public static com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded parseFrom(
+          java.nio.ByteBuffer data)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+      }
+      public static com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded parseFrom(
+          java.nio.ByteBuffer data,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+      }
+      public static com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded parseFrom(
+          com.google.protobuf.ByteString data)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+      }
+      public static com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded parseFrom(
+          com.google.protobuf.ByteString data,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+      }
+      public static com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded parseFrom(byte[] data)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+      }
+      public static com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded parseFrom(
+          byte[] data,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+      }
+      public static com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded parseFrom(java.io.InputStream input)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseWithIOException(PARSER, input);
+      }
+      public static com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded parseFrom(
+          java.io.InputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseWithIOException(PARSER, input, extensionRegistry);
+      }
+      public static com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded parseDelimitedFrom(java.io.InputStream input)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseDelimitedWithIOException(PARSER, input);
+      }
+      public static com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded parseDelimitedFrom(
+          java.io.InputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+      }
+      public static com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded parseFrom(
+          com.google.protobuf.CodedInputStream input)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseWithIOException(PARSER, input);
+      }
+      public static com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded parseFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseWithIOException(PARSER, input, extensionRegistry);
+      }
+
+      @java.lang.Override
+      public Builder newBuilderForType() { return newBuilder(); }
+      public static Builder newBuilder() {
+        return DEFAULT_INSTANCE.toBuilder();
+      }
+      public static Builder newBuilder(com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded prototype) {
+        return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+      }
+      @java.lang.Override
+      public Builder toBuilder() {
+        return this == DEFAULT_INSTANCE
+            ? new Builder() : new Builder().mergeFrom(this);
+      }
+
+      @java.lang.Override
+      protected Builder newBuilderForType(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        Builder builder = new Builder(parent);
+        return builder;
+      }
+      /**
+       * Protobuf type {@code com.giyeok.bibix.repo.TargetState.BuildSucceeded}
+       */
+      public static final class Builder extends
+          com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+          // @@protoc_insertion_point(builder_implements:com.giyeok.bibix.repo.TargetState.BuildSucceeded)
+          com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceededOrBuilder {
+        public static final com.google.protobuf.Descriptors.Descriptor
+            getDescriptor() {
+          return com.giyeok.bibix.repo.BibixRepoProto.internal_static_com_giyeok_bibix_repo_TargetState_BuildSucceeded_descriptor;
+        }
+
+        @java.lang.Override
+        protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+            internalGetFieldAccessorTable() {
+          return com.giyeok.bibix.repo.BibixRepoProto.internal_static_com_giyeok_bibix_repo_TargetState_BuildSucceeded_fieldAccessorTable
+              .ensureFieldAccessorsInitialized(
+                  com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded.class, com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded.Builder.class);
+        }
+
+        // Construct using com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded.newBuilder()
+        private Builder() {
+          maybeForceBuilderInitialization();
+        }
+
+        private Builder(
+            com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+          super(parent);
+          maybeForceBuilderInitialization();
+        }
+        private void maybeForceBuilderInitialization() {
+          if (com.google.protobuf.GeneratedMessageV3
+                  .alwaysUseFieldBuilders) {
+          }
+        }
+        @java.lang.Override
+        public Builder clear() {
+          super.clear();
+          if (buildEndTimeBuilder_ == null) {
+            buildEndTime_ = null;
+          } else {
+            buildEndTime_ = null;
+            buildEndTimeBuilder_ = null;
+          }
+          if (resultValueBuilder_ == null) {
+            resultValue_ = null;
+          } else {
+            resultValue_ = null;
+            resultValueBuilder_ = null;
+          }
+          return this;
+        }
+
+        @java.lang.Override
+        public com.google.protobuf.Descriptors.Descriptor
+            getDescriptorForType() {
+          return com.giyeok.bibix.repo.BibixRepoProto.internal_static_com_giyeok_bibix_repo_TargetState_BuildSucceeded_descriptor;
+        }
+
+        @java.lang.Override
+        public com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded getDefaultInstanceForType() {
+          return com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded.getDefaultInstance();
+        }
+
+        @java.lang.Override
+        public com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded build() {
+          com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded result = buildPartial();
+          if (!result.isInitialized()) {
+            throw newUninitializedMessageException(result);
+          }
+          return result;
+        }
+
+        @java.lang.Override
+        public com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded buildPartial() {
+          com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded result = new com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded(this);
+          if (buildEndTimeBuilder_ == null) {
+            result.buildEndTime_ = buildEndTime_;
+          } else {
+            result.buildEndTime_ = buildEndTimeBuilder_.build();
+          }
+          if (resultValueBuilder_ == null) {
+            result.resultValue_ = resultValue_;
+          } else {
+            result.resultValue_ = resultValueBuilder_.build();
+          }
+          onBuilt();
+          return result;
+        }
+
+        @java.lang.Override
+        public Builder clone() {
+          return super.clone();
+        }
+        @java.lang.Override
+        public Builder setField(
+            com.google.protobuf.Descriptors.FieldDescriptor field,
+            java.lang.Object value) {
+          return super.setField(field, value);
+        }
+        @java.lang.Override
+        public Builder clearField(
+            com.google.protobuf.Descriptors.FieldDescriptor field) {
+          return super.clearField(field);
+        }
+        @java.lang.Override
+        public Builder clearOneof(
+            com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+          return super.clearOneof(oneof);
+        }
+        @java.lang.Override
+        public Builder setRepeatedField(
+            com.google.protobuf.Descriptors.FieldDescriptor field,
+            int index, java.lang.Object value) {
+          return super.setRepeatedField(field, index, value);
+        }
+        @java.lang.Override
+        public Builder addRepeatedField(
+            com.google.protobuf.Descriptors.FieldDescriptor field,
+            java.lang.Object value) {
+          return super.addRepeatedField(field, value);
+        }
+        @java.lang.Override
+        public Builder mergeFrom(com.google.protobuf.Message other) {
+          if (other instanceof com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded) {
+            return mergeFrom((com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded)other);
+          } else {
+            super.mergeFrom(other);
+            return this;
+          }
+        }
+
+        public Builder mergeFrom(com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded other) {
+          if (other == com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded.getDefaultInstance()) return this;
+          if (other.hasBuildEndTime()) {
+            mergeBuildEndTime(other.getBuildEndTime());
+          }
+          if (other.hasResultValue()) {
+            mergeResultValue(other.getResultValue());
+          }
+          this.mergeUnknownFields(other.unknownFields);
+          onChanged();
+          return this;
+        }
+
+        @java.lang.Override
+        public final boolean isInitialized() {
+          return true;
+        }
+
+        @java.lang.Override
+        public Builder mergeFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
+          com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded parsedMessage = null;
+          try {
+            parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+          } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+            parsedMessage = (com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded) e.getUnfinishedMessage();
+            throw e.unwrapIOException();
+          } finally {
+            if (parsedMessage != null) {
+              mergeFrom(parsedMessage);
+            }
+          }
+          return this;
+        }
+
+        private com.google.protobuf.Timestamp buildEndTime_;
+        private com.google.protobuf.SingleFieldBuilderV3<
+            com.google.protobuf.Timestamp, com.google.protobuf.Timestamp.Builder, com.google.protobuf.TimestampOrBuilder> buildEndTimeBuilder_;
+        /**
+         * <code>.google.protobuf.Timestamp build_end_time = 1;</code>
+         * @return Whether the buildEndTime field is set.
+         */
+        public boolean hasBuildEndTime() {
+          return buildEndTimeBuilder_ != null || buildEndTime_ != null;
+        }
+        /**
+         * <code>.google.protobuf.Timestamp build_end_time = 1;</code>
+         * @return The buildEndTime.
+         */
+        public com.google.protobuf.Timestamp getBuildEndTime() {
+          if (buildEndTimeBuilder_ == null) {
+            return buildEndTime_ == null ? com.google.protobuf.Timestamp.getDefaultInstance() : buildEndTime_;
+          } else {
+            return buildEndTimeBuilder_.getMessage();
+          }
+        }
+        /**
+         * <code>.google.protobuf.Timestamp build_end_time = 1;</code>
+         */
+        public Builder setBuildEndTime(com.google.protobuf.Timestamp value) {
+          if (buildEndTimeBuilder_ == null) {
+            if (value == null) {
+              throw new NullPointerException();
+            }
+            buildEndTime_ = value;
+            onChanged();
+          } else {
+            buildEndTimeBuilder_.setMessage(value);
+          }
+
+          return this;
+        }
+        /**
+         * <code>.google.protobuf.Timestamp build_end_time = 1;</code>
+         */
+        public Builder setBuildEndTime(
+            com.google.protobuf.Timestamp.Builder builderForValue) {
+          if (buildEndTimeBuilder_ == null) {
+            buildEndTime_ = builderForValue.build();
+            onChanged();
+          } else {
+            buildEndTimeBuilder_.setMessage(builderForValue.build());
+          }
+
+          return this;
+        }
+        /**
+         * <code>.google.protobuf.Timestamp build_end_time = 1;</code>
+         */
+        public Builder mergeBuildEndTime(com.google.protobuf.Timestamp value) {
+          if (buildEndTimeBuilder_ == null) {
+            if (buildEndTime_ != null) {
+              buildEndTime_ =
+                com.google.protobuf.Timestamp.newBuilder(buildEndTime_).mergeFrom(value).buildPartial();
+            } else {
+              buildEndTime_ = value;
+            }
+            onChanged();
+          } else {
+            buildEndTimeBuilder_.mergeFrom(value);
+          }
+
+          return this;
+        }
+        /**
+         * <code>.google.protobuf.Timestamp build_end_time = 1;</code>
+         */
+        public Builder clearBuildEndTime() {
+          if (buildEndTimeBuilder_ == null) {
+            buildEndTime_ = null;
+            onChanged();
+          } else {
+            buildEndTime_ = null;
+            buildEndTimeBuilder_ = null;
+          }
+
+          return this;
+        }
+        /**
+         * <code>.google.protobuf.Timestamp build_end_time = 1;</code>
+         */
+        public com.google.protobuf.Timestamp.Builder getBuildEndTimeBuilder() {
+          
+          onChanged();
+          return getBuildEndTimeFieldBuilder().getBuilder();
+        }
+        /**
+         * <code>.google.protobuf.Timestamp build_end_time = 1;</code>
+         */
+        public com.google.protobuf.TimestampOrBuilder getBuildEndTimeOrBuilder() {
+          if (buildEndTimeBuilder_ != null) {
+            return buildEndTimeBuilder_.getMessageOrBuilder();
+          } else {
+            return buildEndTime_ == null ?
+                com.google.protobuf.Timestamp.getDefaultInstance() : buildEndTime_;
+          }
+        }
+        /**
+         * <code>.google.protobuf.Timestamp build_end_time = 1;</code>
+         */
+        private com.google.protobuf.SingleFieldBuilderV3<
+            com.google.protobuf.Timestamp, com.google.protobuf.Timestamp.Builder, com.google.protobuf.TimestampOrBuilder> 
+            getBuildEndTimeFieldBuilder() {
+          if (buildEndTimeBuilder_ == null) {
+            buildEndTimeBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+                com.google.protobuf.Timestamp, com.google.protobuf.Timestamp.Builder, com.google.protobuf.TimestampOrBuilder>(
+                    getBuildEndTime(),
+                    getParentForChildren(),
+                    isClean());
+            buildEndTime_ = null;
+          }
+          return buildEndTimeBuilder_;
+        }
+
+        private com.giyeok.bibix.BibixValueProto.BibixValue resultValue_;
+        private com.google.protobuf.SingleFieldBuilderV3<
+            com.giyeok.bibix.BibixValueProto.BibixValue, com.giyeok.bibix.BibixValueProto.BibixValue.Builder, com.giyeok.bibix.BibixValueProto.BibixValueOrBuilder> resultValueBuilder_;
+        /**
+         * <code>.com.giyeok.bibix.BibixValue result_value = 2;</code>
+         * @return Whether the resultValue field is set.
+         */
+        public boolean hasResultValue() {
+          return resultValueBuilder_ != null || resultValue_ != null;
+        }
+        /**
+         * <code>.com.giyeok.bibix.BibixValue result_value = 2;</code>
+         * @return The resultValue.
+         */
+        public com.giyeok.bibix.BibixValueProto.BibixValue getResultValue() {
+          if (resultValueBuilder_ == null) {
+            return resultValue_ == null ? com.giyeok.bibix.BibixValueProto.BibixValue.getDefaultInstance() : resultValue_;
+          } else {
+            return resultValueBuilder_.getMessage();
+          }
+        }
+        /**
+         * <code>.com.giyeok.bibix.BibixValue result_value = 2;</code>
+         */
+        public Builder setResultValue(com.giyeok.bibix.BibixValueProto.BibixValue value) {
+          if (resultValueBuilder_ == null) {
+            if (value == null) {
+              throw new NullPointerException();
+            }
+            resultValue_ = value;
+            onChanged();
+          } else {
+            resultValueBuilder_.setMessage(value);
+          }
+
+          return this;
+        }
+        /**
+         * <code>.com.giyeok.bibix.BibixValue result_value = 2;</code>
+         */
+        public Builder setResultValue(
+            com.giyeok.bibix.BibixValueProto.BibixValue.Builder builderForValue) {
+          if (resultValueBuilder_ == null) {
+            resultValue_ = builderForValue.build();
+            onChanged();
+          } else {
+            resultValueBuilder_.setMessage(builderForValue.build());
+          }
+
+          return this;
+        }
+        /**
+         * <code>.com.giyeok.bibix.BibixValue result_value = 2;</code>
+         */
+        public Builder mergeResultValue(com.giyeok.bibix.BibixValueProto.BibixValue value) {
+          if (resultValueBuilder_ == null) {
+            if (resultValue_ != null) {
+              resultValue_ =
+                com.giyeok.bibix.BibixValueProto.BibixValue.newBuilder(resultValue_).mergeFrom(value).buildPartial();
+            } else {
+              resultValue_ = value;
+            }
+            onChanged();
+          } else {
+            resultValueBuilder_.mergeFrom(value);
+          }
+
+          return this;
+        }
+        /**
+         * <code>.com.giyeok.bibix.BibixValue result_value = 2;</code>
+         */
+        public Builder clearResultValue() {
+          if (resultValueBuilder_ == null) {
+            resultValue_ = null;
+            onChanged();
+          } else {
+            resultValue_ = null;
+            resultValueBuilder_ = null;
+          }
+
+          return this;
+        }
+        /**
+         * <code>.com.giyeok.bibix.BibixValue result_value = 2;</code>
+         */
+        public com.giyeok.bibix.BibixValueProto.BibixValue.Builder getResultValueBuilder() {
+          
+          onChanged();
+          return getResultValueFieldBuilder().getBuilder();
+        }
+        /**
+         * <code>.com.giyeok.bibix.BibixValue result_value = 2;</code>
+         */
+        public com.giyeok.bibix.BibixValueProto.BibixValueOrBuilder getResultValueOrBuilder() {
+          if (resultValueBuilder_ != null) {
+            return resultValueBuilder_.getMessageOrBuilder();
+          } else {
+            return resultValue_ == null ?
+                com.giyeok.bibix.BibixValueProto.BibixValue.getDefaultInstance() : resultValue_;
+          }
+        }
+        /**
+         * <code>.com.giyeok.bibix.BibixValue result_value = 2;</code>
+         */
+        private com.google.protobuf.SingleFieldBuilderV3<
+            com.giyeok.bibix.BibixValueProto.BibixValue, com.giyeok.bibix.BibixValueProto.BibixValue.Builder, com.giyeok.bibix.BibixValueProto.BibixValueOrBuilder> 
+            getResultValueFieldBuilder() {
+          if (resultValueBuilder_ == null) {
+            resultValueBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+                com.giyeok.bibix.BibixValueProto.BibixValue, com.giyeok.bibix.BibixValueProto.BibixValue.Builder, com.giyeok.bibix.BibixValueProto.BibixValueOrBuilder>(
+                    getResultValue(),
+                    getParentForChildren(),
+                    isClean());
+            resultValue_ = null;
+          }
+          return resultValueBuilder_;
+        }
+        @java.lang.Override
+        public final Builder setUnknownFields(
+            final com.google.protobuf.UnknownFieldSet unknownFields) {
+          return super.setUnknownFields(unknownFields);
+        }
+
+        @java.lang.Override
+        public final Builder mergeUnknownFields(
+            final com.google.protobuf.UnknownFieldSet unknownFields) {
+          return super.mergeUnknownFields(unknownFields);
+        }
+
+
+        // @@protoc_insertion_point(builder_scope:com.giyeok.bibix.repo.TargetState.BuildSucceeded)
+      }
+
+      // @@protoc_insertion_point(class_scope:com.giyeok.bibix.repo.TargetState.BuildSucceeded)
+      private static final com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded DEFAULT_INSTANCE;
+      static {
+        DEFAULT_INSTANCE = new com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded();
+      }
+
+      public static com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded getDefaultInstance() {
+        return DEFAULT_INSTANCE;
+      }
+
+      private static final com.google.protobuf.Parser<BuildSucceeded>
+          PARSER = new com.google.protobuf.AbstractParser<BuildSucceeded>() {
+        @java.lang.Override
+        public BuildSucceeded parsePartialFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+          return new BuildSucceeded(input, extensionRegistry);
+        }
+      };
+
+      public static com.google.protobuf.Parser<BuildSucceeded> parser() {
+        return PARSER;
+      }
+
+      @java.lang.Override
+      public com.google.protobuf.Parser<BuildSucceeded> getParserForType() {
+        return PARSER;
+      }
+
+      @java.lang.Override
+      public com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded getDefaultInstanceForType() {
+        return DEFAULT_INSTANCE;
+      }
+
+    }
+
+    public interface BuildFailedOrBuilder extends
+        // @@protoc_insertion_point(interface_extends:com.giyeok.bibix.repo.TargetState.BuildFailed)
+        com.google.protobuf.MessageOrBuilder {
+
+      /**
+       * <code>.google.protobuf.Timestamp build_fail_time = 1;</code>
+       * @return Whether the buildFailTime field is set.
+       */
+      boolean hasBuildFailTime();
+      /**
+       * <code>.google.protobuf.Timestamp build_fail_time = 1;</code>
+       * @return The buildFailTime.
+       */
+      com.google.protobuf.Timestamp getBuildFailTime();
+      /**
+       * <code>.google.protobuf.Timestamp build_fail_time = 1;</code>
+       */
+      com.google.protobuf.TimestampOrBuilder getBuildFailTimeOrBuilder();
+
+      /**
+       * <code>string error_message = 2;</code>
+       * @return The errorMessage.
+       */
+      java.lang.String getErrorMessage();
+      /**
+       * <code>string error_message = 2;</code>
+       * @return The bytes for errorMessage.
+       */
+      com.google.protobuf.ByteString
+          getErrorMessageBytes();
+    }
+    /**
+     * Protobuf type {@code com.giyeok.bibix.repo.TargetState.BuildFailed}
+     */
+    public static final class BuildFailed extends
+        com.google.protobuf.GeneratedMessageV3 implements
+        // @@protoc_insertion_point(message_implements:com.giyeok.bibix.repo.TargetState.BuildFailed)
+        BuildFailedOrBuilder {
+    private static final long serialVersionUID = 0L;
+      // Use BuildFailed.newBuilder() to construct.
+      private BuildFailed(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+        super(builder);
+      }
+      private BuildFailed() {
+        errorMessage_ = "";
+      }
+
+      @java.lang.Override
+      @SuppressWarnings({"unused"})
+      protected java.lang.Object newInstance(
+          UnusedPrivateParameter unused) {
+        return new BuildFailed();
+      }
+
+      @java.lang.Override
+      public final com.google.protobuf.UnknownFieldSet
+      getUnknownFields() {
+        return this.unknownFields;
+      }
+      private BuildFailed(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        this();
+        if (extensionRegistry == null) {
+          throw new java.lang.NullPointerException();
+        }
+        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+            com.google.protobuf.UnknownFieldSet.newBuilder();
+        try {
+          boolean done = false;
+          while (!done) {
+            int tag = input.readTag();
+            switch (tag) {
+              case 0:
+                done = true;
+                break;
+              case 10: {
+                com.google.protobuf.Timestamp.Builder subBuilder = null;
+                if (buildFailTime_ != null) {
+                  subBuilder = buildFailTime_.toBuilder();
+                }
+                buildFailTime_ = input.readMessage(com.google.protobuf.Timestamp.parser(), extensionRegistry);
+                if (subBuilder != null) {
+                  subBuilder.mergeFrom(buildFailTime_);
+                  buildFailTime_ = subBuilder.buildPartial();
+                }
+
+                break;
+              }
+              case 18: {
+                java.lang.String s = input.readStringRequireUtf8();
+
+                errorMessage_ = s;
+                break;
+              }
+              default: {
+                if (!parseUnknownField(
+                    input, unknownFields, extensionRegistry, tag)) {
+                  done = true;
+                }
+                break;
+              }
+            }
+          }
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          throw e.setUnfinishedMessage(this);
+        } catch (com.google.protobuf.UninitializedMessageException e) {
+          throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
+        } catch (java.io.IOException e) {
+          throw new com.google.protobuf.InvalidProtocolBufferException(
+              e).setUnfinishedMessage(this);
+        } finally {
+          this.unknownFields = unknownFields.build();
+          makeExtensionsImmutable();
+        }
+      }
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return com.giyeok.bibix.repo.BibixRepoProto.internal_static_com_giyeok_bibix_repo_TargetState_BuildFailed_descriptor;
+      }
+
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return com.giyeok.bibix.repo.BibixRepoProto.internal_static_com_giyeok_bibix_repo_TargetState_BuildFailed_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed.class, com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed.Builder.class);
+      }
+
+      public static final int BUILD_FAIL_TIME_FIELD_NUMBER = 1;
+      private com.google.protobuf.Timestamp buildFailTime_;
+      /**
+       * <code>.google.protobuf.Timestamp build_fail_time = 1;</code>
+       * @return Whether the buildFailTime field is set.
+       */
+      @java.lang.Override
+      public boolean hasBuildFailTime() {
+        return buildFailTime_ != null;
+      }
+      /**
+       * <code>.google.protobuf.Timestamp build_fail_time = 1;</code>
+       * @return The buildFailTime.
+       */
+      @java.lang.Override
+      public com.google.protobuf.Timestamp getBuildFailTime() {
+        return buildFailTime_ == null ? com.google.protobuf.Timestamp.getDefaultInstance() : buildFailTime_;
+      }
+      /**
+       * <code>.google.protobuf.Timestamp build_fail_time = 1;</code>
+       */
+      @java.lang.Override
+      public com.google.protobuf.TimestampOrBuilder getBuildFailTimeOrBuilder() {
+        return getBuildFailTime();
+      }
+
+      public static final int ERROR_MESSAGE_FIELD_NUMBER = 2;
+      private volatile java.lang.Object errorMessage_;
+      /**
+       * <code>string error_message = 2;</code>
+       * @return The errorMessage.
+       */
+      @java.lang.Override
+      public java.lang.String getErrorMessage() {
+        java.lang.Object ref = errorMessage_;
+        if (ref instanceof java.lang.String) {
+          return (java.lang.String) ref;
+        } else {
+          com.google.protobuf.ByteString bs = 
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          errorMessage_ = s;
+          return s;
+        }
+      }
+      /**
+       * <code>string error_message = 2;</code>
+       * @return The bytes for errorMessage.
+       */
+      @java.lang.Override
+      public com.google.protobuf.ByteString
+          getErrorMessageBytes() {
+        java.lang.Object ref = errorMessage_;
+        if (ref instanceof java.lang.String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          errorMessage_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+
+      private byte memoizedIsInitialized = -1;
+      @java.lang.Override
+      public final boolean isInitialized() {
+        byte isInitialized = memoizedIsInitialized;
+        if (isInitialized == 1) return true;
+        if (isInitialized == 0) return false;
+
+        memoizedIsInitialized = 1;
+        return true;
+      }
+
+      @java.lang.Override
+      public void writeTo(com.google.protobuf.CodedOutputStream output)
+                          throws java.io.IOException {
+        if (buildFailTime_ != null) {
+          output.writeMessage(1, getBuildFailTime());
+        }
+        if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(errorMessage_)) {
+          com.google.protobuf.GeneratedMessageV3.writeString(output, 2, errorMessage_);
+        }
+        unknownFields.writeTo(output);
+      }
+
+      @java.lang.Override
+      public int getSerializedSize() {
+        int size = memoizedSize;
+        if (size != -1) return size;
+
+        size = 0;
+        if (buildFailTime_ != null) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeMessageSize(1, getBuildFailTime());
+        }
+        if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(errorMessage_)) {
+          size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, errorMessage_);
+        }
+        size += unknownFields.getSerializedSize();
+        memoizedSize = size;
+        return size;
+      }
+
+      @java.lang.Override
+      public boolean equals(final java.lang.Object obj) {
+        if (obj == this) {
+         return true;
+        }
+        if (!(obj instanceof com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed)) {
+          return super.equals(obj);
+        }
+        com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed other = (com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed) obj;
+
+        if (hasBuildFailTime() != other.hasBuildFailTime()) return false;
+        if (hasBuildFailTime()) {
+          if (!getBuildFailTime()
+              .equals(other.getBuildFailTime())) return false;
+        }
+        if (!getErrorMessage()
+            .equals(other.getErrorMessage())) return false;
+        if (!unknownFields.equals(other.unknownFields)) return false;
+        return true;
+      }
+
+      @java.lang.Override
+      public int hashCode() {
+        if (memoizedHashCode != 0) {
+          return memoizedHashCode;
+        }
+        int hash = 41;
+        hash = (19 * hash) + getDescriptor().hashCode();
+        if (hasBuildFailTime()) {
+          hash = (37 * hash) + BUILD_FAIL_TIME_FIELD_NUMBER;
+          hash = (53 * hash) + getBuildFailTime().hashCode();
+        }
+        hash = (37 * hash) + ERROR_MESSAGE_FIELD_NUMBER;
+        hash = (53 * hash) + getErrorMessage().hashCode();
+        hash = (29 * hash) + unknownFields.hashCode();
+        memoizedHashCode = hash;
+        return hash;
+      }
+
+      public static com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed parseFrom(
+          java.nio.ByteBuffer data)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+      }
+      public static com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed parseFrom(
+          java.nio.ByteBuffer data,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+      }
+      public static com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed parseFrom(
+          com.google.protobuf.ByteString data)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+      }
+      public static com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed parseFrom(
+          com.google.protobuf.ByteString data,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+      }
+      public static com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed parseFrom(byte[] data)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+      }
+      public static com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed parseFrom(
+          byte[] data,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+      }
+      public static com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed parseFrom(java.io.InputStream input)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseWithIOException(PARSER, input);
+      }
+      public static com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed parseFrom(
+          java.io.InputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseWithIOException(PARSER, input, extensionRegistry);
+      }
+      public static com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed parseDelimitedFrom(java.io.InputStream input)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseDelimitedWithIOException(PARSER, input);
+      }
+      public static com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed parseDelimitedFrom(
+          java.io.InputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+      }
+      public static com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed parseFrom(
+          com.google.protobuf.CodedInputStream input)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseWithIOException(PARSER, input);
+      }
+      public static com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed parseFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseWithIOException(PARSER, input, extensionRegistry);
+      }
+
+      @java.lang.Override
+      public Builder newBuilderForType() { return newBuilder(); }
+      public static Builder newBuilder() {
+        return DEFAULT_INSTANCE.toBuilder();
+      }
+      public static Builder newBuilder(com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed prototype) {
+        return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+      }
+      @java.lang.Override
+      public Builder toBuilder() {
+        return this == DEFAULT_INSTANCE
+            ? new Builder() : new Builder().mergeFrom(this);
+      }
+
+      @java.lang.Override
+      protected Builder newBuilderForType(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        Builder builder = new Builder(parent);
+        return builder;
+      }
+      /**
+       * Protobuf type {@code com.giyeok.bibix.repo.TargetState.BuildFailed}
+       */
+      public static final class Builder extends
+          com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+          // @@protoc_insertion_point(builder_implements:com.giyeok.bibix.repo.TargetState.BuildFailed)
+          com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailedOrBuilder {
+        public static final com.google.protobuf.Descriptors.Descriptor
+            getDescriptor() {
+          return com.giyeok.bibix.repo.BibixRepoProto.internal_static_com_giyeok_bibix_repo_TargetState_BuildFailed_descriptor;
+        }
+
+        @java.lang.Override
+        protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+            internalGetFieldAccessorTable() {
+          return com.giyeok.bibix.repo.BibixRepoProto.internal_static_com_giyeok_bibix_repo_TargetState_BuildFailed_fieldAccessorTable
+              .ensureFieldAccessorsInitialized(
+                  com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed.class, com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed.Builder.class);
+        }
+
+        // Construct using com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed.newBuilder()
+        private Builder() {
+          maybeForceBuilderInitialization();
+        }
+
+        private Builder(
+            com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+          super(parent);
+          maybeForceBuilderInitialization();
+        }
+        private void maybeForceBuilderInitialization() {
+          if (com.google.protobuf.GeneratedMessageV3
+                  .alwaysUseFieldBuilders) {
+          }
+        }
+        @java.lang.Override
+        public Builder clear() {
+          super.clear();
+          if (buildFailTimeBuilder_ == null) {
+            buildFailTime_ = null;
+          } else {
+            buildFailTime_ = null;
+            buildFailTimeBuilder_ = null;
+          }
+          errorMessage_ = "";
+
+          return this;
+        }
+
+        @java.lang.Override
+        public com.google.protobuf.Descriptors.Descriptor
+            getDescriptorForType() {
+          return com.giyeok.bibix.repo.BibixRepoProto.internal_static_com_giyeok_bibix_repo_TargetState_BuildFailed_descriptor;
+        }
+
+        @java.lang.Override
+        public com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed getDefaultInstanceForType() {
+          return com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed.getDefaultInstance();
+        }
+
+        @java.lang.Override
+        public com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed build() {
+          com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed result = buildPartial();
+          if (!result.isInitialized()) {
+            throw newUninitializedMessageException(result);
+          }
+          return result;
+        }
+
+        @java.lang.Override
+        public com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed buildPartial() {
+          com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed result = new com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed(this);
+          if (buildFailTimeBuilder_ == null) {
+            result.buildFailTime_ = buildFailTime_;
+          } else {
+            result.buildFailTime_ = buildFailTimeBuilder_.build();
+          }
+          result.errorMessage_ = errorMessage_;
+          onBuilt();
+          return result;
+        }
+
+        @java.lang.Override
+        public Builder clone() {
+          return super.clone();
+        }
+        @java.lang.Override
+        public Builder setField(
+            com.google.protobuf.Descriptors.FieldDescriptor field,
+            java.lang.Object value) {
+          return super.setField(field, value);
+        }
+        @java.lang.Override
+        public Builder clearField(
+            com.google.protobuf.Descriptors.FieldDescriptor field) {
+          return super.clearField(field);
+        }
+        @java.lang.Override
+        public Builder clearOneof(
+            com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+          return super.clearOneof(oneof);
+        }
+        @java.lang.Override
+        public Builder setRepeatedField(
+            com.google.protobuf.Descriptors.FieldDescriptor field,
+            int index, java.lang.Object value) {
+          return super.setRepeatedField(field, index, value);
+        }
+        @java.lang.Override
+        public Builder addRepeatedField(
+            com.google.protobuf.Descriptors.FieldDescriptor field,
+            java.lang.Object value) {
+          return super.addRepeatedField(field, value);
+        }
+        @java.lang.Override
+        public Builder mergeFrom(com.google.protobuf.Message other) {
+          if (other instanceof com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed) {
+            return mergeFrom((com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed)other);
+          } else {
+            super.mergeFrom(other);
+            return this;
+          }
+        }
+
+        public Builder mergeFrom(com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed other) {
+          if (other == com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed.getDefaultInstance()) return this;
+          if (other.hasBuildFailTime()) {
+            mergeBuildFailTime(other.getBuildFailTime());
+          }
+          if (!other.getErrorMessage().isEmpty()) {
+            errorMessage_ = other.errorMessage_;
+            onChanged();
+          }
+          this.mergeUnknownFields(other.unknownFields);
+          onChanged();
+          return this;
+        }
+
+        @java.lang.Override
+        public final boolean isInitialized() {
+          return true;
+        }
+
+        @java.lang.Override
+        public Builder mergeFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
+          com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed parsedMessage = null;
+          try {
+            parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+          } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+            parsedMessage = (com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed) e.getUnfinishedMessage();
+            throw e.unwrapIOException();
+          } finally {
+            if (parsedMessage != null) {
+              mergeFrom(parsedMessage);
+            }
+          }
+          return this;
+        }
+
+        private com.google.protobuf.Timestamp buildFailTime_;
+        private com.google.protobuf.SingleFieldBuilderV3<
+            com.google.protobuf.Timestamp, com.google.protobuf.Timestamp.Builder, com.google.protobuf.TimestampOrBuilder> buildFailTimeBuilder_;
+        /**
+         * <code>.google.protobuf.Timestamp build_fail_time = 1;</code>
+         * @return Whether the buildFailTime field is set.
+         */
+        public boolean hasBuildFailTime() {
+          return buildFailTimeBuilder_ != null || buildFailTime_ != null;
+        }
+        /**
+         * <code>.google.protobuf.Timestamp build_fail_time = 1;</code>
+         * @return The buildFailTime.
+         */
+        public com.google.protobuf.Timestamp getBuildFailTime() {
+          if (buildFailTimeBuilder_ == null) {
+            return buildFailTime_ == null ? com.google.protobuf.Timestamp.getDefaultInstance() : buildFailTime_;
+          } else {
+            return buildFailTimeBuilder_.getMessage();
+          }
+        }
+        /**
+         * <code>.google.protobuf.Timestamp build_fail_time = 1;</code>
+         */
+        public Builder setBuildFailTime(com.google.protobuf.Timestamp value) {
+          if (buildFailTimeBuilder_ == null) {
+            if (value == null) {
+              throw new NullPointerException();
+            }
+            buildFailTime_ = value;
+            onChanged();
+          } else {
+            buildFailTimeBuilder_.setMessage(value);
+          }
+
+          return this;
+        }
+        /**
+         * <code>.google.protobuf.Timestamp build_fail_time = 1;</code>
+         */
+        public Builder setBuildFailTime(
+            com.google.protobuf.Timestamp.Builder builderForValue) {
+          if (buildFailTimeBuilder_ == null) {
+            buildFailTime_ = builderForValue.build();
+            onChanged();
+          } else {
+            buildFailTimeBuilder_.setMessage(builderForValue.build());
+          }
+
+          return this;
+        }
+        /**
+         * <code>.google.protobuf.Timestamp build_fail_time = 1;</code>
+         */
+        public Builder mergeBuildFailTime(com.google.protobuf.Timestamp value) {
+          if (buildFailTimeBuilder_ == null) {
+            if (buildFailTime_ != null) {
+              buildFailTime_ =
+                com.google.protobuf.Timestamp.newBuilder(buildFailTime_).mergeFrom(value).buildPartial();
+            } else {
+              buildFailTime_ = value;
+            }
+            onChanged();
+          } else {
+            buildFailTimeBuilder_.mergeFrom(value);
+          }
+
+          return this;
+        }
+        /**
+         * <code>.google.protobuf.Timestamp build_fail_time = 1;</code>
+         */
+        public Builder clearBuildFailTime() {
+          if (buildFailTimeBuilder_ == null) {
+            buildFailTime_ = null;
+            onChanged();
+          } else {
+            buildFailTime_ = null;
+            buildFailTimeBuilder_ = null;
+          }
+
+          return this;
+        }
+        /**
+         * <code>.google.protobuf.Timestamp build_fail_time = 1;</code>
+         */
+        public com.google.protobuf.Timestamp.Builder getBuildFailTimeBuilder() {
+          
+          onChanged();
+          return getBuildFailTimeFieldBuilder().getBuilder();
+        }
+        /**
+         * <code>.google.protobuf.Timestamp build_fail_time = 1;</code>
+         */
+        public com.google.protobuf.TimestampOrBuilder getBuildFailTimeOrBuilder() {
+          if (buildFailTimeBuilder_ != null) {
+            return buildFailTimeBuilder_.getMessageOrBuilder();
+          } else {
+            return buildFailTime_ == null ?
+                com.google.protobuf.Timestamp.getDefaultInstance() : buildFailTime_;
+          }
+        }
+        /**
+         * <code>.google.protobuf.Timestamp build_fail_time = 1;</code>
+         */
+        private com.google.protobuf.SingleFieldBuilderV3<
+            com.google.protobuf.Timestamp, com.google.protobuf.Timestamp.Builder, com.google.protobuf.TimestampOrBuilder> 
+            getBuildFailTimeFieldBuilder() {
+          if (buildFailTimeBuilder_ == null) {
+            buildFailTimeBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+                com.google.protobuf.Timestamp, com.google.protobuf.Timestamp.Builder, com.google.protobuf.TimestampOrBuilder>(
+                    getBuildFailTime(),
+                    getParentForChildren(),
+                    isClean());
+            buildFailTime_ = null;
+          }
+          return buildFailTimeBuilder_;
+        }
+
+        private java.lang.Object errorMessage_ = "";
+        /**
+         * <code>string error_message = 2;</code>
+         * @return The errorMessage.
+         */
+        public java.lang.String getErrorMessage() {
+          java.lang.Object ref = errorMessage_;
+          if (!(ref instanceof java.lang.String)) {
+            com.google.protobuf.ByteString bs =
+                (com.google.protobuf.ByteString) ref;
+            java.lang.String s = bs.toStringUtf8();
+            errorMessage_ = s;
+            return s;
+          } else {
+            return (java.lang.String) ref;
+          }
+        }
+        /**
+         * <code>string error_message = 2;</code>
+         * @return The bytes for errorMessage.
+         */
+        public com.google.protobuf.ByteString
+            getErrorMessageBytes() {
+          java.lang.Object ref = errorMessage_;
+          if (ref instanceof String) {
+            com.google.protobuf.ByteString b = 
+                com.google.protobuf.ByteString.copyFromUtf8(
+                    (java.lang.String) ref);
+            errorMessage_ = b;
+            return b;
+          } else {
+            return (com.google.protobuf.ByteString) ref;
+          }
+        }
+        /**
+         * <code>string error_message = 2;</code>
+         * @param value The errorMessage to set.
+         * @return This builder for chaining.
+         */
+        public Builder setErrorMessage(
+            java.lang.String value) {
+          if (value == null) {
+    throw new NullPointerException();
+  }
+  
+          errorMessage_ = value;
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>string error_message = 2;</code>
+         * @return This builder for chaining.
+         */
+        public Builder clearErrorMessage() {
+          
+          errorMessage_ = getDefaultInstance().getErrorMessage();
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>string error_message = 2;</code>
+         * @param value The bytes for errorMessage to set.
+         * @return This builder for chaining.
+         */
+        public Builder setErrorMessageBytes(
+            com.google.protobuf.ByteString value) {
+          if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+          
+          errorMessage_ = value;
+          onChanged();
+          return this;
+        }
+        @java.lang.Override
+        public final Builder setUnknownFields(
+            final com.google.protobuf.UnknownFieldSet unknownFields) {
+          return super.setUnknownFields(unknownFields);
+        }
+
+        @java.lang.Override
+        public final Builder mergeUnknownFields(
+            final com.google.protobuf.UnknownFieldSet unknownFields) {
+          return super.mergeUnknownFields(unknownFields);
+        }
+
+
+        // @@protoc_insertion_point(builder_scope:com.giyeok.bibix.repo.TargetState.BuildFailed)
+      }
+
+      // @@protoc_insertion_point(class_scope:com.giyeok.bibix.repo.TargetState.BuildFailed)
+      private static final com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed DEFAULT_INSTANCE;
+      static {
+        DEFAULT_INSTANCE = new com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed();
+      }
+
+      public static com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed getDefaultInstance() {
+        return DEFAULT_INSTANCE;
+      }
+
+      private static final com.google.protobuf.Parser<BuildFailed>
+          PARSER = new com.google.protobuf.AbstractParser<BuildFailed>() {
+        @java.lang.Override
+        public BuildFailed parsePartialFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+          return new BuildFailed(input, extensionRegistry);
+        }
+      };
+
+      public static com.google.protobuf.Parser<BuildFailed> parser() {
+        return PARSER;
+      }
+
+      @java.lang.Override
+      public com.google.protobuf.Parser<BuildFailed> getParserForType() {
+        return PARSER;
+      }
+
+      @java.lang.Override
+      public com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed getDefaultInstanceForType() {
+        return DEFAULT_INSTANCE;
+      }
+
+    }
+
+    private int stateCase_ = 0;
+    private java.lang.Object state_;
+    public enum StateCase
+        implements com.google.protobuf.Internal.EnumLite,
+            com.google.protobuf.AbstractMessage.InternalOneOfEnum {
+      BUILD_STARTED(2),
+      BUILD_SUCCEEDED(3),
+      BUILD_FAILED(4),
+      STATE_NOT_SET(0);
+      private final int value;
+      private StateCase(int value) {
+        this.value = value;
+      }
+      /**
+       * @param value The number of the enum to look for.
+       * @return The enum associated with the given number.
+       * @deprecated Use {@link #forNumber(int)} instead.
+       */
+      @java.lang.Deprecated
+      public static StateCase valueOf(int value) {
+        return forNumber(value);
+      }
+
+      public static StateCase forNumber(int value) {
+        switch (value) {
+          case 2: return BUILD_STARTED;
+          case 3: return BUILD_SUCCEEDED;
+          case 4: return BUILD_FAILED;
+          case 0: return STATE_NOT_SET;
+          default: return null;
+        }
+      }
+      public int getNumber() {
+        return this.value;
+      }
+    };
+
+    public StateCase
+    getStateCase() {
+      return StateCase.forNumber(
+          stateCase_);
+    }
+
+    public static final int BUILD_START_TIME_FIELD_NUMBER = 1;
+    private com.google.protobuf.Timestamp buildStartTime_;
+    /**
+     * <code>.google.protobuf.Timestamp build_start_time = 1;</code>
+     * @return Whether the buildStartTime field is set.
+     */
+    @java.lang.Override
+    public boolean hasBuildStartTime() {
+      return buildStartTime_ != null;
+    }
+    /**
+     * <code>.google.protobuf.Timestamp build_start_time = 1;</code>
+     * @return The buildStartTime.
+     */
+    @java.lang.Override
+    public com.google.protobuf.Timestamp getBuildStartTime() {
+      return buildStartTime_ == null ? com.google.protobuf.Timestamp.getDefaultInstance() : buildStartTime_;
+    }
+    /**
+     * <code>.google.protobuf.Timestamp build_start_time = 1;</code>
+     */
+    @java.lang.Override
+    public com.google.protobuf.TimestampOrBuilder getBuildStartTimeOrBuilder() {
+      return getBuildStartTime();
+    }
+
+    public static final int BUILD_STARTED_FIELD_NUMBER = 2;
+    /**
+     * <code>.google.protobuf.Empty build_started = 2;</code>
+     * @return Whether the buildStarted field is set.
+     */
+    @java.lang.Override
+    public boolean hasBuildStarted() {
+      return stateCase_ == 2;
+    }
+    /**
+     * <code>.google.protobuf.Empty build_started = 2;</code>
+     * @return The buildStarted.
+     */
+    @java.lang.Override
+    public com.google.protobuf.Empty getBuildStarted() {
+      if (stateCase_ == 2) {
+         return (com.google.protobuf.Empty) state_;
+      }
+      return com.google.protobuf.Empty.getDefaultInstance();
+    }
+    /**
+     * <code>.google.protobuf.Empty build_started = 2;</code>
+     */
+    @java.lang.Override
+    public com.google.protobuf.EmptyOrBuilder getBuildStartedOrBuilder() {
+      if (stateCase_ == 2) {
+         return (com.google.protobuf.Empty) state_;
+      }
+      return com.google.protobuf.Empty.getDefaultInstance();
+    }
+
+    public static final int BUILD_SUCCEEDED_FIELD_NUMBER = 3;
+    /**
+     * <code>.com.giyeok.bibix.repo.TargetState.BuildSucceeded build_succeeded = 3;</code>
+     * @return Whether the buildSucceeded field is set.
+     */
+    @java.lang.Override
+    public boolean hasBuildSucceeded() {
+      return stateCase_ == 3;
+    }
+    /**
+     * <code>.com.giyeok.bibix.repo.TargetState.BuildSucceeded build_succeeded = 3;</code>
+     * @return The buildSucceeded.
+     */
+    @java.lang.Override
+    public com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded getBuildSucceeded() {
+      if (stateCase_ == 3) {
+         return (com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded) state_;
+      }
+      return com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded.getDefaultInstance();
+    }
+    /**
+     * <code>.com.giyeok.bibix.repo.TargetState.BuildSucceeded build_succeeded = 3;</code>
+     */
+    @java.lang.Override
+    public com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceededOrBuilder getBuildSucceededOrBuilder() {
+      if (stateCase_ == 3) {
+         return (com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded) state_;
+      }
+      return com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded.getDefaultInstance();
+    }
+
+    public static final int BUILD_FAILED_FIELD_NUMBER = 4;
+    /**
+     * <code>.com.giyeok.bibix.repo.TargetState.BuildFailed build_failed = 4;</code>
+     * @return Whether the buildFailed field is set.
+     */
+    @java.lang.Override
+    public boolean hasBuildFailed() {
+      return stateCase_ == 4;
+    }
+    /**
+     * <code>.com.giyeok.bibix.repo.TargetState.BuildFailed build_failed = 4;</code>
+     * @return The buildFailed.
+     */
+    @java.lang.Override
+    public com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed getBuildFailed() {
+      if (stateCase_ == 4) {
+         return (com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed) state_;
+      }
+      return com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed.getDefaultInstance();
+    }
+    /**
+     * <code>.com.giyeok.bibix.repo.TargetState.BuildFailed build_failed = 4;</code>
+     */
+    @java.lang.Override
+    public com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailedOrBuilder getBuildFailedOrBuilder() {
+      if (stateCase_ == 4) {
+         return (com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed) state_;
+      }
+      return com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed.getDefaultInstance();
+    }
+
+    private byte memoizedIsInitialized = -1;
+    @java.lang.Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    @java.lang.Override
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      if (buildStartTime_ != null) {
+        output.writeMessage(1, getBuildStartTime());
+      }
+      if (stateCase_ == 2) {
+        output.writeMessage(2, (com.google.protobuf.Empty) state_);
+      }
+      if (stateCase_ == 3) {
+        output.writeMessage(3, (com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded) state_);
+      }
+      if (stateCase_ == 4) {
+        output.writeMessage(4, (com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed) state_);
+      }
+      unknownFields.writeTo(output);
+    }
+
+    @java.lang.Override
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (buildStartTime_ != null) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(1, getBuildStartTime());
+      }
+      if (stateCase_ == 2) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(2, (com.google.protobuf.Empty) state_);
+      }
+      if (stateCase_ == 3) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(3, (com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded) state_);
+      }
+      if (stateCase_ == 4) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(4, (com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed) state_);
+      }
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof com.giyeok.bibix.repo.BibixRepoProto.TargetState)) {
+        return super.equals(obj);
+      }
+      com.giyeok.bibix.repo.BibixRepoProto.TargetState other = (com.giyeok.bibix.repo.BibixRepoProto.TargetState) obj;
+
+      if (hasBuildStartTime() != other.hasBuildStartTime()) return false;
+      if (hasBuildStartTime()) {
+        if (!getBuildStartTime()
+            .equals(other.getBuildStartTime())) return false;
+      }
+      if (!getStateCase().equals(other.getStateCase())) return false;
+      switch (stateCase_) {
+        case 2:
+          if (!getBuildStarted()
+              .equals(other.getBuildStarted())) return false;
+          break;
+        case 3:
+          if (!getBuildSucceeded()
+              .equals(other.getBuildSucceeded())) return false;
+          break;
+        case 4:
+          if (!getBuildFailed()
+              .equals(other.getBuildFailed())) return false;
+          break;
+        case 0:
+        default:
+      }
+      if (!unknownFields.equals(other.unknownFields)) return false;
+      return true;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      if (hasBuildStartTime()) {
+        hash = (37 * hash) + BUILD_START_TIME_FIELD_NUMBER;
+        hash = (53 * hash) + getBuildStartTime().hashCode();
+      }
+      switch (stateCase_) {
+        case 2:
+          hash = (37 * hash) + BUILD_STARTED_FIELD_NUMBER;
+          hash = (53 * hash) + getBuildStarted().hashCode();
+          break;
+        case 3:
+          hash = (37 * hash) + BUILD_SUCCEEDED_FIELD_NUMBER;
+          hash = (53 * hash) + getBuildSucceeded().hashCode();
+          break;
+        case 4:
+          hash = (37 * hash) + BUILD_FAILED_FIELD_NUMBER;
+          hash = (53 * hash) + getBuildFailed().hashCode();
+          break;
+        case 0:
+        default:
+      }
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static com.giyeok.bibix.repo.BibixRepoProto.TargetState parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.giyeok.bibix.repo.BibixRepoProto.TargetState parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.giyeok.bibix.repo.BibixRepoProto.TargetState parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.giyeok.bibix.repo.BibixRepoProto.TargetState parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.giyeok.bibix.repo.BibixRepoProto.TargetState parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.giyeok.bibix.repo.BibixRepoProto.TargetState parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.giyeok.bibix.repo.BibixRepoProto.TargetState parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.giyeok.bibix.repo.BibixRepoProto.TargetState parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.giyeok.bibix.repo.BibixRepoProto.TargetState parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static com.giyeok.bibix.repo.BibixRepoProto.TargetState parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.giyeok.bibix.repo.BibixRepoProto.TargetState parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.giyeok.bibix.repo.BibixRepoProto.TargetState parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    @java.lang.Override
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(com.giyeok.bibix.repo.BibixRepoProto.TargetState prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @java.lang.Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code com.giyeok.bibix.repo.TargetState}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:com.giyeok.bibix.repo.TargetState)
+        com.giyeok.bibix.repo.BibixRepoProto.TargetStateOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return com.giyeok.bibix.repo.BibixRepoProto.internal_static_com_giyeok_bibix_repo_TargetState_descriptor;
+      }
+
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return com.giyeok.bibix.repo.BibixRepoProto.internal_static_com_giyeok_bibix_repo_TargetState_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                com.giyeok.bibix.repo.BibixRepoProto.TargetState.class, com.giyeok.bibix.repo.BibixRepoProto.TargetState.Builder.class);
+      }
+
+      // Construct using com.giyeok.bibix.repo.BibixRepoProto.TargetState.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+        }
+      }
+      @java.lang.Override
+      public Builder clear() {
+        super.clear();
+        if (buildStartTimeBuilder_ == null) {
+          buildStartTime_ = null;
+        } else {
+          buildStartTime_ = null;
+          buildStartTimeBuilder_ = null;
+        }
+        stateCase_ = 0;
+        state_ = null;
+        return this;
+      }
+
+      @java.lang.Override
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return com.giyeok.bibix.repo.BibixRepoProto.internal_static_com_giyeok_bibix_repo_TargetState_descriptor;
+      }
+
+      @java.lang.Override
+      public com.giyeok.bibix.repo.BibixRepoProto.TargetState getDefaultInstanceForType() {
+        return com.giyeok.bibix.repo.BibixRepoProto.TargetState.getDefaultInstance();
+      }
+
+      @java.lang.Override
+      public com.giyeok.bibix.repo.BibixRepoProto.TargetState build() {
+        com.giyeok.bibix.repo.BibixRepoProto.TargetState result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      @java.lang.Override
+      public com.giyeok.bibix.repo.BibixRepoProto.TargetState buildPartial() {
+        com.giyeok.bibix.repo.BibixRepoProto.TargetState result = new com.giyeok.bibix.repo.BibixRepoProto.TargetState(this);
+        if (buildStartTimeBuilder_ == null) {
+          result.buildStartTime_ = buildStartTime_;
+        } else {
+          result.buildStartTime_ = buildStartTimeBuilder_.build();
+        }
+        if (stateCase_ == 2) {
+          if (buildStartedBuilder_ == null) {
+            result.state_ = state_;
+          } else {
+            result.state_ = buildStartedBuilder_.build();
+          }
+        }
+        if (stateCase_ == 3) {
+          if (buildSucceededBuilder_ == null) {
+            result.state_ = state_;
+          } else {
+            result.state_ = buildSucceededBuilder_.build();
+          }
+        }
+        if (stateCase_ == 4) {
+          if (buildFailedBuilder_ == null) {
+            result.state_ = state_;
+          } else {
+            result.state_ = buildFailedBuilder_.build();
+          }
+        }
+        result.stateCase_ = stateCase_;
+        onBuilt();
+        return result;
+      }
+
+      @java.lang.Override
+      public Builder clone() {
+        return super.clone();
+      }
+      @java.lang.Override
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.setField(field, value);
+      }
+      @java.lang.Override
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return super.clearField(field);
+      }
+      @java.lang.Override
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return super.clearOneof(oneof);
+      }
+      @java.lang.Override
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return super.setRepeatedField(field, index, value);
+      }
+      @java.lang.Override
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.addRepeatedField(field, value);
+      }
+      @java.lang.Override
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof com.giyeok.bibix.repo.BibixRepoProto.TargetState) {
+          return mergeFrom((com.giyeok.bibix.repo.BibixRepoProto.TargetState)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(com.giyeok.bibix.repo.BibixRepoProto.TargetState other) {
+        if (other == com.giyeok.bibix.repo.BibixRepoProto.TargetState.getDefaultInstance()) return this;
+        if (other.hasBuildStartTime()) {
+          mergeBuildStartTime(other.getBuildStartTime());
+        }
+        switch (other.getStateCase()) {
+          case BUILD_STARTED: {
+            mergeBuildStarted(other.getBuildStarted());
+            break;
+          }
+          case BUILD_SUCCEEDED: {
+            mergeBuildSucceeded(other.getBuildSucceeded());
+            break;
+          }
+          case BUILD_FAILED: {
+            mergeBuildFailed(other.getBuildFailed());
+            break;
+          }
+          case STATE_NOT_SET: {
+            break;
+          }
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      @java.lang.Override
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      @java.lang.Override
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.giyeok.bibix.repo.BibixRepoProto.TargetState parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (com.giyeok.bibix.repo.BibixRepoProto.TargetState) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int stateCase_ = 0;
+      private java.lang.Object state_;
+      public StateCase
+          getStateCase() {
+        return StateCase.forNumber(
+            stateCase_);
+      }
+
+      public Builder clearState() {
+        stateCase_ = 0;
+        state_ = null;
+        onChanged();
+        return this;
+      }
+
+
+      private com.google.protobuf.Timestamp buildStartTime_;
+      private com.google.protobuf.SingleFieldBuilderV3<
+          com.google.protobuf.Timestamp, com.google.protobuf.Timestamp.Builder, com.google.protobuf.TimestampOrBuilder> buildStartTimeBuilder_;
+      /**
+       * <code>.google.protobuf.Timestamp build_start_time = 1;</code>
+       * @return Whether the buildStartTime field is set.
+       */
+      public boolean hasBuildStartTime() {
+        return buildStartTimeBuilder_ != null || buildStartTime_ != null;
+      }
+      /**
+       * <code>.google.protobuf.Timestamp build_start_time = 1;</code>
+       * @return The buildStartTime.
+       */
+      public com.google.protobuf.Timestamp getBuildStartTime() {
+        if (buildStartTimeBuilder_ == null) {
+          return buildStartTime_ == null ? com.google.protobuf.Timestamp.getDefaultInstance() : buildStartTime_;
+        } else {
+          return buildStartTimeBuilder_.getMessage();
+        }
+      }
+      /**
+       * <code>.google.protobuf.Timestamp build_start_time = 1;</code>
+       */
+      public Builder setBuildStartTime(com.google.protobuf.Timestamp value) {
+        if (buildStartTimeBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          buildStartTime_ = value;
+          onChanged();
+        } else {
+          buildStartTimeBuilder_.setMessage(value);
+        }
+
+        return this;
+      }
+      /**
+       * <code>.google.protobuf.Timestamp build_start_time = 1;</code>
+       */
+      public Builder setBuildStartTime(
+          com.google.protobuf.Timestamp.Builder builderForValue) {
+        if (buildStartTimeBuilder_ == null) {
+          buildStartTime_ = builderForValue.build();
+          onChanged();
+        } else {
+          buildStartTimeBuilder_.setMessage(builderForValue.build());
+        }
+
+        return this;
+      }
+      /**
+       * <code>.google.protobuf.Timestamp build_start_time = 1;</code>
+       */
+      public Builder mergeBuildStartTime(com.google.protobuf.Timestamp value) {
+        if (buildStartTimeBuilder_ == null) {
+          if (buildStartTime_ != null) {
+            buildStartTime_ =
+              com.google.protobuf.Timestamp.newBuilder(buildStartTime_).mergeFrom(value).buildPartial();
+          } else {
+            buildStartTime_ = value;
+          }
+          onChanged();
+        } else {
+          buildStartTimeBuilder_.mergeFrom(value);
+        }
+
+        return this;
+      }
+      /**
+       * <code>.google.protobuf.Timestamp build_start_time = 1;</code>
+       */
+      public Builder clearBuildStartTime() {
+        if (buildStartTimeBuilder_ == null) {
+          buildStartTime_ = null;
+          onChanged();
+        } else {
+          buildStartTime_ = null;
+          buildStartTimeBuilder_ = null;
+        }
+
+        return this;
+      }
+      /**
+       * <code>.google.protobuf.Timestamp build_start_time = 1;</code>
+       */
+      public com.google.protobuf.Timestamp.Builder getBuildStartTimeBuilder() {
+        
+        onChanged();
+        return getBuildStartTimeFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>.google.protobuf.Timestamp build_start_time = 1;</code>
+       */
+      public com.google.protobuf.TimestampOrBuilder getBuildStartTimeOrBuilder() {
+        if (buildStartTimeBuilder_ != null) {
+          return buildStartTimeBuilder_.getMessageOrBuilder();
+        } else {
+          return buildStartTime_ == null ?
+              com.google.protobuf.Timestamp.getDefaultInstance() : buildStartTime_;
+        }
+      }
+      /**
+       * <code>.google.protobuf.Timestamp build_start_time = 1;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          com.google.protobuf.Timestamp, com.google.protobuf.Timestamp.Builder, com.google.protobuf.TimestampOrBuilder> 
+          getBuildStartTimeFieldBuilder() {
+        if (buildStartTimeBuilder_ == null) {
+          buildStartTimeBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              com.google.protobuf.Timestamp, com.google.protobuf.Timestamp.Builder, com.google.protobuf.TimestampOrBuilder>(
+                  getBuildStartTime(),
+                  getParentForChildren(),
+                  isClean());
+          buildStartTime_ = null;
+        }
+        return buildStartTimeBuilder_;
+      }
+
+      private com.google.protobuf.SingleFieldBuilderV3<
+          com.google.protobuf.Empty, com.google.protobuf.Empty.Builder, com.google.protobuf.EmptyOrBuilder> buildStartedBuilder_;
+      /**
+       * <code>.google.protobuf.Empty build_started = 2;</code>
+       * @return Whether the buildStarted field is set.
+       */
+      @java.lang.Override
+      public boolean hasBuildStarted() {
+        return stateCase_ == 2;
+      }
+      /**
+       * <code>.google.protobuf.Empty build_started = 2;</code>
+       * @return The buildStarted.
+       */
+      @java.lang.Override
+      public com.google.protobuf.Empty getBuildStarted() {
+        if (buildStartedBuilder_ == null) {
+          if (stateCase_ == 2) {
+            return (com.google.protobuf.Empty) state_;
+          }
+          return com.google.protobuf.Empty.getDefaultInstance();
+        } else {
+          if (stateCase_ == 2) {
+            return buildStartedBuilder_.getMessage();
+          }
+          return com.google.protobuf.Empty.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>.google.protobuf.Empty build_started = 2;</code>
+       */
+      public Builder setBuildStarted(com.google.protobuf.Empty value) {
+        if (buildStartedBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          state_ = value;
+          onChanged();
+        } else {
+          buildStartedBuilder_.setMessage(value);
+        }
+        stateCase_ = 2;
+        return this;
+      }
+      /**
+       * <code>.google.protobuf.Empty build_started = 2;</code>
+       */
+      public Builder setBuildStarted(
+          com.google.protobuf.Empty.Builder builderForValue) {
+        if (buildStartedBuilder_ == null) {
+          state_ = builderForValue.build();
+          onChanged();
+        } else {
+          buildStartedBuilder_.setMessage(builderForValue.build());
+        }
+        stateCase_ = 2;
+        return this;
+      }
+      /**
+       * <code>.google.protobuf.Empty build_started = 2;</code>
+       */
+      public Builder mergeBuildStarted(com.google.protobuf.Empty value) {
+        if (buildStartedBuilder_ == null) {
+          if (stateCase_ == 2 &&
+              state_ != com.google.protobuf.Empty.getDefaultInstance()) {
+            state_ = com.google.protobuf.Empty.newBuilder((com.google.protobuf.Empty) state_)
+                .mergeFrom(value).buildPartial();
+          } else {
+            state_ = value;
+          }
+          onChanged();
+        } else {
+          if (stateCase_ == 2) {
+            buildStartedBuilder_.mergeFrom(value);
+          } else {
+            buildStartedBuilder_.setMessage(value);
+          }
+        }
+        stateCase_ = 2;
+        return this;
+      }
+      /**
+       * <code>.google.protobuf.Empty build_started = 2;</code>
+       */
+      public Builder clearBuildStarted() {
+        if (buildStartedBuilder_ == null) {
+          if (stateCase_ == 2) {
+            stateCase_ = 0;
+            state_ = null;
+            onChanged();
+          }
+        } else {
+          if (stateCase_ == 2) {
+            stateCase_ = 0;
+            state_ = null;
+          }
+          buildStartedBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>.google.protobuf.Empty build_started = 2;</code>
+       */
+      public com.google.protobuf.Empty.Builder getBuildStartedBuilder() {
+        return getBuildStartedFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>.google.protobuf.Empty build_started = 2;</code>
+       */
+      @java.lang.Override
+      public com.google.protobuf.EmptyOrBuilder getBuildStartedOrBuilder() {
+        if ((stateCase_ == 2) && (buildStartedBuilder_ != null)) {
+          return buildStartedBuilder_.getMessageOrBuilder();
+        } else {
+          if (stateCase_ == 2) {
+            return (com.google.protobuf.Empty) state_;
+          }
+          return com.google.protobuf.Empty.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>.google.protobuf.Empty build_started = 2;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          com.google.protobuf.Empty, com.google.protobuf.Empty.Builder, com.google.protobuf.EmptyOrBuilder> 
+          getBuildStartedFieldBuilder() {
+        if (buildStartedBuilder_ == null) {
+          if (!(stateCase_ == 2)) {
+            state_ = com.google.protobuf.Empty.getDefaultInstance();
+          }
+          buildStartedBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              com.google.protobuf.Empty, com.google.protobuf.Empty.Builder, com.google.protobuf.EmptyOrBuilder>(
+                  (com.google.protobuf.Empty) state_,
+                  getParentForChildren(),
+                  isClean());
+          state_ = null;
+        }
+        stateCase_ = 2;
+        onChanged();;
+        return buildStartedBuilder_;
+      }
+
+      private com.google.protobuf.SingleFieldBuilderV3<
+          com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded, com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded.Builder, com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceededOrBuilder> buildSucceededBuilder_;
+      /**
+       * <code>.com.giyeok.bibix.repo.TargetState.BuildSucceeded build_succeeded = 3;</code>
+       * @return Whether the buildSucceeded field is set.
+       */
+      @java.lang.Override
+      public boolean hasBuildSucceeded() {
+        return stateCase_ == 3;
+      }
+      /**
+       * <code>.com.giyeok.bibix.repo.TargetState.BuildSucceeded build_succeeded = 3;</code>
+       * @return The buildSucceeded.
+       */
+      @java.lang.Override
+      public com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded getBuildSucceeded() {
+        if (buildSucceededBuilder_ == null) {
+          if (stateCase_ == 3) {
+            return (com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded) state_;
+          }
+          return com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded.getDefaultInstance();
+        } else {
+          if (stateCase_ == 3) {
+            return buildSucceededBuilder_.getMessage();
+          }
+          return com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>.com.giyeok.bibix.repo.TargetState.BuildSucceeded build_succeeded = 3;</code>
+       */
+      public Builder setBuildSucceeded(com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded value) {
+        if (buildSucceededBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          state_ = value;
+          onChanged();
+        } else {
+          buildSucceededBuilder_.setMessage(value);
+        }
+        stateCase_ = 3;
+        return this;
+      }
+      /**
+       * <code>.com.giyeok.bibix.repo.TargetState.BuildSucceeded build_succeeded = 3;</code>
+       */
+      public Builder setBuildSucceeded(
+          com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded.Builder builderForValue) {
+        if (buildSucceededBuilder_ == null) {
+          state_ = builderForValue.build();
+          onChanged();
+        } else {
+          buildSucceededBuilder_.setMessage(builderForValue.build());
+        }
+        stateCase_ = 3;
+        return this;
+      }
+      /**
+       * <code>.com.giyeok.bibix.repo.TargetState.BuildSucceeded build_succeeded = 3;</code>
+       */
+      public Builder mergeBuildSucceeded(com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded value) {
+        if (buildSucceededBuilder_ == null) {
+          if (stateCase_ == 3 &&
+              state_ != com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded.getDefaultInstance()) {
+            state_ = com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded.newBuilder((com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded) state_)
+                .mergeFrom(value).buildPartial();
+          } else {
+            state_ = value;
+          }
+          onChanged();
+        } else {
+          if (stateCase_ == 3) {
+            buildSucceededBuilder_.mergeFrom(value);
+          } else {
+            buildSucceededBuilder_.setMessage(value);
+          }
+        }
+        stateCase_ = 3;
+        return this;
+      }
+      /**
+       * <code>.com.giyeok.bibix.repo.TargetState.BuildSucceeded build_succeeded = 3;</code>
+       */
+      public Builder clearBuildSucceeded() {
+        if (buildSucceededBuilder_ == null) {
+          if (stateCase_ == 3) {
+            stateCase_ = 0;
+            state_ = null;
+            onChanged();
+          }
+        } else {
+          if (stateCase_ == 3) {
+            stateCase_ = 0;
+            state_ = null;
+          }
+          buildSucceededBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>.com.giyeok.bibix.repo.TargetState.BuildSucceeded build_succeeded = 3;</code>
+       */
+      public com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded.Builder getBuildSucceededBuilder() {
+        return getBuildSucceededFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>.com.giyeok.bibix.repo.TargetState.BuildSucceeded build_succeeded = 3;</code>
+       */
+      @java.lang.Override
+      public com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceededOrBuilder getBuildSucceededOrBuilder() {
+        if ((stateCase_ == 3) && (buildSucceededBuilder_ != null)) {
+          return buildSucceededBuilder_.getMessageOrBuilder();
+        } else {
+          if (stateCase_ == 3) {
+            return (com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded) state_;
+          }
+          return com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>.com.giyeok.bibix.repo.TargetState.BuildSucceeded build_succeeded = 3;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded, com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded.Builder, com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceededOrBuilder> 
+          getBuildSucceededFieldBuilder() {
+        if (buildSucceededBuilder_ == null) {
+          if (!(stateCase_ == 3)) {
+            state_ = com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded.getDefaultInstance();
+          }
+          buildSucceededBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded, com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded.Builder, com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceededOrBuilder>(
+                  (com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded) state_,
+                  getParentForChildren(),
+                  isClean());
+          state_ = null;
+        }
+        stateCase_ = 3;
+        onChanged();;
+        return buildSucceededBuilder_;
+      }
+
+      private com.google.protobuf.SingleFieldBuilderV3<
+          com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed, com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed.Builder, com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailedOrBuilder> buildFailedBuilder_;
+      /**
+       * <code>.com.giyeok.bibix.repo.TargetState.BuildFailed build_failed = 4;</code>
+       * @return Whether the buildFailed field is set.
+       */
+      @java.lang.Override
+      public boolean hasBuildFailed() {
+        return stateCase_ == 4;
+      }
+      /**
+       * <code>.com.giyeok.bibix.repo.TargetState.BuildFailed build_failed = 4;</code>
+       * @return The buildFailed.
+       */
+      @java.lang.Override
+      public com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed getBuildFailed() {
+        if (buildFailedBuilder_ == null) {
+          if (stateCase_ == 4) {
+            return (com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed) state_;
+          }
+          return com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed.getDefaultInstance();
+        } else {
+          if (stateCase_ == 4) {
+            return buildFailedBuilder_.getMessage();
+          }
+          return com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>.com.giyeok.bibix.repo.TargetState.BuildFailed build_failed = 4;</code>
+       */
+      public Builder setBuildFailed(com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed value) {
+        if (buildFailedBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          state_ = value;
+          onChanged();
+        } else {
+          buildFailedBuilder_.setMessage(value);
+        }
+        stateCase_ = 4;
+        return this;
+      }
+      /**
+       * <code>.com.giyeok.bibix.repo.TargetState.BuildFailed build_failed = 4;</code>
+       */
+      public Builder setBuildFailed(
+          com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed.Builder builderForValue) {
+        if (buildFailedBuilder_ == null) {
+          state_ = builderForValue.build();
+          onChanged();
+        } else {
+          buildFailedBuilder_.setMessage(builderForValue.build());
+        }
+        stateCase_ = 4;
+        return this;
+      }
+      /**
+       * <code>.com.giyeok.bibix.repo.TargetState.BuildFailed build_failed = 4;</code>
+       */
+      public Builder mergeBuildFailed(com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed value) {
+        if (buildFailedBuilder_ == null) {
+          if (stateCase_ == 4 &&
+              state_ != com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed.getDefaultInstance()) {
+            state_ = com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed.newBuilder((com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed) state_)
+                .mergeFrom(value).buildPartial();
+          } else {
+            state_ = value;
+          }
+          onChanged();
+        } else {
+          if (stateCase_ == 4) {
+            buildFailedBuilder_.mergeFrom(value);
+          } else {
+            buildFailedBuilder_.setMessage(value);
+          }
+        }
+        stateCase_ = 4;
+        return this;
+      }
+      /**
+       * <code>.com.giyeok.bibix.repo.TargetState.BuildFailed build_failed = 4;</code>
+       */
+      public Builder clearBuildFailed() {
+        if (buildFailedBuilder_ == null) {
+          if (stateCase_ == 4) {
+            stateCase_ = 0;
+            state_ = null;
+            onChanged();
+          }
+        } else {
+          if (stateCase_ == 4) {
+            stateCase_ = 0;
+            state_ = null;
+          }
+          buildFailedBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>.com.giyeok.bibix.repo.TargetState.BuildFailed build_failed = 4;</code>
+       */
+      public com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed.Builder getBuildFailedBuilder() {
+        return getBuildFailedFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>.com.giyeok.bibix.repo.TargetState.BuildFailed build_failed = 4;</code>
+       */
+      @java.lang.Override
+      public com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailedOrBuilder getBuildFailedOrBuilder() {
+        if ((stateCase_ == 4) && (buildFailedBuilder_ != null)) {
+          return buildFailedBuilder_.getMessageOrBuilder();
+        } else {
+          if (stateCase_ == 4) {
+            return (com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed) state_;
+          }
+          return com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>.com.giyeok.bibix.repo.TargetState.BuildFailed build_failed = 4;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed, com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed.Builder, com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailedOrBuilder> 
+          getBuildFailedFieldBuilder() {
+        if (buildFailedBuilder_ == null) {
+          if (!(stateCase_ == 4)) {
+            state_ = com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed.getDefaultInstance();
+          }
+          buildFailedBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed, com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed.Builder, com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailedOrBuilder>(
+                  (com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed) state_,
+                  getParentForChildren(),
+                  isClean());
+          state_ = null;
+        }
+        stateCase_ = 4;
+        onChanged();;
+        return buildFailedBuilder_;
+      }
+      @java.lang.Override
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFields(unknownFields);
+      }
+
+      @java.lang.Override
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:com.giyeok.bibix.repo.TargetState)
+    }
+
+    // @@protoc_insertion_point(class_scope:com.giyeok.bibix.repo.TargetState)
+    private static final com.giyeok.bibix.repo.BibixRepoProto.TargetState DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new com.giyeok.bibix.repo.BibixRepoProto.TargetState();
+    }
+
+    public static com.giyeok.bibix.repo.BibixRepoProto.TargetState getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<TargetState>
+        PARSER = new com.google.protobuf.AbstractParser<TargetState>() {
+      @java.lang.Override
+      public TargetState parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new TargetState(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<TargetState> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<TargetState> getParserForType() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.giyeok.bibix.repo.BibixRepoProto.TargetState getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -3242,35 +6236,30 @@ public final class BibixRepoProto {
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_com_giyeok_bibix_repo_BibixRepo_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_com_giyeok_bibix_repo_BibixRepo_ObjectsEntry_descriptor;
+    internal_static_com_giyeok_bibix_repo_TargetData_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_com_giyeok_bibix_repo_BibixRepo_ObjectsEntry_fieldAccessorTable;
+      internal_static_com_giyeok_bibix_repo_TargetData_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_com_giyeok_bibix_repo_BibixRepo_BuildingTargetsEntry_descriptor;
+    internal_static_com_giyeok_bibix_repo_OutputName_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_com_giyeok_bibix_repo_BibixRepo_BuildingTargetsEntry_fieldAccessorTable;
+      internal_static_com_giyeok_bibix_repo_OutputName_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_com_giyeok_bibix_repo_BibixRepo_ObjectNamesEntry_descriptor;
+    internal_static_com_giyeok_bibix_repo_TargetState_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_com_giyeok_bibix_repo_BibixRepo_ObjectNamesEntry_fieldAccessorTable;
+      internal_static_com_giyeok_bibix_repo_TargetState_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_com_giyeok_bibix_repo_BibixRepo_SourcesEntry_descriptor;
+    internal_static_com_giyeok_bibix_repo_TargetState_BuildSucceeded_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_com_giyeok_bibix_repo_BibixRepo_SourcesEntry_fieldAccessorTable;
+      internal_static_com_giyeok_bibix_repo_TargetState_BuildSucceeded_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_com_giyeok_bibix_repo_BibixRepo_ObjectIdsEntry_descriptor;
+    internal_static_com_giyeok_bibix_repo_TargetState_BuildFailed_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_com_giyeok_bibix_repo_BibixRepo_ObjectIdsEntry_fieldAccessorTable;
-  private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_com_giyeok_bibix_repo_ObjectInfo_descriptor;
-  private static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_com_giyeok_bibix_repo_ObjectInfo_fieldAccessorTable;
+      internal_static_com_giyeok_bibix_repo_TargetState_BuildFailed_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -3281,85 +6270,81 @@ public final class BibixRepoProto {
   static {
     java.lang.String[] descriptorData = {
       "\n\nrepo.proto\022\025com.giyeok.bibix.repo\032\tids" +
-      ".proto\032\037google/protobuf/timestamp.proto\032" +
-      "\036google/protobuf/duration.proto\"\340\005\n\tBibi" +
-      "xRepo\022\033\n\023repo_schema_version\030\001 \001(\t\022>\n\007ob" +
-      "jects\030\002 \003(\0132-.com.giyeok.bibix.repo.Bibi" +
-      "xRepo.ObjectsEntry\022O\n\020building_targets\030\003" +
-      " \003(\01325.com.giyeok.bibix.repo.BibixRepo.B" +
-      "uildingTargetsEntry\022G\n\014object_names\030\004 \003(" +
-      "\01321.com.giyeok.bibix.repo.BibixRepo.Obje" +
-      "ctNamesEntry\022>\n\007sources\030\005 \003(\0132-.com.giye" +
-      "ok.bibix.repo.BibixRepo.SourcesEntry\022C\n\n" +
-      "object_ids\030\006 \003(\0132/.com.giyeok.bibix.repo" +
-      ".BibixRepo.ObjectIdsEntry\032Q\n\014ObjectsEntr" +
-      "y\022\013\n\003key\030\001 \001(\t\0220\n\005value\030\002 \001(\0132!.com.giye" +
-      "ok.bibix.repo.ObjectInfo:\0028\001\0326\n\024Building" +
-      "TargetsEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\010" +
-      ":\0028\001\0322\n\020ObjectNamesEntry\022\013\n\003key\030\001 \001(\t\022\r\n" +
-      "\005value\030\002 \001(\t:\0028\001\032J\n\014SourcesEntry\022\013\n\003key\030" +
-      "\001 \001(\t\022)\n\005value\030\002 \001(\0132\032.com.giyeok.bibix." +
-      "SourceId:\0028\001\032L\n\016ObjectIdsEntry\022\013\n\003key\030\001 " +
-      "\001(\t\022)\n\005value\030\002 \001(\0132\032.com.giyeok.bibix.Ob" +
-      "jectId:\0028\001\"\254\001\n\nObjectInfo\022\023\n\013inputs_hash" +
-      "\030\001 \001(\014\022.\n\nstart_time\030\002 \001(\0132\032.google.prot" +
-      "obuf.Timestamp\022,\n\010end_time\030\003 \001(\0132\032.googl" +
-      "e.protobuf.Timestamp\022+\n\010duration\030\004 \001(\0132\031" +
-      ".google.protobuf.DurationB\020B\016BibixRepoPr" +
-      "otob\006proto3"
+      ".proto\032\014values.proto\032\033google/protobuf/em" +
+      "pty.proto\032\037google/protobuf/timestamp.pro" +
+      "to\"x\n\tBibixRepo\0222\n\007targets\030\001 \003(\0132!.com.g" +
+      "iyeok.bibix.repo.TargetData\0227\n\014output_na" +
+      "mes\030\002 \003(\0132!.com.giyeok.bibix.repo.Output" +
+      "Name\"\357\001\n\nTargetData\022\021\n\ttarget_id\030\001 \001(\014\0226" +
+      "\n\016target_id_data\030\002 \001(\0132\036.com.giyeok.bibi" +
+      "x.TargetIdData\022:\n\023latest_input_hashes\030\003 " +
+      "\001(\0132\035.com.giyeok.bibix.InputHashes\022\030\n\020la" +
+      "test_object_id\030\004 \001(\014\0226\n\005state\030\005 \001(\0132\".co" +
+      "m.giyeok.bibix.repo.TargetStateH\000\210\001\001B\010\n\006" +
+      "_state\"4\n\nOutputName\022\023\n\013output_name\030\001 \001(" +
+      "\t\022\021\n\ttarget_id\030\002 \001(\014\"\350\003\n\013TargetState\0224\n\020" +
+      "build_start_time\030\001 \001(\0132\032.google.protobuf" +
+      ".Timestamp\022/\n\rbuild_started\030\002 \001(\0132\026.goog" +
+      "le.protobuf.EmptyH\000\022L\n\017build_succeeded\030\003" +
+      " \001(\01321.com.giyeok.bibix.repo.TargetState" +
+      ".BuildSucceededH\000\022F\n\014build_failed\030\004 \001(\0132" +
+      "..com.giyeok.bibix.repo.TargetState.Buil" +
+      "dFailedH\000\032x\n\016BuildSucceeded\0222\n\016build_end" +
+      "_time\030\001 \001(\0132\032.google.protobuf.Timestamp\022" +
+      "2\n\014result_value\030\002 \001(\0132\034.com.giyeok.bibix" +
+      ".BibixValue\032Y\n\013BuildFailed\0223\n\017build_fail" +
+      "_time\030\001 \001(\0132\032.google.protobuf.Timestamp\022" +
+      "\025\n\rerror_message\030\002 \001(\tB\007\n\005stateB\020B\016Bibix" +
+      "RepoProtob\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
           com.giyeok.bibix.BibixIdProto.getDescriptor(),
+          com.giyeok.bibix.BibixValueProto.getDescriptor(),
+          com.google.protobuf.EmptyProto.getDescriptor(),
           com.google.protobuf.TimestampProto.getDescriptor(),
-          com.google.protobuf.DurationProto.getDescriptor(),
         });
     internal_static_com_giyeok_bibix_repo_BibixRepo_descriptor =
       getDescriptor().getMessageTypes().get(0);
     internal_static_com_giyeok_bibix_repo_BibixRepo_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_giyeok_bibix_repo_BibixRepo_descriptor,
-        new java.lang.String[] { "RepoSchemaVersion", "Objects", "BuildingTargets", "ObjectNames", "Sources", "ObjectIds", });
-    internal_static_com_giyeok_bibix_repo_BibixRepo_ObjectsEntry_descriptor =
-      internal_static_com_giyeok_bibix_repo_BibixRepo_descriptor.getNestedTypes().get(0);
-    internal_static_com_giyeok_bibix_repo_BibixRepo_ObjectsEntry_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_com_giyeok_bibix_repo_BibixRepo_ObjectsEntry_descriptor,
-        new java.lang.String[] { "Key", "Value", });
-    internal_static_com_giyeok_bibix_repo_BibixRepo_BuildingTargetsEntry_descriptor =
-      internal_static_com_giyeok_bibix_repo_BibixRepo_descriptor.getNestedTypes().get(1);
-    internal_static_com_giyeok_bibix_repo_BibixRepo_BuildingTargetsEntry_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_com_giyeok_bibix_repo_BibixRepo_BuildingTargetsEntry_descriptor,
-        new java.lang.String[] { "Key", "Value", });
-    internal_static_com_giyeok_bibix_repo_BibixRepo_ObjectNamesEntry_descriptor =
-      internal_static_com_giyeok_bibix_repo_BibixRepo_descriptor.getNestedTypes().get(2);
-    internal_static_com_giyeok_bibix_repo_BibixRepo_ObjectNamesEntry_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_com_giyeok_bibix_repo_BibixRepo_ObjectNamesEntry_descriptor,
-        new java.lang.String[] { "Key", "Value", });
-    internal_static_com_giyeok_bibix_repo_BibixRepo_SourcesEntry_descriptor =
-      internal_static_com_giyeok_bibix_repo_BibixRepo_descriptor.getNestedTypes().get(3);
-    internal_static_com_giyeok_bibix_repo_BibixRepo_SourcesEntry_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_com_giyeok_bibix_repo_BibixRepo_SourcesEntry_descriptor,
-        new java.lang.String[] { "Key", "Value", });
-    internal_static_com_giyeok_bibix_repo_BibixRepo_ObjectIdsEntry_descriptor =
-      internal_static_com_giyeok_bibix_repo_BibixRepo_descriptor.getNestedTypes().get(4);
-    internal_static_com_giyeok_bibix_repo_BibixRepo_ObjectIdsEntry_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_com_giyeok_bibix_repo_BibixRepo_ObjectIdsEntry_descriptor,
-        new java.lang.String[] { "Key", "Value", });
-    internal_static_com_giyeok_bibix_repo_ObjectInfo_descriptor =
+        new java.lang.String[] { "Targets", "OutputNames", });
+    internal_static_com_giyeok_bibix_repo_TargetData_descriptor =
       getDescriptor().getMessageTypes().get(1);
-    internal_static_com_giyeok_bibix_repo_ObjectInfo_fieldAccessorTable = new
+    internal_static_com_giyeok_bibix_repo_TargetData_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_com_giyeok_bibix_repo_ObjectInfo_descriptor,
-        new java.lang.String[] { "InputsHash", "StartTime", "EndTime", "Duration", });
+        internal_static_com_giyeok_bibix_repo_TargetData_descriptor,
+        new java.lang.String[] { "TargetId", "TargetIdData", "LatestInputHashes", "LatestObjectId", "State", "State", });
+    internal_static_com_giyeok_bibix_repo_OutputName_descriptor =
+      getDescriptor().getMessageTypes().get(2);
+    internal_static_com_giyeok_bibix_repo_OutputName_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_com_giyeok_bibix_repo_OutputName_descriptor,
+        new java.lang.String[] { "OutputName", "TargetId", });
+    internal_static_com_giyeok_bibix_repo_TargetState_descriptor =
+      getDescriptor().getMessageTypes().get(3);
+    internal_static_com_giyeok_bibix_repo_TargetState_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_com_giyeok_bibix_repo_TargetState_descriptor,
+        new java.lang.String[] { "BuildStartTime", "BuildStarted", "BuildSucceeded", "BuildFailed", "State", });
+    internal_static_com_giyeok_bibix_repo_TargetState_BuildSucceeded_descriptor =
+      internal_static_com_giyeok_bibix_repo_TargetState_descriptor.getNestedTypes().get(0);
+    internal_static_com_giyeok_bibix_repo_TargetState_BuildSucceeded_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_com_giyeok_bibix_repo_TargetState_BuildSucceeded_descriptor,
+        new java.lang.String[] { "BuildEndTime", "ResultValue", });
+    internal_static_com_giyeok_bibix_repo_TargetState_BuildFailed_descriptor =
+      internal_static_com_giyeok_bibix_repo_TargetState_descriptor.getNestedTypes().get(1);
+    internal_static_com_giyeok_bibix_repo_TargetState_BuildFailed_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_com_giyeok_bibix_repo_TargetState_BuildFailed_descriptor,
+        new java.lang.String[] { "BuildFailTime", "ErrorMessage", });
     com.giyeok.bibix.BibixIdProto.getDescriptor();
+    com.giyeok.bibix.BibixValueProto.getDescriptor();
+    com.google.protobuf.EmptyProto.getDescriptor();
     com.google.protobuf.TimestampProto.getDescriptor();
-    com.google.protobuf.DurationProto.getDescriptor();
   }
 
   // @@protoc_insertion_point(outer_class_scope)

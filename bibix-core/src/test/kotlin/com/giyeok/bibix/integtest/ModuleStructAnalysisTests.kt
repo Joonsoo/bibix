@@ -42,7 +42,7 @@ class ModuleStructAnalysisTests {
     val test1Hash = "6fc4cbc1888d29fbd07702bbcfcabff3272cbd40"
     val test2Hash = "999e8279e9d5b7292876e677cbf00e82022fba09"
     val unnamedHash = "79ddffbbe76151febe15febde8c6c66cd7661fd4"
-    assertThat(frontend.repo.repoMeta.objectNamesMap).containsExactly(
+    assertThat(frontend.repo.targets).containsExactly(
       "test1", test1Hash,
       "test2", test2Hash,
     )
@@ -135,7 +135,7 @@ class ModulesCollector {
   fun build(context: BuildContext): BibixValue {
     val srcs = context.arguments.getValue("srcs") as SetValue
     val deps = context.arguments.getValue("deps") as SetValue
-    modules[context.objectIdHash] = ModuleData(
+    modules[context.targetId] = ModuleData(
       srcs.values.map { (it as FileValue).file }.toSet(),
       deps.values
     )
@@ -143,7 +143,7 @@ class ModulesCollector {
       "com.giyeok.bibix.plugins.jvm",
       "LocalBuilt",
       mapOf(
-        "objHash" to StringValue(context.objectIdHash),
+        "objHash" to StringValue(context.targetId),
         "builderName" to StringValue("ModulesCollector")
       )
     )

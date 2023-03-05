@@ -3,16 +3,16 @@
 
 package com.giyeok.bibix;
 
-@kotlin.jvm.JvmSynthetic
-public inline fun dataClassInstanceValue(block: com.giyeok.bibix.DataClassInstanceValueKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.BibixValueProto.DataClassInstanceValue =
+@kotlin.jvm.JvmName("-initializedataClassInstanceValue")
+inline fun dataClassInstanceValue(block: com.giyeok.bibix.DataClassInstanceValueKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.BibixValueProto.DataClassInstanceValue =
   com.giyeok.bibix.DataClassInstanceValueKt.Dsl._create(com.giyeok.bibix.BibixValueProto.DataClassInstanceValue.newBuilder()).apply { block() }._build()
-public object DataClassInstanceValueKt {
+object DataClassInstanceValueKt {
   @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
   @com.google.protobuf.kotlin.ProtoDslMarker
-  public class Dsl private constructor(
+  class Dsl private constructor(
     private val _builder: com.giyeok.bibix.BibixValueProto.DataClassInstanceValue.Builder
   ) {
-    public companion object {
+    companion object {
       @kotlin.jvm.JvmSynthetic
       @kotlin.PublishedApi
       internal fun _create(builder: com.giyeok.bibix.BibixValueProto.DataClassInstanceValue.Builder): Dsl = Dsl(builder)
@@ -25,7 +25,7 @@ public object DataClassInstanceValueKt {
     /**
      * <code>string class_cname = 1;</code>
      */
-    public var classCname: kotlin.String
+    var classCname: kotlin.String
       @JvmName("getClassCname")
       get() = _builder.getClassCname()
       @JvmName("setClassCname")
@@ -35,7 +35,7 @@ public object DataClassInstanceValueKt {
     /**
      * <code>string class_cname = 1;</code>
      */
-    public fun clearClassCname() {
+    fun clearClassCname() {
       _builder.clearClassCname()
     }
 
@@ -44,11 +44,11 @@ public object DataClassInstanceValueKt {
      * generics.
      */
     @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
-    public class FieldsProxy private constructor() : com.google.protobuf.kotlin.DslProxy()
+    class FieldsProxy private constructor() : com.google.protobuf.kotlin.DslProxy()
     /**
      * <code>repeated .com.giyeok.bibix.DataClassField fields = 2;</code>
      */
-     public val fields: com.google.protobuf.kotlin.DslList<com.giyeok.bibix.BibixValueProto.DataClassField, FieldsProxy>
+     val fields: com.google.protobuf.kotlin.DslList<com.giyeok.bibix.BibixValueProto.DataClassField, FieldsProxy>
       @kotlin.jvm.JvmSynthetic
       get() = com.google.protobuf.kotlin.DslList(
         _builder.getFieldsList()
@@ -59,52 +59,60 @@ public object DataClassInstanceValueKt {
      */
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("addFields")
-    public fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.BibixValueProto.DataClassField, FieldsProxy>.add(value: com.giyeok.bibix.BibixValueProto.DataClassField) {
+    fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.BibixValueProto.DataClassField, FieldsProxy>.add(value: com.giyeok.bibix.BibixValueProto.DataClassField) {
       _builder.addFields(value)
-    }/**
+    }
+    /**
      * <code>repeated .com.giyeok.bibix.DataClassField fields = 2;</code>
      * @param value The fields to add.
      */
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("plusAssignFields")
     @Suppress("NOTHING_TO_INLINE")
-    public inline operator fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.BibixValueProto.DataClassField, FieldsProxy>.plusAssign(value: com.giyeok.bibix.BibixValueProto.DataClassField) {
+    inline operator fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.BibixValueProto.DataClassField, FieldsProxy>.plusAssign(value: com.giyeok.bibix.BibixValueProto.DataClassField) {
       add(value)
-    }/**
+    }
+    /**
      * <code>repeated .com.giyeok.bibix.DataClassField fields = 2;</code>
      * @param values The fields to add.
      */
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("addAllFields")
-    public fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.BibixValueProto.DataClassField, FieldsProxy>.addAll(values: kotlin.collections.Iterable<com.giyeok.bibix.BibixValueProto.DataClassField>) {
+    fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.BibixValueProto.DataClassField, FieldsProxy>.addAll(values: kotlin.collections.Iterable<com.giyeok.bibix.BibixValueProto.DataClassField>) {
       _builder.addAllFields(values)
-    }/**
+    }
+    /**
      * <code>repeated .com.giyeok.bibix.DataClassField fields = 2;</code>
      * @param values The fields to add.
      */
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("plusAssignAllFields")
     @Suppress("NOTHING_TO_INLINE")
-    public inline operator fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.BibixValueProto.DataClassField, FieldsProxy>.plusAssign(values: kotlin.collections.Iterable<com.giyeok.bibix.BibixValueProto.DataClassField>) {
+    inline operator fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.BibixValueProto.DataClassField, FieldsProxy>.plusAssign(values: kotlin.collections.Iterable<com.giyeok.bibix.BibixValueProto.DataClassField>) {
       addAll(values)
-    }/**
+    }
+    /**
      * <code>repeated .com.giyeok.bibix.DataClassField fields = 2;</code>
      * @param index The index to set the value at.
      * @param value The fields to set.
      */
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("setFields")
-    public operator fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.BibixValueProto.DataClassField, FieldsProxy>.set(index: kotlin.Int, value: com.giyeok.bibix.BibixValueProto.DataClassField) {
+    operator fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.BibixValueProto.DataClassField, FieldsProxy>.set(index: kotlin.Int, value: com.giyeok.bibix.BibixValueProto.DataClassField) {
       _builder.setFields(index, value)
-    }/**
+    }
+    /**
      * <code>repeated .com.giyeok.bibix.DataClassField fields = 2;</code>
      */
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("clearFields")
-    public fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.BibixValueProto.DataClassField, FieldsProxy>.clear() {
+    fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.BibixValueProto.DataClassField, FieldsProxy>.clear() {
       _builder.clearFields()
-    }}
+    }
+
+  }
 }
 @kotlin.jvm.JvmSynthetic
-public inline fun com.giyeok.bibix.BibixValueProto.DataClassInstanceValue.copy(block: com.giyeok.bibix.DataClassInstanceValueKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.BibixValueProto.DataClassInstanceValue =
+inline fun com.giyeok.bibix.BibixValueProto.DataClassInstanceValue.copy(block: com.giyeok.bibix.DataClassInstanceValueKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.BibixValueProto.DataClassInstanceValue =
   com.giyeok.bibix.DataClassInstanceValueKt.Dsl._create(this.toBuilder()).apply { block() }._build()
+

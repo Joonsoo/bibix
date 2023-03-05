@@ -3,16 +3,16 @@
 
 package com.giyeok.bibix;
 
-@kotlin.jvm.JvmSynthetic
-public inline fun fileHash(block: com.giyeok.bibix.FileHashKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.BibixIdProto.FileHash =
+@kotlin.jvm.JvmName("-initializefileHash")
+inline fun fileHash(block: com.giyeok.bibix.FileHashKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.BibixIdProto.FileHash =
   com.giyeok.bibix.FileHashKt.Dsl._create(com.giyeok.bibix.BibixIdProto.FileHash.newBuilder()).apply { block() }._build()
-public object FileHashKt {
+object FileHashKt {
   @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
   @com.google.protobuf.kotlin.ProtoDslMarker
-  public class Dsl private constructor(
+  class Dsl private constructor(
     private val _builder: com.giyeok.bibix.BibixIdProto.FileHash.Builder
   ) {
-    public companion object {
+    companion object {
       @kotlin.jvm.JvmSynthetic
       @kotlin.PublishedApi
       internal fun _create(builder: com.giyeok.bibix.BibixIdProto.FileHash.Builder): Dsl = Dsl(builder)
@@ -25,7 +25,7 @@ public object FileHashKt {
     /**
      * <code>string path = 1;</code>
      */
-    public var path: kotlin.String
+    var path: kotlin.String
       @JvmName("getPath")
       get() = _builder.getPath()
       @JvmName("setPath")
@@ -35,14 +35,14 @@ public object FileHashKt {
     /**
      * <code>string path = 1;</code>
      */
-    public fun clearPath() {
+    fun clearPath() {
       _builder.clearPath()
     }
 
     /**
      * <code>.google.protobuf.Timestamp last_modified_time = 2;</code>
      */
-    public var lastModifiedTime: com.google.protobuf.Timestamp
+    var lastModifiedTime: com.google.protobuf.Timestamp
       @JvmName("getLastModifiedTime")
       get() = _builder.getLastModifiedTime()
       @JvmName("setLastModifiedTime")
@@ -52,21 +52,21 @@ public object FileHashKt {
     /**
      * <code>.google.protobuf.Timestamp last_modified_time = 2;</code>
      */
-    public fun clearLastModifiedTime() {
+    fun clearLastModifiedTime() {
       _builder.clearLastModifiedTime()
     }
     /**
      * <code>.google.protobuf.Timestamp last_modified_time = 2;</code>
      * @return Whether the lastModifiedTime field is set.
      */
-    public fun hasLastModifiedTime(): kotlin.Boolean {
+    fun hasLastModifiedTime(): kotlin.Boolean {
       return _builder.hasLastModifiedTime()
     }
 
     /**
      * <code>int64 size = 3;</code>
      */
-    public var size: kotlin.Long
+    var size: kotlin.Long
       @JvmName("getSize")
       get() = _builder.getSize()
       @JvmName("setSize")
@@ -76,14 +76,14 @@ public object FileHashKt {
     /**
      * <code>int64 size = 3;</code>
      */
-    public fun clearSize() {
+    fun clearSize() {
       _builder.clearSize()
     }
 
     /**
      * <code>bytes sha1_hash = 4;</code>
      */
-    public var sha1Hash: com.google.protobuf.ByteString
+    var sha1Hash: com.google.protobuf.ByteString
       @JvmName("getSha1Hash")
       get() = _builder.getSha1Hash()
       @JvmName("setSha1Hash")
@@ -93,11 +93,15 @@ public object FileHashKt {
     /**
      * <code>bytes sha1_hash = 4;</code>
      */
-    public fun clearSha1Hash() {
+    fun clearSha1Hash() {
       _builder.clearSha1Hash()
     }
   }
 }
 @kotlin.jvm.JvmSynthetic
-public inline fun com.giyeok.bibix.BibixIdProto.FileHash.copy(block: com.giyeok.bibix.FileHashKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.BibixIdProto.FileHash =
+inline fun com.giyeok.bibix.BibixIdProto.FileHash.copy(block: com.giyeok.bibix.FileHashKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.BibixIdProto.FileHash =
   com.giyeok.bibix.FileHashKt.Dsl._create(this.toBuilder()).apply { block() }._build()
+
+val com.giyeok.bibix.BibixIdProto.FileHashOrBuilder.lastModifiedTimeOrNull: com.google.protobuf.Timestamp?
+  get() = if (hasLastModifiedTime()) getLastModifiedTime() else null
+

@@ -3,16 +3,16 @@
 
 package com.giyeok.bibix.runner;
 
-@kotlin.jvm.JvmSynthetic
-public inline fun runConfig(block: com.giyeok.bibix.runner.RunConfigKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.runner.RunConfigProto.RunConfig =
+@kotlin.jvm.JvmName("-initializerunConfig")
+inline fun runConfig(block: com.giyeok.bibix.runner.RunConfigKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.runner.RunConfigProto.RunConfig =
   com.giyeok.bibix.runner.RunConfigKt.Dsl._create(com.giyeok.bibix.runner.RunConfigProto.RunConfig.newBuilder()).apply { block() }._build()
-public object RunConfigKt {
+object RunConfigKt {
   @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
   @com.google.protobuf.kotlin.ProtoDslMarker
-  public class Dsl private constructor(
+  class Dsl private constructor(
     private val _builder: com.giyeok.bibix.runner.RunConfigProto.RunConfig.Builder
   ) {
-    public companion object {
+    companion object {
       @kotlin.jvm.JvmSynthetic
       @kotlin.PublishedApi
       internal fun _create(builder: com.giyeok.bibix.runner.RunConfigProto.RunConfig.Builder): Dsl = Dsl(builder)
@@ -25,7 +25,7 @@ public object RunConfigKt {
     /**
      * <code>int32 max_threads = 1;</code>
      */
-    public var maxThreads: kotlin.Int
+    var maxThreads: kotlin.Int
       @JvmName("getMaxThreads")
       get() = _builder.getMaxThreads()
       @JvmName("setMaxThreads")
@@ -35,11 +35,12 @@ public object RunConfigKt {
     /**
      * <code>int32 max_threads = 1;</code>
      */
-    public fun clearMaxThreads() {
+    fun clearMaxThreads() {
       _builder.clearMaxThreads()
     }
   }
 }
 @kotlin.jvm.JvmSynthetic
-public inline fun com.giyeok.bibix.runner.RunConfigProto.RunConfig.copy(block: com.giyeok.bibix.runner.RunConfigKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.runner.RunConfigProto.RunConfig =
+inline fun com.giyeok.bibix.runner.RunConfigProto.RunConfig.copy(block: com.giyeok.bibix.runner.RunConfigKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.runner.RunConfigProto.RunConfig =
   com.giyeok.bibix.runner.RunConfigKt.Dsl._create(this.toBuilder()).apply { block() }._build()
+

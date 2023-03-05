@@ -5,6 +5,7 @@ import com.giyeok.bibix.base.BibixValue
 import com.giyeok.bibix.base.CName
 import com.giyeok.bibix.base.SourceId
 import com.giyeok.bibix.interpreter.coroutine.TaskElement
+import com.giyeok.bibix.interpreter.expr.NameLookupContext
 import com.giyeok.bibix.repo.BibixValueWithObjectHash
 import com.giyeok.bibix.repo.ObjectHash
 import com.google.common.annotations.VisibleForTesting
@@ -40,26 +41,42 @@ class TaskRelGraph {
     return task
   }
 
+  sealed class TaskPath {
+    fun toList(): List<Task> {
+      val list = mutableListOf<Task>()
+      var current = this
+      while (current !is Nil) {
+        list.add((current as Cons).task)
+        current = current.next
+      }
+      return list.toList()
+    }
+
+    data class Cons(val task: Task, val next: TaskPath) : TaskPath()
+
+    object Nil : TaskPath()
+  }
+
   private suspend fun findCycleBetween(start: Task, end: Task): List<Task>? = depsMutex.withLock {
-    fun traverse(task: Task, path: List<Task>): List<Task>? {
+    fun traverse(task: Task, path: TaskPath): TaskPath? {
       if (task == start) {
         return path
       }
       val outgoing = downstream[task] ?: setOf()
       outgoing.forEach { next ->
-        val found = traverse(next, path + next)
+        val found = traverse(next, TaskPath.Cons(next, path))
         if (found != null) {
           return found
         }
       }
       return null
     }
-    downstream[start]?.forEach { next ->
-      val found = traverse(next, listOf(start, next))
-      if (found != null) {
-        return found
-      }
-    }
+//    downstream[start]?.forEach { next ->
+//      val found = traverse(next, TaskPath.Cons(next, TaskPath.Cons(start, TaskPath.Nil)))
+//      if (found != null) {
+//        return found.toList()
+//      }
+//    }
     return null
   }
 
@@ -87,13 +104,33 @@ class TaskRelGraph {
     return Task.EvalExpr(sourceId, astNode.nodeId, thisValue)
   }
 
+  fun evalTypeTask(
+    sourceId: SourceId,
+    astNode: BibixAst.AstNode,
+  ): Task.EvalType {
+    referredNodes[Pair(sourceId, astNode.nodeId)] = astNode
+    return Task.EvalType(sourceId, astNode.nodeId)
+  }
+
+  fun evalNameTask(
+    nameLookupContext: NameLookupContext,
+    name: List<String>,
+    thisValue: BibixValue?
+  ): Task.EvalName {
+    return Task.EvalName(nameLookupContext, name, thisValue)
+  }
+
   fun evalCallExprTask(
     sourceId: SourceId,
     astNode: BibixAst.AstNode,
     thisValue: BibixValue?
-  ): Task {
+  ): Task.EvalCallExpr {
     referredNodes[Pair(sourceId, astNode.nodeId)] = astNode
     return Task.EvalCallExpr(sourceId, astNode.nodeId, thisValue)
+  }
+
+  fun lookupNameTask(nameLookupContext: NameLookupContext, name: List<String>): Task.LookupName {
+    return Task.LookupName(nameLookupContext, name)
   }
 
   fun getReferredNodeById(sourceId: SourceId, nodeId: Int): BibixAst.AstNode? =
@@ -117,25 +154,25 @@ class TaskRelGraph {
     }
 
   suspend fun withMemo(
-    objId: ObjectHash,
-    body: suspend CoroutineScope.(ObjectHash) -> BibixValue
+    objectHash: ObjectHash,
+    body: suspend CoroutineScope.() -> BibixValue
   ): BibixValueWithObjectHash = coroutineScope {
-    val objIdHash = objId.hashString
+    val targetId = objectHash.targetId.targetIdBytes
     val (newMemo, stateFlow) = memoMutex.withLock {
-      val existing = objMemoMap[objIdHash]
+      val existing = objMemoMap[targetId]
       if (existing == null) {
         val newStateFlow = MutableStateFlow<BibixValueWithObjectHash?>(null)
-        objMemoMap[objIdHash] = newStateFlow
-        check(!objHashMap.containsKey(objIdHash))
-        objHashMap[objIdHash] = objId
+        objMemoMap[targetId] = newStateFlow
+        check(!objHashMap.containsKey(targetId))
+        objHashMap[targetId] = objectHash
         Pair(true, newStateFlow)
       } else {
-        check(objHashMap[objIdHash] == objId)
+        // check(objHashMap[targetId] == targetId)
         Pair(false, existing)
       }
     }
     if (newMemo) {
-      val result = BibixValueWithObjectHash(body(objId), objId)
+      val result = BibixValueWithObjectHash(body(), objectHash)
       stateFlow.emit(result)
       result
     } else {
@@ -143,15 +180,14 @@ class TaskRelGraph {
     }
   }
 
-  fun upstreamPathsTo(task: Task): List<List<Task>> {
-    fun traverse(task: Task, path: List<Task>): List<List<Task>> {
+  fun upstreamPathTo(task: Task): List<Task> {
+    fun traverse(task: Task, path: TaskPath): TaskPath {
       val ups = upstream[task]?.toList() ?: listOf()
-      return if (ups.isEmpty()) listOf(path) else {
-        ups.flatMap { up ->
-          traverse(up, path + up)
-        }
+      return if (ups.isEmpty()) path else {
+        val up = ups.first()
+        traverse(up, TaskPath.Cons(up, path))
       }
     }
-    return traverse(task, listOf(task))
+    return traverse(task, TaskPath.Cons(task, TaskPath.Nil)).toList()
   }
 }

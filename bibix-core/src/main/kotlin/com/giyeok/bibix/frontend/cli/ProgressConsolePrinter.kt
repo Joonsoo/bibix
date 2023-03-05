@@ -3,11 +3,15 @@ package com.giyeok.bibix.frontend.cli
 import com.giyeok.bibix.frontend.ProgressNotifier
 import com.giyeok.bibix.frontend.ThreadState
 import com.giyeok.bibix.interpreter.BibixInterpreter
+import com.giyeok.bibix.interpreter.TaskDescriptor
 import com.giyeok.bibix.interpreter.task.Task
 import kotlinx.coroutines.runBlocking
+import java.time.Duration
+import java.time.Instant
 
 class ProgressConsolePrinter : ProgressNotifier {
   private lateinit var interpreter: BibixInterpreter
+  private var lastPrinted: Instant? = null
   private var occupiedLines = 0
 
   override fun setInterpreter(interpreter: BibixInterpreter) {
@@ -15,34 +19,18 @@ class ProgressConsolePrinter : ProgressNotifier {
   }
 
   override fun notifyProgresses(progressesFunc: () -> List<ThreadState?>) {
-    repeat(occupiedLines) { print("\b\r") }
-    val progresses = progressesFunc()
-    occupiedLines = progresses.size
-    progresses.forEachIndexed { index, state ->
-      if (state == null || !state.isActive) {
-        println("$index: IDLE")
-      } else {
-        println("$index: ${state.lastMessage.time}")
-        when (val task = state.task) {
-          is Task.EvalExpr -> runBlocking {
-            val astNode = interpreter.g.getReferredNodeById(task.sourceId, task.exprId)
-            val projectPath = interpreter.sourceManager.getProjectRoot(task.sourceId)
-            val taskText = interpreter.sourceManager.sourceText(task.sourceId, astNode!!)
-            println("Evaluating expression at ${task.sourceId} $projectPath ${astNode.start}-${astNode.end}")
-            println(taskText)
-          }
-
-          is Task.EvalCallExpr -> runBlocking {
-            val astNode = interpreter.g.getReferredNodeById(task.sourceId, task.exprId)
-            val projectPath = interpreter.sourceManager.getProjectRoot(task.sourceId)
-            val taskText = interpreter.sourceManager.sourceText(task.sourceId, astNode!!)
-            println("Evaluating call expression at ${task.sourceId} $projectPath ${astNode.start}-${astNode.end}")
-            println(taskText)
-          }
-
-          else -> {
-            // Do nothing
-          }
+    val now = Instant.now()
+    if (lastPrinted == null || Duration.between(lastPrinted, now) >= Duration.ofMillis(500)) {
+      lastPrinted = now
+      repeat(occupiedLines) { print("\b\r") }
+      val progresses = progressesFunc()
+      occupiedLines = progresses.size
+      progresses.forEachIndexed { index, state ->
+        if (state == null || !state.isActive) {
+          println("$index: IDLE")
+        } else {
+          println("$index: ${state.lastMessage.time}")
+          TaskDescriptor(interpreter.g, interpreter.sourceManager).printTaskDescription(state.task)
         }
       }
     }

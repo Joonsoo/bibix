@@ -3,16 +3,16 @@
 
 package com.giyeok.bibix;
 
-@kotlin.jvm.JvmSynthetic
-public inline fun inputHashes(block: com.giyeok.bibix.InputHashesKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.BibixIdProto.InputHashes =
+@kotlin.jvm.JvmName("-initializeinputHashes")
+inline fun inputHashes(block: com.giyeok.bibix.InputHashesKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.BibixIdProto.InputHashes =
   com.giyeok.bibix.InputHashesKt.Dsl._create(com.giyeok.bibix.BibixIdProto.InputHashes.newBuilder()).apply { block() }._build()
-public object InputHashesKt {
+object InputHashesKt {
   @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
   @com.google.protobuf.kotlin.ProtoDslMarker
-  public class Dsl private constructor(
+  class Dsl private constructor(
     private val _builder: com.giyeok.bibix.BibixIdProto.InputHashes.Builder
   ) {
-    public companion object {
+    companion object {
       @kotlin.jvm.JvmSynthetic
       @kotlin.PublishedApi
       internal fun _create(builder: com.giyeok.bibix.BibixIdProto.InputHashes.Builder): Dsl = Dsl(builder)
@@ -27,11 +27,11 @@ public object InputHashesKt {
      * generics.
      */
     @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
-    public class DirectoriesProxy private constructor() : com.google.protobuf.kotlin.DslProxy()
+    class DirectoriesProxy private constructor() : com.google.protobuf.kotlin.DslProxy()
     /**
      * <code>repeated .com.giyeok.bibix.DirectoryHash directories = 1;</code>
      */
-     public val directories: com.google.protobuf.kotlin.DslList<com.giyeok.bibix.BibixIdProto.DirectoryHash, DirectoriesProxy>
+     val directories: com.google.protobuf.kotlin.DslList<com.giyeok.bibix.BibixIdProto.DirectoryHash, DirectoriesProxy>
       @kotlin.jvm.JvmSynthetic
       get() = com.google.protobuf.kotlin.DslList(
         _builder.getDirectoriesList()
@@ -42,61 +42,68 @@ public object InputHashesKt {
      */
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("addDirectories")
-    public fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.BibixIdProto.DirectoryHash, DirectoriesProxy>.add(value: com.giyeok.bibix.BibixIdProto.DirectoryHash) {
+    fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.BibixIdProto.DirectoryHash, DirectoriesProxy>.add(value: com.giyeok.bibix.BibixIdProto.DirectoryHash) {
       _builder.addDirectories(value)
-    }/**
+    }
+    /**
      * <code>repeated .com.giyeok.bibix.DirectoryHash directories = 1;</code>
      * @param value The directories to add.
      */
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("plusAssignDirectories")
     @Suppress("NOTHING_TO_INLINE")
-    public inline operator fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.BibixIdProto.DirectoryHash, DirectoriesProxy>.plusAssign(value: com.giyeok.bibix.BibixIdProto.DirectoryHash) {
+    inline operator fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.BibixIdProto.DirectoryHash, DirectoriesProxy>.plusAssign(value: com.giyeok.bibix.BibixIdProto.DirectoryHash) {
       add(value)
-    }/**
+    }
+    /**
      * <code>repeated .com.giyeok.bibix.DirectoryHash directories = 1;</code>
      * @param values The directories to add.
      */
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("addAllDirectories")
-    public fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.BibixIdProto.DirectoryHash, DirectoriesProxy>.addAll(values: kotlin.collections.Iterable<com.giyeok.bibix.BibixIdProto.DirectoryHash>) {
+    fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.BibixIdProto.DirectoryHash, DirectoriesProxy>.addAll(values: kotlin.collections.Iterable<com.giyeok.bibix.BibixIdProto.DirectoryHash>) {
       _builder.addAllDirectories(values)
-    }/**
+    }
+    /**
      * <code>repeated .com.giyeok.bibix.DirectoryHash directories = 1;</code>
      * @param values The directories to add.
      */
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("plusAssignAllDirectories")
     @Suppress("NOTHING_TO_INLINE")
-    public inline operator fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.BibixIdProto.DirectoryHash, DirectoriesProxy>.plusAssign(values: kotlin.collections.Iterable<com.giyeok.bibix.BibixIdProto.DirectoryHash>) {
+    inline operator fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.BibixIdProto.DirectoryHash, DirectoriesProxy>.plusAssign(values: kotlin.collections.Iterable<com.giyeok.bibix.BibixIdProto.DirectoryHash>) {
       addAll(values)
-    }/**
+    }
+    /**
      * <code>repeated .com.giyeok.bibix.DirectoryHash directories = 1;</code>
      * @param index The index to set the value at.
      * @param value The directories to set.
      */
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("setDirectories")
-    public operator fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.BibixIdProto.DirectoryHash, DirectoriesProxy>.set(index: kotlin.Int, value: com.giyeok.bibix.BibixIdProto.DirectoryHash) {
+    operator fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.BibixIdProto.DirectoryHash, DirectoriesProxy>.set(index: kotlin.Int, value: com.giyeok.bibix.BibixIdProto.DirectoryHash) {
       _builder.setDirectories(index, value)
-    }/**
+    }
+    /**
      * <code>repeated .com.giyeok.bibix.DirectoryHash directories = 1;</code>
      */
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("clearDirectories")
-    public fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.BibixIdProto.DirectoryHash, DirectoriesProxy>.clear() {
+    fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.BibixIdProto.DirectoryHash, DirectoriesProxy>.clear() {
       _builder.clearDirectories()
     }
+
+
     /**
      * An uninstantiable, behaviorless type to represent the field in
      * generics.
      */
     @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
-    public class FilesProxy private constructor() : com.google.protobuf.kotlin.DslProxy()
+    class FilesProxy private constructor() : com.google.protobuf.kotlin.DslProxy()
     /**
      * <code>repeated .com.giyeok.bibix.FileHash files = 2;</code>
      */
-     public val files: com.google.protobuf.kotlin.DslList<com.giyeok.bibix.BibixIdProto.FileHash, FilesProxy>
+     val files: com.google.protobuf.kotlin.DslList<com.giyeok.bibix.BibixIdProto.FileHash, FilesProxy>
       @kotlin.jvm.JvmSynthetic
       get() = com.google.protobuf.kotlin.DslList(
         _builder.getFilesList()
@@ -107,62 +114,69 @@ public object InputHashesKt {
      */
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("addFiles")
-    public fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.BibixIdProto.FileHash, FilesProxy>.add(value: com.giyeok.bibix.BibixIdProto.FileHash) {
+    fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.BibixIdProto.FileHash, FilesProxy>.add(value: com.giyeok.bibix.BibixIdProto.FileHash) {
       _builder.addFiles(value)
-    }/**
+    }
+    /**
      * <code>repeated .com.giyeok.bibix.FileHash files = 2;</code>
      * @param value The files to add.
      */
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("plusAssignFiles")
     @Suppress("NOTHING_TO_INLINE")
-    public inline operator fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.BibixIdProto.FileHash, FilesProxy>.plusAssign(value: com.giyeok.bibix.BibixIdProto.FileHash) {
+    inline operator fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.BibixIdProto.FileHash, FilesProxy>.plusAssign(value: com.giyeok.bibix.BibixIdProto.FileHash) {
       add(value)
-    }/**
+    }
+    /**
      * <code>repeated .com.giyeok.bibix.FileHash files = 2;</code>
      * @param values The files to add.
      */
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("addAllFiles")
-    public fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.BibixIdProto.FileHash, FilesProxy>.addAll(values: kotlin.collections.Iterable<com.giyeok.bibix.BibixIdProto.FileHash>) {
+    fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.BibixIdProto.FileHash, FilesProxy>.addAll(values: kotlin.collections.Iterable<com.giyeok.bibix.BibixIdProto.FileHash>) {
       _builder.addAllFiles(values)
-    }/**
+    }
+    /**
      * <code>repeated .com.giyeok.bibix.FileHash files = 2;</code>
      * @param values The files to add.
      */
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("plusAssignAllFiles")
     @Suppress("NOTHING_TO_INLINE")
-    public inline operator fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.BibixIdProto.FileHash, FilesProxy>.plusAssign(values: kotlin.collections.Iterable<com.giyeok.bibix.BibixIdProto.FileHash>) {
+    inline operator fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.BibixIdProto.FileHash, FilesProxy>.plusAssign(values: kotlin.collections.Iterable<com.giyeok.bibix.BibixIdProto.FileHash>) {
       addAll(values)
-    }/**
+    }
+    /**
      * <code>repeated .com.giyeok.bibix.FileHash files = 2;</code>
      * @param index The index to set the value at.
      * @param value The files to set.
      */
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("setFiles")
-    public operator fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.BibixIdProto.FileHash, FilesProxy>.set(index: kotlin.Int, value: com.giyeok.bibix.BibixIdProto.FileHash) {
+    operator fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.BibixIdProto.FileHash, FilesProxy>.set(index: kotlin.Int, value: com.giyeok.bibix.BibixIdProto.FileHash) {
       _builder.setFiles(index, value)
-    }/**
+    }
+    /**
      * <code>repeated .com.giyeok.bibix.FileHash files = 2;</code>
      */
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("clearFiles")
-    public fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.BibixIdProto.FileHash, FilesProxy>.clear() {
+    fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.BibixIdProto.FileHash, FilesProxy>.clear() {
       _builder.clearFiles()
     }
+
+
     /**
      * An uninstantiable, behaviorless type to represent the field in
      * generics.
      */
     @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
-    public class NonExistentProxy private constructor() : com.google.protobuf.kotlin.DslProxy()
+    class NonExistentProxy private constructor() : com.google.protobuf.kotlin.DslProxy()
     /**
      * <code>repeated string non_existent = 3;</code>
      * @return A list containing the nonExistent.
      */
-    public val nonExistent: com.google.protobuf.kotlin.DslList<kotlin.String, NonExistentProxy>
+     val nonExistent: com.google.protobuf.kotlin.DslList<kotlin.String, NonExistentProxy>
       @kotlin.jvm.JvmSynthetic
       get() = com.google.protobuf.kotlin.DslList(
         _builder.getNonExistentList()
@@ -173,7 +187,7 @@ public object InputHashesKt {
      */
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("addNonExistent")
-    public fun com.google.protobuf.kotlin.DslList<kotlin.String, NonExistentProxy>.add(value: kotlin.String) {
+    fun com.google.protobuf.kotlin.DslList<kotlin.String, NonExistentProxy>.add(value: kotlin.String) {
       _builder.addNonExistent(value)
     }
     /**
@@ -183,7 +197,7 @@ public object InputHashesKt {
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("plusAssignNonExistent")
     @Suppress("NOTHING_TO_INLINE")
-    public inline operator fun com.google.protobuf.kotlin.DslList<kotlin.String, NonExistentProxy>.plusAssign(value: kotlin.String) {
+    inline operator fun com.google.protobuf.kotlin.DslList<kotlin.String, NonExistentProxy>.plusAssign(value: kotlin.String) {
       add(value)
     }
     /**
@@ -192,7 +206,7 @@ public object InputHashesKt {
      */
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("addAllNonExistent")
-    public fun com.google.protobuf.kotlin.DslList<kotlin.String, NonExistentProxy>.addAll(values: kotlin.collections.Iterable<kotlin.String>) {
+    fun com.google.protobuf.kotlin.DslList<kotlin.String, NonExistentProxy>.addAll(values: kotlin.collections.Iterable<kotlin.String>) {
       _builder.addAllNonExistent(values)
     }
     /**
@@ -202,7 +216,7 @@ public object InputHashesKt {
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("plusAssignAllNonExistent")
     @Suppress("NOTHING_TO_INLINE")
-    public inline operator fun com.google.protobuf.kotlin.DslList<kotlin.String, NonExistentProxy>.plusAssign(values: kotlin.collections.Iterable<kotlin.String>) {
+    inline operator fun com.google.protobuf.kotlin.DslList<kotlin.String, NonExistentProxy>.plusAssign(values: kotlin.collections.Iterable<kotlin.String>) {
       addAll(values)
     }
     /**
@@ -212,17 +226,18 @@ public object InputHashesKt {
      */
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("setNonExistent")
-    public operator fun com.google.protobuf.kotlin.DslList<kotlin.String, NonExistentProxy>.set(index: kotlin.Int, value: kotlin.String) {
+    operator fun com.google.protobuf.kotlin.DslList<kotlin.String, NonExistentProxy>.set(index: kotlin.Int, value: kotlin.String) {
       _builder.setNonExistent(index, value)
     }/**
      * <code>repeated string non_existent = 3;</code>
      */
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("clearNonExistent")
-    public fun com.google.protobuf.kotlin.DslList<kotlin.String, NonExistentProxy>.clear() {
+    fun com.google.protobuf.kotlin.DslList<kotlin.String, NonExistentProxy>.clear() {
       _builder.clearNonExistent()
     }}
 }
 @kotlin.jvm.JvmSynthetic
-public inline fun com.giyeok.bibix.BibixIdProto.InputHashes.copy(block: com.giyeok.bibix.InputHashesKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.BibixIdProto.InputHashes =
+inline fun com.giyeok.bibix.BibixIdProto.InputHashes.copy(block: com.giyeok.bibix.InputHashesKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.BibixIdProto.InputHashes =
   com.giyeok.bibix.InputHashesKt.Dsl._create(this.toBuilder()).apply { block() }._build()
+
