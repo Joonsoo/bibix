@@ -23,7 +23,31 @@ object BibixValueKt {
     internal fun _build(): com.giyeok.bibix.BibixValueProto.BibixValue = _builder.build()
 
     /**
-     * <code>bool boolean_value = 1;</code>
+     * <code>.google.protobuf.Empty none_value = 1;</code>
+     */
+    var noneValue: com.google.protobuf.Empty
+      @JvmName("getNoneValue")
+      get() = _builder.getNoneValue()
+      @JvmName("setNoneValue")
+      set(value) {
+        _builder.setNoneValue(value)
+      }
+    /**
+     * <code>.google.protobuf.Empty none_value = 1;</code>
+     */
+    fun clearNoneValue() {
+      _builder.clearNoneValue()
+    }
+    /**
+     * <code>.google.protobuf.Empty none_value = 1;</code>
+     * @return Whether the noneValue field is set.
+     */
+    fun hasNoneValue(): kotlin.Boolean {
+      return _builder.hasNoneValue()
+    }
+
+    /**
+     * <code>bool boolean_value = 2;</code>
      */
     var booleanValue: kotlin.Boolean
       @JvmName("getBooleanValue")
@@ -33,13 +57,13 @@ object BibixValueKt {
         _builder.setBooleanValue(value)
       }
     /**
-     * <code>bool boolean_value = 1;</code>
+     * <code>bool boolean_value = 2;</code>
      */
     fun clearBooleanValue() {
       _builder.clearBooleanValue()
     }
     /**
-     * <code>bool boolean_value = 1;</code>
+     * <code>bool boolean_value = 2;</code>
      * @return Whether the booleanValue field is set.
      */
     fun hasBooleanValue(): kotlin.Boolean {
@@ -47,7 +71,7 @@ object BibixValueKt {
     }
 
     /**
-     * <code>string string_value = 2;</code>
+     * <code>string string_value = 3;</code>
      */
     var stringValue: kotlin.String
       @JvmName("getStringValue")
@@ -57,13 +81,13 @@ object BibixValueKt {
         _builder.setStringValue(value)
       }
     /**
-     * <code>string string_value = 2;</code>
+     * <code>string string_value = 3;</code>
      */
     fun clearStringValue() {
       _builder.clearStringValue()
     }
     /**
-     * <code>string string_value = 2;</code>
+     * <code>string string_value = 3;</code>
      * @return Whether the stringValue field is set.
      */
     fun hasStringValue(): kotlin.Boolean {
@@ -71,7 +95,7 @@ object BibixValueKt {
     }
 
     /**
-     * <code>string path_value = 3;</code>
+     * <code>string path_value = 4;</code>
      */
     var pathValue: kotlin.String
       @JvmName("getPathValue")
@@ -81,13 +105,13 @@ object BibixValueKt {
         _builder.setPathValue(value)
       }
     /**
-     * <code>string path_value = 3;</code>
+     * <code>string path_value = 4;</code>
      */
     fun clearPathValue() {
       _builder.clearPathValue()
     }
     /**
-     * <code>string path_value = 3;</code>
+     * <code>string path_value = 4;</code>
      * @return Whether the pathValue field is set.
      */
     fun hasPathValue(): kotlin.Boolean {
@@ -95,7 +119,7 @@ object BibixValueKt {
     }
 
     /**
-     * <code>string file_value = 4;</code>
+     * <code>string file_value = 5;</code>
      */
     var fileValue: kotlin.String
       @JvmName("getFileValue")
@@ -105,13 +129,13 @@ object BibixValueKt {
         _builder.setFileValue(value)
       }
     /**
-     * <code>string file_value = 4;</code>
+     * <code>string file_value = 5;</code>
      */
     fun clearFileValue() {
       _builder.clearFileValue()
     }
     /**
-     * <code>string file_value = 4;</code>
+     * <code>string file_value = 5;</code>
      * @return Whether the fileValue field is set.
      */
     fun hasFileValue(): kotlin.Boolean {
@@ -119,7 +143,7 @@ object BibixValueKt {
     }
 
     /**
-     * <code>string directory_value = 5;</code>
+     * <code>string directory_value = 6;</code>
      */
     var directoryValue: kotlin.String
       @JvmName("getDirectoryValue")
@@ -129,13 +153,13 @@ object BibixValueKt {
         _builder.setDirectoryValue(value)
       }
     /**
-     * <code>string directory_value = 5;</code>
+     * <code>string directory_value = 6;</code>
      */
     fun clearDirectoryValue() {
       _builder.clearDirectoryValue()
     }
     /**
-     * <code>string directory_value = 5;</code>
+     * <code>string directory_value = 6;</code>
      * @return Whether the directoryValue field is set.
      */
     fun hasDirectoryValue(): kotlin.Boolean {
@@ -143,7 +167,7 @@ object BibixValueKt {
     }
 
     /**
-     * <code>.com.giyeok.bibix.EnumValue enum_value = 6;</code>
+     * <code>.com.giyeok.bibix.EnumValue enum_value = 7;</code>
      */
     var enumValue: com.giyeok.bibix.BibixValueProto.EnumValue
       @JvmName("getEnumValue")
@@ -153,13 +177,13 @@ object BibixValueKt {
         _builder.setEnumValue(value)
       }
     /**
-     * <code>.com.giyeok.bibix.EnumValue enum_value = 6;</code>
+     * <code>.com.giyeok.bibix.EnumValue enum_value = 7;</code>
      */
     fun clearEnumValue() {
       _builder.clearEnumValue()
     }
     /**
-     * <code>.com.giyeok.bibix.EnumValue enum_value = 6;</code>
+     * <code>.com.giyeok.bibix.EnumValue enum_value = 7;</code>
      * @return Whether the enumValue field is set.
      */
     fun hasEnumValue(): kotlin.Boolean {
@@ -167,7 +191,7 @@ object BibixValueKt {
     }
 
     /**
-     * <code>.com.giyeok.bibix.ListValue list_value = 7;</code>
+     * <code>.com.giyeok.bibix.ListValue list_value = 8;</code>
      */
     var listValue: com.giyeok.bibix.BibixValueProto.ListValue
       @JvmName("getListValue")
@@ -177,13 +201,13 @@ object BibixValueKt {
         _builder.setListValue(value)
       }
     /**
-     * <code>.com.giyeok.bibix.ListValue list_value = 7;</code>
+     * <code>.com.giyeok.bibix.ListValue list_value = 8;</code>
      */
     fun clearListValue() {
       _builder.clearListValue()
     }
     /**
-     * <code>.com.giyeok.bibix.ListValue list_value = 7;</code>
+     * <code>.com.giyeok.bibix.ListValue list_value = 8;</code>
      * @return Whether the listValue field is set.
      */
     fun hasListValue(): kotlin.Boolean {
@@ -191,7 +215,7 @@ object BibixValueKt {
     }
 
     /**
-     * <code>.com.giyeok.bibix.SetValue set_value = 8;</code>
+     * <code>.com.giyeok.bibix.SetValue set_value = 9;</code>
      */
     var setValue: com.giyeok.bibix.BibixValueProto.SetValue
       @JvmName("getSetValue")
@@ -201,13 +225,13 @@ object BibixValueKt {
         _builder.setSetValue(value)
       }
     /**
-     * <code>.com.giyeok.bibix.SetValue set_value = 8;</code>
+     * <code>.com.giyeok.bibix.SetValue set_value = 9;</code>
      */
     fun clearSetValue() {
       _builder.clearSetValue()
     }
     /**
-     * <code>.com.giyeok.bibix.SetValue set_value = 8;</code>
+     * <code>.com.giyeok.bibix.SetValue set_value = 9;</code>
      * @return Whether the setValue field is set.
      */
     fun hasSetValue(): kotlin.Boolean {
@@ -215,7 +239,7 @@ object BibixValueKt {
     }
 
     /**
-     * <code>.com.giyeok.bibix.TupleValue tuple_value = 9;</code>
+     * <code>.com.giyeok.bibix.TupleValue tuple_value = 10;</code>
      */
     var tupleValue: com.giyeok.bibix.BibixValueProto.TupleValue
       @JvmName("getTupleValue")
@@ -225,13 +249,13 @@ object BibixValueKt {
         _builder.setTupleValue(value)
       }
     /**
-     * <code>.com.giyeok.bibix.TupleValue tuple_value = 9;</code>
+     * <code>.com.giyeok.bibix.TupleValue tuple_value = 10;</code>
      */
     fun clearTupleValue() {
       _builder.clearTupleValue()
     }
     /**
-     * <code>.com.giyeok.bibix.TupleValue tuple_value = 9;</code>
+     * <code>.com.giyeok.bibix.TupleValue tuple_value = 10;</code>
      * @return Whether the tupleValue field is set.
      */
     fun hasTupleValue(): kotlin.Boolean {
@@ -239,7 +263,7 @@ object BibixValueKt {
     }
 
     /**
-     * <code>.com.giyeok.bibix.NamedTupleValue named_tuple_value = 10;</code>
+     * <code>.com.giyeok.bibix.NamedTupleValue named_tuple_value = 11;</code>
      */
     var namedTupleValue: com.giyeok.bibix.BibixValueProto.NamedTupleValue
       @JvmName("getNamedTupleValue")
@@ -249,13 +273,13 @@ object BibixValueKt {
         _builder.setNamedTupleValue(value)
       }
     /**
-     * <code>.com.giyeok.bibix.NamedTupleValue named_tuple_value = 10;</code>
+     * <code>.com.giyeok.bibix.NamedTupleValue named_tuple_value = 11;</code>
      */
     fun clearNamedTupleValue() {
       _builder.clearNamedTupleValue()
     }
     /**
-     * <code>.com.giyeok.bibix.NamedTupleValue named_tuple_value = 10;</code>
+     * <code>.com.giyeok.bibix.NamedTupleValue named_tuple_value = 11;</code>
      * @return Whether the namedTupleValue field is set.
      */
     fun hasNamedTupleValue(): kotlin.Boolean {
@@ -263,7 +287,7 @@ object BibixValueKt {
     }
 
     /**
-     * <code>.com.giyeok.bibix.DataClassInstanceValue data_class_instance_value = 11;</code>
+     * <code>.com.giyeok.bibix.DataClassInstanceValue data_class_instance_value = 12;</code>
      */
     var dataClassInstanceValue: com.giyeok.bibix.BibixValueProto.DataClassInstanceValue
       @JvmName("getDataClassInstanceValue")
@@ -273,13 +297,13 @@ object BibixValueKt {
         _builder.setDataClassInstanceValue(value)
       }
     /**
-     * <code>.com.giyeok.bibix.DataClassInstanceValue data_class_instance_value = 11;</code>
+     * <code>.com.giyeok.bibix.DataClassInstanceValue data_class_instance_value = 12;</code>
      */
     fun clearDataClassInstanceValue() {
       _builder.clearDataClassInstanceValue()
     }
     /**
-     * <code>.com.giyeok.bibix.DataClassInstanceValue data_class_instance_value = 11;</code>
+     * <code>.com.giyeok.bibix.DataClassInstanceValue data_class_instance_value = 12;</code>
      * @return Whether the dataClassInstanceValue field is set.
      */
     fun hasDataClassInstanceValue(): kotlin.Boolean {
@@ -297,6 +321,9 @@ object BibixValueKt {
 @kotlin.jvm.JvmSynthetic
 inline fun com.giyeok.bibix.BibixValueProto.BibixValue.copy(block: com.giyeok.bibix.BibixValueKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.BibixValueProto.BibixValue =
   com.giyeok.bibix.BibixValueKt.Dsl._create(this.toBuilder()).apply { block() }._build()
+
+val com.giyeok.bibix.BibixValueProto.BibixValueOrBuilder.noneValueOrNull: com.google.protobuf.Empty?
+  get() = if (hasNoneValue()) getNoneValue() else null
 
 val com.giyeok.bibix.BibixValueProto.BibixValueOrBuilder.enumValueOrNull: com.giyeok.bibix.BibixValueProto.EnumValue?
   get() = if (hasEnumValue()) getEnumValue() else null

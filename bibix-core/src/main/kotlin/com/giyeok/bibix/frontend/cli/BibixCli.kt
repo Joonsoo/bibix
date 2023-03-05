@@ -2,6 +2,7 @@ package com.giyeok.bibix.frontend.cli
 
 import com.giyeok.bibix.frontend.BuildFrontend
 import com.giyeok.bibix.interpreter.BibixProject
+import kotlinx.coroutines.runBlocking
 import java.nio.file.Paths
 import java.time.Duration
 import java.time.Instant
@@ -32,6 +33,10 @@ object BibixCli {
     )
 
     val targetResults = buildFrontend.buildTargets(buildTargetNames)
+
+    runBlocking {
+      buildFrontend.repo.shutdown()
+    }
 
     targetResults.forEach { (targetName, value) ->
       println("$targetName = $value")

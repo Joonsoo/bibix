@@ -2,21 +2,24 @@ syntax = "proto3";
 
 package com.giyeok.bibix;
 
+import "google/protobuf/empty.proto";
+
 option java_outer_classname = "BibixValueProto";
 
 message BibixValue {
   oneof value {
-    bool boolean_value = 1;
-    string string_value = 2;
-    string path_value = 3;
-    string file_value = 4;
-    string directory_value = 5;
-    EnumValue enum_value = 6;
-    ListValue list_value = 7;
-    SetValue set_value = 8;
-    TupleValue tuple_value = 9;
-    NamedTupleValue named_tuple_value = 10;
-    DataClassInstanceValue data_class_instance_value = 11;
+    google.protobuf.Empty none_value = 1;
+    bool boolean_value = 2;
+    string string_value = 3;
+    string path_value = 4;
+    string file_value = 5;
+    string directory_value = 6;
+    EnumValue enum_value = 7;
+    ListValue list_value = 8;
+    SetValue set_value = 9;
+    TupleValue tuple_value = 10;
+    NamedTupleValue named_tuple_value = 11;
+    DataClassInstanceValue data_class_instance_value = 12;
   }
 }
 

@@ -1441,38 +1441,17 @@ public final class BibixRepoProto {
     com.giyeok.bibix.BibixIdProto.TargetIdDataOrBuilder getTargetIdDataOrBuilder();
 
     /**
-     * <code>.com.giyeok.bibix.InputHashes latest_input_hashes = 3;</code>
-     * @return Whether the latestInputHashes field is set.
-     */
-    boolean hasLatestInputHashes();
-    /**
-     * <code>.com.giyeok.bibix.InputHashes latest_input_hashes = 3;</code>
-     * @return The latestInputHashes.
-     */
-    com.giyeok.bibix.BibixIdProto.InputHashes getLatestInputHashes();
-    /**
-     * <code>.com.giyeok.bibix.InputHashes latest_input_hashes = 3;</code>
-     */
-    com.giyeok.bibix.BibixIdProto.InputHashesOrBuilder getLatestInputHashesOrBuilder();
-
-    /**
-     * <code>bytes latest_object_id = 4;</code>
-     * @return The latestObjectId.
-     */
-    com.google.protobuf.ByteString getLatestObjectId();
-
-    /**
-     * <code>optional .com.giyeok.bibix.repo.TargetState state = 5;</code>
+     * <code>optional .com.giyeok.bibix.repo.TargetState state = 3;</code>
      * @return Whether the state field is set.
      */
     boolean hasState();
     /**
-     * <code>optional .com.giyeok.bibix.repo.TargetState state = 5;</code>
+     * <code>optional .com.giyeok.bibix.repo.TargetState state = 3;</code>
      * @return The state.
      */
     com.giyeok.bibix.repo.BibixRepoProto.TargetState getState();
     /**
-     * <code>optional .com.giyeok.bibix.repo.TargetState state = 5;</code>
+     * <code>optional .com.giyeok.bibix.repo.TargetState state = 3;</code>
      */
     com.giyeok.bibix.repo.BibixRepoProto.TargetStateOrBuilder getStateOrBuilder();
   }
@@ -1490,7 +1469,6 @@ public final class BibixRepoProto {
     }
     private TargetData() {
       targetId_ = com.google.protobuf.ByteString.EMPTY;
-      latestObjectId_ = com.google.protobuf.ByteString.EMPTY;
     }
 
     @java.lang.Override
@@ -1543,24 +1521,6 @@ public final class BibixRepoProto {
               break;
             }
             case 26: {
-              com.giyeok.bibix.BibixIdProto.InputHashes.Builder subBuilder = null;
-              if (latestInputHashes_ != null) {
-                subBuilder = latestInputHashes_.toBuilder();
-              }
-              latestInputHashes_ = input.readMessage(com.giyeok.bibix.BibixIdProto.InputHashes.parser(), extensionRegistry);
-              if (subBuilder != null) {
-                subBuilder.mergeFrom(latestInputHashes_);
-                latestInputHashes_ = subBuilder.buildPartial();
-              }
-
-              break;
-            }
-            case 34: {
-
-              latestObjectId_ = input.readBytes();
-              break;
-            }
-            case 42: {
               com.giyeok.bibix.repo.BibixRepoProto.TargetState.Builder subBuilder = null;
               if (((bitField0_ & 0x00000001) != 0)) {
                 subBuilder = state_.toBuilder();
@@ -1645,47 +1605,10 @@ public final class BibixRepoProto {
       return getTargetIdData();
     }
 
-    public static final int LATEST_INPUT_HASHES_FIELD_NUMBER = 3;
-    private com.giyeok.bibix.BibixIdProto.InputHashes latestInputHashes_;
-    /**
-     * <code>.com.giyeok.bibix.InputHashes latest_input_hashes = 3;</code>
-     * @return Whether the latestInputHashes field is set.
-     */
-    @java.lang.Override
-    public boolean hasLatestInputHashes() {
-      return latestInputHashes_ != null;
-    }
-    /**
-     * <code>.com.giyeok.bibix.InputHashes latest_input_hashes = 3;</code>
-     * @return The latestInputHashes.
-     */
-    @java.lang.Override
-    public com.giyeok.bibix.BibixIdProto.InputHashes getLatestInputHashes() {
-      return latestInputHashes_ == null ? com.giyeok.bibix.BibixIdProto.InputHashes.getDefaultInstance() : latestInputHashes_;
-    }
-    /**
-     * <code>.com.giyeok.bibix.InputHashes latest_input_hashes = 3;</code>
-     */
-    @java.lang.Override
-    public com.giyeok.bibix.BibixIdProto.InputHashesOrBuilder getLatestInputHashesOrBuilder() {
-      return getLatestInputHashes();
-    }
-
-    public static final int LATEST_OBJECT_ID_FIELD_NUMBER = 4;
-    private com.google.protobuf.ByteString latestObjectId_;
-    /**
-     * <code>bytes latest_object_id = 4;</code>
-     * @return The latestObjectId.
-     */
-    @java.lang.Override
-    public com.google.protobuf.ByteString getLatestObjectId() {
-      return latestObjectId_;
-    }
-
-    public static final int STATE_FIELD_NUMBER = 5;
+    public static final int STATE_FIELD_NUMBER = 3;
     private com.giyeok.bibix.repo.BibixRepoProto.TargetState state_;
     /**
-     * <code>optional .com.giyeok.bibix.repo.TargetState state = 5;</code>
+     * <code>optional .com.giyeok.bibix.repo.TargetState state = 3;</code>
      * @return Whether the state field is set.
      */
     @java.lang.Override
@@ -1693,7 +1616,7 @@ public final class BibixRepoProto {
       return ((bitField0_ & 0x00000001) != 0);
     }
     /**
-     * <code>optional .com.giyeok.bibix.repo.TargetState state = 5;</code>
+     * <code>optional .com.giyeok.bibix.repo.TargetState state = 3;</code>
      * @return The state.
      */
     @java.lang.Override
@@ -1701,7 +1624,7 @@ public final class BibixRepoProto {
       return state_ == null ? com.giyeok.bibix.repo.BibixRepoProto.TargetState.getDefaultInstance() : state_;
     }
     /**
-     * <code>optional .com.giyeok.bibix.repo.TargetState state = 5;</code>
+     * <code>optional .com.giyeok.bibix.repo.TargetState state = 3;</code>
      */
     @java.lang.Override
     public com.giyeok.bibix.repo.BibixRepoProto.TargetStateOrBuilder getStateOrBuilder() {
@@ -1728,14 +1651,8 @@ public final class BibixRepoProto {
       if (targetIdData_ != null) {
         output.writeMessage(2, getTargetIdData());
       }
-      if (latestInputHashes_ != null) {
-        output.writeMessage(3, getLatestInputHashes());
-      }
-      if (!latestObjectId_.isEmpty()) {
-        output.writeBytes(4, latestObjectId_);
-      }
       if (((bitField0_ & 0x00000001) != 0)) {
-        output.writeMessage(5, getState());
+        output.writeMessage(3, getState());
       }
       unknownFields.writeTo(output);
     }
@@ -1754,17 +1671,9 @@ public final class BibixRepoProto {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(2, getTargetIdData());
       }
-      if (latestInputHashes_ != null) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(3, getLatestInputHashes());
-      }
-      if (!latestObjectId_.isEmpty()) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(4, latestObjectId_);
-      }
       if (((bitField0_ & 0x00000001) != 0)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(5, getState());
+          .computeMessageSize(3, getState());
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -1788,13 +1697,6 @@ public final class BibixRepoProto {
         if (!getTargetIdData()
             .equals(other.getTargetIdData())) return false;
       }
-      if (hasLatestInputHashes() != other.hasLatestInputHashes()) return false;
-      if (hasLatestInputHashes()) {
-        if (!getLatestInputHashes()
-            .equals(other.getLatestInputHashes())) return false;
-      }
-      if (!getLatestObjectId()
-          .equals(other.getLatestObjectId())) return false;
       if (hasState() != other.hasState()) return false;
       if (hasState()) {
         if (!getState()
@@ -1817,12 +1719,6 @@ public final class BibixRepoProto {
         hash = (37 * hash) + TARGET_ID_DATA_FIELD_NUMBER;
         hash = (53 * hash) + getTargetIdData().hashCode();
       }
-      if (hasLatestInputHashes()) {
-        hash = (37 * hash) + LATEST_INPUT_HASHES_FIELD_NUMBER;
-        hash = (53 * hash) + getLatestInputHashes().hashCode();
-      }
-      hash = (37 * hash) + LATEST_OBJECT_ID_FIELD_NUMBER;
-      hash = (53 * hash) + getLatestObjectId().hashCode();
       if (hasState()) {
         hash = (37 * hash) + STATE_FIELD_NUMBER;
         hash = (53 * hash) + getState().hashCode();
@@ -1969,14 +1865,6 @@ public final class BibixRepoProto {
           targetIdData_ = null;
           targetIdDataBuilder_ = null;
         }
-        if (latestInputHashesBuilder_ == null) {
-          latestInputHashes_ = null;
-        } else {
-          latestInputHashes_ = null;
-          latestInputHashesBuilder_ = null;
-        }
-        latestObjectId_ = com.google.protobuf.ByteString.EMPTY;
-
         if (stateBuilder_ == null) {
           state_ = null;
         } else {
@@ -2017,12 +1905,6 @@ public final class BibixRepoProto {
         } else {
           result.targetIdData_ = targetIdDataBuilder_.build();
         }
-        if (latestInputHashesBuilder_ == null) {
-          result.latestInputHashes_ = latestInputHashes_;
-        } else {
-          result.latestInputHashes_ = latestInputHashesBuilder_.build();
-        }
-        result.latestObjectId_ = latestObjectId_;
         if (((from_bitField0_ & 0x00000001) != 0)) {
           if (stateBuilder_ == null) {
             result.state_ = state_;
@@ -2085,12 +1967,6 @@ public final class BibixRepoProto {
         }
         if (other.hasTargetIdData()) {
           mergeTargetIdData(other.getTargetIdData());
-        }
-        if (other.hasLatestInputHashes()) {
-          mergeLatestInputHashes(other.getLatestInputHashes());
-        }
-        if (other.getLatestObjectId() != com.google.protobuf.ByteString.EMPTY) {
-          setLatestObjectId(other.getLatestObjectId());
         }
         if (other.hasState()) {
           mergeState(other.getState());
@@ -2278,171 +2154,18 @@ public final class BibixRepoProto {
         return targetIdDataBuilder_;
       }
 
-      private com.giyeok.bibix.BibixIdProto.InputHashes latestInputHashes_;
-      private com.google.protobuf.SingleFieldBuilderV3<
-          com.giyeok.bibix.BibixIdProto.InputHashes, com.giyeok.bibix.BibixIdProto.InputHashes.Builder, com.giyeok.bibix.BibixIdProto.InputHashesOrBuilder> latestInputHashesBuilder_;
-      /**
-       * <code>.com.giyeok.bibix.InputHashes latest_input_hashes = 3;</code>
-       * @return Whether the latestInputHashes field is set.
-       */
-      public boolean hasLatestInputHashes() {
-        return latestInputHashesBuilder_ != null || latestInputHashes_ != null;
-      }
-      /**
-       * <code>.com.giyeok.bibix.InputHashes latest_input_hashes = 3;</code>
-       * @return The latestInputHashes.
-       */
-      public com.giyeok.bibix.BibixIdProto.InputHashes getLatestInputHashes() {
-        if (latestInputHashesBuilder_ == null) {
-          return latestInputHashes_ == null ? com.giyeok.bibix.BibixIdProto.InputHashes.getDefaultInstance() : latestInputHashes_;
-        } else {
-          return latestInputHashesBuilder_.getMessage();
-        }
-      }
-      /**
-       * <code>.com.giyeok.bibix.InputHashes latest_input_hashes = 3;</code>
-       */
-      public Builder setLatestInputHashes(com.giyeok.bibix.BibixIdProto.InputHashes value) {
-        if (latestInputHashesBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          latestInputHashes_ = value;
-          onChanged();
-        } else {
-          latestInputHashesBuilder_.setMessage(value);
-        }
-
-        return this;
-      }
-      /**
-       * <code>.com.giyeok.bibix.InputHashes latest_input_hashes = 3;</code>
-       */
-      public Builder setLatestInputHashes(
-          com.giyeok.bibix.BibixIdProto.InputHashes.Builder builderForValue) {
-        if (latestInputHashesBuilder_ == null) {
-          latestInputHashes_ = builderForValue.build();
-          onChanged();
-        } else {
-          latestInputHashesBuilder_.setMessage(builderForValue.build());
-        }
-
-        return this;
-      }
-      /**
-       * <code>.com.giyeok.bibix.InputHashes latest_input_hashes = 3;</code>
-       */
-      public Builder mergeLatestInputHashes(com.giyeok.bibix.BibixIdProto.InputHashes value) {
-        if (latestInputHashesBuilder_ == null) {
-          if (latestInputHashes_ != null) {
-            latestInputHashes_ =
-              com.giyeok.bibix.BibixIdProto.InputHashes.newBuilder(latestInputHashes_).mergeFrom(value).buildPartial();
-          } else {
-            latestInputHashes_ = value;
-          }
-          onChanged();
-        } else {
-          latestInputHashesBuilder_.mergeFrom(value);
-        }
-
-        return this;
-      }
-      /**
-       * <code>.com.giyeok.bibix.InputHashes latest_input_hashes = 3;</code>
-       */
-      public Builder clearLatestInputHashes() {
-        if (latestInputHashesBuilder_ == null) {
-          latestInputHashes_ = null;
-          onChanged();
-        } else {
-          latestInputHashes_ = null;
-          latestInputHashesBuilder_ = null;
-        }
-
-        return this;
-      }
-      /**
-       * <code>.com.giyeok.bibix.InputHashes latest_input_hashes = 3;</code>
-       */
-      public com.giyeok.bibix.BibixIdProto.InputHashes.Builder getLatestInputHashesBuilder() {
-        
-        onChanged();
-        return getLatestInputHashesFieldBuilder().getBuilder();
-      }
-      /**
-       * <code>.com.giyeok.bibix.InputHashes latest_input_hashes = 3;</code>
-       */
-      public com.giyeok.bibix.BibixIdProto.InputHashesOrBuilder getLatestInputHashesOrBuilder() {
-        if (latestInputHashesBuilder_ != null) {
-          return latestInputHashesBuilder_.getMessageOrBuilder();
-        } else {
-          return latestInputHashes_ == null ?
-              com.giyeok.bibix.BibixIdProto.InputHashes.getDefaultInstance() : latestInputHashes_;
-        }
-      }
-      /**
-       * <code>.com.giyeok.bibix.InputHashes latest_input_hashes = 3;</code>
-       */
-      private com.google.protobuf.SingleFieldBuilderV3<
-          com.giyeok.bibix.BibixIdProto.InputHashes, com.giyeok.bibix.BibixIdProto.InputHashes.Builder, com.giyeok.bibix.BibixIdProto.InputHashesOrBuilder> 
-          getLatestInputHashesFieldBuilder() {
-        if (latestInputHashesBuilder_ == null) {
-          latestInputHashesBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-              com.giyeok.bibix.BibixIdProto.InputHashes, com.giyeok.bibix.BibixIdProto.InputHashes.Builder, com.giyeok.bibix.BibixIdProto.InputHashesOrBuilder>(
-                  getLatestInputHashes(),
-                  getParentForChildren(),
-                  isClean());
-          latestInputHashes_ = null;
-        }
-        return latestInputHashesBuilder_;
-      }
-
-      private com.google.protobuf.ByteString latestObjectId_ = com.google.protobuf.ByteString.EMPTY;
-      /**
-       * <code>bytes latest_object_id = 4;</code>
-       * @return The latestObjectId.
-       */
-      @java.lang.Override
-      public com.google.protobuf.ByteString getLatestObjectId() {
-        return latestObjectId_;
-      }
-      /**
-       * <code>bytes latest_object_id = 4;</code>
-       * @param value The latestObjectId to set.
-       * @return This builder for chaining.
-       */
-      public Builder setLatestObjectId(com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
-        latestObjectId_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>bytes latest_object_id = 4;</code>
-       * @return This builder for chaining.
-       */
-      public Builder clearLatestObjectId() {
-        
-        latestObjectId_ = getDefaultInstance().getLatestObjectId();
-        onChanged();
-        return this;
-      }
-
       private com.giyeok.bibix.repo.BibixRepoProto.TargetState state_;
       private com.google.protobuf.SingleFieldBuilderV3<
           com.giyeok.bibix.repo.BibixRepoProto.TargetState, com.giyeok.bibix.repo.BibixRepoProto.TargetState.Builder, com.giyeok.bibix.repo.BibixRepoProto.TargetStateOrBuilder> stateBuilder_;
       /**
-       * <code>optional .com.giyeok.bibix.repo.TargetState state = 5;</code>
+       * <code>optional .com.giyeok.bibix.repo.TargetState state = 3;</code>
        * @return Whether the state field is set.
        */
       public boolean hasState() {
         return ((bitField0_ & 0x00000001) != 0);
       }
       /**
-       * <code>optional .com.giyeok.bibix.repo.TargetState state = 5;</code>
+       * <code>optional .com.giyeok.bibix.repo.TargetState state = 3;</code>
        * @return The state.
        */
       public com.giyeok.bibix.repo.BibixRepoProto.TargetState getState() {
@@ -2453,7 +2176,7 @@ public final class BibixRepoProto {
         }
       }
       /**
-       * <code>optional .com.giyeok.bibix.repo.TargetState state = 5;</code>
+       * <code>optional .com.giyeok.bibix.repo.TargetState state = 3;</code>
        */
       public Builder setState(com.giyeok.bibix.repo.BibixRepoProto.TargetState value) {
         if (stateBuilder_ == null) {
@@ -2469,7 +2192,7 @@ public final class BibixRepoProto {
         return this;
       }
       /**
-       * <code>optional .com.giyeok.bibix.repo.TargetState state = 5;</code>
+       * <code>optional .com.giyeok.bibix.repo.TargetState state = 3;</code>
        */
       public Builder setState(
           com.giyeok.bibix.repo.BibixRepoProto.TargetState.Builder builderForValue) {
@@ -2483,7 +2206,7 @@ public final class BibixRepoProto {
         return this;
       }
       /**
-       * <code>optional .com.giyeok.bibix.repo.TargetState state = 5;</code>
+       * <code>optional .com.giyeok.bibix.repo.TargetState state = 3;</code>
        */
       public Builder mergeState(com.giyeok.bibix.repo.BibixRepoProto.TargetState value) {
         if (stateBuilder_ == null) {
@@ -2503,7 +2226,7 @@ public final class BibixRepoProto {
         return this;
       }
       /**
-       * <code>optional .com.giyeok.bibix.repo.TargetState state = 5;</code>
+       * <code>optional .com.giyeok.bibix.repo.TargetState state = 3;</code>
        */
       public Builder clearState() {
         if (stateBuilder_ == null) {
@@ -2516,7 +2239,7 @@ public final class BibixRepoProto {
         return this;
       }
       /**
-       * <code>optional .com.giyeok.bibix.repo.TargetState state = 5;</code>
+       * <code>optional .com.giyeok.bibix.repo.TargetState state = 3;</code>
        */
       public com.giyeok.bibix.repo.BibixRepoProto.TargetState.Builder getStateBuilder() {
         bitField0_ |= 0x00000001;
@@ -2524,7 +2247,7 @@ public final class BibixRepoProto {
         return getStateFieldBuilder().getBuilder();
       }
       /**
-       * <code>optional .com.giyeok.bibix.repo.TargetState state = 5;</code>
+       * <code>optional .com.giyeok.bibix.repo.TargetState state = 3;</code>
        */
       public com.giyeok.bibix.repo.BibixRepoProto.TargetStateOrBuilder getStateOrBuilder() {
         if (stateBuilder_ != null) {
@@ -2535,7 +2258,7 @@ public final class BibixRepoProto {
         }
       }
       /**
-       * <code>optional .com.giyeok.bibix.repo.TargetState state = 5;</code>
+       * <code>optional .com.giyeok.bibix.repo.TargetState state = 3;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
           com.giyeok.bibix.repo.BibixRepoProto.TargetState, com.giyeok.bibix.repo.BibixRepoProto.TargetState.Builder, com.giyeok.bibix.repo.BibixRepoProto.TargetStateOrBuilder> 
@@ -3267,47 +2990,69 @@ public final class BibixRepoProto {
     com.google.protobuf.TimestampOrBuilder getBuildStartTimeOrBuilder();
 
     /**
-     * <code>.google.protobuf.Empty build_started = 2;</code>
+     * <code>optional bytes inputs_hash = 2;</code>
+     * @return Whether the inputsHash field is set.
+     */
+    boolean hasInputsHash();
+    /**
+     * <code>optional bytes inputs_hash = 2;</code>
+     * @return The inputsHash.
+     */
+    com.google.protobuf.ByteString getInputsHash();
+
+    /**
+     * <code>optional bytes object_id = 3;</code>
+     * @return Whether the objectId field is set.
+     */
+    boolean hasObjectId();
+    /**
+     * <code>optional bytes object_id = 3;</code>
+     * @return The objectId.
+     */
+    com.google.protobuf.ByteString getObjectId();
+
+    /**
+     * <code>.google.protobuf.Empty build_started = 4;</code>
      * @return Whether the buildStarted field is set.
      */
     boolean hasBuildStarted();
     /**
-     * <code>.google.protobuf.Empty build_started = 2;</code>
+     * <code>.google.protobuf.Empty build_started = 4;</code>
      * @return The buildStarted.
      */
     com.google.protobuf.Empty getBuildStarted();
     /**
-     * <code>.google.protobuf.Empty build_started = 2;</code>
+     * <code>.google.protobuf.Empty build_started = 4;</code>
      */
     com.google.protobuf.EmptyOrBuilder getBuildStartedOrBuilder();
 
     /**
-     * <code>.com.giyeok.bibix.repo.TargetState.BuildSucceeded build_succeeded = 3;</code>
+     * <code>.com.giyeok.bibix.repo.TargetState.BuildSucceeded build_succeeded = 5;</code>
      * @return Whether the buildSucceeded field is set.
      */
     boolean hasBuildSucceeded();
     /**
-     * <code>.com.giyeok.bibix.repo.TargetState.BuildSucceeded build_succeeded = 3;</code>
+     * <code>.com.giyeok.bibix.repo.TargetState.BuildSucceeded build_succeeded = 5;</code>
      * @return The buildSucceeded.
      */
     com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded getBuildSucceeded();
     /**
-     * <code>.com.giyeok.bibix.repo.TargetState.BuildSucceeded build_succeeded = 3;</code>
+     * <code>.com.giyeok.bibix.repo.TargetState.BuildSucceeded build_succeeded = 5;</code>
      */
     com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceededOrBuilder getBuildSucceededOrBuilder();
 
     /**
-     * <code>.com.giyeok.bibix.repo.TargetState.BuildFailed build_failed = 4;</code>
+     * <code>.com.giyeok.bibix.repo.TargetState.BuildFailed build_failed = 6;</code>
      * @return Whether the buildFailed field is set.
      */
     boolean hasBuildFailed();
     /**
-     * <code>.com.giyeok.bibix.repo.TargetState.BuildFailed build_failed = 4;</code>
+     * <code>.com.giyeok.bibix.repo.TargetState.BuildFailed build_failed = 6;</code>
      * @return The buildFailed.
      */
     com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed getBuildFailed();
     /**
-     * <code>.com.giyeok.bibix.repo.TargetState.BuildFailed build_failed = 4;</code>
+     * <code>.com.giyeok.bibix.repo.TargetState.BuildFailed build_failed = 6;</code>
      */
     com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailedOrBuilder getBuildFailedOrBuilder();
 
@@ -3326,6 +3071,8 @@ public final class BibixRepoProto {
       super(builder);
     }
     private TargetState() {
+      inputsHash_ = com.google.protobuf.ByteString.EMPTY;
+      objectId_ = com.google.protobuf.ByteString.EMPTY;
     }
 
     @java.lang.Override
@@ -3348,6 +3095,7 @@ public final class BibixRepoProto {
       if (extensionRegistry == null) {
         throw new java.lang.NullPointerException();
       }
+      int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
       try {
@@ -3372,8 +3120,18 @@ public final class BibixRepoProto {
               break;
             }
             case 18: {
+              bitField0_ |= 0x00000001;
+              inputsHash_ = input.readBytes();
+              break;
+            }
+            case 26: {
+              bitField0_ |= 0x00000002;
+              objectId_ = input.readBytes();
+              break;
+            }
+            case 34: {
               com.google.protobuf.Empty.Builder subBuilder = null;
-              if (stateCase_ == 2) {
+              if (stateCase_ == 4) {
                 subBuilder = ((com.google.protobuf.Empty) state_).toBuilder();
               }
               state_ =
@@ -3382,12 +3140,12 @@ public final class BibixRepoProto {
                 subBuilder.mergeFrom((com.google.protobuf.Empty) state_);
                 state_ = subBuilder.buildPartial();
               }
-              stateCase_ = 2;
+              stateCase_ = 4;
               break;
             }
-            case 26: {
+            case 42: {
               com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded.Builder subBuilder = null;
-              if (stateCase_ == 3) {
+              if (stateCase_ == 5) {
                 subBuilder = ((com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded) state_).toBuilder();
               }
               state_ =
@@ -3396,12 +3154,12 @@ public final class BibixRepoProto {
                 subBuilder.mergeFrom((com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded) state_);
                 state_ = subBuilder.buildPartial();
               }
-              stateCase_ = 3;
+              stateCase_ = 5;
               break;
             }
-            case 34: {
+            case 50: {
               com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed.Builder subBuilder = null;
-              if (stateCase_ == 4) {
+              if (stateCase_ == 6) {
                 subBuilder = ((com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed) state_).toBuilder();
               }
               state_ =
@@ -3410,7 +3168,7 @@ public final class BibixRepoProto {
                 subBuilder.mergeFrom((com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed) state_);
                 state_ = subBuilder.buildPartial();
               }
-              stateCase_ = 4;
+              stateCase_ = 6;
               break;
             }
             default: {
@@ -5046,14 +4804,15 @@ public final class BibixRepoProto {
 
     }
 
+    private int bitField0_;
     private int stateCase_ = 0;
     private java.lang.Object state_;
     public enum StateCase
         implements com.google.protobuf.Internal.EnumLite,
             com.google.protobuf.AbstractMessage.InternalOneOfEnum {
-      BUILD_STARTED(2),
-      BUILD_SUCCEEDED(3),
-      BUILD_FAILED(4),
+      BUILD_STARTED(4),
+      BUILD_SUCCEEDED(5),
+      BUILD_FAILED(6),
       STATE_NOT_SET(0);
       private final int value;
       private StateCase(int value) {
@@ -5071,9 +4830,9 @@ public final class BibixRepoProto {
 
       public static StateCase forNumber(int value) {
         switch (value) {
-          case 2: return BUILD_STARTED;
-          case 3: return BUILD_SUCCEEDED;
-          case 4: return BUILD_FAILED;
+          case 4: return BUILD_STARTED;
+          case 5: return BUILD_SUCCEEDED;
+          case 6: return BUILD_FAILED;
           case 0: return STATE_NOT_SET;
           default: return null;
         }
@@ -5115,94 +4874,132 @@ public final class BibixRepoProto {
       return getBuildStartTime();
     }
 
-    public static final int BUILD_STARTED_FIELD_NUMBER = 2;
+    public static final int INPUTS_HASH_FIELD_NUMBER = 2;
+    private com.google.protobuf.ByteString inputsHash_;
     /**
-     * <code>.google.protobuf.Empty build_started = 2;</code>
+     * <code>optional bytes inputs_hash = 2;</code>
+     * @return Whether the inputsHash field is set.
+     */
+    @java.lang.Override
+    public boolean hasInputsHash() {
+      return ((bitField0_ & 0x00000001) != 0);
+    }
+    /**
+     * <code>optional bytes inputs_hash = 2;</code>
+     * @return The inputsHash.
+     */
+    @java.lang.Override
+    public com.google.protobuf.ByteString getInputsHash() {
+      return inputsHash_;
+    }
+
+    public static final int OBJECT_ID_FIELD_NUMBER = 3;
+    private com.google.protobuf.ByteString objectId_;
+    /**
+     * <code>optional bytes object_id = 3;</code>
+     * @return Whether the objectId field is set.
+     */
+    @java.lang.Override
+    public boolean hasObjectId() {
+      return ((bitField0_ & 0x00000002) != 0);
+    }
+    /**
+     * <code>optional bytes object_id = 3;</code>
+     * @return The objectId.
+     */
+    @java.lang.Override
+    public com.google.protobuf.ByteString getObjectId() {
+      return objectId_;
+    }
+
+    public static final int BUILD_STARTED_FIELD_NUMBER = 4;
+    /**
+     * <code>.google.protobuf.Empty build_started = 4;</code>
      * @return Whether the buildStarted field is set.
      */
     @java.lang.Override
     public boolean hasBuildStarted() {
-      return stateCase_ == 2;
+      return stateCase_ == 4;
     }
     /**
-     * <code>.google.protobuf.Empty build_started = 2;</code>
+     * <code>.google.protobuf.Empty build_started = 4;</code>
      * @return The buildStarted.
      */
     @java.lang.Override
     public com.google.protobuf.Empty getBuildStarted() {
-      if (stateCase_ == 2) {
+      if (stateCase_ == 4) {
          return (com.google.protobuf.Empty) state_;
       }
       return com.google.protobuf.Empty.getDefaultInstance();
     }
     /**
-     * <code>.google.protobuf.Empty build_started = 2;</code>
+     * <code>.google.protobuf.Empty build_started = 4;</code>
      */
     @java.lang.Override
     public com.google.protobuf.EmptyOrBuilder getBuildStartedOrBuilder() {
-      if (stateCase_ == 2) {
+      if (stateCase_ == 4) {
          return (com.google.protobuf.Empty) state_;
       }
       return com.google.protobuf.Empty.getDefaultInstance();
     }
 
-    public static final int BUILD_SUCCEEDED_FIELD_NUMBER = 3;
+    public static final int BUILD_SUCCEEDED_FIELD_NUMBER = 5;
     /**
-     * <code>.com.giyeok.bibix.repo.TargetState.BuildSucceeded build_succeeded = 3;</code>
+     * <code>.com.giyeok.bibix.repo.TargetState.BuildSucceeded build_succeeded = 5;</code>
      * @return Whether the buildSucceeded field is set.
      */
     @java.lang.Override
     public boolean hasBuildSucceeded() {
-      return stateCase_ == 3;
+      return stateCase_ == 5;
     }
     /**
-     * <code>.com.giyeok.bibix.repo.TargetState.BuildSucceeded build_succeeded = 3;</code>
+     * <code>.com.giyeok.bibix.repo.TargetState.BuildSucceeded build_succeeded = 5;</code>
      * @return The buildSucceeded.
      */
     @java.lang.Override
     public com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded getBuildSucceeded() {
-      if (stateCase_ == 3) {
+      if (stateCase_ == 5) {
          return (com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded) state_;
       }
       return com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded.getDefaultInstance();
     }
     /**
-     * <code>.com.giyeok.bibix.repo.TargetState.BuildSucceeded build_succeeded = 3;</code>
+     * <code>.com.giyeok.bibix.repo.TargetState.BuildSucceeded build_succeeded = 5;</code>
      */
     @java.lang.Override
     public com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceededOrBuilder getBuildSucceededOrBuilder() {
-      if (stateCase_ == 3) {
+      if (stateCase_ == 5) {
          return (com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded) state_;
       }
       return com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded.getDefaultInstance();
     }
 
-    public static final int BUILD_FAILED_FIELD_NUMBER = 4;
+    public static final int BUILD_FAILED_FIELD_NUMBER = 6;
     /**
-     * <code>.com.giyeok.bibix.repo.TargetState.BuildFailed build_failed = 4;</code>
+     * <code>.com.giyeok.bibix.repo.TargetState.BuildFailed build_failed = 6;</code>
      * @return Whether the buildFailed field is set.
      */
     @java.lang.Override
     public boolean hasBuildFailed() {
-      return stateCase_ == 4;
+      return stateCase_ == 6;
     }
     /**
-     * <code>.com.giyeok.bibix.repo.TargetState.BuildFailed build_failed = 4;</code>
+     * <code>.com.giyeok.bibix.repo.TargetState.BuildFailed build_failed = 6;</code>
      * @return The buildFailed.
      */
     @java.lang.Override
     public com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed getBuildFailed() {
-      if (stateCase_ == 4) {
+      if (stateCase_ == 6) {
          return (com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed) state_;
       }
       return com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed.getDefaultInstance();
     }
     /**
-     * <code>.com.giyeok.bibix.repo.TargetState.BuildFailed build_failed = 4;</code>
+     * <code>.com.giyeok.bibix.repo.TargetState.BuildFailed build_failed = 6;</code>
      */
     @java.lang.Override
     public com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailedOrBuilder getBuildFailedOrBuilder() {
-      if (stateCase_ == 4) {
+      if (stateCase_ == 6) {
          return (com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed) state_;
       }
       return com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed.getDefaultInstance();
@@ -5225,14 +5022,20 @@ public final class BibixRepoProto {
       if (buildStartTime_ != null) {
         output.writeMessage(1, getBuildStartTime());
       }
-      if (stateCase_ == 2) {
-        output.writeMessage(2, (com.google.protobuf.Empty) state_);
+      if (((bitField0_ & 0x00000001) != 0)) {
+        output.writeBytes(2, inputsHash_);
       }
-      if (stateCase_ == 3) {
-        output.writeMessage(3, (com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded) state_);
+      if (((bitField0_ & 0x00000002) != 0)) {
+        output.writeBytes(3, objectId_);
       }
       if (stateCase_ == 4) {
-        output.writeMessage(4, (com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed) state_);
+        output.writeMessage(4, (com.google.protobuf.Empty) state_);
+      }
+      if (stateCase_ == 5) {
+        output.writeMessage(5, (com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded) state_);
+      }
+      if (stateCase_ == 6) {
+        output.writeMessage(6, (com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed) state_);
       }
       unknownFields.writeTo(output);
     }
@@ -5247,17 +5050,25 @@ public final class BibixRepoProto {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(1, getBuildStartTime());
       }
-      if (stateCase_ == 2) {
+      if (((bitField0_ & 0x00000001) != 0)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(2, (com.google.protobuf.Empty) state_);
+          .computeBytesSize(2, inputsHash_);
       }
-      if (stateCase_ == 3) {
+      if (((bitField0_ & 0x00000002) != 0)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(3, (com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded) state_);
+          .computeBytesSize(3, objectId_);
       }
       if (stateCase_ == 4) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(4, (com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed) state_);
+          .computeMessageSize(4, (com.google.protobuf.Empty) state_);
+      }
+      if (stateCase_ == 5) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(5, (com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded) state_);
+      }
+      if (stateCase_ == 6) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(6, (com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed) state_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -5279,17 +5090,27 @@ public final class BibixRepoProto {
         if (!getBuildStartTime()
             .equals(other.getBuildStartTime())) return false;
       }
+      if (hasInputsHash() != other.hasInputsHash()) return false;
+      if (hasInputsHash()) {
+        if (!getInputsHash()
+            .equals(other.getInputsHash())) return false;
+      }
+      if (hasObjectId() != other.hasObjectId()) return false;
+      if (hasObjectId()) {
+        if (!getObjectId()
+            .equals(other.getObjectId())) return false;
+      }
       if (!getStateCase().equals(other.getStateCase())) return false;
       switch (stateCase_) {
-        case 2:
+        case 4:
           if (!getBuildStarted()
               .equals(other.getBuildStarted())) return false;
           break;
-        case 3:
+        case 5:
           if (!getBuildSucceeded()
               .equals(other.getBuildSucceeded())) return false;
           break;
-        case 4:
+        case 6:
           if (!getBuildFailed()
               .equals(other.getBuildFailed())) return false;
           break;
@@ -5311,16 +5132,24 @@ public final class BibixRepoProto {
         hash = (37 * hash) + BUILD_START_TIME_FIELD_NUMBER;
         hash = (53 * hash) + getBuildStartTime().hashCode();
       }
+      if (hasInputsHash()) {
+        hash = (37 * hash) + INPUTS_HASH_FIELD_NUMBER;
+        hash = (53 * hash) + getInputsHash().hashCode();
+      }
+      if (hasObjectId()) {
+        hash = (37 * hash) + OBJECT_ID_FIELD_NUMBER;
+        hash = (53 * hash) + getObjectId().hashCode();
+      }
       switch (stateCase_) {
-        case 2:
+        case 4:
           hash = (37 * hash) + BUILD_STARTED_FIELD_NUMBER;
           hash = (53 * hash) + getBuildStarted().hashCode();
           break;
-        case 3:
+        case 5:
           hash = (37 * hash) + BUILD_SUCCEEDED_FIELD_NUMBER;
           hash = (53 * hash) + getBuildSucceeded().hashCode();
           break;
-        case 4:
+        case 6:
           hash = (37 * hash) + BUILD_FAILED_FIELD_NUMBER;
           hash = (53 * hash) + getBuildFailed().hashCode();
           break;
@@ -5466,6 +5295,10 @@ public final class BibixRepoProto {
           buildStartTime_ = null;
           buildStartTimeBuilder_ = null;
         }
+        inputsHash_ = com.google.protobuf.ByteString.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000001);
+        objectId_ = com.google.protobuf.ByteString.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000002);
         stateCase_ = 0;
         state_ = null;
         return this;
@@ -5494,32 +5327,43 @@ public final class BibixRepoProto {
       @java.lang.Override
       public com.giyeok.bibix.repo.BibixRepoProto.TargetState buildPartial() {
         com.giyeok.bibix.repo.BibixRepoProto.TargetState result = new com.giyeok.bibix.repo.BibixRepoProto.TargetState(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
         if (buildStartTimeBuilder_ == null) {
           result.buildStartTime_ = buildStartTime_;
         } else {
           result.buildStartTime_ = buildStartTimeBuilder_.build();
         }
-        if (stateCase_ == 2) {
+        if (((from_bitField0_ & 0x00000001) != 0)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.inputsHash_ = inputsHash_;
+        if (((from_bitField0_ & 0x00000002) != 0)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        result.objectId_ = objectId_;
+        if (stateCase_ == 4) {
           if (buildStartedBuilder_ == null) {
             result.state_ = state_;
           } else {
             result.state_ = buildStartedBuilder_.build();
           }
         }
-        if (stateCase_ == 3) {
+        if (stateCase_ == 5) {
           if (buildSucceededBuilder_ == null) {
             result.state_ = state_;
           } else {
             result.state_ = buildSucceededBuilder_.build();
           }
         }
-        if (stateCase_ == 4) {
+        if (stateCase_ == 6) {
           if (buildFailedBuilder_ == null) {
             result.state_ = state_;
           } else {
             result.state_ = buildFailedBuilder_.build();
           }
         }
+        result.bitField0_ = to_bitField0_;
         result.stateCase_ = stateCase_;
         onBuilt();
         return result;
@@ -5571,6 +5415,12 @@ public final class BibixRepoProto {
         if (other == com.giyeok.bibix.repo.BibixRepoProto.TargetState.getDefaultInstance()) return this;
         if (other.hasBuildStartTime()) {
           mergeBuildStartTime(other.getBuildStartTime());
+        }
+        if (other.hasInputsHash()) {
+          setInputsHash(other.getInputsHash());
+        }
+        if (other.hasObjectId()) {
+          setObjectId(other.getObjectId());
         }
         switch (other.getStateCase()) {
           case BUILD_STARTED: {
@@ -5632,6 +5482,7 @@ public final class BibixRepoProto {
         return this;
       }
 
+      private int bitField0_;
 
       private com.google.protobuf.Timestamp buildStartTime_;
       private com.google.protobuf.SingleFieldBuilderV3<
@@ -5752,36 +5603,120 @@ public final class BibixRepoProto {
         return buildStartTimeBuilder_;
       }
 
+      private com.google.protobuf.ByteString inputsHash_ = com.google.protobuf.ByteString.EMPTY;
+      /**
+       * <code>optional bytes inputs_hash = 2;</code>
+       * @return Whether the inputsHash field is set.
+       */
+      @java.lang.Override
+      public boolean hasInputsHash() {
+        return ((bitField0_ & 0x00000001) != 0);
+      }
+      /**
+       * <code>optional bytes inputs_hash = 2;</code>
+       * @return The inputsHash.
+       */
+      @java.lang.Override
+      public com.google.protobuf.ByteString getInputsHash() {
+        return inputsHash_;
+      }
+      /**
+       * <code>optional bytes inputs_hash = 2;</code>
+       * @param value The inputsHash to set.
+       * @return This builder for chaining.
+       */
+      public Builder setInputsHash(com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+        inputsHash_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional bytes inputs_hash = 2;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearInputsHash() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        inputsHash_ = getDefaultInstance().getInputsHash();
+        onChanged();
+        return this;
+      }
+
+      private com.google.protobuf.ByteString objectId_ = com.google.protobuf.ByteString.EMPTY;
+      /**
+       * <code>optional bytes object_id = 3;</code>
+       * @return Whether the objectId field is set.
+       */
+      @java.lang.Override
+      public boolean hasObjectId() {
+        return ((bitField0_ & 0x00000002) != 0);
+      }
+      /**
+       * <code>optional bytes object_id = 3;</code>
+       * @return The objectId.
+       */
+      @java.lang.Override
+      public com.google.protobuf.ByteString getObjectId() {
+        return objectId_;
+      }
+      /**
+       * <code>optional bytes object_id = 3;</code>
+       * @param value The objectId to set.
+       * @return This builder for chaining.
+       */
+      public Builder setObjectId(com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+        objectId_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional bytes object_id = 3;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearObjectId() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        objectId_ = getDefaultInstance().getObjectId();
+        onChanged();
+        return this;
+      }
+
       private com.google.protobuf.SingleFieldBuilderV3<
           com.google.protobuf.Empty, com.google.protobuf.Empty.Builder, com.google.protobuf.EmptyOrBuilder> buildStartedBuilder_;
       /**
-       * <code>.google.protobuf.Empty build_started = 2;</code>
+       * <code>.google.protobuf.Empty build_started = 4;</code>
        * @return Whether the buildStarted field is set.
        */
       @java.lang.Override
       public boolean hasBuildStarted() {
-        return stateCase_ == 2;
+        return stateCase_ == 4;
       }
       /**
-       * <code>.google.protobuf.Empty build_started = 2;</code>
+       * <code>.google.protobuf.Empty build_started = 4;</code>
        * @return The buildStarted.
        */
       @java.lang.Override
       public com.google.protobuf.Empty getBuildStarted() {
         if (buildStartedBuilder_ == null) {
-          if (stateCase_ == 2) {
+          if (stateCase_ == 4) {
             return (com.google.protobuf.Empty) state_;
           }
           return com.google.protobuf.Empty.getDefaultInstance();
         } else {
-          if (stateCase_ == 2) {
+          if (stateCase_ == 4) {
             return buildStartedBuilder_.getMessage();
           }
           return com.google.protobuf.Empty.getDefaultInstance();
         }
       }
       /**
-       * <code>.google.protobuf.Empty build_started = 2;</code>
+       * <code>.google.protobuf.Empty build_started = 4;</code>
        */
       public Builder setBuildStarted(com.google.protobuf.Empty value) {
         if (buildStartedBuilder_ == null) {
@@ -5793,11 +5728,11 @@ public final class BibixRepoProto {
         } else {
           buildStartedBuilder_.setMessage(value);
         }
-        stateCase_ = 2;
+        stateCase_ = 4;
         return this;
       }
       /**
-       * <code>.google.protobuf.Empty build_started = 2;</code>
+       * <code>.google.protobuf.Empty build_started = 4;</code>
        */
       public Builder setBuildStarted(
           com.google.protobuf.Empty.Builder builderForValue) {
@@ -5807,15 +5742,15 @@ public final class BibixRepoProto {
         } else {
           buildStartedBuilder_.setMessage(builderForValue.build());
         }
-        stateCase_ = 2;
+        stateCase_ = 4;
         return this;
       }
       /**
-       * <code>.google.protobuf.Empty build_started = 2;</code>
+       * <code>.google.protobuf.Empty build_started = 4;</code>
        */
       public Builder mergeBuildStarted(com.google.protobuf.Empty value) {
         if (buildStartedBuilder_ == null) {
-          if (stateCase_ == 2 &&
+          if (stateCase_ == 4 &&
               state_ != com.google.protobuf.Empty.getDefaultInstance()) {
             state_ = com.google.protobuf.Empty.newBuilder((com.google.protobuf.Empty) state_)
                 .mergeFrom(value).buildPartial();
@@ -5824,27 +5759,27 @@ public final class BibixRepoProto {
           }
           onChanged();
         } else {
-          if (stateCase_ == 2) {
+          if (stateCase_ == 4) {
             buildStartedBuilder_.mergeFrom(value);
           } else {
             buildStartedBuilder_.setMessage(value);
           }
         }
-        stateCase_ = 2;
+        stateCase_ = 4;
         return this;
       }
       /**
-       * <code>.google.protobuf.Empty build_started = 2;</code>
+       * <code>.google.protobuf.Empty build_started = 4;</code>
        */
       public Builder clearBuildStarted() {
         if (buildStartedBuilder_ == null) {
-          if (stateCase_ == 2) {
+          if (stateCase_ == 4) {
             stateCase_ = 0;
             state_ = null;
             onChanged();
           }
         } else {
-          if (stateCase_ == 2) {
+          if (stateCase_ == 4) {
             stateCase_ = 0;
             state_ = null;
           }
@@ -5853,33 +5788,33 @@ public final class BibixRepoProto {
         return this;
       }
       /**
-       * <code>.google.protobuf.Empty build_started = 2;</code>
+       * <code>.google.protobuf.Empty build_started = 4;</code>
        */
       public com.google.protobuf.Empty.Builder getBuildStartedBuilder() {
         return getBuildStartedFieldBuilder().getBuilder();
       }
       /**
-       * <code>.google.protobuf.Empty build_started = 2;</code>
+       * <code>.google.protobuf.Empty build_started = 4;</code>
        */
       @java.lang.Override
       public com.google.protobuf.EmptyOrBuilder getBuildStartedOrBuilder() {
-        if ((stateCase_ == 2) && (buildStartedBuilder_ != null)) {
+        if ((stateCase_ == 4) && (buildStartedBuilder_ != null)) {
           return buildStartedBuilder_.getMessageOrBuilder();
         } else {
-          if (stateCase_ == 2) {
+          if (stateCase_ == 4) {
             return (com.google.protobuf.Empty) state_;
           }
           return com.google.protobuf.Empty.getDefaultInstance();
         }
       }
       /**
-       * <code>.google.protobuf.Empty build_started = 2;</code>
+       * <code>.google.protobuf.Empty build_started = 4;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
           com.google.protobuf.Empty, com.google.protobuf.Empty.Builder, com.google.protobuf.EmptyOrBuilder> 
           getBuildStartedFieldBuilder() {
         if (buildStartedBuilder_ == null) {
-          if (!(stateCase_ == 2)) {
+          if (!(stateCase_ == 4)) {
             state_ = com.google.protobuf.Empty.getDefaultInstance();
           }
           buildStartedBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
@@ -5889,7 +5824,7 @@ public final class BibixRepoProto {
                   isClean());
           state_ = null;
         }
-        stateCase_ = 2;
+        stateCase_ = 4;
         onChanged();;
         return buildStartedBuilder_;
       }
@@ -5897,33 +5832,33 @@ public final class BibixRepoProto {
       private com.google.protobuf.SingleFieldBuilderV3<
           com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded, com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded.Builder, com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceededOrBuilder> buildSucceededBuilder_;
       /**
-       * <code>.com.giyeok.bibix.repo.TargetState.BuildSucceeded build_succeeded = 3;</code>
+       * <code>.com.giyeok.bibix.repo.TargetState.BuildSucceeded build_succeeded = 5;</code>
        * @return Whether the buildSucceeded field is set.
        */
       @java.lang.Override
       public boolean hasBuildSucceeded() {
-        return stateCase_ == 3;
+        return stateCase_ == 5;
       }
       /**
-       * <code>.com.giyeok.bibix.repo.TargetState.BuildSucceeded build_succeeded = 3;</code>
+       * <code>.com.giyeok.bibix.repo.TargetState.BuildSucceeded build_succeeded = 5;</code>
        * @return The buildSucceeded.
        */
       @java.lang.Override
       public com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded getBuildSucceeded() {
         if (buildSucceededBuilder_ == null) {
-          if (stateCase_ == 3) {
+          if (stateCase_ == 5) {
             return (com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded) state_;
           }
           return com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded.getDefaultInstance();
         } else {
-          if (stateCase_ == 3) {
+          if (stateCase_ == 5) {
             return buildSucceededBuilder_.getMessage();
           }
           return com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded.getDefaultInstance();
         }
       }
       /**
-       * <code>.com.giyeok.bibix.repo.TargetState.BuildSucceeded build_succeeded = 3;</code>
+       * <code>.com.giyeok.bibix.repo.TargetState.BuildSucceeded build_succeeded = 5;</code>
        */
       public Builder setBuildSucceeded(com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded value) {
         if (buildSucceededBuilder_ == null) {
@@ -5935,11 +5870,11 @@ public final class BibixRepoProto {
         } else {
           buildSucceededBuilder_.setMessage(value);
         }
-        stateCase_ = 3;
+        stateCase_ = 5;
         return this;
       }
       /**
-       * <code>.com.giyeok.bibix.repo.TargetState.BuildSucceeded build_succeeded = 3;</code>
+       * <code>.com.giyeok.bibix.repo.TargetState.BuildSucceeded build_succeeded = 5;</code>
        */
       public Builder setBuildSucceeded(
           com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded.Builder builderForValue) {
@@ -5949,15 +5884,15 @@ public final class BibixRepoProto {
         } else {
           buildSucceededBuilder_.setMessage(builderForValue.build());
         }
-        stateCase_ = 3;
+        stateCase_ = 5;
         return this;
       }
       /**
-       * <code>.com.giyeok.bibix.repo.TargetState.BuildSucceeded build_succeeded = 3;</code>
+       * <code>.com.giyeok.bibix.repo.TargetState.BuildSucceeded build_succeeded = 5;</code>
        */
       public Builder mergeBuildSucceeded(com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded value) {
         if (buildSucceededBuilder_ == null) {
-          if (stateCase_ == 3 &&
+          if (stateCase_ == 5 &&
               state_ != com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded.getDefaultInstance()) {
             state_ = com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded.newBuilder((com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded) state_)
                 .mergeFrom(value).buildPartial();
@@ -5966,27 +5901,27 @@ public final class BibixRepoProto {
           }
           onChanged();
         } else {
-          if (stateCase_ == 3) {
+          if (stateCase_ == 5) {
             buildSucceededBuilder_.mergeFrom(value);
           } else {
             buildSucceededBuilder_.setMessage(value);
           }
         }
-        stateCase_ = 3;
+        stateCase_ = 5;
         return this;
       }
       /**
-       * <code>.com.giyeok.bibix.repo.TargetState.BuildSucceeded build_succeeded = 3;</code>
+       * <code>.com.giyeok.bibix.repo.TargetState.BuildSucceeded build_succeeded = 5;</code>
        */
       public Builder clearBuildSucceeded() {
         if (buildSucceededBuilder_ == null) {
-          if (stateCase_ == 3) {
+          if (stateCase_ == 5) {
             stateCase_ = 0;
             state_ = null;
             onChanged();
           }
         } else {
-          if (stateCase_ == 3) {
+          if (stateCase_ == 5) {
             stateCase_ = 0;
             state_ = null;
           }
@@ -5995,33 +5930,33 @@ public final class BibixRepoProto {
         return this;
       }
       /**
-       * <code>.com.giyeok.bibix.repo.TargetState.BuildSucceeded build_succeeded = 3;</code>
+       * <code>.com.giyeok.bibix.repo.TargetState.BuildSucceeded build_succeeded = 5;</code>
        */
       public com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded.Builder getBuildSucceededBuilder() {
         return getBuildSucceededFieldBuilder().getBuilder();
       }
       /**
-       * <code>.com.giyeok.bibix.repo.TargetState.BuildSucceeded build_succeeded = 3;</code>
+       * <code>.com.giyeok.bibix.repo.TargetState.BuildSucceeded build_succeeded = 5;</code>
        */
       @java.lang.Override
       public com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceededOrBuilder getBuildSucceededOrBuilder() {
-        if ((stateCase_ == 3) && (buildSucceededBuilder_ != null)) {
+        if ((stateCase_ == 5) && (buildSucceededBuilder_ != null)) {
           return buildSucceededBuilder_.getMessageOrBuilder();
         } else {
-          if (stateCase_ == 3) {
+          if (stateCase_ == 5) {
             return (com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded) state_;
           }
           return com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded.getDefaultInstance();
         }
       }
       /**
-       * <code>.com.giyeok.bibix.repo.TargetState.BuildSucceeded build_succeeded = 3;</code>
+       * <code>.com.giyeok.bibix.repo.TargetState.BuildSucceeded build_succeeded = 5;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
           com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded, com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded.Builder, com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceededOrBuilder> 
           getBuildSucceededFieldBuilder() {
         if (buildSucceededBuilder_ == null) {
-          if (!(stateCase_ == 3)) {
+          if (!(stateCase_ == 5)) {
             state_ = com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded.getDefaultInstance();
           }
           buildSucceededBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
@@ -6031,7 +5966,7 @@ public final class BibixRepoProto {
                   isClean());
           state_ = null;
         }
-        stateCase_ = 3;
+        stateCase_ = 5;
         onChanged();;
         return buildSucceededBuilder_;
       }
@@ -6039,33 +5974,33 @@ public final class BibixRepoProto {
       private com.google.protobuf.SingleFieldBuilderV3<
           com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed, com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed.Builder, com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailedOrBuilder> buildFailedBuilder_;
       /**
-       * <code>.com.giyeok.bibix.repo.TargetState.BuildFailed build_failed = 4;</code>
+       * <code>.com.giyeok.bibix.repo.TargetState.BuildFailed build_failed = 6;</code>
        * @return Whether the buildFailed field is set.
        */
       @java.lang.Override
       public boolean hasBuildFailed() {
-        return stateCase_ == 4;
+        return stateCase_ == 6;
       }
       /**
-       * <code>.com.giyeok.bibix.repo.TargetState.BuildFailed build_failed = 4;</code>
+       * <code>.com.giyeok.bibix.repo.TargetState.BuildFailed build_failed = 6;</code>
        * @return The buildFailed.
        */
       @java.lang.Override
       public com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed getBuildFailed() {
         if (buildFailedBuilder_ == null) {
-          if (stateCase_ == 4) {
+          if (stateCase_ == 6) {
             return (com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed) state_;
           }
           return com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed.getDefaultInstance();
         } else {
-          if (stateCase_ == 4) {
+          if (stateCase_ == 6) {
             return buildFailedBuilder_.getMessage();
           }
           return com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed.getDefaultInstance();
         }
       }
       /**
-       * <code>.com.giyeok.bibix.repo.TargetState.BuildFailed build_failed = 4;</code>
+       * <code>.com.giyeok.bibix.repo.TargetState.BuildFailed build_failed = 6;</code>
        */
       public Builder setBuildFailed(com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed value) {
         if (buildFailedBuilder_ == null) {
@@ -6077,11 +6012,11 @@ public final class BibixRepoProto {
         } else {
           buildFailedBuilder_.setMessage(value);
         }
-        stateCase_ = 4;
+        stateCase_ = 6;
         return this;
       }
       /**
-       * <code>.com.giyeok.bibix.repo.TargetState.BuildFailed build_failed = 4;</code>
+       * <code>.com.giyeok.bibix.repo.TargetState.BuildFailed build_failed = 6;</code>
        */
       public Builder setBuildFailed(
           com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed.Builder builderForValue) {
@@ -6091,15 +6026,15 @@ public final class BibixRepoProto {
         } else {
           buildFailedBuilder_.setMessage(builderForValue.build());
         }
-        stateCase_ = 4;
+        stateCase_ = 6;
         return this;
       }
       /**
-       * <code>.com.giyeok.bibix.repo.TargetState.BuildFailed build_failed = 4;</code>
+       * <code>.com.giyeok.bibix.repo.TargetState.BuildFailed build_failed = 6;</code>
        */
       public Builder mergeBuildFailed(com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed value) {
         if (buildFailedBuilder_ == null) {
-          if (stateCase_ == 4 &&
+          if (stateCase_ == 6 &&
               state_ != com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed.getDefaultInstance()) {
             state_ = com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed.newBuilder((com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed) state_)
                 .mergeFrom(value).buildPartial();
@@ -6108,27 +6043,27 @@ public final class BibixRepoProto {
           }
           onChanged();
         } else {
-          if (stateCase_ == 4) {
+          if (stateCase_ == 6) {
             buildFailedBuilder_.mergeFrom(value);
           } else {
             buildFailedBuilder_.setMessage(value);
           }
         }
-        stateCase_ = 4;
+        stateCase_ = 6;
         return this;
       }
       /**
-       * <code>.com.giyeok.bibix.repo.TargetState.BuildFailed build_failed = 4;</code>
+       * <code>.com.giyeok.bibix.repo.TargetState.BuildFailed build_failed = 6;</code>
        */
       public Builder clearBuildFailed() {
         if (buildFailedBuilder_ == null) {
-          if (stateCase_ == 4) {
+          if (stateCase_ == 6) {
             stateCase_ = 0;
             state_ = null;
             onChanged();
           }
         } else {
-          if (stateCase_ == 4) {
+          if (stateCase_ == 6) {
             stateCase_ = 0;
             state_ = null;
           }
@@ -6137,33 +6072,33 @@ public final class BibixRepoProto {
         return this;
       }
       /**
-       * <code>.com.giyeok.bibix.repo.TargetState.BuildFailed build_failed = 4;</code>
+       * <code>.com.giyeok.bibix.repo.TargetState.BuildFailed build_failed = 6;</code>
        */
       public com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed.Builder getBuildFailedBuilder() {
         return getBuildFailedFieldBuilder().getBuilder();
       }
       /**
-       * <code>.com.giyeok.bibix.repo.TargetState.BuildFailed build_failed = 4;</code>
+       * <code>.com.giyeok.bibix.repo.TargetState.BuildFailed build_failed = 6;</code>
        */
       @java.lang.Override
       public com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailedOrBuilder getBuildFailedOrBuilder() {
-        if ((stateCase_ == 4) && (buildFailedBuilder_ != null)) {
+        if ((stateCase_ == 6) && (buildFailedBuilder_ != null)) {
           return buildFailedBuilder_.getMessageOrBuilder();
         } else {
-          if (stateCase_ == 4) {
+          if (stateCase_ == 6) {
             return (com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed) state_;
           }
           return com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed.getDefaultInstance();
         }
       }
       /**
-       * <code>.com.giyeok.bibix.repo.TargetState.BuildFailed build_failed = 4;</code>
+       * <code>.com.giyeok.bibix.repo.TargetState.BuildFailed build_failed = 6;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
           com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed, com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed.Builder, com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailedOrBuilder> 
           getBuildFailedFieldBuilder() {
         if (buildFailedBuilder_ == null) {
-          if (!(stateCase_ == 4)) {
+          if (!(stateCase_ == 6)) {
             state_ = com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed.getDefaultInstance();
           }
           buildFailedBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
@@ -6173,7 +6108,7 @@ public final class BibixRepoProto {
                   isClean());
           state_ = null;
         }
-        stateCase_ = 4;
+        stateCase_ = 6;
         onChanged();;
         return buildFailedBuilder_;
       }
@@ -6275,27 +6210,27 @@ public final class BibixRepoProto {
       "to\"x\n\tBibixRepo\0222\n\007targets\030\001 \003(\0132!.com.g" +
       "iyeok.bibix.repo.TargetData\0227\n\014output_na" +
       "mes\030\002 \003(\0132!.com.giyeok.bibix.repo.Output" +
-      "Name\"\357\001\n\nTargetData\022\021\n\ttarget_id\030\001 \001(\014\0226" +
+      "Name\"\231\001\n\nTargetData\022\021\n\ttarget_id\030\001 \001(\014\0226" +
       "\n\016target_id_data\030\002 \001(\0132\036.com.giyeok.bibi" +
-      "x.TargetIdData\022:\n\023latest_input_hashes\030\003 " +
-      "\001(\0132\035.com.giyeok.bibix.InputHashes\022\030\n\020la" +
-      "test_object_id\030\004 \001(\014\0226\n\005state\030\005 \001(\0132\".co" +
-      "m.giyeok.bibix.repo.TargetStateH\000\210\001\001B\010\n\006" +
-      "_state\"4\n\nOutputName\022\023\n\013output_name\030\001 \001(" +
-      "\t\022\021\n\ttarget_id\030\002 \001(\014\"\350\003\n\013TargetState\0224\n\020" +
-      "build_start_time\030\001 \001(\0132\032.google.protobuf" +
-      ".Timestamp\022/\n\rbuild_started\030\002 \001(\0132\026.goog" +
-      "le.protobuf.EmptyH\000\022L\n\017build_succeeded\030\003" +
-      " \001(\01321.com.giyeok.bibix.repo.TargetState" +
-      ".BuildSucceededH\000\022F\n\014build_failed\030\004 \001(\0132" +
-      "..com.giyeok.bibix.repo.TargetState.Buil" +
-      "dFailedH\000\032x\n\016BuildSucceeded\0222\n\016build_end" +
-      "_time\030\001 \001(\0132\032.google.protobuf.Timestamp\022" +
-      "2\n\014result_value\030\002 \001(\0132\034.com.giyeok.bibix" +
-      ".BibixValue\032Y\n\013BuildFailed\0223\n\017build_fail" +
-      "_time\030\001 \001(\0132\032.google.protobuf.Timestamp\022" +
-      "\025\n\rerror_message\030\002 \001(\tB\007\n\005stateB\020B\016Bibix" +
-      "RepoProtob\006proto3"
+      "x.TargetIdData\0226\n\005state\030\003 \001(\0132\".com.giye" +
+      "ok.bibix.repo.TargetStateH\000\210\001\001B\010\n\006_state" +
+      "\"4\n\nOutputName\022\023\n\013output_name\030\001 \001(\t\022\021\n\tt" +
+      "arget_id\030\002 \001(\014\"\270\004\n\013TargetState\0224\n\020build_" +
+      "start_time\030\001 \001(\0132\032.google.protobuf.Times" +
+      "tamp\022\030\n\013inputs_hash\030\002 \001(\014H\001\210\001\001\022\026\n\tobject" +
+      "_id\030\003 \001(\014H\002\210\001\001\022/\n\rbuild_started\030\004 \001(\0132\026." +
+      "google.protobuf.EmptyH\000\022L\n\017build_succeed" +
+      "ed\030\005 \001(\01321.com.giyeok.bibix.repo.TargetS" +
+      "tate.BuildSucceededH\000\022F\n\014build_failed\030\006 " +
+      "\001(\0132..com.giyeok.bibix.repo.TargetState." +
+      "BuildFailedH\000\032x\n\016BuildSucceeded\0222\n\016build" +
+      "_end_time\030\001 \001(\0132\032.google.protobuf.Timest" +
+      "amp\0222\n\014result_value\030\002 \001(\0132\034.com.giyeok.b" +
+      "ibix.BibixValue\032Y\n\013BuildFailed\0223\n\017build_" +
+      "fail_time\030\001 \001(\0132\032.google.protobuf.Timest" +
+      "amp\022\025\n\rerror_message\030\002 \001(\tB\007\n\005stateB\016\n\014_" +
+      "inputs_hashB\014\n\n_object_idB\020B\016BibixRepoPr" +
+      "otob\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -6316,7 +6251,7 @@ public final class BibixRepoProto {
     internal_static_com_giyeok_bibix_repo_TargetData_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_giyeok_bibix_repo_TargetData_descriptor,
-        new java.lang.String[] { "TargetId", "TargetIdData", "LatestInputHashes", "LatestObjectId", "State", "State", });
+        new java.lang.String[] { "TargetId", "TargetIdData", "State", "State", });
     internal_static_com_giyeok_bibix_repo_OutputName_descriptor =
       getDescriptor().getMessageTypes().get(2);
     internal_static_com_giyeok_bibix_repo_OutputName_fieldAccessorTable = new
@@ -6328,7 +6263,7 @@ public final class BibixRepoProto {
     internal_static_com_giyeok_bibix_repo_TargetState_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_giyeok_bibix_repo_TargetState_descriptor,
-        new java.lang.String[] { "BuildStartTime", "BuildStarted", "BuildSucceeded", "BuildFailed", "State", });
+        new java.lang.String[] { "BuildStartTime", "InputsHash", "ObjectId", "BuildStarted", "BuildSucceeded", "BuildFailed", "State", "InputsHash", "ObjectId", });
     internal_static_com_giyeok_bibix_repo_TargetState_BuildSucceeded_descriptor =
       internal_static_com_giyeok_bibix_repo_TargetState_descriptor.getNestedTypes().get(0);
     internal_static_com_giyeok_bibix_repo_TargetState_BuildSucceeded_fieldAccessorTable = new

@@ -5083,19 +5083,10 @@ public final class BibixIdProto {
     com.google.protobuf.ByteString getTargetId();
 
     /**
-     * <code>.com.giyeok.bibix.InputHashes input_hashes = 2;</code>
-     * @return Whether the inputHashes field is set.
+     * <code>bytes inputs_hash = 2;</code>
+     * @return The inputsHash.
      */
-    boolean hasInputHashes();
-    /**
-     * <code>.com.giyeok.bibix.InputHashes input_hashes = 2;</code>
-     * @return The inputHashes.
-     */
-    com.giyeok.bibix.BibixIdProto.InputHashes getInputHashes();
-    /**
-     * <code>.com.giyeok.bibix.InputHashes input_hashes = 2;</code>
-     */
-    com.giyeok.bibix.BibixIdProto.InputHashesOrBuilder getInputHashesOrBuilder();
+    com.google.protobuf.ByteString getInputsHash();
   }
   /**
    * <pre>
@@ -5115,6 +5106,7 @@ public final class BibixIdProto {
     }
     private ObjectIdData() {
       targetId_ = com.google.protobuf.ByteString.EMPTY;
+      inputsHash_ = com.google.protobuf.ByteString.EMPTY;
     }
 
     @java.lang.Override
@@ -5153,16 +5145,8 @@ public final class BibixIdProto {
               break;
             }
             case 18: {
-              com.giyeok.bibix.BibixIdProto.InputHashes.Builder subBuilder = null;
-              if (inputHashes_ != null) {
-                subBuilder = inputHashes_.toBuilder();
-              }
-              inputHashes_ = input.readMessage(com.giyeok.bibix.BibixIdProto.InputHashes.parser(), extensionRegistry);
-              if (subBuilder != null) {
-                subBuilder.mergeFrom(inputHashes_);
-                inputHashes_ = subBuilder.buildPartial();
-              }
 
+              inputsHash_ = input.readBytes();
               break;
             }
             default: {
@@ -5210,30 +5194,15 @@ public final class BibixIdProto {
       return targetId_;
     }
 
-    public static final int INPUT_HASHES_FIELD_NUMBER = 2;
-    private com.giyeok.bibix.BibixIdProto.InputHashes inputHashes_;
+    public static final int INPUTS_HASH_FIELD_NUMBER = 2;
+    private com.google.protobuf.ByteString inputsHash_;
     /**
-     * <code>.com.giyeok.bibix.InputHashes input_hashes = 2;</code>
-     * @return Whether the inputHashes field is set.
+     * <code>bytes inputs_hash = 2;</code>
+     * @return The inputsHash.
      */
     @java.lang.Override
-    public boolean hasInputHashes() {
-      return inputHashes_ != null;
-    }
-    /**
-     * <code>.com.giyeok.bibix.InputHashes input_hashes = 2;</code>
-     * @return The inputHashes.
-     */
-    @java.lang.Override
-    public com.giyeok.bibix.BibixIdProto.InputHashes getInputHashes() {
-      return inputHashes_ == null ? com.giyeok.bibix.BibixIdProto.InputHashes.getDefaultInstance() : inputHashes_;
-    }
-    /**
-     * <code>.com.giyeok.bibix.InputHashes input_hashes = 2;</code>
-     */
-    @java.lang.Override
-    public com.giyeok.bibix.BibixIdProto.InputHashesOrBuilder getInputHashesOrBuilder() {
-      return getInputHashes();
+    public com.google.protobuf.ByteString getInputsHash() {
+      return inputsHash_;
     }
 
     private byte memoizedIsInitialized = -1;
@@ -5253,8 +5222,8 @@ public final class BibixIdProto {
       if (!targetId_.isEmpty()) {
         output.writeBytes(1, targetId_);
       }
-      if (inputHashes_ != null) {
-        output.writeMessage(2, getInputHashes());
+      if (!inputsHash_.isEmpty()) {
+        output.writeBytes(2, inputsHash_);
       }
       unknownFields.writeTo(output);
     }
@@ -5269,9 +5238,9 @@ public final class BibixIdProto {
         size += com.google.protobuf.CodedOutputStream
           .computeBytesSize(1, targetId_);
       }
-      if (inputHashes_ != null) {
+      if (!inputsHash_.isEmpty()) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(2, getInputHashes());
+          .computeBytesSize(2, inputsHash_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -5290,11 +5259,8 @@ public final class BibixIdProto {
 
       if (!getTargetId()
           .equals(other.getTargetId())) return false;
-      if (hasInputHashes() != other.hasInputHashes()) return false;
-      if (hasInputHashes()) {
-        if (!getInputHashes()
-            .equals(other.getInputHashes())) return false;
-      }
+      if (!getInputsHash()
+          .equals(other.getInputsHash())) return false;
       if (!unknownFields.equals(other.unknownFields)) return false;
       return true;
     }
@@ -5308,10 +5274,8 @@ public final class BibixIdProto {
       hash = (19 * hash) + getDescriptor().hashCode();
       hash = (37 * hash) + TARGET_ID_FIELD_NUMBER;
       hash = (53 * hash) + getTargetId().hashCode();
-      if (hasInputHashes()) {
-        hash = (37 * hash) + INPUT_HASHES_FIELD_NUMBER;
-        hash = (53 * hash) + getInputHashes().hashCode();
-      }
+      hash = (37 * hash) + INPUTS_HASH_FIELD_NUMBER;
+      hash = (53 * hash) + getInputsHash().hashCode();
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -5451,12 +5415,8 @@ public final class BibixIdProto {
         super.clear();
         targetId_ = com.google.protobuf.ByteString.EMPTY;
 
-        if (inputHashesBuilder_ == null) {
-          inputHashes_ = null;
-        } else {
-          inputHashes_ = null;
-          inputHashesBuilder_ = null;
-        }
+        inputsHash_ = com.google.protobuf.ByteString.EMPTY;
+
         return this;
       }
 
@@ -5484,11 +5444,7 @@ public final class BibixIdProto {
       public com.giyeok.bibix.BibixIdProto.ObjectIdData buildPartial() {
         com.giyeok.bibix.BibixIdProto.ObjectIdData result = new com.giyeok.bibix.BibixIdProto.ObjectIdData(this);
         result.targetId_ = targetId_;
-        if (inputHashesBuilder_ == null) {
-          result.inputHashes_ = inputHashes_;
-        } else {
-          result.inputHashes_ = inputHashesBuilder_.build();
-        }
+        result.inputsHash_ = inputsHash_;
         onBuilt();
         return result;
       }
@@ -5540,8 +5496,8 @@ public final class BibixIdProto {
         if (other.getTargetId() != com.google.protobuf.ByteString.EMPTY) {
           setTargetId(other.getTargetId());
         }
-        if (other.hasInputHashes()) {
-          mergeInputHashes(other.getInputHashes());
+        if (other.getInputsHash() != com.google.protobuf.ByteString.EMPTY) {
+          setInputsHash(other.getInputsHash());
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -5606,123 +5562,38 @@ public final class BibixIdProto {
         return this;
       }
 
-      private com.giyeok.bibix.BibixIdProto.InputHashes inputHashes_;
-      private com.google.protobuf.SingleFieldBuilderV3<
-          com.giyeok.bibix.BibixIdProto.InputHashes, com.giyeok.bibix.BibixIdProto.InputHashes.Builder, com.giyeok.bibix.BibixIdProto.InputHashesOrBuilder> inputHashesBuilder_;
+      private com.google.protobuf.ByteString inputsHash_ = com.google.protobuf.ByteString.EMPTY;
       /**
-       * <code>.com.giyeok.bibix.InputHashes input_hashes = 2;</code>
-       * @return Whether the inputHashes field is set.
+       * <code>bytes inputs_hash = 2;</code>
+       * @return The inputsHash.
        */
-      public boolean hasInputHashes() {
-        return inputHashesBuilder_ != null || inputHashes_ != null;
+      @java.lang.Override
+      public com.google.protobuf.ByteString getInputsHash() {
+        return inputsHash_;
       }
       /**
-       * <code>.com.giyeok.bibix.InputHashes input_hashes = 2;</code>
-       * @return The inputHashes.
+       * <code>bytes inputs_hash = 2;</code>
+       * @param value The inputsHash to set.
+       * @return This builder for chaining.
        */
-      public com.giyeok.bibix.BibixIdProto.InputHashes getInputHashes() {
-        if (inputHashesBuilder_ == null) {
-          return inputHashes_ == null ? com.giyeok.bibix.BibixIdProto.InputHashes.getDefaultInstance() : inputHashes_;
-        } else {
-          return inputHashesBuilder_.getMessage();
-        }
-      }
-      /**
-       * <code>.com.giyeok.bibix.InputHashes input_hashes = 2;</code>
-       */
-      public Builder setInputHashes(com.giyeok.bibix.BibixIdProto.InputHashes value) {
-        if (inputHashesBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          inputHashes_ = value;
-          onChanged();
-        } else {
-          inputHashesBuilder_.setMessage(value);
-        }
-
-        return this;
-      }
-      /**
-       * <code>.com.giyeok.bibix.InputHashes input_hashes = 2;</code>
-       */
-      public Builder setInputHashes(
-          com.giyeok.bibix.BibixIdProto.InputHashes.Builder builderForValue) {
-        if (inputHashesBuilder_ == null) {
-          inputHashes_ = builderForValue.build();
-          onChanged();
-        } else {
-          inputHashesBuilder_.setMessage(builderForValue.build());
-        }
-
-        return this;
-      }
-      /**
-       * <code>.com.giyeok.bibix.InputHashes input_hashes = 2;</code>
-       */
-      public Builder mergeInputHashes(com.giyeok.bibix.BibixIdProto.InputHashes value) {
-        if (inputHashesBuilder_ == null) {
-          if (inputHashes_ != null) {
-            inputHashes_ =
-              com.giyeok.bibix.BibixIdProto.InputHashes.newBuilder(inputHashes_).mergeFrom(value).buildPartial();
-          } else {
-            inputHashes_ = value;
-          }
-          onChanged();
-        } else {
-          inputHashesBuilder_.mergeFrom(value);
-        }
-
-        return this;
-      }
-      /**
-       * <code>.com.giyeok.bibix.InputHashes input_hashes = 2;</code>
-       */
-      public Builder clearInputHashes() {
-        if (inputHashesBuilder_ == null) {
-          inputHashes_ = null;
-          onChanged();
-        } else {
-          inputHashes_ = null;
-          inputHashesBuilder_ = null;
-        }
-
-        return this;
-      }
-      /**
-       * <code>.com.giyeok.bibix.InputHashes input_hashes = 2;</code>
-       */
-      public com.giyeok.bibix.BibixIdProto.InputHashes.Builder getInputHashesBuilder() {
-        
+      public Builder setInputsHash(com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        inputsHash_ = value;
         onChanged();
-        return getInputHashesFieldBuilder().getBuilder();
+        return this;
       }
       /**
-       * <code>.com.giyeok.bibix.InputHashes input_hashes = 2;</code>
+       * <code>bytes inputs_hash = 2;</code>
+       * @return This builder for chaining.
        */
-      public com.giyeok.bibix.BibixIdProto.InputHashesOrBuilder getInputHashesOrBuilder() {
-        if (inputHashesBuilder_ != null) {
-          return inputHashesBuilder_.getMessageOrBuilder();
-        } else {
-          return inputHashes_ == null ?
-              com.giyeok.bibix.BibixIdProto.InputHashes.getDefaultInstance() : inputHashes_;
-        }
-      }
-      /**
-       * <code>.com.giyeok.bibix.InputHashes input_hashes = 2;</code>
-       */
-      private com.google.protobuf.SingleFieldBuilderV3<
-          com.giyeok.bibix.BibixIdProto.InputHashes, com.giyeok.bibix.BibixIdProto.InputHashes.Builder, com.giyeok.bibix.BibixIdProto.InputHashesOrBuilder> 
-          getInputHashesFieldBuilder() {
-        if (inputHashesBuilder_ == null) {
-          inputHashesBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-              com.giyeok.bibix.BibixIdProto.InputHashes, com.giyeok.bibix.BibixIdProto.InputHashes.Builder, com.giyeok.bibix.BibixIdProto.InputHashesOrBuilder>(
-                  getInputHashes(),
-                  getParentForChildren(),
-                  isClean());
-          inputHashes_ = null;
-        }
-        return inputHashesBuilder_;
+      public Builder clearInputsHash() {
+        
+        inputsHash_ = getDefaultInstance().getInputsHash();
+        onChanged();
+        return this;
       }
       @java.lang.Override
       public final Builder setUnknownFields(
@@ -11053,22 +10924,22 @@ public final class BibixIdProto {
       ".com.giyeok.bibix.ArgsMapB\014\n\nbuild_rule\"" +
       "f\n\017BuildRuleImplId\022-\n\tsource_id\030\001 \001(\0132\032." +
       "com.giyeok.bibix.SourceId\022\021\n\ttarget_id\030\002" +
-      " \001(\014\022\021\n\tobject_id\030\003 \001(\014\"V\n\014ObjectIdData\022" +
-      "\021\n\ttarget_id\030\001 \001(\014\0223\n\014input_hashes\030\002 \001(\013" +
-      "2\035.com.giyeok.bibix.InputHashes\"3\n\007ArgsM" +
-      "ap\022(\n\005pairs\030\001 \003(\0132\031.com.giyeok.bibix.Arg" +
-      "Pair\"D\n\007ArgPair\022\014\n\004name\030\001 \001(\t\022+\n\005value\030\002" +
-      " \001(\0132\034.com.giyeok.bibix.BibixValue\"\204\001\n\013I" +
-      "nputHashes\0224\n\013directories\030\001 \003(\0132\037.com.gi" +
-      "yeok.bibix.DirectoryHash\022)\n\005files\030\002 \003(\0132" +
-      "\032.com.giyeok.bibix.FileHash\022\024\n\014non_exist" +
-      "ent\030\003 \003(\t\"~\n\rDirectoryHash\022\014\n\004path\030\001 \001(\t" +
-      "\0224\n\013directories\030\002 \003(\0132\037.com.giyeok.bibix" +
-      ".DirectoryHash\022)\n\005files\030\003 \003(\0132\032.com.giye" +
-      "ok.bibix.FileHash\"q\n\010FileHash\022\014\n\004path\030\001 " +
-      "\001(\t\0226\n\022last_modified_time\030\002 \001(\0132\032.google" +
-      ".protobuf.Timestamp\022\014\n\004size\030\003 \001(\003\022\021\n\tsha" +
-      "1_hash\030\004 \001(\014B\016B\014BibixIdProtob\006proto3"
+      " \001(\014\022\021\n\tobject_id\030\003 \001(\014\"6\n\014ObjectIdData\022" +
+      "\021\n\ttarget_id\030\001 \001(\014\022\023\n\013inputs_hash\030\002 \001(\014\"" +
+      "3\n\007ArgsMap\022(\n\005pairs\030\001 \003(\0132\031.com.giyeok.b" +
+      "ibix.ArgPair\"D\n\007ArgPair\022\014\n\004name\030\001 \001(\t\022+\n" +
+      "\005value\030\002 \001(\0132\034.com.giyeok.bibix.BibixVal" +
+      "ue\"\204\001\n\013InputHashes\0224\n\013directories\030\001 \003(\0132" +
+      "\037.com.giyeok.bibix.DirectoryHash\022)\n\005file" +
+      "s\030\002 \003(\0132\032.com.giyeok.bibix.FileHash\022\024\n\014n" +
+      "on_existent\030\003 \003(\t\"~\n\rDirectoryHash\022\014\n\004pa" +
+      "th\030\001 \001(\t\0224\n\013directories\030\002 \003(\0132\037.com.giye" +
+      "ok.bibix.DirectoryHash\022)\n\005files\030\003 \003(\0132\032." +
+      "com.giyeok.bibix.FileHash\"q\n\010FileHash\022\014\n" +
+      "\004path\030\001 \001(\t\0226\n\022last_modified_time\030\002 \001(\0132" +
+      "\032.google.protobuf.Timestamp\022\014\n\004size\030\003 \001(" +
+      "\003\022\021\n\tsha1_hash\030\004 \001(\014B\016B\014BibixIdProtob\006pr" +
+      "oto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -11106,7 +10977,7 @@ public final class BibixIdProto {
     internal_static_com_giyeok_bibix_ObjectIdData_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_giyeok_bibix_ObjectIdData_descriptor,
-        new java.lang.String[] { "TargetId", "InputHashes", });
+        new java.lang.String[] { "TargetId", "InputsHash", });
     internal_static_com_giyeok_bibix_ArgsMap_descriptor =
       getDescriptor().getMessageTypes().get(5);
     internal_static_com_giyeok_bibix_ArgsMap_fieldAccessorTable = new

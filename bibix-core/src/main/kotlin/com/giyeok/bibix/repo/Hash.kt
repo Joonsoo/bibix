@@ -118,3 +118,9 @@ suspend fun BibixIdProto.ArgsMap.extractInputHashes(): BibixIdProto.InputHashes 
 
 fun BibixIdProto.InputHashes.hashString() =
   sha1Hash(this.toByteArray())
+
+fun BibixIdProto.TargetIdData.hashString() =
+  sha1Hash(this.toByteArray())
+
+fun BibixIdProto.ObjectIdData.hashString() =
+  sha1Hash(this.toByteArray())

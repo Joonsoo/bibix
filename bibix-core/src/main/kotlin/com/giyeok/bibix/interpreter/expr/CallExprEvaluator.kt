@@ -12,6 +12,8 @@ import com.giyeok.bibix.interpreter.expr.EvaluationResult.RuleDef.BuildRuleDef
 import com.giyeok.bibix.interpreter.task.Task
 import com.giyeok.bibix.interpreter.task.TaskRelGraph
 import com.giyeok.bibix.repo.*
+import com.giyeok.bibix.utils.toBibix
+import com.giyeok.bibix.utils.toInstant
 import com.giyeok.bibix.utils.toProto
 import com.google.protobuf.empty
 import kotlinx.coroutines.Deferred
@@ -537,17 +539,24 @@ class CallExprEvaluator(
     val objHash = ObjectHash(targetId, inputHashes)
 
     val targetIdBytes = objHash.targetId.targetIdBytes
-    val prevInputHashes = interpreter.repo.getPrevInputHashesOf(targetIdBytes)
+    val prevInputHashes = interpreter.repo.getPrevInputsHashOf(targetIdBytes)
+    val prevState = interpreter.repo.getPrevTargetState(targetIdBytes)
+    val prevSucceeded = prevState?.let {
+      if (it.stateCase != BibixRepoProto.TargetState.StateCase.BUILD_SUCCEEDED) null else {
+        it.buildSucceeded
+      }
+    }
 
     interpreter.repo.putObjectHash(objHash)
 
     val result = g.withMemo(objHash) {
-      interpreter.repo.startBuildingTarget(targetIdBytes)
+      interpreter.repo.startBuildingTarget(targetIdBytes, objHash)
 
       val method =
         pluginInstance::class.java.getMethod(buildRule.methodName, BuildContext::class.java)
 
-      val hashChanged = prevInputHashes == null || prevInputHashes != objHash.inputHashes
+      val hashChanged =
+        prevInputHashes == null || prevInputHashes != objHash.inputsHash
       val progressIndicator = interpreter.progressIndicatorContainer.ofCurrentThread()
       val buildContext = BuildContext(
         buildEnv = interpreter.buildEnv,
@@ -556,9 +565,11 @@ class CallExprEvaluator(
         callerBaseDirectory = baseDirectoryOf(context.sourceId),
         ruleDefinedDirectory = baseDirectoryOf(buildRule.context.sourceId),
         arguments = params,
-        hashChanged = hashChanged,
         targetIdData = objHash.targetId.targetIdData,
         targetId = objHash.targetId.targetIdHex,
+        hashChanged = hashChanged,
+        prevBuildTime = prevSucceeded?.buildEndTime?.toInstant(),
+        prevResult = prevSucceeded?.resultValue?.toBibix(),
         destDirectoryPath = interpreter.repo.objectsDirectory.resolve(objHash.targetId.targetIdHex),
         progressLogger = progressIndicator,
         repo = interpreter.repo,

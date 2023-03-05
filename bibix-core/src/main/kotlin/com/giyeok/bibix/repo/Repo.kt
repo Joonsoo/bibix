@@ -5,6 +5,7 @@ import com.giyeok.bibix.base.BaseRepo
 import com.giyeok.bibix.base.BibixValue
 import com.giyeok.bibix.repo.BibixRepoProto.BibixRepo
 import com.giyeok.bibix.repo.BibixRepoProto.TargetData
+import com.giyeok.bibix.repo.BibixRepoProto.TargetState
 import com.giyeok.bibix.runner.RunConfigProto
 import com.giyeok.bibix.utils.toProto
 import com.google.protobuf.ByteString
@@ -16,6 +17,8 @@ import java.io.IOException
 import java.nio.file.FileSystem
 import java.nio.file.Files
 import java.nio.file.Path
+import java.time.Duration
+import java.time.Instant
 import kotlin.io.path.*
 
 // bibix 빌드 폴더의 내용을 관리
@@ -127,9 +130,17 @@ class Repo(
     }.build()
   }
 
+  private var lastUpdated: Instant? = null
+
   private suspend fun repoDataUpdated() {
-    // TODO 매번 저장하지 말고 적당한 시점에 저장하도록
-    commitRepoData()
+    // TODO 임의로 5초에 한번만 저장하게 했는데 더 잘 할 수 없을까..
+    val last = mutex.withLock { lastUpdated }
+    if (last == null || Duration.between(last, Instant.now()) >= Duration.ofSeconds(5)) {
+      mutex.withLock {
+        lastUpdated = Instant.now()
+      }
+      commitRepoData()
+    }
   }
 
   private suspend fun getTargetData(targetId: ByteString): TargetData.Builder? =
@@ -155,28 +166,31 @@ class Repo(
 
     updateTargetData(targetId) { builder ->
       builder.targetIdData = objectHash.targetId.targetIdData
-      builder.latestInputHashes = objectHash.inputHashes
-      builder.latestObjectId = objectHash.objectId.objectIdBytes
     }
   }
 
-  suspend fun startBuildingTarget(targetIdBytes: ByteString) {
+  suspend fun startBuildingTarget(targetIdBytes: ByteString, objectHash: ObjectHash) {
     updateTargetData(targetIdBytes) { builder ->
-      builder.stateBuilder.buildStartTime = now()
+      val state = builder.stateBuilder
+      state.buildStartTime = now()
+      state.inputsHash = objectHash.inputsHash
+      state.objectId = objectHash.objectId.objectIdBytes
     }
   }
 
   suspend fun targetBuildingFailed(targetIdBytes: ByteString, message: String) {
     updateTargetData(targetIdBytes) { builder ->
-      builder.stateBuilder.buildFailedBuilder.buildFailTime = now()
-      builder.stateBuilder.buildFailedBuilder.errorMessage = message
+      val state = builder.stateBuilder
+      state.buildFailedBuilder.buildFailTime = now()
+      state.buildFailedBuilder.errorMessage = message
     }
   }
 
   suspend fun targetBuildingSucceeded(targetIdBytes: ByteString, resultValue: BibixValue) {
     updateTargetData(targetIdBytes) { builder ->
-      builder.stateBuilder.buildSucceededBuilder.buildEndTime = now()
-      builder.stateBuilder.buildSucceededBuilder.resultValue = resultValue.toProto()
+      val state = builder.stateBuilder
+      state.buildSucceededBuilder.buildEndTime = now()
+      state.buildSucceededBuilder.resultValue = resultValue.toProto()
     }
   }
 
@@ -198,12 +212,18 @@ class Repo(
     commitRepoData()
   }
 
-  suspend fun getPrevInputsHashesOf(targetId: ByteString): InputHashes? =
+  suspend fun getPrevInputsHashOf(targetId: ByteString): ByteString? =
     getTargetData(targetId)?.let { targetData ->
-      if (!targetData.hasLatestInputHashes()) null else {
-        val hashes = targetData.latestInputHashes
-        if (hashes == InputHashes.getDefaultInstance()) null else hashes
+      if (targetData.state.stateCase == BibixRepoProto.TargetState.StateCase.BUILD_SUCCEEDED) {
+        targetData.state.inputsHash
+      } else {
+        null
       }
+    }
+
+  suspend fun getPrevTargetState(targetId: ByteString): TargetState? =
+    getTargetData(targetId)?.let { targetData ->
+      targetData.state
     }
 
   companion object {

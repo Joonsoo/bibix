@@ -47,7 +47,55 @@ object TargetStateKt {
     }
 
     /**
-     * <code>.google.protobuf.Empty build_started = 2;</code>
+     * <code>optional bytes inputs_hash = 2;</code>
+     */
+    var inputsHash: com.google.protobuf.ByteString
+      @JvmName("getInputsHash")
+      get() = _builder.getInputsHash()
+      @JvmName("setInputsHash")
+      set(value) {
+        _builder.setInputsHash(value)
+      }
+    /**
+     * <code>optional bytes inputs_hash = 2;</code>
+     */
+    fun clearInputsHash() {
+      _builder.clearInputsHash()
+    }
+    /**
+     * <code>optional bytes inputs_hash = 2;</code>
+     * @return Whether the inputsHash field is set.
+     */
+    fun hasInputsHash(): kotlin.Boolean {
+      return _builder.hasInputsHash()
+    }
+
+    /**
+     * <code>optional bytes object_id = 3;</code>
+     */
+    var objectId: com.google.protobuf.ByteString
+      @JvmName("getObjectId")
+      get() = _builder.getObjectId()
+      @JvmName("setObjectId")
+      set(value) {
+        _builder.setObjectId(value)
+      }
+    /**
+     * <code>optional bytes object_id = 3;</code>
+     */
+    fun clearObjectId() {
+      _builder.clearObjectId()
+    }
+    /**
+     * <code>optional bytes object_id = 3;</code>
+     * @return Whether the objectId field is set.
+     */
+    fun hasObjectId(): kotlin.Boolean {
+      return _builder.hasObjectId()
+    }
+
+    /**
+     * <code>.google.protobuf.Empty build_started = 4;</code>
      */
     var buildStarted: com.google.protobuf.Empty
       @JvmName("getBuildStarted")
@@ -57,13 +105,13 @@ object TargetStateKt {
         _builder.setBuildStarted(value)
       }
     /**
-     * <code>.google.protobuf.Empty build_started = 2;</code>
+     * <code>.google.protobuf.Empty build_started = 4;</code>
      */
     fun clearBuildStarted() {
       _builder.clearBuildStarted()
     }
     /**
-     * <code>.google.protobuf.Empty build_started = 2;</code>
+     * <code>.google.protobuf.Empty build_started = 4;</code>
      * @return Whether the buildStarted field is set.
      */
     fun hasBuildStarted(): kotlin.Boolean {
@@ -71,7 +119,7 @@ object TargetStateKt {
     }
 
     /**
-     * <code>.com.giyeok.bibix.repo.TargetState.BuildSucceeded build_succeeded = 3;</code>
+     * <code>.com.giyeok.bibix.repo.TargetState.BuildSucceeded build_succeeded = 5;</code>
      */
     var buildSucceeded: com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded
       @JvmName("getBuildSucceeded")
@@ -81,13 +129,13 @@ object TargetStateKt {
         _builder.setBuildSucceeded(value)
       }
     /**
-     * <code>.com.giyeok.bibix.repo.TargetState.BuildSucceeded build_succeeded = 3;</code>
+     * <code>.com.giyeok.bibix.repo.TargetState.BuildSucceeded build_succeeded = 5;</code>
      */
     fun clearBuildSucceeded() {
       _builder.clearBuildSucceeded()
     }
     /**
-     * <code>.com.giyeok.bibix.repo.TargetState.BuildSucceeded build_succeeded = 3;</code>
+     * <code>.com.giyeok.bibix.repo.TargetState.BuildSucceeded build_succeeded = 5;</code>
      * @return Whether the buildSucceeded field is set.
      */
     fun hasBuildSucceeded(): kotlin.Boolean {
@@ -95,7 +143,7 @@ object TargetStateKt {
     }
 
     /**
-     * <code>.com.giyeok.bibix.repo.TargetState.BuildFailed build_failed = 4;</code>
+     * <code>.com.giyeok.bibix.repo.TargetState.BuildFailed build_failed = 6;</code>
      */
     var buildFailed: com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed
       @JvmName("getBuildFailed")
@@ -105,13 +153,13 @@ object TargetStateKt {
         _builder.setBuildFailed(value)
       }
     /**
-     * <code>.com.giyeok.bibix.repo.TargetState.BuildFailed build_failed = 4;</code>
+     * <code>.com.giyeok.bibix.repo.TargetState.BuildFailed build_failed = 6;</code>
      */
     fun clearBuildFailed() {
       _builder.clearBuildFailed()
     }
     /**
-     * <code>.com.giyeok.bibix.repo.TargetState.BuildFailed build_failed = 4;</code>
+     * <code>.com.giyeok.bibix.repo.TargetState.BuildFailed build_failed = 6;</code>
      * @return Whether the buildFailed field is set.
      */
     fun hasBuildFailed(): kotlin.Boolean {

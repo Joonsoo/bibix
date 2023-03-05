@@ -40,34 +40,24 @@ object ObjectIdDataKt {
     }
 
     /**
-     * <code>.com.giyeok.bibix.InputHashes input_hashes = 2;</code>
+     * <code>bytes inputs_hash = 2;</code>
      */
-    var inputHashes: com.giyeok.bibix.BibixIdProto.InputHashes
-      @JvmName("getInputHashes")
-      get() = _builder.getInputHashes()
-      @JvmName("setInputHashes")
+    var inputsHash: com.google.protobuf.ByteString
+      @JvmName("getInputsHash")
+      get() = _builder.getInputsHash()
+      @JvmName("setInputsHash")
       set(value) {
-        _builder.setInputHashes(value)
+        _builder.setInputsHash(value)
       }
     /**
-     * <code>.com.giyeok.bibix.InputHashes input_hashes = 2;</code>
+     * <code>bytes inputs_hash = 2;</code>
      */
-    fun clearInputHashes() {
-      _builder.clearInputHashes()
-    }
-    /**
-     * <code>.com.giyeok.bibix.InputHashes input_hashes = 2;</code>
-     * @return Whether the inputHashes field is set.
-     */
-    fun hasInputHashes(): kotlin.Boolean {
-      return _builder.hasInputHashes()
+    fun clearInputsHash() {
+      _builder.clearInputsHash()
     }
   }
 }
 @kotlin.jvm.JvmSynthetic
 inline fun com.giyeok.bibix.BibixIdProto.ObjectIdData.copy(block: com.giyeok.bibix.ObjectIdDataKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.BibixIdProto.ObjectIdData =
   com.giyeok.bibix.ObjectIdDataKt.Dsl._create(this.toBuilder()).apply { block() }._build()
-
-val com.giyeok.bibix.BibixIdProto.ObjectIdDataOrBuilder.inputHashesOrNull: com.giyeok.bibix.BibixIdProto.InputHashes?
-  get() = if (hasInputHashes()) getInputHashes() else null
 

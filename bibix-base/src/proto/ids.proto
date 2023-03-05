@@ -47,7 +47,7 @@ message BuildRuleImplId {
 // 빌드된 결과물에 대한 ID. target id와 input hash에 대한 해시값으로 만들어진다.
 message ObjectIdData {
   bytes target_id = 1;
-  InputHashes input_hashes = 2;
+  bytes inputs_hash = 2;
 }
 
 //message ObjectIdHash {

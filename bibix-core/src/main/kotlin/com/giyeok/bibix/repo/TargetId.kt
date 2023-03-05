@@ -9,7 +9,7 @@ data class TargetId(
   val targetIdData: TargetIdData
 ) {
   val targetIdBytes: ByteString by lazy {
-    sha1Hash(targetIdData.toByteArray())
+    targetIdData.hashString()
   }
 
   val targetIdHex: String by lazy {
@@ -21,7 +21,7 @@ data class ObjectId(
   val objectIdData: ObjectIdData
 ) {
   val objectIdBytes: ByteString by lazy {
-    sha1Hash(objectIdData.toByteArray())
+    objectIdData.hashString()
   }
 
   val objectIdHex: String by lazy {

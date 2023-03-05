@@ -3,6 +3,7 @@ package com.giyeok.bibix.base
 import com.giyeok.bibix.BibixIdProto
 import java.nio.file.FileSystem
 import java.nio.file.Path
+import java.time.Instant
 import kotlin.io.path.createDirectory
 import kotlin.io.path.notExists
 
@@ -18,14 +19,16 @@ data class BuildContext(
   val ruleDefinedDirectory: Path?,
   // target에 지정된 parameter들의 값
   val arguments: Map<String, BibixValue>,
-  // input file들이 지난 빌드때와 같으면 true.
-  // 첫 빌드이거나 지난번 빌드때와 다르면 false.
-  // 일반적으로는 hashPreserved==true이면 실제 빌드는 하지 않고 값만 반환해도 됨.
-  val hashChanged: Boolean,
   // target id data
   val targetIdData: BibixIdProto.TargetIdData,
   // target id
   val targetId: String,
+  // input file들이 지난 빌드때와 같으면 true.
+  // 첫 빌드이거나 지난번 빌드때와 다르면 false.
+  // 일반적으로는 hashPreserved==true이면 실제 빌드는 하지 않고 값만 반환해도 됨.
+  val hashChanged: Boolean,
+  val prevBuildTime: Instant?,
+  val prevResult: BibixValue?,
   // 빌드된 결과를 저장할 디렉토리
   private val destDirectoryPath: Path,
   // 로깅/진행 상황 표시

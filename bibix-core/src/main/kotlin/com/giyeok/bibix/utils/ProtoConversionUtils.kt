@@ -3,9 +3,16 @@ package com.giyeok.bibix.utils
 import com.giyeok.bibix.*
 import com.giyeok.bibix.base.*
 import com.google.protobuf.ByteString
+import com.google.protobuf.Timestamp
+import com.google.protobuf.empty
 import com.google.protobuf.kotlin.get
-import java.nio.file.Path
+import com.google.protobuf.util.Timestamps
+import java.time.Instant
+import kotlin.io.path.Path
 import kotlin.io.path.absolutePathString
+
+fun Timestamp.toInstant(): Instant =
+  Instant.ofEpochMilli(Timestamps.toMillis(this))
 
 fun ByteString.toHexString(): String {
   val chars = "0123456789abcdef"
@@ -49,6 +56,45 @@ object BibixValueComparator : Comparator<BibixValueProto.BibixValue> {
     p0.toString().compareTo(p1.toString())
 }
 
+fun BibixValueProto.BibixValue.toBibix(): BibixValue = when (this.valueCase) {
+  BibixValueProto.BibixValue.ValueCase.NONE_VALUE -> NoneValue
+  BibixValueProto.BibixValue.ValueCase.BOOLEAN_VALUE -> BooleanValue(this.booleanValue)
+  BibixValueProto.BibixValue.ValueCase.STRING_VALUE -> StringValue(this.stringValue)
+  BibixValueProto.BibixValue.ValueCase.PATH_VALUE -> PathValue(Path(this.pathValue))
+  BibixValueProto.BibixValue.ValueCase.FILE_VALUE -> FileValue(Path(this.fileValue))
+  BibixValueProto.BibixValue.ValueCase.DIRECTORY_VALUE -> DirectoryValue(Path(this.directoryValue))
+  BibixValueProto.BibixValue.ValueCase.ENUM_VALUE -> {
+    val clsName = this.enumValue.enumType
+    EnumValue(clsName.substringBefore(':'), clsName.substringAfter(':'), this.enumValue.value)
+  }
+
+  BibixValueProto.BibixValue.ValueCase.LIST_VALUE ->
+    ListValue(this.listValue.valuesList.map { it.toBibix() })
+
+  BibixValueProto.BibixValue.ValueCase.SET_VALUE ->
+    SetValue(this.setValue.valuesList.map { it.toBibix() })
+
+  BibixValueProto.BibixValue.ValueCase.TUPLE_VALUE ->
+    TupleValue(this.tupleValue.valuesList.map { it.toBibix() })
+
+  BibixValueProto.BibixValue.ValueCase.NAMED_TUPLE_VALUE ->
+    NamedTupleValue(this.namedTupleValue.valuesList.map { it.name to it.value.toBibix() })
+
+  BibixValueProto.BibixValue.ValueCase.DATA_CLASS_INSTANCE_VALUE -> {
+    val clsName = this.dataClassInstanceValue.classCname
+    ClassInstanceValue(
+      clsName.substringBefore(':'), clsName.substringAfter(':'),
+      this.dataClassInstanceValue.fieldsList.associate {
+        it.name to it.value.toBibix()
+      }
+    )
+  }
+
+  BibixValueProto.BibixValue.ValueCase.VALUE_NOT_SET -> {
+    TODO()
+  }
+}
+
 fun BibixValue.toProto(): BibixValueProto.BibixValue = when (val value = this) {
   is BooleanValue -> bibixValue { this.booleanValue = value.value }
   is StringValue -> bibixValue { this.stringValue = value.value }
@@ -57,7 +103,7 @@ fun BibixValue.toProto(): BibixValueProto.BibixValue = when (val value = this) {
   is DirectoryValue -> bibixValue { this.directoryValue = value.directory.absolutePathString() }
   is EnumValue -> bibixValue {
     this.enumValue = enumValue {
-      this.enumType = value.enumName.toString()
+      this.enumType = "${value.packageName}:${value.enumName}"
       this.value = value.value
     }
   }
@@ -104,7 +150,9 @@ fun BibixValue.toProto(): BibixValueProto.BibixValue = when (val value = this) {
   }
 
   is NClassInstanceValue -> throw AssertionError("NClassInstnaceValue cannot be marshalled")
-  is NoneValue -> bibixValue { }
+
+  is NoneValue -> bibixValue { this.noneValue = empty {} }
+
   is ActionRuleDefValue ->
     // TODO
     bibixValue {}

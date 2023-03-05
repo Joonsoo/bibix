@@ -20,7 +20,7 @@ class ProgressConsolePrinter : ProgressNotifier {
 
   override fun notifyProgresses(progressesFunc: () -> List<ThreadState?>) {
     val now = Instant.now()
-    if (lastPrinted == null || Duration.between(lastPrinted, now) >= Duration.ofMillis(100)) {
+    if (lastPrinted == null || Duration.between(lastPrinted, now) >= Duration.ofMillis(500)) {
       lastPrinted = now
       repeat(occupiedLines) { print("\b\r") }
       val progresses = progressesFunc()

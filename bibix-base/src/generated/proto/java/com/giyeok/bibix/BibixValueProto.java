@@ -19,171 +19,186 @@ public final class BibixValueProto {
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>bool boolean_value = 1;</code>
+     * <code>.google.protobuf.Empty none_value = 1;</code>
+     * @return Whether the noneValue field is set.
+     */
+    boolean hasNoneValue();
+    /**
+     * <code>.google.protobuf.Empty none_value = 1;</code>
+     * @return The noneValue.
+     */
+    com.google.protobuf.Empty getNoneValue();
+    /**
+     * <code>.google.protobuf.Empty none_value = 1;</code>
+     */
+    com.google.protobuf.EmptyOrBuilder getNoneValueOrBuilder();
+
+    /**
+     * <code>bool boolean_value = 2;</code>
      * @return Whether the booleanValue field is set.
      */
     boolean hasBooleanValue();
     /**
-     * <code>bool boolean_value = 1;</code>
+     * <code>bool boolean_value = 2;</code>
      * @return The booleanValue.
      */
     boolean getBooleanValue();
 
     /**
-     * <code>string string_value = 2;</code>
+     * <code>string string_value = 3;</code>
      * @return Whether the stringValue field is set.
      */
     boolean hasStringValue();
     /**
-     * <code>string string_value = 2;</code>
+     * <code>string string_value = 3;</code>
      * @return The stringValue.
      */
     java.lang.String getStringValue();
     /**
-     * <code>string string_value = 2;</code>
+     * <code>string string_value = 3;</code>
      * @return The bytes for stringValue.
      */
     com.google.protobuf.ByteString
         getStringValueBytes();
 
     /**
-     * <code>string path_value = 3;</code>
+     * <code>string path_value = 4;</code>
      * @return Whether the pathValue field is set.
      */
     boolean hasPathValue();
     /**
-     * <code>string path_value = 3;</code>
+     * <code>string path_value = 4;</code>
      * @return The pathValue.
      */
     java.lang.String getPathValue();
     /**
-     * <code>string path_value = 3;</code>
+     * <code>string path_value = 4;</code>
      * @return The bytes for pathValue.
      */
     com.google.protobuf.ByteString
         getPathValueBytes();
 
     /**
-     * <code>string file_value = 4;</code>
+     * <code>string file_value = 5;</code>
      * @return Whether the fileValue field is set.
      */
     boolean hasFileValue();
     /**
-     * <code>string file_value = 4;</code>
+     * <code>string file_value = 5;</code>
      * @return The fileValue.
      */
     java.lang.String getFileValue();
     /**
-     * <code>string file_value = 4;</code>
+     * <code>string file_value = 5;</code>
      * @return The bytes for fileValue.
      */
     com.google.protobuf.ByteString
         getFileValueBytes();
 
     /**
-     * <code>string directory_value = 5;</code>
+     * <code>string directory_value = 6;</code>
      * @return Whether the directoryValue field is set.
      */
     boolean hasDirectoryValue();
     /**
-     * <code>string directory_value = 5;</code>
+     * <code>string directory_value = 6;</code>
      * @return The directoryValue.
      */
     java.lang.String getDirectoryValue();
     /**
-     * <code>string directory_value = 5;</code>
+     * <code>string directory_value = 6;</code>
      * @return The bytes for directoryValue.
      */
     com.google.protobuf.ByteString
         getDirectoryValueBytes();
 
     /**
-     * <code>.com.giyeok.bibix.EnumValue enum_value = 6;</code>
+     * <code>.com.giyeok.bibix.EnumValue enum_value = 7;</code>
      * @return Whether the enumValue field is set.
      */
     boolean hasEnumValue();
     /**
-     * <code>.com.giyeok.bibix.EnumValue enum_value = 6;</code>
+     * <code>.com.giyeok.bibix.EnumValue enum_value = 7;</code>
      * @return The enumValue.
      */
     com.giyeok.bibix.BibixValueProto.EnumValue getEnumValue();
     /**
-     * <code>.com.giyeok.bibix.EnumValue enum_value = 6;</code>
+     * <code>.com.giyeok.bibix.EnumValue enum_value = 7;</code>
      */
     com.giyeok.bibix.BibixValueProto.EnumValueOrBuilder getEnumValueOrBuilder();
 
     /**
-     * <code>.com.giyeok.bibix.ListValue list_value = 7;</code>
+     * <code>.com.giyeok.bibix.ListValue list_value = 8;</code>
      * @return Whether the listValue field is set.
      */
     boolean hasListValue();
     /**
-     * <code>.com.giyeok.bibix.ListValue list_value = 7;</code>
+     * <code>.com.giyeok.bibix.ListValue list_value = 8;</code>
      * @return The listValue.
      */
     com.giyeok.bibix.BibixValueProto.ListValue getListValue();
     /**
-     * <code>.com.giyeok.bibix.ListValue list_value = 7;</code>
+     * <code>.com.giyeok.bibix.ListValue list_value = 8;</code>
      */
     com.giyeok.bibix.BibixValueProto.ListValueOrBuilder getListValueOrBuilder();
 
     /**
-     * <code>.com.giyeok.bibix.SetValue set_value = 8;</code>
+     * <code>.com.giyeok.bibix.SetValue set_value = 9;</code>
      * @return Whether the setValue field is set.
      */
     boolean hasSetValue();
     /**
-     * <code>.com.giyeok.bibix.SetValue set_value = 8;</code>
+     * <code>.com.giyeok.bibix.SetValue set_value = 9;</code>
      * @return The setValue.
      */
     com.giyeok.bibix.BibixValueProto.SetValue getSetValue();
     /**
-     * <code>.com.giyeok.bibix.SetValue set_value = 8;</code>
+     * <code>.com.giyeok.bibix.SetValue set_value = 9;</code>
      */
     com.giyeok.bibix.BibixValueProto.SetValueOrBuilder getSetValueOrBuilder();
 
     /**
-     * <code>.com.giyeok.bibix.TupleValue tuple_value = 9;</code>
+     * <code>.com.giyeok.bibix.TupleValue tuple_value = 10;</code>
      * @return Whether the tupleValue field is set.
      */
     boolean hasTupleValue();
     /**
-     * <code>.com.giyeok.bibix.TupleValue tuple_value = 9;</code>
+     * <code>.com.giyeok.bibix.TupleValue tuple_value = 10;</code>
      * @return The tupleValue.
      */
     com.giyeok.bibix.BibixValueProto.TupleValue getTupleValue();
     /**
-     * <code>.com.giyeok.bibix.TupleValue tuple_value = 9;</code>
+     * <code>.com.giyeok.bibix.TupleValue tuple_value = 10;</code>
      */
     com.giyeok.bibix.BibixValueProto.TupleValueOrBuilder getTupleValueOrBuilder();
 
     /**
-     * <code>.com.giyeok.bibix.NamedTupleValue named_tuple_value = 10;</code>
+     * <code>.com.giyeok.bibix.NamedTupleValue named_tuple_value = 11;</code>
      * @return Whether the namedTupleValue field is set.
      */
     boolean hasNamedTupleValue();
     /**
-     * <code>.com.giyeok.bibix.NamedTupleValue named_tuple_value = 10;</code>
+     * <code>.com.giyeok.bibix.NamedTupleValue named_tuple_value = 11;</code>
      * @return The namedTupleValue.
      */
     com.giyeok.bibix.BibixValueProto.NamedTupleValue getNamedTupleValue();
     /**
-     * <code>.com.giyeok.bibix.NamedTupleValue named_tuple_value = 10;</code>
+     * <code>.com.giyeok.bibix.NamedTupleValue named_tuple_value = 11;</code>
      */
     com.giyeok.bibix.BibixValueProto.NamedTupleValueOrBuilder getNamedTupleValueOrBuilder();
 
     /**
-     * <code>.com.giyeok.bibix.DataClassInstanceValue data_class_instance_value = 11;</code>
+     * <code>.com.giyeok.bibix.DataClassInstanceValue data_class_instance_value = 12;</code>
      * @return Whether the dataClassInstanceValue field is set.
      */
     boolean hasDataClassInstanceValue();
     /**
-     * <code>.com.giyeok.bibix.DataClassInstanceValue data_class_instance_value = 11;</code>
+     * <code>.com.giyeok.bibix.DataClassInstanceValue data_class_instance_value = 12;</code>
      * @return The dataClassInstanceValue.
      */
     com.giyeok.bibix.BibixValueProto.DataClassInstanceValue getDataClassInstanceValue();
     /**
-     * <code>.com.giyeok.bibix.DataClassInstanceValue data_class_instance_value = 11;</code>
+     * <code>.com.giyeok.bibix.DataClassInstanceValue data_class_instance_value = 12;</code>
      */
     com.giyeok.bibix.BibixValueProto.DataClassInstanceValueOrBuilder getDataClassInstanceValueOrBuilder();
 
@@ -234,15 +249,23 @@ public final class BibixValueProto {
             case 0:
               done = true;
               break;
-            case 8: {
-              value_ = input.readBool();
+            case 10: {
+              com.google.protobuf.Empty.Builder subBuilder = null;
+              if (valueCase_ == 1) {
+                subBuilder = ((com.google.protobuf.Empty) value_).toBuilder();
+              }
+              value_ =
+                  input.readMessage(com.google.protobuf.Empty.parser(), extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom((com.google.protobuf.Empty) value_);
+                value_ = subBuilder.buildPartial();
+              }
               valueCase_ = 1;
               break;
             }
-            case 18: {
-              java.lang.String s = input.readStringRequireUtf8();
+            case 16: {
+              value_ = input.readBool();
               valueCase_ = 2;
-              value_ = s;
               break;
             }
             case 26: {
@@ -264,8 +287,14 @@ public final class BibixValueProto {
               break;
             }
             case 50: {
+              java.lang.String s = input.readStringRequireUtf8();
+              valueCase_ = 6;
+              value_ = s;
+              break;
+            }
+            case 58: {
               com.giyeok.bibix.BibixValueProto.EnumValue.Builder subBuilder = null;
-              if (valueCase_ == 6) {
+              if (valueCase_ == 7) {
                 subBuilder = ((com.giyeok.bibix.BibixValueProto.EnumValue) value_).toBuilder();
               }
               value_ =
@@ -274,12 +303,12 @@ public final class BibixValueProto {
                 subBuilder.mergeFrom((com.giyeok.bibix.BibixValueProto.EnumValue) value_);
                 value_ = subBuilder.buildPartial();
               }
-              valueCase_ = 6;
+              valueCase_ = 7;
               break;
             }
-            case 58: {
+            case 66: {
               com.giyeok.bibix.BibixValueProto.ListValue.Builder subBuilder = null;
-              if (valueCase_ == 7) {
+              if (valueCase_ == 8) {
                 subBuilder = ((com.giyeok.bibix.BibixValueProto.ListValue) value_).toBuilder();
               }
               value_ =
@@ -288,12 +317,12 @@ public final class BibixValueProto {
                 subBuilder.mergeFrom((com.giyeok.bibix.BibixValueProto.ListValue) value_);
                 value_ = subBuilder.buildPartial();
               }
-              valueCase_ = 7;
+              valueCase_ = 8;
               break;
             }
-            case 66: {
+            case 74: {
               com.giyeok.bibix.BibixValueProto.SetValue.Builder subBuilder = null;
-              if (valueCase_ == 8) {
+              if (valueCase_ == 9) {
                 subBuilder = ((com.giyeok.bibix.BibixValueProto.SetValue) value_).toBuilder();
               }
               value_ =
@@ -302,12 +331,12 @@ public final class BibixValueProto {
                 subBuilder.mergeFrom((com.giyeok.bibix.BibixValueProto.SetValue) value_);
                 value_ = subBuilder.buildPartial();
               }
-              valueCase_ = 8;
+              valueCase_ = 9;
               break;
             }
-            case 74: {
+            case 82: {
               com.giyeok.bibix.BibixValueProto.TupleValue.Builder subBuilder = null;
-              if (valueCase_ == 9) {
+              if (valueCase_ == 10) {
                 subBuilder = ((com.giyeok.bibix.BibixValueProto.TupleValue) value_).toBuilder();
               }
               value_ =
@@ -316,12 +345,12 @@ public final class BibixValueProto {
                 subBuilder.mergeFrom((com.giyeok.bibix.BibixValueProto.TupleValue) value_);
                 value_ = subBuilder.buildPartial();
               }
-              valueCase_ = 9;
+              valueCase_ = 10;
               break;
             }
-            case 82: {
+            case 90: {
               com.giyeok.bibix.BibixValueProto.NamedTupleValue.Builder subBuilder = null;
-              if (valueCase_ == 10) {
+              if (valueCase_ == 11) {
                 subBuilder = ((com.giyeok.bibix.BibixValueProto.NamedTupleValue) value_).toBuilder();
               }
               value_ =
@@ -330,12 +359,12 @@ public final class BibixValueProto {
                 subBuilder.mergeFrom((com.giyeok.bibix.BibixValueProto.NamedTupleValue) value_);
                 value_ = subBuilder.buildPartial();
               }
-              valueCase_ = 10;
+              valueCase_ = 11;
               break;
             }
-            case 90: {
+            case 98: {
               com.giyeok.bibix.BibixValueProto.DataClassInstanceValue.Builder subBuilder = null;
-              if (valueCase_ == 11) {
+              if (valueCase_ == 12) {
                 subBuilder = ((com.giyeok.bibix.BibixValueProto.DataClassInstanceValue) value_).toBuilder();
               }
               value_ =
@@ -344,7 +373,7 @@ public final class BibixValueProto {
                 subBuilder.mergeFrom((com.giyeok.bibix.BibixValueProto.DataClassInstanceValue) value_);
                 value_ = subBuilder.buildPartial();
               }
-              valueCase_ = 11;
+              valueCase_ = 12;
               break;
             }
             default: {
@@ -386,17 +415,18 @@ public final class BibixValueProto {
     public enum ValueCase
         implements com.google.protobuf.Internal.EnumLite,
             com.google.protobuf.AbstractMessage.InternalOneOfEnum {
-      BOOLEAN_VALUE(1),
-      STRING_VALUE(2),
-      PATH_VALUE(3),
-      FILE_VALUE(4),
-      DIRECTORY_VALUE(5),
-      ENUM_VALUE(6),
-      LIST_VALUE(7),
-      SET_VALUE(8),
-      TUPLE_VALUE(9),
-      NAMED_TUPLE_VALUE(10),
-      DATA_CLASS_INSTANCE_VALUE(11),
+      NONE_VALUE(1),
+      BOOLEAN_VALUE(2),
+      STRING_VALUE(3),
+      PATH_VALUE(4),
+      FILE_VALUE(5),
+      DIRECTORY_VALUE(6),
+      ENUM_VALUE(7),
+      LIST_VALUE(8),
+      SET_VALUE(9),
+      TUPLE_VALUE(10),
+      NAMED_TUPLE_VALUE(11),
+      DATA_CLASS_INSTANCE_VALUE(12),
       VALUE_NOT_SET(0);
       private final int value;
       private ValueCase(int value) {
@@ -414,17 +444,18 @@ public final class BibixValueProto {
 
       public static ValueCase forNumber(int value) {
         switch (value) {
-          case 1: return BOOLEAN_VALUE;
-          case 2: return STRING_VALUE;
-          case 3: return PATH_VALUE;
-          case 4: return FILE_VALUE;
-          case 5: return DIRECTORY_VALUE;
-          case 6: return ENUM_VALUE;
-          case 7: return LIST_VALUE;
-          case 8: return SET_VALUE;
-          case 9: return TUPLE_VALUE;
-          case 10: return NAMED_TUPLE_VALUE;
-          case 11: return DATA_CLASS_INSTANCE_VALUE;
+          case 1: return NONE_VALUE;
+          case 2: return BOOLEAN_VALUE;
+          case 3: return STRING_VALUE;
+          case 4: return PATH_VALUE;
+          case 5: return FILE_VALUE;
+          case 6: return DIRECTORY_VALUE;
+          case 7: return ENUM_VALUE;
+          case 8: return LIST_VALUE;
+          case 9: return SET_VALUE;
+          case 10: return TUPLE_VALUE;
+          case 11: return NAMED_TUPLE_VALUE;
+          case 12: return DATA_CLASS_INSTANCE_VALUE;
           case 0: return VALUE_NOT_SET;
           default: return null;
         }
@@ -440,42 +471,73 @@ public final class BibixValueProto {
           valueCase_);
     }
 
-    public static final int BOOLEAN_VALUE_FIELD_NUMBER = 1;
+    public static final int NONE_VALUE_FIELD_NUMBER = 1;
     /**
-     * <code>bool boolean_value = 1;</code>
+     * <code>.google.protobuf.Empty none_value = 1;</code>
+     * @return Whether the noneValue field is set.
+     */
+    @java.lang.Override
+    public boolean hasNoneValue() {
+      return valueCase_ == 1;
+    }
+    /**
+     * <code>.google.protobuf.Empty none_value = 1;</code>
+     * @return The noneValue.
+     */
+    @java.lang.Override
+    public com.google.protobuf.Empty getNoneValue() {
+      if (valueCase_ == 1) {
+         return (com.google.protobuf.Empty) value_;
+      }
+      return com.google.protobuf.Empty.getDefaultInstance();
+    }
+    /**
+     * <code>.google.protobuf.Empty none_value = 1;</code>
+     */
+    @java.lang.Override
+    public com.google.protobuf.EmptyOrBuilder getNoneValueOrBuilder() {
+      if (valueCase_ == 1) {
+         return (com.google.protobuf.Empty) value_;
+      }
+      return com.google.protobuf.Empty.getDefaultInstance();
+    }
+
+    public static final int BOOLEAN_VALUE_FIELD_NUMBER = 2;
+    /**
+     * <code>bool boolean_value = 2;</code>
      * @return Whether the booleanValue field is set.
      */
     @java.lang.Override
     public boolean hasBooleanValue() {
-      return valueCase_ == 1;
+      return valueCase_ == 2;
     }
     /**
-     * <code>bool boolean_value = 1;</code>
+     * <code>bool boolean_value = 2;</code>
      * @return The booleanValue.
      */
     @java.lang.Override
     public boolean getBooleanValue() {
-      if (valueCase_ == 1) {
+      if (valueCase_ == 2) {
         return (java.lang.Boolean) value_;
       }
       return false;
     }
 
-    public static final int STRING_VALUE_FIELD_NUMBER = 2;
+    public static final int STRING_VALUE_FIELD_NUMBER = 3;
     /**
-     * <code>string string_value = 2;</code>
+     * <code>string string_value = 3;</code>
      * @return Whether the stringValue field is set.
      */
     public boolean hasStringValue() {
-      return valueCase_ == 2;
+      return valueCase_ == 3;
     }
     /**
-     * <code>string string_value = 2;</code>
+     * <code>string string_value = 3;</code>
      * @return The stringValue.
      */
     public java.lang.String getStringValue() {
       java.lang.Object ref = "";
-      if (valueCase_ == 2) {
+      if (valueCase_ == 3) {
         ref = value_;
       }
       if (ref instanceof java.lang.String) {
@@ -484,27 +546,27 @@ public final class BibixValueProto {
         com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
-        if (valueCase_ == 2) {
+        if (valueCase_ == 3) {
           value_ = s;
         }
         return s;
       }
     }
     /**
-     * <code>string string_value = 2;</code>
+     * <code>string string_value = 3;</code>
      * @return The bytes for stringValue.
      */
     public com.google.protobuf.ByteString
         getStringValueBytes() {
       java.lang.Object ref = "";
-      if (valueCase_ == 2) {
+      if (valueCase_ == 3) {
         ref = value_;
       }
       if (ref instanceof java.lang.String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
-        if (valueCase_ == 2) {
+        if (valueCase_ == 3) {
           value_ = b;
         }
         return b;
@@ -513,21 +575,21 @@ public final class BibixValueProto {
       }
     }
 
-    public static final int PATH_VALUE_FIELD_NUMBER = 3;
+    public static final int PATH_VALUE_FIELD_NUMBER = 4;
     /**
-     * <code>string path_value = 3;</code>
+     * <code>string path_value = 4;</code>
      * @return Whether the pathValue field is set.
      */
     public boolean hasPathValue() {
-      return valueCase_ == 3;
+      return valueCase_ == 4;
     }
     /**
-     * <code>string path_value = 3;</code>
+     * <code>string path_value = 4;</code>
      * @return The pathValue.
      */
     public java.lang.String getPathValue() {
       java.lang.Object ref = "";
-      if (valueCase_ == 3) {
+      if (valueCase_ == 4) {
         ref = value_;
       }
       if (ref instanceof java.lang.String) {
@@ -536,27 +598,27 @@ public final class BibixValueProto {
         com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
-        if (valueCase_ == 3) {
+        if (valueCase_ == 4) {
           value_ = s;
         }
         return s;
       }
     }
     /**
-     * <code>string path_value = 3;</code>
+     * <code>string path_value = 4;</code>
      * @return The bytes for pathValue.
      */
     public com.google.protobuf.ByteString
         getPathValueBytes() {
       java.lang.Object ref = "";
-      if (valueCase_ == 3) {
+      if (valueCase_ == 4) {
         ref = value_;
       }
       if (ref instanceof java.lang.String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
-        if (valueCase_ == 3) {
+        if (valueCase_ == 4) {
           value_ = b;
         }
         return b;
@@ -565,21 +627,21 @@ public final class BibixValueProto {
       }
     }
 
-    public static final int FILE_VALUE_FIELD_NUMBER = 4;
+    public static final int FILE_VALUE_FIELD_NUMBER = 5;
     /**
-     * <code>string file_value = 4;</code>
+     * <code>string file_value = 5;</code>
      * @return Whether the fileValue field is set.
      */
     public boolean hasFileValue() {
-      return valueCase_ == 4;
+      return valueCase_ == 5;
     }
     /**
-     * <code>string file_value = 4;</code>
+     * <code>string file_value = 5;</code>
      * @return The fileValue.
      */
     public java.lang.String getFileValue() {
       java.lang.Object ref = "";
-      if (valueCase_ == 4) {
+      if (valueCase_ == 5) {
         ref = value_;
       }
       if (ref instanceof java.lang.String) {
@@ -588,27 +650,27 @@ public final class BibixValueProto {
         com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
-        if (valueCase_ == 4) {
+        if (valueCase_ == 5) {
           value_ = s;
         }
         return s;
       }
     }
     /**
-     * <code>string file_value = 4;</code>
+     * <code>string file_value = 5;</code>
      * @return The bytes for fileValue.
      */
     public com.google.protobuf.ByteString
         getFileValueBytes() {
       java.lang.Object ref = "";
-      if (valueCase_ == 4) {
+      if (valueCase_ == 5) {
         ref = value_;
       }
       if (ref instanceof java.lang.String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
-        if (valueCase_ == 4) {
+        if (valueCase_ == 5) {
           value_ = b;
         }
         return b;
@@ -617,21 +679,21 @@ public final class BibixValueProto {
       }
     }
 
-    public static final int DIRECTORY_VALUE_FIELD_NUMBER = 5;
+    public static final int DIRECTORY_VALUE_FIELD_NUMBER = 6;
     /**
-     * <code>string directory_value = 5;</code>
+     * <code>string directory_value = 6;</code>
      * @return Whether the directoryValue field is set.
      */
     public boolean hasDirectoryValue() {
-      return valueCase_ == 5;
+      return valueCase_ == 6;
     }
     /**
-     * <code>string directory_value = 5;</code>
+     * <code>string directory_value = 6;</code>
      * @return The directoryValue.
      */
     public java.lang.String getDirectoryValue() {
       java.lang.Object ref = "";
-      if (valueCase_ == 5) {
+      if (valueCase_ == 6) {
         ref = value_;
       }
       if (ref instanceof java.lang.String) {
@@ -640,27 +702,27 @@ public final class BibixValueProto {
         com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
-        if (valueCase_ == 5) {
+        if (valueCase_ == 6) {
           value_ = s;
         }
         return s;
       }
     }
     /**
-     * <code>string directory_value = 5;</code>
+     * <code>string directory_value = 6;</code>
      * @return The bytes for directoryValue.
      */
     public com.google.protobuf.ByteString
         getDirectoryValueBytes() {
       java.lang.Object ref = "";
-      if (valueCase_ == 5) {
+      if (valueCase_ == 6) {
         ref = value_;
       }
       if (ref instanceof java.lang.String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
-        if (valueCase_ == 5) {
+        if (valueCase_ == 6) {
           value_ = b;
         }
         return b;
@@ -669,187 +731,187 @@ public final class BibixValueProto {
       }
     }
 
-    public static final int ENUM_VALUE_FIELD_NUMBER = 6;
+    public static final int ENUM_VALUE_FIELD_NUMBER = 7;
     /**
-     * <code>.com.giyeok.bibix.EnumValue enum_value = 6;</code>
+     * <code>.com.giyeok.bibix.EnumValue enum_value = 7;</code>
      * @return Whether the enumValue field is set.
      */
     @java.lang.Override
     public boolean hasEnumValue() {
-      return valueCase_ == 6;
+      return valueCase_ == 7;
     }
     /**
-     * <code>.com.giyeok.bibix.EnumValue enum_value = 6;</code>
+     * <code>.com.giyeok.bibix.EnumValue enum_value = 7;</code>
      * @return The enumValue.
      */
     @java.lang.Override
     public com.giyeok.bibix.BibixValueProto.EnumValue getEnumValue() {
-      if (valueCase_ == 6) {
+      if (valueCase_ == 7) {
          return (com.giyeok.bibix.BibixValueProto.EnumValue) value_;
       }
       return com.giyeok.bibix.BibixValueProto.EnumValue.getDefaultInstance();
     }
     /**
-     * <code>.com.giyeok.bibix.EnumValue enum_value = 6;</code>
+     * <code>.com.giyeok.bibix.EnumValue enum_value = 7;</code>
      */
     @java.lang.Override
     public com.giyeok.bibix.BibixValueProto.EnumValueOrBuilder getEnumValueOrBuilder() {
-      if (valueCase_ == 6) {
+      if (valueCase_ == 7) {
          return (com.giyeok.bibix.BibixValueProto.EnumValue) value_;
       }
       return com.giyeok.bibix.BibixValueProto.EnumValue.getDefaultInstance();
     }
 
-    public static final int LIST_VALUE_FIELD_NUMBER = 7;
+    public static final int LIST_VALUE_FIELD_NUMBER = 8;
     /**
-     * <code>.com.giyeok.bibix.ListValue list_value = 7;</code>
+     * <code>.com.giyeok.bibix.ListValue list_value = 8;</code>
      * @return Whether the listValue field is set.
      */
     @java.lang.Override
     public boolean hasListValue() {
-      return valueCase_ == 7;
+      return valueCase_ == 8;
     }
     /**
-     * <code>.com.giyeok.bibix.ListValue list_value = 7;</code>
+     * <code>.com.giyeok.bibix.ListValue list_value = 8;</code>
      * @return The listValue.
      */
     @java.lang.Override
     public com.giyeok.bibix.BibixValueProto.ListValue getListValue() {
-      if (valueCase_ == 7) {
+      if (valueCase_ == 8) {
          return (com.giyeok.bibix.BibixValueProto.ListValue) value_;
       }
       return com.giyeok.bibix.BibixValueProto.ListValue.getDefaultInstance();
     }
     /**
-     * <code>.com.giyeok.bibix.ListValue list_value = 7;</code>
+     * <code>.com.giyeok.bibix.ListValue list_value = 8;</code>
      */
     @java.lang.Override
     public com.giyeok.bibix.BibixValueProto.ListValueOrBuilder getListValueOrBuilder() {
-      if (valueCase_ == 7) {
+      if (valueCase_ == 8) {
          return (com.giyeok.bibix.BibixValueProto.ListValue) value_;
       }
       return com.giyeok.bibix.BibixValueProto.ListValue.getDefaultInstance();
     }
 
-    public static final int SET_VALUE_FIELD_NUMBER = 8;
+    public static final int SET_VALUE_FIELD_NUMBER = 9;
     /**
-     * <code>.com.giyeok.bibix.SetValue set_value = 8;</code>
+     * <code>.com.giyeok.bibix.SetValue set_value = 9;</code>
      * @return Whether the setValue field is set.
      */
     @java.lang.Override
     public boolean hasSetValue() {
-      return valueCase_ == 8;
+      return valueCase_ == 9;
     }
     /**
-     * <code>.com.giyeok.bibix.SetValue set_value = 8;</code>
+     * <code>.com.giyeok.bibix.SetValue set_value = 9;</code>
      * @return The setValue.
      */
     @java.lang.Override
     public com.giyeok.bibix.BibixValueProto.SetValue getSetValue() {
-      if (valueCase_ == 8) {
+      if (valueCase_ == 9) {
          return (com.giyeok.bibix.BibixValueProto.SetValue) value_;
       }
       return com.giyeok.bibix.BibixValueProto.SetValue.getDefaultInstance();
     }
     /**
-     * <code>.com.giyeok.bibix.SetValue set_value = 8;</code>
+     * <code>.com.giyeok.bibix.SetValue set_value = 9;</code>
      */
     @java.lang.Override
     public com.giyeok.bibix.BibixValueProto.SetValueOrBuilder getSetValueOrBuilder() {
-      if (valueCase_ == 8) {
+      if (valueCase_ == 9) {
          return (com.giyeok.bibix.BibixValueProto.SetValue) value_;
       }
       return com.giyeok.bibix.BibixValueProto.SetValue.getDefaultInstance();
     }
 
-    public static final int TUPLE_VALUE_FIELD_NUMBER = 9;
+    public static final int TUPLE_VALUE_FIELD_NUMBER = 10;
     /**
-     * <code>.com.giyeok.bibix.TupleValue tuple_value = 9;</code>
+     * <code>.com.giyeok.bibix.TupleValue tuple_value = 10;</code>
      * @return Whether the tupleValue field is set.
      */
     @java.lang.Override
     public boolean hasTupleValue() {
-      return valueCase_ == 9;
+      return valueCase_ == 10;
     }
     /**
-     * <code>.com.giyeok.bibix.TupleValue tuple_value = 9;</code>
+     * <code>.com.giyeok.bibix.TupleValue tuple_value = 10;</code>
      * @return The tupleValue.
      */
     @java.lang.Override
     public com.giyeok.bibix.BibixValueProto.TupleValue getTupleValue() {
-      if (valueCase_ == 9) {
+      if (valueCase_ == 10) {
          return (com.giyeok.bibix.BibixValueProto.TupleValue) value_;
       }
       return com.giyeok.bibix.BibixValueProto.TupleValue.getDefaultInstance();
     }
     /**
-     * <code>.com.giyeok.bibix.TupleValue tuple_value = 9;</code>
+     * <code>.com.giyeok.bibix.TupleValue tuple_value = 10;</code>
      */
     @java.lang.Override
     public com.giyeok.bibix.BibixValueProto.TupleValueOrBuilder getTupleValueOrBuilder() {
-      if (valueCase_ == 9) {
+      if (valueCase_ == 10) {
          return (com.giyeok.bibix.BibixValueProto.TupleValue) value_;
       }
       return com.giyeok.bibix.BibixValueProto.TupleValue.getDefaultInstance();
     }
 
-    public static final int NAMED_TUPLE_VALUE_FIELD_NUMBER = 10;
+    public static final int NAMED_TUPLE_VALUE_FIELD_NUMBER = 11;
     /**
-     * <code>.com.giyeok.bibix.NamedTupleValue named_tuple_value = 10;</code>
+     * <code>.com.giyeok.bibix.NamedTupleValue named_tuple_value = 11;</code>
      * @return Whether the namedTupleValue field is set.
      */
     @java.lang.Override
     public boolean hasNamedTupleValue() {
-      return valueCase_ == 10;
+      return valueCase_ == 11;
     }
     /**
-     * <code>.com.giyeok.bibix.NamedTupleValue named_tuple_value = 10;</code>
+     * <code>.com.giyeok.bibix.NamedTupleValue named_tuple_value = 11;</code>
      * @return The namedTupleValue.
      */
     @java.lang.Override
     public com.giyeok.bibix.BibixValueProto.NamedTupleValue getNamedTupleValue() {
-      if (valueCase_ == 10) {
+      if (valueCase_ == 11) {
          return (com.giyeok.bibix.BibixValueProto.NamedTupleValue) value_;
       }
       return com.giyeok.bibix.BibixValueProto.NamedTupleValue.getDefaultInstance();
     }
     /**
-     * <code>.com.giyeok.bibix.NamedTupleValue named_tuple_value = 10;</code>
+     * <code>.com.giyeok.bibix.NamedTupleValue named_tuple_value = 11;</code>
      */
     @java.lang.Override
     public com.giyeok.bibix.BibixValueProto.NamedTupleValueOrBuilder getNamedTupleValueOrBuilder() {
-      if (valueCase_ == 10) {
+      if (valueCase_ == 11) {
          return (com.giyeok.bibix.BibixValueProto.NamedTupleValue) value_;
       }
       return com.giyeok.bibix.BibixValueProto.NamedTupleValue.getDefaultInstance();
     }
 
-    public static final int DATA_CLASS_INSTANCE_VALUE_FIELD_NUMBER = 11;
+    public static final int DATA_CLASS_INSTANCE_VALUE_FIELD_NUMBER = 12;
     /**
-     * <code>.com.giyeok.bibix.DataClassInstanceValue data_class_instance_value = 11;</code>
+     * <code>.com.giyeok.bibix.DataClassInstanceValue data_class_instance_value = 12;</code>
      * @return Whether the dataClassInstanceValue field is set.
      */
     @java.lang.Override
     public boolean hasDataClassInstanceValue() {
-      return valueCase_ == 11;
+      return valueCase_ == 12;
     }
     /**
-     * <code>.com.giyeok.bibix.DataClassInstanceValue data_class_instance_value = 11;</code>
+     * <code>.com.giyeok.bibix.DataClassInstanceValue data_class_instance_value = 12;</code>
      * @return The dataClassInstanceValue.
      */
     @java.lang.Override
     public com.giyeok.bibix.BibixValueProto.DataClassInstanceValue getDataClassInstanceValue() {
-      if (valueCase_ == 11) {
+      if (valueCase_ == 12) {
          return (com.giyeok.bibix.BibixValueProto.DataClassInstanceValue) value_;
       }
       return com.giyeok.bibix.BibixValueProto.DataClassInstanceValue.getDefaultInstance();
     }
     /**
-     * <code>.com.giyeok.bibix.DataClassInstanceValue data_class_instance_value = 11;</code>
+     * <code>.com.giyeok.bibix.DataClassInstanceValue data_class_instance_value = 12;</code>
      */
     @java.lang.Override
     public com.giyeok.bibix.BibixValueProto.DataClassInstanceValueOrBuilder getDataClassInstanceValueOrBuilder() {
-      if (valueCase_ == 11) {
+      if (valueCase_ == 12) {
          return (com.giyeok.bibix.BibixValueProto.DataClassInstanceValue) value_;
       }
       return com.giyeok.bibix.BibixValueProto.DataClassInstanceValue.getDefaultInstance();
@@ -870,11 +932,11 @@ public final class BibixValueProto {
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       if (valueCase_ == 1) {
-        output.writeBool(
-            1, (boolean)((java.lang.Boolean) value_));
+        output.writeMessage(1, (com.google.protobuf.Empty) value_);
       }
       if (valueCase_ == 2) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, value_);
+        output.writeBool(
+            2, (boolean)((java.lang.Boolean) value_));
       }
       if (valueCase_ == 3) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 3, value_);
@@ -886,22 +948,25 @@ public final class BibixValueProto {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 5, value_);
       }
       if (valueCase_ == 6) {
-        output.writeMessage(6, (com.giyeok.bibix.BibixValueProto.EnumValue) value_);
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 6, value_);
       }
       if (valueCase_ == 7) {
-        output.writeMessage(7, (com.giyeok.bibix.BibixValueProto.ListValue) value_);
+        output.writeMessage(7, (com.giyeok.bibix.BibixValueProto.EnumValue) value_);
       }
       if (valueCase_ == 8) {
-        output.writeMessage(8, (com.giyeok.bibix.BibixValueProto.SetValue) value_);
+        output.writeMessage(8, (com.giyeok.bibix.BibixValueProto.ListValue) value_);
       }
       if (valueCase_ == 9) {
-        output.writeMessage(9, (com.giyeok.bibix.BibixValueProto.TupleValue) value_);
+        output.writeMessage(9, (com.giyeok.bibix.BibixValueProto.SetValue) value_);
       }
       if (valueCase_ == 10) {
-        output.writeMessage(10, (com.giyeok.bibix.BibixValueProto.NamedTupleValue) value_);
+        output.writeMessage(10, (com.giyeok.bibix.BibixValueProto.TupleValue) value_);
       }
       if (valueCase_ == 11) {
-        output.writeMessage(11, (com.giyeok.bibix.BibixValueProto.DataClassInstanceValue) value_);
+        output.writeMessage(11, (com.giyeok.bibix.BibixValueProto.NamedTupleValue) value_);
+      }
+      if (valueCase_ == 12) {
+        output.writeMessage(12, (com.giyeok.bibix.BibixValueProto.DataClassInstanceValue) value_);
       }
       unknownFields.writeTo(output);
     }
@@ -914,11 +979,12 @@ public final class BibixValueProto {
       size = 0;
       if (valueCase_ == 1) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBoolSize(
-              1, (boolean)((java.lang.Boolean) value_));
+          .computeMessageSize(1, (com.google.protobuf.Empty) value_);
       }
       if (valueCase_ == 2) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, value_);
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(
+              2, (boolean)((java.lang.Boolean) value_));
       }
       if (valueCase_ == 3) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, value_);
@@ -930,28 +996,31 @@ public final class BibixValueProto {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(5, value_);
       }
       if (valueCase_ == 6) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(6, (com.giyeok.bibix.BibixValueProto.EnumValue) value_);
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(6, value_);
       }
       if (valueCase_ == 7) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(7, (com.giyeok.bibix.BibixValueProto.ListValue) value_);
+          .computeMessageSize(7, (com.giyeok.bibix.BibixValueProto.EnumValue) value_);
       }
       if (valueCase_ == 8) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(8, (com.giyeok.bibix.BibixValueProto.SetValue) value_);
+          .computeMessageSize(8, (com.giyeok.bibix.BibixValueProto.ListValue) value_);
       }
       if (valueCase_ == 9) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(9, (com.giyeok.bibix.BibixValueProto.TupleValue) value_);
+          .computeMessageSize(9, (com.giyeok.bibix.BibixValueProto.SetValue) value_);
       }
       if (valueCase_ == 10) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(10, (com.giyeok.bibix.BibixValueProto.NamedTupleValue) value_);
+          .computeMessageSize(10, (com.giyeok.bibix.BibixValueProto.TupleValue) value_);
       }
       if (valueCase_ == 11) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(11, (com.giyeok.bibix.BibixValueProto.DataClassInstanceValue) value_);
+          .computeMessageSize(11, (com.giyeok.bibix.BibixValueProto.NamedTupleValue) value_);
+      }
+      if (valueCase_ == 12) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(12, (com.giyeok.bibix.BibixValueProto.DataClassInstanceValue) value_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -971,46 +1040,50 @@ public final class BibixValueProto {
       if (!getValueCase().equals(other.getValueCase())) return false;
       switch (valueCase_) {
         case 1:
+          if (!getNoneValue()
+              .equals(other.getNoneValue())) return false;
+          break;
+        case 2:
           if (getBooleanValue()
               != other.getBooleanValue()) return false;
           break;
-        case 2:
+        case 3:
           if (!getStringValue()
               .equals(other.getStringValue())) return false;
           break;
-        case 3:
+        case 4:
           if (!getPathValue()
               .equals(other.getPathValue())) return false;
           break;
-        case 4:
+        case 5:
           if (!getFileValue()
               .equals(other.getFileValue())) return false;
           break;
-        case 5:
+        case 6:
           if (!getDirectoryValue()
               .equals(other.getDirectoryValue())) return false;
           break;
-        case 6:
+        case 7:
           if (!getEnumValue()
               .equals(other.getEnumValue())) return false;
           break;
-        case 7:
+        case 8:
           if (!getListValue()
               .equals(other.getListValue())) return false;
           break;
-        case 8:
+        case 9:
           if (!getSetValue()
               .equals(other.getSetValue())) return false;
           break;
-        case 9:
+        case 10:
           if (!getTupleValue()
               .equals(other.getTupleValue())) return false;
           break;
-        case 10:
+        case 11:
           if (!getNamedTupleValue()
               .equals(other.getNamedTupleValue())) return false;
           break;
-        case 11:
+        case 12:
           if (!getDataClassInstanceValue()
               .equals(other.getDataClassInstanceValue())) return false;
           break;
@@ -1030,47 +1103,51 @@ public final class BibixValueProto {
       hash = (19 * hash) + getDescriptor().hashCode();
       switch (valueCase_) {
         case 1:
+          hash = (37 * hash) + NONE_VALUE_FIELD_NUMBER;
+          hash = (53 * hash) + getNoneValue().hashCode();
+          break;
+        case 2:
           hash = (37 * hash) + BOOLEAN_VALUE_FIELD_NUMBER;
           hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
               getBooleanValue());
           break;
-        case 2:
+        case 3:
           hash = (37 * hash) + STRING_VALUE_FIELD_NUMBER;
           hash = (53 * hash) + getStringValue().hashCode();
           break;
-        case 3:
+        case 4:
           hash = (37 * hash) + PATH_VALUE_FIELD_NUMBER;
           hash = (53 * hash) + getPathValue().hashCode();
           break;
-        case 4:
+        case 5:
           hash = (37 * hash) + FILE_VALUE_FIELD_NUMBER;
           hash = (53 * hash) + getFileValue().hashCode();
           break;
-        case 5:
+        case 6:
           hash = (37 * hash) + DIRECTORY_VALUE_FIELD_NUMBER;
           hash = (53 * hash) + getDirectoryValue().hashCode();
           break;
-        case 6:
+        case 7:
           hash = (37 * hash) + ENUM_VALUE_FIELD_NUMBER;
           hash = (53 * hash) + getEnumValue().hashCode();
           break;
-        case 7:
+        case 8:
           hash = (37 * hash) + LIST_VALUE_FIELD_NUMBER;
           hash = (53 * hash) + getListValue().hashCode();
           break;
-        case 8:
+        case 9:
           hash = (37 * hash) + SET_VALUE_FIELD_NUMBER;
           hash = (53 * hash) + getSetValue().hashCode();
           break;
-        case 9:
+        case 10:
           hash = (37 * hash) + TUPLE_VALUE_FIELD_NUMBER;
           hash = (53 * hash) + getTupleValue().hashCode();
           break;
-        case 10:
+        case 11:
           hash = (37 * hash) + NAMED_TUPLE_VALUE_FIELD_NUMBER;
           hash = (53 * hash) + getNamedTupleValue().hashCode();
           break;
-        case 11:
+        case 12:
           hash = (37 * hash) + DATA_CLASS_INSTANCE_VALUE_FIELD_NUMBER;
           hash = (53 * hash) + getDataClassInstanceValue().hashCode();
           break;
@@ -1239,7 +1316,11 @@ public final class BibixValueProto {
       public com.giyeok.bibix.BibixValueProto.BibixValue buildPartial() {
         com.giyeok.bibix.BibixValueProto.BibixValue result = new com.giyeok.bibix.BibixValueProto.BibixValue(this);
         if (valueCase_ == 1) {
-          result.value_ = value_;
+          if (noneValueBuilder_ == null) {
+            result.value_ = value_;
+          } else {
+            result.value_ = noneValueBuilder_.build();
+          }
         }
         if (valueCase_ == 2) {
           result.value_ = value_;
@@ -1254,41 +1335,44 @@ public final class BibixValueProto {
           result.value_ = value_;
         }
         if (valueCase_ == 6) {
+          result.value_ = value_;
+        }
+        if (valueCase_ == 7) {
           if (enumValueBuilder_ == null) {
             result.value_ = value_;
           } else {
             result.value_ = enumValueBuilder_.build();
           }
         }
-        if (valueCase_ == 7) {
+        if (valueCase_ == 8) {
           if (listValueBuilder_ == null) {
             result.value_ = value_;
           } else {
             result.value_ = listValueBuilder_.build();
           }
         }
-        if (valueCase_ == 8) {
+        if (valueCase_ == 9) {
           if (setValueBuilder_ == null) {
             result.value_ = value_;
           } else {
             result.value_ = setValueBuilder_.build();
           }
         }
-        if (valueCase_ == 9) {
+        if (valueCase_ == 10) {
           if (tupleValueBuilder_ == null) {
             result.value_ = value_;
           } else {
             result.value_ = tupleValueBuilder_.build();
           }
         }
-        if (valueCase_ == 10) {
+        if (valueCase_ == 11) {
           if (namedTupleValueBuilder_ == null) {
             result.value_ = value_;
           } else {
             result.value_ = namedTupleValueBuilder_.build();
           }
         }
-        if (valueCase_ == 11) {
+        if (valueCase_ == 12) {
           if (dataClassInstanceValueBuilder_ == null) {
             result.value_ = value_;
           } else {
@@ -1345,30 +1429,34 @@ public final class BibixValueProto {
       public Builder mergeFrom(com.giyeok.bibix.BibixValueProto.BibixValue other) {
         if (other == com.giyeok.bibix.BibixValueProto.BibixValue.getDefaultInstance()) return this;
         switch (other.getValueCase()) {
+          case NONE_VALUE: {
+            mergeNoneValue(other.getNoneValue());
+            break;
+          }
           case BOOLEAN_VALUE: {
             setBooleanValue(other.getBooleanValue());
             break;
           }
           case STRING_VALUE: {
-            valueCase_ = 2;
-            value_ = other.value_;
-            onChanged();
-            break;
-          }
-          case PATH_VALUE: {
             valueCase_ = 3;
             value_ = other.value_;
             onChanged();
             break;
           }
-          case FILE_VALUE: {
+          case PATH_VALUE: {
             valueCase_ = 4;
             value_ = other.value_;
             onChanged();
             break;
           }
-          case DIRECTORY_VALUE: {
+          case FILE_VALUE: {
             valueCase_ = 5;
+            value_ = other.value_;
+            onChanged();
+            break;
+          }
+          case DIRECTORY_VALUE: {
+            valueCase_ = 6;
             value_ = other.value_;
             onChanged();
             break;
@@ -1445,40 +1533,182 @@ public final class BibixValueProto {
       }
 
 
+      private com.google.protobuf.SingleFieldBuilderV3<
+          com.google.protobuf.Empty, com.google.protobuf.Empty.Builder, com.google.protobuf.EmptyOrBuilder> noneValueBuilder_;
       /**
-       * <code>bool boolean_value = 1;</code>
-       * @return Whether the booleanValue field is set.
+       * <code>.google.protobuf.Empty none_value = 1;</code>
+       * @return Whether the noneValue field is set.
        */
-      public boolean hasBooleanValue() {
+      @java.lang.Override
+      public boolean hasNoneValue() {
         return valueCase_ == 1;
       }
       /**
-       * <code>bool boolean_value = 1;</code>
+       * <code>.google.protobuf.Empty none_value = 1;</code>
+       * @return The noneValue.
+       */
+      @java.lang.Override
+      public com.google.protobuf.Empty getNoneValue() {
+        if (noneValueBuilder_ == null) {
+          if (valueCase_ == 1) {
+            return (com.google.protobuf.Empty) value_;
+          }
+          return com.google.protobuf.Empty.getDefaultInstance();
+        } else {
+          if (valueCase_ == 1) {
+            return noneValueBuilder_.getMessage();
+          }
+          return com.google.protobuf.Empty.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>.google.protobuf.Empty none_value = 1;</code>
+       */
+      public Builder setNoneValue(com.google.protobuf.Empty value) {
+        if (noneValueBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          value_ = value;
+          onChanged();
+        } else {
+          noneValueBuilder_.setMessage(value);
+        }
+        valueCase_ = 1;
+        return this;
+      }
+      /**
+       * <code>.google.protobuf.Empty none_value = 1;</code>
+       */
+      public Builder setNoneValue(
+          com.google.protobuf.Empty.Builder builderForValue) {
+        if (noneValueBuilder_ == null) {
+          value_ = builderForValue.build();
+          onChanged();
+        } else {
+          noneValueBuilder_.setMessage(builderForValue.build());
+        }
+        valueCase_ = 1;
+        return this;
+      }
+      /**
+       * <code>.google.protobuf.Empty none_value = 1;</code>
+       */
+      public Builder mergeNoneValue(com.google.protobuf.Empty value) {
+        if (noneValueBuilder_ == null) {
+          if (valueCase_ == 1 &&
+              value_ != com.google.protobuf.Empty.getDefaultInstance()) {
+            value_ = com.google.protobuf.Empty.newBuilder((com.google.protobuf.Empty) value_)
+                .mergeFrom(value).buildPartial();
+          } else {
+            value_ = value;
+          }
+          onChanged();
+        } else {
+          if (valueCase_ == 1) {
+            noneValueBuilder_.mergeFrom(value);
+          } else {
+            noneValueBuilder_.setMessage(value);
+          }
+        }
+        valueCase_ = 1;
+        return this;
+      }
+      /**
+       * <code>.google.protobuf.Empty none_value = 1;</code>
+       */
+      public Builder clearNoneValue() {
+        if (noneValueBuilder_ == null) {
+          if (valueCase_ == 1) {
+            valueCase_ = 0;
+            value_ = null;
+            onChanged();
+          }
+        } else {
+          if (valueCase_ == 1) {
+            valueCase_ = 0;
+            value_ = null;
+          }
+          noneValueBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>.google.protobuf.Empty none_value = 1;</code>
+       */
+      public com.google.protobuf.Empty.Builder getNoneValueBuilder() {
+        return getNoneValueFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>.google.protobuf.Empty none_value = 1;</code>
+       */
+      @java.lang.Override
+      public com.google.protobuf.EmptyOrBuilder getNoneValueOrBuilder() {
+        if ((valueCase_ == 1) && (noneValueBuilder_ != null)) {
+          return noneValueBuilder_.getMessageOrBuilder();
+        } else {
+          if (valueCase_ == 1) {
+            return (com.google.protobuf.Empty) value_;
+          }
+          return com.google.protobuf.Empty.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>.google.protobuf.Empty none_value = 1;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          com.google.protobuf.Empty, com.google.protobuf.Empty.Builder, com.google.protobuf.EmptyOrBuilder> 
+          getNoneValueFieldBuilder() {
+        if (noneValueBuilder_ == null) {
+          if (!(valueCase_ == 1)) {
+            value_ = com.google.protobuf.Empty.getDefaultInstance();
+          }
+          noneValueBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              com.google.protobuf.Empty, com.google.protobuf.Empty.Builder, com.google.protobuf.EmptyOrBuilder>(
+                  (com.google.protobuf.Empty) value_,
+                  getParentForChildren(),
+                  isClean());
+          value_ = null;
+        }
+        valueCase_ = 1;
+        onChanged();;
+        return noneValueBuilder_;
+      }
+
+      /**
+       * <code>bool boolean_value = 2;</code>
+       * @return Whether the booleanValue field is set.
+       */
+      public boolean hasBooleanValue() {
+        return valueCase_ == 2;
+      }
+      /**
+       * <code>bool boolean_value = 2;</code>
        * @return The booleanValue.
        */
       public boolean getBooleanValue() {
-        if (valueCase_ == 1) {
+        if (valueCase_ == 2) {
           return (java.lang.Boolean) value_;
         }
         return false;
       }
       /**
-       * <code>bool boolean_value = 1;</code>
+       * <code>bool boolean_value = 2;</code>
        * @param value The booleanValue to set.
        * @return This builder for chaining.
        */
       public Builder setBooleanValue(boolean value) {
-        valueCase_ = 1;
+        valueCase_ = 2;
         value_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>bool boolean_value = 1;</code>
+       * <code>bool boolean_value = 2;</code>
        * @return This builder for chaining.
        */
       public Builder clearBooleanValue() {
-        if (valueCase_ == 1) {
+        if (valueCase_ == 2) {
           valueCase_ = 0;
           value_ = null;
           onChanged();
@@ -1487,28 +1717,28 @@ public final class BibixValueProto {
       }
 
       /**
-       * <code>string string_value = 2;</code>
+       * <code>string string_value = 3;</code>
        * @return Whether the stringValue field is set.
        */
       @java.lang.Override
       public boolean hasStringValue() {
-        return valueCase_ == 2;
+        return valueCase_ == 3;
       }
       /**
-       * <code>string string_value = 2;</code>
+       * <code>string string_value = 3;</code>
        * @return The stringValue.
        */
       @java.lang.Override
       public java.lang.String getStringValue() {
         java.lang.Object ref = "";
-        if (valueCase_ == 2) {
+        if (valueCase_ == 3) {
           ref = value_;
         }
         if (!(ref instanceof java.lang.String)) {
           com.google.protobuf.ByteString bs =
               (com.google.protobuf.ByteString) ref;
           java.lang.String s = bs.toStringUtf8();
-          if (valueCase_ == 2) {
+          if (valueCase_ == 3) {
             value_ = s;
           }
           return s;
@@ -1517,21 +1747,21 @@ public final class BibixValueProto {
         }
       }
       /**
-       * <code>string string_value = 2;</code>
+       * <code>string string_value = 3;</code>
        * @return The bytes for stringValue.
        */
       @java.lang.Override
       public com.google.protobuf.ByteString
           getStringValueBytes() {
         java.lang.Object ref = "";
-        if (valueCase_ == 2) {
+        if (valueCase_ == 3) {
           ref = value_;
         }
         if (ref instanceof String) {
           com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
-          if (valueCase_ == 2) {
+          if (valueCase_ == 3) {
             value_ = b;
           }
           return b;
@@ -1540,108 +1770,11 @@ public final class BibixValueProto {
         }
       }
       /**
-       * <code>string string_value = 2;</code>
+       * <code>string string_value = 3;</code>
        * @param value The stringValue to set.
        * @return This builder for chaining.
        */
       public Builder setStringValue(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  valueCase_ = 2;
-        value_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>string string_value = 2;</code>
-       * @return This builder for chaining.
-       */
-      public Builder clearStringValue() {
-        if (valueCase_ == 2) {
-          valueCase_ = 0;
-          value_ = null;
-          onChanged();
-        }
-        return this;
-      }
-      /**
-       * <code>string string_value = 2;</code>
-       * @param value The bytes for stringValue to set.
-       * @return This builder for chaining.
-       */
-      public Builder setStringValueBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        valueCase_ = 2;
-        value_ = value;
-        onChanged();
-        return this;
-      }
-
-      /**
-       * <code>string path_value = 3;</code>
-       * @return Whether the pathValue field is set.
-       */
-      @java.lang.Override
-      public boolean hasPathValue() {
-        return valueCase_ == 3;
-      }
-      /**
-       * <code>string path_value = 3;</code>
-       * @return The pathValue.
-       */
-      @java.lang.Override
-      public java.lang.String getPathValue() {
-        java.lang.Object ref = "";
-        if (valueCase_ == 3) {
-          ref = value_;
-        }
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          if (valueCase_ == 3) {
-            value_ = s;
-          }
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
-      }
-      /**
-       * <code>string path_value = 3;</code>
-       * @return The bytes for pathValue.
-       */
-      @java.lang.Override
-      public com.google.protobuf.ByteString
-          getPathValueBytes() {
-        java.lang.Object ref = "";
-        if (valueCase_ == 3) {
-          ref = value_;
-        }
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          if (valueCase_ == 3) {
-            value_ = b;
-          }
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <code>string path_value = 3;</code>
-       * @param value The pathValue to set.
-       * @return This builder for chaining.
-       */
-      public Builder setPathValue(
           java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
@@ -1652,10 +1785,10 @@ public final class BibixValueProto {
         return this;
       }
       /**
-       * <code>string path_value = 3;</code>
+       * <code>string string_value = 3;</code>
        * @return This builder for chaining.
        */
-      public Builder clearPathValue() {
+      public Builder clearStringValue() {
         if (valueCase_ == 3) {
           valueCase_ = 0;
           value_ = null;
@@ -1664,11 +1797,11 @@ public final class BibixValueProto {
         return this;
       }
       /**
-       * <code>string path_value = 3;</code>
-       * @param value The bytes for pathValue to set.
+       * <code>string string_value = 3;</code>
+       * @param value The bytes for stringValue to set.
        * @return This builder for chaining.
        */
-      public Builder setPathValueBytes(
+      public Builder setStringValueBytes(
           com.google.protobuf.ByteString value) {
         if (value == null) {
     throw new NullPointerException();
@@ -1681,19 +1814,19 @@ public final class BibixValueProto {
       }
 
       /**
-       * <code>string file_value = 4;</code>
-       * @return Whether the fileValue field is set.
+       * <code>string path_value = 4;</code>
+       * @return Whether the pathValue field is set.
        */
       @java.lang.Override
-      public boolean hasFileValue() {
+      public boolean hasPathValue() {
         return valueCase_ == 4;
       }
       /**
-       * <code>string file_value = 4;</code>
-       * @return The fileValue.
+       * <code>string path_value = 4;</code>
+       * @return The pathValue.
        */
       @java.lang.Override
-      public java.lang.String getFileValue() {
+      public java.lang.String getPathValue() {
         java.lang.Object ref = "";
         if (valueCase_ == 4) {
           ref = value_;
@@ -1711,12 +1844,12 @@ public final class BibixValueProto {
         }
       }
       /**
-       * <code>string file_value = 4;</code>
-       * @return The bytes for fileValue.
+       * <code>string path_value = 4;</code>
+       * @return The bytes for pathValue.
        */
       @java.lang.Override
       public com.google.protobuf.ByteString
-          getFileValueBytes() {
+          getPathValueBytes() {
         java.lang.Object ref = "";
         if (valueCase_ == 4) {
           ref = value_;
@@ -1734,11 +1867,11 @@ public final class BibixValueProto {
         }
       }
       /**
-       * <code>string file_value = 4;</code>
-       * @param value The fileValue to set.
+       * <code>string path_value = 4;</code>
+       * @param value The pathValue to set.
        * @return This builder for chaining.
        */
-      public Builder setFileValue(
+      public Builder setPathValue(
           java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
@@ -1749,10 +1882,10 @@ public final class BibixValueProto {
         return this;
       }
       /**
-       * <code>string file_value = 4;</code>
+       * <code>string path_value = 4;</code>
        * @return This builder for chaining.
        */
-      public Builder clearFileValue() {
+      public Builder clearPathValue() {
         if (valueCase_ == 4) {
           valueCase_ = 0;
           value_ = null;
@@ -1761,11 +1894,11 @@ public final class BibixValueProto {
         return this;
       }
       /**
-       * <code>string file_value = 4;</code>
-       * @param value The bytes for fileValue to set.
+       * <code>string path_value = 4;</code>
+       * @param value The bytes for pathValue to set.
        * @return This builder for chaining.
        */
-      public Builder setFileValueBytes(
+      public Builder setPathValueBytes(
           com.google.protobuf.ByteString value) {
         if (value == null) {
     throw new NullPointerException();
@@ -1778,19 +1911,19 @@ public final class BibixValueProto {
       }
 
       /**
-       * <code>string directory_value = 5;</code>
-       * @return Whether the directoryValue field is set.
+       * <code>string file_value = 5;</code>
+       * @return Whether the fileValue field is set.
        */
       @java.lang.Override
-      public boolean hasDirectoryValue() {
+      public boolean hasFileValue() {
         return valueCase_ == 5;
       }
       /**
-       * <code>string directory_value = 5;</code>
-       * @return The directoryValue.
+       * <code>string file_value = 5;</code>
+       * @return The fileValue.
        */
       @java.lang.Override
-      public java.lang.String getDirectoryValue() {
+      public java.lang.String getFileValue() {
         java.lang.Object ref = "";
         if (valueCase_ == 5) {
           ref = value_;
@@ -1808,12 +1941,12 @@ public final class BibixValueProto {
         }
       }
       /**
-       * <code>string directory_value = 5;</code>
-       * @return The bytes for directoryValue.
+       * <code>string file_value = 5;</code>
+       * @return The bytes for fileValue.
        */
       @java.lang.Override
       public com.google.protobuf.ByteString
-          getDirectoryValueBytes() {
+          getFileValueBytes() {
         java.lang.Object ref = "";
         if (valueCase_ == 5) {
           ref = value_;
@@ -1831,11 +1964,11 @@ public final class BibixValueProto {
         }
       }
       /**
-       * <code>string directory_value = 5;</code>
-       * @param value The directoryValue to set.
+       * <code>string file_value = 5;</code>
+       * @param value The fileValue to set.
        * @return This builder for chaining.
        */
-      public Builder setDirectoryValue(
+      public Builder setFileValue(
           java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
@@ -1846,10 +1979,10 @@ public final class BibixValueProto {
         return this;
       }
       /**
-       * <code>string directory_value = 5;</code>
+       * <code>string file_value = 5;</code>
        * @return This builder for chaining.
        */
-      public Builder clearDirectoryValue() {
+      public Builder clearFileValue() {
         if (valueCase_ == 5) {
           valueCase_ = 0;
           value_ = null;
@@ -1858,11 +1991,11 @@ public final class BibixValueProto {
         return this;
       }
       /**
-       * <code>string directory_value = 5;</code>
-       * @param value The bytes for directoryValue to set.
+       * <code>string file_value = 5;</code>
+       * @param value The bytes for fileValue to set.
        * @return This builder for chaining.
        */
-      public Builder setDirectoryValueBytes(
+      public Builder setFileValueBytes(
           com.google.protobuf.ByteString value) {
         if (value == null) {
     throw new NullPointerException();
@@ -1874,36 +2007,133 @@ public final class BibixValueProto {
         return this;
       }
 
+      /**
+       * <code>string directory_value = 6;</code>
+       * @return Whether the directoryValue field is set.
+       */
+      @java.lang.Override
+      public boolean hasDirectoryValue() {
+        return valueCase_ == 6;
+      }
+      /**
+       * <code>string directory_value = 6;</code>
+       * @return The directoryValue.
+       */
+      @java.lang.Override
+      public java.lang.String getDirectoryValue() {
+        java.lang.Object ref = "";
+        if (valueCase_ == 6) {
+          ref = value_;
+        }
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (valueCase_ == 6) {
+            value_ = s;
+          }
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string directory_value = 6;</code>
+       * @return The bytes for directoryValue.
+       */
+      @java.lang.Override
+      public com.google.protobuf.ByteString
+          getDirectoryValueBytes() {
+        java.lang.Object ref = "";
+        if (valueCase_ == 6) {
+          ref = value_;
+        }
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          if (valueCase_ == 6) {
+            value_ = b;
+          }
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string directory_value = 6;</code>
+       * @param value The directoryValue to set.
+       * @return This builder for chaining.
+       */
+      public Builder setDirectoryValue(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  valueCase_ = 6;
+        value_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string directory_value = 6;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearDirectoryValue() {
+        if (valueCase_ == 6) {
+          valueCase_ = 0;
+          value_ = null;
+          onChanged();
+        }
+        return this;
+      }
+      /**
+       * <code>string directory_value = 6;</code>
+       * @param value The bytes for directoryValue to set.
+       * @return This builder for chaining.
+       */
+      public Builder setDirectoryValueBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        valueCase_ = 6;
+        value_ = value;
+        onChanged();
+        return this;
+      }
+
       private com.google.protobuf.SingleFieldBuilderV3<
           com.giyeok.bibix.BibixValueProto.EnumValue, com.giyeok.bibix.BibixValueProto.EnumValue.Builder, com.giyeok.bibix.BibixValueProto.EnumValueOrBuilder> enumValueBuilder_;
       /**
-       * <code>.com.giyeok.bibix.EnumValue enum_value = 6;</code>
+       * <code>.com.giyeok.bibix.EnumValue enum_value = 7;</code>
        * @return Whether the enumValue field is set.
        */
       @java.lang.Override
       public boolean hasEnumValue() {
-        return valueCase_ == 6;
+        return valueCase_ == 7;
       }
       /**
-       * <code>.com.giyeok.bibix.EnumValue enum_value = 6;</code>
+       * <code>.com.giyeok.bibix.EnumValue enum_value = 7;</code>
        * @return The enumValue.
        */
       @java.lang.Override
       public com.giyeok.bibix.BibixValueProto.EnumValue getEnumValue() {
         if (enumValueBuilder_ == null) {
-          if (valueCase_ == 6) {
+          if (valueCase_ == 7) {
             return (com.giyeok.bibix.BibixValueProto.EnumValue) value_;
           }
           return com.giyeok.bibix.BibixValueProto.EnumValue.getDefaultInstance();
         } else {
-          if (valueCase_ == 6) {
+          if (valueCase_ == 7) {
             return enumValueBuilder_.getMessage();
           }
           return com.giyeok.bibix.BibixValueProto.EnumValue.getDefaultInstance();
         }
       }
       /**
-       * <code>.com.giyeok.bibix.EnumValue enum_value = 6;</code>
+       * <code>.com.giyeok.bibix.EnumValue enum_value = 7;</code>
        */
       public Builder setEnumValue(com.giyeok.bibix.BibixValueProto.EnumValue value) {
         if (enumValueBuilder_ == null) {
@@ -1915,11 +2145,11 @@ public final class BibixValueProto {
         } else {
           enumValueBuilder_.setMessage(value);
         }
-        valueCase_ = 6;
+        valueCase_ = 7;
         return this;
       }
       /**
-       * <code>.com.giyeok.bibix.EnumValue enum_value = 6;</code>
+       * <code>.com.giyeok.bibix.EnumValue enum_value = 7;</code>
        */
       public Builder setEnumValue(
           com.giyeok.bibix.BibixValueProto.EnumValue.Builder builderForValue) {
@@ -1929,15 +2159,15 @@ public final class BibixValueProto {
         } else {
           enumValueBuilder_.setMessage(builderForValue.build());
         }
-        valueCase_ = 6;
+        valueCase_ = 7;
         return this;
       }
       /**
-       * <code>.com.giyeok.bibix.EnumValue enum_value = 6;</code>
+       * <code>.com.giyeok.bibix.EnumValue enum_value = 7;</code>
        */
       public Builder mergeEnumValue(com.giyeok.bibix.BibixValueProto.EnumValue value) {
         if (enumValueBuilder_ == null) {
-          if (valueCase_ == 6 &&
+          if (valueCase_ == 7 &&
               value_ != com.giyeok.bibix.BibixValueProto.EnumValue.getDefaultInstance()) {
             value_ = com.giyeok.bibix.BibixValueProto.EnumValue.newBuilder((com.giyeok.bibix.BibixValueProto.EnumValue) value_)
                 .mergeFrom(value).buildPartial();
@@ -1946,27 +2176,27 @@ public final class BibixValueProto {
           }
           onChanged();
         } else {
-          if (valueCase_ == 6) {
+          if (valueCase_ == 7) {
             enumValueBuilder_.mergeFrom(value);
           } else {
             enumValueBuilder_.setMessage(value);
           }
         }
-        valueCase_ = 6;
+        valueCase_ = 7;
         return this;
       }
       /**
-       * <code>.com.giyeok.bibix.EnumValue enum_value = 6;</code>
+       * <code>.com.giyeok.bibix.EnumValue enum_value = 7;</code>
        */
       public Builder clearEnumValue() {
         if (enumValueBuilder_ == null) {
-          if (valueCase_ == 6) {
+          if (valueCase_ == 7) {
             valueCase_ = 0;
             value_ = null;
             onChanged();
           }
         } else {
-          if (valueCase_ == 6) {
+          if (valueCase_ == 7) {
             valueCase_ = 0;
             value_ = null;
           }
@@ -1975,33 +2205,33 @@ public final class BibixValueProto {
         return this;
       }
       /**
-       * <code>.com.giyeok.bibix.EnumValue enum_value = 6;</code>
+       * <code>.com.giyeok.bibix.EnumValue enum_value = 7;</code>
        */
       public com.giyeok.bibix.BibixValueProto.EnumValue.Builder getEnumValueBuilder() {
         return getEnumValueFieldBuilder().getBuilder();
       }
       /**
-       * <code>.com.giyeok.bibix.EnumValue enum_value = 6;</code>
+       * <code>.com.giyeok.bibix.EnumValue enum_value = 7;</code>
        */
       @java.lang.Override
       public com.giyeok.bibix.BibixValueProto.EnumValueOrBuilder getEnumValueOrBuilder() {
-        if ((valueCase_ == 6) && (enumValueBuilder_ != null)) {
+        if ((valueCase_ == 7) && (enumValueBuilder_ != null)) {
           return enumValueBuilder_.getMessageOrBuilder();
         } else {
-          if (valueCase_ == 6) {
+          if (valueCase_ == 7) {
             return (com.giyeok.bibix.BibixValueProto.EnumValue) value_;
           }
           return com.giyeok.bibix.BibixValueProto.EnumValue.getDefaultInstance();
         }
       }
       /**
-       * <code>.com.giyeok.bibix.EnumValue enum_value = 6;</code>
+       * <code>.com.giyeok.bibix.EnumValue enum_value = 7;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
           com.giyeok.bibix.BibixValueProto.EnumValue, com.giyeok.bibix.BibixValueProto.EnumValue.Builder, com.giyeok.bibix.BibixValueProto.EnumValueOrBuilder> 
           getEnumValueFieldBuilder() {
         if (enumValueBuilder_ == null) {
-          if (!(valueCase_ == 6)) {
+          if (!(valueCase_ == 7)) {
             value_ = com.giyeok.bibix.BibixValueProto.EnumValue.getDefaultInstance();
           }
           enumValueBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
@@ -2011,7 +2241,7 @@ public final class BibixValueProto {
                   isClean());
           value_ = null;
         }
-        valueCase_ = 6;
+        valueCase_ = 7;
         onChanged();;
         return enumValueBuilder_;
       }
@@ -2019,33 +2249,33 @@ public final class BibixValueProto {
       private com.google.protobuf.SingleFieldBuilderV3<
           com.giyeok.bibix.BibixValueProto.ListValue, com.giyeok.bibix.BibixValueProto.ListValue.Builder, com.giyeok.bibix.BibixValueProto.ListValueOrBuilder> listValueBuilder_;
       /**
-       * <code>.com.giyeok.bibix.ListValue list_value = 7;</code>
+       * <code>.com.giyeok.bibix.ListValue list_value = 8;</code>
        * @return Whether the listValue field is set.
        */
       @java.lang.Override
       public boolean hasListValue() {
-        return valueCase_ == 7;
+        return valueCase_ == 8;
       }
       /**
-       * <code>.com.giyeok.bibix.ListValue list_value = 7;</code>
+       * <code>.com.giyeok.bibix.ListValue list_value = 8;</code>
        * @return The listValue.
        */
       @java.lang.Override
       public com.giyeok.bibix.BibixValueProto.ListValue getListValue() {
         if (listValueBuilder_ == null) {
-          if (valueCase_ == 7) {
+          if (valueCase_ == 8) {
             return (com.giyeok.bibix.BibixValueProto.ListValue) value_;
           }
           return com.giyeok.bibix.BibixValueProto.ListValue.getDefaultInstance();
         } else {
-          if (valueCase_ == 7) {
+          if (valueCase_ == 8) {
             return listValueBuilder_.getMessage();
           }
           return com.giyeok.bibix.BibixValueProto.ListValue.getDefaultInstance();
         }
       }
       /**
-       * <code>.com.giyeok.bibix.ListValue list_value = 7;</code>
+       * <code>.com.giyeok.bibix.ListValue list_value = 8;</code>
        */
       public Builder setListValue(com.giyeok.bibix.BibixValueProto.ListValue value) {
         if (listValueBuilder_ == null) {
@@ -2057,11 +2287,11 @@ public final class BibixValueProto {
         } else {
           listValueBuilder_.setMessage(value);
         }
-        valueCase_ = 7;
+        valueCase_ = 8;
         return this;
       }
       /**
-       * <code>.com.giyeok.bibix.ListValue list_value = 7;</code>
+       * <code>.com.giyeok.bibix.ListValue list_value = 8;</code>
        */
       public Builder setListValue(
           com.giyeok.bibix.BibixValueProto.ListValue.Builder builderForValue) {
@@ -2071,15 +2301,15 @@ public final class BibixValueProto {
         } else {
           listValueBuilder_.setMessage(builderForValue.build());
         }
-        valueCase_ = 7;
+        valueCase_ = 8;
         return this;
       }
       /**
-       * <code>.com.giyeok.bibix.ListValue list_value = 7;</code>
+       * <code>.com.giyeok.bibix.ListValue list_value = 8;</code>
        */
       public Builder mergeListValue(com.giyeok.bibix.BibixValueProto.ListValue value) {
         if (listValueBuilder_ == null) {
-          if (valueCase_ == 7 &&
+          if (valueCase_ == 8 &&
               value_ != com.giyeok.bibix.BibixValueProto.ListValue.getDefaultInstance()) {
             value_ = com.giyeok.bibix.BibixValueProto.ListValue.newBuilder((com.giyeok.bibix.BibixValueProto.ListValue) value_)
                 .mergeFrom(value).buildPartial();
@@ -2088,27 +2318,27 @@ public final class BibixValueProto {
           }
           onChanged();
         } else {
-          if (valueCase_ == 7) {
+          if (valueCase_ == 8) {
             listValueBuilder_.mergeFrom(value);
           } else {
             listValueBuilder_.setMessage(value);
           }
         }
-        valueCase_ = 7;
+        valueCase_ = 8;
         return this;
       }
       /**
-       * <code>.com.giyeok.bibix.ListValue list_value = 7;</code>
+       * <code>.com.giyeok.bibix.ListValue list_value = 8;</code>
        */
       public Builder clearListValue() {
         if (listValueBuilder_ == null) {
-          if (valueCase_ == 7) {
+          if (valueCase_ == 8) {
             valueCase_ = 0;
             value_ = null;
             onChanged();
           }
         } else {
-          if (valueCase_ == 7) {
+          if (valueCase_ == 8) {
             valueCase_ = 0;
             value_ = null;
           }
@@ -2117,33 +2347,33 @@ public final class BibixValueProto {
         return this;
       }
       /**
-       * <code>.com.giyeok.bibix.ListValue list_value = 7;</code>
+       * <code>.com.giyeok.bibix.ListValue list_value = 8;</code>
        */
       public com.giyeok.bibix.BibixValueProto.ListValue.Builder getListValueBuilder() {
         return getListValueFieldBuilder().getBuilder();
       }
       /**
-       * <code>.com.giyeok.bibix.ListValue list_value = 7;</code>
+       * <code>.com.giyeok.bibix.ListValue list_value = 8;</code>
        */
       @java.lang.Override
       public com.giyeok.bibix.BibixValueProto.ListValueOrBuilder getListValueOrBuilder() {
-        if ((valueCase_ == 7) && (listValueBuilder_ != null)) {
+        if ((valueCase_ == 8) && (listValueBuilder_ != null)) {
           return listValueBuilder_.getMessageOrBuilder();
         } else {
-          if (valueCase_ == 7) {
+          if (valueCase_ == 8) {
             return (com.giyeok.bibix.BibixValueProto.ListValue) value_;
           }
           return com.giyeok.bibix.BibixValueProto.ListValue.getDefaultInstance();
         }
       }
       /**
-       * <code>.com.giyeok.bibix.ListValue list_value = 7;</code>
+       * <code>.com.giyeok.bibix.ListValue list_value = 8;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
           com.giyeok.bibix.BibixValueProto.ListValue, com.giyeok.bibix.BibixValueProto.ListValue.Builder, com.giyeok.bibix.BibixValueProto.ListValueOrBuilder> 
           getListValueFieldBuilder() {
         if (listValueBuilder_ == null) {
-          if (!(valueCase_ == 7)) {
+          if (!(valueCase_ == 8)) {
             value_ = com.giyeok.bibix.BibixValueProto.ListValue.getDefaultInstance();
           }
           listValueBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
@@ -2153,7 +2383,7 @@ public final class BibixValueProto {
                   isClean());
           value_ = null;
         }
-        valueCase_ = 7;
+        valueCase_ = 8;
         onChanged();;
         return listValueBuilder_;
       }
@@ -2161,33 +2391,33 @@ public final class BibixValueProto {
       private com.google.protobuf.SingleFieldBuilderV3<
           com.giyeok.bibix.BibixValueProto.SetValue, com.giyeok.bibix.BibixValueProto.SetValue.Builder, com.giyeok.bibix.BibixValueProto.SetValueOrBuilder> setValueBuilder_;
       /**
-       * <code>.com.giyeok.bibix.SetValue set_value = 8;</code>
+       * <code>.com.giyeok.bibix.SetValue set_value = 9;</code>
        * @return Whether the setValue field is set.
        */
       @java.lang.Override
       public boolean hasSetValue() {
-        return valueCase_ == 8;
+        return valueCase_ == 9;
       }
       /**
-       * <code>.com.giyeok.bibix.SetValue set_value = 8;</code>
+       * <code>.com.giyeok.bibix.SetValue set_value = 9;</code>
        * @return The setValue.
        */
       @java.lang.Override
       public com.giyeok.bibix.BibixValueProto.SetValue getSetValue() {
         if (setValueBuilder_ == null) {
-          if (valueCase_ == 8) {
+          if (valueCase_ == 9) {
             return (com.giyeok.bibix.BibixValueProto.SetValue) value_;
           }
           return com.giyeok.bibix.BibixValueProto.SetValue.getDefaultInstance();
         } else {
-          if (valueCase_ == 8) {
+          if (valueCase_ == 9) {
             return setValueBuilder_.getMessage();
           }
           return com.giyeok.bibix.BibixValueProto.SetValue.getDefaultInstance();
         }
       }
       /**
-       * <code>.com.giyeok.bibix.SetValue set_value = 8;</code>
+       * <code>.com.giyeok.bibix.SetValue set_value = 9;</code>
        */
       public Builder setSetValue(com.giyeok.bibix.BibixValueProto.SetValue value) {
         if (setValueBuilder_ == null) {
@@ -2199,11 +2429,11 @@ public final class BibixValueProto {
         } else {
           setValueBuilder_.setMessage(value);
         }
-        valueCase_ = 8;
+        valueCase_ = 9;
         return this;
       }
       /**
-       * <code>.com.giyeok.bibix.SetValue set_value = 8;</code>
+       * <code>.com.giyeok.bibix.SetValue set_value = 9;</code>
        */
       public Builder setSetValue(
           com.giyeok.bibix.BibixValueProto.SetValue.Builder builderForValue) {
@@ -2213,15 +2443,15 @@ public final class BibixValueProto {
         } else {
           setValueBuilder_.setMessage(builderForValue.build());
         }
-        valueCase_ = 8;
+        valueCase_ = 9;
         return this;
       }
       /**
-       * <code>.com.giyeok.bibix.SetValue set_value = 8;</code>
+       * <code>.com.giyeok.bibix.SetValue set_value = 9;</code>
        */
       public Builder mergeSetValue(com.giyeok.bibix.BibixValueProto.SetValue value) {
         if (setValueBuilder_ == null) {
-          if (valueCase_ == 8 &&
+          if (valueCase_ == 9 &&
               value_ != com.giyeok.bibix.BibixValueProto.SetValue.getDefaultInstance()) {
             value_ = com.giyeok.bibix.BibixValueProto.SetValue.newBuilder((com.giyeok.bibix.BibixValueProto.SetValue) value_)
                 .mergeFrom(value).buildPartial();
@@ -2230,27 +2460,27 @@ public final class BibixValueProto {
           }
           onChanged();
         } else {
-          if (valueCase_ == 8) {
+          if (valueCase_ == 9) {
             setValueBuilder_.mergeFrom(value);
           } else {
             setValueBuilder_.setMessage(value);
           }
         }
-        valueCase_ = 8;
+        valueCase_ = 9;
         return this;
       }
       /**
-       * <code>.com.giyeok.bibix.SetValue set_value = 8;</code>
+       * <code>.com.giyeok.bibix.SetValue set_value = 9;</code>
        */
       public Builder clearSetValue() {
         if (setValueBuilder_ == null) {
-          if (valueCase_ == 8) {
+          if (valueCase_ == 9) {
             valueCase_ = 0;
             value_ = null;
             onChanged();
           }
         } else {
-          if (valueCase_ == 8) {
+          if (valueCase_ == 9) {
             valueCase_ = 0;
             value_ = null;
           }
@@ -2259,33 +2489,33 @@ public final class BibixValueProto {
         return this;
       }
       /**
-       * <code>.com.giyeok.bibix.SetValue set_value = 8;</code>
+       * <code>.com.giyeok.bibix.SetValue set_value = 9;</code>
        */
       public com.giyeok.bibix.BibixValueProto.SetValue.Builder getSetValueBuilder() {
         return getSetValueFieldBuilder().getBuilder();
       }
       /**
-       * <code>.com.giyeok.bibix.SetValue set_value = 8;</code>
+       * <code>.com.giyeok.bibix.SetValue set_value = 9;</code>
        */
       @java.lang.Override
       public com.giyeok.bibix.BibixValueProto.SetValueOrBuilder getSetValueOrBuilder() {
-        if ((valueCase_ == 8) && (setValueBuilder_ != null)) {
+        if ((valueCase_ == 9) && (setValueBuilder_ != null)) {
           return setValueBuilder_.getMessageOrBuilder();
         } else {
-          if (valueCase_ == 8) {
+          if (valueCase_ == 9) {
             return (com.giyeok.bibix.BibixValueProto.SetValue) value_;
           }
           return com.giyeok.bibix.BibixValueProto.SetValue.getDefaultInstance();
         }
       }
       /**
-       * <code>.com.giyeok.bibix.SetValue set_value = 8;</code>
+       * <code>.com.giyeok.bibix.SetValue set_value = 9;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
           com.giyeok.bibix.BibixValueProto.SetValue, com.giyeok.bibix.BibixValueProto.SetValue.Builder, com.giyeok.bibix.BibixValueProto.SetValueOrBuilder> 
           getSetValueFieldBuilder() {
         if (setValueBuilder_ == null) {
-          if (!(valueCase_ == 8)) {
+          if (!(valueCase_ == 9)) {
             value_ = com.giyeok.bibix.BibixValueProto.SetValue.getDefaultInstance();
           }
           setValueBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
@@ -2295,7 +2525,7 @@ public final class BibixValueProto {
                   isClean());
           value_ = null;
         }
-        valueCase_ = 8;
+        valueCase_ = 9;
         onChanged();;
         return setValueBuilder_;
       }
@@ -2303,33 +2533,33 @@ public final class BibixValueProto {
       private com.google.protobuf.SingleFieldBuilderV3<
           com.giyeok.bibix.BibixValueProto.TupleValue, com.giyeok.bibix.BibixValueProto.TupleValue.Builder, com.giyeok.bibix.BibixValueProto.TupleValueOrBuilder> tupleValueBuilder_;
       /**
-       * <code>.com.giyeok.bibix.TupleValue tuple_value = 9;</code>
+       * <code>.com.giyeok.bibix.TupleValue tuple_value = 10;</code>
        * @return Whether the tupleValue field is set.
        */
       @java.lang.Override
       public boolean hasTupleValue() {
-        return valueCase_ == 9;
+        return valueCase_ == 10;
       }
       /**
-       * <code>.com.giyeok.bibix.TupleValue tuple_value = 9;</code>
+       * <code>.com.giyeok.bibix.TupleValue tuple_value = 10;</code>
        * @return The tupleValue.
        */
       @java.lang.Override
       public com.giyeok.bibix.BibixValueProto.TupleValue getTupleValue() {
         if (tupleValueBuilder_ == null) {
-          if (valueCase_ == 9) {
+          if (valueCase_ == 10) {
             return (com.giyeok.bibix.BibixValueProto.TupleValue) value_;
           }
           return com.giyeok.bibix.BibixValueProto.TupleValue.getDefaultInstance();
         } else {
-          if (valueCase_ == 9) {
+          if (valueCase_ == 10) {
             return tupleValueBuilder_.getMessage();
           }
           return com.giyeok.bibix.BibixValueProto.TupleValue.getDefaultInstance();
         }
       }
       /**
-       * <code>.com.giyeok.bibix.TupleValue tuple_value = 9;</code>
+       * <code>.com.giyeok.bibix.TupleValue tuple_value = 10;</code>
        */
       public Builder setTupleValue(com.giyeok.bibix.BibixValueProto.TupleValue value) {
         if (tupleValueBuilder_ == null) {
@@ -2341,11 +2571,11 @@ public final class BibixValueProto {
         } else {
           tupleValueBuilder_.setMessage(value);
         }
-        valueCase_ = 9;
+        valueCase_ = 10;
         return this;
       }
       /**
-       * <code>.com.giyeok.bibix.TupleValue tuple_value = 9;</code>
+       * <code>.com.giyeok.bibix.TupleValue tuple_value = 10;</code>
        */
       public Builder setTupleValue(
           com.giyeok.bibix.BibixValueProto.TupleValue.Builder builderForValue) {
@@ -2355,15 +2585,15 @@ public final class BibixValueProto {
         } else {
           tupleValueBuilder_.setMessage(builderForValue.build());
         }
-        valueCase_ = 9;
+        valueCase_ = 10;
         return this;
       }
       /**
-       * <code>.com.giyeok.bibix.TupleValue tuple_value = 9;</code>
+       * <code>.com.giyeok.bibix.TupleValue tuple_value = 10;</code>
        */
       public Builder mergeTupleValue(com.giyeok.bibix.BibixValueProto.TupleValue value) {
         if (tupleValueBuilder_ == null) {
-          if (valueCase_ == 9 &&
+          if (valueCase_ == 10 &&
               value_ != com.giyeok.bibix.BibixValueProto.TupleValue.getDefaultInstance()) {
             value_ = com.giyeok.bibix.BibixValueProto.TupleValue.newBuilder((com.giyeok.bibix.BibixValueProto.TupleValue) value_)
                 .mergeFrom(value).buildPartial();
@@ -2372,27 +2602,27 @@ public final class BibixValueProto {
           }
           onChanged();
         } else {
-          if (valueCase_ == 9) {
+          if (valueCase_ == 10) {
             tupleValueBuilder_.mergeFrom(value);
           } else {
             tupleValueBuilder_.setMessage(value);
           }
         }
-        valueCase_ = 9;
+        valueCase_ = 10;
         return this;
       }
       /**
-       * <code>.com.giyeok.bibix.TupleValue tuple_value = 9;</code>
+       * <code>.com.giyeok.bibix.TupleValue tuple_value = 10;</code>
        */
       public Builder clearTupleValue() {
         if (tupleValueBuilder_ == null) {
-          if (valueCase_ == 9) {
+          if (valueCase_ == 10) {
             valueCase_ = 0;
             value_ = null;
             onChanged();
           }
         } else {
-          if (valueCase_ == 9) {
+          if (valueCase_ == 10) {
             valueCase_ = 0;
             value_ = null;
           }
@@ -2401,33 +2631,33 @@ public final class BibixValueProto {
         return this;
       }
       /**
-       * <code>.com.giyeok.bibix.TupleValue tuple_value = 9;</code>
+       * <code>.com.giyeok.bibix.TupleValue tuple_value = 10;</code>
        */
       public com.giyeok.bibix.BibixValueProto.TupleValue.Builder getTupleValueBuilder() {
         return getTupleValueFieldBuilder().getBuilder();
       }
       /**
-       * <code>.com.giyeok.bibix.TupleValue tuple_value = 9;</code>
+       * <code>.com.giyeok.bibix.TupleValue tuple_value = 10;</code>
        */
       @java.lang.Override
       public com.giyeok.bibix.BibixValueProto.TupleValueOrBuilder getTupleValueOrBuilder() {
-        if ((valueCase_ == 9) && (tupleValueBuilder_ != null)) {
+        if ((valueCase_ == 10) && (tupleValueBuilder_ != null)) {
           return tupleValueBuilder_.getMessageOrBuilder();
         } else {
-          if (valueCase_ == 9) {
+          if (valueCase_ == 10) {
             return (com.giyeok.bibix.BibixValueProto.TupleValue) value_;
           }
           return com.giyeok.bibix.BibixValueProto.TupleValue.getDefaultInstance();
         }
       }
       /**
-       * <code>.com.giyeok.bibix.TupleValue tuple_value = 9;</code>
+       * <code>.com.giyeok.bibix.TupleValue tuple_value = 10;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
           com.giyeok.bibix.BibixValueProto.TupleValue, com.giyeok.bibix.BibixValueProto.TupleValue.Builder, com.giyeok.bibix.BibixValueProto.TupleValueOrBuilder> 
           getTupleValueFieldBuilder() {
         if (tupleValueBuilder_ == null) {
-          if (!(valueCase_ == 9)) {
+          if (!(valueCase_ == 10)) {
             value_ = com.giyeok.bibix.BibixValueProto.TupleValue.getDefaultInstance();
           }
           tupleValueBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
@@ -2437,7 +2667,7 @@ public final class BibixValueProto {
                   isClean());
           value_ = null;
         }
-        valueCase_ = 9;
+        valueCase_ = 10;
         onChanged();;
         return tupleValueBuilder_;
       }
@@ -2445,33 +2675,33 @@ public final class BibixValueProto {
       private com.google.protobuf.SingleFieldBuilderV3<
           com.giyeok.bibix.BibixValueProto.NamedTupleValue, com.giyeok.bibix.BibixValueProto.NamedTupleValue.Builder, com.giyeok.bibix.BibixValueProto.NamedTupleValueOrBuilder> namedTupleValueBuilder_;
       /**
-       * <code>.com.giyeok.bibix.NamedTupleValue named_tuple_value = 10;</code>
+       * <code>.com.giyeok.bibix.NamedTupleValue named_tuple_value = 11;</code>
        * @return Whether the namedTupleValue field is set.
        */
       @java.lang.Override
       public boolean hasNamedTupleValue() {
-        return valueCase_ == 10;
+        return valueCase_ == 11;
       }
       /**
-       * <code>.com.giyeok.bibix.NamedTupleValue named_tuple_value = 10;</code>
+       * <code>.com.giyeok.bibix.NamedTupleValue named_tuple_value = 11;</code>
        * @return The namedTupleValue.
        */
       @java.lang.Override
       public com.giyeok.bibix.BibixValueProto.NamedTupleValue getNamedTupleValue() {
         if (namedTupleValueBuilder_ == null) {
-          if (valueCase_ == 10) {
+          if (valueCase_ == 11) {
             return (com.giyeok.bibix.BibixValueProto.NamedTupleValue) value_;
           }
           return com.giyeok.bibix.BibixValueProto.NamedTupleValue.getDefaultInstance();
         } else {
-          if (valueCase_ == 10) {
+          if (valueCase_ == 11) {
             return namedTupleValueBuilder_.getMessage();
           }
           return com.giyeok.bibix.BibixValueProto.NamedTupleValue.getDefaultInstance();
         }
       }
       /**
-       * <code>.com.giyeok.bibix.NamedTupleValue named_tuple_value = 10;</code>
+       * <code>.com.giyeok.bibix.NamedTupleValue named_tuple_value = 11;</code>
        */
       public Builder setNamedTupleValue(com.giyeok.bibix.BibixValueProto.NamedTupleValue value) {
         if (namedTupleValueBuilder_ == null) {
@@ -2483,11 +2713,11 @@ public final class BibixValueProto {
         } else {
           namedTupleValueBuilder_.setMessage(value);
         }
-        valueCase_ = 10;
+        valueCase_ = 11;
         return this;
       }
       /**
-       * <code>.com.giyeok.bibix.NamedTupleValue named_tuple_value = 10;</code>
+       * <code>.com.giyeok.bibix.NamedTupleValue named_tuple_value = 11;</code>
        */
       public Builder setNamedTupleValue(
           com.giyeok.bibix.BibixValueProto.NamedTupleValue.Builder builderForValue) {
@@ -2497,15 +2727,15 @@ public final class BibixValueProto {
         } else {
           namedTupleValueBuilder_.setMessage(builderForValue.build());
         }
-        valueCase_ = 10;
+        valueCase_ = 11;
         return this;
       }
       /**
-       * <code>.com.giyeok.bibix.NamedTupleValue named_tuple_value = 10;</code>
+       * <code>.com.giyeok.bibix.NamedTupleValue named_tuple_value = 11;</code>
        */
       public Builder mergeNamedTupleValue(com.giyeok.bibix.BibixValueProto.NamedTupleValue value) {
         if (namedTupleValueBuilder_ == null) {
-          if (valueCase_ == 10 &&
+          if (valueCase_ == 11 &&
               value_ != com.giyeok.bibix.BibixValueProto.NamedTupleValue.getDefaultInstance()) {
             value_ = com.giyeok.bibix.BibixValueProto.NamedTupleValue.newBuilder((com.giyeok.bibix.BibixValueProto.NamedTupleValue) value_)
                 .mergeFrom(value).buildPartial();
@@ -2514,27 +2744,27 @@ public final class BibixValueProto {
           }
           onChanged();
         } else {
-          if (valueCase_ == 10) {
+          if (valueCase_ == 11) {
             namedTupleValueBuilder_.mergeFrom(value);
           } else {
             namedTupleValueBuilder_.setMessage(value);
           }
         }
-        valueCase_ = 10;
+        valueCase_ = 11;
         return this;
       }
       /**
-       * <code>.com.giyeok.bibix.NamedTupleValue named_tuple_value = 10;</code>
+       * <code>.com.giyeok.bibix.NamedTupleValue named_tuple_value = 11;</code>
        */
       public Builder clearNamedTupleValue() {
         if (namedTupleValueBuilder_ == null) {
-          if (valueCase_ == 10) {
+          if (valueCase_ == 11) {
             valueCase_ = 0;
             value_ = null;
             onChanged();
           }
         } else {
-          if (valueCase_ == 10) {
+          if (valueCase_ == 11) {
             valueCase_ = 0;
             value_ = null;
           }
@@ -2543,33 +2773,33 @@ public final class BibixValueProto {
         return this;
       }
       /**
-       * <code>.com.giyeok.bibix.NamedTupleValue named_tuple_value = 10;</code>
+       * <code>.com.giyeok.bibix.NamedTupleValue named_tuple_value = 11;</code>
        */
       public com.giyeok.bibix.BibixValueProto.NamedTupleValue.Builder getNamedTupleValueBuilder() {
         return getNamedTupleValueFieldBuilder().getBuilder();
       }
       /**
-       * <code>.com.giyeok.bibix.NamedTupleValue named_tuple_value = 10;</code>
+       * <code>.com.giyeok.bibix.NamedTupleValue named_tuple_value = 11;</code>
        */
       @java.lang.Override
       public com.giyeok.bibix.BibixValueProto.NamedTupleValueOrBuilder getNamedTupleValueOrBuilder() {
-        if ((valueCase_ == 10) && (namedTupleValueBuilder_ != null)) {
+        if ((valueCase_ == 11) && (namedTupleValueBuilder_ != null)) {
           return namedTupleValueBuilder_.getMessageOrBuilder();
         } else {
-          if (valueCase_ == 10) {
+          if (valueCase_ == 11) {
             return (com.giyeok.bibix.BibixValueProto.NamedTupleValue) value_;
           }
           return com.giyeok.bibix.BibixValueProto.NamedTupleValue.getDefaultInstance();
         }
       }
       /**
-       * <code>.com.giyeok.bibix.NamedTupleValue named_tuple_value = 10;</code>
+       * <code>.com.giyeok.bibix.NamedTupleValue named_tuple_value = 11;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
           com.giyeok.bibix.BibixValueProto.NamedTupleValue, com.giyeok.bibix.BibixValueProto.NamedTupleValue.Builder, com.giyeok.bibix.BibixValueProto.NamedTupleValueOrBuilder> 
           getNamedTupleValueFieldBuilder() {
         if (namedTupleValueBuilder_ == null) {
-          if (!(valueCase_ == 10)) {
+          if (!(valueCase_ == 11)) {
             value_ = com.giyeok.bibix.BibixValueProto.NamedTupleValue.getDefaultInstance();
           }
           namedTupleValueBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
@@ -2579,7 +2809,7 @@ public final class BibixValueProto {
                   isClean());
           value_ = null;
         }
-        valueCase_ = 10;
+        valueCase_ = 11;
         onChanged();;
         return namedTupleValueBuilder_;
       }
@@ -2587,33 +2817,33 @@ public final class BibixValueProto {
       private com.google.protobuf.SingleFieldBuilderV3<
           com.giyeok.bibix.BibixValueProto.DataClassInstanceValue, com.giyeok.bibix.BibixValueProto.DataClassInstanceValue.Builder, com.giyeok.bibix.BibixValueProto.DataClassInstanceValueOrBuilder> dataClassInstanceValueBuilder_;
       /**
-       * <code>.com.giyeok.bibix.DataClassInstanceValue data_class_instance_value = 11;</code>
+       * <code>.com.giyeok.bibix.DataClassInstanceValue data_class_instance_value = 12;</code>
        * @return Whether the dataClassInstanceValue field is set.
        */
       @java.lang.Override
       public boolean hasDataClassInstanceValue() {
-        return valueCase_ == 11;
+        return valueCase_ == 12;
       }
       /**
-       * <code>.com.giyeok.bibix.DataClassInstanceValue data_class_instance_value = 11;</code>
+       * <code>.com.giyeok.bibix.DataClassInstanceValue data_class_instance_value = 12;</code>
        * @return The dataClassInstanceValue.
        */
       @java.lang.Override
       public com.giyeok.bibix.BibixValueProto.DataClassInstanceValue getDataClassInstanceValue() {
         if (dataClassInstanceValueBuilder_ == null) {
-          if (valueCase_ == 11) {
+          if (valueCase_ == 12) {
             return (com.giyeok.bibix.BibixValueProto.DataClassInstanceValue) value_;
           }
           return com.giyeok.bibix.BibixValueProto.DataClassInstanceValue.getDefaultInstance();
         } else {
-          if (valueCase_ == 11) {
+          if (valueCase_ == 12) {
             return dataClassInstanceValueBuilder_.getMessage();
           }
           return com.giyeok.bibix.BibixValueProto.DataClassInstanceValue.getDefaultInstance();
         }
       }
       /**
-       * <code>.com.giyeok.bibix.DataClassInstanceValue data_class_instance_value = 11;</code>
+       * <code>.com.giyeok.bibix.DataClassInstanceValue data_class_instance_value = 12;</code>
        */
       public Builder setDataClassInstanceValue(com.giyeok.bibix.BibixValueProto.DataClassInstanceValue value) {
         if (dataClassInstanceValueBuilder_ == null) {
@@ -2625,11 +2855,11 @@ public final class BibixValueProto {
         } else {
           dataClassInstanceValueBuilder_.setMessage(value);
         }
-        valueCase_ = 11;
+        valueCase_ = 12;
         return this;
       }
       /**
-       * <code>.com.giyeok.bibix.DataClassInstanceValue data_class_instance_value = 11;</code>
+       * <code>.com.giyeok.bibix.DataClassInstanceValue data_class_instance_value = 12;</code>
        */
       public Builder setDataClassInstanceValue(
           com.giyeok.bibix.BibixValueProto.DataClassInstanceValue.Builder builderForValue) {
@@ -2639,15 +2869,15 @@ public final class BibixValueProto {
         } else {
           dataClassInstanceValueBuilder_.setMessage(builderForValue.build());
         }
-        valueCase_ = 11;
+        valueCase_ = 12;
         return this;
       }
       /**
-       * <code>.com.giyeok.bibix.DataClassInstanceValue data_class_instance_value = 11;</code>
+       * <code>.com.giyeok.bibix.DataClassInstanceValue data_class_instance_value = 12;</code>
        */
       public Builder mergeDataClassInstanceValue(com.giyeok.bibix.BibixValueProto.DataClassInstanceValue value) {
         if (dataClassInstanceValueBuilder_ == null) {
-          if (valueCase_ == 11 &&
+          if (valueCase_ == 12 &&
               value_ != com.giyeok.bibix.BibixValueProto.DataClassInstanceValue.getDefaultInstance()) {
             value_ = com.giyeok.bibix.BibixValueProto.DataClassInstanceValue.newBuilder((com.giyeok.bibix.BibixValueProto.DataClassInstanceValue) value_)
                 .mergeFrom(value).buildPartial();
@@ -2656,27 +2886,27 @@ public final class BibixValueProto {
           }
           onChanged();
         } else {
-          if (valueCase_ == 11) {
+          if (valueCase_ == 12) {
             dataClassInstanceValueBuilder_.mergeFrom(value);
           } else {
             dataClassInstanceValueBuilder_.setMessage(value);
           }
         }
-        valueCase_ = 11;
+        valueCase_ = 12;
         return this;
       }
       /**
-       * <code>.com.giyeok.bibix.DataClassInstanceValue data_class_instance_value = 11;</code>
+       * <code>.com.giyeok.bibix.DataClassInstanceValue data_class_instance_value = 12;</code>
        */
       public Builder clearDataClassInstanceValue() {
         if (dataClassInstanceValueBuilder_ == null) {
-          if (valueCase_ == 11) {
+          if (valueCase_ == 12) {
             valueCase_ = 0;
             value_ = null;
             onChanged();
           }
         } else {
-          if (valueCase_ == 11) {
+          if (valueCase_ == 12) {
             valueCase_ = 0;
             value_ = null;
           }
@@ -2685,33 +2915,33 @@ public final class BibixValueProto {
         return this;
       }
       /**
-       * <code>.com.giyeok.bibix.DataClassInstanceValue data_class_instance_value = 11;</code>
+       * <code>.com.giyeok.bibix.DataClassInstanceValue data_class_instance_value = 12;</code>
        */
       public com.giyeok.bibix.BibixValueProto.DataClassInstanceValue.Builder getDataClassInstanceValueBuilder() {
         return getDataClassInstanceValueFieldBuilder().getBuilder();
       }
       /**
-       * <code>.com.giyeok.bibix.DataClassInstanceValue data_class_instance_value = 11;</code>
+       * <code>.com.giyeok.bibix.DataClassInstanceValue data_class_instance_value = 12;</code>
        */
       @java.lang.Override
       public com.giyeok.bibix.BibixValueProto.DataClassInstanceValueOrBuilder getDataClassInstanceValueOrBuilder() {
-        if ((valueCase_ == 11) && (dataClassInstanceValueBuilder_ != null)) {
+        if ((valueCase_ == 12) && (dataClassInstanceValueBuilder_ != null)) {
           return dataClassInstanceValueBuilder_.getMessageOrBuilder();
         } else {
-          if (valueCase_ == 11) {
+          if (valueCase_ == 12) {
             return (com.giyeok.bibix.BibixValueProto.DataClassInstanceValue) value_;
           }
           return com.giyeok.bibix.BibixValueProto.DataClassInstanceValue.getDefaultInstance();
         }
       }
       /**
-       * <code>.com.giyeok.bibix.DataClassInstanceValue data_class_instance_value = 11;</code>
+       * <code>.com.giyeok.bibix.DataClassInstanceValue data_class_instance_value = 12;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
           com.giyeok.bibix.BibixValueProto.DataClassInstanceValue, com.giyeok.bibix.BibixValueProto.DataClassInstanceValue.Builder, com.giyeok.bibix.BibixValueProto.DataClassInstanceValueOrBuilder> 
           getDataClassInstanceValueFieldBuilder() {
         if (dataClassInstanceValueBuilder_ == null) {
-          if (!(valueCase_ == 11)) {
+          if (!(valueCase_ == 12)) {
             value_ = com.giyeok.bibix.BibixValueProto.DataClassInstanceValue.getDefaultInstance();
           }
           dataClassInstanceValueBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
@@ -2721,7 +2951,7 @@ public final class BibixValueProto {
                   isClean());
           value_ = null;
         }
-        valueCase_ = 11;
+        valueCase_ = 12;
         onChanged();;
         return dataClassInstanceValueBuilder_;
       }
@@ -9223,45 +9453,48 @@ public final class BibixValueProto {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\014values.proto\022\020com.giyeok.bibix\"\350\003\n\nBib" +
-      "ixValue\022\027\n\rboolean_value\030\001 \001(\010H\000\022\026\n\014stri" +
-      "ng_value\030\002 \001(\tH\000\022\024\n\npath_value\030\003 \001(\tH\000\022\024" +
-      "\n\nfile_value\030\004 \001(\tH\000\022\031\n\017directory_value\030" +
-      "\005 \001(\tH\000\0221\n\nenum_value\030\006 \001(\0132\033.com.giyeok" +
-      ".bibix.EnumValueH\000\0221\n\nlist_value\030\007 \001(\0132\033" +
-      ".com.giyeok.bibix.ListValueH\000\022/\n\tset_val" +
-      "ue\030\010 \001(\0132\032.com.giyeok.bibix.SetValueH\000\0223" +
-      "\n\013tuple_value\030\t \001(\0132\034.com.giyeok.bibix.T" +
-      "upleValueH\000\022>\n\021named_tuple_value\030\n \001(\0132!" +
-      ".com.giyeok.bibix.NamedTupleValueH\000\022M\n\031d" +
-      "ata_class_instance_value\030\013 \001(\0132(.com.giy" +
-      "eok.bibix.DataClassInstanceValueH\000B\007\n\005va" +
-      "lue\"-\n\tEnumValue\022\021\n\tenum_type\030\001 \001(\t\022\r\n\005v" +
-      "alue\030\002 \001(\t\"9\n\tListValue\022,\n\006values\030\001 \003(\0132" +
-      "\034.com.giyeok.bibix.BibixValue\"8\n\010SetValu" +
-      "e\022,\n\006values\030\001 \003(\0132\034.com.giyeok.bibix.Bib" +
-      "ixValue\":\n\nTupleValue\022,\n\006values\030\001 \003(\0132\034." +
-      "com.giyeok.bibix.BibixValue\"?\n\017NamedTupl" +
-      "eValue\022,\n\006values\030\001 \003(\0132\034.com.giyeok.bibi" +
-      "x.NamedValue\"G\n\nNamedValue\022\014\n\004name\030\001 \001(\t" +
-      "\022+\n\005value\030\002 \001(\0132\034.com.giyeok.bibix.Bibix" +
-      "Value\"_\n\026DataClassInstanceValue\022\023\n\013class" +
-      "_cname\030\001 \001(\t\0220\n\006fields\030\002 \003(\0132 .com.giyeo" +
-      "k.bibix.DataClassField\"K\n\016DataClassField" +
-      "\022\014\n\004name\030\001 \001(\t\022+\n\005value\030\002 \001(\0132\034.com.giye" +
-      "ok.bibix.BibixValueB\021B\017BibixValueProtob\006" +
-      "proto3"
+      "\n\014values.proto\022\020com.giyeok.bibix\032\033google" +
+      "/protobuf/empty.proto\"\226\004\n\nBibixValue\022,\n\n" +
+      "none_value\030\001 \001(\0132\026.google.protobuf.Empty" +
+      "H\000\022\027\n\rboolean_value\030\002 \001(\010H\000\022\026\n\014string_va" +
+      "lue\030\003 \001(\tH\000\022\024\n\npath_value\030\004 \001(\tH\000\022\024\n\nfil" +
+      "e_value\030\005 \001(\tH\000\022\031\n\017directory_value\030\006 \001(\t" +
+      "H\000\0221\n\nenum_value\030\007 \001(\0132\033.com.giyeok.bibi" +
+      "x.EnumValueH\000\0221\n\nlist_value\030\010 \001(\0132\033.com." +
+      "giyeok.bibix.ListValueH\000\022/\n\tset_value\030\t " +
+      "\001(\0132\032.com.giyeok.bibix.SetValueH\000\0223\n\013tup" +
+      "le_value\030\n \001(\0132\034.com.giyeok.bibix.TupleV" +
+      "alueH\000\022>\n\021named_tuple_value\030\013 \001(\0132!.com." +
+      "giyeok.bibix.NamedTupleValueH\000\022M\n\031data_c" +
+      "lass_instance_value\030\014 \001(\0132(.com.giyeok.b" +
+      "ibix.DataClassInstanceValueH\000B\007\n\005value\"-" +
+      "\n\tEnumValue\022\021\n\tenum_type\030\001 \001(\t\022\r\n\005value\030" +
+      "\002 \001(\t\"9\n\tListValue\022,\n\006values\030\001 \003(\0132\034.com" +
+      ".giyeok.bibix.BibixValue\"8\n\010SetValue\022,\n\006" +
+      "values\030\001 \003(\0132\034.com.giyeok.bibix.BibixVal" +
+      "ue\":\n\nTupleValue\022,\n\006values\030\001 \003(\0132\034.com.g" +
+      "iyeok.bibix.BibixValue\"?\n\017NamedTupleValu" +
+      "e\022,\n\006values\030\001 \003(\0132\034.com.giyeok.bibix.Nam" +
+      "edValue\"G\n\nNamedValue\022\014\n\004name\030\001 \001(\t\022+\n\005v" +
+      "alue\030\002 \001(\0132\034.com.giyeok.bibix.BibixValue" +
+      "\"_\n\026DataClassInstanceValue\022\023\n\013class_cnam" +
+      "e\030\001 \001(\t\0220\n\006fields\030\002 \003(\0132 .com.giyeok.bib" +
+      "ix.DataClassField\"K\n\016DataClassField\022\014\n\004n" +
+      "ame\030\001 \001(\t\022+\n\005value\030\002 \001(\0132\034.com.giyeok.bi" +
+      "bix.BibixValueB\021B\017BibixValueProtob\006proto" +
+      "3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
+          com.google.protobuf.EmptyProto.getDescriptor(),
         });
     internal_static_com_giyeok_bibix_BibixValue_descriptor =
       getDescriptor().getMessageTypes().get(0);
     internal_static_com_giyeok_bibix_BibixValue_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_giyeok_bibix_BibixValue_descriptor,
-        new java.lang.String[] { "BooleanValue", "StringValue", "PathValue", "FileValue", "DirectoryValue", "EnumValue", "ListValue", "SetValue", "TupleValue", "NamedTupleValue", "DataClassInstanceValue", "Value", });
+        new java.lang.String[] { "NoneValue", "BooleanValue", "StringValue", "PathValue", "FileValue", "DirectoryValue", "EnumValue", "ListValue", "SetValue", "TupleValue", "NamedTupleValue", "DataClassInstanceValue", "Value", });
     internal_static_com_giyeok_bibix_EnumValue_descriptor =
       getDescriptor().getMessageTypes().get(1);
     internal_static_com_giyeok_bibix_EnumValue_fieldAccessorTable = new
@@ -9310,6 +9543,7 @@ public final class BibixValueProto {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_giyeok_bibix_DataClassField_descriptor,
         new java.lang.String[] { "Name", "Value", });
+    com.google.protobuf.EmptyProto.getDescriptor();
   }
 
   // @@protoc_insertion_point(outer_class_scope)

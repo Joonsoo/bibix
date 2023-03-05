@@ -11,9 +11,13 @@ data class ObjectHash(
   val targetId: TargetId,
   val inputHashes: BibixIdProto.InputHashes,
 ) {
+  val inputsHash: ByteString by lazy {
+    inputHashes.hashString()
+  }
+
   val objectId = ObjectId(objectIdData {
     this.targetId = this@ObjectHash.targetId.targetIdBytes
-    this.inputHashes = this@ObjectHash.inputHashes
+    this.inputsHash = this@ObjectHash.inputsHash
   })
 }
 

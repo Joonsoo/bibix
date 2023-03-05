@@ -23,9 +23,7 @@ message BibixRepo {
 message TargetData {
   bytes target_id = 1;
   TargetIdData target_id_data = 2;
-  InputHashes latest_input_hashes = 3;
-  bytes latest_object_id = 4;
-  optional TargetState state = 5;
+  optional TargetState state = 3;
 }
 
 message OutputName {
@@ -35,6 +33,8 @@ message OutputName {
 
 message TargetState {
   google.protobuf.Timestamp build_start_time = 1;
+  optional bytes inputs_hash = 2;
+  optional bytes object_id = 3;
 
   message BuildSucceeded {
     google.protobuf.Timestamp build_end_time = 1;
@@ -47,8 +47,8 @@ message TargetState {
   }
 
   oneof state {
-    google.protobuf.Empty build_started = 2;
-    BuildSucceeded build_succeeded = 3;
-    BuildFailed build_failed = 4;
+    google.protobuf.Empty build_started = 4;
+    BuildSucceeded build_succeeded = 5;
+    BuildFailed build_failed = 6;
   }
 }

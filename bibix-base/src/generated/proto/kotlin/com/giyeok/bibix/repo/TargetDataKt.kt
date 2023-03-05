@@ -64,48 +64,7 @@ object TargetDataKt {
     }
 
     /**
-     * <code>.com.giyeok.bibix.InputHashes latest_input_hashes = 3;</code>
-     */
-    var latestInputHashes: com.giyeok.bibix.BibixIdProto.InputHashes
-      @JvmName("getLatestInputHashes")
-      get() = _builder.getLatestInputHashes()
-      @JvmName("setLatestInputHashes")
-      set(value) {
-        _builder.setLatestInputHashes(value)
-      }
-    /**
-     * <code>.com.giyeok.bibix.InputHashes latest_input_hashes = 3;</code>
-     */
-    fun clearLatestInputHashes() {
-      _builder.clearLatestInputHashes()
-    }
-    /**
-     * <code>.com.giyeok.bibix.InputHashes latest_input_hashes = 3;</code>
-     * @return Whether the latestInputHashes field is set.
-     */
-    fun hasLatestInputHashes(): kotlin.Boolean {
-      return _builder.hasLatestInputHashes()
-    }
-
-    /**
-     * <code>bytes latest_object_id = 4;</code>
-     */
-    var latestObjectId: com.google.protobuf.ByteString
-      @JvmName("getLatestObjectId")
-      get() = _builder.getLatestObjectId()
-      @JvmName("setLatestObjectId")
-      set(value) {
-        _builder.setLatestObjectId(value)
-      }
-    /**
-     * <code>bytes latest_object_id = 4;</code>
-     */
-    fun clearLatestObjectId() {
-      _builder.clearLatestObjectId()
-    }
-
-    /**
-     * <code>optional .com.giyeok.bibix.repo.TargetState state = 5;</code>
+     * <code>optional .com.giyeok.bibix.repo.TargetState state = 3;</code>
      */
     var state: com.giyeok.bibix.repo.BibixRepoProto.TargetState
       @JvmName("getState")
@@ -115,13 +74,13 @@ object TargetDataKt {
         _builder.setState(value)
       }
     /**
-     * <code>optional .com.giyeok.bibix.repo.TargetState state = 5;</code>
+     * <code>optional .com.giyeok.bibix.repo.TargetState state = 3;</code>
      */
     fun clearState() {
       _builder.clearState()
     }
     /**
-     * <code>optional .com.giyeok.bibix.repo.TargetState state = 5;</code>
+     * <code>optional .com.giyeok.bibix.repo.TargetState state = 3;</code>
      * @return Whether the state field is set.
      */
     fun hasState(): kotlin.Boolean {
@@ -137,9 +96,6 @@ inline fun com.giyeok.bibix.repo.BibixRepoProto.TargetData.copy(block: com.giyeo
 
 val com.giyeok.bibix.repo.BibixRepoProto.TargetDataOrBuilder.targetIdDataOrNull: com.giyeok.bibix.BibixIdProto.TargetIdData?
   get() = if (hasTargetIdData()) getTargetIdData() else null
-
-val com.giyeok.bibix.repo.BibixRepoProto.TargetDataOrBuilder.latestInputHashesOrNull: com.giyeok.bibix.BibixIdProto.InputHashes?
-  get() = if (hasLatestInputHashes()) getLatestInputHashes() else null
 
 val com.giyeok.bibix.repo.BibixRepoProto.TargetDataOrBuilder.stateOrNull: com.giyeok.bibix.repo.BibixRepoProto.TargetState?
   get() = if (hasState()) getState() else null
