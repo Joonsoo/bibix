@@ -58,7 +58,7 @@ ast0 = scala.library(
     maven.artifact("com.google.protobuf", "protobuf-java", "3.19.4"),
     maven.artifact("com.google.protobuf", "protobuf-java-util", "3.19.4"),
   ],
-  //resources = ["bibix-ast/src/generated/resources/parserdata.pb"],
+  resources = ["bibix-ast/src/generated/resources/parserdata.pb"],
 )
 
 ast0Jar = jvm.jar(deps=[ast0], jarFileName="bibix-ast-0.0.3.jar")

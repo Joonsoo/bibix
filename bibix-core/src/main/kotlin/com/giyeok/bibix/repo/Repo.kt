@@ -198,8 +198,13 @@ class Repo(
     commitRepoData()
   }
 
-  suspend fun getPrevInputHashesOf(targetId: ByteString): InputHashes? =
-    getTargetData(targetId)?.latestInputHashesBuilder?.build()
+  suspend fun getPrevInputsHashesOf(targetId: ByteString): InputHashes? =
+    getTargetData(targetId)?.let { targetData ->
+      if (!targetData.hasLatestInputHashes()) null else {
+        val hashes = targetData.latestInputHashes
+        if (hashes == InputHashes.getDefaultInstance()) null else hashes
+      }
+    }
 
   companion object {
     fun load(mainDirectory: Path, debuggingMode: Boolean = false): Repo {

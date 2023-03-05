@@ -5,6 +5,7 @@ import com.giyeok.bibix.base.BibixValue
 import com.giyeok.bibix.base.CName
 import com.giyeok.bibix.base.SourceId
 import com.giyeok.bibix.interpreter.coroutine.TaskElement
+import com.giyeok.bibix.interpreter.expr.Definition
 import com.giyeok.bibix.interpreter.expr.NameLookupContext
 import com.giyeok.bibix.repo.BibixValueWithObjectHash
 import com.giyeok.bibix.repo.ObjectHash
@@ -120,6 +121,13 @@ class TaskRelGraph {
     return Task.EvalName(nameLookupContext, name, thisValue)
   }
 
+  fun evalDefinitionTask(
+    definition: Definition,
+    thisValue: BibixValue?
+  ): Task.EvalDefinitionTask {
+    return Task.EvalDefinitionTask(definition, thisValue)
+  }
+
   fun evalCallExprTask(
     sourceId: SourceId,
     astNode: BibixAst.AstNode,
@@ -127,6 +135,10 @@ class TaskRelGraph {
   ): Task.EvalCallExpr {
     referredNodes[Pair(sourceId, astNode.nodeId)] = astNode
     return Task.EvalCallExpr(sourceId, astNode.nodeId, thisValue)
+  }
+
+  fun findVarRedefsTask(cname: CName): Task.FindVarRedefsTask {
+    return Task.FindVarRedefsTask(cname)
   }
 
   fun lookupNameTask(nameLookupContext: NameLookupContext, name: List<String>): Task.LookupName {
@@ -189,5 +201,10 @@ class TaskRelGraph {
       }
     }
     return traverse(task, TaskPath.Cons(task, TaskPath.Nil)).toList()
+  }
+
+  fun resolveImportTask(sourceId: SourceId, astNode: BibixAst.AstNode): Task {
+    referredNodes[Pair(sourceId, astNode.nodeId)] = astNode
+    return Task.ResolveImport(sourceId, astNode.nodeId)
   }
 }

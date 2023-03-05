@@ -1,7 +1,9 @@
 package com.giyeok.bibix.interpreter.task
 
 import com.giyeok.bibix.base.BibixValue
+import com.giyeok.bibix.base.CName
 import com.giyeok.bibix.base.SourceId
+import com.giyeok.bibix.interpreter.expr.Definition
 import com.giyeok.bibix.interpreter.expr.NameLookupContext
 
 sealed class Task {
@@ -25,12 +27,16 @@ sealed class Task {
     val thisValue: BibixValue?
   ) : Task()
 
+  data class EvalDefinitionTask(val definition: Definition, val thisValue: BibixValue?) : Task()
+
   data class LookupName(val nameLookupContext: NameLookupContext, val name: List<String>) : Task()
 
   data class PluginRequestedCallExpr(val sourceId: SourceId, val id: Int) : Task()
 
   data class EvalCallExpr(val sourceId: SourceId, val exprId: Int, val thisValue: BibixValue?) :
     Task()
+
+  data class FindVarRedefsTask(val cname: CName) : Task()
 
   // actionDefId는 action def의 ast id
   data class ExecuteAction(val sourceId: SourceId, val actionDefId: Int) : Task()

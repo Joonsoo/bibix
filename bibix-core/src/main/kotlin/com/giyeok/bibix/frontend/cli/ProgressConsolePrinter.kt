@@ -20,7 +20,7 @@ class ProgressConsolePrinter : ProgressNotifier {
 
   override fun notifyProgresses(progressesFunc: () -> List<ThreadState?>) {
     val now = Instant.now()
-    if (lastPrinted == null || Duration.between(lastPrinted, now) >= Duration.ofMillis(500)) {
+    if (lastPrinted == null || Duration.between(lastPrinted, now) >= Duration.ofMillis(100)) {
       lastPrinted = now
       repeat(occupiedLines) { print("\b\r") }
       val progresses = progressesFunc()
@@ -29,8 +29,10 @@ class ProgressConsolePrinter : ProgressNotifier {
         if (state == null || !state.isActive) {
           println("$index: IDLE")
         } else {
-          println("$index: ${state.lastMessage.time}")
-          TaskDescriptor(interpreter.g, interpreter.sourceManager).printTaskDescription(state.task)
+          println("$index: ${state.lastMessage.time} $state")
+        }
+        state?.task?.let { task ->
+          TaskDescriptor(interpreter.g, interpreter.sourceManager).printTaskDescription(task)
         }
       }
     }

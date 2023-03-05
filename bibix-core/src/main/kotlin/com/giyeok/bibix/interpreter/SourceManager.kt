@@ -44,13 +44,13 @@ class SourceManager {
     }
   }
 
-  private fun registerScript(
+  private suspend fun registerScript(
     sourceId: SourceId,
     project: BibixProject,
     scriptText: String,
     buildScript: BibixAst.BuildScript,
     nameLookupTable: NameLookupTable
-  ): SourceId {
+  ): SourceId = mutex.withLock {
     // script가 sourceId라는 이름으로 등록됨
     // remember that sourceId has the package name
     // It is checked by sourcePackageName whether the package name is unique
@@ -69,7 +69,7 @@ class SourceManager {
     projectRoots[usingSourceId] = project.projectRoot.absolute()
     sourceScripts[usingSourceId] = scriptText
     nameLookupTable.add(NameLookupContext(usingSourceId, listOf()), buildScript.defs)
-    return usingSourceId
+    usingSourceId
   }
 
   suspend fun loadPrelude(prelude: PreloadedPlugin, nameLookupTable: NameLookupTable) {
@@ -85,8 +85,8 @@ class SourceManager {
 
     mutex.withLock {
       _mainBaseDirectory = project.projectRoot
-      registerScript(MainSourceId, project, scriptText, buildScript, nameLookupTable)
     }
+    registerScript(MainSourceId, project, scriptText, buildScript, nameLookupTable)
   }
 
   suspend fun loadSource(project: BibixProject, nameLookupTable: NameLookupTable): ExternSourceId {
@@ -97,12 +97,18 @@ class SourceManager {
 
     val (scriptText, buildScript) = parseScript(project)
 
-    return mutex.withLock {
+    val sourceId = ExternSourceId(externSourceIdCounter)
+    mutex.withLock {
       externSourceIdCounter += 1
-      val sourceId = ExternSourceId(externSourceIdCounter)
       externSources[project] = sourceId
-      registerScript(sourceId, project, scriptText, buildScript, nameLookupTable) as ExternSourceId
     }
+    return registerScript(
+      sourceId,
+      project,
+      scriptText,
+      buildScript,
+      nameLookupTable
+    ) as ExternSourceId
   }
 
   suspend fun getProjectRoot(sourceId: SourceId): Path? = mutex.withLock {

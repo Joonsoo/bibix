@@ -5,22 +5,27 @@ import com.giyeok.bibix.base.CName
 import com.giyeok.bibix.base.PreludeSourceId
 import com.giyeok.bibix.base.SourceId
 import com.google.common.annotations.VisibleForTesting
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 
 class NameLookupTable(private val varsManager: VarsManager) {
+
   val definitions = mutableMapOf<CName, Definition>()
+  private val defsMutex = Mutex()
 
   // 메인 스크립트에서 "jparser"란 이름으로 임포트한 것은 RemoteSourceId(1)에서 "asdf"
   // CName(MainSourceId, "jparser") -> NameLookupContext(CName(RemoteSourceId(1), "asdf"), [])
   // source A의 import def expr id X를 임포트하면 source B가 된다 -> imports[(A, X)] = B
   @VisibleForTesting
   val imports = mutableMapOf<CName, ImportedSource>()
+  private val importsMutex = Mutex()
 
   private fun addDefinition(cname: CName, definition: Definition) {
     // TODO check duplicate
     definitions[cname] = definition
   }
 
-  fun add(context: NameLookupContext, defs: List<BibixAst.Def>) {
+  suspend fun add(context: NameLookupContext, defs: List<BibixAst.Def>) = defsMutex.withLock {
     fun traverse(scope: List<String>, defs: List<BibixAst.Def>) {
       defs.forEach { def ->
         when (def) {
@@ -94,18 +99,19 @@ class NameLookupTable(private val varsManager: VarsManager) {
     traverse(context.scopePath, defs)
   }
 
-  fun addImport(importCName: CName, context: NameLookupContext) {
+  suspend fun addImport(importCName: CName, context: NameLookupContext) = importsMutex.withLock {
     imports[importCName] = ImportedSource.ImportedNames(context)
   }
 
-  fun addImport(importCName: CName, definition: Definition) {
+  suspend fun addImport(importCName: CName, definition: Definition) = importsMutex.withLock {
     imports[importCName] = ImportedSource.ImportedDefinition(definition)
   }
 
-  fun isImported(sourceId: SourceId, name: String): Boolean =
+  suspend fun isImported(sourceId: SourceId, name: String): Boolean = importsMutex.withLock {
     imports.containsKey(CName(sourceId, listOf(name)))
+  }
 
-  fun lookup(context: NameLookupContext, name: List<String>): LookupResult {
+  suspend fun lookup(context: NameLookupContext, name: List<String>): LookupResult {
     fun findFirstToken(firstToken: String): Definition? {
       val scopePath = context.scopePath.toMutableList()
       while (true) {
@@ -119,10 +125,10 @@ class NameLookupTable(private val varsManager: VarsManager) {
     }
 
     check(name.isNotEmpty())
-    val firstDefinition = findFirstToken(name.first())
+    val firstDefinition = defsMutex.withLock { findFirstToken(name.first()) }
       ?: return LookupResult.NameNotFound
     if (firstDefinition is Definition.ImportDef) {
-      val imported = imports[firstDefinition.cname]
+      val imported = importsMutex.withLock { imports[firstDefinition.cname] }
         ?: return LookupResult.ImportRequired(firstDefinition, name.drop(1))
       return when (imported) {
         is ImportedSource.ImportedNames ->
@@ -139,7 +145,8 @@ class NameLookupTable(private val varsManager: VarsManager) {
     return if (name.size == 1) {
       LookupResult.DefinitionFound(firstDefinition)
     } else {
-      val finalDefinition = definitions[firstDefinition.cname.append(name.drop(1))]
+      val finalDefinition =
+        defsMutex.withLock { definitions[firstDefinition.cname.append(name.drop(1))] }
       if (finalDefinition != null) {
         LookupResult.DefinitionFound(finalDefinition)
       } else {

@@ -528,6 +528,7 @@ class CallExprEvaluator(
         targetIdDataBuilder.buildRuleImplId = buildRuleImplId {
           this.sourceId = protoOf(buildRule.name.sourceId)
           this.targetId = impl.objectHash.targetId.targetIdBytes
+          this.objectId = impl.objectHash.objectId.objectIdBytes
         }
       }
     }
@@ -535,10 +536,10 @@ class CallExprEvaluator(
     val targetId = TargetId(targetIdDataBuilder.build())
     val objHash = ObjectHash(targetId, inputHashes)
 
-    interpreter.repo.putObjectHash(objHash)
-
     val targetIdBytes = objHash.targetId.targetIdBytes
     val prevInputHashes = interpreter.repo.getPrevInputHashesOf(targetIdBytes)
+
+    interpreter.repo.putObjectHash(objHash)
 
     val result = g.withMemo(objHash) {
       interpreter.repo.startBuildingTarget(targetIdBytes)
@@ -546,6 +547,7 @@ class CallExprEvaluator(
       val method =
         pluginInstance::class.java.getMethod(buildRule.methodName, BuildContext::class.java)
 
+      val hashChanged = prevInputHashes == null || prevInputHashes != objHash.inputHashes
       val progressIndicator = interpreter.progressIndicatorContainer.ofCurrentThread()
       val buildContext = BuildContext(
         buildEnv = interpreter.buildEnv,
@@ -554,7 +556,7 @@ class CallExprEvaluator(
         callerBaseDirectory = baseDirectoryOf(context.sourceId),
         ruleDefinedDirectory = baseDirectoryOf(buildRule.context.sourceId),
         arguments = params,
-        hashChanged = prevInputHashes == null || prevInputHashes != objHash.inputHashes,
+        hashChanged = hashChanged,
         targetIdData = objHash.targetId.targetIdData,
         targetId = objHash.targetId.targetIdHex,
         destDirectoryPath = interpreter.repo.objectsDirectory.resolve(objHash.targetId.targetIdHex),

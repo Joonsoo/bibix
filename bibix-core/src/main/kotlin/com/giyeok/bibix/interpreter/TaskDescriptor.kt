@@ -13,7 +13,7 @@ class TaskDescriptor(val g: TaskRelGraph, val sourceManager: SourceManager) {
         val astNode = g.getReferredNodeById(task.sourceId, task.exprId)
         val projectPath = sourceManager.getProjectRoot(task.sourceId)
         val taskText = sourceManager.sourceText(task.sourceId, astNode!!)
-        writer.println("EvalExpr ${task.sourceId} $projectPath ${astNode.start}-${astNode.end}")
+        writer.println("EvalExpr ${task.sourceId} $projectPath ${astNode::class.simpleName} ${astNode.start}-${astNode.end}")
         writer.println(taskText)
       }
 
@@ -25,9 +25,30 @@ class TaskDescriptor(val g: TaskRelGraph, val sourceManager: SourceManager) {
         writer.println(taskText)
       }
 
-      else -> {
-        // Do nothing
+      is Task.EvalDefinitionTask -> {}
+      is Task.EvalName -> {}
+      is Task.EvalType -> {}
+      is Task.ExecuteAction -> {}
+      is Task.ExecuteActionCall -> {}
+      is Task.FindVarRedefsTask -> runBlocking {
+        val projectPath = sourceManager.getProjectRoot(task.cname.sourceId)
+        writer.println(projectPath)
       }
+
+      is Task.LookupName -> {}
+      is Task.PluginRequestedCallExpr -> {}
+
+      is Task.ResolveImport -> runBlocking {
+        val astNode = g.getReferredNodeById(task.sourceId, task.importDefId)
+        val projectPath = sourceManager.getProjectRoot(task.sourceId)
+        val taskText = sourceManager.sourceText(task.sourceId, astNode!!)
+        writer.println("resolve import at ${task.sourceId} $projectPath ${astNode.start}-${astNode.end}")
+        writer.println(taskText)
+      }
+
+      is Task.ResolveImportSource -> {}
+      Task.RootTask -> {}
+      is Task.UserBuildRequest -> {}
     }
   }
 
@@ -38,6 +59,8 @@ class TaskDescriptor(val g: TaskRelGraph, val sourceManager: SourceManager) {
   }
 
   fun printTaskDescription(task: Task) {
-    printTaskDescription(task, PrintWriter(System.out))
+    val writer = PrintWriter(System.out)
+    printTaskDescription(task, writer)
+    writer.flush()
   }
 }

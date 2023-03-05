@@ -4,6 +4,7 @@ import com.giyeok.bibix.ast.BibixAst
 import com.giyeok.bibix.base.CName
 import com.giyeok.bibix.interpreter.BibixInterpreter
 import com.giyeok.bibix.interpreter.task.Task
+import java.lang.invoke.MethodHandles.Lookup
 
 class VarsManager(private val interpreter: BibixInterpreter) {
   companion object {
@@ -26,19 +27,18 @@ class VarsManager(private val interpreter: BibixInterpreter) {
     varRedefs.add(VarRedef(redefContext, def))
   }
 
-  suspend fun redefines(task: Task, cname: CName): List<VarRedef> {
-    // TODO 모든 redef를 뒤지지 않는 방법이 없을까?
-    val redefs = varRedefs.filter { redef ->
-      val lookup = try {
-        interpreter.lookupName(task, redef.redefContext, redef.def.nameTokens)
-      } catch (e: Exception) {
-        e.printStackTrace()
-        throw e
+  suspend fun findVarRedefs(requester: Task, cname: CName): List<VarRedef> =
+    interpreter.g.withTask(requester, interpreter.g.findVarRedefsTask(cname)) { task ->
+      // TODO 모든 redef를 뒤지지 않는 방법이 없을까?
+      varRedefs.filter { redef ->
+        val lookup = interpreter.tryLookupName(task, redef.redefContext, redef.def.nameTokens)
+        if (lookup is LookupResult.DefinitionFound) {
+          lookup.definition.cname == cname
+        } else {
+          false
+        }
       }
-      lookup.cname == cname
     }
-    return redefs
-  }
 
   fun getVarDef(cname: CName): VarDef {
     return varDefs.getValue(cname)

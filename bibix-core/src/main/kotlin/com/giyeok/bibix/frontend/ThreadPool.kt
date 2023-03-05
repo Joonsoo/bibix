@@ -88,7 +88,7 @@ class ThreadPool(
 
   fun processTasks(rootJob: Job) {
     while (!rootJob.isCompleted || queue.isNotEmpty()) {
-      val nextBlock = queue.poll(10, TimeUnit.SECONDS)
+      val nextBlock = queue.poll(3, TimeUnit.SECONDS)
       if (nextBlock != null) {
         var assignedThreadIdx = findAndAssignThread()
         while (assignedThreadIdx == null) {

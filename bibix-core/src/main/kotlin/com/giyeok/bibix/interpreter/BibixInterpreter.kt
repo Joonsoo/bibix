@@ -98,6 +98,12 @@ class BibixInterpreter(
     }
   }
 
+  suspend fun tryLookupName(
+    requester: Task,
+    context: NameLookupContext,
+    name: List<String>
+  ): LookupResult = nameLookup.tryLookupName(requester, context, name)
+
   suspend fun lookupName(
     requester: Task,
     context: NameLookupContext,
