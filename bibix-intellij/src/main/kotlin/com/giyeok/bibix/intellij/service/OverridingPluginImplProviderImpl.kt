@@ -1,9 +1,9 @@
 package com.giyeok.bibix.intellij.service
 
-import com.giyeok.bibix.base.ClassInstanceValue
 import com.giyeok.bibix.base.SourceId
 import com.giyeok.bibix.interpreter.PluginImplProvider
 import com.giyeok.bibix.interpreter.PluginImplProviderImpl
+import java.nio.file.Path
 
 class OverridingPluginImplProviderImpl(
   val overridings: Map<Pair<SourceId, String>, Any>
@@ -12,8 +12,8 @@ class OverridingPluginImplProviderImpl(
 
   override suspend fun getPluginImplInstance(
     callerSourceId: SourceId,
-    cpInstance: ClassInstanceValue,
+    cps: List<Path>,
     className: String
   ): Any = overridings[Pair(callerSourceId, className)]
-    ?: impl.getPluginImplInstance(callerSourceId, cpInstance, className)
+    ?: impl.getPluginImplInstance(callerSourceId, cps, className)
 }

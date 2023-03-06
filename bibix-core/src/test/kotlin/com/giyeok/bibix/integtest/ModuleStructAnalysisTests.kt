@@ -124,10 +124,10 @@ class OverridingPluginImplProviderImpl(val overridings: Map<Pair<SourceId, Strin
 
   override suspend fun getPluginImplInstance(
     callerSourceId: SourceId,
-    cpInstance: ClassInstanceValue,
+    cps: List<Path>,
     className: String
   ): Any = overridings[Pair(callerSourceId, className)]
-    ?: impl.getPluginImplInstance(callerSourceId, cpInstance, className)
+    ?: impl.getPluginImplInstance(callerSourceId, cps, className)
 }
 
 class ModulesCollector {
