@@ -26,8 +26,6 @@ class BibixIntellijServiceImpl(
     val scriptName = request.scriptName.ifEmpty { null }
     val key = Pair(projectRoot, scriptName)
 
-    println(key)
-
     if (!request.forceReload) {
       val existing = memos[key]
       if (existing != null) {

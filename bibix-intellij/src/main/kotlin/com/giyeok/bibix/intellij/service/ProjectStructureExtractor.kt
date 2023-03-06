@@ -180,7 +180,15 @@ object ProjectStructureExtractor {
 
     val mainTargets = buildFrontend.mainScriptDefinitions()
       .filterValues { it is Definition.TargetDef }
-    buildFrontend.blockingBuildTargets(mainTargets.keys.toList())
+    mainTargets.keys.forEach { target ->
+      try {
+        val result = buildFrontend.blockingBuildTargets(listOf(target))
+        println(result)
+      } catch (e: Exception) {
+        e.printStackTrace()
+        println("Failed to build $target. Ignored")
+      }
+    }
 
     val modules =
       javaModulesCollector.modules + ktjvmModulesCollector.modules + scalaModulesCollector.modules

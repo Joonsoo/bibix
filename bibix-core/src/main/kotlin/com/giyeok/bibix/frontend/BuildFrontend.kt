@@ -11,7 +11,6 @@ import com.giyeok.bibix.plugins.PreloadedPlugin
 import com.giyeok.bibix.plugins.bibix.bibixPlugin
 import com.giyeok.bibix.plugins.curl.curlPlugin
 import com.giyeok.bibix.plugins.file.filePlugin
-import com.giyeok.bibix.plugins.java.javaPlugin
 import com.giyeok.bibix.plugins.jvm.jvmPlugin
 import com.giyeok.bibix.plugins.maven.mavenPlugin
 import com.giyeok.bibix.plugins.prelude.preludePlugin
@@ -34,7 +33,6 @@ class BuildFrontend(
       "file" to filePlugin,
       "curl" to curlPlugin,
       "jvm" to jvmPlugin,
-      "java" to javaPlugin,
       "maven" to mavenPlugin,
     )
   }
