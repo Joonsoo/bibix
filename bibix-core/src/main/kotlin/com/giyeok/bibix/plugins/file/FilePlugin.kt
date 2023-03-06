@@ -6,9 +6,6 @@ import com.giyeok.bibix.plugins.PreloadedPlugin
 val filePlugin = PreloadedPlugin.fromScript(
   "com.giyeok.bibix.plugins.file",
   """
-    action def clearDirectory(directory: directory)
-      = native:com.giyeok.bibix.plugins.file.ClearDirectory
-      
     action def copyFile(
       src: {file, set<file>},
       dest: path,
@@ -21,9 +18,13 @@ val filePlugin = PreloadedPlugin.fromScript(
       createDirectories: boolean = false,
       overwrite: boolean = true,
     ) = native:com.giyeok.bibix.plugins.file.Copy:copyDirectory
+
+    action def clearDirectory(
+      dest: directory,
+    ) = native:com.giyeok.bibix.plugins.file.Clear:clearDirectory
   """.trimIndent(),
   PluginInstanceProvider(
-    ClearDirectory::class.java,
+    Clear::class.java,
     Copy::class.java,
   )
 )

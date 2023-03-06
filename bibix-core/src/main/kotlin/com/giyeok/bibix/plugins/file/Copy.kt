@@ -50,6 +50,7 @@ class Copy {
     fun copy(currSrc: Path, currDest: Path) {
       val (subdirs, subfiles) = currSrc.listDirectoryEntries()
         .partition { it.isDirectory() }
+      // TODO symlink는 어떻게 되지? 확인 필요
       subfiles.forEach { subfile ->
         subfile.copyTo(currDest.resolve(subfile.fileName.name), overwrite = overwrite)
       }
