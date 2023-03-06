@@ -1,17 +1,13 @@
 package com.giyeok.bibix.plugins.file
 
 import com.giyeok.bibix.base.*
+import java.nio.file.Files
 import java.nio.file.Path
 import kotlin.io.path.*
 
 class Copy {
   fun copyFile(context: ActionContext) {
-    val srcValue = context.arguments.getValue("src")
-    val srcs = when (srcValue) {
-      is FileValue -> listOf(srcValue.file)
-      is SetValue -> srcValue.values.map { (it as FileValue).file }
-      else -> TODO()
-    }
+    val src = (context.arguments.getValue("src") as FileValue).file
     val dest = (context.arguments.getValue("dest") as PathValue).path
     val overwrite = (context.arguments.getValue("overwrite") as BooleanValue).value
 
@@ -19,16 +15,31 @@ class Copy {
 
     when {
       dest.notExists() && dest.parent.isDirectory() -> {
-        check(srcs.size == 1)
-        srcs.first().copyTo(dest, overwrite = overwrite)
+        src.copyTo(dest, overwrite = overwrite)
       }
 
       dest.isRegularFile() -> {
-        check(srcs.size == 1)
         check(overwrite)
-        srcs.first().copyTo(dest, overwrite = true)
+        src.copyTo(dest, overwrite = true)
       }
 
+      dest.isDirectory() -> {
+        val fileDest = dest.resolve(src.fileName.name)
+        src.copyTo(fileDest, overwrite = overwrite)
+      }
+
+      else -> throw IllegalStateException("Unsupported operation")
+    }
+  }
+
+  fun copyFiles(context: ActionContext) {
+    val srcs = (context.arguments.getValue("srcs") as SetValue).values.map { (it as FileValue).file }
+    val dest = (context.arguments.getValue("dest") as PathValue).path
+    val overwrite = (context.arguments.getValue("overwrite") as BooleanValue).value
+
+    // dest가 존재하지 않고, dest.parent는 디렉토리인 경우 -> dest라는 이름으로 복사
+
+    when {
       dest.isDirectory() -> {
         srcs.forEach { src ->
           val fileDest = dest.resolve(src.fileName.name)
@@ -48,7 +59,7 @@ class Copy {
     val overwrite = (context.arguments.getValue("overwrite") as BooleanValue).value
 
     fun copy(currSrc: Path, currDest: Path) {
-      val (subdirs, subfiles) = currSrc.listDirectoryEntries()
+      val (subdirs, subfiles) = Files.list(currSrc).toList()
         .partition { it.isDirectory() }
       // TODO symlink는 어떻게 되지? 확인 필요
       subfiles.forEach { subfile ->

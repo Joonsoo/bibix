@@ -7,15 +7,21 @@ val filePlugin = PreloadedPlugin.fromScript(
   "com.giyeok.bibix.plugins.file",
   """
     action def copyFile(
-      src: {file, set<file>},
+      src: file,
       dest: path,
       overwrite: boolean = true,
     ) = native:com.giyeok.bibix.plugins.file.Copy:copyFile
 
+    action def copyFiles(
+      srcs: set<file>,
+      dest: path,
+      overwrite: boolean = true,
+    ) = native:com.giyeok.bibix.plugins.file.Copy:copyFiles
+
     action def copyDirectory(
       src: directory,
       dest: directory,
-      createDirectories: boolean = false,
+      createDirectories: boolean = true,
       overwrite: boolean = true,
     ) = native:com.giyeok.bibix.plugins.file.Copy:copyDirectory
 
