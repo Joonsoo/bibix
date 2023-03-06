@@ -286,6 +286,9 @@ class ExprEvaluator(
             is EvaluationResult.Value ->
               EvaluationResult.Value(findMember(expr.target, target.value, expr.name))
 
+            is EvaluationResult.ValueWithObjectHash ->
+              EvaluationResult.Value(findMember(expr.target, target.value, expr.name))
+
             is EvaluationResult.EnumDef -> {
               check(target.enumValues.contains(expr.name)) { "Invalid enum value name" }
               EvaluationResult.Value(EnumValue(target.packageName, target.enumName, expr.name))
