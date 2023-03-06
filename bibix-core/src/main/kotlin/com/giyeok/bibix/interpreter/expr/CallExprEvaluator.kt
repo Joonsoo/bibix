@@ -11,6 +11,11 @@ import com.giyeok.bibix.interpreter.expr.EvaluationResult.RuleDef.ActionRuleDef
 import com.giyeok.bibix.interpreter.expr.EvaluationResult.RuleDef.BuildRuleDef
 import com.giyeok.bibix.interpreter.task.Task
 import com.giyeok.bibix.interpreter.task.TaskRelGraph
+import com.giyeok.bibix.plugins.jvm.ClassPkg
+import com.giyeok.bibix.plugins.jvm.LocalLib
+import com.giyeok.bibix.plugins.jvm.MavenDep
+import com.giyeok.bibix.plugins.jvm.ResolveClassPkgs
+import com.giyeok.bibix.plugins.jvm.ResolveClassPkgs.Companion.toPaths
 import com.giyeok.bibix.repo.*
 import com.giyeok.bibix.utils.toBibix
 import com.giyeok.bibix.utils.toInstant
@@ -19,7 +24,9 @@ import com.google.protobuf.empty
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import java.nio.file.Path
+import kotlin.io.path.absolute
 import kotlin.io.path.absolutePathString
+import kotlin.io.path.name
 
 class CallExprEvaluator(
   private val interpreter: BibixInterpreter,
@@ -44,13 +51,35 @@ class CallExprEvaluator(
       )
     }
 
-  private suspend fun coerceCpInstance(
+  private suspend fun prepareClassPathsForPlugin(
     task: Task,
     context: NameLookupContext,
     implValue: BibixValue
-  ): ClassInstanceValue {
-    val cpType = DataClassType("com.giyeok.bibix.plugins.jvm", "ClassPaths")
-    return exprEvaluator.coerce(task, context, implValue, cpType) as ClassInstanceValue
+  ): List<Path> {
+    val cpType = DataClassType("com.giyeok.bibix.plugins.jvm", "ClassPkg")
+    val classPkgValue = exprEvaluator.coerce(task, context, implValue, cpType) as ClassInstanceValue
+    val classPkg = ClassPkg.fromBibix(classPkgValue)
+
+    // bibix.base 와 및 kotlin sdk 관련 classpath 들은 cpInstance의 것을 사용하지 *않고* bibix runtime의 것을 사용해야 한다
+    // 그래서 classPkg에서 그 부분은 빼고 classpath 목록 반환
+    val cpsMap = ResolveClassPkgs.cpsMap(listOf(classPkg))
+      // TODo bibix.base를 maven artifact로 넣어서 필터링하는게 나을듯
+      .filterNot { it.key is LocalLib && (it.key as LocalLib).path.fileName.name.startsWith("bibix-base-") }
+    val mavenVersions = ResolveClassPkgs.mavenArtifactVersionsToUse(listOf(classPkg))
+      .filterNot {
+        (it.key.group == "org.jetbrains.kotlin" && it.key.artifact == "kotlin-stdlib") ||
+          (it.key.group == "org.jetbrains.kotlin" && it.key.artifact == "kotlin-stdlib-jdk7") ||
+          (it.key.group == "org.jetbrains.kotlin" && it.key.artifact == "kotlin-stdlib-jdk8") ||
+          (it.key.group == "org.jetbrains.kotlin" && it.key.artifact == "kotlin-stdlib-common") ||
+          (it.key.group == "org.jetbrains.kotlin" && it.key.artifact == "kotlin-reflect") ||
+          (it.key.group == "org.jetbrains.kotlinx" && it.key.artifact == "kotlinx-coroutines-core") ||
+          (it.key.group == "org.jetbrains.kotlinx" && it.key.artifact == "kotlinx-coroutines-jdk7") ||
+          (it.key.group == "org.jetbrains.kotlinx" && it.key.artifact == "kotlinx-coroutines-jdk8")
+      }
+
+    val packs =
+      cpsMap.filter { it.key !is MavenDep } + mavenVersions.values.associateWith { cpsMap[it] }
+    return packs.mapNotNull { it.value?.toPaths() }.flatten().map { it.absolute() }.distinct()
   }
 
   suspend fun resolveClassDef(
@@ -430,33 +459,6 @@ class CallExprEvaluator(
       else -> sourceManager.mainBaseDirectory
     }
 
-  private suspend fun getRuleImplValue(
-    task: Task,
-    buildRule: BuildRuleDef.UserBuildRuleDef
-  ): ClassInstanceValue {
-    val impl = exprEvaluator.evaluateName(
-      task,
-      buildRule.context,
-      buildRule.implTarget,
-      buildRule.thisValue,
-      setOf()
-    ).ensureValue()
-    return coerceCpInstance(task, buildRule.context, impl)
-  }
-
-  private suspend fun getRuleImplInstance(
-    callerSourceId: SourceId,
-    task: Task,
-    buildRule: BuildRuleDef
-  ): Any =
-    when (buildRule) {
-      is BuildRuleDef.NativeBuildRuleDef -> buildRule.implInstance
-      is BuildRuleDef.UserBuildRuleDef -> {
-        val cpInstance = getRuleImplValue(task, buildRule)
-        pluginImplProvider.getPluginImplInstance(callerSourceId, cpInstance, buildRule.className)
-      }
-    }
-
   private suspend fun protoOf(sourceId: SourceId): BibixIdProto.SourceId = when (sourceId) {
     PreludeSourceId -> sourceId { this.preludeSource = empty {} }
     MainSourceId -> sourceId { this.mainSource = empty { } }
@@ -519,11 +521,10 @@ class CallExprEvaluator(
           buildRule.thisValue,
           setOf()
         ) as EvaluationResult.ValueWithObjectHash
-        val cpInstance = coerceCpInstance(task, buildRule.context, impl.ensureValue())
 
         pluginInstance = pluginImplProvider.getPluginImplInstance(
           context.sourceId,
-          cpInstance,
+          prepareClassPathsForPlugin(task, buildRule.context, impl.ensureValue()),
           buildRule.className
         )
 
@@ -648,7 +649,7 @@ class CallExprEvaluator(
         ).ensureValue()
         pluginImplProvider.getPluginImplInstance(
           callerSourceId,
-          coerceCpInstance(task, actionRule.context, impl),
+          prepareClassPathsForPlugin(task, actionRule.context, impl),
           actionRule.className
         )
       }
