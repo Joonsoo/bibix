@@ -1,6 +1,5 @@
 package com.giyeok.bibix.interpreter
 
-import com.giyeok.bibix.base.ClassInstanceValue
 import com.giyeok.bibix.base.SourceId
 import java.nio.file.Path
 

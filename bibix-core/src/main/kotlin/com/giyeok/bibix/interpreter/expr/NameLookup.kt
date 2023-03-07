@@ -2,6 +2,7 @@ package com.giyeok.bibix.interpreter.expr
 
 import com.giyeok.bibix.ast.BibixAst
 import com.giyeok.bibix.base.*
+import com.giyeok.bibix.interpreter.BibixExecutionException
 import com.giyeok.bibix.interpreter.BibixProject
 import com.giyeok.bibix.interpreter.SourceManager
 import com.giyeok.bibix.interpreter.TaskDescriptor
@@ -80,18 +81,10 @@ class NameLookup(
       }
 
       LookupResult.NameNotFound -> {
-        println(task)
         val upstreamPath = g.upstreamPathTo(task)
-        val writer = StringWriter()
-        val pwriter = PrintWriter(writer)
-        pwriter.println("upstream path (${upstreamPath.size}):")
-        upstreamPath.forEach { task ->
-          pwriter.println(task)
-          TaskDescriptor(g, sourceManager).printTaskDescription(task, pwriter)
-        }
-        pwriter.println("===")
-        throw IllegalStateException(
-          "Name not found: ${name.joinToString(".")} in ${sourceManager.descriptionOf(context.sourceId)}\n" + writer.toString()
+        throw BibixExecutionException(
+          "Name not found: ${name.joinToString(".")} in ${sourceManager.descriptionOf(context.sourceId)}",
+          upstreamPath
         )
       }
     }

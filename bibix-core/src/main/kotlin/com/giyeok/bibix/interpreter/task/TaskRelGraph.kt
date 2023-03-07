@@ -4,12 +4,16 @@ import com.giyeok.bibix.ast.BibixAst
 import com.giyeok.bibix.base.BibixValue
 import com.giyeok.bibix.base.CName
 import com.giyeok.bibix.base.SourceId
+import com.giyeok.bibix.interpreter.BibixExecutionException
+import com.giyeok.bibix.interpreter.TaskDescriptor
 import com.giyeok.bibix.interpreter.coroutine.TaskElement
 import com.giyeok.bibix.interpreter.expr.Definition
 import com.giyeok.bibix.interpreter.expr.NameLookupContext
 import com.giyeok.bibix.repo.BibixValueWithObjectHash
 import com.giyeok.bibix.repo.ObjectHash
 import com.google.common.annotations.VisibleForTesting
+import com.google.common.collect.BiMap
+import com.google.common.collect.HashBiMap
 import com.google.protobuf.ByteString
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.coroutineScope
@@ -20,66 +24,80 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
+import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 
 // 태스크 사이의 관계를 저장해서 싸이클을 찾아내는 클래스
 class TaskRelGraph {
   @VisibleForTesting
-  val downstream = mutableMapOf<Task, MutableList<Task>>()
+  val tasks = HashBiMap.create<Task, Int>()
+
+  private var taskIdCounter = 0
 
   @VisibleForTesting
-  val upstream = mutableMapOf<Task, MutableList<Task>>()
+  val downstream = mutableMapOf<Int, MutableList<Int>>()
+
+  @VisibleForTesting
+  val upstream = mutableMapOf<Int, MutableList<Int>>()
 
   private val depsMutex = Mutex()
 
   private val referredNodes = ConcurrentHashMap<Pair<SourceId, Int>, BibixAst.AstNode>()
 
-  private suspend fun add(requester: Task, task: Task): Task {
+  private suspend fun taskId(task: Task): Int =
     depsMutex.withLock {
-      downstream.getOrPut(requester) { mutableListOf() }.add(task)
-      upstream.getOrPut(task) { mutableListOf() }.add(requester)
-    }
-    return task
-  }
-
-  sealed class TaskPath {
-    fun toList(): List<Task> {
-      val list = mutableListOf<Task>()
-      var current = this
-      while (current !is Nil) {
-        list.add((current as Cons).task)
-        current = current.next
+      val existingId = tasks[task]
+      if (existingId != null) existingId else {
+        taskIdCounter += 1
+        val newId = taskIdCounter
+        tasks[task] = newId
+        newId
       }
-      return list.toList()
     }
 
-    data class Cons(val task: Task, val next: TaskPath) : TaskPath()
-
-    object Nil : TaskPath()
+  private suspend fun add(requesterId: Int, taskId: Int) {
+    depsMutex.withLock {
+      downstream.getOrPut(requesterId) { mutableListOf() }.add(taskId)
+      upstream.getOrPut(taskId) { mutableListOf() }.add(requesterId)
+    }
   }
 
-  private suspend fun findCycleBetween(start: Task, end: Task): List<Task>? = depsMutex.withLock {
-    // TODO 성능 개선이 가능할 것 같은데..
-    fun traverse(task: Task, path: TaskPath): TaskPath? {
-      if (task == start) {
-        return path
-      }
-      val outgoing = downstream[task] ?: setOf()
-      outgoing.forEach { next ->
-        val found = traverse(next, TaskPath.Cons(next, path))
-        if (found != null) {
-          return found
+  // startId에서 endId로 가는 경로가 있으면 그 경로를 반환. 없으면 null 반환
+  private suspend fun reachable(startId: Int, endId: Int): List<Int>? = depsMutex.withLock {
+    val visited = mutableSetOf<Int>()
+    val path = LinkedList<Int>()
+
+    fun traverse(pointer: Int): List<Int>? {
+      when {
+        pointer == endId -> {
+          path.push(pointer)
+          return path.toList()
+        }
+
+        visited.contains(pointer) -> {
+          return null
+        }
+
+        else -> {
+          visited.add(pointer)
+          path.push(pointer)
+
+          val outgoing = downstream[pointer]
+          outgoing?.forEach { next ->
+            val found = traverse(next)
+            if (found != null) {
+              // 이 return이 traverse 함수에 대한 거라는게 조금 특이하네
+              return found
+            }
+          }
+
+          val popped = path.pop()
+          check(popped == pointer)
+          return null
         }
       }
-      return null
     }
-//    downstream[start]?.forEach { next ->
-//      val found = traverse(next, TaskPath.Cons(next, TaskPath.Cons(start, TaskPath.Nil)))
-//      if (found != null) {
-//        return found.toList()
-//      }
-//    }
-    return null
+    return traverse(startId)
   }
 
   suspend fun <T> withTask(
@@ -89,10 +107,15 @@ class TaskRelGraph {
   ): T {
     check(requester != task)
 
-    add(requester, task)
+    val requesterId = taskId(requester)
+    val taskId = taskId(task)
 
-    val cycle = findCycleBetween(requester, task)
-    check(cycle == null) { "Cycle found: $cycle" }
+    val cycle = reachable(taskId, requesterId)
+    check(cycle == null) {
+      throw BibixExecutionException("Cycle found", tasks.inverse(), cycle!! + requesterId)
+    }
+
+    add(requesterId, taskId)
 
     return withContext(currentCoroutineContext() + TaskElement(task)) { body(task) }
   }
@@ -194,14 +217,20 @@ class TaskRelGraph {
   }
 
   fun upstreamPathTo(task: Task): List<Task> {
-    fun traverse(task: Task, path: TaskPath): TaskPath {
-      val ups = upstream[task]?.toList() ?: listOf()
-      return if (ups.isEmpty()) path else {
+    val path = LinkedList<Int>()
+
+    fun traverse(pointer: Int): List<Int> {
+      val ups = upstream[pointer]?.toList()
+      return if (ups == null) path else {
         val up = ups.first()
-        traverse(up, TaskPath.Cons(up, path))
+        path.push(pointer)
+        return traverse(up)
       }
     }
-    return traverse(task, TaskPath.Cons(task, TaskPath.Nil)).toList()
+
+    val foundPath = traverse(tasks.getValue(task))
+    val tasksMap = tasks.inverse()
+    return foundPath.map { tasksMap.getValue(it) }
   }
 
   fun resolveImportTask(sourceId: SourceId, astNode: BibixAst.AstNode): Task {

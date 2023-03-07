@@ -1,10 +1,7 @@
 package com.giyeok.bibix.frontend
 
 import com.giyeok.bibix.base.*
-import com.giyeok.bibix.interpreter.BibixInterpreter
-import com.giyeok.bibix.interpreter.BibixProject
-import com.giyeok.bibix.interpreter.PluginImplProvider
-import com.giyeok.bibix.interpreter.PluginImplProviderImpl
+import com.giyeok.bibix.interpreter.*
 import com.giyeok.bibix.interpreter.coroutine.TaskElement
 import com.giyeok.bibix.interpreter.task.Task
 import com.giyeok.bibix.plugins.PreloadedPlugin
@@ -16,6 +13,9 @@ import com.giyeok.bibix.plugins.maven.mavenPlugin
 import com.giyeok.bibix.plugins.prelude.preludePlugin
 import com.giyeok.bibix.repo.Repo
 import kotlinx.coroutines.*
+import java.io.PrintWriter
+import java.io.StringWriter
+import kotlin.system.exitProcess
 
 class BuildFrontend(
   val mainProject: BibixProject,
@@ -94,7 +94,34 @@ class BuildFrontend(
 
     threadPool.processTasks(deferred.job)
 
-    return runBlocking { deferred.await().toMap() }
+    return runBlocking {
+      try {
+        deferred.await().toMap()
+      } catch (e: Exception) {
+        when (e) {
+          is BibixExecutionException -> {
+            val writer = StringWriter()
+            val pwriter = PrintWriter(writer)
+            pwriter.println("Task trace (size=${e.trace.size}):")
+            val descriptor = TaskDescriptor(interpreter.g, interpreter.sourceManager)
+            e.trace.forEach { task ->
+              pwriter.println(task)
+              descriptor.printTaskDescription(task, pwriter)
+            }
+            pwriter.println("===")
+            System.err.println(writer.toString())
+            e.printStackTrace()
+          }
+
+          else -> {
+            e.printStackTrace()
+          }
+        }
+        // Shutdown
+        repo.shutdown()
+        exitProcess(1)
+      }
+    }
   }
 
   fun blockingBuildTargets(targetNames: List<String>): Map<String, BibixValue> {
