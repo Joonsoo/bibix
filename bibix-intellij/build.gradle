@@ -63,13 +63,16 @@ dependencies {
     implementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-core', version: '1.6.0'
     implementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-jdk8', version: '1.6.0'
 
-    implementation "com.google.protobuf:protobuf-java-util:3.19.4"
-    implementation "com.google.protobuf:protobuf-java:3.19.4"
-    implementation 'com.google.protobuf:protobuf-kotlin:3.19.4'
+    implementation "com.google.protobuf:protobuf-java-util:3.22.0"
+    implementation "com.google.protobuf:protobuf-java:3.22.0"
+    implementation 'com.google.protobuf:protobuf-kotlin:3.22.0'
 
-    implementation group: 'io.grpc', name: 'grpc-netty-shaded', version: '1.41.0'
+    // https://mvnrepository.com/artifact/com.squareup.okhttp3/okhttp
+    implementation("com.squareup.okhttp3:okhttp:4.10.0")
+
+    implementation group: 'io.grpc', name: 'grpc-netty-shaded', version: '1.47.0'
+    implementation "io.grpc:grpc-services:1.47.0"
     implementation "io.grpc:grpc-kotlin-stub:1.2.1"
-    implementation "io.grpc:grpc-services:1.41.0"
 
     implementation group: 'org.codehaus.plexus', name: 'plexus-classworlds', version: '2.6.0'
 

@@ -4,7 +4,7 @@ import com.google.common.flogger.FluentLogger
 import io.grpc.netty.shaded.io.grpc.netty.NettyServerBuilder
 import java.util.concurrent.Executors
 
-object BibixIntellijServiceServerMain {
+object BibixIntellijServiceGrpcServerMain {
   val logger = FluentLogger.forEnclosingClass()
 
   @JvmStatic

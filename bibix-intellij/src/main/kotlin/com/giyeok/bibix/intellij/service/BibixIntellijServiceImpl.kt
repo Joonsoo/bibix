@@ -9,6 +9,8 @@ import kotlinx.coroutines.flow.Flow
 import java.nio.file.FileSystem
 import java.nio.file.FileSystems
 import java.nio.file.Path
+import java.time.Instant
+import java.time.LocalDateTime
 import kotlin.io.path.absolute
 
 class BibixIntellijServiceImpl(
@@ -20,7 +22,7 @@ class BibixIntellijServiceImpl(
 
   override suspend fun loadProject(request: LoadProjectReq): BibixProjectInfo {
     logger.atFine().log("loadProject: $request")
-    println("loadProject: $request")
+    println("${LocalDateTime.now()} loadProject: $request")
 
     val projectRoot = fileSystem.getPath(request.projectRoot).normalize().absolute()
     val scriptName = request.scriptName.ifEmpty { null }
