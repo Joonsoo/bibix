@@ -2,7 +2,9 @@ package com.giyeok.bibix.intellij.service
 
 import com.giyeok.bibix.intellij.BibixIntellijProto.*
 import com.giyeok.bibix.intellij.BibixIntellijServiceGrpcKt.BibixIntellijServiceCoroutineImplBase
+import com.giyeok.bibix.repo.sha1Hash
 import com.google.common.flogger.FluentLogger
+import com.google.protobuf.ByteString
 import io.grpc.Status
 import io.grpc.StatusException
 import kotlinx.coroutines.flow.Flow
@@ -12,13 +14,14 @@ import java.nio.file.Path
 import java.time.Instant
 import java.time.LocalDateTime
 import kotlin.io.path.absolute
+import kotlin.io.path.readBytes
 
 class BibixIntellijServiceImpl(
   private val fileSystem: FileSystem = FileSystems.getDefault(),
 ) : BibixIntellijServiceCoroutineImplBase() {
   val logger = FluentLogger.forEnclosingClass()
 
-  private val memos = mutableMapOf<Pair<Path, String?>, BibixProjectInfo>()
+  private val memos = mutableMapOf<Pair<Path, String?>, Pair<ByteString, BibixProjectInfo>>()
 
   override suspend fun loadProject(request: LoadProjectReq): BibixProjectInfo {
     logger.atFine().log("loadProject: $request")
@@ -28,10 +31,13 @@ class BibixIntellijServiceImpl(
     val scriptName = request.scriptName.ifEmpty { null }
     val key = Pair(projectRoot, scriptName)
 
+    val scriptPath = projectRoot.resolve(scriptName ?: "build.bbx")
+    val scriptHash = sha1Hash(scriptPath.readBytes())
+
     if (!request.forceReload) {
       val existing = memos[key]
-      if (existing != null) {
-        return existing
+      if (existing != null && existing.first == scriptHash) {
+        return existing.second
       }
     }
 
@@ -41,7 +47,7 @@ class BibixIntellijServiceImpl(
       e.printStackTrace()
       throw StatusException(Status.FAILED_PRECONDITION)
     }
-    memos[key] = loaded
+    memos[key] = Pair(scriptHash, loaded)
 
     return loaded
   }

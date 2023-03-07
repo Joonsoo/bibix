@@ -47,7 +47,7 @@ class Artifact {
         Instant.now()
       ) <= Duration.ofHours(6)
     ) {
-      return BuildRuleReturn.value(context.prevResult)
+      return BuildRuleReturn.value(context.prevResult!!)
     }
     val mavenReposDir = context.getSharedDirectory(sharedRepoName)
     return BuildRuleReturn.withDirectoryLock(mavenReposDir) {
