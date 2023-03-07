@@ -2,6 +2,7 @@ package com.giyeok.bibix.interpreter.expr
 
 import com.giyeok.bibix.ast.BibixAst
 import com.giyeok.bibix.base.*
+import com.giyeok.bibix.interpreter.BibixExecutionException
 import com.giyeok.bibix.interpreter.BibixInterpreter
 import com.giyeok.bibix.interpreter.PluginImplProvider
 import com.giyeok.bibix.interpreter.SourceManager
@@ -163,10 +164,17 @@ class ExprEvaluator(
         val varDef = varsManager.getVarDef(definition.cname)
         check(varDef.def == definition.varDef)
         // TODO 프로그램 argument 지원
+        // TODO 지금은 main에서의 redef만 인정하도록 해놨는데 어떻게 하는게 좋을지 더 고민
         val redefines = varsManager.findVarRedefs(task, definition.cname)
+          .filter { it.redefContext.sourceId == MainSourceId }
         if (redefines.isNotEmpty()) {
           // TODO redefinition이 여러개 발견되면 어떻게 처리하지..?
-          check(redefines.size == 1) { "more than one redefinition for ${definition.cname} found" }
+          if (redefines.size != 1) {
+            throw BibixExecutionException(
+              "more than one redefinition for ${definition.cname} found: $redefines",
+              g.upstreamPathTo(task)
+            )
+          }
           val redefine = redefines.first()
           evaluateExpr(task, redefine.redefContext, redefine.def.redefValue, null, setOf())
         } else {

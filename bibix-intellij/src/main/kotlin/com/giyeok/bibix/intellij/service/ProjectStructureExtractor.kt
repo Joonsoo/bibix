@@ -6,7 +6,9 @@ import com.giyeok.bibix.base.StringValue
 import com.giyeok.bibix.frontend.BuildFrontend
 import com.giyeok.bibix.frontend.NoopProgressNotifier
 import com.giyeok.bibix.intellij.*
+import com.giyeok.bibix.interpreter.BibixExecutionException
 import com.giyeok.bibix.interpreter.BibixProject
+import com.giyeok.bibix.interpreter.TaskDescriptor
 import com.giyeok.bibix.interpreter.expr.Definition
 import com.giyeok.bibix.interpreter.expr.EvaluationResult
 import com.giyeok.bibix.interpreter.expr.NameLookupContext
@@ -15,6 +17,8 @@ import com.giyeok.bibix.plugins.maven.Artifact
 import com.giyeok.bibix.utils.toHexString
 import com.google.common.annotations.VisibleForTesting
 import kotlinx.coroutines.runBlocking
+import java.io.PrintWriter
+import java.io.StringWriter
 import java.nio.file.Path
 import kotlin.io.path.*
 
@@ -153,7 +157,7 @@ object ProjectStructureExtractor {
   }
 
   fun libIdFromOrigin(origin: ClassOrigin): String = when (origin) {
-    is LocalBuilt -> throw AssertionError()
+    is LocalBuilt -> "built: ${origin.objHash}"
     is LocalLib -> "local: ${origin.path.absolutePathString()}"
     is MavenDep -> "maven: ${origin.group}:${origin.artifact}:${origin.version}"
   }
@@ -209,6 +213,19 @@ object ProjectStructureExtractor {
         val result = buildFrontend.blockingBuildTargets(listOf(target))
         println(result)
       } catch (e: Exception) {
+        if (e is BibixExecutionException) {
+          val writer = StringWriter()
+          val pwriter = PrintWriter(writer)
+          pwriter.println("Task trace (size=${e.trace.size}):")
+          val descriptor =
+            TaskDescriptor(buildFrontend.interpreter.g, buildFrontend.interpreter.sourceManager)
+          e.trace.forEach { task ->
+            pwriter.println(task)
+            descriptor.printTaskDescription(task, pwriter)
+          }
+          pwriter.println("===")
+          System.err.println(writer.toString())
+        }
         e.printStackTrace()
         println("Failed to build $target. Ignored")
       }
@@ -219,17 +236,17 @@ object ProjectStructureExtractor {
     val namesMap = buildFrontend.repo.outputNames.mapValues { it.value.toHexString() }
 
     val objectNamesMap = mutableMapOf<String, String>()
-    namesMap.forEach { (objHash, name) ->
-      val existingName = objectNamesMap[name]
-      if (existingName == null || existingName.length > name.length) {
-        objectNamesMap[name] = objHash
+    namesMap.forEach { (targetId, outputName) ->
+      val existingName = objectNamesMap[outputName]
+      if (existingName == null || existingName.length > outputName.length) {
+        objectNamesMap[outputName] = targetId
       }
     }
 
     val pkgGraph = PackageGraph.create(modules.values)
 
-    fun moduleName(objHash: String): String =
-      "$rootModuleName." + (objectNamesMap[objHash] ?: objHash)
+    fun moduleName(targetId: String): String =
+      "$rootModuleName." + (objectNamesMap[targetId] ?: targetId)
 
     val externalLibraries = pkgGraph.nonModulePkgs.values.map { pkg ->
       externalLibrary {
@@ -296,8 +313,15 @@ object ProjectStructureExtractor {
           })
         }
         val deps = pkgGraph.dependentNodesOf(module.origin)
-        this.moduleDeps.addAll(deps.filterIsInstance<LocalBuilt>().map { moduleName(it.objHash) })
-        this.libraryDeps.addAll(deps.filter { it !is LocalBuilt }.map { libIdFromOrigin(it) })
+        // TODO LocalBuilt이지만 main에서 빌드한게 아니면 module이 아니고 library
+        // TODO main에서 java, ktjvm, scala의 library 빌드룰 호출하는게 아니면 중단
+        this.moduleDeps.addAll(deps
+          .filterIsInstance<LocalBuilt>()
+          .filter { pkgGraph.isModule(it) }
+          .map { moduleName(it.objHash) })
+        this.libraryDeps.addAll(deps
+          .filter { !pkgGraph.isModule(it) }
+          .map { libIdFromOrigin(it) })
       }
     }
 

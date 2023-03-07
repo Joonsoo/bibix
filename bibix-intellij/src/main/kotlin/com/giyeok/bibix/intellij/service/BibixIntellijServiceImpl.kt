@@ -43,8 +43,6 @@ class BibixIntellijServiceImpl(
     }
     memos[key] = loaded
 
-    println(loaded)
-
     return loaded
   }
 

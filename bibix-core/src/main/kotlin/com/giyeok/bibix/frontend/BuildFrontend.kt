@@ -46,7 +46,7 @@ class BuildFrontend(
 
   private val threadPool = ThreadPool(getMaxThreads(), progressNotifier)
 
-  private val interpreter = BibixInterpreter(
+  val interpreter = BibixInterpreter(
     buildEnv = buildEnv,
     prelude = prelude,
     preloadedPlugins = preloadedPlugins,

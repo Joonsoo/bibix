@@ -32,11 +32,23 @@ import java.io.PrintStream
 import java.nio.file.Path
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
+import java.time.Duration
+import java.time.Instant
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 
 class Artifact {
   fun build(context: BuildContext): BuildRuleReturn {
+    if (!context.hashChanged &&
+      context.prevBuildTime != null &&
+      context.prevResult != null &&
+      Duration.between(
+        context.prevBuildTime,
+        Instant.now()
+      ) <= Duration.ofHours(6)
+    ) {
+      return BuildRuleReturn.value(context.prevResult)
+    }
     val mavenReposDir = context.getSharedDirectory(sharedRepoName)
     return BuildRuleReturn.withDirectoryLock(mavenReposDir) {
       // TODO resolve 결과 캐시해놨다 그대로 사용

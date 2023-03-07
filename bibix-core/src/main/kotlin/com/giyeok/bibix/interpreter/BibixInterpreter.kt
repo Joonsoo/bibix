@@ -27,7 +27,6 @@ class BibixInterpreter(
   val progressIndicatorContainer: ProgressIndicatorContainer,
   val actionArgs: List<String>,
 ) {
-  @VisibleForTesting
   val g = TaskRelGraph()
 
   private val varsManager = VarsManager(this)
