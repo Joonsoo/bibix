@@ -4,23 +4,23 @@
 package com.giyeok.bibix.intellij;
 
 @kotlin.jvm.JvmSynthetic
-public inline fun moduleSdk(block: com.giyeok.bibix.intellij.ModuleSdkKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk =
-  com.giyeok.bibix.intellij.ModuleSdkKt.Dsl._create(com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk.newBuilder()).apply { block() }._build()
-public object ModuleSdkKt {
+public inline fun sdkVersion(block: com.giyeok.bibix.intellij.SdkVersionKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion =
+  com.giyeok.bibix.intellij.SdkVersionKt.Dsl._create(com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion.newBuilder()).apply { block() }._build()
+public object SdkVersionKt {
   @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
   @com.google.protobuf.kotlin.ProtoDslMarker
   public class Dsl private constructor(
-    private val _builder: com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk.Builder
+    private val _builder: com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion.Builder
   ) {
     public companion object {
       @kotlin.jvm.JvmSynthetic
       @kotlin.PublishedApi
-      internal fun _create(builder: com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk.Builder): Dsl = Dsl(builder)
+      internal fun _create(builder: com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion.Builder): Dsl = Dsl(builder)
     }
 
     @kotlin.jvm.JvmSynthetic
     @kotlin.PublishedApi
-    internal fun _build(): com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk = _builder.build()
+    internal fun _build(): com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion = _builder.build()
 
     /**
      * <code>string jdk_version = 1;</code>
@@ -93,7 +93,7 @@ public object ModuleSdkKt {
     public fun hasScalaSdkVersion(): kotlin.Boolean {
       return _builder.hasScalaSdkVersion()
     }
-    public val sdkCase: com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk.SdkCase
+    public val sdkCase: com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion.SdkCase
       @JvmName("getSdkCase")
       get() = _builder.getSdkCase()
 
@@ -103,5 +103,5 @@ public object ModuleSdkKt {
   }
 }
 @kotlin.jvm.JvmSynthetic
-public inline fun com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk.copy(block: com.giyeok.bibix.intellij.ModuleSdkKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk =
-  com.giyeok.bibix.intellij.ModuleSdkKt.Dsl._create(this.toBuilder()).apply { block() }._build()
+public inline fun com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion.copy(block: com.giyeok.bibix.intellij.SdkVersionKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion =
+  com.giyeok.bibix.intellij.SdkVersionKt.Dsl._create(this.toBuilder()).apply { block() }._build()

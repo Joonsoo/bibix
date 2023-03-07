@@ -179,65 +179,65 @@ public object ModuleKt {
      * generics.
      */
     @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
-    public class ModuleSdksProxy private constructor() : com.google.protobuf.kotlin.DslProxy()
+    public class UsingSdksProxy private constructor() : com.google.protobuf.kotlin.DslProxy()
     /**
-     * <code>repeated .com.giyeok.bibix.intellij.ModuleSdk module_sdks = 5;</code>
+     * <code>repeated .com.giyeok.bibix.intellij.SdkVersion using_sdks = 5;</code>
      */
-     public val moduleSdks: com.google.protobuf.kotlin.DslList<com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk, ModuleSdksProxy>
+     public val usingSdks: com.google.protobuf.kotlin.DslList<com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion, UsingSdksProxy>
       @kotlin.jvm.JvmSynthetic
       get() = com.google.protobuf.kotlin.DslList(
-        _builder.getModuleSdksList()
+        _builder.getUsingSdksList()
       )
     /**
-     * <code>repeated .com.giyeok.bibix.intellij.ModuleSdk module_sdks = 5;</code>
-     * @param value The moduleSdks to add.
+     * <code>repeated .com.giyeok.bibix.intellij.SdkVersion using_sdks = 5;</code>
+     * @param value The usingSdks to add.
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("addModuleSdks")
-    public fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk, ModuleSdksProxy>.add(value: com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk) {
-      _builder.addModuleSdks(value)
+    @kotlin.jvm.JvmName("addUsingSdks")
+    public fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion, UsingSdksProxy>.add(value: com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion) {
+      _builder.addUsingSdks(value)
     }/**
-     * <code>repeated .com.giyeok.bibix.intellij.ModuleSdk module_sdks = 5;</code>
-     * @param value The moduleSdks to add.
+     * <code>repeated .com.giyeok.bibix.intellij.SdkVersion using_sdks = 5;</code>
+     * @param value The usingSdks to add.
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("plusAssignModuleSdks")
+    @kotlin.jvm.JvmName("plusAssignUsingSdks")
     @Suppress("NOTHING_TO_INLINE")
-    public inline operator fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk, ModuleSdksProxy>.plusAssign(value: com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk) {
+    public inline operator fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion, UsingSdksProxy>.plusAssign(value: com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion) {
       add(value)
     }/**
-     * <code>repeated .com.giyeok.bibix.intellij.ModuleSdk module_sdks = 5;</code>
-     * @param values The moduleSdks to add.
+     * <code>repeated .com.giyeok.bibix.intellij.SdkVersion using_sdks = 5;</code>
+     * @param values The usingSdks to add.
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("addAllModuleSdks")
-    public fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk, ModuleSdksProxy>.addAll(values: kotlin.collections.Iterable<com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk>) {
-      _builder.addAllModuleSdks(values)
+    @kotlin.jvm.JvmName("addAllUsingSdks")
+    public fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion, UsingSdksProxy>.addAll(values: kotlin.collections.Iterable<com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion>) {
+      _builder.addAllUsingSdks(values)
     }/**
-     * <code>repeated .com.giyeok.bibix.intellij.ModuleSdk module_sdks = 5;</code>
-     * @param values The moduleSdks to add.
+     * <code>repeated .com.giyeok.bibix.intellij.SdkVersion using_sdks = 5;</code>
+     * @param values The usingSdks to add.
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("plusAssignAllModuleSdks")
+    @kotlin.jvm.JvmName("plusAssignAllUsingSdks")
     @Suppress("NOTHING_TO_INLINE")
-    public inline operator fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk, ModuleSdksProxy>.plusAssign(values: kotlin.collections.Iterable<com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk>) {
+    public inline operator fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion, UsingSdksProxy>.plusAssign(values: kotlin.collections.Iterable<com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion>) {
       addAll(values)
     }/**
-     * <code>repeated .com.giyeok.bibix.intellij.ModuleSdk module_sdks = 5;</code>
+     * <code>repeated .com.giyeok.bibix.intellij.SdkVersion using_sdks = 5;</code>
      * @param index The index to set the value at.
-     * @param value The moduleSdks to set.
+     * @param value The usingSdks to set.
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("setModuleSdks")
-    public operator fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk, ModuleSdksProxy>.set(index: kotlin.Int, value: com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk) {
-      _builder.setModuleSdks(index, value)
+    @kotlin.jvm.JvmName("setUsingSdks")
+    public operator fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion, UsingSdksProxy>.set(index: kotlin.Int, value: com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion) {
+      _builder.setUsingSdks(index, value)
     }/**
-     * <code>repeated .com.giyeok.bibix.intellij.ModuleSdk module_sdks = 5;</code>
+     * <code>repeated .com.giyeok.bibix.intellij.SdkVersion using_sdks = 5;</code>
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("clearModuleSdks")
-    public fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk, ModuleSdksProxy>.clear() {
-      _builder.clearModuleSdks()
+    @kotlin.jvm.JvmName("clearUsingSdks")
+    public fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion, UsingSdksProxy>.clear() {
+      _builder.clearUsingSdks()
     }
     /**
      * An uninstantiable, behaviorless type to represent the field in

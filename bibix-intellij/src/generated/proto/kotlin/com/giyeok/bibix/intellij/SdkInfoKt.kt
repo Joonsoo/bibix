@@ -4,23 +4,23 @@
 package com.giyeok.bibix.intellij;
 
 @kotlin.jvm.JvmSynthetic
-public inline fun sdks(block: com.giyeok.bibix.intellij.SdksKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.intellij.BibixIntellijProto.Sdks =
-  com.giyeok.bibix.intellij.SdksKt.Dsl._create(com.giyeok.bibix.intellij.BibixIntellijProto.Sdks.newBuilder()).apply { block() }._build()
-public object SdksKt {
+public inline fun sdkInfo(block: com.giyeok.bibix.intellij.SdkInfoKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.intellij.BibixIntellijProto.SdkInfo =
+  com.giyeok.bibix.intellij.SdkInfoKt.Dsl._create(com.giyeok.bibix.intellij.BibixIntellijProto.SdkInfo.newBuilder()).apply { block() }._build()
+public object SdkInfoKt {
   @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
   @com.google.protobuf.kotlin.ProtoDslMarker
   public class Dsl private constructor(
-    private val _builder: com.giyeok.bibix.intellij.BibixIntellijProto.Sdks.Builder
+    private val _builder: com.giyeok.bibix.intellij.BibixIntellijProto.SdkInfo.Builder
   ) {
     public companion object {
       @kotlin.jvm.JvmSynthetic
       @kotlin.PublishedApi
-      internal fun _create(builder: com.giyeok.bibix.intellij.BibixIntellijProto.Sdks.Builder): Dsl = Dsl(builder)
+      internal fun _create(builder: com.giyeok.bibix.intellij.BibixIntellijProto.SdkInfo.Builder): Dsl = Dsl(builder)
     }
 
     @kotlin.jvm.JvmSynthetic
     @kotlin.PublishedApi
-    internal fun _build(): com.giyeok.bibix.intellij.BibixIntellijProto.Sdks = _builder.build()
+    internal fun _build(): com.giyeok.bibix.intellij.BibixIntellijProto.SdkInfo = _builder.build()
 
     /**
      * An uninstantiable, behaviorless type to represent the field in
@@ -154,5 +154,5 @@ public object SdksKt {
     }}
 }
 @kotlin.jvm.JvmSynthetic
-public inline fun com.giyeok.bibix.intellij.BibixIntellijProto.Sdks.copy(block: com.giyeok.bibix.intellij.SdksKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.intellij.BibixIntellijProto.Sdks =
-  com.giyeok.bibix.intellij.SdksKt.Dsl._create(this.toBuilder()).apply { block() }._build()
+public inline fun com.giyeok.bibix.intellij.BibixIntellijProto.SdkInfo.copy(block: com.giyeok.bibix.intellij.SdkInfoKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.intellij.BibixIntellijProto.SdkInfo =
+  com.giyeok.bibix.intellij.SdkInfoKt.Dsl._create(this.toBuilder()).apply { block() }._build()

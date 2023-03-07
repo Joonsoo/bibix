@@ -832,67 +832,115 @@ public final class BibixIntellijProto {
         getProjectNameBytes();
 
     /**
-     * <code>repeated .com.giyeok.bibix.intellij.Module modules = 3;</code>
+     * <code>repeated .com.giyeok.bibix.intellij.SdkVersion using_sdks = 3;</code>
+     */
+    java.util.List<com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion> 
+        getUsingSdksList();
+    /**
+     * <code>repeated .com.giyeok.bibix.intellij.SdkVersion using_sdks = 3;</code>
+     */
+    com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion getUsingSdks(int index);
+    /**
+     * <code>repeated .com.giyeok.bibix.intellij.SdkVersion using_sdks = 3;</code>
+     */
+    int getUsingSdksCount();
+    /**
+     * <code>repeated .com.giyeok.bibix.intellij.SdkVersion using_sdks = 3;</code>
+     */
+    java.util.List<? extends com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersionOrBuilder> 
+        getUsingSdksOrBuilderList();
+    /**
+     * <code>repeated .com.giyeok.bibix.intellij.SdkVersion using_sdks = 3;</code>
+     */
+    com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersionOrBuilder getUsingSdksOrBuilder(
+        int index);
+
+    /**
+     * <code>repeated .com.giyeok.bibix.intellij.Module modules = 4;</code>
      */
     java.util.List<com.giyeok.bibix.intellij.BibixIntellijProto.Module> 
         getModulesList();
     /**
-     * <code>repeated .com.giyeok.bibix.intellij.Module modules = 3;</code>
+     * <code>repeated .com.giyeok.bibix.intellij.Module modules = 4;</code>
      */
     com.giyeok.bibix.intellij.BibixIntellijProto.Module getModules(int index);
     /**
-     * <code>repeated .com.giyeok.bibix.intellij.Module modules = 3;</code>
+     * <code>repeated .com.giyeok.bibix.intellij.Module modules = 4;</code>
      */
     int getModulesCount();
     /**
-     * <code>repeated .com.giyeok.bibix.intellij.Module modules = 3;</code>
+     * <code>repeated .com.giyeok.bibix.intellij.Module modules = 4;</code>
      */
     java.util.List<? extends com.giyeok.bibix.intellij.BibixIntellijProto.ModuleOrBuilder> 
         getModulesOrBuilderList();
     /**
-     * <code>repeated .com.giyeok.bibix.intellij.Module modules = 3;</code>
+     * <code>repeated .com.giyeok.bibix.intellij.Module modules = 4;</code>
      */
     com.giyeok.bibix.intellij.BibixIntellijProto.ModuleOrBuilder getModulesOrBuilder(
         int index);
 
     /**
-     * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary external_libraries = 4;</code>
+     * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary external_libraries = 5;</code>
      */
     java.util.List<com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary> 
         getExternalLibrariesList();
     /**
-     * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary external_libraries = 4;</code>
+     * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary external_libraries = 5;</code>
      */
     com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary getExternalLibraries(int index);
     /**
-     * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary external_libraries = 4;</code>
+     * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary external_libraries = 5;</code>
      */
     int getExternalLibrariesCount();
     /**
-     * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary external_libraries = 4;</code>
+     * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary external_libraries = 5;</code>
      */
     java.util.List<? extends com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibraryOrBuilder> 
         getExternalLibrariesOrBuilderList();
     /**
-     * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary external_libraries = 4;</code>
+     * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary external_libraries = 5;</code>
      */
     com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibraryOrBuilder getExternalLibrariesOrBuilder(
         int index);
 
     /**
-     * <code>.com.giyeok.bibix.intellij.Sdks sdks = 5;</code>
-     * @return Whether the sdks field is set.
+     * <code>.com.giyeok.bibix.intellij.SdkInfo sdk_info = 6;</code>
+     * @return Whether the sdkInfo field is set.
      */
-    boolean hasSdks();
+    boolean hasSdkInfo();
     /**
-     * <code>.com.giyeok.bibix.intellij.Sdks sdks = 5;</code>
-     * @return The sdks.
+     * <code>.com.giyeok.bibix.intellij.SdkInfo sdk_info = 6;</code>
+     * @return The sdkInfo.
      */
-    com.giyeok.bibix.intellij.BibixIntellijProto.Sdks getSdks();
+    com.giyeok.bibix.intellij.BibixIntellijProto.SdkInfo getSdkInfo();
     /**
-     * <code>.com.giyeok.bibix.intellij.Sdks sdks = 5;</code>
+     * <code>.com.giyeok.bibix.intellij.SdkInfo sdk_info = 6;</code>
      */
-    com.giyeok.bibix.intellij.BibixIntellijProto.SdksOrBuilder getSdksOrBuilder();
+    com.giyeok.bibix.intellij.BibixIntellijProto.SdkInfoOrBuilder getSdkInfoOrBuilder();
+
+    /**
+     * <code>repeated .com.giyeok.bibix.intellij.Action actions = 7;</code>
+     */
+    java.util.List<com.giyeok.bibix.intellij.BibixIntellijProto.Action> 
+        getActionsList();
+    /**
+     * <code>repeated .com.giyeok.bibix.intellij.Action actions = 7;</code>
+     */
+    com.giyeok.bibix.intellij.BibixIntellijProto.Action getActions(int index);
+    /**
+     * <code>repeated .com.giyeok.bibix.intellij.Action actions = 7;</code>
+     */
+    int getActionsCount();
+    /**
+     * <code>repeated .com.giyeok.bibix.intellij.Action actions = 7;</code>
+     */
+    java.util.List<? extends com.giyeok.bibix.intellij.BibixIntellijProto.ActionOrBuilder> 
+        getActionsOrBuilderList();
+    /**
+     * <code>repeated .com.giyeok.bibix.intellij.Action actions = 7;</code>
+     */
+    com.giyeok.bibix.intellij.BibixIntellijProto.ActionOrBuilder getActionsOrBuilder(
+        int index);
   }
   /**
    * Protobuf type {@code com.giyeok.bibix.intellij.BibixProjectInfo}
@@ -909,8 +957,10 @@ public final class BibixIntellijProto {
     private BibixProjectInfo() {
       projectId_ = "";
       projectName_ = "";
+      usingSdks_ = java.util.Collections.emptyList();
       modules_ = java.util.Collections.emptyList();
       externalLibraries_ = java.util.Collections.emptyList();
+      actions_ = java.util.Collections.emptyList();
     }
 
     @java.lang.Override
@@ -958,33 +1008,51 @@ public final class BibixIntellijProto {
             }
             case 26: {
               if (!((mutable_bitField0_ & 0x00000001) != 0)) {
-                modules_ = new java.util.ArrayList<com.giyeok.bibix.intellij.BibixIntellijProto.Module>();
+                usingSdks_ = new java.util.ArrayList<com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion>();
                 mutable_bitField0_ |= 0x00000001;
+              }
+              usingSdks_.add(
+                  input.readMessage(com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion.parser(), extensionRegistry));
+              break;
+            }
+            case 34: {
+              if (!((mutable_bitField0_ & 0x00000002) != 0)) {
+                modules_ = new java.util.ArrayList<com.giyeok.bibix.intellij.BibixIntellijProto.Module>();
+                mutable_bitField0_ |= 0x00000002;
               }
               modules_.add(
                   input.readMessage(com.giyeok.bibix.intellij.BibixIntellijProto.Module.parser(), extensionRegistry));
               break;
             }
-            case 34: {
-              if (!((mutable_bitField0_ & 0x00000002) != 0)) {
+            case 42: {
+              if (!((mutable_bitField0_ & 0x00000004) != 0)) {
                 externalLibraries_ = new java.util.ArrayList<com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary>();
-                mutable_bitField0_ |= 0x00000002;
+                mutable_bitField0_ |= 0x00000004;
               }
               externalLibraries_.add(
                   input.readMessage(com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary.parser(), extensionRegistry));
               break;
             }
-            case 42: {
-              com.giyeok.bibix.intellij.BibixIntellijProto.Sdks.Builder subBuilder = null;
-              if (sdks_ != null) {
-                subBuilder = sdks_.toBuilder();
+            case 50: {
+              com.giyeok.bibix.intellij.BibixIntellijProto.SdkInfo.Builder subBuilder = null;
+              if (sdkInfo_ != null) {
+                subBuilder = sdkInfo_.toBuilder();
               }
-              sdks_ = input.readMessage(com.giyeok.bibix.intellij.BibixIntellijProto.Sdks.parser(), extensionRegistry);
+              sdkInfo_ = input.readMessage(com.giyeok.bibix.intellij.BibixIntellijProto.SdkInfo.parser(), extensionRegistry);
               if (subBuilder != null) {
-                subBuilder.mergeFrom(sdks_);
-                sdks_ = subBuilder.buildPartial();
+                subBuilder.mergeFrom(sdkInfo_);
+                sdkInfo_ = subBuilder.buildPartial();
               }
 
+              break;
+            }
+            case 58: {
+              if (!((mutable_bitField0_ & 0x00000008) != 0)) {
+                actions_ = new java.util.ArrayList<com.giyeok.bibix.intellij.BibixIntellijProto.Action>();
+                mutable_bitField0_ |= 0x00000008;
+              }
+              actions_.add(
+                  input.readMessage(com.giyeok.bibix.intellij.BibixIntellijProto.Action.parser(), extensionRegistry));
               break;
             }
             default: {
@@ -1003,10 +1071,16 @@ public final class BibixIntellijProto {
             e).setUnfinishedMessage(this);
       } finally {
         if (((mutable_bitField0_ & 0x00000001) != 0)) {
-          modules_ = java.util.Collections.unmodifiableList(modules_);
+          usingSdks_ = java.util.Collections.unmodifiableList(usingSdks_);
         }
         if (((mutable_bitField0_ & 0x00000002) != 0)) {
+          modules_ = java.util.Collections.unmodifiableList(modules_);
+        }
+        if (((mutable_bitField0_ & 0x00000004) != 0)) {
           externalLibraries_ = java.util.Collections.unmodifiableList(externalLibraries_);
+        }
+        if (((mutable_bitField0_ & 0x00000008) != 0)) {
+          actions_ = java.util.Collections.unmodifiableList(actions_);
         }
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
@@ -1101,17 +1175,57 @@ public final class BibixIntellijProto {
       }
     }
 
-    public static final int MODULES_FIELD_NUMBER = 3;
+    public static final int USING_SDKS_FIELD_NUMBER = 3;
+    private java.util.List<com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion> usingSdks_;
+    /**
+     * <code>repeated .com.giyeok.bibix.intellij.SdkVersion using_sdks = 3;</code>
+     */
+    @java.lang.Override
+    public java.util.List<com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion> getUsingSdksList() {
+      return usingSdks_;
+    }
+    /**
+     * <code>repeated .com.giyeok.bibix.intellij.SdkVersion using_sdks = 3;</code>
+     */
+    @java.lang.Override
+    public java.util.List<? extends com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersionOrBuilder> 
+        getUsingSdksOrBuilderList() {
+      return usingSdks_;
+    }
+    /**
+     * <code>repeated .com.giyeok.bibix.intellij.SdkVersion using_sdks = 3;</code>
+     */
+    @java.lang.Override
+    public int getUsingSdksCount() {
+      return usingSdks_.size();
+    }
+    /**
+     * <code>repeated .com.giyeok.bibix.intellij.SdkVersion using_sdks = 3;</code>
+     */
+    @java.lang.Override
+    public com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion getUsingSdks(int index) {
+      return usingSdks_.get(index);
+    }
+    /**
+     * <code>repeated .com.giyeok.bibix.intellij.SdkVersion using_sdks = 3;</code>
+     */
+    @java.lang.Override
+    public com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersionOrBuilder getUsingSdksOrBuilder(
+        int index) {
+      return usingSdks_.get(index);
+    }
+
+    public static final int MODULES_FIELD_NUMBER = 4;
     private java.util.List<com.giyeok.bibix.intellij.BibixIntellijProto.Module> modules_;
     /**
-     * <code>repeated .com.giyeok.bibix.intellij.Module modules = 3;</code>
+     * <code>repeated .com.giyeok.bibix.intellij.Module modules = 4;</code>
      */
     @java.lang.Override
     public java.util.List<com.giyeok.bibix.intellij.BibixIntellijProto.Module> getModulesList() {
       return modules_;
     }
     /**
-     * <code>repeated .com.giyeok.bibix.intellij.Module modules = 3;</code>
+     * <code>repeated .com.giyeok.bibix.intellij.Module modules = 4;</code>
      */
     @java.lang.Override
     public java.util.List<? extends com.giyeok.bibix.intellij.BibixIntellijProto.ModuleOrBuilder> 
@@ -1119,21 +1233,21 @@ public final class BibixIntellijProto {
       return modules_;
     }
     /**
-     * <code>repeated .com.giyeok.bibix.intellij.Module modules = 3;</code>
+     * <code>repeated .com.giyeok.bibix.intellij.Module modules = 4;</code>
      */
     @java.lang.Override
     public int getModulesCount() {
       return modules_.size();
     }
     /**
-     * <code>repeated .com.giyeok.bibix.intellij.Module modules = 3;</code>
+     * <code>repeated .com.giyeok.bibix.intellij.Module modules = 4;</code>
      */
     @java.lang.Override
     public com.giyeok.bibix.intellij.BibixIntellijProto.Module getModules(int index) {
       return modules_.get(index);
     }
     /**
-     * <code>repeated .com.giyeok.bibix.intellij.Module modules = 3;</code>
+     * <code>repeated .com.giyeok.bibix.intellij.Module modules = 4;</code>
      */
     @java.lang.Override
     public com.giyeok.bibix.intellij.BibixIntellijProto.ModuleOrBuilder getModulesOrBuilder(
@@ -1141,17 +1255,17 @@ public final class BibixIntellijProto {
       return modules_.get(index);
     }
 
-    public static final int EXTERNAL_LIBRARIES_FIELD_NUMBER = 4;
+    public static final int EXTERNAL_LIBRARIES_FIELD_NUMBER = 5;
     private java.util.List<com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary> externalLibraries_;
     /**
-     * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary external_libraries = 4;</code>
+     * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary external_libraries = 5;</code>
      */
     @java.lang.Override
     public java.util.List<com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary> getExternalLibrariesList() {
       return externalLibraries_;
     }
     /**
-     * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary external_libraries = 4;</code>
+     * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary external_libraries = 5;</code>
      */
     @java.lang.Override
     public java.util.List<? extends com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibraryOrBuilder> 
@@ -1159,21 +1273,21 @@ public final class BibixIntellijProto {
       return externalLibraries_;
     }
     /**
-     * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary external_libraries = 4;</code>
+     * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary external_libraries = 5;</code>
      */
     @java.lang.Override
     public int getExternalLibrariesCount() {
       return externalLibraries_.size();
     }
     /**
-     * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary external_libraries = 4;</code>
+     * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary external_libraries = 5;</code>
      */
     @java.lang.Override
     public com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary getExternalLibraries(int index) {
       return externalLibraries_.get(index);
     }
     /**
-     * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary external_libraries = 4;</code>
+     * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary external_libraries = 5;</code>
      */
     @java.lang.Override
     public com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibraryOrBuilder getExternalLibrariesOrBuilder(
@@ -1181,30 +1295,70 @@ public final class BibixIntellijProto {
       return externalLibraries_.get(index);
     }
 
-    public static final int SDKS_FIELD_NUMBER = 5;
-    private com.giyeok.bibix.intellij.BibixIntellijProto.Sdks sdks_;
+    public static final int SDK_INFO_FIELD_NUMBER = 6;
+    private com.giyeok.bibix.intellij.BibixIntellijProto.SdkInfo sdkInfo_;
     /**
-     * <code>.com.giyeok.bibix.intellij.Sdks sdks = 5;</code>
-     * @return Whether the sdks field is set.
+     * <code>.com.giyeok.bibix.intellij.SdkInfo sdk_info = 6;</code>
+     * @return Whether the sdkInfo field is set.
      */
     @java.lang.Override
-    public boolean hasSdks() {
-      return sdks_ != null;
+    public boolean hasSdkInfo() {
+      return sdkInfo_ != null;
     }
     /**
-     * <code>.com.giyeok.bibix.intellij.Sdks sdks = 5;</code>
-     * @return The sdks.
+     * <code>.com.giyeok.bibix.intellij.SdkInfo sdk_info = 6;</code>
+     * @return The sdkInfo.
      */
     @java.lang.Override
-    public com.giyeok.bibix.intellij.BibixIntellijProto.Sdks getSdks() {
-      return sdks_ == null ? com.giyeok.bibix.intellij.BibixIntellijProto.Sdks.getDefaultInstance() : sdks_;
+    public com.giyeok.bibix.intellij.BibixIntellijProto.SdkInfo getSdkInfo() {
+      return sdkInfo_ == null ? com.giyeok.bibix.intellij.BibixIntellijProto.SdkInfo.getDefaultInstance() : sdkInfo_;
     }
     /**
-     * <code>.com.giyeok.bibix.intellij.Sdks sdks = 5;</code>
+     * <code>.com.giyeok.bibix.intellij.SdkInfo sdk_info = 6;</code>
      */
     @java.lang.Override
-    public com.giyeok.bibix.intellij.BibixIntellijProto.SdksOrBuilder getSdksOrBuilder() {
-      return getSdks();
+    public com.giyeok.bibix.intellij.BibixIntellijProto.SdkInfoOrBuilder getSdkInfoOrBuilder() {
+      return getSdkInfo();
+    }
+
+    public static final int ACTIONS_FIELD_NUMBER = 7;
+    private java.util.List<com.giyeok.bibix.intellij.BibixIntellijProto.Action> actions_;
+    /**
+     * <code>repeated .com.giyeok.bibix.intellij.Action actions = 7;</code>
+     */
+    @java.lang.Override
+    public java.util.List<com.giyeok.bibix.intellij.BibixIntellijProto.Action> getActionsList() {
+      return actions_;
+    }
+    /**
+     * <code>repeated .com.giyeok.bibix.intellij.Action actions = 7;</code>
+     */
+    @java.lang.Override
+    public java.util.List<? extends com.giyeok.bibix.intellij.BibixIntellijProto.ActionOrBuilder> 
+        getActionsOrBuilderList() {
+      return actions_;
+    }
+    /**
+     * <code>repeated .com.giyeok.bibix.intellij.Action actions = 7;</code>
+     */
+    @java.lang.Override
+    public int getActionsCount() {
+      return actions_.size();
+    }
+    /**
+     * <code>repeated .com.giyeok.bibix.intellij.Action actions = 7;</code>
+     */
+    @java.lang.Override
+    public com.giyeok.bibix.intellij.BibixIntellijProto.Action getActions(int index) {
+      return actions_.get(index);
+    }
+    /**
+     * <code>repeated .com.giyeok.bibix.intellij.Action actions = 7;</code>
+     */
+    @java.lang.Override
+    public com.giyeok.bibix.intellij.BibixIntellijProto.ActionOrBuilder getActionsOrBuilder(
+        int index) {
+      return actions_.get(index);
     }
 
     private byte memoizedIsInitialized = -1;
@@ -1227,14 +1381,20 @@ public final class BibixIntellijProto {
       if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(projectName_)) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 2, projectName_);
       }
+      for (int i = 0; i < usingSdks_.size(); i++) {
+        output.writeMessage(3, usingSdks_.get(i));
+      }
       for (int i = 0; i < modules_.size(); i++) {
-        output.writeMessage(3, modules_.get(i));
+        output.writeMessage(4, modules_.get(i));
       }
       for (int i = 0; i < externalLibraries_.size(); i++) {
-        output.writeMessage(4, externalLibraries_.get(i));
+        output.writeMessage(5, externalLibraries_.get(i));
       }
-      if (sdks_ != null) {
-        output.writeMessage(5, getSdks());
+      if (sdkInfo_ != null) {
+        output.writeMessage(6, getSdkInfo());
+      }
+      for (int i = 0; i < actions_.size(); i++) {
+        output.writeMessage(7, actions_.get(i));
       }
       unknownFields.writeTo(output);
     }
@@ -1251,17 +1411,25 @@ public final class BibixIntellijProto {
       if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(projectName_)) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, projectName_);
       }
+      for (int i = 0; i < usingSdks_.size(); i++) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(3, usingSdks_.get(i));
+      }
       for (int i = 0; i < modules_.size(); i++) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(3, modules_.get(i));
+          .computeMessageSize(4, modules_.get(i));
       }
       for (int i = 0; i < externalLibraries_.size(); i++) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(4, externalLibraries_.get(i));
+          .computeMessageSize(5, externalLibraries_.get(i));
       }
-      if (sdks_ != null) {
+      if (sdkInfo_ != null) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(5, getSdks());
+          .computeMessageSize(6, getSdkInfo());
+      }
+      for (int i = 0; i < actions_.size(); i++) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(7, actions_.get(i));
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -1282,15 +1450,19 @@ public final class BibixIntellijProto {
           .equals(other.getProjectId())) return false;
       if (!getProjectName()
           .equals(other.getProjectName())) return false;
+      if (!getUsingSdksList()
+          .equals(other.getUsingSdksList())) return false;
       if (!getModulesList()
           .equals(other.getModulesList())) return false;
       if (!getExternalLibrariesList()
           .equals(other.getExternalLibrariesList())) return false;
-      if (hasSdks() != other.hasSdks()) return false;
-      if (hasSdks()) {
-        if (!getSdks()
-            .equals(other.getSdks())) return false;
+      if (hasSdkInfo() != other.hasSdkInfo()) return false;
+      if (hasSdkInfo()) {
+        if (!getSdkInfo()
+            .equals(other.getSdkInfo())) return false;
       }
+      if (!getActionsList()
+          .equals(other.getActionsList())) return false;
       if (!unknownFields.equals(other.unknownFields)) return false;
       return true;
     }
@@ -1306,6 +1478,10 @@ public final class BibixIntellijProto {
       hash = (53 * hash) + getProjectId().hashCode();
       hash = (37 * hash) + PROJECT_NAME_FIELD_NUMBER;
       hash = (53 * hash) + getProjectName().hashCode();
+      if (getUsingSdksCount() > 0) {
+        hash = (37 * hash) + USING_SDKS_FIELD_NUMBER;
+        hash = (53 * hash) + getUsingSdksList().hashCode();
+      }
       if (getModulesCount() > 0) {
         hash = (37 * hash) + MODULES_FIELD_NUMBER;
         hash = (53 * hash) + getModulesList().hashCode();
@@ -1314,9 +1490,13 @@ public final class BibixIntellijProto {
         hash = (37 * hash) + EXTERNAL_LIBRARIES_FIELD_NUMBER;
         hash = (53 * hash) + getExternalLibrariesList().hashCode();
       }
-      if (hasSdks()) {
-        hash = (37 * hash) + SDKS_FIELD_NUMBER;
-        hash = (53 * hash) + getSdks().hashCode();
+      if (hasSdkInfo()) {
+        hash = (37 * hash) + SDK_INFO_FIELD_NUMBER;
+        hash = (53 * hash) + getSdkInfo().hashCode();
+      }
+      if (getActionsCount() > 0) {
+        hash = (37 * hash) + ACTIONS_FIELD_NUMBER;
+        hash = (53 * hash) + getActionsList().hashCode();
       }
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
@@ -1446,8 +1626,10 @@ public final class BibixIntellijProto {
       private void maybeForceBuilderInitialization() {
         if (com.google.protobuf.GeneratedMessageV3
                 .alwaysUseFieldBuilders) {
+          getUsingSdksFieldBuilder();
           getModulesFieldBuilder();
           getExternalLibrariesFieldBuilder();
+          getActionsFieldBuilder();
         }
       }
       @java.lang.Override
@@ -1457,23 +1639,35 @@ public final class BibixIntellijProto {
 
         projectName_ = "";
 
+        if (usingSdksBuilder_ == null) {
+          usingSdks_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000001);
+        } else {
+          usingSdksBuilder_.clear();
+        }
         if (modulesBuilder_ == null) {
           modules_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000001);
+          bitField0_ = (bitField0_ & ~0x00000002);
         } else {
           modulesBuilder_.clear();
         }
         if (externalLibrariesBuilder_ == null) {
           externalLibraries_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000002);
+          bitField0_ = (bitField0_ & ~0x00000004);
         } else {
           externalLibrariesBuilder_.clear();
         }
-        if (sdksBuilder_ == null) {
-          sdks_ = null;
+        if (sdkInfoBuilder_ == null) {
+          sdkInfo_ = null;
         } else {
-          sdks_ = null;
-          sdksBuilder_ = null;
+          sdkInfo_ = null;
+          sdkInfoBuilder_ = null;
+        }
+        if (actionsBuilder_ == null) {
+          actions_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000008);
+        } else {
+          actionsBuilder_.clear();
         }
         return this;
       }
@@ -1504,28 +1698,46 @@ public final class BibixIntellijProto {
         int from_bitField0_ = bitField0_;
         result.projectId_ = projectId_;
         result.projectName_ = projectName_;
-        if (modulesBuilder_ == null) {
+        if (usingSdksBuilder_ == null) {
           if (((bitField0_ & 0x00000001) != 0)) {
-            modules_ = java.util.Collections.unmodifiableList(modules_);
+            usingSdks_ = java.util.Collections.unmodifiableList(usingSdks_);
             bitField0_ = (bitField0_ & ~0x00000001);
+          }
+          result.usingSdks_ = usingSdks_;
+        } else {
+          result.usingSdks_ = usingSdksBuilder_.build();
+        }
+        if (modulesBuilder_ == null) {
+          if (((bitField0_ & 0x00000002) != 0)) {
+            modules_ = java.util.Collections.unmodifiableList(modules_);
+            bitField0_ = (bitField0_ & ~0x00000002);
           }
           result.modules_ = modules_;
         } else {
           result.modules_ = modulesBuilder_.build();
         }
         if (externalLibrariesBuilder_ == null) {
-          if (((bitField0_ & 0x00000002) != 0)) {
+          if (((bitField0_ & 0x00000004) != 0)) {
             externalLibraries_ = java.util.Collections.unmodifiableList(externalLibraries_);
-            bitField0_ = (bitField0_ & ~0x00000002);
+            bitField0_ = (bitField0_ & ~0x00000004);
           }
           result.externalLibraries_ = externalLibraries_;
         } else {
           result.externalLibraries_ = externalLibrariesBuilder_.build();
         }
-        if (sdksBuilder_ == null) {
-          result.sdks_ = sdks_;
+        if (sdkInfoBuilder_ == null) {
+          result.sdkInfo_ = sdkInfo_;
         } else {
-          result.sdks_ = sdksBuilder_.build();
+          result.sdkInfo_ = sdkInfoBuilder_.build();
+        }
+        if (actionsBuilder_ == null) {
+          if (((bitField0_ & 0x00000008) != 0)) {
+            actions_ = java.util.Collections.unmodifiableList(actions_);
+            bitField0_ = (bitField0_ & ~0x00000008);
+          }
+          result.actions_ = actions_;
+        } else {
+          result.actions_ = actionsBuilder_.build();
         }
         onBuilt();
         return result;
@@ -1583,11 +1795,37 @@ public final class BibixIntellijProto {
           projectName_ = other.projectName_;
           onChanged();
         }
+        if (usingSdksBuilder_ == null) {
+          if (!other.usingSdks_.isEmpty()) {
+            if (usingSdks_.isEmpty()) {
+              usingSdks_ = other.usingSdks_;
+              bitField0_ = (bitField0_ & ~0x00000001);
+            } else {
+              ensureUsingSdksIsMutable();
+              usingSdks_.addAll(other.usingSdks_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.usingSdks_.isEmpty()) {
+            if (usingSdksBuilder_.isEmpty()) {
+              usingSdksBuilder_.dispose();
+              usingSdksBuilder_ = null;
+              usingSdks_ = other.usingSdks_;
+              bitField0_ = (bitField0_ & ~0x00000001);
+              usingSdksBuilder_ = 
+                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                   getUsingSdksFieldBuilder() : null;
+            } else {
+              usingSdksBuilder_.addAllMessages(other.usingSdks_);
+            }
+          }
+        }
         if (modulesBuilder_ == null) {
           if (!other.modules_.isEmpty()) {
             if (modules_.isEmpty()) {
               modules_ = other.modules_;
-              bitField0_ = (bitField0_ & ~0x00000001);
+              bitField0_ = (bitField0_ & ~0x00000002);
             } else {
               ensureModulesIsMutable();
               modules_.addAll(other.modules_);
@@ -1600,7 +1838,7 @@ public final class BibixIntellijProto {
               modulesBuilder_.dispose();
               modulesBuilder_ = null;
               modules_ = other.modules_;
-              bitField0_ = (bitField0_ & ~0x00000001);
+              bitField0_ = (bitField0_ & ~0x00000002);
               modulesBuilder_ = 
                 com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
                    getModulesFieldBuilder() : null;
@@ -1613,7 +1851,7 @@ public final class BibixIntellijProto {
           if (!other.externalLibraries_.isEmpty()) {
             if (externalLibraries_.isEmpty()) {
               externalLibraries_ = other.externalLibraries_;
-              bitField0_ = (bitField0_ & ~0x00000002);
+              bitField0_ = (bitField0_ & ~0x00000004);
             } else {
               ensureExternalLibrariesIsMutable();
               externalLibraries_.addAll(other.externalLibraries_);
@@ -1626,7 +1864,7 @@ public final class BibixIntellijProto {
               externalLibrariesBuilder_.dispose();
               externalLibrariesBuilder_ = null;
               externalLibraries_ = other.externalLibraries_;
-              bitField0_ = (bitField0_ & ~0x00000002);
+              bitField0_ = (bitField0_ & ~0x00000004);
               externalLibrariesBuilder_ = 
                 com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
                    getExternalLibrariesFieldBuilder() : null;
@@ -1635,8 +1873,34 @@ public final class BibixIntellijProto {
             }
           }
         }
-        if (other.hasSdks()) {
-          mergeSdks(other.getSdks());
+        if (other.hasSdkInfo()) {
+          mergeSdkInfo(other.getSdkInfo());
+        }
+        if (actionsBuilder_ == null) {
+          if (!other.actions_.isEmpty()) {
+            if (actions_.isEmpty()) {
+              actions_ = other.actions_;
+              bitField0_ = (bitField0_ & ~0x00000008);
+            } else {
+              ensureActionsIsMutable();
+              actions_.addAll(other.actions_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.actions_.isEmpty()) {
+            if (actionsBuilder_.isEmpty()) {
+              actionsBuilder_.dispose();
+              actionsBuilder_ = null;
+              actions_ = other.actions_;
+              bitField0_ = (bitField0_ & ~0x00000008);
+              actionsBuilder_ = 
+                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                   getActionsFieldBuilder() : null;
+            } else {
+              actionsBuilder_.addAllMessages(other.actions_);
+            }
+          }
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -1820,12 +2084,252 @@ public final class BibixIntellijProto {
         return this;
       }
 
+      private java.util.List<com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion> usingSdks_ =
+        java.util.Collections.emptyList();
+      private void ensureUsingSdksIsMutable() {
+        if (!((bitField0_ & 0x00000001) != 0)) {
+          usingSdks_ = new java.util.ArrayList<com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion>(usingSdks_);
+          bitField0_ |= 0x00000001;
+         }
+      }
+
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion, com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion.Builder, com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersionOrBuilder> usingSdksBuilder_;
+
+      /**
+       * <code>repeated .com.giyeok.bibix.intellij.SdkVersion using_sdks = 3;</code>
+       */
+      public java.util.List<com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion> getUsingSdksList() {
+        if (usingSdksBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(usingSdks_);
+        } else {
+          return usingSdksBuilder_.getMessageList();
+        }
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.intellij.SdkVersion using_sdks = 3;</code>
+       */
+      public int getUsingSdksCount() {
+        if (usingSdksBuilder_ == null) {
+          return usingSdks_.size();
+        } else {
+          return usingSdksBuilder_.getCount();
+        }
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.intellij.SdkVersion using_sdks = 3;</code>
+       */
+      public com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion getUsingSdks(int index) {
+        if (usingSdksBuilder_ == null) {
+          return usingSdks_.get(index);
+        } else {
+          return usingSdksBuilder_.getMessage(index);
+        }
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.intellij.SdkVersion using_sdks = 3;</code>
+       */
+      public Builder setUsingSdks(
+          int index, com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion value) {
+        if (usingSdksBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureUsingSdksIsMutable();
+          usingSdks_.set(index, value);
+          onChanged();
+        } else {
+          usingSdksBuilder_.setMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.intellij.SdkVersion using_sdks = 3;</code>
+       */
+      public Builder setUsingSdks(
+          int index, com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion.Builder builderForValue) {
+        if (usingSdksBuilder_ == null) {
+          ensureUsingSdksIsMutable();
+          usingSdks_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          usingSdksBuilder_.setMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.intellij.SdkVersion using_sdks = 3;</code>
+       */
+      public Builder addUsingSdks(com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion value) {
+        if (usingSdksBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureUsingSdksIsMutable();
+          usingSdks_.add(value);
+          onChanged();
+        } else {
+          usingSdksBuilder_.addMessage(value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.intellij.SdkVersion using_sdks = 3;</code>
+       */
+      public Builder addUsingSdks(
+          int index, com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion value) {
+        if (usingSdksBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureUsingSdksIsMutable();
+          usingSdks_.add(index, value);
+          onChanged();
+        } else {
+          usingSdksBuilder_.addMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.intellij.SdkVersion using_sdks = 3;</code>
+       */
+      public Builder addUsingSdks(
+          com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion.Builder builderForValue) {
+        if (usingSdksBuilder_ == null) {
+          ensureUsingSdksIsMutable();
+          usingSdks_.add(builderForValue.build());
+          onChanged();
+        } else {
+          usingSdksBuilder_.addMessage(builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.intellij.SdkVersion using_sdks = 3;</code>
+       */
+      public Builder addUsingSdks(
+          int index, com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion.Builder builderForValue) {
+        if (usingSdksBuilder_ == null) {
+          ensureUsingSdksIsMutable();
+          usingSdks_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          usingSdksBuilder_.addMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.intellij.SdkVersion using_sdks = 3;</code>
+       */
+      public Builder addAllUsingSdks(
+          java.lang.Iterable<? extends com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion> values) {
+        if (usingSdksBuilder_ == null) {
+          ensureUsingSdksIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, usingSdks_);
+          onChanged();
+        } else {
+          usingSdksBuilder_.addAllMessages(values);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.intellij.SdkVersion using_sdks = 3;</code>
+       */
+      public Builder clearUsingSdks() {
+        if (usingSdksBuilder_ == null) {
+          usingSdks_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000001);
+          onChanged();
+        } else {
+          usingSdksBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.intellij.SdkVersion using_sdks = 3;</code>
+       */
+      public Builder removeUsingSdks(int index) {
+        if (usingSdksBuilder_ == null) {
+          ensureUsingSdksIsMutable();
+          usingSdks_.remove(index);
+          onChanged();
+        } else {
+          usingSdksBuilder_.remove(index);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.intellij.SdkVersion using_sdks = 3;</code>
+       */
+      public com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion.Builder getUsingSdksBuilder(
+          int index) {
+        return getUsingSdksFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.intellij.SdkVersion using_sdks = 3;</code>
+       */
+      public com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersionOrBuilder getUsingSdksOrBuilder(
+          int index) {
+        if (usingSdksBuilder_ == null) {
+          return usingSdks_.get(index);  } else {
+          return usingSdksBuilder_.getMessageOrBuilder(index);
+        }
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.intellij.SdkVersion using_sdks = 3;</code>
+       */
+      public java.util.List<? extends com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersionOrBuilder> 
+           getUsingSdksOrBuilderList() {
+        if (usingSdksBuilder_ != null) {
+          return usingSdksBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(usingSdks_);
+        }
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.intellij.SdkVersion using_sdks = 3;</code>
+       */
+      public com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion.Builder addUsingSdksBuilder() {
+        return getUsingSdksFieldBuilder().addBuilder(
+            com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.intellij.SdkVersion using_sdks = 3;</code>
+       */
+      public com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion.Builder addUsingSdksBuilder(
+          int index) {
+        return getUsingSdksFieldBuilder().addBuilder(
+            index, com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.intellij.SdkVersion using_sdks = 3;</code>
+       */
+      public java.util.List<com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion.Builder> 
+           getUsingSdksBuilderList() {
+        return getUsingSdksFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion, com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion.Builder, com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersionOrBuilder> 
+          getUsingSdksFieldBuilder() {
+        if (usingSdksBuilder_ == null) {
+          usingSdksBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+              com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion, com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion.Builder, com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersionOrBuilder>(
+                  usingSdks_,
+                  ((bitField0_ & 0x00000001) != 0),
+                  getParentForChildren(),
+                  isClean());
+          usingSdks_ = null;
+        }
+        return usingSdksBuilder_;
+      }
+
       private java.util.List<com.giyeok.bibix.intellij.BibixIntellijProto.Module> modules_ =
         java.util.Collections.emptyList();
       private void ensureModulesIsMutable() {
-        if (!((bitField0_ & 0x00000001) != 0)) {
+        if (!((bitField0_ & 0x00000002) != 0)) {
           modules_ = new java.util.ArrayList<com.giyeok.bibix.intellij.BibixIntellijProto.Module>(modules_);
-          bitField0_ |= 0x00000001;
+          bitField0_ |= 0x00000002;
          }
       }
 
@@ -1833,7 +2337,7 @@ public final class BibixIntellijProto {
           com.giyeok.bibix.intellij.BibixIntellijProto.Module, com.giyeok.bibix.intellij.BibixIntellijProto.Module.Builder, com.giyeok.bibix.intellij.BibixIntellijProto.ModuleOrBuilder> modulesBuilder_;
 
       /**
-       * <code>repeated .com.giyeok.bibix.intellij.Module modules = 3;</code>
+       * <code>repeated .com.giyeok.bibix.intellij.Module modules = 4;</code>
        */
       public java.util.List<com.giyeok.bibix.intellij.BibixIntellijProto.Module> getModulesList() {
         if (modulesBuilder_ == null) {
@@ -1843,7 +2347,7 @@ public final class BibixIntellijProto {
         }
       }
       /**
-       * <code>repeated .com.giyeok.bibix.intellij.Module modules = 3;</code>
+       * <code>repeated .com.giyeok.bibix.intellij.Module modules = 4;</code>
        */
       public int getModulesCount() {
         if (modulesBuilder_ == null) {
@@ -1853,7 +2357,7 @@ public final class BibixIntellijProto {
         }
       }
       /**
-       * <code>repeated .com.giyeok.bibix.intellij.Module modules = 3;</code>
+       * <code>repeated .com.giyeok.bibix.intellij.Module modules = 4;</code>
        */
       public com.giyeok.bibix.intellij.BibixIntellijProto.Module getModules(int index) {
         if (modulesBuilder_ == null) {
@@ -1863,7 +2367,7 @@ public final class BibixIntellijProto {
         }
       }
       /**
-       * <code>repeated .com.giyeok.bibix.intellij.Module modules = 3;</code>
+       * <code>repeated .com.giyeok.bibix.intellij.Module modules = 4;</code>
        */
       public Builder setModules(
           int index, com.giyeok.bibix.intellij.BibixIntellijProto.Module value) {
@@ -1880,7 +2384,7 @@ public final class BibixIntellijProto {
         return this;
       }
       /**
-       * <code>repeated .com.giyeok.bibix.intellij.Module modules = 3;</code>
+       * <code>repeated .com.giyeok.bibix.intellij.Module modules = 4;</code>
        */
       public Builder setModules(
           int index, com.giyeok.bibix.intellij.BibixIntellijProto.Module.Builder builderForValue) {
@@ -1894,7 +2398,7 @@ public final class BibixIntellijProto {
         return this;
       }
       /**
-       * <code>repeated .com.giyeok.bibix.intellij.Module modules = 3;</code>
+       * <code>repeated .com.giyeok.bibix.intellij.Module modules = 4;</code>
        */
       public Builder addModules(com.giyeok.bibix.intellij.BibixIntellijProto.Module value) {
         if (modulesBuilder_ == null) {
@@ -1910,7 +2414,7 @@ public final class BibixIntellijProto {
         return this;
       }
       /**
-       * <code>repeated .com.giyeok.bibix.intellij.Module modules = 3;</code>
+       * <code>repeated .com.giyeok.bibix.intellij.Module modules = 4;</code>
        */
       public Builder addModules(
           int index, com.giyeok.bibix.intellij.BibixIntellijProto.Module value) {
@@ -1927,7 +2431,7 @@ public final class BibixIntellijProto {
         return this;
       }
       /**
-       * <code>repeated .com.giyeok.bibix.intellij.Module modules = 3;</code>
+       * <code>repeated .com.giyeok.bibix.intellij.Module modules = 4;</code>
        */
       public Builder addModules(
           com.giyeok.bibix.intellij.BibixIntellijProto.Module.Builder builderForValue) {
@@ -1941,7 +2445,7 @@ public final class BibixIntellijProto {
         return this;
       }
       /**
-       * <code>repeated .com.giyeok.bibix.intellij.Module modules = 3;</code>
+       * <code>repeated .com.giyeok.bibix.intellij.Module modules = 4;</code>
        */
       public Builder addModules(
           int index, com.giyeok.bibix.intellij.BibixIntellijProto.Module.Builder builderForValue) {
@@ -1955,7 +2459,7 @@ public final class BibixIntellijProto {
         return this;
       }
       /**
-       * <code>repeated .com.giyeok.bibix.intellij.Module modules = 3;</code>
+       * <code>repeated .com.giyeok.bibix.intellij.Module modules = 4;</code>
        */
       public Builder addAllModules(
           java.lang.Iterable<? extends com.giyeok.bibix.intellij.BibixIntellijProto.Module> values) {
@@ -1970,12 +2474,12 @@ public final class BibixIntellijProto {
         return this;
       }
       /**
-       * <code>repeated .com.giyeok.bibix.intellij.Module modules = 3;</code>
+       * <code>repeated .com.giyeok.bibix.intellij.Module modules = 4;</code>
        */
       public Builder clearModules() {
         if (modulesBuilder_ == null) {
           modules_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000001);
+          bitField0_ = (bitField0_ & ~0x00000002);
           onChanged();
         } else {
           modulesBuilder_.clear();
@@ -1983,7 +2487,7 @@ public final class BibixIntellijProto {
         return this;
       }
       /**
-       * <code>repeated .com.giyeok.bibix.intellij.Module modules = 3;</code>
+       * <code>repeated .com.giyeok.bibix.intellij.Module modules = 4;</code>
        */
       public Builder removeModules(int index) {
         if (modulesBuilder_ == null) {
@@ -1996,14 +2500,14 @@ public final class BibixIntellijProto {
         return this;
       }
       /**
-       * <code>repeated .com.giyeok.bibix.intellij.Module modules = 3;</code>
+       * <code>repeated .com.giyeok.bibix.intellij.Module modules = 4;</code>
        */
       public com.giyeok.bibix.intellij.BibixIntellijProto.Module.Builder getModulesBuilder(
           int index) {
         return getModulesFieldBuilder().getBuilder(index);
       }
       /**
-       * <code>repeated .com.giyeok.bibix.intellij.Module modules = 3;</code>
+       * <code>repeated .com.giyeok.bibix.intellij.Module modules = 4;</code>
        */
       public com.giyeok.bibix.intellij.BibixIntellijProto.ModuleOrBuilder getModulesOrBuilder(
           int index) {
@@ -2013,7 +2517,7 @@ public final class BibixIntellijProto {
         }
       }
       /**
-       * <code>repeated .com.giyeok.bibix.intellij.Module modules = 3;</code>
+       * <code>repeated .com.giyeok.bibix.intellij.Module modules = 4;</code>
        */
       public java.util.List<? extends com.giyeok.bibix.intellij.BibixIntellijProto.ModuleOrBuilder> 
            getModulesOrBuilderList() {
@@ -2024,14 +2528,14 @@ public final class BibixIntellijProto {
         }
       }
       /**
-       * <code>repeated .com.giyeok.bibix.intellij.Module modules = 3;</code>
+       * <code>repeated .com.giyeok.bibix.intellij.Module modules = 4;</code>
        */
       public com.giyeok.bibix.intellij.BibixIntellijProto.Module.Builder addModulesBuilder() {
         return getModulesFieldBuilder().addBuilder(
             com.giyeok.bibix.intellij.BibixIntellijProto.Module.getDefaultInstance());
       }
       /**
-       * <code>repeated .com.giyeok.bibix.intellij.Module modules = 3;</code>
+       * <code>repeated .com.giyeok.bibix.intellij.Module modules = 4;</code>
        */
       public com.giyeok.bibix.intellij.BibixIntellijProto.Module.Builder addModulesBuilder(
           int index) {
@@ -2039,7 +2543,7 @@ public final class BibixIntellijProto {
             index, com.giyeok.bibix.intellij.BibixIntellijProto.Module.getDefaultInstance());
       }
       /**
-       * <code>repeated .com.giyeok.bibix.intellij.Module modules = 3;</code>
+       * <code>repeated .com.giyeok.bibix.intellij.Module modules = 4;</code>
        */
       public java.util.List<com.giyeok.bibix.intellij.BibixIntellijProto.Module.Builder> 
            getModulesBuilderList() {
@@ -2052,7 +2556,7 @@ public final class BibixIntellijProto {
           modulesBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
               com.giyeok.bibix.intellij.BibixIntellijProto.Module, com.giyeok.bibix.intellij.BibixIntellijProto.Module.Builder, com.giyeok.bibix.intellij.BibixIntellijProto.ModuleOrBuilder>(
                   modules_,
-                  ((bitField0_ & 0x00000001) != 0),
+                  ((bitField0_ & 0x00000002) != 0),
                   getParentForChildren(),
                   isClean());
           modules_ = null;
@@ -2063,9 +2567,9 @@ public final class BibixIntellijProto {
       private java.util.List<com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary> externalLibraries_ =
         java.util.Collections.emptyList();
       private void ensureExternalLibrariesIsMutable() {
-        if (!((bitField0_ & 0x00000002) != 0)) {
+        if (!((bitField0_ & 0x00000004) != 0)) {
           externalLibraries_ = new java.util.ArrayList<com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary>(externalLibraries_);
-          bitField0_ |= 0x00000002;
+          bitField0_ |= 0x00000004;
          }
       }
 
@@ -2073,7 +2577,7 @@ public final class BibixIntellijProto {
           com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary, com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary.Builder, com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibraryOrBuilder> externalLibrariesBuilder_;
 
       /**
-       * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary external_libraries = 4;</code>
+       * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary external_libraries = 5;</code>
        */
       public java.util.List<com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary> getExternalLibrariesList() {
         if (externalLibrariesBuilder_ == null) {
@@ -2083,7 +2587,7 @@ public final class BibixIntellijProto {
         }
       }
       /**
-       * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary external_libraries = 4;</code>
+       * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary external_libraries = 5;</code>
        */
       public int getExternalLibrariesCount() {
         if (externalLibrariesBuilder_ == null) {
@@ -2093,7 +2597,7 @@ public final class BibixIntellijProto {
         }
       }
       /**
-       * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary external_libraries = 4;</code>
+       * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary external_libraries = 5;</code>
        */
       public com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary getExternalLibraries(int index) {
         if (externalLibrariesBuilder_ == null) {
@@ -2103,7 +2607,7 @@ public final class BibixIntellijProto {
         }
       }
       /**
-       * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary external_libraries = 4;</code>
+       * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary external_libraries = 5;</code>
        */
       public Builder setExternalLibraries(
           int index, com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary value) {
@@ -2120,7 +2624,7 @@ public final class BibixIntellijProto {
         return this;
       }
       /**
-       * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary external_libraries = 4;</code>
+       * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary external_libraries = 5;</code>
        */
       public Builder setExternalLibraries(
           int index, com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary.Builder builderForValue) {
@@ -2134,7 +2638,7 @@ public final class BibixIntellijProto {
         return this;
       }
       /**
-       * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary external_libraries = 4;</code>
+       * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary external_libraries = 5;</code>
        */
       public Builder addExternalLibraries(com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary value) {
         if (externalLibrariesBuilder_ == null) {
@@ -2150,7 +2654,7 @@ public final class BibixIntellijProto {
         return this;
       }
       /**
-       * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary external_libraries = 4;</code>
+       * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary external_libraries = 5;</code>
        */
       public Builder addExternalLibraries(
           int index, com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary value) {
@@ -2167,7 +2671,7 @@ public final class BibixIntellijProto {
         return this;
       }
       /**
-       * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary external_libraries = 4;</code>
+       * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary external_libraries = 5;</code>
        */
       public Builder addExternalLibraries(
           com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary.Builder builderForValue) {
@@ -2181,7 +2685,7 @@ public final class BibixIntellijProto {
         return this;
       }
       /**
-       * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary external_libraries = 4;</code>
+       * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary external_libraries = 5;</code>
        */
       public Builder addExternalLibraries(
           int index, com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary.Builder builderForValue) {
@@ -2195,7 +2699,7 @@ public final class BibixIntellijProto {
         return this;
       }
       /**
-       * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary external_libraries = 4;</code>
+       * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary external_libraries = 5;</code>
        */
       public Builder addAllExternalLibraries(
           java.lang.Iterable<? extends com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary> values) {
@@ -2210,12 +2714,12 @@ public final class BibixIntellijProto {
         return this;
       }
       /**
-       * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary external_libraries = 4;</code>
+       * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary external_libraries = 5;</code>
        */
       public Builder clearExternalLibraries() {
         if (externalLibrariesBuilder_ == null) {
           externalLibraries_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000002);
+          bitField0_ = (bitField0_ & ~0x00000004);
           onChanged();
         } else {
           externalLibrariesBuilder_.clear();
@@ -2223,7 +2727,7 @@ public final class BibixIntellijProto {
         return this;
       }
       /**
-       * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary external_libraries = 4;</code>
+       * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary external_libraries = 5;</code>
        */
       public Builder removeExternalLibraries(int index) {
         if (externalLibrariesBuilder_ == null) {
@@ -2236,14 +2740,14 @@ public final class BibixIntellijProto {
         return this;
       }
       /**
-       * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary external_libraries = 4;</code>
+       * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary external_libraries = 5;</code>
        */
       public com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary.Builder getExternalLibrariesBuilder(
           int index) {
         return getExternalLibrariesFieldBuilder().getBuilder(index);
       }
       /**
-       * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary external_libraries = 4;</code>
+       * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary external_libraries = 5;</code>
        */
       public com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibraryOrBuilder getExternalLibrariesOrBuilder(
           int index) {
@@ -2253,7 +2757,7 @@ public final class BibixIntellijProto {
         }
       }
       /**
-       * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary external_libraries = 4;</code>
+       * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary external_libraries = 5;</code>
        */
       public java.util.List<? extends com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibraryOrBuilder> 
            getExternalLibrariesOrBuilderList() {
@@ -2264,14 +2768,14 @@ public final class BibixIntellijProto {
         }
       }
       /**
-       * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary external_libraries = 4;</code>
+       * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary external_libraries = 5;</code>
        */
       public com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary.Builder addExternalLibrariesBuilder() {
         return getExternalLibrariesFieldBuilder().addBuilder(
             com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary.getDefaultInstance());
       }
       /**
-       * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary external_libraries = 4;</code>
+       * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary external_libraries = 5;</code>
        */
       public com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary.Builder addExternalLibrariesBuilder(
           int index) {
@@ -2279,7 +2783,7 @@ public final class BibixIntellijProto {
             index, com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary.getDefaultInstance());
       }
       /**
-       * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary external_libraries = 4;</code>
+       * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary external_libraries = 5;</code>
        */
       public java.util.List<com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary.Builder> 
            getExternalLibrariesBuilderList() {
@@ -2292,7 +2796,7 @@ public final class BibixIntellijProto {
           externalLibrariesBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
               com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary, com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary.Builder, com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibraryOrBuilder>(
                   externalLibraries_,
-                  ((bitField0_ & 0x00000002) != 0),
+                  ((bitField0_ & 0x00000004) != 0),
                   getParentForChildren(),
                   isClean());
           externalLibraries_ = null;
@@ -2300,123 +2804,363 @@ public final class BibixIntellijProto {
         return externalLibrariesBuilder_;
       }
 
-      private com.giyeok.bibix.intellij.BibixIntellijProto.Sdks sdks_;
+      private com.giyeok.bibix.intellij.BibixIntellijProto.SdkInfo sdkInfo_;
       private com.google.protobuf.SingleFieldBuilderV3<
-          com.giyeok.bibix.intellij.BibixIntellijProto.Sdks, com.giyeok.bibix.intellij.BibixIntellijProto.Sdks.Builder, com.giyeok.bibix.intellij.BibixIntellijProto.SdksOrBuilder> sdksBuilder_;
+          com.giyeok.bibix.intellij.BibixIntellijProto.SdkInfo, com.giyeok.bibix.intellij.BibixIntellijProto.SdkInfo.Builder, com.giyeok.bibix.intellij.BibixIntellijProto.SdkInfoOrBuilder> sdkInfoBuilder_;
       /**
-       * <code>.com.giyeok.bibix.intellij.Sdks sdks = 5;</code>
-       * @return Whether the sdks field is set.
+       * <code>.com.giyeok.bibix.intellij.SdkInfo sdk_info = 6;</code>
+       * @return Whether the sdkInfo field is set.
        */
-      public boolean hasSdks() {
-        return sdksBuilder_ != null || sdks_ != null;
+      public boolean hasSdkInfo() {
+        return sdkInfoBuilder_ != null || sdkInfo_ != null;
       }
       /**
-       * <code>.com.giyeok.bibix.intellij.Sdks sdks = 5;</code>
-       * @return The sdks.
+       * <code>.com.giyeok.bibix.intellij.SdkInfo sdk_info = 6;</code>
+       * @return The sdkInfo.
        */
-      public com.giyeok.bibix.intellij.BibixIntellijProto.Sdks getSdks() {
-        if (sdksBuilder_ == null) {
-          return sdks_ == null ? com.giyeok.bibix.intellij.BibixIntellijProto.Sdks.getDefaultInstance() : sdks_;
+      public com.giyeok.bibix.intellij.BibixIntellijProto.SdkInfo getSdkInfo() {
+        if (sdkInfoBuilder_ == null) {
+          return sdkInfo_ == null ? com.giyeok.bibix.intellij.BibixIntellijProto.SdkInfo.getDefaultInstance() : sdkInfo_;
         } else {
-          return sdksBuilder_.getMessage();
+          return sdkInfoBuilder_.getMessage();
         }
       }
       /**
-       * <code>.com.giyeok.bibix.intellij.Sdks sdks = 5;</code>
+       * <code>.com.giyeok.bibix.intellij.SdkInfo sdk_info = 6;</code>
        */
-      public Builder setSdks(com.giyeok.bibix.intellij.BibixIntellijProto.Sdks value) {
-        if (sdksBuilder_ == null) {
+      public Builder setSdkInfo(com.giyeok.bibix.intellij.BibixIntellijProto.SdkInfo value) {
+        if (sdkInfoBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
           }
-          sdks_ = value;
+          sdkInfo_ = value;
           onChanged();
         } else {
-          sdksBuilder_.setMessage(value);
+          sdkInfoBuilder_.setMessage(value);
         }
 
         return this;
       }
       /**
-       * <code>.com.giyeok.bibix.intellij.Sdks sdks = 5;</code>
+       * <code>.com.giyeok.bibix.intellij.SdkInfo sdk_info = 6;</code>
        */
-      public Builder setSdks(
-          com.giyeok.bibix.intellij.BibixIntellijProto.Sdks.Builder builderForValue) {
-        if (sdksBuilder_ == null) {
-          sdks_ = builderForValue.build();
+      public Builder setSdkInfo(
+          com.giyeok.bibix.intellij.BibixIntellijProto.SdkInfo.Builder builderForValue) {
+        if (sdkInfoBuilder_ == null) {
+          sdkInfo_ = builderForValue.build();
           onChanged();
         } else {
-          sdksBuilder_.setMessage(builderForValue.build());
+          sdkInfoBuilder_.setMessage(builderForValue.build());
         }
 
         return this;
       }
       /**
-       * <code>.com.giyeok.bibix.intellij.Sdks sdks = 5;</code>
+       * <code>.com.giyeok.bibix.intellij.SdkInfo sdk_info = 6;</code>
        */
-      public Builder mergeSdks(com.giyeok.bibix.intellij.BibixIntellijProto.Sdks value) {
-        if (sdksBuilder_ == null) {
-          if (sdks_ != null) {
-            sdks_ =
-              com.giyeok.bibix.intellij.BibixIntellijProto.Sdks.newBuilder(sdks_).mergeFrom(value).buildPartial();
+      public Builder mergeSdkInfo(com.giyeok.bibix.intellij.BibixIntellijProto.SdkInfo value) {
+        if (sdkInfoBuilder_ == null) {
+          if (sdkInfo_ != null) {
+            sdkInfo_ =
+              com.giyeok.bibix.intellij.BibixIntellijProto.SdkInfo.newBuilder(sdkInfo_).mergeFrom(value).buildPartial();
           } else {
-            sdks_ = value;
+            sdkInfo_ = value;
           }
           onChanged();
         } else {
-          sdksBuilder_.mergeFrom(value);
+          sdkInfoBuilder_.mergeFrom(value);
         }
 
         return this;
       }
       /**
-       * <code>.com.giyeok.bibix.intellij.Sdks sdks = 5;</code>
+       * <code>.com.giyeok.bibix.intellij.SdkInfo sdk_info = 6;</code>
        */
-      public Builder clearSdks() {
-        if (sdksBuilder_ == null) {
-          sdks_ = null;
+      public Builder clearSdkInfo() {
+        if (sdkInfoBuilder_ == null) {
+          sdkInfo_ = null;
           onChanged();
         } else {
-          sdks_ = null;
-          sdksBuilder_ = null;
+          sdkInfo_ = null;
+          sdkInfoBuilder_ = null;
         }
 
         return this;
       }
       /**
-       * <code>.com.giyeok.bibix.intellij.Sdks sdks = 5;</code>
+       * <code>.com.giyeok.bibix.intellij.SdkInfo sdk_info = 6;</code>
        */
-      public com.giyeok.bibix.intellij.BibixIntellijProto.Sdks.Builder getSdksBuilder() {
+      public com.giyeok.bibix.intellij.BibixIntellijProto.SdkInfo.Builder getSdkInfoBuilder() {
         
         onChanged();
-        return getSdksFieldBuilder().getBuilder();
+        return getSdkInfoFieldBuilder().getBuilder();
       }
       /**
-       * <code>.com.giyeok.bibix.intellij.Sdks sdks = 5;</code>
+       * <code>.com.giyeok.bibix.intellij.SdkInfo sdk_info = 6;</code>
        */
-      public com.giyeok.bibix.intellij.BibixIntellijProto.SdksOrBuilder getSdksOrBuilder() {
-        if (sdksBuilder_ != null) {
-          return sdksBuilder_.getMessageOrBuilder();
+      public com.giyeok.bibix.intellij.BibixIntellijProto.SdkInfoOrBuilder getSdkInfoOrBuilder() {
+        if (sdkInfoBuilder_ != null) {
+          return sdkInfoBuilder_.getMessageOrBuilder();
         } else {
-          return sdks_ == null ?
-              com.giyeok.bibix.intellij.BibixIntellijProto.Sdks.getDefaultInstance() : sdks_;
+          return sdkInfo_ == null ?
+              com.giyeok.bibix.intellij.BibixIntellijProto.SdkInfo.getDefaultInstance() : sdkInfo_;
         }
       }
       /**
-       * <code>.com.giyeok.bibix.intellij.Sdks sdks = 5;</code>
+       * <code>.com.giyeok.bibix.intellij.SdkInfo sdk_info = 6;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
-          com.giyeok.bibix.intellij.BibixIntellijProto.Sdks, com.giyeok.bibix.intellij.BibixIntellijProto.Sdks.Builder, com.giyeok.bibix.intellij.BibixIntellijProto.SdksOrBuilder> 
-          getSdksFieldBuilder() {
-        if (sdksBuilder_ == null) {
-          sdksBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-              com.giyeok.bibix.intellij.BibixIntellijProto.Sdks, com.giyeok.bibix.intellij.BibixIntellijProto.Sdks.Builder, com.giyeok.bibix.intellij.BibixIntellijProto.SdksOrBuilder>(
-                  getSdks(),
+          com.giyeok.bibix.intellij.BibixIntellijProto.SdkInfo, com.giyeok.bibix.intellij.BibixIntellijProto.SdkInfo.Builder, com.giyeok.bibix.intellij.BibixIntellijProto.SdkInfoOrBuilder> 
+          getSdkInfoFieldBuilder() {
+        if (sdkInfoBuilder_ == null) {
+          sdkInfoBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              com.giyeok.bibix.intellij.BibixIntellijProto.SdkInfo, com.giyeok.bibix.intellij.BibixIntellijProto.SdkInfo.Builder, com.giyeok.bibix.intellij.BibixIntellijProto.SdkInfoOrBuilder>(
+                  getSdkInfo(),
                   getParentForChildren(),
                   isClean());
-          sdks_ = null;
+          sdkInfo_ = null;
         }
-        return sdksBuilder_;
+        return sdkInfoBuilder_;
+      }
+
+      private java.util.List<com.giyeok.bibix.intellij.BibixIntellijProto.Action> actions_ =
+        java.util.Collections.emptyList();
+      private void ensureActionsIsMutable() {
+        if (!((bitField0_ & 0x00000008) != 0)) {
+          actions_ = new java.util.ArrayList<com.giyeok.bibix.intellij.BibixIntellijProto.Action>(actions_);
+          bitField0_ |= 0x00000008;
+         }
+      }
+
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          com.giyeok.bibix.intellij.BibixIntellijProto.Action, com.giyeok.bibix.intellij.BibixIntellijProto.Action.Builder, com.giyeok.bibix.intellij.BibixIntellijProto.ActionOrBuilder> actionsBuilder_;
+
+      /**
+       * <code>repeated .com.giyeok.bibix.intellij.Action actions = 7;</code>
+       */
+      public java.util.List<com.giyeok.bibix.intellij.BibixIntellijProto.Action> getActionsList() {
+        if (actionsBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(actions_);
+        } else {
+          return actionsBuilder_.getMessageList();
+        }
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.intellij.Action actions = 7;</code>
+       */
+      public int getActionsCount() {
+        if (actionsBuilder_ == null) {
+          return actions_.size();
+        } else {
+          return actionsBuilder_.getCount();
+        }
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.intellij.Action actions = 7;</code>
+       */
+      public com.giyeok.bibix.intellij.BibixIntellijProto.Action getActions(int index) {
+        if (actionsBuilder_ == null) {
+          return actions_.get(index);
+        } else {
+          return actionsBuilder_.getMessage(index);
+        }
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.intellij.Action actions = 7;</code>
+       */
+      public Builder setActions(
+          int index, com.giyeok.bibix.intellij.BibixIntellijProto.Action value) {
+        if (actionsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureActionsIsMutable();
+          actions_.set(index, value);
+          onChanged();
+        } else {
+          actionsBuilder_.setMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.intellij.Action actions = 7;</code>
+       */
+      public Builder setActions(
+          int index, com.giyeok.bibix.intellij.BibixIntellijProto.Action.Builder builderForValue) {
+        if (actionsBuilder_ == null) {
+          ensureActionsIsMutable();
+          actions_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          actionsBuilder_.setMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.intellij.Action actions = 7;</code>
+       */
+      public Builder addActions(com.giyeok.bibix.intellij.BibixIntellijProto.Action value) {
+        if (actionsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureActionsIsMutable();
+          actions_.add(value);
+          onChanged();
+        } else {
+          actionsBuilder_.addMessage(value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.intellij.Action actions = 7;</code>
+       */
+      public Builder addActions(
+          int index, com.giyeok.bibix.intellij.BibixIntellijProto.Action value) {
+        if (actionsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureActionsIsMutable();
+          actions_.add(index, value);
+          onChanged();
+        } else {
+          actionsBuilder_.addMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.intellij.Action actions = 7;</code>
+       */
+      public Builder addActions(
+          com.giyeok.bibix.intellij.BibixIntellijProto.Action.Builder builderForValue) {
+        if (actionsBuilder_ == null) {
+          ensureActionsIsMutable();
+          actions_.add(builderForValue.build());
+          onChanged();
+        } else {
+          actionsBuilder_.addMessage(builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.intellij.Action actions = 7;</code>
+       */
+      public Builder addActions(
+          int index, com.giyeok.bibix.intellij.BibixIntellijProto.Action.Builder builderForValue) {
+        if (actionsBuilder_ == null) {
+          ensureActionsIsMutable();
+          actions_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          actionsBuilder_.addMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.intellij.Action actions = 7;</code>
+       */
+      public Builder addAllActions(
+          java.lang.Iterable<? extends com.giyeok.bibix.intellij.BibixIntellijProto.Action> values) {
+        if (actionsBuilder_ == null) {
+          ensureActionsIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, actions_);
+          onChanged();
+        } else {
+          actionsBuilder_.addAllMessages(values);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.intellij.Action actions = 7;</code>
+       */
+      public Builder clearActions() {
+        if (actionsBuilder_ == null) {
+          actions_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000008);
+          onChanged();
+        } else {
+          actionsBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.intellij.Action actions = 7;</code>
+       */
+      public Builder removeActions(int index) {
+        if (actionsBuilder_ == null) {
+          ensureActionsIsMutable();
+          actions_.remove(index);
+          onChanged();
+        } else {
+          actionsBuilder_.remove(index);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.intellij.Action actions = 7;</code>
+       */
+      public com.giyeok.bibix.intellij.BibixIntellijProto.Action.Builder getActionsBuilder(
+          int index) {
+        return getActionsFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.intellij.Action actions = 7;</code>
+       */
+      public com.giyeok.bibix.intellij.BibixIntellijProto.ActionOrBuilder getActionsOrBuilder(
+          int index) {
+        if (actionsBuilder_ == null) {
+          return actions_.get(index);  } else {
+          return actionsBuilder_.getMessageOrBuilder(index);
+        }
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.intellij.Action actions = 7;</code>
+       */
+      public java.util.List<? extends com.giyeok.bibix.intellij.BibixIntellijProto.ActionOrBuilder> 
+           getActionsOrBuilderList() {
+        if (actionsBuilder_ != null) {
+          return actionsBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(actions_);
+        }
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.intellij.Action actions = 7;</code>
+       */
+      public com.giyeok.bibix.intellij.BibixIntellijProto.Action.Builder addActionsBuilder() {
+        return getActionsFieldBuilder().addBuilder(
+            com.giyeok.bibix.intellij.BibixIntellijProto.Action.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.intellij.Action actions = 7;</code>
+       */
+      public com.giyeok.bibix.intellij.BibixIntellijProto.Action.Builder addActionsBuilder(
+          int index) {
+        return getActionsFieldBuilder().addBuilder(
+            index, com.giyeok.bibix.intellij.BibixIntellijProto.Action.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.intellij.Action actions = 7;</code>
+       */
+      public java.util.List<com.giyeok.bibix.intellij.BibixIntellijProto.Action.Builder> 
+           getActionsBuilderList() {
+        return getActionsFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          com.giyeok.bibix.intellij.BibixIntellijProto.Action, com.giyeok.bibix.intellij.BibixIntellijProto.Action.Builder, com.giyeok.bibix.intellij.BibixIntellijProto.ActionOrBuilder> 
+          getActionsFieldBuilder() {
+        if (actionsBuilder_ == null) {
+          actionsBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+              com.giyeok.bibix.intellij.BibixIntellijProto.Action, com.giyeok.bibix.intellij.BibixIntellijProto.Action.Builder, com.giyeok.bibix.intellij.BibixIntellijProto.ActionOrBuilder>(
+                  actions_,
+                  ((bitField0_ & 0x00000008) != 0),
+                  getParentForChildren(),
+                  isClean());
+          actions_ = null;
+        }
+        return actionsBuilder_;
       }
       @java.lang.Override
       public final Builder setUnknownFields(
@@ -2564,27 +3308,27 @@ public final class BibixIntellijProto {
         int index);
 
     /**
-     * <code>repeated .com.giyeok.bibix.intellij.ModuleSdk module_sdks = 5;</code>
+     * <code>repeated .com.giyeok.bibix.intellij.SdkVersion using_sdks = 5;</code>
      */
-    java.util.List<com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk> 
-        getModuleSdksList();
+    java.util.List<com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion> 
+        getUsingSdksList();
     /**
-     * <code>repeated .com.giyeok.bibix.intellij.ModuleSdk module_sdks = 5;</code>
+     * <code>repeated .com.giyeok.bibix.intellij.SdkVersion using_sdks = 5;</code>
      */
-    com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk getModuleSdks(int index);
+    com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion getUsingSdks(int index);
     /**
-     * <code>repeated .com.giyeok.bibix.intellij.ModuleSdk module_sdks = 5;</code>
+     * <code>repeated .com.giyeok.bibix.intellij.SdkVersion using_sdks = 5;</code>
      */
-    int getModuleSdksCount();
+    int getUsingSdksCount();
     /**
-     * <code>repeated .com.giyeok.bibix.intellij.ModuleSdk module_sdks = 5;</code>
+     * <code>repeated .com.giyeok.bibix.intellij.SdkVersion using_sdks = 5;</code>
      */
-    java.util.List<? extends com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdkOrBuilder> 
-        getModuleSdksOrBuilderList();
+    java.util.List<? extends com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersionOrBuilder> 
+        getUsingSdksOrBuilderList();
     /**
-     * <code>repeated .com.giyeok.bibix.intellij.ModuleSdk module_sdks = 5;</code>
+     * <code>repeated .com.giyeok.bibix.intellij.SdkVersion using_sdks = 5;</code>
      */
-    com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdkOrBuilder getModuleSdksOrBuilder(
+    com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersionOrBuilder getUsingSdksOrBuilder(
         int index);
 
     /**
@@ -2686,7 +3430,7 @@ public final class BibixIntellijProto {
       moduleType_ = "";
       moduleRootPath_ = "";
       contentRoots_ = java.util.Collections.emptyList();
-      moduleSdks_ = java.util.Collections.emptyList();
+      usingSdks_ = java.util.Collections.emptyList();
       moduleDeps_ = com.google.protobuf.LazyStringArrayList.EMPTY;
       libraryDeps_ = com.google.protobuf.LazyStringArrayList.EMPTY;
     }
@@ -2751,11 +3495,11 @@ public final class BibixIntellijProto {
             }
             case 42: {
               if (!((mutable_bitField0_ & 0x00000002) != 0)) {
-                moduleSdks_ = new java.util.ArrayList<com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk>();
+                usingSdks_ = new java.util.ArrayList<com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion>();
                 mutable_bitField0_ |= 0x00000002;
               }
-              moduleSdks_.add(
-                  input.readMessage(com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk.parser(), extensionRegistry));
+              usingSdks_.add(
+                  input.readMessage(com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion.parser(), extensionRegistry));
               break;
             }
             case 50: {
@@ -2795,7 +3539,7 @@ public final class BibixIntellijProto {
           contentRoots_ = java.util.Collections.unmodifiableList(contentRoots_);
         }
         if (((mutable_bitField0_ & 0x00000002) != 0)) {
-          moduleSdks_ = java.util.Collections.unmodifiableList(moduleSdks_);
+          usingSdks_ = java.util.Collections.unmodifiableList(usingSdks_);
         }
         if (((mutable_bitField0_ & 0x00000004) != 0)) {
           moduleDeps_ = moduleDeps_.getUnmodifiableView();
@@ -3002,44 +3746,44 @@ public final class BibixIntellijProto {
       return contentRoots_.get(index);
     }
 
-    public static final int MODULE_SDKS_FIELD_NUMBER = 5;
-    private java.util.List<com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk> moduleSdks_;
+    public static final int USING_SDKS_FIELD_NUMBER = 5;
+    private java.util.List<com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion> usingSdks_;
     /**
-     * <code>repeated .com.giyeok.bibix.intellij.ModuleSdk module_sdks = 5;</code>
+     * <code>repeated .com.giyeok.bibix.intellij.SdkVersion using_sdks = 5;</code>
      */
     @java.lang.Override
-    public java.util.List<com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk> getModuleSdksList() {
-      return moduleSdks_;
+    public java.util.List<com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion> getUsingSdksList() {
+      return usingSdks_;
     }
     /**
-     * <code>repeated .com.giyeok.bibix.intellij.ModuleSdk module_sdks = 5;</code>
+     * <code>repeated .com.giyeok.bibix.intellij.SdkVersion using_sdks = 5;</code>
      */
     @java.lang.Override
-    public java.util.List<? extends com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdkOrBuilder> 
-        getModuleSdksOrBuilderList() {
-      return moduleSdks_;
+    public java.util.List<? extends com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersionOrBuilder> 
+        getUsingSdksOrBuilderList() {
+      return usingSdks_;
     }
     /**
-     * <code>repeated .com.giyeok.bibix.intellij.ModuleSdk module_sdks = 5;</code>
+     * <code>repeated .com.giyeok.bibix.intellij.SdkVersion using_sdks = 5;</code>
      */
     @java.lang.Override
-    public int getModuleSdksCount() {
-      return moduleSdks_.size();
+    public int getUsingSdksCount() {
+      return usingSdks_.size();
     }
     /**
-     * <code>repeated .com.giyeok.bibix.intellij.ModuleSdk module_sdks = 5;</code>
+     * <code>repeated .com.giyeok.bibix.intellij.SdkVersion using_sdks = 5;</code>
      */
     @java.lang.Override
-    public com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk getModuleSdks(int index) {
-      return moduleSdks_.get(index);
+    public com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion getUsingSdks(int index) {
+      return usingSdks_.get(index);
     }
     /**
-     * <code>repeated .com.giyeok.bibix.intellij.ModuleSdk module_sdks = 5;</code>
+     * <code>repeated .com.giyeok.bibix.intellij.SdkVersion using_sdks = 5;</code>
      */
     @java.lang.Override
-    public com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdkOrBuilder getModuleSdksOrBuilder(
+    public com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersionOrBuilder getUsingSdksOrBuilder(
         int index) {
-      return moduleSdks_.get(index);
+      return usingSdks_.get(index);
     }
 
     public static final int MODULE_DEPS_FIELD_NUMBER = 6;
@@ -3170,8 +3914,8 @@ public final class BibixIntellijProto {
       for (int i = 0; i < contentRoots_.size(); i++) {
         output.writeMessage(4, contentRoots_.get(i));
       }
-      for (int i = 0; i < moduleSdks_.size(); i++) {
-        output.writeMessage(5, moduleSdks_.get(i));
+      for (int i = 0; i < usingSdks_.size(); i++) {
+        output.writeMessage(5, usingSdks_.get(i));
       }
       for (int i = 0; i < moduleDeps_.size(); i++) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 6, moduleDeps_.getRaw(i));
@@ -3201,9 +3945,9 @@ public final class BibixIntellijProto {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(4, contentRoots_.get(i));
       }
-      for (int i = 0; i < moduleSdks_.size(); i++) {
+      for (int i = 0; i < usingSdks_.size(); i++) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(5, moduleSdks_.get(i));
+          .computeMessageSize(5, usingSdks_.get(i));
       }
       {
         int dataSize = 0;
@@ -3244,8 +3988,8 @@ public final class BibixIntellijProto {
           .equals(other.getModuleRootPath())) return false;
       if (!getContentRootsList()
           .equals(other.getContentRootsList())) return false;
-      if (!getModuleSdksList()
-          .equals(other.getModuleSdksList())) return false;
+      if (!getUsingSdksList()
+          .equals(other.getUsingSdksList())) return false;
       if (!getModuleDepsList()
           .equals(other.getModuleDepsList())) return false;
       if (!getLibraryDepsList()
@@ -3271,9 +4015,9 @@ public final class BibixIntellijProto {
         hash = (37 * hash) + CONTENT_ROOTS_FIELD_NUMBER;
         hash = (53 * hash) + getContentRootsList().hashCode();
       }
-      if (getModuleSdksCount() > 0) {
-        hash = (37 * hash) + MODULE_SDKS_FIELD_NUMBER;
-        hash = (53 * hash) + getModuleSdksList().hashCode();
+      if (getUsingSdksCount() > 0) {
+        hash = (37 * hash) + USING_SDKS_FIELD_NUMBER;
+        hash = (53 * hash) + getUsingSdksList().hashCode();
       }
       if (getModuleDepsCount() > 0) {
         hash = (37 * hash) + MODULE_DEPS_FIELD_NUMBER;
@@ -3412,7 +4156,7 @@ public final class BibixIntellijProto {
         if (com.google.protobuf.GeneratedMessageV3
                 .alwaysUseFieldBuilders) {
           getContentRootsFieldBuilder();
-          getModuleSdksFieldBuilder();
+          getUsingSdksFieldBuilder();
         }
       }
       @java.lang.Override
@@ -3430,11 +4174,11 @@ public final class BibixIntellijProto {
         } else {
           contentRootsBuilder_.clear();
         }
-        if (moduleSdksBuilder_ == null) {
-          moduleSdks_ = java.util.Collections.emptyList();
+        if (usingSdksBuilder_ == null) {
+          usingSdks_ = java.util.Collections.emptyList();
           bitField0_ = (bitField0_ & ~0x00000002);
         } else {
-          moduleSdksBuilder_.clear();
+          usingSdksBuilder_.clear();
         }
         moduleDeps_ = com.google.protobuf.LazyStringArrayList.EMPTY;
         bitField0_ = (bitField0_ & ~0x00000004);
@@ -3479,14 +4223,14 @@ public final class BibixIntellijProto {
         } else {
           result.contentRoots_ = contentRootsBuilder_.build();
         }
-        if (moduleSdksBuilder_ == null) {
+        if (usingSdksBuilder_ == null) {
           if (((bitField0_ & 0x00000002) != 0)) {
-            moduleSdks_ = java.util.Collections.unmodifiableList(moduleSdks_);
+            usingSdks_ = java.util.Collections.unmodifiableList(usingSdks_);
             bitField0_ = (bitField0_ & ~0x00000002);
           }
-          result.moduleSdks_ = moduleSdks_;
+          result.usingSdks_ = usingSdks_;
         } else {
-          result.moduleSdks_ = moduleSdksBuilder_.build();
+          result.usingSdks_ = usingSdksBuilder_.build();
         }
         if (((bitField0_ & 0x00000004) != 0)) {
           moduleDeps_ = moduleDeps_.getUnmodifiableView();
@@ -3584,29 +4328,29 @@ public final class BibixIntellijProto {
             }
           }
         }
-        if (moduleSdksBuilder_ == null) {
-          if (!other.moduleSdks_.isEmpty()) {
-            if (moduleSdks_.isEmpty()) {
-              moduleSdks_ = other.moduleSdks_;
+        if (usingSdksBuilder_ == null) {
+          if (!other.usingSdks_.isEmpty()) {
+            if (usingSdks_.isEmpty()) {
+              usingSdks_ = other.usingSdks_;
               bitField0_ = (bitField0_ & ~0x00000002);
             } else {
-              ensureModuleSdksIsMutable();
-              moduleSdks_.addAll(other.moduleSdks_);
+              ensureUsingSdksIsMutable();
+              usingSdks_.addAll(other.usingSdks_);
             }
             onChanged();
           }
         } else {
-          if (!other.moduleSdks_.isEmpty()) {
-            if (moduleSdksBuilder_.isEmpty()) {
-              moduleSdksBuilder_.dispose();
-              moduleSdksBuilder_ = null;
-              moduleSdks_ = other.moduleSdks_;
+          if (!other.usingSdks_.isEmpty()) {
+            if (usingSdksBuilder_.isEmpty()) {
+              usingSdksBuilder_.dispose();
+              usingSdksBuilder_ = null;
+              usingSdks_ = other.usingSdks_;
               bitField0_ = (bitField0_ & ~0x00000002);
-              moduleSdksBuilder_ = 
+              usingSdksBuilder_ = 
                 com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
-                   getModuleSdksFieldBuilder() : null;
+                   getUsingSdksFieldBuilder() : null;
             } else {
-              moduleSdksBuilder_.addAllMessages(other.moduleSdks_);
+              usingSdksBuilder_.addAllMessages(other.usingSdks_);
             }
           }
         }
@@ -4220,244 +4964,244 @@ public final class BibixIntellijProto {
         return contentRootsBuilder_;
       }
 
-      private java.util.List<com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk> moduleSdks_ =
+      private java.util.List<com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion> usingSdks_ =
         java.util.Collections.emptyList();
-      private void ensureModuleSdksIsMutable() {
+      private void ensureUsingSdksIsMutable() {
         if (!((bitField0_ & 0x00000002) != 0)) {
-          moduleSdks_ = new java.util.ArrayList<com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk>(moduleSdks_);
+          usingSdks_ = new java.util.ArrayList<com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion>(usingSdks_);
           bitField0_ |= 0x00000002;
          }
       }
 
       private com.google.protobuf.RepeatedFieldBuilderV3<
-          com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk, com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk.Builder, com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdkOrBuilder> moduleSdksBuilder_;
+          com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion, com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion.Builder, com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersionOrBuilder> usingSdksBuilder_;
 
       /**
-       * <code>repeated .com.giyeok.bibix.intellij.ModuleSdk module_sdks = 5;</code>
+       * <code>repeated .com.giyeok.bibix.intellij.SdkVersion using_sdks = 5;</code>
        */
-      public java.util.List<com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk> getModuleSdksList() {
-        if (moduleSdksBuilder_ == null) {
-          return java.util.Collections.unmodifiableList(moduleSdks_);
+      public java.util.List<com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion> getUsingSdksList() {
+        if (usingSdksBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(usingSdks_);
         } else {
-          return moduleSdksBuilder_.getMessageList();
+          return usingSdksBuilder_.getMessageList();
         }
       }
       /**
-       * <code>repeated .com.giyeok.bibix.intellij.ModuleSdk module_sdks = 5;</code>
+       * <code>repeated .com.giyeok.bibix.intellij.SdkVersion using_sdks = 5;</code>
        */
-      public int getModuleSdksCount() {
-        if (moduleSdksBuilder_ == null) {
-          return moduleSdks_.size();
+      public int getUsingSdksCount() {
+        if (usingSdksBuilder_ == null) {
+          return usingSdks_.size();
         } else {
-          return moduleSdksBuilder_.getCount();
+          return usingSdksBuilder_.getCount();
         }
       }
       /**
-       * <code>repeated .com.giyeok.bibix.intellij.ModuleSdk module_sdks = 5;</code>
+       * <code>repeated .com.giyeok.bibix.intellij.SdkVersion using_sdks = 5;</code>
        */
-      public com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk getModuleSdks(int index) {
-        if (moduleSdksBuilder_ == null) {
-          return moduleSdks_.get(index);
+      public com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion getUsingSdks(int index) {
+        if (usingSdksBuilder_ == null) {
+          return usingSdks_.get(index);
         } else {
-          return moduleSdksBuilder_.getMessage(index);
+          return usingSdksBuilder_.getMessage(index);
         }
       }
       /**
-       * <code>repeated .com.giyeok.bibix.intellij.ModuleSdk module_sdks = 5;</code>
+       * <code>repeated .com.giyeok.bibix.intellij.SdkVersion using_sdks = 5;</code>
        */
-      public Builder setModuleSdks(
-          int index, com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk value) {
-        if (moduleSdksBuilder_ == null) {
+      public Builder setUsingSdks(
+          int index, com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion value) {
+        if (usingSdksBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
           }
-          ensureModuleSdksIsMutable();
-          moduleSdks_.set(index, value);
+          ensureUsingSdksIsMutable();
+          usingSdks_.set(index, value);
           onChanged();
         } else {
-          moduleSdksBuilder_.setMessage(index, value);
+          usingSdksBuilder_.setMessage(index, value);
         }
         return this;
       }
       /**
-       * <code>repeated .com.giyeok.bibix.intellij.ModuleSdk module_sdks = 5;</code>
+       * <code>repeated .com.giyeok.bibix.intellij.SdkVersion using_sdks = 5;</code>
        */
-      public Builder setModuleSdks(
-          int index, com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk.Builder builderForValue) {
-        if (moduleSdksBuilder_ == null) {
-          ensureModuleSdksIsMutable();
-          moduleSdks_.set(index, builderForValue.build());
+      public Builder setUsingSdks(
+          int index, com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion.Builder builderForValue) {
+        if (usingSdksBuilder_ == null) {
+          ensureUsingSdksIsMutable();
+          usingSdks_.set(index, builderForValue.build());
           onChanged();
         } else {
-          moduleSdksBuilder_.setMessage(index, builderForValue.build());
+          usingSdksBuilder_.setMessage(index, builderForValue.build());
         }
         return this;
       }
       /**
-       * <code>repeated .com.giyeok.bibix.intellij.ModuleSdk module_sdks = 5;</code>
+       * <code>repeated .com.giyeok.bibix.intellij.SdkVersion using_sdks = 5;</code>
        */
-      public Builder addModuleSdks(com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk value) {
-        if (moduleSdksBuilder_ == null) {
+      public Builder addUsingSdks(com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion value) {
+        if (usingSdksBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
           }
-          ensureModuleSdksIsMutable();
-          moduleSdks_.add(value);
+          ensureUsingSdksIsMutable();
+          usingSdks_.add(value);
           onChanged();
         } else {
-          moduleSdksBuilder_.addMessage(value);
+          usingSdksBuilder_.addMessage(value);
         }
         return this;
       }
       /**
-       * <code>repeated .com.giyeok.bibix.intellij.ModuleSdk module_sdks = 5;</code>
+       * <code>repeated .com.giyeok.bibix.intellij.SdkVersion using_sdks = 5;</code>
        */
-      public Builder addModuleSdks(
-          int index, com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk value) {
-        if (moduleSdksBuilder_ == null) {
+      public Builder addUsingSdks(
+          int index, com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion value) {
+        if (usingSdksBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
           }
-          ensureModuleSdksIsMutable();
-          moduleSdks_.add(index, value);
+          ensureUsingSdksIsMutable();
+          usingSdks_.add(index, value);
           onChanged();
         } else {
-          moduleSdksBuilder_.addMessage(index, value);
+          usingSdksBuilder_.addMessage(index, value);
         }
         return this;
       }
       /**
-       * <code>repeated .com.giyeok.bibix.intellij.ModuleSdk module_sdks = 5;</code>
+       * <code>repeated .com.giyeok.bibix.intellij.SdkVersion using_sdks = 5;</code>
        */
-      public Builder addModuleSdks(
-          com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk.Builder builderForValue) {
-        if (moduleSdksBuilder_ == null) {
-          ensureModuleSdksIsMutable();
-          moduleSdks_.add(builderForValue.build());
+      public Builder addUsingSdks(
+          com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion.Builder builderForValue) {
+        if (usingSdksBuilder_ == null) {
+          ensureUsingSdksIsMutable();
+          usingSdks_.add(builderForValue.build());
           onChanged();
         } else {
-          moduleSdksBuilder_.addMessage(builderForValue.build());
+          usingSdksBuilder_.addMessage(builderForValue.build());
         }
         return this;
       }
       /**
-       * <code>repeated .com.giyeok.bibix.intellij.ModuleSdk module_sdks = 5;</code>
+       * <code>repeated .com.giyeok.bibix.intellij.SdkVersion using_sdks = 5;</code>
        */
-      public Builder addModuleSdks(
-          int index, com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk.Builder builderForValue) {
-        if (moduleSdksBuilder_ == null) {
-          ensureModuleSdksIsMutable();
-          moduleSdks_.add(index, builderForValue.build());
+      public Builder addUsingSdks(
+          int index, com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion.Builder builderForValue) {
+        if (usingSdksBuilder_ == null) {
+          ensureUsingSdksIsMutable();
+          usingSdks_.add(index, builderForValue.build());
           onChanged();
         } else {
-          moduleSdksBuilder_.addMessage(index, builderForValue.build());
+          usingSdksBuilder_.addMessage(index, builderForValue.build());
         }
         return this;
       }
       /**
-       * <code>repeated .com.giyeok.bibix.intellij.ModuleSdk module_sdks = 5;</code>
+       * <code>repeated .com.giyeok.bibix.intellij.SdkVersion using_sdks = 5;</code>
        */
-      public Builder addAllModuleSdks(
-          java.lang.Iterable<? extends com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk> values) {
-        if (moduleSdksBuilder_ == null) {
-          ensureModuleSdksIsMutable();
+      public Builder addAllUsingSdks(
+          java.lang.Iterable<? extends com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion> values) {
+        if (usingSdksBuilder_ == null) {
+          ensureUsingSdksIsMutable();
           com.google.protobuf.AbstractMessageLite.Builder.addAll(
-              values, moduleSdks_);
+              values, usingSdks_);
           onChanged();
         } else {
-          moduleSdksBuilder_.addAllMessages(values);
+          usingSdksBuilder_.addAllMessages(values);
         }
         return this;
       }
       /**
-       * <code>repeated .com.giyeok.bibix.intellij.ModuleSdk module_sdks = 5;</code>
+       * <code>repeated .com.giyeok.bibix.intellij.SdkVersion using_sdks = 5;</code>
        */
-      public Builder clearModuleSdks() {
-        if (moduleSdksBuilder_ == null) {
-          moduleSdks_ = java.util.Collections.emptyList();
+      public Builder clearUsingSdks() {
+        if (usingSdksBuilder_ == null) {
+          usingSdks_ = java.util.Collections.emptyList();
           bitField0_ = (bitField0_ & ~0x00000002);
           onChanged();
         } else {
-          moduleSdksBuilder_.clear();
+          usingSdksBuilder_.clear();
         }
         return this;
       }
       /**
-       * <code>repeated .com.giyeok.bibix.intellij.ModuleSdk module_sdks = 5;</code>
+       * <code>repeated .com.giyeok.bibix.intellij.SdkVersion using_sdks = 5;</code>
        */
-      public Builder removeModuleSdks(int index) {
-        if (moduleSdksBuilder_ == null) {
-          ensureModuleSdksIsMutable();
-          moduleSdks_.remove(index);
+      public Builder removeUsingSdks(int index) {
+        if (usingSdksBuilder_ == null) {
+          ensureUsingSdksIsMutable();
+          usingSdks_.remove(index);
           onChanged();
         } else {
-          moduleSdksBuilder_.remove(index);
+          usingSdksBuilder_.remove(index);
         }
         return this;
       }
       /**
-       * <code>repeated .com.giyeok.bibix.intellij.ModuleSdk module_sdks = 5;</code>
+       * <code>repeated .com.giyeok.bibix.intellij.SdkVersion using_sdks = 5;</code>
        */
-      public com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk.Builder getModuleSdksBuilder(
+      public com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion.Builder getUsingSdksBuilder(
           int index) {
-        return getModuleSdksFieldBuilder().getBuilder(index);
+        return getUsingSdksFieldBuilder().getBuilder(index);
       }
       /**
-       * <code>repeated .com.giyeok.bibix.intellij.ModuleSdk module_sdks = 5;</code>
+       * <code>repeated .com.giyeok.bibix.intellij.SdkVersion using_sdks = 5;</code>
        */
-      public com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdkOrBuilder getModuleSdksOrBuilder(
+      public com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersionOrBuilder getUsingSdksOrBuilder(
           int index) {
-        if (moduleSdksBuilder_ == null) {
-          return moduleSdks_.get(index);  } else {
-          return moduleSdksBuilder_.getMessageOrBuilder(index);
+        if (usingSdksBuilder_ == null) {
+          return usingSdks_.get(index);  } else {
+          return usingSdksBuilder_.getMessageOrBuilder(index);
         }
       }
       /**
-       * <code>repeated .com.giyeok.bibix.intellij.ModuleSdk module_sdks = 5;</code>
+       * <code>repeated .com.giyeok.bibix.intellij.SdkVersion using_sdks = 5;</code>
        */
-      public java.util.List<? extends com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdkOrBuilder> 
-           getModuleSdksOrBuilderList() {
-        if (moduleSdksBuilder_ != null) {
-          return moduleSdksBuilder_.getMessageOrBuilderList();
+      public java.util.List<? extends com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersionOrBuilder> 
+           getUsingSdksOrBuilderList() {
+        if (usingSdksBuilder_ != null) {
+          return usingSdksBuilder_.getMessageOrBuilderList();
         } else {
-          return java.util.Collections.unmodifiableList(moduleSdks_);
+          return java.util.Collections.unmodifiableList(usingSdks_);
         }
       }
       /**
-       * <code>repeated .com.giyeok.bibix.intellij.ModuleSdk module_sdks = 5;</code>
+       * <code>repeated .com.giyeok.bibix.intellij.SdkVersion using_sdks = 5;</code>
        */
-      public com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk.Builder addModuleSdksBuilder() {
-        return getModuleSdksFieldBuilder().addBuilder(
-            com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk.getDefaultInstance());
+      public com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion.Builder addUsingSdksBuilder() {
+        return getUsingSdksFieldBuilder().addBuilder(
+            com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion.getDefaultInstance());
       }
       /**
-       * <code>repeated .com.giyeok.bibix.intellij.ModuleSdk module_sdks = 5;</code>
+       * <code>repeated .com.giyeok.bibix.intellij.SdkVersion using_sdks = 5;</code>
        */
-      public com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk.Builder addModuleSdksBuilder(
+      public com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion.Builder addUsingSdksBuilder(
           int index) {
-        return getModuleSdksFieldBuilder().addBuilder(
-            index, com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk.getDefaultInstance());
+        return getUsingSdksFieldBuilder().addBuilder(
+            index, com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion.getDefaultInstance());
       }
       /**
-       * <code>repeated .com.giyeok.bibix.intellij.ModuleSdk module_sdks = 5;</code>
+       * <code>repeated .com.giyeok.bibix.intellij.SdkVersion using_sdks = 5;</code>
        */
-      public java.util.List<com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk.Builder> 
-           getModuleSdksBuilderList() {
-        return getModuleSdksFieldBuilder().getBuilderList();
+      public java.util.List<com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion.Builder> 
+           getUsingSdksBuilderList() {
+        return getUsingSdksFieldBuilder().getBuilderList();
       }
       private com.google.protobuf.RepeatedFieldBuilderV3<
-          com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk, com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk.Builder, com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdkOrBuilder> 
-          getModuleSdksFieldBuilder() {
-        if (moduleSdksBuilder_ == null) {
-          moduleSdksBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
-              com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk, com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk.Builder, com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdkOrBuilder>(
-                  moduleSdks_,
+          com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion, com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion.Builder, com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersionOrBuilder> 
+          getUsingSdksFieldBuilder() {
+        if (usingSdksBuilder_ == null) {
+          usingSdksBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+              com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion, com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion.Builder, com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersionOrBuilder>(
+                  usingSdks_,
                   ((bitField0_ & 0x00000002) != 0),
                   getParentForChildren(),
                   isClean());
-          moduleSdks_ = null;
+          usingSdks_ = null;
         }
-        return moduleSdksBuilder_;
+        return usingSdksBuilder_;
       }
 
       private com.google.protobuf.LazyStringList moduleDeps_ = com.google.protobuf.LazyStringArrayList.EMPTY;
@@ -5672,8 +6416,8 @@ public final class BibixIntellijProto {
 
   }
 
-  public interface ModuleSdkOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:com.giyeok.bibix.intellij.ModuleSdk)
+  public interface SdkVersionOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:com.giyeok.bibix.intellij.SdkVersion)
       com.google.protobuf.MessageOrBuilder {
 
     /**
@@ -5727,28 +6471,28 @@ public final class BibixIntellijProto {
     com.google.protobuf.ByteString
         getScalaSdkVersionBytes();
 
-    public com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk.SdkCase getSdkCase();
+    public com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion.SdkCase getSdkCase();
   }
   /**
-   * Protobuf type {@code com.giyeok.bibix.intellij.ModuleSdk}
+   * Protobuf type {@code com.giyeok.bibix.intellij.SdkVersion}
    */
-  public static final class ModuleSdk extends
+  public static final class SdkVersion extends
       com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:com.giyeok.bibix.intellij.ModuleSdk)
-      ModuleSdkOrBuilder {
+      // @@protoc_insertion_point(message_implements:com.giyeok.bibix.intellij.SdkVersion)
+      SdkVersionOrBuilder {
   private static final long serialVersionUID = 0L;
-    // Use ModuleSdk.newBuilder() to construct.
-    private ModuleSdk(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+    // Use SdkVersion.newBuilder() to construct.
+    private SdkVersion(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
       super(builder);
     }
-    private ModuleSdk() {
+    private SdkVersion() {
     }
 
     @java.lang.Override
     @SuppressWarnings({"unused"})
     protected java.lang.Object newInstance(
         UnusedPrivateParameter unused) {
-      return new ModuleSdk();
+      return new SdkVersion();
     }
 
     @java.lang.Override
@@ -5756,7 +6500,7 @@ public final class BibixIntellijProto {
     getUnknownFields() {
       return this.unknownFields;
     }
-    private ModuleSdk(
+    private SdkVersion(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
@@ -5813,15 +6557,15 @@ public final class BibixIntellijProto {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return com.giyeok.bibix.intellij.BibixIntellijProto.internal_static_com_giyeok_bibix_intellij_ModuleSdk_descriptor;
+      return com.giyeok.bibix.intellij.BibixIntellijProto.internal_static_com_giyeok_bibix_intellij_SdkVersion_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return com.giyeok.bibix.intellij.BibixIntellijProto.internal_static_com_giyeok_bibix_intellij_ModuleSdk_fieldAccessorTable
+      return com.giyeok.bibix.intellij.BibixIntellijProto.internal_static_com_giyeok_bibix_intellij_SdkVersion_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk.class, com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk.Builder.class);
+              com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion.class, com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion.Builder.class);
     }
 
     private int sdkCase_ = 0;
@@ -6074,10 +6818,10 @@ public final class BibixIntellijProto {
       if (obj == this) {
        return true;
       }
-      if (!(obj instanceof com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk)) {
+      if (!(obj instanceof com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion)) {
         return super.equals(obj);
       }
-      com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk other = (com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk) obj;
+      com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion other = (com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion) obj;
 
       if (!getSdkCase().equals(other.getSdkCase())) return false;
       switch (sdkCase_) {
@@ -6128,69 +6872,69 @@ public final class BibixIntellijProto {
       return hash;
     }
 
-    public static com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk parseFrom(
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion parseFrom(
         java.nio.ByteBuffer data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk parseFrom(
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion parseFrom(
         java.nio.ByteBuffer data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk parseFrom(
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk parseFrom(
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk parseFrom(byte[] data)
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk parseFrom(
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk parseFrom(java.io.InputStream input)
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk parseFrom(
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
-    public static com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk parseDelimitedFrom(java.io.InputStream input)
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input);
     }
-    public static com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk parseDelimitedFrom(
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
-    public static com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk parseFrom(
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk parseFrom(
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -6203,7 +6947,7 @@ public final class BibixIntellijProto {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk prototype) {
+    public static Builder newBuilder(com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     @java.lang.Override
@@ -6219,26 +6963,26 @@ public final class BibixIntellijProto {
       return builder;
     }
     /**
-     * Protobuf type {@code com.giyeok.bibix.intellij.ModuleSdk}
+     * Protobuf type {@code com.giyeok.bibix.intellij.SdkVersion}
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:com.giyeok.bibix.intellij.ModuleSdk)
-        com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdkOrBuilder {
+        // @@protoc_insertion_point(builder_implements:com.giyeok.bibix.intellij.SdkVersion)
+        com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersionOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return com.giyeok.bibix.intellij.BibixIntellijProto.internal_static_com_giyeok_bibix_intellij_ModuleSdk_descriptor;
+        return com.giyeok.bibix.intellij.BibixIntellijProto.internal_static_com_giyeok_bibix_intellij_SdkVersion_descriptor;
       }
 
       @java.lang.Override
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return com.giyeok.bibix.intellij.BibixIntellijProto.internal_static_com_giyeok_bibix_intellij_ModuleSdk_fieldAccessorTable
+        return com.giyeok.bibix.intellij.BibixIntellijProto.internal_static_com_giyeok_bibix_intellij_SdkVersion_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk.class, com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk.Builder.class);
+                com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion.class, com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion.Builder.class);
       }
 
-      // Construct using com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk.newBuilder()
+      // Construct using com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -6264,17 +7008,17 @@ public final class BibixIntellijProto {
       @java.lang.Override
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return com.giyeok.bibix.intellij.BibixIntellijProto.internal_static_com_giyeok_bibix_intellij_ModuleSdk_descriptor;
+        return com.giyeok.bibix.intellij.BibixIntellijProto.internal_static_com_giyeok_bibix_intellij_SdkVersion_descriptor;
       }
 
       @java.lang.Override
-      public com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk getDefaultInstanceForType() {
-        return com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk.getDefaultInstance();
+      public com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion getDefaultInstanceForType() {
+        return com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion.getDefaultInstance();
       }
 
       @java.lang.Override
-      public com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk build() {
-        com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk result = buildPartial();
+      public com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion build() {
+        com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
@@ -6282,8 +7026,8 @@ public final class BibixIntellijProto {
       }
 
       @java.lang.Override
-      public com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk buildPartial() {
-        com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk result = new com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk(this);
+      public com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion buildPartial() {
+        com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion result = new com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion(this);
         if (sdkCase_ == 1) {
           result.sdk_ = sdk_;
         }
@@ -6332,16 +7076,16 @@ public final class BibixIntellijProto {
       }
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk) {
-          return mergeFrom((com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk)other);
+        if (other instanceof com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion) {
+          return mergeFrom((com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk other) {
-        if (other == com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk.getDefaultInstance()) return this;
+      public Builder mergeFrom(com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion other) {
+        if (other == com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion.getDefaultInstance()) return this;
         switch (other.getSdkCase()) {
           case JDK_VERSION: {
             sdkCase_ = 1;
@@ -6380,11 +7124,11 @@ public final class BibixIntellijProto {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk parsedMessage = null;
+        com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk) e.getUnfinishedMessage();
+          parsedMessage = (com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion) e.getUnfinishedMessage();
           throw e.unwrapIOException();
         } finally {
           if (parsedMessage != null) {
@@ -6712,41 +7456,41 @@ public final class BibixIntellijProto {
       }
 
 
-      // @@protoc_insertion_point(builder_scope:com.giyeok.bibix.intellij.ModuleSdk)
+      // @@protoc_insertion_point(builder_scope:com.giyeok.bibix.intellij.SdkVersion)
     }
 
-    // @@protoc_insertion_point(class_scope:com.giyeok.bibix.intellij.ModuleSdk)
-    private static final com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk DEFAULT_INSTANCE;
+    // @@protoc_insertion_point(class_scope:com.giyeok.bibix.intellij.SdkVersion)
+    private static final com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk();
+      DEFAULT_INSTANCE = new com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion();
     }
 
-    public static com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk getDefaultInstance() {
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
-    private static final com.google.protobuf.Parser<ModuleSdk>
-        PARSER = new com.google.protobuf.AbstractParser<ModuleSdk>() {
+    private static final com.google.protobuf.Parser<SdkVersion>
+        PARSER = new com.google.protobuf.AbstractParser<SdkVersion>() {
       @java.lang.Override
-      public ModuleSdk parsePartialFrom(
+      public SdkVersion parsePartialFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return new ModuleSdk(input, extensionRegistry);
+        return new SdkVersion(input, extensionRegistry);
       }
     };
 
-    public static com.google.protobuf.Parser<ModuleSdk> parser() {
+    public static com.google.protobuf.Parser<SdkVersion> parser() {
       return PARSER;
     }
 
     @java.lang.Override
-    public com.google.protobuf.Parser<ModuleSdk> getParserForType() {
+    public com.google.protobuf.Parser<SdkVersion> getParserForType() {
       return PARSER;
     }
 
     @java.lang.Override
-    public com.giyeok.bibix.intellij.BibixIntellijProto.ModuleSdk getDefaultInstanceForType() {
+    public com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -7907,8 +8651,8 @@ public final class BibixIntellijProto {
 
   }
 
-  public interface SdksOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:com.giyeok.bibix.intellij.Sdks)
+  public interface SdkInfoOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:com.giyeok.bibix.intellij.SdkInfo)
       com.google.protobuf.MessageOrBuilder {
 
     /**
@@ -7960,18 +8704,18 @@ public final class BibixIntellijProto {
         int index);
   }
   /**
-   * Protobuf type {@code com.giyeok.bibix.intellij.Sdks}
+   * Protobuf type {@code com.giyeok.bibix.intellij.SdkInfo}
    */
-  public static final class Sdks extends
+  public static final class SdkInfo extends
       com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:com.giyeok.bibix.intellij.Sdks)
-      SdksOrBuilder {
+      // @@protoc_insertion_point(message_implements:com.giyeok.bibix.intellij.SdkInfo)
+      SdkInfoOrBuilder {
   private static final long serialVersionUID = 0L;
-    // Use Sdks.newBuilder() to construct.
-    private Sdks(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+    // Use SdkInfo.newBuilder() to construct.
+    private SdkInfo(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
       super(builder);
     }
-    private Sdks() {
+    private SdkInfo() {
       ktjvmSdks_ = java.util.Collections.emptyList();
       scalaSdks_ = java.util.Collections.emptyList();
     }
@@ -7980,7 +8724,7 @@ public final class BibixIntellijProto {
     @SuppressWarnings({"unused"})
     protected java.lang.Object newInstance(
         UnusedPrivateParameter unused) {
-      return new Sdks();
+      return new SdkInfo();
     }
 
     @java.lang.Override
@@ -7988,7 +8732,7 @@ public final class BibixIntellijProto {
     getUnknownFields() {
       return this.unknownFields;
     }
-    private Sdks(
+    private SdkInfo(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
@@ -8052,15 +8796,15 @@ public final class BibixIntellijProto {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return com.giyeok.bibix.intellij.BibixIntellijProto.internal_static_com_giyeok_bibix_intellij_Sdks_descriptor;
+      return com.giyeok.bibix.intellij.BibixIntellijProto.internal_static_com_giyeok_bibix_intellij_SdkInfo_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return com.giyeok.bibix.intellij.BibixIntellijProto.internal_static_com_giyeok_bibix_intellij_Sdks_fieldAccessorTable
+      return com.giyeok.bibix.intellij.BibixIntellijProto.internal_static_com_giyeok_bibix_intellij_SdkInfo_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              com.giyeok.bibix.intellij.BibixIntellijProto.Sdks.class, com.giyeok.bibix.intellij.BibixIntellijProto.Sdks.Builder.class);
+              com.giyeok.bibix.intellij.BibixIntellijProto.SdkInfo.class, com.giyeok.bibix.intellij.BibixIntellijProto.SdkInfo.Builder.class);
     }
 
     public static final int KTJVM_SDKS_FIELD_NUMBER = 1;
@@ -8190,10 +8934,10 @@ public final class BibixIntellijProto {
       if (obj == this) {
        return true;
       }
-      if (!(obj instanceof com.giyeok.bibix.intellij.BibixIntellijProto.Sdks)) {
+      if (!(obj instanceof com.giyeok.bibix.intellij.BibixIntellijProto.SdkInfo)) {
         return super.equals(obj);
       }
-      com.giyeok.bibix.intellij.BibixIntellijProto.Sdks other = (com.giyeok.bibix.intellij.BibixIntellijProto.Sdks) obj;
+      com.giyeok.bibix.intellij.BibixIntellijProto.SdkInfo other = (com.giyeok.bibix.intellij.BibixIntellijProto.SdkInfo) obj;
 
       if (!getKtjvmSdksList()
           .equals(other.getKtjvmSdksList())) return false;
@@ -8223,69 +8967,69 @@ public final class BibixIntellijProto {
       return hash;
     }
 
-    public static com.giyeok.bibix.intellij.BibixIntellijProto.Sdks parseFrom(
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.SdkInfo parseFrom(
         java.nio.ByteBuffer data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static com.giyeok.bibix.intellij.BibixIntellijProto.Sdks parseFrom(
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.SdkInfo parseFrom(
         java.nio.ByteBuffer data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static com.giyeok.bibix.intellij.BibixIntellijProto.Sdks parseFrom(
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.SdkInfo parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static com.giyeok.bibix.intellij.BibixIntellijProto.Sdks parseFrom(
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.SdkInfo parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static com.giyeok.bibix.intellij.BibixIntellijProto.Sdks parseFrom(byte[] data)
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.SdkInfo parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static com.giyeok.bibix.intellij.BibixIntellijProto.Sdks parseFrom(
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.SdkInfo parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static com.giyeok.bibix.intellij.BibixIntellijProto.Sdks parseFrom(java.io.InputStream input)
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.SdkInfo parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static com.giyeok.bibix.intellij.BibixIntellijProto.Sdks parseFrom(
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.SdkInfo parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
-    public static com.giyeok.bibix.intellij.BibixIntellijProto.Sdks parseDelimitedFrom(java.io.InputStream input)
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.SdkInfo parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input);
     }
-    public static com.giyeok.bibix.intellij.BibixIntellijProto.Sdks parseDelimitedFrom(
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.SdkInfo parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
-    public static com.giyeok.bibix.intellij.BibixIntellijProto.Sdks parseFrom(
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.SdkInfo parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static com.giyeok.bibix.intellij.BibixIntellijProto.Sdks parseFrom(
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.SdkInfo parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -8298,7 +9042,7 @@ public final class BibixIntellijProto {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(com.giyeok.bibix.intellij.BibixIntellijProto.Sdks prototype) {
+    public static Builder newBuilder(com.giyeok.bibix.intellij.BibixIntellijProto.SdkInfo prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     @java.lang.Override
@@ -8314,26 +9058,26 @@ public final class BibixIntellijProto {
       return builder;
     }
     /**
-     * Protobuf type {@code com.giyeok.bibix.intellij.Sdks}
+     * Protobuf type {@code com.giyeok.bibix.intellij.SdkInfo}
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:com.giyeok.bibix.intellij.Sdks)
-        com.giyeok.bibix.intellij.BibixIntellijProto.SdksOrBuilder {
+        // @@protoc_insertion_point(builder_implements:com.giyeok.bibix.intellij.SdkInfo)
+        com.giyeok.bibix.intellij.BibixIntellijProto.SdkInfoOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return com.giyeok.bibix.intellij.BibixIntellijProto.internal_static_com_giyeok_bibix_intellij_Sdks_descriptor;
+        return com.giyeok.bibix.intellij.BibixIntellijProto.internal_static_com_giyeok_bibix_intellij_SdkInfo_descriptor;
       }
 
       @java.lang.Override
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return com.giyeok.bibix.intellij.BibixIntellijProto.internal_static_com_giyeok_bibix_intellij_Sdks_fieldAccessorTable
+        return com.giyeok.bibix.intellij.BibixIntellijProto.internal_static_com_giyeok_bibix_intellij_SdkInfo_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                com.giyeok.bibix.intellij.BibixIntellijProto.Sdks.class, com.giyeok.bibix.intellij.BibixIntellijProto.Sdks.Builder.class);
+                com.giyeok.bibix.intellij.BibixIntellijProto.SdkInfo.class, com.giyeok.bibix.intellij.BibixIntellijProto.SdkInfo.Builder.class);
       }
 
-      // Construct using com.giyeok.bibix.intellij.BibixIntellijProto.Sdks.newBuilder()
+      // Construct using com.giyeok.bibix.intellij.BibixIntellijProto.SdkInfo.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -8371,17 +9115,17 @@ public final class BibixIntellijProto {
       @java.lang.Override
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return com.giyeok.bibix.intellij.BibixIntellijProto.internal_static_com_giyeok_bibix_intellij_Sdks_descriptor;
+        return com.giyeok.bibix.intellij.BibixIntellijProto.internal_static_com_giyeok_bibix_intellij_SdkInfo_descriptor;
       }
 
       @java.lang.Override
-      public com.giyeok.bibix.intellij.BibixIntellijProto.Sdks getDefaultInstanceForType() {
-        return com.giyeok.bibix.intellij.BibixIntellijProto.Sdks.getDefaultInstance();
+      public com.giyeok.bibix.intellij.BibixIntellijProto.SdkInfo getDefaultInstanceForType() {
+        return com.giyeok.bibix.intellij.BibixIntellijProto.SdkInfo.getDefaultInstance();
       }
 
       @java.lang.Override
-      public com.giyeok.bibix.intellij.BibixIntellijProto.Sdks build() {
-        com.giyeok.bibix.intellij.BibixIntellijProto.Sdks result = buildPartial();
+      public com.giyeok.bibix.intellij.BibixIntellijProto.SdkInfo build() {
+        com.giyeok.bibix.intellij.BibixIntellijProto.SdkInfo result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
@@ -8389,8 +9133,8 @@ public final class BibixIntellijProto {
       }
 
       @java.lang.Override
-      public com.giyeok.bibix.intellij.BibixIntellijProto.Sdks buildPartial() {
-        com.giyeok.bibix.intellij.BibixIntellijProto.Sdks result = new com.giyeok.bibix.intellij.BibixIntellijProto.Sdks(this);
+      public com.giyeok.bibix.intellij.BibixIntellijProto.SdkInfo buildPartial() {
+        com.giyeok.bibix.intellij.BibixIntellijProto.SdkInfo result = new com.giyeok.bibix.intellij.BibixIntellijProto.SdkInfo(this);
         int from_bitField0_ = bitField0_;
         if (ktjvmSdksBuilder_ == null) {
           if (((bitField0_ & 0x00000001) != 0)) {
@@ -8448,16 +9192,16 @@ public final class BibixIntellijProto {
       }
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof com.giyeok.bibix.intellij.BibixIntellijProto.Sdks) {
-          return mergeFrom((com.giyeok.bibix.intellij.BibixIntellijProto.Sdks)other);
+        if (other instanceof com.giyeok.bibix.intellij.BibixIntellijProto.SdkInfo) {
+          return mergeFrom((com.giyeok.bibix.intellij.BibixIntellijProto.SdkInfo)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(com.giyeok.bibix.intellij.BibixIntellijProto.Sdks other) {
-        if (other == com.giyeok.bibix.intellij.BibixIntellijProto.Sdks.getDefaultInstance()) return this;
+      public Builder mergeFrom(com.giyeok.bibix.intellij.BibixIntellijProto.SdkInfo other) {
+        if (other == com.giyeok.bibix.intellij.BibixIntellijProto.SdkInfo.getDefaultInstance()) return this;
         if (ktjvmSdksBuilder_ == null) {
           if (!other.ktjvmSdks_.isEmpty()) {
             if (ktjvmSdks_.isEmpty()) {
@@ -8525,11 +9269,11 @@ public final class BibixIntellijProto {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        com.giyeok.bibix.intellij.BibixIntellijProto.Sdks parsedMessage = null;
+        com.giyeok.bibix.intellij.BibixIntellijProto.SdkInfo parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (com.giyeok.bibix.intellij.BibixIntellijProto.Sdks) e.getUnfinishedMessage();
+          parsedMessage = (com.giyeok.bibix.intellij.BibixIntellijProto.SdkInfo) e.getUnfinishedMessage();
           throw e.unwrapIOException();
         } finally {
           if (parsedMessage != null) {
@@ -9032,41 +9776,41 @@ public final class BibixIntellijProto {
       }
 
 
-      // @@protoc_insertion_point(builder_scope:com.giyeok.bibix.intellij.Sdks)
+      // @@protoc_insertion_point(builder_scope:com.giyeok.bibix.intellij.SdkInfo)
     }
 
-    // @@protoc_insertion_point(class_scope:com.giyeok.bibix.intellij.Sdks)
-    private static final com.giyeok.bibix.intellij.BibixIntellijProto.Sdks DEFAULT_INSTANCE;
+    // @@protoc_insertion_point(class_scope:com.giyeok.bibix.intellij.SdkInfo)
+    private static final com.giyeok.bibix.intellij.BibixIntellijProto.SdkInfo DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new com.giyeok.bibix.intellij.BibixIntellijProto.Sdks();
+      DEFAULT_INSTANCE = new com.giyeok.bibix.intellij.BibixIntellijProto.SdkInfo();
     }
 
-    public static com.giyeok.bibix.intellij.BibixIntellijProto.Sdks getDefaultInstance() {
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.SdkInfo getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
-    private static final com.google.protobuf.Parser<Sdks>
-        PARSER = new com.google.protobuf.AbstractParser<Sdks>() {
+    private static final com.google.protobuf.Parser<SdkInfo>
+        PARSER = new com.google.protobuf.AbstractParser<SdkInfo>() {
       @java.lang.Override
-      public Sdks parsePartialFrom(
+      public SdkInfo parsePartialFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return new Sdks(input, extensionRegistry);
+        return new SdkInfo(input, extensionRegistry);
       }
     };
 
-    public static com.google.protobuf.Parser<Sdks> parser() {
+    public static com.google.protobuf.Parser<SdkInfo> parser() {
       return PARSER;
     }
 
     @java.lang.Override
-    public com.google.protobuf.Parser<Sdks> getParserForType() {
+    public com.google.protobuf.Parser<SdkInfo> getParserForType() {
       return PARSER;
     }
 
     @java.lang.Override
-    public com.giyeok.bibix.intellij.BibixIntellijProto.Sdks getDefaultInstanceForType() {
+    public com.giyeok.bibix.intellij.BibixIntellijProto.SdkInfo getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -11010,6 +11754,610 @@ public final class BibixIntellijProto {
 
     @java.lang.Override
     public com.giyeok.bibix.intellij.BibixIntellijProto.ScalaSdk getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
+  public interface ActionOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:com.giyeok.bibix.intellij.Action)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <pre>
+     * TODO definition
+     * </pre>
+     *
+     * <code>string action_name = 1;</code>
+     * @return The actionName.
+     */
+    java.lang.String getActionName();
+    /**
+     * <pre>
+     * TODO definition
+     * </pre>
+     *
+     * <code>string action_name = 1;</code>
+     * @return The bytes for actionName.
+     */
+    com.google.protobuf.ByteString
+        getActionNameBytes();
+  }
+  /**
+   * Protobuf type {@code com.giyeok.bibix.intellij.Action}
+   */
+  public static final class Action extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:com.giyeok.bibix.intellij.Action)
+      ActionOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use Action.newBuilder() to construct.
+    private Action(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private Action() {
+      actionName_ = "";
+    }
+
+    @java.lang.Override
+    @SuppressWarnings({"unused"})
+    protected java.lang.Object newInstance(
+        UnusedPrivateParameter unused) {
+      return new Action();
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private Action(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            case 10: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              actionName_ = s;
+              break;
+            }
+            default: {
+              if (!parseUnknownField(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return com.giyeok.bibix.intellij.BibixIntellijProto.internal_static_com_giyeok_bibix_intellij_Action_descriptor;
+    }
+
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return com.giyeok.bibix.intellij.BibixIntellijProto.internal_static_com_giyeok_bibix_intellij_Action_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              com.giyeok.bibix.intellij.BibixIntellijProto.Action.class, com.giyeok.bibix.intellij.BibixIntellijProto.Action.Builder.class);
+    }
+
+    public static final int ACTION_NAME_FIELD_NUMBER = 1;
+    private volatile java.lang.Object actionName_;
+    /**
+     * <pre>
+     * TODO definition
+     * </pre>
+     *
+     * <code>string action_name = 1;</code>
+     * @return The actionName.
+     */
+    @java.lang.Override
+    public java.lang.String getActionName() {
+      java.lang.Object ref = actionName_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        actionName_ = s;
+        return s;
+      }
+    }
+    /**
+     * <pre>
+     * TODO definition
+     * </pre>
+     *
+     * <code>string action_name = 1;</code>
+     * @return The bytes for actionName.
+     */
+    @java.lang.Override
+    public com.google.protobuf.ByteString
+        getActionNameBytes() {
+      java.lang.Object ref = actionName_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        actionName_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    private byte memoizedIsInitialized = -1;
+    @java.lang.Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    @java.lang.Override
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(actionName_)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, actionName_);
+      }
+      unknownFields.writeTo(output);
+    }
+
+    @java.lang.Override
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(actionName_)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, actionName_);
+      }
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof com.giyeok.bibix.intellij.BibixIntellijProto.Action)) {
+        return super.equals(obj);
+      }
+      com.giyeok.bibix.intellij.BibixIntellijProto.Action other = (com.giyeok.bibix.intellij.BibixIntellijProto.Action) obj;
+
+      if (!getActionName()
+          .equals(other.getActionName())) return false;
+      if (!unknownFields.equals(other.unknownFields)) return false;
+      return true;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      hash = (37 * hash) + ACTION_NAME_FIELD_NUMBER;
+      hash = (53 * hash) + getActionName().hashCode();
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.Action parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.Action parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.Action parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.Action parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.Action parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.Action parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.Action parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.Action parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.Action parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.Action parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.Action parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.Action parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    @java.lang.Override
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(com.giyeok.bibix.intellij.BibixIntellijProto.Action prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @java.lang.Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code com.giyeok.bibix.intellij.Action}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:com.giyeok.bibix.intellij.Action)
+        com.giyeok.bibix.intellij.BibixIntellijProto.ActionOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return com.giyeok.bibix.intellij.BibixIntellijProto.internal_static_com_giyeok_bibix_intellij_Action_descriptor;
+      }
+
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return com.giyeok.bibix.intellij.BibixIntellijProto.internal_static_com_giyeok_bibix_intellij_Action_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                com.giyeok.bibix.intellij.BibixIntellijProto.Action.class, com.giyeok.bibix.intellij.BibixIntellijProto.Action.Builder.class);
+      }
+
+      // Construct using com.giyeok.bibix.intellij.BibixIntellijProto.Action.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+        }
+      }
+      @java.lang.Override
+      public Builder clear() {
+        super.clear();
+        actionName_ = "";
+
+        return this;
+      }
+
+      @java.lang.Override
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return com.giyeok.bibix.intellij.BibixIntellijProto.internal_static_com_giyeok_bibix_intellij_Action_descriptor;
+      }
+
+      @java.lang.Override
+      public com.giyeok.bibix.intellij.BibixIntellijProto.Action getDefaultInstanceForType() {
+        return com.giyeok.bibix.intellij.BibixIntellijProto.Action.getDefaultInstance();
+      }
+
+      @java.lang.Override
+      public com.giyeok.bibix.intellij.BibixIntellijProto.Action build() {
+        com.giyeok.bibix.intellij.BibixIntellijProto.Action result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      @java.lang.Override
+      public com.giyeok.bibix.intellij.BibixIntellijProto.Action buildPartial() {
+        com.giyeok.bibix.intellij.BibixIntellijProto.Action result = new com.giyeok.bibix.intellij.BibixIntellijProto.Action(this);
+        result.actionName_ = actionName_;
+        onBuilt();
+        return result;
+      }
+
+      @java.lang.Override
+      public Builder clone() {
+        return super.clone();
+      }
+      @java.lang.Override
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.setField(field, value);
+      }
+      @java.lang.Override
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return super.clearField(field);
+      }
+      @java.lang.Override
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return super.clearOneof(oneof);
+      }
+      @java.lang.Override
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return super.setRepeatedField(field, index, value);
+      }
+      @java.lang.Override
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.addRepeatedField(field, value);
+      }
+      @java.lang.Override
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof com.giyeok.bibix.intellij.BibixIntellijProto.Action) {
+          return mergeFrom((com.giyeok.bibix.intellij.BibixIntellijProto.Action)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(com.giyeok.bibix.intellij.BibixIntellijProto.Action other) {
+        if (other == com.giyeok.bibix.intellij.BibixIntellijProto.Action.getDefaultInstance()) return this;
+        if (!other.getActionName().isEmpty()) {
+          actionName_ = other.actionName_;
+          onChanged();
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      @java.lang.Override
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      @java.lang.Override
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.giyeok.bibix.intellij.BibixIntellijProto.Action parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (com.giyeok.bibix.intellij.BibixIntellijProto.Action) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+
+      private java.lang.Object actionName_ = "";
+      /**
+       * <pre>
+       * TODO definition
+       * </pre>
+       *
+       * <code>string action_name = 1;</code>
+       * @return The actionName.
+       */
+      public java.lang.String getActionName() {
+        java.lang.Object ref = actionName_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          actionName_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <pre>
+       * TODO definition
+       * </pre>
+       *
+       * <code>string action_name = 1;</code>
+       * @return The bytes for actionName.
+       */
+      public com.google.protobuf.ByteString
+          getActionNameBytes() {
+        java.lang.Object ref = actionName_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          actionName_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <pre>
+       * TODO definition
+       * </pre>
+       *
+       * <code>string action_name = 1;</code>
+       * @param value The actionName to set.
+       * @return This builder for chaining.
+       */
+      public Builder setActionName(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        actionName_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * TODO definition
+       * </pre>
+       *
+       * <code>string action_name = 1;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearActionName() {
+        
+        actionName_ = getDefaultInstance().getActionName();
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * TODO definition
+       * </pre>
+       *
+       * <code>string action_name = 1;</code>
+       * @param value The bytes for actionName to set.
+       * @return This builder for chaining.
+       */
+      public Builder setActionNameBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        actionName_ = value;
+        onChanged();
+        return this;
+      }
+      @java.lang.Override
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFields(unknownFields);
+      }
+
+      @java.lang.Override
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:com.giyeok.bibix.intellij.Action)
+    }
+
+    // @@protoc_insertion_point(class_scope:com.giyeok.bibix.intellij.Action)
+    private static final com.giyeok.bibix.intellij.BibixIntellijProto.Action DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new com.giyeok.bibix.intellij.BibixIntellijProto.Action();
+    }
+
+    public static com.giyeok.bibix.intellij.BibixIntellijProto.Action getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<Action>
+        PARSER = new com.google.protobuf.AbstractParser<Action>() {
+      @java.lang.Override
+      public Action parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new Action(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<Action> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<Action> getParserForType() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.giyeok.bibix.intellij.BibixIntellijProto.Action getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -14300,20 +15648,20 @@ public final class BibixIntellijProto {
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_com_giyeok_bibix_intellij_ContentRoot_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_com_giyeok_bibix_intellij_ModuleSdk_descriptor;
+    internal_static_com_giyeok_bibix_intellij_SdkVersion_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_com_giyeok_bibix_intellij_ModuleSdk_fieldAccessorTable;
+      internal_static_com_giyeok_bibix_intellij_SdkVersion_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_com_giyeok_bibix_intellij_ExternalLibrary_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_com_giyeok_bibix_intellij_ExternalLibrary_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_com_giyeok_bibix_intellij_Sdks_descriptor;
+    internal_static_com_giyeok_bibix_intellij_SdkInfo_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_com_giyeok_bibix_intellij_Sdks_fieldAccessorTable;
+      internal_static_com_giyeok_bibix_intellij_SdkInfo_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_com_giyeok_bibix_intellij_KotlinJvmSdk_descriptor;
   private static final 
@@ -14324,6 +15672,11 @@ public final class BibixIntellijProto {
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_com_giyeok_bibix_intellij_ScalaSdk_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_com_giyeok_bibix_intellij_Action_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_com_giyeok_bibix_intellij_Action_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_com_giyeok_bibix_intellij_BuildTargetsReq_descriptor;
   private static final 
@@ -14366,54 +15719,58 @@ public final class BibixIntellijProto {
       "\n\tapi.proto\022\031com.giyeok.bibix.intellij\"Q" +
       "\n\016LoadProjectReq\022\024\n\014project_root\030\001 \001(\t\022\023" +
       "\n\013script_name\030\002 \001(\t\022\024\n\014force_reload\030\003 \001(" +
-      "\010\"\347\001\n\020BibixProjectInfo\022\022\n\nproject_id\030\001 \001" +
-      "(\t\022\024\n\014project_name\030\002 \001(\t\0222\n\007modules\030\003 \003(" +
-      "\0132!.com.giyeok.bibix.intellij.Module\022F\n\022" +
-      "external_libraries\030\004 \003(\0132*.com.giyeok.bi" +
-      "bix.intellij.ExternalLibrary\022-\n\004sdks\030\005 \001" +
-      "(\0132\037.com.giyeok.bibix.intellij.Sdks\"\361\001\n\006" +
-      "Module\022\023\n\013module_name\030\001 \001(\t\022\023\n\013module_ty" +
-      "pe\030\002 \001(\t\022\030\n\020module_root_path\030\003 \001(\t\022=\n\rco" +
-      "ntent_roots\030\004 \003(\0132&.com.giyeok.bibix.int" +
-      "ellij.ContentRoot\0229\n\013module_sdks\030\005 \003(\0132$" +
-      ".com.giyeok.bibix.intellij.ModuleSdk\022\023\n\013" +
-      "module_deps\030\006 \003(\t\022\024\n\014library_deps\030\007 \003(\t\"" +
-      "^\n\013ContentRoot\022\031\n\021content_root_name\030\001 \001(" +
-      "\t\022\031\n\021content_root_type\030\002 \001(\t\022\031\n\021content_" +
-      "root_path\030\003 \001(\t\"c\n\tModuleSdk\022\025\n\013jdk_vers" +
-      "ion\030\001 \001(\tH\000\022\033\n\021ktjvm_sdk_version\030\002 \001(\tH\000" +
-      "\022\033\n\021scala_sdk_version\030\003 \001(\tH\000B\005\n\003sdk\"_\n\017" +
-      "ExternalLibrary\022\022\n\nlibrary_id\030\001 \001(\t\022\023\n\013d" +
-      "escription\030\002 \001(\t\022\022\n\nclasspaths\030\003 \003(\t\022\017\n\007" +
-      "sources\030\004 \003(\t\"|\n\004Sdks\022;\n\nktjvm_sdks\030\001 \003(" +
-      "\0132\'.com.giyeok.bibix.intellij.KotlinJvmS" +
-      "dk\0227\n\nscala_sdks\030\002 \003(\0132#.com.giyeok.bibi" +
-      "x.intellij.ScalaSdk\"8\n\014KotlinJvmSdk\022\017\n\007v" +
-      "ersion\030\001 \001(\t\022\027\n\017sdk_library_ids\030\002 \003(\t\"q\n" +
-      "\010ScalaSdk\022\017\n\007version\030\001 \001(\t\022\036\n\026scala_lang" +
-      "uage_version\030\002 \001(\t\022\033\n\023compiler_classpath" +
-      "s\030\003 \003(\t\022\027\n\017sdk_library_ids\030\004 \003(\t\"<\n\017Buil" +
-      "dTargetsReq\022\022\n\nproject_id\030\001 \001(\t\022\025\n\rbuild" +
-      "_targets\030\002 \003(\t\"\021\n\017BuildTargetsRes\"\024\n\022Bui" +
-      "ldTargetsUpdate\"8\n\021ExecuteActionsReq\022\022\n\n" +
-      "project_id\030\001 \001(\t\022\017\n\007actions\030\002 \003(\t\"\023\n\021Exe" +
-      "cuteActionsRes\"\025\n\023ExecuteActionUpdate2\302\004" +
-      "\n\024BibixIntellijService\022e\n\013loadProject\022)." +
-      "com.giyeok.bibix.intellij.LoadProjectReq" +
-      "\032+.com.giyeok.bibix.intellij.BibixProjec" +
-      "tInfo\022f\n\014buildTargets\022*.com.giyeok.bibix" +
-      ".intellij.BuildTargetsReq\032*.com.giyeok.b" +
-      "ibix.intellij.BuildTargetsRes\022t\n\025buildTa" +
-      "rgetsStreaming\022*.com.giyeok.bibix.intell" +
-      "ij.BuildTargetsReq\032-.com.giyeok.bibix.in" +
-      "tellij.BuildTargetsUpdate0\001\022l\n\016executeAc" +
-      "tions\022,.com.giyeok.bibix.intellij.Execut" +
-      "eActionsReq\032,.com.giyeok.bibix.intellij." +
-      "ExecuteActionsRes\022w\n\027executeActionsStrea" +
-      "ming\022*.com.giyeok.bibix.intellij.BuildTa" +
-      "rgetsReq\032..com.giyeok.bibix.intellij.Exe" +
-      "cuteActionUpdate0\001B\024B\022BibixIntellijProto" +
-      "b\006proto3"
+      "\010\"\335\002\n\020BibixProjectInfo\022\022\n\nproject_id\030\001 \001" +
+      "(\t\022\024\n\014project_name\030\002 \001(\t\0229\n\nusing_sdks\030\003" +
+      " \003(\0132%.com.giyeok.bibix.intellij.SdkVers" +
+      "ion\0222\n\007modules\030\004 \003(\0132!.com.giyeok.bibix." +
+      "intellij.Module\022F\n\022external_libraries\030\005 " +
+      "\003(\0132*.com.giyeok.bibix.intellij.External" +
+      "Library\0224\n\010sdk_info\030\006 \001(\0132\".com.giyeok.b" +
+      "ibix.intellij.SdkInfo\0222\n\007actions\030\007 \003(\0132!" +
+      ".com.giyeok.bibix.intellij.Action\"\361\001\n\006Mo" +
+      "dule\022\023\n\013module_name\030\001 \001(\t\022\023\n\013module_type" +
+      "\030\002 \001(\t\022\030\n\020module_root_path\030\003 \001(\t\022=\n\rcont" +
+      "ent_roots\030\004 \003(\0132&.com.giyeok.bibix.intel" +
+      "lij.ContentRoot\0229\n\nusing_sdks\030\005 \003(\0132%.co" +
+      "m.giyeok.bibix.intellij.SdkVersion\022\023\n\013mo" +
+      "dule_deps\030\006 \003(\t\022\024\n\014library_deps\030\007 \003(\t\"^\n" +
+      "\013ContentRoot\022\031\n\021content_root_name\030\001 \001(\t\022" +
+      "\031\n\021content_root_type\030\002 \001(\t\022\031\n\021content_ro" +
+      "ot_path\030\003 \001(\t\"d\n\nSdkVersion\022\025\n\013jdk_versi" +
+      "on\030\001 \001(\tH\000\022\033\n\021ktjvm_sdk_version\030\002 \001(\tH\000\022" +
+      "\033\n\021scala_sdk_version\030\003 \001(\tH\000B\005\n\003sdk\"_\n\017E" +
+      "xternalLibrary\022\022\n\nlibrary_id\030\001 \001(\t\022\023\n\013de" +
+      "scription\030\002 \001(\t\022\022\n\nclasspaths\030\003 \003(\t\022\017\n\007s" +
+      "ources\030\004 \003(\t\"\177\n\007SdkInfo\022;\n\nktjvm_sdks\030\001 " +
+      "\003(\0132\'.com.giyeok.bibix.intellij.KotlinJv" +
+      "mSdk\0227\n\nscala_sdks\030\002 \003(\0132#.com.giyeok.bi" +
+      "bix.intellij.ScalaSdk\"8\n\014KotlinJvmSdk\022\017\n" +
+      "\007version\030\001 \001(\t\022\027\n\017sdk_library_ids\030\002 \003(\t\"" +
+      "q\n\010ScalaSdk\022\017\n\007version\030\001 \001(\t\022\036\n\026scala_la" +
+      "nguage_version\030\002 \001(\t\022\033\n\023compiler_classpa" +
+      "ths\030\003 \003(\t\022\027\n\017sdk_library_ids\030\004 \003(\t\"\035\n\006Ac" +
+      "tion\022\023\n\013action_name\030\001 \001(\t\"<\n\017BuildTarget" +
+      "sReq\022\022\n\nproject_id\030\001 \001(\t\022\025\n\rbuild_target" +
+      "s\030\002 \003(\t\"\021\n\017BuildTargetsRes\"\024\n\022BuildTarge" +
+      "tsUpdate\"8\n\021ExecuteActionsReq\022\022\n\nproject" +
+      "_id\030\001 \001(\t\022\017\n\007actions\030\002 \003(\t\"\023\n\021ExecuteAct" +
+      "ionsRes\"\025\n\023ExecuteActionUpdate2\302\004\n\024Bibix" +
+      "IntellijService\022e\n\013loadProject\022).com.giy" +
+      "eok.bibix.intellij.LoadProjectReq\032+.com." +
+      "giyeok.bibix.intellij.BibixProjectInfo\022f" +
+      "\n\014buildTargets\022*.com.giyeok.bibix.intell" +
+      "ij.BuildTargetsReq\032*.com.giyeok.bibix.in" +
+      "tellij.BuildTargetsRes\022t\n\025buildTargetsSt" +
+      "reaming\022*.com.giyeok.bibix.intellij.Buil" +
+      "dTargetsReq\032-.com.giyeok.bibix.intellij." +
+      "BuildTargetsUpdate0\001\022l\n\016executeActions\022," +
+      ".com.giyeok.bibix.intellij.ExecuteAction" +
+      "sReq\032,.com.giyeok.bibix.intellij.Execute" +
+      "ActionsRes\022w\n\027executeActionsStreaming\022*." +
+      "com.giyeok.bibix.intellij.BuildTargetsRe" +
+      "q\032..com.giyeok.bibix.intellij.ExecuteAct" +
+      "ionUpdate0\001B\024B\022BibixIntellijProtob\006proto" +
+      "3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -14430,24 +15787,24 @@ public final class BibixIntellijProto {
     internal_static_com_giyeok_bibix_intellij_BibixProjectInfo_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_giyeok_bibix_intellij_BibixProjectInfo_descriptor,
-        new java.lang.String[] { "ProjectId", "ProjectName", "Modules", "ExternalLibraries", "Sdks", });
+        new java.lang.String[] { "ProjectId", "ProjectName", "UsingSdks", "Modules", "ExternalLibraries", "SdkInfo", "Actions", });
     internal_static_com_giyeok_bibix_intellij_Module_descriptor =
       getDescriptor().getMessageTypes().get(2);
     internal_static_com_giyeok_bibix_intellij_Module_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_giyeok_bibix_intellij_Module_descriptor,
-        new java.lang.String[] { "ModuleName", "ModuleType", "ModuleRootPath", "ContentRoots", "ModuleSdks", "ModuleDeps", "LibraryDeps", });
+        new java.lang.String[] { "ModuleName", "ModuleType", "ModuleRootPath", "ContentRoots", "UsingSdks", "ModuleDeps", "LibraryDeps", });
     internal_static_com_giyeok_bibix_intellij_ContentRoot_descriptor =
       getDescriptor().getMessageTypes().get(3);
     internal_static_com_giyeok_bibix_intellij_ContentRoot_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_giyeok_bibix_intellij_ContentRoot_descriptor,
         new java.lang.String[] { "ContentRootName", "ContentRootType", "ContentRootPath", });
-    internal_static_com_giyeok_bibix_intellij_ModuleSdk_descriptor =
+    internal_static_com_giyeok_bibix_intellij_SdkVersion_descriptor =
       getDescriptor().getMessageTypes().get(4);
-    internal_static_com_giyeok_bibix_intellij_ModuleSdk_fieldAccessorTable = new
+    internal_static_com_giyeok_bibix_intellij_SdkVersion_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_com_giyeok_bibix_intellij_ModuleSdk_descriptor,
+        internal_static_com_giyeok_bibix_intellij_SdkVersion_descriptor,
         new java.lang.String[] { "JdkVersion", "KtjvmSdkVersion", "ScalaSdkVersion", "Sdk", });
     internal_static_com_giyeok_bibix_intellij_ExternalLibrary_descriptor =
       getDescriptor().getMessageTypes().get(5);
@@ -14455,11 +15812,11 @@ public final class BibixIntellijProto {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_giyeok_bibix_intellij_ExternalLibrary_descriptor,
         new java.lang.String[] { "LibraryId", "Description", "Classpaths", "Sources", });
-    internal_static_com_giyeok_bibix_intellij_Sdks_descriptor =
+    internal_static_com_giyeok_bibix_intellij_SdkInfo_descriptor =
       getDescriptor().getMessageTypes().get(6);
-    internal_static_com_giyeok_bibix_intellij_Sdks_fieldAccessorTable = new
+    internal_static_com_giyeok_bibix_intellij_SdkInfo_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_com_giyeok_bibix_intellij_Sdks_descriptor,
+        internal_static_com_giyeok_bibix_intellij_SdkInfo_descriptor,
         new java.lang.String[] { "KtjvmSdks", "ScalaSdks", });
     internal_static_com_giyeok_bibix_intellij_KotlinJvmSdk_descriptor =
       getDescriptor().getMessageTypes().get(7);
@@ -14473,38 +15830,44 @@ public final class BibixIntellijProto {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_giyeok_bibix_intellij_ScalaSdk_descriptor,
         new java.lang.String[] { "Version", "ScalaLanguageVersion", "CompilerClasspaths", "SdkLibraryIds", });
-    internal_static_com_giyeok_bibix_intellij_BuildTargetsReq_descriptor =
+    internal_static_com_giyeok_bibix_intellij_Action_descriptor =
       getDescriptor().getMessageTypes().get(9);
+    internal_static_com_giyeok_bibix_intellij_Action_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_com_giyeok_bibix_intellij_Action_descriptor,
+        new java.lang.String[] { "ActionName", });
+    internal_static_com_giyeok_bibix_intellij_BuildTargetsReq_descriptor =
+      getDescriptor().getMessageTypes().get(10);
     internal_static_com_giyeok_bibix_intellij_BuildTargetsReq_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_giyeok_bibix_intellij_BuildTargetsReq_descriptor,
         new java.lang.String[] { "ProjectId", "BuildTargets", });
     internal_static_com_giyeok_bibix_intellij_BuildTargetsRes_descriptor =
-      getDescriptor().getMessageTypes().get(10);
+      getDescriptor().getMessageTypes().get(11);
     internal_static_com_giyeok_bibix_intellij_BuildTargetsRes_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_giyeok_bibix_intellij_BuildTargetsRes_descriptor,
         new java.lang.String[] { });
     internal_static_com_giyeok_bibix_intellij_BuildTargetsUpdate_descriptor =
-      getDescriptor().getMessageTypes().get(11);
+      getDescriptor().getMessageTypes().get(12);
     internal_static_com_giyeok_bibix_intellij_BuildTargetsUpdate_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_giyeok_bibix_intellij_BuildTargetsUpdate_descriptor,
         new java.lang.String[] { });
     internal_static_com_giyeok_bibix_intellij_ExecuteActionsReq_descriptor =
-      getDescriptor().getMessageTypes().get(12);
+      getDescriptor().getMessageTypes().get(13);
     internal_static_com_giyeok_bibix_intellij_ExecuteActionsReq_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_giyeok_bibix_intellij_ExecuteActionsReq_descriptor,
         new java.lang.String[] { "ProjectId", "Actions", });
     internal_static_com_giyeok_bibix_intellij_ExecuteActionsRes_descriptor =
-      getDescriptor().getMessageTypes().get(13);
+      getDescriptor().getMessageTypes().get(14);
     internal_static_com_giyeok_bibix_intellij_ExecuteActionsRes_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_giyeok_bibix_intellij_ExecuteActionsRes_descriptor,
         new java.lang.String[] { });
     internal_static_com_giyeok_bibix_intellij_ExecuteActionUpdate_descriptor =
-      getDescriptor().getMessageTypes().get(14);
+      getDescriptor().getMessageTypes().get(15);
     internal_static_com_giyeok_bibix_intellij_ExecuteActionUpdate_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_giyeok_bibix_intellij_ExecuteActionUpdate_descriptor,

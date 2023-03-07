@@ -1,8 +1,11 @@
 package com.giyeok.bibix.frontend
 
+import com.giyeok.bibix.ast.BibixAst
 import com.giyeok.bibix.base.*
 import com.giyeok.bibix.interpreter.*
 import com.giyeok.bibix.interpreter.coroutine.TaskElement
+import com.giyeok.bibix.interpreter.expr.EvaluationResult
+import com.giyeok.bibix.interpreter.expr.NameLookupContext
 import com.giyeok.bibix.interpreter.task.Task
 import com.giyeok.bibix.plugins.PreloadedPlugin
 import com.giyeok.bibix.plugins.bibix.bibixPlugin
@@ -95,6 +98,7 @@ class BuildFrontend(
     threadPool.processTasks(deferred.job)
 
     return runBlocking {
+      interpreter.g.clear()
       try {
         deferred.await().toMap()
       } catch (e: Exception) {
@@ -127,9 +131,27 @@ class BuildFrontend(
   fun blockingBuildTargets(targetNames: List<String>): Map<String, BibixValue> {
     threadPool.setLocalProgressIndicator()
     return runBlocking {
+      interpreter.g.clear()
       targetNames.associateWith { targetName ->
         interpreter.userBuildRequest(targetName)
       }
+    }
+  }
+
+  fun blockingEvaluateName(
+    nameLookupContext: NameLookupContext,
+    nameTokens: List<String>
+  ): EvaluationResult {
+    threadPool.setLocalProgressIndicator()
+    return runBlocking {
+      interpreter.g.clear()
+      interpreter.exprEvaluator.evaluateName(
+        Task.RootTask,
+        nameLookupContext,
+        nameTokens,
+        null,
+        setOf()
+      )
     }
   }
 

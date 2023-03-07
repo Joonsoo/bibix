@@ -1,5 +1,6 @@
 package com.giyeok.bibix.intellij.service
 
+import com.giyeok.bibix.ast.BibixAst
 import com.giyeok.bibix.base.MainSourceId
 import com.giyeok.bibix.base.StringValue
 import com.giyeok.bibix.frontend.BuildFrontend
@@ -7,10 +8,13 @@ import com.giyeok.bibix.frontend.NoopProgressNotifier
 import com.giyeok.bibix.intellij.*
 import com.giyeok.bibix.interpreter.BibixProject
 import com.giyeok.bibix.interpreter.expr.Definition
+import com.giyeok.bibix.interpreter.expr.EvaluationResult
+import com.giyeok.bibix.interpreter.expr.NameLookupContext
 import com.giyeok.bibix.plugins.jvm.*
 import com.giyeok.bibix.plugins.maven.Artifact
 import com.giyeok.bibix.utils.toHexString
 import com.google.common.annotations.VisibleForTesting
+import kotlinx.coroutines.runBlocking
 import java.nio.file.Path
 import kotlin.io.path.*
 
@@ -179,8 +183,28 @@ object ProjectStructureExtractor {
     val rootModuleName = projectRoot.name
 
     val mainTargets = buildFrontend.mainScriptDefinitions()
-      .filterValues { it is Definition.TargetDef }
-    mainTargets.keys.forEach { target ->
+
+    val moduleTargets = runBlocking {
+      mainTargets.filterValues { definition ->
+        if (definition is Definition.TargetDef) {
+          if (definition.target.value is BibixAst.CallExpr) {
+            val callTarget = buildFrontend.blockingEvaluateName(
+              NameLookupContext(definition.cname).dropLastToken(),
+              (definition.target.value as BibixAst.CallExpr).name.tokens,
+            )
+            when (callTarget) {
+              is EvaluationResult.RuleDef.BuildRuleDef.UserBuildRuleDef ->
+                callTarget.className == "com.giyeok.bibix.plugins.java.Library" ||
+                  callTarget.className == "com.giyeok.bibix.plugins.ktjvm.Library" ||
+                  callTarget.className == "com.giyeok.bibix.plugins.scala.Library"
+
+              else -> false
+            }
+          } else false
+        } else false
+      }
+    }
+    moduleTargets.keys.forEach { target ->
       try {
         val result = buildFrontend.blockingBuildTargets(listOf(target))
         println(result)
@@ -213,7 +237,6 @@ object ProjectStructureExtractor {
         when (val cpinfo = pkg.cpinfo) {
           is ClassesInfo -> {
             this.classpaths.addAll(cpinfo.classDirs.map { it.absolutePathString() })
-            // TODO resources?
             this.classpaths.addAll(cpinfo.resDirs.map { it.absolutePathString() })
             cpinfo.srcs?.let { srcs ->
               this.sources.addAll(srcs.map { it.absolutePathString() })
@@ -245,28 +268,28 @@ object ProjectStructureExtractor {
         this.contentRoots.addAll(moduleContentRoots.getValue(moduleId))
         when (module.languageType) {
           "ktjvm" -> {
-            this.moduleSdks.add(moduleSdk {
+            this.usingSdks.add(sdkVersion {
               val sdkVersion = (module.allArgs["sdkVersion"] as StringValue).value
               this.ktjvmSdkVersion = sdkVersion
             })
-            this.moduleSdks.add(moduleSdk {
+            this.usingSdks.add(sdkVersion {
               val jdkVersion = (module.allArgs["outVersion"] as StringValue).value
               this.jdkVersion = jdkVersion
             })
           }
 
           "scala" -> {
-            this.moduleSdks.add(moduleSdk {
+            this.usingSdks.add(sdkVersion {
               val sdkVersion = (module.allArgs["sdkVersion"] as StringValue).value
               this.scalaSdkVersion = sdkVersion
             })
-            this.moduleSdks.add(moduleSdk {
+            this.usingSdks.add(sdkVersion {
               val jdkVersion = (module.allArgs["outVersion"] as StringValue).value
               this.jdkVersion = jdkVersion
             })
           }
 
-          else -> this.moduleSdks.add(moduleSdk {
+          else -> this.usingSdks.add(sdkVersion {
             // assuming java
             val jdkVersion = (module.allArgs["jdkVersion"] as StringValue).value
             this.jdkVersion = jdkVersion
@@ -300,14 +323,14 @@ object ProjectStructureExtractor {
       })
       this.modules.addAll(projectModules)
       this.externalLibraries.addAll(externalLibraries)
-      this.sdks = sdks
+      this.sdkInfo = sdks
     }
   }
 
   private fun getSdksForModules(
     buildFrontend: BuildFrontend,
     modules: Map<LocalBuilt, ModuleData>
-  ): BibixIntellijProto.Sdks {
+  ): BibixIntellijProto.SdkInfo {
     val ktjvmModules = modules.filterValues { it.languageType == "ktjvm" }
     val scalaModules = modules.filterValues { it.languageType == "scala" }
 
@@ -351,7 +374,7 @@ object ProjectStructureExtractor {
       ResolveClassPkgs.resolveClassPkgs(classPkgs).map { it.absolutePathString() }
     }
 
-    return sdks {
+    return sdkInfo {
       kotlinSdkVersions.forEach { (sdkVersion, sdkArtifact) ->
         this.ktjvmSdks.add(kotlinJvmSdk {
           this.version = sdkVersion

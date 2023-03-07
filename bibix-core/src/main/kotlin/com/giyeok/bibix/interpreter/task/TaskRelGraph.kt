@@ -44,6 +44,13 @@ class TaskRelGraph {
 
   private val referredNodes = ConcurrentHashMap<Pair<SourceId, Int>, BibixAst.AstNode>()
 
+  suspend fun clear() = depsMutex.withLock {
+    tasks.clear()
+    downstream.clear()
+    upstream.clear()
+    referredNodes.clear()
+  }
+
   private suspend fun taskId(task: Task): Int =
     depsMutex.withLock {
       val existingId = tasks[task]
@@ -110,6 +117,7 @@ class TaskRelGraph {
     val requesterId = taskId(requester)
     val taskId = taskId(task)
 
+    // TODO 싸이클 체크가 너무 느린데..
     val cycle = reachable(taskId, requesterId)
     check(cycle == null) {
       throw BibixExecutionException("Cycle found", tasks.inverse(), cycle!! + requesterId)
