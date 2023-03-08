@@ -68,8 +68,8 @@ class NameLookupTable(private val varsManager: VarsManager) {
           }
 
           is BibixAst.VarDef -> {
-            check(scope.isEmpty()) { "var must be in the root scope of the script" }
-            val cname = CName(context.sourceId, def.name)
+            // check(scope.isEmpty()) { "var must be in the root scope of the script" }
+            val cname = CName(context.sourceId, scope + def.name)
             val varContext = NameLookupContext(context.sourceId, scope)
             varsManager.addVarDef(cname, varContext, def)
             addDefinition(cname, Definition.VarDef(cname, def))
@@ -167,6 +167,39 @@ class NameLookupTable(private val varsManager: VarsManager) {
       }
     }
   }
+
+  suspend fun lookupInImport(context: NameLookupContext, name: List<String>): LookupInImportResult {
+    check(name.isNotEmpty())
+    val firstDefinition = findFirstToken(context, name.first())
+      ?: return LookupInImportResult.NameNotFound
+    if (firstDefinition is Definition.ImportDef) {
+      val imported = importsMutex.withLock { imports[firstDefinition.cname] }
+        ?: return LookupInImportResult.ImportRequired(firstDefinition, name.drop(1))
+      return when (imported) {
+        is ImportedSource.ImportedNames ->
+          if (name.size > 1) {
+            val internalName = name.drop(1)
+            val inLookupResult = lookupInImport(imported.nameLookupContext, internalName)
+            LookupInImportResult.InsideImport(imported, internalName, inLookupResult)
+          } else {
+            LookupInImportResult.DefinitionFound(Definition.NamespaceDef(imported.nameLookupContext.toCName()))
+          }
+
+        is ImportedSource.ImportedDefinition ->
+          LookupInImportResult.DefinitionFound(imported.definition)
+      }
+    }
+    return if (name.size == 1) {
+      LookupInImportResult.DefinitionFound(firstDefinition)
+    } else {
+      when (firstDefinition) {
+        is Definition.NamespaceDef ->
+          lookupInImport(NameLookupContext(firstDefinition.cname), name.drop(1))
+
+        else -> TODO()
+      }
+    }
+  }
 }
 
 // sourceId 스크립트에서 namespace path 밑에서 이름 검색중
@@ -199,10 +232,28 @@ sealed class Definition {
 
 sealed class LookupResult {
   data class DefinitionFound(val definition: Definition) : LookupResult()
+
   data class ImportRequired(val import: Definition.ImportDef, val restName: List<String>) :
     LookupResult()
 
   object NameNotFound : LookupResult()
+}
+
+sealed class LookupInImportResult {
+  data class DefinitionFound(val definition: Definition) : LookupInImportResult()
+
+  data class ImportRequired(
+    val import: Definition.ImportDef,
+    val restName: List<String>
+  ) : LookupInImportResult()
+
+  data class InsideImport(
+    val importedSource: ImportedSource,
+    val internalName: List<String>,
+    val lookupResult: LookupInImportResult
+  ) : LookupInImportResult()
+
+  object NameNotFound : LookupInImportResult()
 }
 
 sealed class ImportedSource {

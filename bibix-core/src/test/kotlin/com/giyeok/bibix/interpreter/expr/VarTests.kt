@@ -58,6 +58,36 @@ class VarTests {
   }
 
   @Test
+  fun testRedefFromImportInNamespace(): Unit = runBlocking {
+    val fs = Jimfs.newFileSystem()
+
+    val script = """
+      abc {
+        import xyz
+      }
+      
+      var abc.xyz.hello.message = "new value"
+      
+      msg = abc.xyz.hello.message
+    """.trimIndent()
+    fs.getPath("/build.bbx").writeText(script)
+
+    val xyz = PreloadedPlugin.fromScript(
+      "abc.xyz",
+      """
+        hello {
+          var message = "old value"
+        }
+      """.trimIndent(),
+      PluginInstanceProvider()
+    )
+
+    val interpreter = testInterpreter(fs, "/", mapOf("xyz" to xyz))
+
+    assertThat(interpreter.userBuildRequest("msg")).isEqualTo(StringValue("new value"))
+  }
+
+  @Test
   fun testMultiRedef(): Unit = runBlocking {
     val fs = Jimfs.newFileSystem()
 

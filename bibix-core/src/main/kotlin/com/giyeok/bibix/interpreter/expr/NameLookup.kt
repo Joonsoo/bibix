@@ -40,25 +40,46 @@ class NameLookup(
             definition.cname,
             definition.import
           )
-        // TODO update varsCtx
-        val redefs = varsManager.redefsInSource(context.sourceId)
+        // update varsCtx
+        val redefs = varsManager.redefsInSource(lookupCtx.sourceId)
         // redefs 중 imported의 var를 가리키고 있는 것들을 추려서 newVarsCtx 구성
-        println(redefs)
         val effectiveRedefs = redefs
-          .filter { redef ->
-            val redefTargetLookup = nameLookupTable.lookup(redef.redefContext, redef.def.nameTokens)
+          .mapNotNull { redef ->
+            val redefTargetLookup =
+              nameLookupTable.lookupInImport(redef.redefContext, redef.def.nameTokens)
+
+            fun invalidVarRedefException() = IllegalStateException(
+              "Invalid variable redefinition: ${redef.def} at ${
+                sourceManager.descriptionOf(lookupCtx.sourceId)
+              }"
+            )
             // 위에서 우리가 관심있는 import는 loadImport가 완료된 상태이기 때문에, ImportRequired가 나온다면 우리가 관심 없는 import라는 의미이므로 제외
-            redefTargetLookup is LookupResult.DefinitionFound &&
-              redefTargetLookup.definition.cname.sourceId == imported.sourceId
+            when {
+              redefTargetLookup is LookupInImportResult.ImportRequired -> null
+              redefTargetLookup !is LookupInImportResult.InsideImport ->
+                throw invalidVarRedefException()
+
+              redefTargetLookup.importedSource.sourceId == imported.sourceId -> {
+                val internalLookup = redefTargetLookup.lookupResult
+                if (internalLookup !is LookupInImportResult.DefinitionFound ||
+                  internalLookup.definition !is Definition.VarDef
+                ) {
+                  throw invalidVarRedefException()
+                }
+                redefTargetLookup.internalName to redef
+              }
+
+              else -> null
+            }
           }
-        val newVarsCtx = varsCtx.push(imported.sourceId, effectiveRedefs.associate { redef ->
-          // TODO redef.def.nameTokens에서 실제로 import된 프로젝트 안의 이름만 추출. 땜빵으로 drop(1) 해놨음
-          redef.def.nameTokens.drop(1) to Pair(
-            // TODO 여기서 varsCtx가 맞나?
-            ExprEvalContext(redef.redefContext, varsCtx),
-            redef.def.redefValue
-          )
-        })
+        val newVarsCtx =
+          varsCtx.push(imported.sourceId, effectiveRedefs.associate { (redefName, redef) ->
+            redefName to Pair(
+              // TODO 여기서 varsCtx가 맞나?
+              ExprEvalContext(redef.redefContext, varsCtx),
+              redef.def.redefValue
+            )
+          })
         when (imported) {
           is ImportedSource.ImportedNames -> {
             if (tokens.isNotEmpty()) {

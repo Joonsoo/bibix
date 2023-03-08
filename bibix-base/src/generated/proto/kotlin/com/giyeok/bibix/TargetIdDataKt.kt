@@ -112,6 +112,10 @@ public object TargetIdDataKt {
     }
 
     /**
+     * ```
+     * 다른 플러그인을 호출해서 생성된 impl인 경우 build_rule_impl_id,
+     * ```
+     *
      * `.com.giyeok.bibix.BuildRuleImplId build_rule_impl_id = 4;`
      */
     public var buildRuleImplId: com.giyeok.bibix.BibixIdProto.BuildRuleImplId
@@ -122,12 +126,20 @@ public object TargetIdDataKt {
         _builder.setBuildRuleImplId(value)
       }
     /**
+     * ```
+     * 다른 플러그인을 호출해서 생성된 impl인 경우 build_rule_impl_id,
+     * ```
+     *
      * `.com.giyeok.bibix.BuildRuleImplId build_rule_impl_id = 4;`
      */
     public fun clearBuildRuleImplId() {
       _builder.clearBuildRuleImplId()
     }
     /**
+     * ```
+     * 다른 플러그인을 호출해서 생성된 impl인 경우 build_rule_impl_id,
+     * ```
+     *
      * `.com.giyeok.bibix.BuildRuleImplId build_rule_impl_id = 4;`
      * @return Whether the buildRuleImplId field is set.
      */
@@ -136,7 +148,43 @@ public object TargetIdDataKt {
     }
 
     /**
-     * `string build_rule_class_name = 5;`
+     * ```
+     * jvm.ClassPaths같은 data class를 사용한 경우 value의 해시값을 사용
+     * ```
+     *
+     * `bytes bibix_value_hash = 5;`
+     */
+    public var bibixValueHash: com.google.protobuf.ByteString
+      @JvmName("getBibixValueHash")
+      get() = _builder.getBibixValueHash()
+      @JvmName("setBibixValueHash")
+      set(value) {
+        _builder.setBibixValueHash(value)
+      }
+    /**
+     * ```
+     * jvm.ClassPaths같은 data class를 사용한 경우 value의 해시값을 사용
+     * ```
+     *
+     * `bytes bibix_value_hash = 5;`
+     */
+    public fun clearBibixValueHash() {
+      _builder.clearBibixValueHash()
+    }
+    /**
+     * ```
+     * jvm.ClassPaths같은 data class를 사용한 경우 value의 해시값을 사용
+     * ```
+     *
+     * `bytes bibix_value_hash = 5;`
+     * @return Whether the bibixValueHash field is set.
+     */
+    public fun hasBibixValueHash(): kotlin.Boolean {
+      return _builder.hasBibixValueHash()
+    }
+
+    /**
+     * `string build_rule_class_name = 6;`
      */
     public var buildRuleClassName: kotlin.String
       @JvmName("getBuildRuleClassName")
@@ -146,14 +194,14 @@ public object TargetIdDataKt {
         _builder.setBuildRuleClassName(value)
       }
     /**
-     * `string build_rule_class_name = 5;`
+     * `string build_rule_class_name = 6;`
      */
     public fun clearBuildRuleClassName() {
       _builder.clearBuildRuleClassName()
     }
 
     /**
-     * `string build_rule_method_name = 6;`
+     * `string build_rule_method_name = 7;`
      */
     public var buildRuleMethodName: kotlin.String
       @JvmName("getBuildRuleMethodName")
@@ -163,14 +211,14 @@ public object TargetIdDataKt {
         _builder.setBuildRuleMethodName(value)
       }
     /**
-     * `string build_rule_method_name = 6;`
+     * `string build_rule_method_name = 7;`
      */
     public fun clearBuildRuleMethodName() {
       _builder.clearBuildRuleMethodName()
     }
 
     /**
-     * `.com.giyeok.bibix.ArgsMap args_map = 7;`
+     * `.com.giyeok.bibix.ArgsMap args_map = 8;`
      */
     public var argsMap: com.giyeok.bibix.BibixIdProto.ArgsMap
       @JvmName("getArgsMap")
@@ -180,13 +228,13 @@ public object TargetIdDataKt {
         _builder.setArgsMap(value)
       }
     /**
-     * `.com.giyeok.bibix.ArgsMap args_map = 7;`
+     * `.com.giyeok.bibix.ArgsMap args_map = 8;`
      */
     public fun clearArgsMap() {
       _builder.clearArgsMap()
     }
     /**
-     * `.com.giyeok.bibix.ArgsMap args_map = 7;`
+     * `.com.giyeok.bibix.ArgsMap args_map = 8;`
      * @return Whether the argsMap field is set.
      */
     public fun hasArgsMap(): kotlin.Boolean {

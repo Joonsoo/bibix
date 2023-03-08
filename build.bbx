@@ -7,60 +7,6 @@ from bibix.plugins import protobuf
 from bibix.plugins import grpc
 from bibix.plugins import java
 
-jparserDeps = [
-  jvm.lib("lib/jparser-base-0.3.1.jar"),
-  jvm.lib("lib/jparser-base-proto-0.3.1.jar"),
-  jvm.lib("lib/jparser-naive-0.3.1.jar"),
-  jvm.lib("lib/jparser-fast-0.3.1.jar"),
-  jvm.lib("lib/jparser-fast-proto-0.3.1.jar"),
-  jvm.lib("lib/jparser-utils-0.3.1.jar"),
-  jvm.lib("lib/jparser-ktlib-0.3.1.jar"),
-]
-
-kotlinVersion = "1.8.10"
-var ktjvm.kotlinVersion = kotlinVersion
-
-kotlinxCoroutinesVersion = "1.6.0"
-kotlinxCoroutinesDeps = [
-  maven.artifact("org.jetbrains.kotlinx", "kotlinx-coroutines-core", kotlinxCoroutinesVersion),
-  maven.artifact("org.jetbrains.kotlinx", "kotlinx-coroutines-jdk8", kotlinxCoroutinesVersion),
-]
-
-protobufVersion = "3.22.0"
-protobufDeps = [
-  maven.artifact("com.google.protobuf", "protobuf-java", protobufVersion),
-  maven.artifact("com.google.protobuf", "protobuf-java-util", protobufVersion),
-  maven.artifact("com.google.protobuf", "protobuf-kotlin", protobufVersion),
-]
-
-floggerVersion = "0.7.4"
-floggerDeps = [
-  maven.artifact("com.google.flogger", "flogger", floggerVersion),
-  maven.artifact("com.google.flogger", "flogger-system-backend", floggerVersion),
-  maven.artifact("org.slf4j", "slf4j-api", "1.7.36"),
-]
-
-testDeps = [
-  // maven.artifact("junit", "junit", "4.12"),
-  maven.artifact("org.junit.jupiter", "junit-jupiter-api", "5.8.2"),
-  maven.artifact("org.jetbrains.kotlin", "kotlin-test", kotlinVersion),
-]
-
-truthVersion = "1.1.3"
-truthDeps = [
-  maven.artifact("com.google.truth", "truth", truthVersion),
-  maven.artifact("com.google.truth.extensions", "truth-proto-extension", truthVersion),
-]
-
-jimfsDep = maven.artifact("com.google.jimfs", "jimfs", "1.2")
-
-grpcVersion = "1.53.0"
-grpcDeps = [
-  maven.artifact("io.grpc", "grpc-services", grpcVersion),
-  maven.artifact("io.grpc", "grpc-netty-shaded", grpcVersion),
-  maven.artifact("io.grpc", "grpc-kotlin-stub", "1.3.0"),
-]
-
 base {
   proto {
     schema = protobuf.schema(glob("bibix-base/src/proto/*.proto"))
@@ -203,3 +149,57 @@ intellij {
     ]
   )
 }
+
+jparserDeps = [
+  jvm.lib("lib/jparser-base-0.3.1.jar"),
+  jvm.lib("lib/jparser-base-proto-0.3.1.jar"),
+  jvm.lib("lib/jparser-naive-0.3.1.jar"),
+  jvm.lib("lib/jparser-fast-0.3.1.jar"),
+  jvm.lib("lib/jparser-fast-proto-0.3.1.jar"),
+  jvm.lib("lib/jparser-utils-0.3.1.jar"),
+  jvm.lib("lib/jparser-ktlib-0.3.1.jar"),
+]
+
+kotlinVersion = "1.8.10"
+var ktjvm.kotlinVersion = kotlinVersion
+
+kotlinxCoroutinesVersion = "1.6.0"
+kotlinxCoroutinesDeps = [
+  maven.artifact("org.jetbrains.kotlinx", "kotlinx-coroutines-core", kotlinxCoroutinesVersion),
+  maven.artifact("org.jetbrains.kotlinx", "kotlinx-coroutines-jdk8", kotlinxCoroutinesVersion),
+]
+
+protobufVersion = "3.22.0"
+protobufDeps = [
+  maven.artifact("com.google.protobuf", "protobuf-java", protobufVersion),
+  maven.artifact("com.google.protobuf", "protobuf-java-util", protobufVersion),
+  maven.artifact("com.google.protobuf", "protobuf-kotlin", protobufVersion),
+]
+
+floggerVersion = "0.7.4"
+floggerDeps = [
+  maven.artifact("com.google.flogger", "flogger", floggerVersion),
+  maven.artifact("com.google.flogger", "flogger-system-backend", floggerVersion),
+  maven.artifact("org.slf4j", "slf4j-api", "1.7.36"),
+]
+
+testDeps = [
+  // maven.artifact("junit", "junit", "4.12"),
+  maven.artifact("org.junit.jupiter", "junit-jupiter-api", "5.8.2"),
+  maven.artifact("org.jetbrains.kotlin", "kotlin-test", kotlinVersion),
+]
+
+truthVersion = "1.1.3"
+truthDeps = [
+  maven.artifact("com.google.truth", "truth", truthVersion),
+  maven.artifact("com.google.truth.extensions", "truth-proto-extension", truthVersion),
+]
+
+jimfsDep = maven.artifact("com.google.jimfs", "jimfs", "1.2")
+
+grpcVersion = "1.53.0"
+grpcDeps = [
+  maven.artifact("io.grpc", "grpc-services", grpcVersion),
+  maven.artifact("io.grpc", "grpc-netty-shaded", grpcVersion),
+  maven.artifact("io.grpc", "grpc-kotlin-stub", "1.3.0"),
+]

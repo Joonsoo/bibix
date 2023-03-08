@@ -29,7 +29,7 @@ class BibixInterpreter(
 ) {
   val g = TaskRelGraph()
 
-  private val varsManager = VarsManager(this)
+  private val varsManager = VarsManager()
 
   val nameLookupTable = NameLookupTable(varsManager)
 

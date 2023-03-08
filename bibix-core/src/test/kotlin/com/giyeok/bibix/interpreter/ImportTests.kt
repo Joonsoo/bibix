@@ -280,7 +280,7 @@ class ImportTests {
       """
         import jvm
         
-        impl = jvm.ClassPaths([])
+        impl = jvm.ClassPkg(jvm.LocalBuilt("hello", "builder"), jvm.ClassesInfo([], [], none), [])
         
         def library(): string = impl:com.giyeok.bibix.interpreter.FakeKtJvmLibraryRule
       """.trimIndent()

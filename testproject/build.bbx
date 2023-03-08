@@ -6,12 +6,10 @@ import maven
 
 kotlinVersion = "1.8.0"
 var ktjvm.compilerVersion = kotlinVersion
+var ktjvm.sdkVersion = kotlinVersion
 
 test2 = ktjvm.library(
   srcs = ["src/main/kotlin/Test.kt"],
-  deps = [
-    maven.artifact("org.jetbrains.kotlin", "kotlin-stdlib", kotlinVersion),
-  ],
 )
 
 test1 = ktjvm.library(
@@ -30,8 +28,5 @@ test1 = ktjvm.library(
 mytest {
   test1 = ktjvm.library(
     srcs = ["src/main/kotlin/Test.kt"],
-    deps = [
-      maven.artifact("org.jetbrains.kotlin", "kotlin-stdlib", kotlinVersion),
-    ],
   )
 }

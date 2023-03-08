@@ -63,6 +63,7 @@ class CallExprEvaluator(
 
     // bibix.base 와 및 kotlin sdk 관련 classpath 들은 cpInstance의 것을 사용하지 *않고* bibix runtime의 것을 사용해야 한다
     // 그래서 classPkg에서 그 부분은 빼고 classpath 목록 반환
+    // 그래서 ClassPaths가 아니고 ClassPkg를 받아야 함
     val cpsMap = ResolveClassPkgs.cpsMap(listOf(classPkg))
       // TODo bibix.base를 maven artifact로 넣어서 필터링하는게 나을듯
       .filterNot { it.key is LocalLib && (it.key as LocalLib).path.fileName.name.startsWith("bibix-base-") }
@@ -526,19 +527,25 @@ class CallExprEvaluator(
           setOf()
         )
 
-        impl as EvaluationResult.ValueWithTargetId
+        when (impl) {
+          is EvaluationResult.ValueWithTargetId ->
+            targetIdDataBuilder.buildRuleImplId = buildRuleImplId {
+              this.sourceId = protoOf(buildRule.name.sourceId)
+              this.targetId = impl.objectHash.targetId.targetIdBytes
+              this.objectId = impl.objectHash.objectId.objectIdBytes
+            }
+
+          is EvaluationResult.Value ->
+            targetIdDataBuilder.bibixValueHash = impl.ensureValue().hashString()
+
+          else -> throw IllegalStateException("??")
+        }
 
         pluginInstance = pluginImplProvider.getPluginImplInstance(
           context.sourceId,
           prepareClassPathsForPlugin(task, buildRule.context, impl.ensureValue()),
           buildRule.className
         )
-
-        targetIdDataBuilder.buildRuleImplId = buildRuleImplId {
-          this.sourceId = protoOf(buildRule.name.sourceId)
-          this.targetId = impl.objectHash.targetId.targetIdBytes
-          this.objectId = impl.objectHash.objectId.objectIdBytes
-        }
       }
     }
 
@@ -556,7 +563,7 @@ class CallExprEvaluator(
 
     interpreter.repo.putObjectHash(objHash)
 
-    val result = g.withMemo(objHash) {
+    val callResult = g.withMemo(objHash) {
       interpreter.repo.startBuildingTarget(targetIdBytes, objHash)
 
       val method =
@@ -593,12 +600,13 @@ class CallExprEvaluator(
       }
       progressIndicator.logInfo("Continuing from ${buildRule.context}...")
 
-      val finalValue = handleBuildRuleReturnValue(task, buildRule.context, returnValue)
-
-      exprEvaluator.coerce(task, buildRule.context, finalValue, buildRule.returnType)
+      handleBuildRuleReturnValue(task, buildRule.context, returnValue)
     }
 
-    interpreter.repo.targetBuildingSucceeded(targetIdBytes, result.value)
+    val result =
+      exprEvaluator.coerce(task, buildRule.context, callResult.value, buildRule.returnType)
+
+    interpreter.repo.targetBuildingSucceeded(targetIdBytes, result)
 
     outputNames.filter { it.sourceId == MainSourceId }.forEach { outputName ->
       if (g.addOutputMemo(outputName, objHash)) {
@@ -606,7 +614,7 @@ class CallExprEvaluator(
       }
     }
 
-    return result
+    return BibixValueWithObjectHash(result, callResult.objectHash)
   }
 
   suspend fun evaluateCallExpr(
