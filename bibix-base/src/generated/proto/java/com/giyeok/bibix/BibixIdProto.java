@@ -109,7 +109,7 @@ public final class BibixIdProto {
      */
     com.giyeok.bibix.BibixIdProto.ExternalBibixProjectOrBuilder getExternalPluginObjhashOrBuilder();
 
-    public com.giyeok.bibix.BibixIdProto.SourceId.SourceCase getSourceCase();
+    com.giyeok.bibix.BibixIdProto.SourceId.SourceCase getSourceCase();
   }
   /**
    * Protobuf type {@code com.giyeok.bibix.SourceId}
@@ -134,105 +134,6 @@ public final class BibixIdProto {
       return new SourceId();
     }
 
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-      return this.unknownFields;
-    }
-    private SourceId(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      this();
-      if (extensionRegistry == null) {
-        throw new java.lang.NullPointerException();
-      }
-      int mutable_bitField0_ = 0;
-      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder();
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            case 10: {
-              java.lang.String s = input.readStringRequireUtf8();
-              bitField0_ |= 0x00000001;
-              bibixVersion_ = s;
-              break;
-            }
-            case 18: {
-              com.google.protobuf.Empty.Builder subBuilder = null;
-              if (sourceCase_ == 2) {
-                subBuilder = ((com.google.protobuf.Empty) source_).toBuilder();
-              }
-              source_ =
-                  input.readMessage(com.google.protobuf.Empty.parser(), extensionRegistry);
-              if (subBuilder != null) {
-                subBuilder.mergeFrom((com.google.protobuf.Empty) source_);
-                source_ = subBuilder.buildPartial();
-              }
-              sourceCase_ = 2;
-              break;
-            }
-            case 26: {
-              com.google.protobuf.Empty.Builder subBuilder = null;
-              if (sourceCase_ == 3) {
-                subBuilder = ((com.google.protobuf.Empty) source_).toBuilder();
-              }
-              source_ =
-                  input.readMessage(com.google.protobuf.Empty.parser(), extensionRegistry);
-              if (subBuilder != null) {
-                subBuilder.mergeFrom((com.google.protobuf.Empty) source_);
-                source_ = subBuilder.buildPartial();
-              }
-              sourceCase_ = 3;
-              break;
-            }
-            case 34: {
-              java.lang.String s = input.readStringRequireUtf8();
-              sourceCase_ = 4;
-              source_ = s;
-              break;
-            }
-            case 42: {
-              com.giyeok.bibix.BibixIdProto.ExternalBibixProject.Builder subBuilder = null;
-              if (sourceCase_ == 5) {
-                subBuilder = ((com.giyeok.bibix.BibixIdProto.ExternalBibixProject) source_).toBuilder();
-              }
-              source_ =
-                  input.readMessage(com.giyeok.bibix.BibixIdProto.ExternalBibixProject.parser(), extensionRegistry);
-              if (subBuilder != null) {
-                subBuilder.mergeFrom((com.giyeok.bibix.BibixIdProto.ExternalBibixProject) source_);
-                source_ = subBuilder.buildPartial();
-              }
-              sourceCase_ = 5;
-              break;
-            }
-            default: {
-              if (!parseUnknownField(
-                  input, unknownFields, extensionRegistry, tag)) {
-                done = true;
-              }
-              break;
-            }
-          }
-        }
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw e.setUnfinishedMessage(this);
-      } catch (com.google.protobuf.UninitializedMessageException e) {
-        throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
-      } catch (java.io.IOException e) {
-        throw new com.google.protobuf.InvalidProtocolBufferException(
-            e).setUnfinishedMessage(this);
-      } finally {
-        this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
-      }
-    }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
       return com.giyeok.bibix.BibixIdProto.internal_static_com_giyeok_bibix_SourceId_descriptor;
@@ -248,6 +149,7 @@ public final class BibixIdProto {
 
     private int bitField0_;
     private int sourceCase_ = 0;
+    @SuppressWarnings("serial")
     private java.lang.Object source_;
     public enum SourceCase
         implements com.google.protobuf.Internal.EnumLite,
@@ -293,7 +195,8 @@ public final class BibixIdProto {
     }
 
     public static final int BIBIX_VERSION_FIELD_NUMBER = 1;
-    private volatile java.lang.Object bibixVersion_;
+    @SuppressWarnings("serial")
+    private volatile java.lang.Object bibixVersion_ = "";
     /**
      * <pre>
      * external_plugin_objhash 인 경우를 제외하고는 비빅스 버전을 적어야 함
@@ -524,7 +427,7 @@ public final class BibixIdProto {
       if (sourceCase_ == 5) {
         output.writeMessage(5, (com.giyeok.bibix.BibixIdProto.ExternalBibixProject) source_);
       }
-      unknownFields.writeTo(output);
+      getUnknownFields().writeTo(output);
     }
 
     @java.lang.Override
@@ -551,7 +454,7 @@ public final class BibixIdProto {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(5, (com.giyeok.bibix.BibixIdProto.ExternalBibixProject) source_);
       }
-      size += unknownFields.getSerializedSize();
+      size += getUnknownFields().getSerializedSize();
       memoizedSize = size;
       return size;
     }
@@ -592,7 +495,7 @@ public final class BibixIdProto {
         case 0:
         default:
       }
-      if (!unknownFields.equals(other.unknownFields)) return false;
+      if (!getUnknownFields().equals(other.getUnknownFields())) return false;
       return true;
     }
 
@@ -627,7 +530,7 @@ public final class BibixIdProto {
         case 0:
         default:
       }
-      hash = (29 * hash) + unknownFields.hashCode();
+      hash = (29 * hash) + getUnknownFields().hashCode();
       memoizedHashCode = hash;
       return hash;
     }
@@ -744,24 +647,28 @@ public final class BibixIdProto {
 
       // Construct using com.giyeok.bibix.BibixIdProto.SourceId.newBuilder()
       private Builder() {
-        maybeForceBuilderInitialization();
+
       }
 
       private Builder(
           com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
         super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
-        }
+
       }
       @java.lang.Override
       public Builder clear() {
         super.clear();
+        bitField0_ = 0;
         bibixVersion_ = "";
-        bitField0_ = (bitField0_ & ~0x00000001);
+        if (preludeSourceBuilder_ != null) {
+          preludeSourceBuilder_.clear();
+        }
+        if (mainSourceBuilder_ != null) {
+          mainSourceBuilder_.clear();
+        }
+        if (externalPluginObjhashBuilder_ != null) {
+          externalPluginObjhashBuilder_.clear();
+        }
         sourceCase_ = 0;
         source_ = null;
         return this;
@@ -790,74 +697,39 @@ public final class BibixIdProto {
       @java.lang.Override
       public com.giyeok.bibix.BibixIdProto.SourceId buildPartial() {
         com.giyeok.bibix.BibixIdProto.SourceId result = new com.giyeok.bibix.BibixIdProto.SourceId(this);
-        int from_bitField0_ = bitField0_;
-        int to_bitField0_ = 0;
-        if (((from_bitField0_ & 0x00000001) != 0)) {
-          to_bitField0_ |= 0x00000001;
-        }
-        result.bibixVersion_ = bibixVersion_;
-        if (sourceCase_ == 2) {
-          if (preludeSourceBuilder_ == null) {
-            result.source_ = source_;
-          } else {
-            result.source_ = preludeSourceBuilder_.build();
-          }
-        }
-        if (sourceCase_ == 3) {
-          if (mainSourceBuilder_ == null) {
-            result.source_ = source_;
-          } else {
-            result.source_ = mainSourceBuilder_.build();
-          }
-        }
-        if (sourceCase_ == 4) {
-          result.source_ = source_;
-        }
-        if (sourceCase_ == 5) {
-          if (externalPluginObjhashBuilder_ == null) {
-            result.source_ = source_;
-          } else {
-            result.source_ = externalPluginObjhashBuilder_.build();
-          }
-        }
-        result.bitField0_ = to_bitField0_;
-        result.sourceCase_ = sourceCase_;
+        if (bitField0_ != 0) { buildPartial0(result); }
+        buildPartialOneofs(result);
         onBuilt();
         return result;
       }
 
-      @java.lang.Override
-      public Builder clone() {
-        return super.clone();
+      private void buildPartial0(com.giyeok.bibix.BibixIdProto.SourceId result) {
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) != 0)) {
+          result.bibixVersion_ = bibixVersion_;
+          to_bitField0_ |= 0x00000001;
+        }
+        result.bitField0_ |= to_bitField0_;
       }
-      @java.lang.Override
-      public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return super.setField(field, value);
+
+      private void buildPartialOneofs(com.giyeok.bibix.BibixIdProto.SourceId result) {
+        result.sourceCase_ = sourceCase_;
+        result.source_ = this.source_;
+        if (sourceCase_ == 2 &&
+            preludeSourceBuilder_ != null) {
+          result.source_ = preludeSourceBuilder_.build();
+        }
+        if (sourceCase_ == 3 &&
+            mainSourceBuilder_ != null) {
+          result.source_ = mainSourceBuilder_.build();
+        }
+        if (sourceCase_ == 5 &&
+            externalPluginObjhashBuilder_ != null) {
+          result.source_ = externalPluginObjhashBuilder_.build();
+        }
       }
-      @java.lang.Override
-      public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return super.clearField(field);
-      }
-      @java.lang.Override
-      public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return super.clearOneof(oneof);
-      }
-      @java.lang.Override
-      public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, java.lang.Object value) {
-        return super.setRepeatedField(field, index, value);
-      }
-      @java.lang.Override
-      public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return super.addRepeatedField(field, value);
-      }
+
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof com.giyeok.bibix.BibixIdProto.SourceId) {
@@ -871,8 +743,8 @@ public final class BibixIdProto {
       public Builder mergeFrom(com.giyeok.bibix.BibixIdProto.SourceId other) {
         if (other == com.giyeok.bibix.BibixIdProto.SourceId.getDefaultInstance()) return this;
         if (other.hasBibixVersion()) {
-          bitField0_ |= 0x00000001;
           bibixVersion_ = other.bibixVersion_;
+          bitField0_ |= 0x00000001;
           onChanged();
         }
         switch (other.getSourceCase()) {
@@ -898,7 +770,7 @@ public final class BibixIdProto {
             break;
           }
         }
-        this.mergeUnknownFields(other.unknownFields);
+        this.mergeUnknownFields(other.getUnknownFields());
         onChanged();
         return this;
       }
@@ -913,17 +785,62 @@ public final class BibixIdProto {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        com.giyeok.bibix.BibixIdProto.SourceId parsedMessage = null;
+        if (extensionRegistry == null) {
+          throw new java.lang.NullPointerException();
+        }
         try {
-          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+          boolean done = false;
+          while (!done) {
+            int tag = input.readTag();
+            switch (tag) {
+              case 0:
+                done = true;
+                break;
+              case 10: {
+                bibixVersion_ = input.readStringRequireUtf8();
+                bitField0_ |= 0x00000001;
+                break;
+              } // case 10
+              case 18: {
+                input.readMessage(
+                    getPreludeSourceFieldBuilder().getBuilder(),
+                    extensionRegistry);
+                sourceCase_ = 2;
+                break;
+              } // case 18
+              case 26: {
+                input.readMessage(
+                    getMainSourceFieldBuilder().getBuilder(),
+                    extensionRegistry);
+                sourceCase_ = 3;
+                break;
+              } // case 26
+              case 34: {
+                java.lang.String s = input.readStringRequireUtf8();
+                sourceCase_ = 4;
+                source_ = s;
+                break;
+              } // case 34
+              case 42: {
+                input.readMessage(
+                    getExternalPluginObjhashFieldBuilder().getBuilder(),
+                    extensionRegistry);
+                sourceCase_ = 5;
+                break;
+              } // case 42
+              default: {
+                if (!super.parseUnknownField(input, extensionRegistry, tag)) {
+                  done = true; // was an endgroup tag
+                }
+                break;
+              } // default:
+            } // switch (tag)
+          } // while (!done)
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (com.giyeok.bibix.BibixIdProto.SourceId) e.getUnfinishedMessage();
           throw e.unwrapIOException();
         } finally {
-          if (parsedMessage != null) {
-            mergeFrom(parsedMessage);
-          }
-        }
+          onChanged();
+        } // finally
         return this;
       }
       private int sourceCase_ = 0;
@@ -1007,11 +924,9 @@ public final class BibixIdProto {
        */
       public Builder setBibixVersion(
           java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000001;
+        if (value == null) { throw new NullPointerException(); }
         bibixVersion_ = value;
+        bitField0_ |= 0x00000001;
         onChanged();
         return this;
       }
@@ -1024,8 +939,8 @@ public final class BibixIdProto {
        * @return This builder for chaining.
        */
       public Builder clearBibixVersion() {
-        bitField0_ = (bitField0_ & ~0x00000001);
         bibixVersion_ = getDefaultInstance().getBibixVersion();
+        bitField0_ = (bitField0_ & ~0x00000001);
         onChanged();
         return this;
       }
@@ -1040,12 +955,10 @@ public final class BibixIdProto {
        */
       public Builder setBibixVersionBytes(
           com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        bitField0_ |= 0x00000001;
+        if (value == null) { throw new NullPointerException(); }
+        checkByteStringIsUtf8(value);
         bibixVersion_ = value;
+        bitField0_ |= 0x00000001;
         onChanged();
         return this;
       }
@@ -1188,7 +1101,7 @@ public final class BibixIdProto {
           source_ = null;
         }
         sourceCase_ = 2;
-        onChanged();;
+        onChanged();
         return preludeSourceBuilder_;
       }
 
@@ -1330,7 +1243,7 @@ public final class BibixIdProto {
           source_ = null;
         }
         sourceCase_ = 3;
-        onChanged();;
+        onChanged();
         return mainSourceBuilder_;
       }
 
@@ -1394,10 +1307,8 @@ public final class BibixIdProto {
        */
       public Builder setPreloadedPlugin(
           java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  sourceCase_ = 4;
+        if (value == null) { throw new NullPointerException(); }
+        sourceCase_ = 4;
         source_ = value;
         onChanged();
         return this;
@@ -1421,10 +1332,8 @@ public final class BibixIdProto {
        */
       public Builder setPreloadedPluginBytes(
           com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
+        if (value == null) { throw new NullPointerException(); }
+        checkByteStringIsUtf8(value);
         sourceCase_ = 4;
         source_ = value;
         onChanged();
@@ -1569,7 +1478,7 @@ public final class BibixIdProto {
           source_ = null;
         }
         sourceCase_ = 5;
-        onChanged();;
+        onChanged();
         return externalPluginObjhashBuilder_;
       }
       @java.lang.Override
@@ -1605,7 +1514,18 @@ public final class BibixIdProto {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return new SourceId(input, extensionRegistry);
+        Builder builder = newBuilder();
+        try {
+          builder.mergeFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          throw e.setUnfinishedMessage(builder.buildPartial());
+        } catch (com.google.protobuf.UninitializedMessageException e) {
+          throw e.asInvalidProtocolBufferException().setUnfinishedMessage(builder.buildPartial());
+        } catch (java.io.IOException e) {
+          throw new com.google.protobuf.InvalidProtocolBufferException(e)
+              .setUnfinishedMessage(builder.buildPartial());
+        }
+        return builder.buildPartial();
       }
     };
 
@@ -1685,62 +1605,6 @@ public final class BibixIdProto {
       return new ExternalBibixProject();
     }
 
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-      return this.unknownFields;
-    }
-    private ExternalBibixProject(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      this();
-      if (extensionRegistry == null) {
-        throw new java.lang.NullPointerException();
-      }
-      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder();
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            case 10: {
-              java.lang.String s = input.readStringRequireUtf8();
-
-              rootDirectory_ = s;
-              break;
-            }
-            case 18: {
-              java.lang.String s = input.readStringRequireUtf8();
-
-              scriptName_ = s;
-              break;
-            }
-            default: {
-              if (!parseUnknownField(
-                  input, unknownFields, extensionRegistry, tag)) {
-                done = true;
-              }
-              break;
-            }
-          }
-        }
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw e.setUnfinishedMessage(this);
-      } catch (com.google.protobuf.UninitializedMessageException e) {
-        throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
-      } catch (java.io.IOException e) {
-        throw new com.google.protobuf.InvalidProtocolBufferException(
-            e).setUnfinishedMessage(this);
-      } finally {
-        this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
-      }
-    }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
       return com.giyeok.bibix.BibixIdProto.internal_static_com_giyeok_bibix_ExternalBibixProject_descriptor;
@@ -1755,7 +1619,8 @@ public final class BibixIdProto {
     }
 
     public static final int ROOT_DIRECTORY_FIELD_NUMBER = 1;
-    private volatile java.lang.Object rootDirectory_;
+    @SuppressWarnings("serial")
+    private volatile java.lang.Object rootDirectory_ = "";
     /**
      * <code>string root_directory = 1;</code>
      * @return The rootDirectory.
@@ -1793,7 +1658,8 @@ public final class BibixIdProto {
     }
 
     public static final int SCRIPT_NAME_FIELD_NUMBER = 2;
-    private volatile java.lang.Object scriptName_;
+    @SuppressWarnings("serial")
+    private volatile java.lang.Object scriptName_ = "";
     /**
      * <pre>
      * bytes script_hash = 3;
@@ -1858,7 +1724,7 @@ public final class BibixIdProto {
       if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(scriptName_)) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 2, scriptName_);
       }
-      unknownFields.writeTo(output);
+      getUnknownFields().writeTo(output);
     }
 
     @java.lang.Override
@@ -1873,7 +1739,7 @@ public final class BibixIdProto {
       if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(scriptName_)) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, scriptName_);
       }
-      size += unknownFields.getSerializedSize();
+      size += getUnknownFields().getSerializedSize();
       memoizedSize = size;
       return size;
     }
@@ -1892,7 +1758,7 @@ public final class BibixIdProto {
           .equals(other.getRootDirectory())) return false;
       if (!getScriptName()
           .equals(other.getScriptName())) return false;
-      if (!unknownFields.equals(other.unknownFields)) return false;
+      if (!getUnknownFields().equals(other.getUnknownFields())) return false;
       return true;
     }
 
@@ -1907,7 +1773,7 @@ public final class BibixIdProto {
       hash = (53 * hash) + getRootDirectory().hashCode();
       hash = (37 * hash) + SCRIPT_NAME_FIELD_NUMBER;
       hash = (53 * hash) + getScriptName().hashCode();
-      hash = (29 * hash) + unknownFields.hashCode();
+      hash = (29 * hash) + getUnknownFields().hashCode();
       memoizedHashCode = hash;
       return hash;
     }
@@ -2024,26 +1890,20 @@ public final class BibixIdProto {
 
       // Construct using com.giyeok.bibix.BibixIdProto.ExternalBibixProject.newBuilder()
       private Builder() {
-        maybeForceBuilderInitialization();
+
       }
 
       private Builder(
           com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
         super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
-        }
+
       }
       @java.lang.Override
       public Builder clear() {
         super.clear();
+        bitField0_ = 0;
         rootDirectory_ = "";
-
         scriptName_ = "";
-
         return this;
       }
 
@@ -2070,44 +1930,21 @@ public final class BibixIdProto {
       @java.lang.Override
       public com.giyeok.bibix.BibixIdProto.ExternalBibixProject buildPartial() {
         com.giyeok.bibix.BibixIdProto.ExternalBibixProject result = new com.giyeok.bibix.BibixIdProto.ExternalBibixProject(this);
-        result.rootDirectory_ = rootDirectory_;
-        result.scriptName_ = scriptName_;
+        if (bitField0_ != 0) { buildPartial0(result); }
         onBuilt();
         return result;
       }
 
-      @java.lang.Override
-      public Builder clone() {
-        return super.clone();
+      private void buildPartial0(com.giyeok.bibix.BibixIdProto.ExternalBibixProject result) {
+        int from_bitField0_ = bitField0_;
+        if (((from_bitField0_ & 0x00000001) != 0)) {
+          result.rootDirectory_ = rootDirectory_;
+        }
+        if (((from_bitField0_ & 0x00000002) != 0)) {
+          result.scriptName_ = scriptName_;
+        }
       }
-      @java.lang.Override
-      public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return super.setField(field, value);
-      }
-      @java.lang.Override
-      public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return super.clearField(field);
-      }
-      @java.lang.Override
-      public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return super.clearOneof(oneof);
-      }
-      @java.lang.Override
-      public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, java.lang.Object value) {
-        return super.setRepeatedField(field, index, value);
-      }
-      @java.lang.Override
-      public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return super.addRepeatedField(field, value);
-      }
+
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof com.giyeok.bibix.BibixIdProto.ExternalBibixProject) {
@@ -2122,13 +1959,15 @@ public final class BibixIdProto {
         if (other == com.giyeok.bibix.BibixIdProto.ExternalBibixProject.getDefaultInstance()) return this;
         if (!other.getRootDirectory().isEmpty()) {
           rootDirectory_ = other.rootDirectory_;
+          bitField0_ |= 0x00000001;
           onChanged();
         }
         if (!other.getScriptName().isEmpty()) {
           scriptName_ = other.scriptName_;
+          bitField0_ |= 0x00000002;
           onChanged();
         }
-        this.mergeUnknownFields(other.unknownFields);
+        this.mergeUnknownFields(other.getUnknownFields());
         onChanged();
         return this;
       }
@@ -2143,19 +1982,43 @@ public final class BibixIdProto {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        com.giyeok.bibix.BibixIdProto.ExternalBibixProject parsedMessage = null;
+        if (extensionRegistry == null) {
+          throw new java.lang.NullPointerException();
+        }
         try {
-          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+          boolean done = false;
+          while (!done) {
+            int tag = input.readTag();
+            switch (tag) {
+              case 0:
+                done = true;
+                break;
+              case 10: {
+                rootDirectory_ = input.readStringRequireUtf8();
+                bitField0_ |= 0x00000001;
+                break;
+              } // case 10
+              case 18: {
+                scriptName_ = input.readStringRequireUtf8();
+                bitField0_ |= 0x00000002;
+                break;
+              } // case 18
+              default: {
+                if (!super.parseUnknownField(input, extensionRegistry, tag)) {
+                  done = true; // was an endgroup tag
+                }
+                break;
+              } // default:
+            } // switch (tag)
+          } // while (!done)
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (com.giyeok.bibix.BibixIdProto.ExternalBibixProject) e.getUnfinishedMessage();
           throw e.unwrapIOException();
         } finally {
-          if (parsedMessage != null) {
-            mergeFrom(parsedMessage);
-          }
-        }
+          onChanged();
+        } // finally
         return this;
       }
+      private int bitField0_;
 
       private java.lang.Object rootDirectory_ = "";
       /**
@@ -2198,11 +2061,9 @@ public final class BibixIdProto {
        */
       public Builder setRootDirectory(
           java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
+        if (value == null) { throw new NullPointerException(); }
         rootDirectory_ = value;
+        bitField0_ |= 0x00000001;
         onChanged();
         return this;
       }
@@ -2211,8 +2072,8 @@ public final class BibixIdProto {
        * @return This builder for chaining.
        */
       public Builder clearRootDirectory() {
-        
         rootDirectory_ = getDefaultInstance().getRootDirectory();
+        bitField0_ = (bitField0_ & ~0x00000001);
         onChanged();
         return this;
       }
@@ -2223,12 +2084,10 @@ public final class BibixIdProto {
        */
       public Builder setRootDirectoryBytes(
           com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
+        if (value == null) { throw new NullPointerException(); }
+        checkByteStringIsUtf8(value);
         rootDirectory_ = value;
+        bitField0_ |= 0x00000001;
         onChanged();
         return this;
       }
@@ -2286,11 +2145,9 @@ public final class BibixIdProto {
        */
       public Builder setScriptName(
           java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
+        if (value == null) { throw new NullPointerException(); }
         scriptName_ = value;
+        bitField0_ |= 0x00000002;
         onChanged();
         return this;
       }
@@ -2303,8 +2160,8 @@ public final class BibixIdProto {
        * @return This builder for chaining.
        */
       public Builder clearScriptName() {
-        
         scriptName_ = getDefaultInstance().getScriptName();
+        bitField0_ = (bitField0_ & ~0x00000002);
         onChanged();
         return this;
       }
@@ -2319,12 +2176,10 @@ public final class BibixIdProto {
        */
       public Builder setScriptNameBytes(
           com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
+        if (value == null) { throw new NullPointerException(); }
+        checkByteStringIsUtf8(value);
         scriptName_ = value;
+        bitField0_ |= 0x00000002;
         onChanged();
         return this;
       }
@@ -2361,7 +2216,18 @@ public final class BibixIdProto {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return new ExternalBibixProject(input, extensionRegistry);
+        Builder builder = newBuilder();
+        try {
+          builder.mergeFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          throw e.setUnfinishedMessage(builder.buildPartial());
+        } catch (com.google.protobuf.UninitializedMessageException e) {
+          throw e.asInvalidProtocolBufferException().setUnfinishedMessage(builder.buildPartial());
+        } catch (java.io.IOException e) {
+          throw new com.google.protobuf.InvalidProtocolBufferException(e)
+              .setUnfinishedMessage(builder.buildPartial());
+        }
+        return builder.buildPartial();
       }
     };
 
@@ -2496,7 +2362,7 @@ public final class BibixIdProto {
      */
     com.giyeok.bibix.BibixIdProto.ArgsMapOrBuilder getArgsMapOrBuilder();
 
-    public com.giyeok.bibix.BibixIdProto.TargetIdData.BuildRuleCase getBuildRuleCase();
+    com.giyeok.bibix.BibixIdProto.TargetIdData.BuildRuleCase getBuildRuleCase();
   }
   /**
    * Protobuf type {@code com.giyeok.bibix.TargetIdData}
@@ -2522,129 +2388,6 @@ public final class BibixIdProto {
       return new TargetIdData();
     }
 
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-      return this.unknownFields;
-    }
-    private TargetIdData(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      this();
-      if (extensionRegistry == null) {
-        throw new java.lang.NullPointerException();
-      }
-      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder();
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            case 10: {
-              com.giyeok.bibix.BibixIdProto.SourceId.Builder subBuilder = null;
-              if (sourceId_ != null) {
-                subBuilder = sourceId_.toBuilder();
-              }
-              sourceId_ = input.readMessage(com.giyeok.bibix.BibixIdProto.SourceId.parser(), extensionRegistry);
-              if (subBuilder != null) {
-                subBuilder.mergeFrom(sourceId_);
-                sourceId_ = subBuilder.buildPartial();
-              }
-
-              break;
-            }
-            case 18: {
-              com.giyeok.bibix.BibixIdProto.SourceId.Builder subBuilder = null;
-              if (buildRuleSourceId_ != null) {
-                subBuilder = buildRuleSourceId_.toBuilder();
-              }
-              buildRuleSourceId_ = input.readMessage(com.giyeok.bibix.BibixIdProto.SourceId.parser(), extensionRegistry);
-              if (subBuilder != null) {
-                subBuilder.mergeFrom(buildRuleSourceId_);
-                buildRuleSourceId_ = subBuilder.buildPartial();
-              }
-
-              break;
-            }
-            case 26: {
-              com.google.protobuf.Empty.Builder subBuilder = null;
-              if (buildRuleCase_ == 3) {
-                subBuilder = ((com.google.protobuf.Empty) buildRule_).toBuilder();
-              }
-              buildRule_ =
-                  input.readMessage(com.google.protobuf.Empty.parser(), extensionRegistry);
-              if (subBuilder != null) {
-                subBuilder.mergeFrom((com.google.protobuf.Empty) buildRule_);
-                buildRule_ = subBuilder.buildPartial();
-              }
-              buildRuleCase_ = 3;
-              break;
-            }
-            case 34: {
-              com.giyeok.bibix.BibixIdProto.BuildRuleImplId.Builder subBuilder = null;
-              if (buildRuleCase_ == 4) {
-                subBuilder = ((com.giyeok.bibix.BibixIdProto.BuildRuleImplId) buildRule_).toBuilder();
-              }
-              buildRule_ =
-                  input.readMessage(com.giyeok.bibix.BibixIdProto.BuildRuleImplId.parser(), extensionRegistry);
-              if (subBuilder != null) {
-                subBuilder.mergeFrom((com.giyeok.bibix.BibixIdProto.BuildRuleImplId) buildRule_);
-                buildRule_ = subBuilder.buildPartial();
-              }
-              buildRuleCase_ = 4;
-              break;
-            }
-            case 42: {
-              java.lang.String s = input.readStringRequireUtf8();
-
-              buildRuleClassName_ = s;
-              break;
-            }
-            case 50: {
-              java.lang.String s = input.readStringRequireUtf8();
-
-              buildRuleMethodName_ = s;
-              break;
-            }
-            case 58: {
-              com.giyeok.bibix.BibixIdProto.ArgsMap.Builder subBuilder = null;
-              if (argsMap_ != null) {
-                subBuilder = argsMap_.toBuilder();
-              }
-              argsMap_ = input.readMessage(com.giyeok.bibix.BibixIdProto.ArgsMap.parser(), extensionRegistry);
-              if (subBuilder != null) {
-                subBuilder.mergeFrom(argsMap_);
-                argsMap_ = subBuilder.buildPartial();
-              }
-
-              break;
-            }
-            default: {
-              if (!parseUnknownField(
-                  input, unknownFields, extensionRegistry, tag)) {
-                done = true;
-              }
-              break;
-            }
-          }
-        }
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw e.setUnfinishedMessage(this);
-      } catch (com.google.protobuf.UninitializedMessageException e) {
-        throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
-      } catch (java.io.IOException e) {
-        throw new com.google.protobuf.InvalidProtocolBufferException(
-            e).setUnfinishedMessage(this);
-      } finally {
-        this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
-      }
-    }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
       return com.giyeok.bibix.BibixIdProto.internal_static_com_giyeok_bibix_TargetIdData_descriptor;
@@ -2659,6 +2402,7 @@ public final class BibixIdProto {
     }
 
     private int buildRuleCase_ = 0;
+    @SuppressWarnings("serial")
     private java.lang.Object buildRule_;
     public enum BuildRuleCase
         implements com.google.protobuf.Internal.EnumLite,
@@ -2722,7 +2466,7 @@ public final class BibixIdProto {
      */
     @java.lang.Override
     public com.giyeok.bibix.BibixIdProto.SourceIdOrBuilder getSourceIdOrBuilder() {
-      return getSourceId();
+      return sourceId_ == null ? com.giyeok.bibix.BibixIdProto.SourceId.getDefaultInstance() : sourceId_;
     }
 
     public static final int BUILD_RULE_SOURCE_ID_FIELD_NUMBER = 2;
@@ -2760,7 +2504,7 @@ public final class BibixIdProto {
      */
     @java.lang.Override
     public com.giyeok.bibix.BibixIdProto.SourceIdOrBuilder getBuildRuleSourceIdOrBuilder() {
-      return getBuildRuleSourceId();
+      return buildRuleSourceId_ == null ? com.giyeok.bibix.BibixIdProto.SourceId.getDefaultInstance() : buildRuleSourceId_;
     }
 
     public static final int NATIVE_IMPL_FIELD_NUMBER = 3;
@@ -2826,7 +2570,8 @@ public final class BibixIdProto {
     }
 
     public static final int BUILD_RULE_CLASS_NAME_FIELD_NUMBER = 5;
-    private volatile java.lang.Object buildRuleClassName_;
+    @SuppressWarnings("serial")
+    private volatile java.lang.Object buildRuleClassName_ = "";
     /**
      * <code>string build_rule_class_name = 5;</code>
      * @return The buildRuleClassName.
@@ -2864,7 +2609,8 @@ public final class BibixIdProto {
     }
 
     public static final int BUILD_RULE_METHOD_NAME_FIELD_NUMBER = 6;
-    private volatile java.lang.Object buildRuleMethodName_;
+    @SuppressWarnings("serial")
+    private volatile java.lang.Object buildRuleMethodName_ = "";
     /**
      * <code>string build_rule_method_name = 6;</code>
      * @return The buildRuleMethodName.
@@ -2924,7 +2670,7 @@ public final class BibixIdProto {
      */
     @java.lang.Override
     public com.giyeok.bibix.BibixIdProto.ArgsMapOrBuilder getArgsMapOrBuilder() {
-      return getArgsMap();
+      return argsMap_ == null ? com.giyeok.bibix.BibixIdProto.ArgsMap.getDefaultInstance() : argsMap_;
     }
 
     private byte memoizedIsInitialized = -1;
@@ -2962,7 +2708,7 @@ public final class BibixIdProto {
       if (argsMap_ != null) {
         output.writeMessage(7, getArgsMap());
       }
-      unknownFields.writeTo(output);
+      getUnknownFields().writeTo(output);
     }
 
     @java.lang.Override
@@ -2997,7 +2743,7 @@ public final class BibixIdProto {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(7, getArgsMap());
       }
-      size += unknownFields.getSerializedSize();
+      size += getUnknownFields().getSerializedSize();
       memoizedSize = size;
       return size;
     }
@@ -3044,7 +2790,7 @@ public final class BibixIdProto {
         case 0:
         default:
       }
-      if (!unknownFields.equals(other.unknownFields)) return false;
+      if (!getUnknownFields().equals(other.getUnknownFields())) return false;
       return true;
     }
 
@@ -3083,7 +2829,7 @@ public final class BibixIdProto {
         case 0:
         default:
       }
-      hash = (29 * hash) + unknownFields.hashCode();
+      hash = (29 * hash) + getUnknownFields().hashCode();
       memoizedHashCode = hash;
       return hash;
     }
@@ -3200,42 +2946,39 @@ public final class BibixIdProto {
 
       // Construct using com.giyeok.bibix.BibixIdProto.TargetIdData.newBuilder()
       private Builder() {
-        maybeForceBuilderInitialization();
+
       }
 
       private Builder(
           com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
         super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
-        }
+
       }
       @java.lang.Override
       public Builder clear() {
         super.clear();
-        if (sourceIdBuilder_ == null) {
-          sourceId_ = null;
-        } else {
-          sourceId_ = null;
+        bitField0_ = 0;
+        sourceId_ = null;
+        if (sourceIdBuilder_ != null) {
+          sourceIdBuilder_.dispose();
           sourceIdBuilder_ = null;
         }
-        if (buildRuleSourceIdBuilder_ == null) {
-          buildRuleSourceId_ = null;
-        } else {
-          buildRuleSourceId_ = null;
+        buildRuleSourceId_ = null;
+        if (buildRuleSourceIdBuilder_ != null) {
+          buildRuleSourceIdBuilder_.dispose();
           buildRuleSourceIdBuilder_ = null;
         }
+        if (nativeImplBuilder_ != null) {
+          nativeImplBuilder_.clear();
+        }
+        if (buildRuleImplIdBuilder_ != null) {
+          buildRuleImplIdBuilder_.clear();
+        }
         buildRuleClassName_ = "";
-
         buildRuleMethodName_ = "";
-
-        if (argsMapBuilder_ == null) {
-          argsMap_ = null;
-        } else {
-          argsMap_ = null;
+        argsMap_ = null;
+        if (argsMapBuilder_ != null) {
+          argsMapBuilder_.dispose();
           argsMapBuilder_ = null;
         }
         buildRuleCase_ = 0;
@@ -3266,74 +3009,50 @@ public final class BibixIdProto {
       @java.lang.Override
       public com.giyeok.bibix.BibixIdProto.TargetIdData buildPartial() {
         com.giyeok.bibix.BibixIdProto.TargetIdData result = new com.giyeok.bibix.BibixIdProto.TargetIdData(this);
-        if (sourceIdBuilder_ == null) {
-          result.sourceId_ = sourceId_;
-        } else {
-          result.sourceId_ = sourceIdBuilder_.build();
-        }
-        if (buildRuleSourceIdBuilder_ == null) {
-          result.buildRuleSourceId_ = buildRuleSourceId_;
-        } else {
-          result.buildRuleSourceId_ = buildRuleSourceIdBuilder_.build();
-        }
-        if (buildRuleCase_ == 3) {
-          if (nativeImplBuilder_ == null) {
-            result.buildRule_ = buildRule_;
-          } else {
-            result.buildRule_ = nativeImplBuilder_.build();
-          }
-        }
-        if (buildRuleCase_ == 4) {
-          if (buildRuleImplIdBuilder_ == null) {
-            result.buildRule_ = buildRule_;
-          } else {
-            result.buildRule_ = buildRuleImplIdBuilder_.build();
-          }
-        }
-        result.buildRuleClassName_ = buildRuleClassName_;
-        result.buildRuleMethodName_ = buildRuleMethodName_;
-        if (argsMapBuilder_ == null) {
-          result.argsMap_ = argsMap_;
-        } else {
-          result.argsMap_ = argsMapBuilder_.build();
-        }
-        result.buildRuleCase_ = buildRuleCase_;
+        if (bitField0_ != 0) { buildPartial0(result); }
+        buildPartialOneofs(result);
         onBuilt();
         return result;
       }
 
-      @java.lang.Override
-      public Builder clone() {
-        return super.clone();
+      private void buildPartial0(com.giyeok.bibix.BibixIdProto.TargetIdData result) {
+        int from_bitField0_ = bitField0_;
+        if (((from_bitField0_ & 0x00000001) != 0)) {
+          result.sourceId_ = sourceIdBuilder_ == null
+              ? sourceId_
+              : sourceIdBuilder_.build();
+        }
+        if (((from_bitField0_ & 0x00000002) != 0)) {
+          result.buildRuleSourceId_ = buildRuleSourceIdBuilder_ == null
+              ? buildRuleSourceId_
+              : buildRuleSourceIdBuilder_.build();
+        }
+        if (((from_bitField0_ & 0x00000010) != 0)) {
+          result.buildRuleClassName_ = buildRuleClassName_;
+        }
+        if (((from_bitField0_ & 0x00000020) != 0)) {
+          result.buildRuleMethodName_ = buildRuleMethodName_;
+        }
+        if (((from_bitField0_ & 0x00000040) != 0)) {
+          result.argsMap_ = argsMapBuilder_ == null
+              ? argsMap_
+              : argsMapBuilder_.build();
+        }
       }
-      @java.lang.Override
-      public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return super.setField(field, value);
+
+      private void buildPartialOneofs(com.giyeok.bibix.BibixIdProto.TargetIdData result) {
+        result.buildRuleCase_ = buildRuleCase_;
+        result.buildRule_ = this.buildRule_;
+        if (buildRuleCase_ == 3 &&
+            nativeImplBuilder_ != null) {
+          result.buildRule_ = nativeImplBuilder_.build();
+        }
+        if (buildRuleCase_ == 4 &&
+            buildRuleImplIdBuilder_ != null) {
+          result.buildRule_ = buildRuleImplIdBuilder_.build();
+        }
       }
-      @java.lang.Override
-      public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return super.clearField(field);
-      }
-      @java.lang.Override
-      public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return super.clearOneof(oneof);
-      }
-      @java.lang.Override
-      public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, java.lang.Object value) {
-        return super.setRepeatedField(field, index, value);
-      }
-      @java.lang.Override
-      public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return super.addRepeatedField(field, value);
-      }
+
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof com.giyeok.bibix.BibixIdProto.TargetIdData) {
@@ -3354,10 +3073,12 @@ public final class BibixIdProto {
         }
         if (!other.getBuildRuleClassName().isEmpty()) {
           buildRuleClassName_ = other.buildRuleClassName_;
+          bitField0_ |= 0x00000010;
           onChanged();
         }
         if (!other.getBuildRuleMethodName().isEmpty()) {
           buildRuleMethodName_ = other.buildRuleMethodName_;
+          bitField0_ |= 0x00000020;
           onChanged();
         }
         if (other.hasArgsMap()) {
@@ -3376,7 +3097,7 @@ public final class BibixIdProto {
             break;
           }
         }
-        this.mergeUnknownFields(other.unknownFields);
+        this.mergeUnknownFields(other.getUnknownFields());
         onChanged();
         return this;
       }
@@ -3391,17 +3112,75 @@ public final class BibixIdProto {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        com.giyeok.bibix.BibixIdProto.TargetIdData parsedMessage = null;
+        if (extensionRegistry == null) {
+          throw new java.lang.NullPointerException();
+        }
         try {
-          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+          boolean done = false;
+          while (!done) {
+            int tag = input.readTag();
+            switch (tag) {
+              case 0:
+                done = true;
+                break;
+              case 10: {
+                input.readMessage(
+                    getSourceIdFieldBuilder().getBuilder(),
+                    extensionRegistry);
+                bitField0_ |= 0x00000001;
+                break;
+              } // case 10
+              case 18: {
+                input.readMessage(
+                    getBuildRuleSourceIdFieldBuilder().getBuilder(),
+                    extensionRegistry);
+                bitField0_ |= 0x00000002;
+                break;
+              } // case 18
+              case 26: {
+                input.readMessage(
+                    getNativeImplFieldBuilder().getBuilder(),
+                    extensionRegistry);
+                buildRuleCase_ = 3;
+                break;
+              } // case 26
+              case 34: {
+                input.readMessage(
+                    getBuildRuleImplIdFieldBuilder().getBuilder(),
+                    extensionRegistry);
+                buildRuleCase_ = 4;
+                break;
+              } // case 34
+              case 42: {
+                buildRuleClassName_ = input.readStringRequireUtf8();
+                bitField0_ |= 0x00000010;
+                break;
+              } // case 42
+              case 50: {
+                buildRuleMethodName_ = input.readStringRequireUtf8();
+                bitField0_ |= 0x00000020;
+                break;
+              } // case 50
+              case 58: {
+                input.readMessage(
+                    getArgsMapFieldBuilder().getBuilder(),
+                    extensionRegistry);
+                bitField0_ |= 0x00000040;
+                break;
+              } // case 58
+              default: {
+                if (!super.parseUnknownField(input, extensionRegistry, tag)) {
+                  done = true; // was an endgroup tag
+                }
+                break;
+              } // default:
+            } // switch (tag)
+          } // while (!done)
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (com.giyeok.bibix.BibixIdProto.TargetIdData) e.getUnfinishedMessage();
           throw e.unwrapIOException();
         } finally {
-          if (parsedMessage != null) {
-            mergeFrom(parsedMessage);
-          }
-        }
+          onChanged();
+        } // finally
         return this;
       }
       private int buildRuleCase_ = 0;
@@ -3419,6 +3198,7 @@ public final class BibixIdProto {
         return this;
       }
 
+      private int bitField0_;
 
       private com.giyeok.bibix.BibixIdProto.SourceId sourceId_;
       private com.google.protobuf.SingleFieldBuilderV3<
@@ -3428,7 +3208,7 @@ public final class BibixIdProto {
        * @return Whether the sourceId field is set.
        */
       public boolean hasSourceId() {
-        return sourceIdBuilder_ != null || sourceId_ != null;
+        return ((bitField0_ & 0x00000001) != 0);
       }
       /**
        * <code>.com.giyeok.bibix.SourceId source_id = 1;</code>
@@ -3450,11 +3230,11 @@ public final class BibixIdProto {
             throw new NullPointerException();
           }
           sourceId_ = value;
-          onChanged();
         } else {
           sourceIdBuilder_.setMessage(value);
         }
-
+        bitField0_ |= 0x00000001;
+        onChanged();
         return this;
       }
       /**
@@ -3464,11 +3244,11 @@ public final class BibixIdProto {
           com.giyeok.bibix.BibixIdProto.SourceId.Builder builderForValue) {
         if (sourceIdBuilder_ == null) {
           sourceId_ = builderForValue.build();
-          onChanged();
         } else {
           sourceIdBuilder_.setMessage(builderForValue.build());
         }
-
+        bitField0_ |= 0x00000001;
+        onChanged();
         return this;
       }
       /**
@@ -3476,38 +3256,38 @@ public final class BibixIdProto {
        */
       public Builder mergeSourceId(com.giyeok.bibix.BibixIdProto.SourceId value) {
         if (sourceIdBuilder_ == null) {
-          if (sourceId_ != null) {
-            sourceId_ =
-              com.giyeok.bibix.BibixIdProto.SourceId.newBuilder(sourceId_).mergeFrom(value).buildPartial();
+          if (((bitField0_ & 0x00000001) != 0) &&
+            sourceId_ != null &&
+            sourceId_ != com.giyeok.bibix.BibixIdProto.SourceId.getDefaultInstance()) {
+            getSourceIdBuilder().mergeFrom(value);
           } else {
             sourceId_ = value;
           }
-          onChanged();
         } else {
           sourceIdBuilder_.mergeFrom(value);
         }
-
+        bitField0_ |= 0x00000001;
+        onChanged();
         return this;
       }
       /**
        * <code>.com.giyeok.bibix.SourceId source_id = 1;</code>
        */
       public Builder clearSourceId() {
-        if (sourceIdBuilder_ == null) {
-          sourceId_ = null;
-          onChanged();
-        } else {
-          sourceId_ = null;
+        bitField0_ = (bitField0_ & ~0x00000001);
+        sourceId_ = null;
+        if (sourceIdBuilder_ != null) {
+          sourceIdBuilder_.dispose();
           sourceIdBuilder_ = null;
         }
-
+        onChanged();
         return this;
       }
       /**
        * <code>.com.giyeok.bibix.SourceId source_id = 1;</code>
        */
       public com.giyeok.bibix.BibixIdProto.SourceId.Builder getSourceIdBuilder() {
-        
+        bitField0_ |= 0x00000001;
         onChanged();
         return getSourceIdFieldBuilder().getBuilder();
       }
@@ -3551,7 +3331,7 @@ public final class BibixIdProto {
        * @return Whether the buildRuleSourceId field is set.
        */
       public boolean hasBuildRuleSourceId() {
-        return buildRuleSourceIdBuilder_ != null || buildRuleSourceId_ != null;
+        return ((bitField0_ & 0x00000002) != 0);
       }
       /**
        * <pre>
@@ -3581,11 +3361,11 @@ public final class BibixIdProto {
             throw new NullPointerException();
           }
           buildRuleSourceId_ = value;
-          onChanged();
         } else {
           buildRuleSourceIdBuilder_.setMessage(value);
         }
-
+        bitField0_ |= 0x00000002;
+        onChanged();
         return this;
       }
       /**
@@ -3599,11 +3379,11 @@ public final class BibixIdProto {
           com.giyeok.bibix.BibixIdProto.SourceId.Builder builderForValue) {
         if (buildRuleSourceIdBuilder_ == null) {
           buildRuleSourceId_ = builderForValue.build();
-          onChanged();
         } else {
           buildRuleSourceIdBuilder_.setMessage(builderForValue.build());
         }
-
+        bitField0_ |= 0x00000002;
+        onChanged();
         return this;
       }
       /**
@@ -3615,17 +3395,18 @@ public final class BibixIdProto {
        */
       public Builder mergeBuildRuleSourceId(com.giyeok.bibix.BibixIdProto.SourceId value) {
         if (buildRuleSourceIdBuilder_ == null) {
-          if (buildRuleSourceId_ != null) {
-            buildRuleSourceId_ =
-              com.giyeok.bibix.BibixIdProto.SourceId.newBuilder(buildRuleSourceId_).mergeFrom(value).buildPartial();
+          if (((bitField0_ & 0x00000002) != 0) &&
+            buildRuleSourceId_ != null &&
+            buildRuleSourceId_ != com.giyeok.bibix.BibixIdProto.SourceId.getDefaultInstance()) {
+            getBuildRuleSourceIdBuilder().mergeFrom(value);
           } else {
             buildRuleSourceId_ = value;
           }
-          onChanged();
         } else {
           buildRuleSourceIdBuilder_.mergeFrom(value);
         }
-
+        bitField0_ |= 0x00000002;
+        onChanged();
         return this;
       }
       /**
@@ -3636,14 +3417,13 @@ public final class BibixIdProto {
        * <code>.com.giyeok.bibix.SourceId build_rule_source_id = 2;</code>
        */
       public Builder clearBuildRuleSourceId() {
-        if (buildRuleSourceIdBuilder_ == null) {
-          buildRuleSourceId_ = null;
-          onChanged();
-        } else {
-          buildRuleSourceId_ = null;
+        bitField0_ = (bitField0_ & ~0x00000002);
+        buildRuleSourceId_ = null;
+        if (buildRuleSourceIdBuilder_ != null) {
+          buildRuleSourceIdBuilder_.dispose();
           buildRuleSourceIdBuilder_ = null;
         }
-
+        onChanged();
         return this;
       }
       /**
@@ -3654,7 +3434,7 @@ public final class BibixIdProto {
        * <code>.com.giyeok.bibix.SourceId build_rule_source_id = 2;</code>
        */
       public com.giyeok.bibix.BibixIdProto.SourceId.Builder getBuildRuleSourceIdBuilder() {
-        
+        bitField0_ |= 0x00000002;
         onChanged();
         return getBuildRuleSourceIdFieldBuilder().getBuilder();
       }
@@ -3832,7 +3612,7 @@ public final class BibixIdProto {
           buildRule_ = null;
         }
         buildRuleCase_ = 3;
-        onChanged();;
+        onChanged();
         return nativeImplBuilder_;
       }
 
@@ -3974,7 +3754,7 @@ public final class BibixIdProto {
           buildRule_ = null;
         }
         buildRuleCase_ = 4;
-        onChanged();;
+        onChanged();
         return buildRuleImplIdBuilder_;
       }
 
@@ -4019,11 +3799,9 @@ public final class BibixIdProto {
        */
       public Builder setBuildRuleClassName(
           java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
+        if (value == null) { throw new NullPointerException(); }
         buildRuleClassName_ = value;
+        bitField0_ |= 0x00000010;
         onChanged();
         return this;
       }
@@ -4032,8 +3810,8 @@ public final class BibixIdProto {
        * @return This builder for chaining.
        */
       public Builder clearBuildRuleClassName() {
-        
         buildRuleClassName_ = getDefaultInstance().getBuildRuleClassName();
+        bitField0_ = (bitField0_ & ~0x00000010);
         onChanged();
         return this;
       }
@@ -4044,12 +3822,10 @@ public final class BibixIdProto {
        */
       public Builder setBuildRuleClassNameBytes(
           com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
+        if (value == null) { throw new NullPointerException(); }
+        checkByteStringIsUtf8(value);
         buildRuleClassName_ = value;
+        bitField0_ |= 0x00000010;
         onChanged();
         return this;
       }
@@ -4095,11 +3871,9 @@ public final class BibixIdProto {
        */
       public Builder setBuildRuleMethodName(
           java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
+        if (value == null) { throw new NullPointerException(); }
         buildRuleMethodName_ = value;
+        bitField0_ |= 0x00000020;
         onChanged();
         return this;
       }
@@ -4108,8 +3882,8 @@ public final class BibixIdProto {
        * @return This builder for chaining.
        */
       public Builder clearBuildRuleMethodName() {
-        
         buildRuleMethodName_ = getDefaultInstance().getBuildRuleMethodName();
+        bitField0_ = (bitField0_ & ~0x00000020);
         onChanged();
         return this;
       }
@@ -4120,12 +3894,10 @@ public final class BibixIdProto {
        */
       public Builder setBuildRuleMethodNameBytes(
           com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
+        if (value == null) { throw new NullPointerException(); }
+        checkByteStringIsUtf8(value);
         buildRuleMethodName_ = value;
+        bitField0_ |= 0x00000020;
         onChanged();
         return this;
       }
@@ -4138,7 +3910,7 @@ public final class BibixIdProto {
        * @return Whether the argsMap field is set.
        */
       public boolean hasArgsMap() {
-        return argsMapBuilder_ != null || argsMap_ != null;
+        return ((bitField0_ & 0x00000040) != 0);
       }
       /**
        * <code>.com.giyeok.bibix.ArgsMap args_map = 7;</code>
@@ -4160,11 +3932,11 @@ public final class BibixIdProto {
             throw new NullPointerException();
           }
           argsMap_ = value;
-          onChanged();
         } else {
           argsMapBuilder_.setMessage(value);
         }
-
+        bitField0_ |= 0x00000040;
+        onChanged();
         return this;
       }
       /**
@@ -4174,11 +3946,11 @@ public final class BibixIdProto {
           com.giyeok.bibix.BibixIdProto.ArgsMap.Builder builderForValue) {
         if (argsMapBuilder_ == null) {
           argsMap_ = builderForValue.build();
-          onChanged();
         } else {
           argsMapBuilder_.setMessage(builderForValue.build());
         }
-
+        bitField0_ |= 0x00000040;
+        onChanged();
         return this;
       }
       /**
@@ -4186,38 +3958,38 @@ public final class BibixIdProto {
        */
       public Builder mergeArgsMap(com.giyeok.bibix.BibixIdProto.ArgsMap value) {
         if (argsMapBuilder_ == null) {
-          if (argsMap_ != null) {
-            argsMap_ =
-              com.giyeok.bibix.BibixIdProto.ArgsMap.newBuilder(argsMap_).mergeFrom(value).buildPartial();
+          if (((bitField0_ & 0x00000040) != 0) &&
+            argsMap_ != null &&
+            argsMap_ != com.giyeok.bibix.BibixIdProto.ArgsMap.getDefaultInstance()) {
+            getArgsMapBuilder().mergeFrom(value);
           } else {
             argsMap_ = value;
           }
-          onChanged();
         } else {
           argsMapBuilder_.mergeFrom(value);
         }
-
+        bitField0_ |= 0x00000040;
+        onChanged();
         return this;
       }
       /**
        * <code>.com.giyeok.bibix.ArgsMap args_map = 7;</code>
        */
       public Builder clearArgsMap() {
-        if (argsMapBuilder_ == null) {
-          argsMap_ = null;
-          onChanged();
-        } else {
-          argsMap_ = null;
+        bitField0_ = (bitField0_ & ~0x00000040);
+        argsMap_ = null;
+        if (argsMapBuilder_ != null) {
+          argsMapBuilder_.dispose();
           argsMapBuilder_ = null;
         }
-
+        onChanged();
         return this;
       }
       /**
        * <code>.com.giyeok.bibix.ArgsMap args_map = 7;</code>
        */
       public com.giyeok.bibix.BibixIdProto.ArgsMap.Builder getArgsMapBuilder() {
-        
+        bitField0_ |= 0x00000040;
         onChanged();
         return getArgsMapFieldBuilder().getBuilder();
       }
@@ -4281,7 +4053,18 @@ public final class BibixIdProto {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return new TargetIdData(input, extensionRegistry);
+        Builder builder = newBuilder();
+        try {
+          builder.mergeFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          throw e.setUnfinishedMessage(builder.buildPartial());
+        } catch (com.google.protobuf.UninitializedMessageException e) {
+          throw e.asInvalidProtocolBufferException().setUnfinishedMessage(builder.buildPartial());
+        } catch (java.io.IOException e) {
+          throw new com.google.protobuf.InvalidProtocolBufferException(e)
+              .setUnfinishedMessage(builder.buildPartial());
+        }
+        return builder.buildPartial();
       }
     };
 
@@ -4356,73 +4139,6 @@ public final class BibixIdProto {
       return new BuildRuleImplId();
     }
 
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-      return this.unknownFields;
-    }
-    private BuildRuleImplId(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      this();
-      if (extensionRegistry == null) {
-        throw new java.lang.NullPointerException();
-      }
-      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder();
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            case 10: {
-              com.giyeok.bibix.BibixIdProto.SourceId.Builder subBuilder = null;
-              if (sourceId_ != null) {
-                subBuilder = sourceId_.toBuilder();
-              }
-              sourceId_ = input.readMessage(com.giyeok.bibix.BibixIdProto.SourceId.parser(), extensionRegistry);
-              if (subBuilder != null) {
-                subBuilder.mergeFrom(sourceId_);
-                sourceId_ = subBuilder.buildPartial();
-              }
-
-              break;
-            }
-            case 18: {
-
-              targetId_ = input.readBytes();
-              break;
-            }
-            case 26: {
-
-              objectId_ = input.readBytes();
-              break;
-            }
-            default: {
-              if (!parseUnknownField(
-                  input, unknownFields, extensionRegistry, tag)) {
-                done = true;
-              }
-              break;
-            }
-          }
-        }
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw e.setUnfinishedMessage(this);
-      } catch (com.google.protobuf.UninitializedMessageException e) {
-        throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
-      } catch (java.io.IOException e) {
-        throw new com.google.protobuf.InvalidProtocolBufferException(
-            e).setUnfinishedMessage(this);
-      } finally {
-        this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
-      }
-    }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
       return com.giyeok.bibix.BibixIdProto.internal_static_com_giyeok_bibix_BuildRuleImplId_descriptor;
@@ -4459,11 +4175,11 @@ public final class BibixIdProto {
      */
     @java.lang.Override
     public com.giyeok.bibix.BibixIdProto.SourceIdOrBuilder getSourceIdOrBuilder() {
-      return getSourceId();
+      return sourceId_ == null ? com.giyeok.bibix.BibixIdProto.SourceId.getDefaultInstance() : sourceId_;
     }
 
     public static final int TARGET_ID_FIELD_NUMBER = 2;
-    private com.google.protobuf.ByteString targetId_;
+    private com.google.protobuf.ByteString targetId_ = com.google.protobuf.ByteString.EMPTY;
     /**
      * <code>bytes target_id = 2;</code>
      * @return The targetId.
@@ -4474,7 +4190,7 @@ public final class BibixIdProto {
     }
 
     public static final int OBJECT_ID_FIELD_NUMBER = 3;
-    private com.google.protobuf.ByteString objectId_;
+    private com.google.protobuf.ByteString objectId_ = com.google.protobuf.ByteString.EMPTY;
     /**
      * <code>bytes object_id = 3;</code>
      * @return The objectId.
@@ -4507,7 +4223,7 @@ public final class BibixIdProto {
       if (!objectId_.isEmpty()) {
         output.writeBytes(3, objectId_);
       }
-      unknownFields.writeTo(output);
+      getUnknownFields().writeTo(output);
     }
 
     @java.lang.Override
@@ -4528,7 +4244,7 @@ public final class BibixIdProto {
         size += com.google.protobuf.CodedOutputStream
           .computeBytesSize(3, objectId_);
       }
-      size += unknownFields.getSerializedSize();
+      size += getUnknownFields().getSerializedSize();
       memoizedSize = size;
       return size;
     }
@@ -4552,7 +4268,7 @@ public final class BibixIdProto {
           .equals(other.getTargetId())) return false;
       if (!getObjectId()
           .equals(other.getObjectId())) return false;
-      if (!unknownFields.equals(other.unknownFields)) return false;
+      if (!getUnknownFields().equals(other.getUnknownFields())) return false;
       return true;
     }
 
@@ -4571,7 +4287,7 @@ public final class BibixIdProto {
       hash = (53 * hash) + getTargetId().hashCode();
       hash = (37 * hash) + OBJECT_ID_FIELD_NUMBER;
       hash = (53 * hash) + getObjectId().hashCode();
-      hash = (29 * hash) + unknownFields.hashCode();
+      hash = (29 * hash) + getUnknownFields().hashCode();
       memoizedHashCode = hash;
       return hash;
     }
@@ -4688,32 +4404,25 @@ public final class BibixIdProto {
 
       // Construct using com.giyeok.bibix.BibixIdProto.BuildRuleImplId.newBuilder()
       private Builder() {
-        maybeForceBuilderInitialization();
+
       }
 
       private Builder(
           com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
         super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
-        }
+
       }
       @java.lang.Override
       public Builder clear() {
         super.clear();
-        if (sourceIdBuilder_ == null) {
-          sourceId_ = null;
-        } else {
-          sourceId_ = null;
+        bitField0_ = 0;
+        sourceId_ = null;
+        if (sourceIdBuilder_ != null) {
+          sourceIdBuilder_.dispose();
           sourceIdBuilder_ = null;
         }
         targetId_ = com.google.protobuf.ByteString.EMPTY;
-
         objectId_ = com.google.protobuf.ByteString.EMPTY;
-
         return this;
       }
 
@@ -4740,49 +4449,26 @@ public final class BibixIdProto {
       @java.lang.Override
       public com.giyeok.bibix.BibixIdProto.BuildRuleImplId buildPartial() {
         com.giyeok.bibix.BibixIdProto.BuildRuleImplId result = new com.giyeok.bibix.BibixIdProto.BuildRuleImplId(this);
-        if (sourceIdBuilder_ == null) {
-          result.sourceId_ = sourceId_;
-        } else {
-          result.sourceId_ = sourceIdBuilder_.build();
-        }
-        result.targetId_ = targetId_;
-        result.objectId_ = objectId_;
+        if (bitField0_ != 0) { buildPartial0(result); }
         onBuilt();
         return result;
       }
 
-      @java.lang.Override
-      public Builder clone() {
-        return super.clone();
+      private void buildPartial0(com.giyeok.bibix.BibixIdProto.BuildRuleImplId result) {
+        int from_bitField0_ = bitField0_;
+        if (((from_bitField0_ & 0x00000001) != 0)) {
+          result.sourceId_ = sourceIdBuilder_ == null
+              ? sourceId_
+              : sourceIdBuilder_.build();
+        }
+        if (((from_bitField0_ & 0x00000002) != 0)) {
+          result.targetId_ = targetId_;
+        }
+        if (((from_bitField0_ & 0x00000004) != 0)) {
+          result.objectId_ = objectId_;
+        }
       }
-      @java.lang.Override
-      public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return super.setField(field, value);
-      }
-      @java.lang.Override
-      public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return super.clearField(field);
-      }
-      @java.lang.Override
-      public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return super.clearOneof(oneof);
-      }
-      @java.lang.Override
-      public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, java.lang.Object value) {
-        return super.setRepeatedField(field, index, value);
-      }
-      @java.lang.Override
-      public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return super.addRepeatedField(field, value);
-      }
+
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof com.giyeok.bibix.BibixIdProto.BuildRuleImplId) {
@@ -4804,7 +4490,7 @@ public final class BibixIdProto {
         if (other.getObjectId() != com.google.protobuf.ByteString.EMPTY) {
           setObjectId(other.getObjectId());
         }
-        this.mergeUnknownFields(other.unknownFields);
+        this.mergeUnknownFields(other.getUnknownFields());
         onChanged();
         return this;
       }
@@ -4819,19 +4505,50 @@ public final class BibixIdProto {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        com.giyeok.bibix.BibixIdProto.BuildRuleImplId parsedMessage = null;
+        if (extensionRegistry == null) {
+          throw new java.lang.NullPointerException();
+        }
         try {
-          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+          boolean done = false;
+          while (!done) {
+            int tag = input.readTag();
+            switch (tag) {
+              case 0:
+                done = true;
+                break;
+              case 10: {
+                input.readMessage(
+                    getSourceIdFieldBuilder().getBuilder(),
+                    extensionRegistry);
+                bitField0_ |= 0x00000001;
+                break;
+              } // case 10
+              case 18: {
+                targetId_ = input.readBytes();
+                bitField0_ |= 0x00000002;
+                break;
+              } // case 18
+              case 26: {
+                objectId_ = input.readBytes();
+                bitField0_ |= 0x00000004;
+                break;
+              } // case 26
+              default: {
+                if (!super.parseUnknownField(input, extensionRegistry, tag)) {
+                  done = true; // was an endgroup tag
+                }
+                break;
+              } // default:
+            } // switch (tag)
+          } // while (!done)
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (com.giyeok.bibix.BibixIdProto.BuildRuleImplId) e.getUnfinishedMessage();
           throw e.unwrapIOException();
         } finally {
-          if (parsedMessage != null) {
-            mergeFrom(parsedMessage);
-          }
-        }
+          onChanged();
+        } // finally
         return this;
       }
+      private int bitField0_;
 
       private com.giyeok.bibix.BibixIdProto.SourceId sourceId_;
       private com.google.protobuf.SingleFieldBuilderV3<
@@ -4841,7 +4558,7 @@ public final class BibixIdProto {
        * @return Whether the sourceId field is set.
        */
       public boolean hasSourceId() {
-        return sourceIdBuilder_ != null || sourceId_ != null;
+        return ((bitField0_ & 0x00000001) != 0);
       }
       /**
        * <code>.com.giyeok.bibix.SourceId source_id = 1;</code>
@@ -4863,11 +4580,11 @@ public final class BibixIdProto {
             throw new NullPointerException();
           }
           sourceId_ = value;
-          onChanged();
         } else {
           sourceIdBuilder_.setMessage(value);
         }
-
+        bitField0_ |= 0x00000001;
+        onChanged();
         return this;
       }
       /**
@@ -4877,11 +4594,11 @@ public final class BibixIdProto {
           com.giyeok.bibix.BibixIdProto.SourceId.Builder builderForValue) {
         if (sourceIdBuilder_ == null) {
           sourceId_ = builderForValue.build();
-          onChanged();
         } else {
           sourceIdBuilder_.setMessage(builderForValue.build());
         }
-
+        bitField0_ |= 0x00000001;
+        onChanged();
         return this;
       }
       /**
@@ -4889,38 +4606,38 @@ public final class BibixIdProto {
        */
       public Builder mergeSourceId(com.giyeok.bibix.BibixIdProto.SourceId value) {
         if (sourceIdBuilder_ == null) {
-          if (sourceId_ != null) {
-            sourceId_ =
-              com.giyeok.bibix.BibixIdProto.SourceId.newBuilder(sourceId_).mergeFrom(value).buildPartial();
+          if (((bitField0_ & 0x00000001) != 0) &&
+            sourceId_ != null &&
+            sourceId_ != com.giyeok.bibix.BibixIdProto.SourceId.getDefaultInstance()) {
+            getSourceIdBuilder().mergeFrom(value);
           } else {
             sourceId_ = value;
           }
-          onChanged();
         } else {
           sourceIdBuilder_.mergeFrom(value);
         }
-
+        bitField0_ |= 0x00000001;
+        onChanged();
         return this;
       }
       /**
        * <code>.com.giyeok.bibix.SourceId source_id = 1;</code>
        */
       public Builder clearSourceId() {
-        if (sourceIdBuilder_ == null) {
-          sourceId_ = null;
-          onChanged();
-        } else {
-          sourceId_ = null;
+        bitField0_ = (bitField0_ & ~0x00000001);
+        sourceId_ = null;
+        if (sourceIdBuilder_ != null) {
+          sourceIdBuilder_.dispose();
           sourceIdBuilder_ = null;
         }
-
+        onChanged();
         return this;
       }
       /**
        * <code>.com.giyeok.bibix.SourceId source_id = 1;</code>
        */
       public com.giyeok.bibix.BibixIdProto.SourceId.Builder getSourceIdBuilder() {
-        
+        bitField0_ |= 0x00000001;
         onChanged();
         return getSourceIdFieldBuilder().getBuilder();
       }
@@ -4967,11 +4684,9 @@ public final class BibixIdProto {
        * @return This builder for chaining.
        */
       public Builder setTargetId(com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
+        if (value == null) { throw new NullPointerException(); }
         targetId_ = value;
+        bitField0_ |= 0x00000002;
         onChanged();
         return this;
       }
@@ -4980,7 +4695,7 @@ public final class BibixIdProto {
        * @return This builder for chaining.
        */
       public Builder clearTargetId() {
-        
+        bitField0_ = (bitField0_ & ~0x00000002);
         targetId_ = getDefaultInstance().getTargetId();
         onChanged();
         return this;
@@ -5001,11 +4716,9 @@ public final class BibixIdProto {
        * @return This builder for chaining.
        */
       public Builder setObjectId(com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
+        if (value == null) { throw new NullPointerException(); }
         objectId_ = value;
+        bitField0_ |= 0x00000004;
         onChanged();
         return this;
       }
@@ -5014,7 +4727,7 @@ public final class BibixIdProto {
        * @return This builder for chaining.
        */
       public Builder clearObjectId() {
-        
+        bitField0_ = (bitField0_ & ~0x00000004);
         objectId_ = getDefaultInstance().getObjectId();
         onChanged();
         return this;
@@ -5052,7 +4765,18 @@ public final class BibixIdProto {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return new BuildRuleImplId(input, extensionRegistry);
+        Builder builder = newBuilder();
+        try {
+          builder.mergeFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          throw e.setUnfinishedMessage(builder.buildPartial());
+        } catch (com.google.protobuf.UninitializedMessageException e) {
+          throw e.asInvalidProtocolBufferException().setUnfinishedMessage(builder.buildPartial());
+        } catch (java.io.IOException e) {
+          throw new com.google.protobuf.InvalidProtocolBufferException(e)
+              .setUnfinishedMessage(builder.buildPartial());
+        }
+        return builder.buildPartial();
       }
     };
 
@@ -5116,60 +4840,6 @@ public final class BibixIdProto {
       return new ObjectIdData();
     }
 
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-      return this.unknownFields;
-    }
-    private ObjectIdData(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      this();
-      if (extensionRegistry == null) {
-        throw new java.lang.NullPointerException();
-      }
-      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder();
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            case 10: {
-
-              targetId_ = input.readBytes();
-              break;
-            }
-            case 18: {
-
-              inputsHash_ = input.readBytes();
-              break;
-            }
-            default: {
-              if (!parseUnknownField(
-                  input, unknownFields, extensionRegistry, tag)) {
-                done = true;
-              }
-              break;
-            }
-          }
-        }
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw e.setUnfinishedMessage(this);
-      } catch (com.google.protobuf.UninitializedMessageException e) {
-        throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
-      } catch (java.io.IOException e) {
-        throw new com.google.protobuf.InvalidProtocolBufferException(
-            e).setUnfinishedMessage(this);
-      } finally {
-        this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
-      }
-    }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
       return com.giyeok.bibix.BibixIdProto.internal_static_com_giyeok_bibix_ObjectIdData_descriptor;
@@ -5184,7 +4854,7 @@ public final class BibixIdProto {
     }
 
     public static final int TARGET_ID_FIELD_NUMBER = 1;
-    private com.google.protobuf.ByteString targetId_;
+    private com.google.protobuf.ByteString targetId_ = com.google.protobuf.ByteString.EMPTY;
     /**
      * <code>bytes target_id = 1;</code>
      * @return The targetId.
@@ -5195,7 +4865,7 @@ public final class BibixIdProto {
     }
 
     public static final int INPUTS_HASH_FIELD_NUMBER = 2;
-    private com.google.protobuf.ByteString inputsHash_;
+    private com.google.protobuf.ByteString inputsHash_ = com.google.protobuf.ByteString.EMPTY;
     /**
      * <code>bytes inputs_hash = 2;</code>
      * @return The inputsHash.
@@ -5225,7 +4895,7 @@ public final class BibixIdProto {
       if (!inputsHash_.isEmpty()) {
         output.writeBytes(2, inputsHash_);
       }
-      unknownFields.writeTo(output);
+      getUnknownFields().writeTo(output);
     }
 
     @java.lang.Override
@@ -5242,7 +4912,7 @@ public final class BibixIdProto {
         size += com.google.protobuf.CodedOutputStream
           .computeBytesSize(2, inputsHash_);
       }
-      size += unknownFields.getSerializedSize();
+      size += getUnknownFields().getSerializedSize();
       memoizedSize = size;
       return size;
     }
@@ -5261,7 +4931,7 @@ public final class BibixIdProto {
           .equals(other.getTargetId())) return false;
       if (!getInputsHash()
           .equals(other.getInputsHash())) return false;
-      if (!unknownFields.equals(other.unknownFields)) return false;
+      if (!getUnknownFields().equals(other.getUnknownFields())) return false;
       return true;
     }
 
@@ -5276,7 +4946,7 @@ public final class BibixIdProto {
       hash = (53 * hash) + getTargetId().hashCode();
       hash = (37 * hash) + INPUTS_HASH_FIELD_NUMBER;
       hash = (53 * hash) + getInputsHash().hashCode();
-      hash = (29 * hash) + unknownFields.hashCode();
+      hash = (29 * hash) + getUnknownFields().hashCode();
       memoizedHashCode = hash;
       return hash;
     }
@@ -5397,26 +5067,20 @@ public final class BibixIdProto {
 
       // Construct using com.giyeok.bibix.BibixIdProto.ObjectIdData.newBuilder()
       private Builder() {
-        maybeForceBuilderInitialization();
+
       }
 
       private Builder(
           com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
         super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
-        }
+
       }
       @java.lang.Override
       public Builder clear() {
         super.clear();
+        bitField0_ = 0;
         targetId_ = com.google.protobuf.ByteString.EMPTY;
-
         inputsHash_ = com.google.protobuf.ByteString.EMPTY;
-
         return this;
       }
 
@@ -5443,44 +5107,21 @@ public final class BibixIdProto {
       @java.lang.Override
       public com.giyeok.bibix.BibixIdProto.ObjectIdData buildPartial() {
         com.giyeok.bibix.BibixIdProto.ObjectIdData result = new com.giyeok.bibix.BibixIdProto.ObjectIdData(this);
-        result.targetId_ = targetId_;
-        result.inputsHash_ = inputsHash_;
+        if (bitField0_ != 0) { buildPartial0(result); }
         onBuilt();
         return result;
       }
 
-      @java.lang.Override
-      public Builder clone() {
-        return super.clone();
+      private void buildPartial0(com.giyeok.bibix.BibixIdProto.ObjectIdData result) {
+        int from_bitField0_ = bitField0_;
+        if (((from_bitField0_ & 0x00000001) != 0)) {
+          result.targetId_ = targetId_;
+        }
+        if (((from_bitField0_ & 0x00000002) != 0)) {
+          result.inputsHash_ = inputsHash_;
+        }
       }
-      @java.lang.Override
-      public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return super.setField(field, value);
-      }
-      @java.lang.Override
-      public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return super.clearField(field);
-      }
-      @java.lang.Override
-      public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return super.clearOneof(oneof);
-      }
-      @java.lang.Override
-      public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, java.lang.Object value) {
-        return super.setRepeatedField(field, index, value);
-      }
-      @java.lang.Override
-      public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return super.addRepeatedField(field, value);
-      }
+
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof com.giyeok.bibix.BibixIdProto.ObjectIdData) {
@@ -5499,7 +5140,7 @@ public final class BibixIdProto {
         if (other.getInputsHash() != com.google.protobuf.ByteString.EMPTY) {
           setInputsHash(other.getInputsHash());
         }
-        this.mergeUnknownFields(other.unknownFields);
+        this.mergeUnknownFields(other.getUnknownFields());
         onChanged();
         return this;
       }
@@ -5514,19 +5155,43 @@ public final class BibixIdProto {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        com.giyeok.bibix.BibixIdProto.ObjectIdData parsedMessage = null;
+        if (extensionRegistry == null) {
+          throw new java.lang.NullPointerException();
+        }
         try {
-          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+          boolean done = false;
+          while (!done) {
+            int tag = input.readTag();
+            switch (tag) {
+              case 0:
+                done = true;
+                break;
+              case 10: {
+                targetId_ = input.readBytes();
+                bitField0_ |= 0x00000001;
+                break;
+              } // case 10
+              case 18: {
+                inputsHash_ = input.readBytes();
+                bitField0_ |= 0x00000002;
+                break;
+              } // case 18
+              default: {
+                if (!super.parseUnknownField(input, extensionRegistry, tag)) {
+                  done = true; // was an endgroup tag
+                }
+                break;
+              } // default:
+            } // switch (tag)
+          } // while (!done)
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (com.giyeok.bibix.BibixIdProto.ObjectIdData) e.getUnfinishedMessage();
           throw e.unwrapIOException();
         } finally {
-          if (parsedMessage != null) {
-            mergeFrom(parsedMessage);
-          }
-        }
+          onChanged();
+        } // finally
         return this;
       }
+      private int bitField0_;
 
       private com.google.protobuf.ByteString targetId_ = com.google.protobuf.ByteString.EMPTY;
       /**
@@ -5543,11 +5208,9 @@ public final class BibixIdProto {
        * @return This builder for chaining.
        */
       public Builder setTargetId(com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
+        if (value == null) { throw new NullPointerException(); }
         targetId_ = value;
+        bitField0_ |= 0x00000001;
         onChanged();
         return this;
       }
@@ -5556,7 +5219,7 @@ public final class BibixIdProto {
        * @return This builder for chaining.
        */
       public Builder clearTargetId() {
-        
+        bitField0_ = (bitField0_ & ~0x00000001);
         targetId_ = getDefaultInstance().getTargetId();
         onChanged();
         return this;
@@ -5577,11 +5240,9 @@ public final class BibixIdProto {
        * @return This builder for chaining.
        */
       public Builder setInputsHash(com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
+        if (value == null) { throw new NullPointerException(); }
         inputsHash_ = value;
+        bitField0_ |= 0x00000002;
         onChanged();
         return this;
       }
@@ -5590,7 +5251,7 @@ public final class BibixIdProto {
        * @return This builder for chaining.
        */
       public Builder clearInputsHash() {
-        
+        bitField0_ = (bitField0_ & ~0x00000002);
         inputsHash_ = getDefaultInstance().getInputsHash();
         onChanged();
         return this;
@@ -5628,7 +5289,18 @@ public final class BibixIdProto {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return new ObjectIdData(input, extensionRegistry);
+        Builder builder = newBuilder();
+        try {
+          builder.mergeFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          throw e.setUnfinishedMessage(builder.buildPartial());
+        } catch (com.google.protobuf.UninitializedMessageException e) {
+          throw e.asInvalidProtocolBufferException().setUnfinishedMessage(builder.buildPartial());
+        } catch (java.io.IOException e) {
+          throw new com.google.protobuf.InvalidProtocolBufferException(e)
+              .setUnfinishedMessage(builder.buildPartial());
+        }
+        return builder.buildPartial();
       }
     };
 
@@ -5699,63 +5371,6 @@ public final class BibixIdProto {
       return new ArgsMap();
     }
 
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-      return this.unknownFields;
-    }
-    private ArgsMap(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      this();
-      if (extensionRegistry == null) {
-        throw new java.lang.NullPointerException();
-      }
-      int mutable_bitField0_ = 0;
-      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder();
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            case 10: {
-              if (!((mutable_bitField0_ & 0x00000001) != 0)) {
-                pairs_ = new java.util.ArrayList<com.giyeok.bibix.BibixIdProto.ArgPair>();
-                mutable_bitField0_ |= 0x00000001;
-              }
-              pairs_.add(
-                  input.readMessage(com.giyeok.bibix.BibixIdProto.ArgPair.parser(), extensionRegistry));
-              break;
-            }
-            default: {
-              if (!parseUnknownField(
-                  input, unknownFields, extensionRegistry, tag)) {
-                done = true;
-              }
-              break;
-            }
-          }
-        }
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw e.setUnfinishedMessage(this);
-      } catch (com.google.protobuf.UninitializedMessageException e) {
-        throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
-      } catch (java.io.IOException e) {
-        throw new com.google.protobuf.InvalidProtocolBufferException(
-            e).setUnfinishedMessage(this);
-      } finally {
-        if (((mutable_bitField0_ & 0x00000001) != 0)) {
-          pairs_ = java.util.Collections.unmodifiableList(pairs_);
-        }
-        this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
-      }
-    }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
       return com.giyeok.bibix.BibixIdProto.internal_static_com_giyeok_bibix_ArgsMap_descriptor;
@@ -5770,6 +5385,7 @@ public final class BibixIdProto {
     }
 
     public static final int PAIRS_FIELD_NUMBER = 1;
+    @SuppressWarnings("serial")
     private java.util.List<com.giyeok.bibix.BibixIdProto.ArgPair> pairs_;
     /**
      * <code>repeated .com.giyeok.bibix.ArgPair pairs = 1;</code>
@@ -5826,7 +5442,7 @@ public final class BibixIdProto {
       for (int i = 0; i < pairs_.size(); i++) {
         output.writeMessage(1, pairs_.get(i));
       }
-      unknownFields.writeTo(output);
+      getUnknownFields().writeTo(output);
     }
 
     @java.lang.Override
@@ -5839,7 +5455,7 @@ public final class BibixIdProto {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(1, pairs_.get(i));
       }
-      size += unknownFields.getSerializedSize();
+      size += getUnknownFields().getSerializedSize();
       memoizedSize = size;
       return size;
     }
@@ -5856,7 +5472,7 @@ public final class BibixIdProto {
 
       if (!getPairsList()
           .equals(other.getPairsList())) return false;
-      if (!unknownFields.equals(other.unknownFields)) return false;
+      if (!getUnknownFields().equals(other.getUnknownFields())) return false;
       return true;
     }
 
@@ -5871,7 +5487,7 @@ public final class BibixIdProto {
         hash = (37 * hash) + PAIRS_FIELD_NUMBER;
         hash = (53 * hash) + getPairsList().hashCode();
       }
-      hash = (29 * hash) + unknownFields.hashCode();
+      hash = (29 * hash) + getUnknownFields().hashCode();
       memoizedHashCode = hash;
       return hash;
     }
@@ -5988,29 +5604,25 @@ public final class BibixIdProto {
 
       // Construct using com.giyeok.bibix.BibixIdProto.ArgsMap.newBuilder()
       private Builder() {
-        maybeForceBuilderInitialization();
+
       }
 
       private Builder(
           com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
         super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
-          getPairsFieldBuilder();
-        }
+
       }
       @java.lang.Override
       public Builder clear() {
         super.clear();
+        bitField0_ = 0;
         if (pairsBuilder_ == null) {
           pairs_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000001);
         } else {
+          pairs_ = null;
           pairsBuilder_.clear();
         }
+        bitField0_ = (bitField0_ & ~0x00000001);
         return this;
       }
 
@@ -6037,7 +5649,13 @@ public final class BibixIdProto {
       @java.lang.Override
       public com.giyeok.bibix.BibixIdProto.ArgsMap buildPartial() {
         com.giyeok.bibix.BibixIdProto.ArgsMap result = new com.giyeok.bibix.BibixIdProto.ArgsMap(this);
-        int from_bitField0_ = bitField0_;
+        buildPartialRepeatedFields(result);
+        if (bitField0_ != 0) { buildPartial0(result); }
+        onBuilt();
+        return result;
+      }
+
+      private void buildPartialRepeatedFields(com.giyeok.bibix.BibixIdProto.ArgsMap result) {
         if (pairsBuilder_ == null) {
           if (((bitField0_ & 0x00000001) != 0)) {
             pairs_ = java.util.Collections.unmodifiableList(pairs_);
@@ -6047,42 +5665,12 @@ public final class BibixIdProto {
         } else {
           result.pairs_ = pairsBuilder_.build();
         }
-        onBuilt();
-        return result;
       }
 
-      @java.lang.Override
-      public Builder clone() {
-        return super.clone();
+      private void buildPartial0(com.giyeok.bibix.BibixIdProto.ArgsMap result) {
+        int from_bitField0_ = bitField0_;
       }
-      @java.lang.Override
-      public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return super.setField(field, value);
-      }
-      @java.lang.Override
-      public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return super.clearField(field);
-      }
-      @java.lang.Override
-      public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return super.clearOneof(oneof);
-      }
-      @java.lang.Override
-      public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, java.lang.Object value) {
-        return super.setRepeatedField(field, index, value);
-      }
-      @java.lang.Override
-      public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return super.addRepeatedField(field, value);
-      }
+
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof com.giyeok.bibix.BibixIdProto.ArgsMap) {
@@ -6121,7 +5709,7 @@ public final class BibixIdProto {
             }
           }
         }
-        this.mergeUnknownFields(other.unknownFields);
+        this.mergeUnknownFields(other.getUnknownFields());
         onChanged();
         return this;
       }
@@ -6136,17 +5724,43 @@ public final class BibixIdProto {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        com.giyeok.bibix.BibixIdProto.ArgsMap parsedMessage = null;
+        if (extensionRegistry == null) {
+          throw new java.lang.NullPointerException();
+        }
         try {
-          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+          boolean done = false;
+          while (!done) {
+            int tag = input.readTag();
+            switch (tag) {
+              case 0:
+                done = true;
+                break;
+              case 10: {
+                com.giyeok.bibix.BibixIdProto.ArgPair m =
+                    input.readMessage(
+                        com.giyeok.bibix.BibixIdProto.ArgPair.parser(),
+                        extensionRegistry);
+                if (pairsBuilder_ == null) {
+                  ensurePairsIsMutable();
+                  pairs_.add(m);
+                } else {
+                  pairsBuilder_.addMessage(m);
+                }
+                break;
+              } // case 10
+              default: {
+                if (!super.parseUnknownField(input, extensionRegistry, tag)) {
+                  done = true; // was an endgroup tag
+                }
+                break;
+              } // default:
+            } // switch (tag)
+          } // while (!done)
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (com.giyeok.bibix.BibixIdProto.ArgsMap) e.getUnfinishedMessage();
           throw e.unwrapIOException();
         } finally {
-          if (parsedMessage != null) {
-            mergeFrom(parsedMessage);
-          }
-        }
+          onChanged();
+        } // finally
         return this;
       }
       private int bitField0_;
@@ -6423,7 +6037,18 @@ public final class BibixIdProto {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return new ArgsMap(input, extensionRegistry);
+        Builder builder = newBuilder();
+        try {
+          builder.mergeFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          throw e.setUnfinishedMessage(builder.buildPartial());
+        } catch (com.google.protobuf.UninitializedMessageException e) {
+          throw e.asInvalidProtocolBufferException().setUnfinishedMessage(builder.buildPartial());
+        } catch (java.io.IOException e) {
+          throw new com.google.protobuf.InvalidProtocolBufferException(e)
+              .setUnfinishedMessage(builder.buildPartial());
+        }
+        return builder.buildPartial();
       }
     };
 
@@ -6497,69 +6122,6 @@ public final class BibixIdProto {
       return new ArgPair();
     }
 
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-      return this.unknownFields;
-    }
-    private ArgPair(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      this();
-      if (extensionRegistry == null) {
-        throw new java.lang.NullPointerException();
-      }
-      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder();
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            case 10: {
-              java.lang.String s = input.readStringRequireUtf8();
-
-              name_ = s;
-              break;
-            }
-            case 18: {
-              com.giyeok.bibix.BibixValueProto.BibixValue.Builder subBuilder = null;
-              if (value_ != null) {
-                subBuilder = value_.toBuilder();
-              }
-              value_ = input.readMessage(com.giyeok.bibix.BibixValueProto.BibixValue.parser(), extensionRegistry);
-              if (subBuilder != null) {
-                subBuilder.mergeFrom(value_);
-                value_ = subBuilder.buildPartial();
-              }
-
-              break;
-            }
-            default: {
-              if (!parseUnknownField(
-                  input, unknownFields, extensionRegistry, tag)) {
-                done = true;
-              }
-              break;
-            }
-          }
-        }
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw e.setUnfinishedMessage(this);
-      } catch (com.google.protobuf.UninitializedMessageException e) {
-        throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
-      } catch (java.io.IOException e) {
-        throw new com.google.protobuf.InvalidProtocolBufferException(
-            e).setUnfinishedMessage(this);
-      } finally {
-        this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
-      }
-    }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
       return com.giyeok.bibix.BibixIdProto.internal_static_com_giyeok_bibix_ArgPair_descriptor;
@@ -6574,7 +6136,8 @@ public final class BibixIdProto {
     }
 
     public static final int NAME_FIELD_NUMBER = 1;
-    private volatile java.lang.Object name_;
+    @SuppressWarnings("serial")
+    private volatile java.lang.Object name_ = "";
     /**
      * <code>string name = 1;</code>
      * @return The name.
@@ -6634,7 +6197,7 @@ public final class BibixIdProto {
      */
     @java.lang.Override
     public com.giyeok.bibix.BibixValueProto.BibixValueOrBuilder getValueOrBuilder() {
-      return getValue();
+      return value_ == null ? com.giyeok.bibix.BibixValueProto.BibixValue.getDefaultInstance() : value_;
     }
 
     private byte memoizedIsInitialized = -1;
@@ -6657,7 +6220,7 @@ public final class BibixIdProto {
       if (value_ != null) {
         output.writeMessage(2, getValue());
       }
-      unknownFields.writeTo(output);
+      getUnknownFields().writeTo(output);
     }
 
     @java.lang.Override
@@ -6673,7 +6236,7 @@ public final class BibixIdProto {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(2, getValue());
       }
-      size += unknownFields.getSerializedSize();
+      size += getUnknownFields().getSerializedSize();
       memoizedSize = size;
       return size;
     }
@@ -6695,7 +6258,7 @@ public final class BibixIdProto {
         if (!getValue()
             .equals(other.getValue())) return false;
       }
-      if (!unknownFields.equals(other.unknownFields)) return false;
+      if (!getUnknownFields().equals(other.getUnknownFields())) return false;
       return true;
     }
 
@@ -6712,7 +6275,7 @@ public final class BibixIdProto {
         hash = (37 * hash) + VALUE_FIELD_NUMBER;
         hash = (53 * hash) + getValue().hashCode();
       }
-      hash = (29 * hash) + unknownFields.hashCode();
+      hash = (29 * hash) + getUnknownFields().hashCode();
       memoizedHashCode = hash;
       return hash;
     }
@@ -6829,28 +6392,22 @@ public final class BibixIdProto {
 
       // Construct using com.giyeok.bibix.BibixIdProto.ArgPair.newBuilder()
       private Builder() {
-        maybeForceBuilderInitialization();
+
       }
 
       private Builder(
           com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
         super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
-        }
+
       }
       @java.lang.Override
       public Builder clear() {
         super.clear();
+        bitField0_ = 0;
         name_ = "";
-
-        if (valueBuilder_ == null) {
-          value_ = null;
-        } else {
-          value_ = null;
+        value_ = null;
+        if (valueBuilder_ != null) {
+          valueBuilder_.dispose();
           valueBuilder_ = null;
         }
         return this;
@@ -6879,48 +6436,23 @@ public final class BibixIdProto {
       @java.lang.Override
       public com.giyeok.bibix.BibixIdProto.ArgPair buildPartial() {
         com.giyeok.bibix.BibixIdProto.ArgPair result = new com.giyeok.bibix.BibixIdProto.ArgPair(this);
-        result.name_ = name_;
-        if (valueBuilder_ == null) {
-          result.value_ = value_;
-        } else {
-          result.value_ = valueBuilder_.build();
-        }
+        if (bitField0_ != 0) { buildPartial0(result); }
         onBuilt();
         return result;
       }
 
-      @java.lang.Override
-      public Builder clone() {
-        return super.clone();
+      private void buildPartial0(com.giyeok.bibix.BibixIdProto.ArgPair result) {
+        int from_bitField0_ = bitField0_;
+        if (((from_bitField0_ & 0x00000001) != 0)) {
+          result.name_ = name_;
+        }
+        if (((from_bitField0_ & 0x00000002) != 0)) {
+          result.value_ = valueBuilder_ == null
+              ? value_
+              : valueBuilder_.build();
+        }
       }
-      @java.lang.Override
-      public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return super.setField(field, value);
-      }
-      @java.lang.Override
-      public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return super.clearField(field);
-      }
-      @java.lang.Override
-      public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return super.clearOneof(oneof);
-      }
-      @java.lang.Override
-      public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, java.lang.Object value) {
-        return super.setRepeatedField(field, index, value);
-      }
-      @java.lang.Override
-      public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return super.addRepeatedField(field, value);
-      }
+
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof com.giyeok.bibix.BibixIdProto.ArgPair) {
@@ -6935,12 +6467,13 @@ public final class BibixIdProto {
         if (other == com.giyeok.bibix.BibixIdProto.ArgPair.getDefaultInstance()) return this;
         if (!other.getName().isEmpty()) {
           name_ = other.name_;
+          bitField0_ |= 0x00000001;
           onChanged();
         }
         if (other.hasValue()) {
           mergeValue(other.getValue());
         }
-        this.mergeUnknownFields(other.unknownFields);
+        this.mergeUnknownFields(other.getUnknownFields());
         onChanged();
         return this;
       }
@@ -6955,19 +6488,45 @@ public final class BibixIdProto {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        com.giyeok.bibix.BibixIdProto.ArgPair parsedMessage = null;
+        if (extensionRegistry == null) {
+          throw new java.lang.NullPointerException();
+        }
         try {
-          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+          boolean done = false;
+          while (!done) {
+            int tag = input.readTag();
+            switch (tag) {
+              case 0:
+                done = true;
+                break;
+              case 10: {
+                name_ = input.readStringRequireUtf8();
+                bitField0_ |= 0x00000001;
+                break;
+              } // case 10
+              case 18: {
+                input.readMessage(
+                    getValueFieldBuilder().getBuilder(),
+                    extensionRegistry);
+                bitField0_ |= 0x00000002;
+                break;
+              } // case 18
+              default: {
+                if (!super.parseUnknownField(input, extensionRegistry, tag)) {
+                  done = true; // was an endgroup tag
+                }
+                break;
+              } // default:
+            } // switch (tag)
+          } // while (!done)
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (com.giyeok.bibix.BibixIdProto.ArgPair) e.getUnfinishedMessage();
           throw e.unwrapIOException();
         } finally {
-          if (parsedMessage != null) {
-            mergeFrom(parsedMessage);
-          }
-        }
+          onChanged();
+        } // finally
         return this;
       }
+      private int bitField0_;
 
       private java.lang.Object name_ = "";
       /**
@@ -7010,11 +6569,9 @@ public final class BibixIdProto {
        */
       public Builder setName(
           java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
+        if (value == null) { throw new NullPointerException(); }
         name_ = value;
+        bitField0_ |= 0x00000001;
         onChanged();
         return this;
       }
@@ -7023,8 +6580,8 @@ public final class BibixIdProto {
        * @return This builder for chaining.
        */
       public Builder clearName() {
-        
         name_ = getDefaultInstance().getName();
+        bitField0_ = (bitField0_ & ~0x00000001);
         onChanged();
         return this;
       }
@@ -7035,12 +6592,10 @@ public final class BibixIdProto {
        */
       public Builder setNameBytes(
           com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
+        if (value == null) { throw new NullPointerException(); }
+        checkByteStringIsUtf8(value);
         name_ = value;
+        bitField0_ |= 0x00000001;
         onChanged();
         return this;
       }
@@ -7053,7 +6608,7 @@ public final class BibixIdProto {
        * @return Whether the value field is set.
        */
       public boolean hasValue() {
-        return valueBuilder_ != null || value_ != null;
+        return ((bitField0_ & 0x00000002) != 0);
       }
       /**
        * <code>.com.giyeok.bibix.BibixValue value = 2;</code>
@@ -7075,11 +6630,11 @@ public final class BibixIdProto {
             throw new NullPointerException();
           }
           value_ = value;
-          onChanged();
         } else {
           valueBuilder_.setMessage(value);
         }
-
+        bitField0_ |= 0x00000002;
+        onChanged();
         return this;
       }
       /**
@@ -7089,11 +6644,11 @@ public final class BibixIdProto {
           com.giyeok.bibix.BibixValueProto.BibixValue.Builder builderForValue) {
         if (valueBuilder_ == null) {
           value_ = builderForValue.build();
-          onChanged();
         } else {
           valueBuilder_.setMessage(builderForValue.build());
         }
-
+        bitField0_ |= 0x00000002;
+        onChanged();
         return this;
       }
       /**
@@ -7101,38 +6656,38 @@ public final class BibixIdProto {
        */
       public Builder mergeValue(com.giyeok.bibix.BibixValueProto.BibixValue value) {
         if (valueBuilder_ == null) {
-          if (value_ != null) {
-            value_ =
-              com.giyeok.bibix.BibixValueProto.BibixValue.newBuilder(value_).mergeFrom(value).buildPartial();
+          if (((bitField0_ & 0x00000002) != 0) &&
+            value_ != null &&
+            value_ != com.giyeok.bibix.BibixValueProto.BibixValue.getDefaultInstance()) {
+            getValueBuilder().mergeFrom(value);
           } else {
             value_ = value;
           }
-          onChanged();
         } else {
           valueBuilder_.mergeFrom(value);
         }
-
+        bitField0_ |= 0x00000002;
+        onChanged();
         return this;
       }
       /**
        * <code>.com.giyeok.bibix.BibixValue value = 2;</code>
        */
       public Builder clearValue() {
-        if (valueBuilder_ == null) {
-          value_ = null;
-          onChanged();
-        } else {
-          value_ = null;
+        bitField0_ = (bitField0_ & ~0x00000002);
+        value_ = null;
+        if (valueBuilder_ != null) {
+          valueBuilder_.dispose();
           valueBuilder_ = null;
         }
-
+        onChanged();
         return this;
       }
       /**
        * <code>.com.giyeok.bibix.BibixValue value = 2;</code>
        */
       public com.giyeok.bibix.BibixValueProto.BibixValue.Builder getValueBuilder() {
-        
+        bitField0_ |= 0x00000002;
         onChanged();
         return getValueFieldBuilder().getBuilder();
       }
@@ -7196,7 +6751,18 @@ public final class BibixIdProto {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return new ArgPair(input, extensionRegistry);
+        Builder builder = newBuilder();
+        try {
+          builder.mergeFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          throw e.setUnfinishedMessage(builder.buildPartial());
+        } catch (com.google.protobuf.UninitializedMessageException e) {
+          throw e.asInvalidProtocolBufferException().setUnfinishedMessage(builder.buildPartial());
+        } catch (java.io.IOException e) {
+          throw new com.google.protobuf.InvalidProtocolBufferException(e)
+              .setUnfinishedMessage(builder.buildPartial());
+        }
+        return builder.buildPartial();
       }
     };
 
@@ -7308,7 +6874,8 @@ public final class BibixIdProto {
     private InputHashes() {
       directories_ = java.util.Collections.emptyList();
       files_ = java.util.Collections.emptyList();
-      nonExistent_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      nonExistent_ =
+          com.google.protobuf.LazyStringArrayList.emptyList();
     }
 
     @java.lang.Override
@@ -7318,87 +6885,6 @@ public final class BibixIdProto {
       return new InputHashes();
     }
 
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-      return this.unknownFields;
-    }
-    private InputHashes(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      this();
-      if (extensionRegistry == null) {
-        throw new java.lang.NullPointerException();
-      }
-      int mutable_bitField0_ = 0;
-      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder();
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            case 10: {
-              if (!((mutable_bitField0_ & 0x00000001) != 0)) {
-                directories_ = new java.util.ArrayList<com.giyeok.bibix.BibixIdProto.DirectoryHash>();
-                mutable_bitField0_ |= 0x00000001;
-              }
-              directories_.add(
-                  input.readMessage(com.giyeok.bibix.BibixIdProto.DirectoryHash.parser(), extensionRegistry));
-              break;
-            }
-            case 18: {
-              if (!((mutable_bitField0_ & 0x00000002) != 0)) {
-                files_ = new java.util.ArrayList<com.giyeok.bibix.BibixIdProto.FileHash>();
-                mutable_bitField0_ |= 0x00000002;
-              }
-              files_.add(
-                  input.readMessage(com.giyeok.bibix.BibixIdProto.FileHash.parser(), extensionRegistry));
-              break;
-            }
-            case 26: {
-              java.lang.String s = input.readStringRequireUtf8();
-              if (!((mutable_bitField0_ & 0x00000004) != 0)) {
-                nonExistent_ = new com.google.protobuf.LazyStringArrayList();
-                mutable_bitField0_ |= 0x00000004;
-              }
-              nonExistent_.add(s);
-              break;
-            }
-            default: {
-              if (!parseUnknownField(
-                  input, unknownFields, extensionRegistry, tag)) {
-                done = true;
-              }
-              break;
-            }
-          }
-        }
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw e.setUnfinishedMessage(this);
-      } catch (com.google.protobuf.UninitializedMessageException e) {
-        throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
-      } catch (java.io.IOException e) {
-        throw new com.google.protobuf.InvalidProtocolBufferException(
-            e).setUnfinishedMessage(this);
-      } finally {
-        if (((mutable_bitField0_ & 0x00000001) != 0)) {
-          directories_ = java.util.Collections.unmodifiableList(directories_);
-        }
-        if (((mutable_bitField0_ & 0x00000002) != 0)) {
-          files_ = java.util.Collections.unmodifiableList(files_);
-        }
-        if (((mutable_bitField0_ & 0x00000004) != 0)) {
-          nonExistent_ = nonExistent_.getUnmodifiableView();
-        }
-        this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
-      }
-    }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
       return com.giyeok.bibix.BibixIdProto.internal_static_com_giyeok_bibix_InputHashes_descriptor;
@@ -7413,6 +6899,7 @@ public final class BibixIdProto {
     }
 
     public static final int DIRECTORIES_FIELD_NUMBER = 1;
+    @SuppressWarnings("serial")
     private java.util.List<com.giyeok.bibix.BibixIdProto.DirectoryHash> directories_;
     /**
      * <code>repeated .com.giyeok.bibix.DirectoryHash directories = 1;</code>
@@ -7453,6 +6940,7 @@ public final class BibixIdProto {
     }
 
     public static final int FILES_FIELD_NUMBER = 2;
+    @SuppressWarnings("serial")
     private java.util.List<com.giyeok.bibix.BibixIdProto.FileHash> files_;
     /**
      * <code>repeated .com.giyeok.bibix.FileHash files = 2;</code>
@@ -7493,7 +6981,9 @@ public final class BibixIdProto {
     }
 
     public static final int NON_EXISTENT_FIELD_NUMBER = 3;
-    private com.google.protobuf.LazyStringList nonExistent_;
+    @SuppressWarnings("serial")
+    private com.google.protobuf.LazyStringArrayList nonExistent_ =
+        com.google.protobuf.LazyStringArrayList.emptyList();
     /**
      * <code>repeated string non_existent = 3;</code>
      * @return A list containing the nonExistent.
@@ -7550,7 +7040,7 @@ public final class BibixIdProto {
       for (int i = 0; i < nonExistent_.size(); i++) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 3, nonExistent_.getRaw(i));
       }
-      unknownFields.writeTo(output);
+      getUnknownFields().writeTo(output);
     }
 
     @java.lang.Override
@@ -7575,7 +7065,7 @@ public final class BibixIdProto {
         size += dataSize;
         size += 1 * getNonExistentList().size();
       }
-      size += unknownFields.getSerializedSize();
+      size += getUnknownFields().getSerializedSize();
       memoizedSize = size;
       return size;
     }
@@ -7596,7 +7086,7 @@ public final class BibixIdProto {
           .equals(other.getFilesList())) return false;
       if (!getNonExistentList()
           .equals(other.getNonExistentList())) return false;
-      if (!unknownFields.equals(other.unknownFields)) return false;
+      if (!getUnknownFields().equals(other.getUnknownFields())) return false;
       return true;
     }
 
@@ -7619,7 +7109,7 @@ public final class BibixIdProto {
         hash = (37 * hash) + NON_EXISTENT_FIELD_NUMBER;
         hash = (53 * hash) + getNonExistentList().hashCode();
       }
-      hash = (29 * hash) + unknownFields.hashCode();
+      hash = (29 * hash) + getUnknownFields().hashCode();
       memoizedHashCode = hash;
       return hash;
     }
@@ -7736,38 +7226,34 @@ public final class BibixIdProto {
 
       // Construct using com.giyeok.bibix.BibixIdProto.InputHashes.newBuilder()
       private Builder() {
-        maybeForceBuilderInitialization();
+
       }
 
       private Builder(
           com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
         super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
-          getDirectoriesFieldBuilder();
-          getFilesFieldBuilder();
-        }
+
       }
       @java.lang.Override
       public Builder clear() {
         super.clear();
+        bitField0_ = 0;
         if (directoriesBuilder_ == null) {
           directories_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000001);
         } else {
+          directories_ = null;
           directoriesBuilder_.clear();
         }
+        bitField0_ = (bitField0_ & ~0x00000001);
         if (filesBuilder_ == null) {
           files_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000002);
         } else {
+          files_ = null;
           filesBuilder_.clear();
         }
-        nonExistent_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-        bitField0_ = (bitField0_ & ~0x00000004);
+        bitField0_ = (bitField0_ & ~0x00000002);
+        nonExistent_ =
+            com.google.protobuf.LazyStringArrayList.emptyList();
         return this;
       }
 
@@ -7794,7 +7280,13 @@ public final class BibixIdProto {
       @java.lang.Override
       public com.giyeok.bibix.BibixIdProto.InputHashes buildPartial() {
         com.giyeok.bibix.BibixIdProto.InputHashes result = new com.giyeok.bibix.BibixIdProto.InputHashes(this);
-        int from_bitField0_ = bitField0_;
+        buildPartialRepeatedFields(result);
+        if (bitField0_ != 0) { buildPartial0(result); }
+        onBuilt();
+        return result;
+      }
+
+      private void buildPartialRepeatedFields(com.giyeok.bibix.BibixIdProto.InputHashes result) {
         if (directoriesBuilder_ == null) {
           if (((bitField0_ & 0x00000001) != 0)) {
             directories_ = java.util.Collections.unmodifiableList(directories_);
@@ -7813,47 +7305,16 @@ public final class BibixIdProto {
         } else {
           result.files_ = filesBuilder_.build();
         }
-        if (((bitField0_ & 0x00000004) != 0)) {
-          nonExistent_ = nonExistent_.getUnmodifiableView();
-          bitField0_ = (bitField0_ & ~0x00000004);
-        }
-        result.nonExistent_ = nonExistent_;
-        onBuilt();
-        return result;
       }
 
-      @java.lang.Override
-      public Builder clone() {
-        return super.clone();
+      private void buildPartial0(com.giyeok.bibix.BibixIdProto.InputHashes result) {
+        int from_bitField0_ = bitField0_;
+        if (((from_bitField0_ & 0x00000004) != 0)) {
+          nonExistent_.makeImmutable();
+          result.nonExistent_ = nonExistent_;
+        }
       }
-      @java.lang.Override
-      public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return super.setField(field, value);
-      }
-      @java.lang.Override
-      public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return super.clearField(field);
-      }
-      @java.lang.Override
-      public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return super.clearOneof(oneof);
-      }
-      @java.lang.Override
-      public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, java.lang.Object value) {
-        return super.setRepeatedField(field, index, value);
-      }
-      @java.lang.Override
-      public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return super.addRepeatedField(field, value);
-      }
+
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof com.giyeok.bibix.BibixIdProto.InputHashes) {
@@ -7921,14 +7382,14 @@ public final class BibixIdProto {
         if (!other.nonExistent_.isEmpty()) {
           if (nonExistent_.isEmpty()) {
             nonExistent_ = other.nonExistent_;
-            bitField0_ = (bitField0_ & ~0x00000004);
+            bitField0_ |= 0x00000004;
           } else {
             ensureNonExistentIsMutable();
             nonExistent_.addAll(other.nonExistent_);
           }
           onChanged();
         }
-        this.mergeUnknownFields(other.unknownFields);
+        this.mergeUnknownFields(other.getUnknownFields());
         onChanged();
         return this;
       }
@@ -7943,17 +7404,62 @@ public final class BibixIdProto {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        com.giyeok.bibix.BibixIdProto.InputHashes parsedMessage = null;
+        if (extensionRegistry == null) {
+          throw new java.lang.NullPointerException();
+        }
         try {
-          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+          boolean done = false;
+          while (!done) {
+            int tag = input.readTag();
+            switch (tag) {
+              case 0:
+                done = true;
+                break;
+              case 10: {
+                com.giyeok.bibix.BibixIdProto.DirectoryHash m =
+                    input.readMessage(
+                        com.giyeok.bibix.BibixIdProto.DirectoryHash.parser(),
+                        extensionRegistry);
+                if (directoriesBuilder_ == null) {
+                  ensureDirectoriesIsMutable();
+                  directories_.add(m);
+                } else {
+                  directoriesBuilder_.addMessage(m);
+                }
+                break;
+              } // case 10
+              case 18: {
+                com.giyeok.bibix.BibixIdProto.FileHash m =
+                    input.readMessage(
+                        com.giyeok.bibix.BibixIdProto.FileHash.parser(),
+                        extensionRegistry);
+                if (filesBuilder_ == null) {
+                  ensureFilesIsMutable();
+                  files_.add(m);
+                } else {
+                  filesBuilder_.addMessage(m);
+                }
+                break;
+              } // case 18
+              case 26: {
+                java.lang.String s = input.readStringRequireUtf8();
+                ensureNonExistentIsMutable();
+                nonExistent_.add(s);
+                break;
+              } // case 26
+              default: {
+                if (!super.parseUnknownField(input, extensionRegistry, tag)) {
+                  done = true; // was an endgroup tag
+                }
+                break;
+              } // default:
+            } // switch (tag)
+          } // while (!done)
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (com.giyeok.bibix.BibixIdProto.InputHashes) e.getUnfinishedMessage();
           throw e.unwrapIOException();
         } finally {
-          if (parsedMessage != null) {
-            mergeFrom(parsedMessage);
-          }
-        }
+          onChanged();
+        } // finally
         return this;
       }
       private int bitField0_;
@@ -8438,12 +7944,13 @@ public final class BibixIdProto {
         return filesBuilder_;
       }
 
-      private com.google.protobuf.LazyStringList nonExistent_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      private com.google.protobuf.LazyStringArrayList nonExistent_ =
+          com.google.protobuf.LazyStringArrayList.emptyList();
       private void ensureNonExistentIsMutable() {
-        if (!((bitField0_ & 0x00000004) != 0)) {
+        if (!nonExistent_.isModifiable()) {
           nonExistent_ = new com.google.protobuf.LazyStringArrayList(nonExistent_);
-          bitField0_ |= 0x00000004;
-         }
+        }
+        bitField0_ |= 0x00000004;
       }
       /**
        * <code>repeated string non_existent = 3;</code>
@@ -8451,7 +7958,8 @@ public final class BibixIdProto {
        */
       public com.google.protobuf.ProtocolStringList
           getNonExistentList() {
-        return nonExistent_.getUnmodifiableView();
+        nonExistent_.makeImmutable();
+        return nonExistent_;
       }
       /**
        * <code>repeated string non_existent = 3;</code>
@@ -8485,11 +7993,10 @@ public final class BibixIdProto {
        */
       public Builder setNonExistent(
           int index, java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  ensureNonExistentIsMutable();
+        if (value == null) { throw new NullPointerException(); }
+        ensureNonExistentIsMutable();
         nonExistent_.set(index, value);
+        bitField0_ |= 0x00000004;
         onChanged();
         return this;
       }
@@ -8500,11 +8007,10 @@ public final class BibixIdProto {
        */
       public Builder addNonExistent(
           java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  ensureNonExistentIsMutable();
+        if (value == null) { throw new NullPointerException(); }
+        ensureNonExistentIsMutable();
         nonExistent_.add(value);
+        bitField0_ |= 0x00000004;
         onChanged();
         return this;
       }
@@ -8518,6 +8024,7 @@ public final class BibixIdProto {
         ensureNonExistentIsMutable();
         com.google.protobuf.AbstractMessageLite.Builder.addAll(
             values, nonExistent_);
+        bitField0_ |= 0x00000004;
         onChanged();
         return this;
       }
@@ -8526,8 +8033,9 @@ public final class BibixIdProto {
        * @return This builder for chaining.
        */
       public Builder clearNonExistent() {
-        nonExistent_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-        bitField0_ = (bitField0_ & ~0x00000004);
+        nonExistent_ =
+          com.google.protobuf.LazyStringArrayList.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000004);;
         onChanged();
         return this;
       }
@@ -8538,12 +8046,11 @@ public final class BibixIdProto {
        */
       public Builder addNonExistentBytes(
           com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
+        if (value == null) { throw new NullPointerException(); }
+        checkByteStringIsUtf8(value);
         ensureNonExistentIsMutable();
         nonExistent_.add(value);
+        bitField0_ |= 0x00000004;
         onChanged();
         return this;
       }
@@ -8580,7 +8087,18 @@ public final class BibixIdProto {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return new InputHashes(input, extensionRegistry);
+        Builder builder = newBuilder();
+        try {
+          builder.mergeFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          throw e.setUnfinishedMessage(builder.buildPartial());
+        } catch (com.google.protobuf.UninitializedMessageException e) {
+          throw e.asInvalidProtocolBufferException().setUnfinishedMessage(builder.buildPartial());
+        } catch (java.io.IOException e) {
+          throw new com.google.protobuf.InvalidProtocolBufferException(e)
+              .setUnfinishedMessage(builder.buildPartial());
+        }
+        return builder.buildPartial();
       }
     };
 
@@ -8693,81 +8211,6 @@ public final class BibixIdProto {
       return new DirectoryHash();
     }
 
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-      return this.unknownFields;
-    }
-    private DirectoryHash(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      this();
-      if (extensionRegistry == null) {
-        throw new java.lang.NullPointerException();
-      }
-      int mutable_bitField0_ = 0;
-      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder();
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            case 10: {
-              java.lang.String s = input.readStringRequireUtf8();
-
-              path_ = s;
-              break;
-            }
-            case 18: {
-              if (!((mutable_bitField0_ & 0x00000001) != 0)) {
-                directories_ = new java.util.ArrayList<com.giyeok.bibix.BibixIdProto.DirectoryHash>();
-                mutable_bitField0_ |= 0x00000001;
-              }
-              directories_.add(
-                  input.readMessage(com.giyeok.bibix.BibixIdProto.DirectoryHash.parser(), extensionRegistry));
-              break;
-            }
-            case 26: {
-              if (!((mutable_bitField0_ & 0x00000002) != 0)) {
-                files_ = new java.util.ArrayList<com.giyeok.bibix.BibixIdProto.FileHash>();
-                mutable_bitField0_ |= 0x00000002;
-              }
-              files_.add(
-                  input.readMessage(com.giyeok.bibix.BibixIdProto.FileHash.parser(), extensionRegistry));
-              break;
-            }
-            default: {
-              if (!parseUnknownField(
-                  input, unknownFields, extensionRegistry, tag)) {
-                done = true;
-              }
-              break;
-            }
-          }
-        }
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw e.setUnfinishedMessage(this);
-      } catch (com.google.protobuf.UninitializedMessageException e) {
-        throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
-      } catch (java.io.IOException e) {
-        throw new com.google.protobuf.InvalidProtocolBufferException(
-            e).setUnfinishedMessage(this);
-      } finally {
-        if (((mutable_bitField0_ & 0x00000001) != 0)) {
-          directories_ = java.util.Collections.unmodifiableList(directories_);
-        }
-        if (((mutable_bitField0_ & 0x00000002) != 0)) {
-          files_ = java.util.Collections.unmodifiableList(files_);
-        }
-        this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
-      }
-    }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
       return com.giyeok.bibix.BibixIdProto.internal_static_com_giyeok_bibix_DirectoryHash_descriptor;
@@ -8782,7 +8225,8 @@ public final class BibixIdProto {
     }
 
     public static final int PATH_FIELD_NUMBER = 1;
-    private volatile java.lang.Object path_;
+    @SuppressWarnings("serial")
+    private volatile java.lang.Object path_ = "";
     /**
      * <code>string path = 1;</code>
      * @return The path.
@@ -8820,6 +8264,7 @@ public final class BibixIdProto {
     }
 
     public static final int DIRECTORIES_FIELD_NUMBER = 2;
+    @SuppressWarnings("serial")
     private java.util.List<com.giyeok.bibix.BibixIdProto.DirectoryHash> directories_;
     /**
      * <code>repeated .com.giyeok.bibix.DirectoryHash directories = 2;</code>
@@ -8860,6 +8305,7 @@ public final class BibixIdProto {
     }
 
     public static final int FILES_FIELD_NUMBER = 3;
+    @SuppressWarnings("serial")
     private java.util.List<com.giyeok.bibix.BibixIdProto.FileHash> files_;
     /**
      * <code>repeated .com.giyeok.bibix.FileHash files = 3;</code>
@@ -8922,7 +8368,7 @@ public final class BibixIdProto {
       for (int i = 0; i < files_.size(); i++) {
         output.writeMessage(3, files_.get(i));
       }
-      unknownFields.writeTo(output);
+      getUnknownFields().writeTo(output);
     }
 
     @java.lang.Override
@@ -8942,7 +8388,7 @@ public final class BibixIdProto {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(3, files_.get(i));
       }
-      size += unknownFields.getSerializedSize();
+      size += getUnknownFields().getSerializedSize();
       memoizedSize = size;
       return size;
     }
@@ -8963,7 +8409,7 @@ public final class BibixIdProto {
           .equals(other.getDirectoriesList())) return false;
       if (!getFilesList()
           .equals(other.getFilesList())) return false;
-      if (!unknownFields.equals(other.unknownFields)) return false;
+      if (!getUnknownFields().equals(other.getUnknownFields())) return false;
       return true;
     }
 
@@ -8984,7 +8430,7 @@ public final class BibixIdProto {
         hash = (37 * hash) + FILES_FIELD_NUMBER;
         hash = (53 * hash) + getFilesList().hashCode();
       }
-      hash = (29 * hash) + unknownFields.hashCode();
+      hash = (29 * hash) + getUnknownFields().hashCode();
       memoizedHashCode = hash;
       return hash;
     }
@@ -9105,38 +8551,33 @@ public final class BibixIdProto {
 
       // Construct using com.giyeok.bibix.BibixIdProto.DirectoryHash.newBuilder()
       private Builder() {
-        maybeForceBuilderInitialization();
+
       }
 
       private Builder(
           com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
         super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
-          getDirectoriesFieldBuilder();
-          getFilesFieldBuilder();
-        }
+
       }
       @java.lang.Override
       public Builder clear() {
         super.clear();
+        bitField0_ = 0;
         path_ = "";
-
         if (directoriesBuilder_ == null) {
           directories_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000001);
         } else {
+          directories_ = null;
           directoriesBuilder_.clear();
         }
+        bitField0_ = (bitField0_ & ~0x00000002);
         if (filesBuilder_ == null) {
           files_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000002);
         } else {
+          files_ = null;
           filesBuilder_.clear();
         }
+        bitField0_ = (bitField0_ & ~0x00000004);
         return this;
       }
 
@@ -9163,62 +8604,40 @@ public final class BibixIdProto {
       @java.lang.Override
       public com.giyeok.bibix.BibixIdProto.DirectoryHash buildPartial() {
         com.giyeok.bibix.BibixIdProto.DirectoryHash result = new com.giyeok.bibix.BibixIdProto.DirectoryHash(this);
-        int from_bitField0_ = bitField0_;
-        result.path_ = path_;
+        buildPartialRepeatedFields(result);
+        if (bitField0_ != 0) { buildPartial0(result); }
+        onBuilt();
+        return result;
+      }
+
+      private void buildPartialRepeatedFields(com.giyeok.bibix.BibixIdProto.DirectoryHash result) {
         if (directoriesBuilder_ == null) {
-          if (((bitField0_ & 0x00000001) != 0)) {
+          if (((bitField0_ & 0x00000002) != 0)) {
             directories_ = java.util.Collections.unmodifiableList(directories_);
-            bitField0_ = (bitField0_ & ~0x00000001);
+            bitField0_ = (bitField0_ & ~0x00000002);
           }
           result.directories_ = directories_;
         } else {
           result.directories_ = directoriesBuilder_.build();
         }
         if (filesBuilder_ == null) {
-          if (((bitField0_ & 0x00000002) != 0)) {
+          if (((bitField0_ & 0x00000004) != 0)) {
             files_ = java.util.Collections.unmodifiableList(files_);
-            bitField0_ = (bitField0_ & ~0x00000002);
+            bitField0_ = (bitField0_ & ~0x00000004);
           }
           result.files_ = files_;
         } else {
           result.files_ = filesBuilder_.build();
         }
-        onBuilt();
-        return result;
       }
 
-      @java.lang.Override
-      public Builder clone() {
-        return super.clone();
+      private void buildPartial0(com.giyeok.bibix.BibixIdProto.DirectoryHash result) {
+        int from_bitField0_ = bitField0_;
+        if (((from_bitField0_ & 0x00000001) != 0)) {
+          result.path_ = path_;
+        }
       }
-      @java.lang.Override
-      public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return super.setField(field, value);
-      }
-      @java.lang.Override
-      public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return super.clearField(field);
-      }
-      @java.lang.Override
-      public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return super.clearOneof(oneof);
-      }
-      @java.lang.Override
-      public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, java.lang.Object value) {
-        return super.setRepeatedField(field, index, value);
-      }
-      @java.lang.Override
-      public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return super.addRepeatedField(field, value);
-      }
+
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof com.giyeok.bibix.BibixIdProto.DirectoryHash) {
@@ -9233,13 +8652,14 @@ public final class BibixIdProto {
         if (other == com.giyeok.bibix.BibixIdProto.DirectoryHash.getDefaultInstance()) return this;
         if (!other.getPath().isEmpty()) {
           path_ = other.path_;
+          bitField0_ |= 0x00000001;
           onChanged();
         }
         if (directoriesBuilder_ == null) {
           if (!other.directories_.isEmpty()) {
             if (directories_.isEmpty()) {
               directories_ = other.directories_;
-              bitField0_ = (bitField0_ & ~0x00000001);
+              bitField0_ = (bitField0_ & ~0x00000002);
             } else {
               ensureDirectoriesIsMutable();
               directories_.addAll(other.directories_);
@@ -9252,7 +8672,7 @@ public final class BibixIdProto {
               directoriesBuilder_.dispose();
               directoriesBuilder_ = null;
               directories_ = other.directories_;
-              bitField0_ = (bitField0_ & ~0x00000001);
+              bitField0_ = (bitField0_ & ~0x00000002);
               directoriesBuilder_ = 
                 com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
                    getDirectoriesFieldBuilder() : null;
@@ -9265,7 +8685,7 @@ public final class BibixIdProto {
           if (!other.files_.isEmpty()) {
             if (files_.isEmpty()) {
               files_ = other.files_;
-              bitField0_ = (bitField0_ & ~0x00000002);
+              bitField0_ = (bitField0_ & ~0x00000004);
             } else {
               ensureFilesIsMutable();
               files_.addAll(other.files_);
@@ -9278,7 +8698,7 @@ public final class BibixIdProto {
               filesBuilder_.dispose();
               filesBuilder_ = null;
               files_ = other.files_;
-              bitField0_ = (bitField0_ & ~0x00000002);
+              bitField0_ = (bitField0_ & ~0x00000004);
               filesBuilder_ = 
                 com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
                    getFilesFieldBuilder() : null;
@@ -9287,7 +8707,7 @@ public final class BibixIdProto {
             }
           }
         }
-        this.mergeUnknownFields(other.unknownFields);
+        this.mergeUnknownFields(other.getUnknownFields());
         onChanged();
         return this;
       }
@@ -9302,17 +8722,61 @@ public final class BibixIdProto {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        com.giyeok.bibix.BibixIdProto.DirectoryHash parsedMessage = null;
+        if (extensionRegistry == null) {
+          throw new java.lang.NullPointerException();
+        }
         try {
-          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+          boolean done = false;
+          while (!done) {
+            int tag = input.readTag();
+            switch (tag) {
+              case 0:
+                done = true;
+                break;
+              case 10: {
+                path_ = input.readStringRequireUtf8();
+                bitField0_ |= 0x00000001;
+                break;
+              } // case 10
+              case 18: {
+                com.giyeok.bibix.BibixIdProto.DirectoryHash m =
+                    input.readMessage(
+                        com.giyeok.bibix.BibixIdProto.DirectoryHash.parser(),
+                        extensionRegistry);
+                if (directoriesBuilder_ == null) {
+                  ensureDirectoriesIsMutable();
+                  directories_.add(m);
+                } else {
+                  directoriesBuilder_.addMessage(m);
+                }
+                break;
+              } // case 18
+              case 26: {
+                com.giyeok.bibix.BibixIdProto.FileHash m =
+                    input.readMessage(
+                        com.giyeok.bibix.BibixIdProto.FileHash.parser(),
+                        extensionRegistry);
+                if (filesBuilder_ == null) {
+                  ensureFilesIsMutable();
+                  files_.add(m);
+                } else {
+                  filesBuilder_.addMessage(m);
+                }
+                break;
+              } // case 26
+              default: {
+                if (!super.parseUnknownField(input, extensionRegistry, tag)) {
+                  done = true; // was an endgroup tag
+                }
+                break;
+              } // default:
+            } // switch (tag)
+          } // while (!done)
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (com.giyeok.bibix.BibixIdProto.DirectoryHash) e.getUnfinishedMessage();
           throw e.unwrapIOException();
         } finally {
-          if (parsedMessage != null) {
-            mergeFrom(parsedMessage);
-          }
-        }
+          onChanged();
+        } // finally
         return this;
       }
       private int bitField0_;
@@ -9358,11 +8822,9 @@ public final class BibixIdProto {
        */
       public Builder setPath(
           java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
+        if (value == null) { throw new NullPointerException(); }
         path_ = value;
+        bitField0_ |= 0x00000001;
         onChanged();
         return this;
       }
@@ -9371,8 +8833,8 @@ public final class BibixIdProto {
        * @return This builder for chaining.
        */
       public Builder clearPath() {
-        
         path_ = getDefaultInstance().getPath();
+        bitField0_ = (bitField0_ & ~0x00000001);
         onChanged();
         return this;
       }
@@ -9383,12 +8845,10 @@ public final class BibixIdProto {
        */
       public Builder setPathBytes(
           com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
+        if (value == null) { throw new NullPointerException(); }
+        checkByteStringIsUtf8(value);
         path_ = value;
+        bitField0_ |= 0x00000001;
         onChanged();
         return this;
       }
@@ -9396,9 +8856,9 @@ public final class BibixIdProto {
       private java.util.List<com.giyeok.bibix.BibixIdProto.DirectoryHash> directories_ =
         java.util.Collections.emptyList();
       private void ensureDirectoriesIsMutable() {
-        if (!((bitField0_ & 0x00000001) != 0)) {
+        if (!((bitField0_ & 0x00000002) != 0)) {
           directories_ = new java.util.ArrayList<com.giyeok.bibix.BibixIdProto.DirectoryHash>(directories_);
-          bitField0_ |= 0x00000001;
+          bitField0_ |= 0x00000002;
          }
       }
 
@@ -9548,7 +9008,7 @@ public final class BibixIdProto {
       public Builder clearDirectories() {
         if (directoriesBuilder_ == null) {
           directories_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000001);
+          bitField0_ = (bitField0_ & ~0x00000002);
           onChanged();
         } else {
           directoriesBuilder_.clear();
@@ -9625,7 +9085,7 @@ public final class BibixIdProto {
           directoriesBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
               com.giyeok.bibix.BibixIdProto.DirectoryHash, com.giyeok.bibix.BibixIdProto.DirectoryHash.Builder, com.giyeok.bibix.BibixIdProto.DirectoryHashOrBuilder>(
                   directories_,
-                  ((bitField0_ & 0x00000001) != 0),
+                  ((bitField0_ & 0x00000002) != 0),
                   getParentForChildren(),
                   isClean());
           directories_ = null;
@@ -9636,9 +9096,9 @@ public final class BibixIdProto {
       private java.util.List<com.giyeok.bibix.BibixIdProto.FileHash> files_ =
         java.util.Collections.emptyList();
       private void ensureFilesIsMutable() {
-        if (!((bitField0_ & 0x00000002) != 0)) {
+        if (!((bitField0_ & 0x00000004) != 0)) {
           files_ = new java.util.ArrayList<com.giyeok.bibix.BibixIdProto.FileHash>(files_);
-          bitField0_ |= 0x00000002;
+          bitField0_ |= 0x00000004;
          }
       }
 
@@ -9788,7 +9248,7 @@ public final class BibixIdProto {
       public Builder clearFiles() {
         if (filesBuilder_ == null) {
           files_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000002);
+          bitField0_ = (bitField0_ & ~0x00000004);
           onChanged();
         } else {
           filesBuilder_.clear();
@@ -9865,7 +9325,7 @@ public final class BibixIdProto {
           filesBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
               com.giyeok.bibix.BibixIdProto.FileHash, com.giyeok.bibix.BibixIdProto.FileHash.Builder, com.giyeok.bibix.BibixIdProto.FileHashOrBuilder>(
                   files_,
-                  ((bitField0_ & 0x00000002) != 0),
+                  ((bitField0_ & 0x00000004) != 0),
                   getParentForChildren(),
                   isClean());
           files_ = null;
@@ -9905,7 +9365,18 @@ public final class BibixIdProto {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return new DirectoryHash(input, extensionRegistry);
+        Builder builder = newBuilder();
+        try {
+          builder.mergeFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          throw e.setUnfinishedMessage(builder.buildPartial());
+        } catch (com.google.protobuf.UninitializedMessageException e) {
+          throw e.asInvalidProtocolBufferException().setUnfinishedMessage(builder.buildPartial());
+        } catch (java.io.IOException e) {
+          throw new com.google.protobuf.InvalidProtocolBufferException(e)
+              .setUnfinishedMessage(builder.buildPartial());
+        }
+        return builder.buildPartial();
       }
     };
 
@@ -9992,79 +9463,6 @@ public final class BibixIdProto {
       return new FileHash();
     }
 
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-      return this.unknownFields;
-    }
-    private FileHash(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      this();
-      if (extensionRegistry == null) {
-        throw new java.lang.NullPointerException();
-      }
-      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder();
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            case 10: {
-              java.lang.String s = input.readStringRequireUtf8();
-
-              path_ = s;
-              break;
-            }
-            case 18: {
-              com.google.protobuf.Timestamp.Builder subBuilder = null;
-              if (lastModifiedTime_ != null) {
-                subBuilder = lastModifiedTime_.toBuilder();
-              }
-              lastModifiedTime_ = input.readMessage(com.google.protobuf.Timestamp.parser(), extensionRegistry);
-              if (subBuilder != null) {
-                subBuilder.mergeFrom(lastModifiedTime_);
-                lastModifiedTime_ = subBuilder.buildPartial();
-              }
-
-              break;
-            }
-            case 24: {
-
-              size_ = input.readInt64();
-              break;
-            }
-            case 34: {
-
-              sha1Hash_ = input.readBytes();
-              break;
-            }
-            default: {
-              if (!parseUnknownField(
-                  input, unknownFields, extensionRegistry, tag)) {
-                done = true;
-              }
-              break;
-            }
-          }
-        }
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw e.setUnfinishedMessage(this);
-      } catch (com.google.protobuf.UninitializedMessageException e) {
-        throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
-      } catch (java.io.IOException e) {
-        throw new com.google.protobuf.InvalidProtocolBufferException(
-            e).setUnfinishedMessage(this);
-      } finally {
-        this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
-      }
-    }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
       return com.giyeok.bibix.BibixIdProto.internal_static_com_giyeok_bibix_FileHash_descriptor;
@@ -10079,7 +9477,8 @@ public final class BibixIdProto {
     }
 
     public static final int PATH_FIELD_NUMBER = 1;
-    private volatile java.lang.Object path_;
+    @SuppressWarnings("serial")
+    private volatile java.lang.Object path_ = "";
     /**
      * <code>string path = 1;</code>
      * @return The path.
@@ -10139,11 +9538,11 @@ public final class BibixIdProto {
      */
     @java.lang.Override
     public com.google.protobuf.TimestampOrBuilder getLastModifiedTimeOrBuilder() {
-      return getLastModifiedTime();
+      return lastModifiedTime_ == null ? com.google.protobuf.Timestamp.getDefaultInstance() : lastModifiedTime_;
     }
 
     public static final int SIZE_FIELD_NUMBER = 3;
-    private long size_;
+    private long size_ = 0L;
     /**
      * <code>int64 size = 3;</code>
      * @return The size.
@@ -10154,7 +9553,7 @@ public final class BibixIdProto {
     }
 
     public static final int SHA1_HASH_FIELD_NUMBER = 4;
-    private com.google.protobuf.ByteString sha1Hash_;
+    private com.google.protobuf.ByteString sha1Hash_ = com.google.protobuf.ByteString.EMPTY;
     /**
      * <code>bytes sha1_hash = 4;</code>
      * @return The sha1Hash.
@@ -10190,7 +9589,7 @@ public final class BibixIdProto {
       if (!sha1Hash_.isEmpty()) {
         output.writeBytes(4, sha1Hash_);
       }
-      unknownFields.writeTo(output);
+      getUnknownFields().writeTo(output);
     }
 
     @java.lang.Override
@@ -10214,7 +9613,7 @@ public final class BibixIdProto {
         size += com.google.protobuf.CodedOutputStream
           .computeBytesSize(4, sha1Hash_);
       }
-      size += unknownFields.getSerializedSize();
+      size += getUnknownFields().getSerializedSize();
       memoizedSize = size;
       return size;
     }
@@ -10240,7 +9639,7 @@ public final class BibixIdProto {
           != other.getSize()) return false;
       if (!getSha1Hash()
           .equals(other.getSha1Hash())) return false;
-      if (!unknownFields.equals(other.unknownFields)) return false;
+      if (!getUnknownFields().equals(other.getUnknownFields())) return false;
       return true;
     }
 
@@ -10262,7 +9661,7 @@ public final class BibixIdProto {
           getSize());
       hash = (37 * hash) + SHA1_HASH_FIELD_NUMBER;
       hash = (53 * hash) + getSha1Hash().hashCode();
-      hash = (29 * hash) + unknownFields.hashCode();
+      hash = (29 * hash) + getUnknownFields().hashCode();
       memoizedHashCode = hash;
       return hash;
     }
@@ -10379,34 +9778,26 @@ public final class BibixIdProto {
 
       // Construct using com.giyeok.bibix.BibixIdProto.FileHash.newBuilder()
       private Builder() {
-        maybeForceBuilderInitialization();
+
       }
 
       private Builder(
           com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
         super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
-        }
+
       }
       @java.lang.Override
       public Builder clear() {
         super.clear();
+        bitField0_ = 0;
         path_ = "";
-
-        if (lastModifiedTimeBuilder_ == null) {
-          lastModifiedTime_ = null;
-        } else {
-          lastModifiedTime_ = null;
+        lastModifiedTime_ = null;
+        if (lastModifiedTimeBuilder_ != null) {
+          lastModifiedTimeBuilder_.dispose();
           lastModifiedTimeBuilder_ = null;
         }
         size_ = 0L;
-
         sha1Hash_ = com.google.protobuf.ByteString.EMPTY;
-
         return this;
       }
 
@@ -10433,50 +9824,29 @@ public final class BibixIdProto {
       @java.lang.Override
       public com.giyeok.bibix.BibixIdProto.FileHash buildPartial() {
         com.giyeok.bibix.BibixIdProto.FileHash result = new com.giyeok.bibix.BibixIdProto.FileHash(this);
-        result.path_ = path_;
-        if (lastModifiedTimeBuilder_ == null) {
-          result.lastModifiedTime_ = lastModifiedTime_;
-        } else {
-          result.lastModifiedTime_ = lastModifiedTimeBuilder_.build();
-        }
-        result.size_ = size_;
-        result.sha1Hash_ = sha1Hash_;
+        if (bitField0_ != 0) { buildPartial0(result); }
         onBuilt();
         return result;
       }
 
-      @java.lang.Override
-      public Builder clone() {
-        return super.clone();
+      private void buildPartial0(com.giyeok.bibix.BibixIdProto.FileHash result) {
+        int from_bitField0_ = bitField0_;
+        if (((from_bitField0_ & 0x00000001) != 0)) {
+          result.path_ = path_;
+        }
+        if (((from_bitField0_ & 0x00000002) != 0)) {
+          result.lastModifiedTime_ = lastModifiedTimeBuilder_ == null
+              ? lastModifiedTime_
+              : lastModifiedTimeBuilder_.build();
+        }
+        if (((from_bitField0_ & 0x00000004) != 0)) {
+          result.size_ = size_;
+        }
+        if (((from_bitField0_ & 0x00000008) != 0)) {
+          result.sha1Hash_ = sha1Hash_;
+        }
       }
-      @java.lang.Override
-      public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return super.setField(field, value);
-      }
-      @java.lang.Override
-      public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return super.clearField(field);
-      }
-      @java.lang.Override
-      public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return super.clearOneof(oneof);
-      }
-      @java.lang.Override
-      public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, java.lang.Object value) {
-        return super.setRepeatedField(field, index, value);
-      }
-      @java.lang.Override
-      public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return super.addRepeatedField(field, value);
-      }
+
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof com.giyeok.bibix.BibixIdProto.FileHash) {
@@ -10491,6 +9861,7 @@ public final class BibixIdProto {
         if (other == com.giyeok.bibix.BibixIdProto.FileHash.getDefaultInstance()) return this;
         if (!other.getPath().isEmpty()) {
           path_ = other.path_;
+          bitField0_ |= 0x00000001;
           onChanged();
         }
         if (other.hasLastModifiedTime()) {
@@ -10502,7 +9873,7 @@ public final class BibixIdProto {
         if (other.getSha1Hash() != com.google.protobuf.ByteString.EMPTY) {
           setSha1Hash(other.getSha1Hash());
         }
-        this.mergeUnknownFields(other.unknownFields);
+        this.mergeUnknownFields(other.getUnknownFields());
         onChanged();
         return this;
       }
@@ -10517,19 +9888,55 @@ public final class BibixIdProto {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        com.giyeok.bibix.BibixIdProto.FileHash parsedMessage = null;
+        if (extensionRegistry == null) {
+          throw new java.lang.NullPointerException();
+        }
         try {
-          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+          boolean done = false;
+          while (!done) {
+            int tag = input.readTag();
+            switch (tag) {
+              case 0:
+                done = true;
+                break;
+              case 10: {
+                path_ = input.readStringRequireUtf8();
+                bitField0_ |= 0x00000001;
+                break;
+              } // case 10
+              case 18: {
+                input.readMessage(
+                    getLastModifiedTimeFieldBuilder().getBuilder(),
+                    extensionRegistry);
+                bitField0_ |= 0x00000002;
+                break;
+              } // case 18
+              case 24: {
+                size_ = input.readInt64();
+                bitField0_ |= 0x00000004;
+                break;
+              } // case 24
+              case 34: {
+                sha1Hash_ = input.readBytes();
+                bitField0_ |= 0x00000008;
+                break;
+              } // case 34
+              default: {
+                if (!super.parseUnknownField(input, extensionRegistry, tag)) {
+                  done = true; // was an endgroup tag
+                }
+                break;
+              } // default:
+            } // switch (tag)
+          } // while (!done)
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (com.giyeok.bibix.BibixIdProto.FileHash) e.getUnfinishedMessage();
           throw e.unwrapIOException();
         } finally {
-          if (parsedMessage != null) {
-            mergeFrom(parsedMessage);
-          }
-        }
+          onChanged();
+        } // finally
         return this;
       }
+      private int bitField0_;
 
       private java.lang.Object path_ = "";
       /**
@@ -10572,11 +9979,9 @@ public final class BibixIdProto {
        */
       public Builder setPath(
           java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
+        if (value == null) { throw new NullPointerException(); }
         path_ = value;
+        bitField0_ |= 0x00000001;
         onChanged();
         return this;
       }
@@ -10585,8 +9990,8 @@ public final class BibixIdProto {
        * @return This builder for chaining.
        */
       public Builder clearPath() {
-        
         path_ = getDefaultInstance().getPath();
+        bitField0_ = (bitField0_ & ~0x00000001);
         onChanged();
         return this;
       }
@@ -10597,12 +10002,10 @@ public final class BibixIdProto {
        */
       public Builder setPathBytes(
           com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
+        if (value == null) { throw new NullPointerException(); }
+        checkByteStringIsUtf8(value);
         path_ = value;
+        bitField0_ |= 0x00000001;
         onChanged();
         return this;
       }
@@ -10615,7 +10018,7 @@ public final class BibixIdProto {
        * @return Whether the lastModifiedTime field is set.
        */
       public boolean hasLastModifiedTime() {
-        return lastModifiedTimeBuilder_ != null || lastModifiedTime_ != null;
+        return ((bitField0_ & 0x00000002) != 0);
       }
       /**
        * <code>.google.protobuf.Timestamp last_modified_time = 2;</code>
@@ -10637,11 +10040,11 @@ public final class BibixIdProto {
             throw new NullPointerException();
           }
           lastModifiedTime_ = value;
-          onChanged();
         } else {
           lastModifiedTimeBuilder_.setMessage(value);
         }
-
+        bitField0_ |= 0x00000002;
+        onChanged();
         return this;
       }
       /**
@@ -10651,11 +10054,11 @@ public final class BibixIdProto {
           com.google.protobuf.Timestamp.Builder builderForValue) {
         if (lastModifiedTimeBuilder_ == null) {
           lastModifiedTime_ = builderForValue.build();
-          onChanged();
         } else {
           lastModifiedTimeBuilder_.setMessage(builderForValue.build());
         }
-
+        bitField0_ |= 0x00000002;
+        onChanged();
         return this;
       }
       /**
@@ -10663,38 +10066,38 @@ public final class BibixIdProto {
        */
       public Builder mergeLastModifiedTime(com.google.protobuf.Timestamp value) {
         if (lastModifiedTimeBuilder_ == null) {
-          if (lastModifiedTime_ != null) {
-            lastModifiedTime_ =
-              com.google.protobuf.Timestamp.newBuilder(lastModifiedTime_).mergeFrom(value).buildPartial();
+          if (((bitField0_ & 0x00000002) != 0) &&
+            lastModifiedTime_ != null &&
+            lastModifiedTime_ != com.google.protobuf.Timestamp.getDefaultInstance()) {
+            getLastModifiedTimeBuilder().mergeFrom(value);
           } else {
             lastModifiedTime_ = value;
           }
-          onChanged();
         } else {
           lastModifiedTimeBuilder_.mergeFrom(value);
         }
-
+        bitField0_ |= 0x00000002;
+        onChanged();
         return this;
       }
       /**
        * <code>.google.protobuf.Timestamp last_modified_time = 2;</code>
        */
       public Builder clearLastModifiedTime() {
-        if (lastModifiedTimeBuilder_ == null) {
-          lastModifiedTime_ = null;
-          onChanged();
-        } else {
-          lastModifiedTime_ = null;
+        bitField0_ = (bitField0_ & ~0x00000002);
+        lastModifiedTime_ = null;
+        if (lastModifiedTimeBuilder_ != null) {
+          lastModifiedTimeBuilder_.dispose();
           lastModifiedTimeBuilder_ = null;
         }
-
+        onChanged();
         return this;
       }
       /**
        * <code>.google.protobuf.Timestamp last_modified_time = 2;</code>
        */
       public com.google.protobuf.Timestamp.Builder getLastModifiedTimeBuilder() {
-        
+        bitField0_ |= 0x00000002;
         onChanged();
         return getLastModifiedTimeFieldBuilder().getBuilder();
       }
@@ -10741,8 +10144,9 @@ public final class BibixIdProto {
        * @return This builder for chaining.
        */
       public Builder setSize(long value) {
-        
+
         size_ = value;
+        bitField0_ |= 0x00000004;
         onChanged();
         return this;
       }
@@ -10751,7 +10155,7 @@ public final class BibixIdProto {
        * @return This builder for chaining.
        */
       public Builder clearSize() {
-        
+        bitField0_ = (bitField0_ & ~0x00000004);
         size_ = 0L;
         onChanged();
         return this;
@@ -10772,11 +10176,9 @@ public final class BibixIdProto {
        * @return This builder for chaining.
        */
       public Builder setSha1Hash(com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
+        if (value == null) { throw new NullPointerException(); }
         sha1Hash_ = value;
+        bitField0_ |= 0x00000008;
         onChanged();
         return this;
       }
@@ -10785,7 +10187,7 @@ public final class BibixIdProto {
        * @return This builder for chaining.
        */
       public Builder clearSha1Hash() {
-        
+        bitField0_ = (bitField0_ & ~0x00000008);
         sha1Hash_ = getDefaultInstance().getSha1Hash();
         onChanged();
         return this;
@@ -10823,7 +10225,18 @@ public final class BibixIdProto {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return new FileHash(input, extensionRegistry);
+        Builder builder = newBuilder();
+        try {
+          builder.mergeFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          throw e.setUnfinishedMessage(builder.buildPartial());
+        } catch (com.google.protobuf.UninitializedMessageException e) {
+          throw e.asInvalidProtocolBufferException().setUnfinishedMessage(builder.buildPartial());
+        } catch (java.io.IOException e) {
+          throw new com.google.protobuf.InvalidProtocolBufferException(e)
+              .setUnfinishedMessage(builder.buildPartial());
+        }
+        return builder.buildPartial();
       }
     };
 

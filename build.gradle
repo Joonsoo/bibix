@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        kotlinVersion = '1.8.0'
+        kotlinVersion = '1.8.10'
         jparserVersion = '0.2.4'
         floggerVersion = '0.7.4'
     }
@@ -15,9 +15,13 @@ buildscript {
 plugins {
     id 'scala'
     id 'java'
-    id 'org.jetbrains.kotlin.jvm' version '1.8.0'
+    id 'org.jetbrains.kotlin.jvm' version '1.8.10'
     id 'com.github.johnrengelman.shadow' version '7.1.2'
 }
 
 group 'com.giyeok.bibix'
-version '0.1.1'
+version '0.3.1'
+
+repositories {
+    mavenCentral()
+}

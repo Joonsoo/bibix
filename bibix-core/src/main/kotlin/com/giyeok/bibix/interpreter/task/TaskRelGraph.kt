@@ -48,7 +48,7 @@ class TaskRelGraph {
     tasks.clear()
     downstream.clear()
     upstream.clear()
-    referredNodes.clear()
+    // referredNodes.clear()
   }
 
   private suspend fun taskId(task: Task): Int =

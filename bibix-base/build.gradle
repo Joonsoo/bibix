@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        kotlinVersion = '1.8.0'
+        kotlinVersion = '1.8.10'
     }
 
     dependencies {
@@ -35,11 +35,6 @@ sourceSets {
             srcDir 'src/generated/grpc/kotlin'
         }
     }
-}
-
-java {
-    sourceCompatibility = JavaVersion.VERSION_16
-    targetCompatibility = JavaVersion.VERSION_16
 }
 
 dependencies {

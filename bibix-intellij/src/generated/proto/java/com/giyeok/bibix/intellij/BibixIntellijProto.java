@@ -72,65 +72,6 @@ public final class BibixIntellijProto {
       return new LoadProjectReq();
     }
 
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-      return this.unknownFields;
-    }
-    private LoadProjectReq(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      this();
-      if (extensionRegistry == null) {
-        throw new java.lang.NullPointerException();
-      }
-      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder();
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            case 10: {
-              java.lang.String s = input.readStringRequireUtf8();
-
-              projectRoot_ = s;
-              break;
-            }
-            case 18: {
-              java.lang.String s = input.readStringRequireUtf8();
-
-              scriptName_ = s;
-              break;
-            }
-            case 24: {
-
-              forceReload_ = input.readBool();
-              break;
-            }
-            default: {
-              if (!parseUnknownField(
-                  input, unknownFields, extensionRegistry, tag)) {
-                done = true;
-              }
-              break;
-            }
-          }
-        }
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw e.setUnfinishedMessage(this);
-      } catch (java.io.IOException e) {
-        throw new com.google.protobuf.InvalidProtocolBufferException(
-            e).setUnfinishedMessage(this);
-      } finally {
-        this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
-      }
-    }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
       return com.giyeok.bibix.intellij.BibixIntellijProto.internal_static_com_giyeok_bibix_intellij_LoadProjectReq_descriptor;
@@ -145,7 +86,8 @@ public final class BibixIntellijProto {
     }
 
     public static final int PROJECT_ROOT_FIELD_NUMBER = 1;
-    private volatile java.lang.Object projectRoot_;
+    @SuppressWarnings("serial")
+    private volatile java.lang.Object projectRoot_ = "";
     /**
      * <code>string project_root = 1;</code>
      * @return The projectRoot.
@@ -183,7 +125,8 @@ public final class BibixIntellijProto {
     }
 
     public static final int SCRIPT_NAME_FIELD_NUMBER = 2;
-    private volatile java.lang.Object scriptName_;
+    @SuppressWarnings("serial")
+    private volatile java.lang.Object scriptName_ = "";
     /**
      * <code>string script_name = 2;</code>
      * @return The scriptName.
@@ -221,7 +164,7 @@ public final class BibixIntellijProto {
     }
 
     public static final int FORCE_RELOAD_FIELD_NUMBER = 3;
-    private boolean forceReload_;
+    private boolean forceReload_ = false;
     /**
      * <code>bool force_reload = 3;</code>
      * @return The forceReload.
@@ -254,7 +197,7 @@ public final class BibixIntellijProto {
       if (forceReload_ != false) {
         output.writeBool(3, forceReload_);
       }
-      unknownFields.writeTo(output);
+      getUnknownFields().writeTo(output);
     }
 
     @java.lang.Override
@@ -273,7 +216,7 @@ public final class BibixIntellijProto {
         size += com.google.protobuf.CodedOutputStream
           .computeBoolSize(3, forceReload_);
       }
-      size += unknownFields.getSerializedSize();
+      size += getUnknownFields().getSerializedSize();
       memoizedSize = size;
       return size;
     }
@@ -294,7 +237,7 @@ public final class BibixIntellijProto {
           .equals(other.getScriptName())) return false;
       if (getForceReload()
           != other.getForceReload()) return false;
-      if (!unknownFields.equals(other.unknownFields)) return false;
+      if (!getUnknownFields().equals(other.getUnknownFields())) return false;
       return true;
     }
 
@@ -312,7 +255,7 @@ public final class BibixIntellijProto {
       hash = (37 * hash) + FORCE_RELOAD_FIELD_NUMBER;
       hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
           getForceReload());
-      hash = (29 * hash) + unknownFields.hashCode();
+      hash = (29 * hash) + getUnknownFields().hashCode();
       memoizedHashCode = hash;
       return hash;
     }
@@ -429,28 +372,21 @@ public final class BibixIntellijProto {
 
       // Construct using com.giyeok.bibix.intellij.BibixIntellijProto.LoadProjectReq.newBuilder()
       private Builder() {
-        maybeForceBuilderInitialization();
+
       }
 
       private Builder(
           com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
         super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
-        }
+
       }
       @java.lang.Override
       public Builder clear() {
         super.clear();
+        bitField0_ = 0;
         projectRoot_ = "";
-
         scriptName_ = "";
-
         forceReload_ = false;
-
         return this;
       }
 
@@ -477,45 +413,24 @@ public final class BibixIntellijProto {
       @java.lang.Override
       public com.giyeok.bibix.intellij.BibixIntellijProto.LoadProjectReq buildPartial() {
         com.giyeok.bibix.intellij.BibixIntellijProto.LoadProjectReq result = new com.giyeok.bibix.intellij.BibixIntellijProto.LoadProjectReq(this);
-        result.projectRoot_ = projectRoot_;
-        result.scriptName_ = scriptName_;
-        result.forceReload_ = forceReload_;
+        if (bitField0_ != 0) { buildPartial0(result); }
         onBuilt();
         return result;
       }
 
-      @java.lang.Override
-      public Builder clone() {
-        return super.clone();
+      private void buildPartial0(com.giyeok.bibix.intellij.BibixIntellijProto.LoadProjectReq result) {
+        int from_bitField0_ = bitField0_;
+        if (((from_bitField0_ & 0x00000001) != 0)) {
+          result.projectRoot_ = projectRoot_;
+        }
+        if (((from_bitField0_ & 0x00000002) != 0)) {
+          result.scriptName_ = scriptName_;
+        }
+        if (((from_bitField0_ & 0x00000004) != 0)) {
+          result.forceReload_ = forceReload_;
+        }
       }
-      @java.lang.Override
-      public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return super.setField(field, value);
-      }
-      @java.lang.Override
-      public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return super.clearField(field);
-      }
-      @java.lang.Override
-      public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return super.clearOneof(oneof);
-      }
-      @java.lang.Override
-      public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, java.lang.Object value) {
-        return super.setRepeatedField(field, index, value);
-      }
-      @java.lang.Override
-      public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return super.addRepeatedField(field, value);
-      }
+
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof com.giyeok.bibix.intellij.BibixIntellijProto.LoadProjectReq) {
@@ -530,16 +445,18 @@ public final class BibixIntellijProto {
         if (other == com.giyeok.bibix.intellij.BibixIntellijProto.LoadProjectReq.getDefaultInstance()) return this;
         if (!other.getProjectRoot().isEmpty()) {
           projectRoot_ = other.projectRoot_;
+          bitField0_ |= 0x00000001;
           onChanged();
         }
         if (!other.getScriptName().isEmpty()) {
           scriptName_ = other.scriptName_;
+          bitField0_ |= 0x00000002;
           onChanged();
         }
         if (other.getForceReload() != false) {
           setForceReload(other.getForceReload());
         }
-        this.mergeUnknownFields(other.unknownFields);
+        this.mergeUnknownFields(other.getUnknownFields());
         onChanged();
         return this;
       }
@@ -554,19 +471,48 @@ public final class BibixIntellijProto {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        com.giyeok.bibix.intellij.BibixIntellijProto.LoadProjectReq parsedMessage = null;
+        if (extensionRegistry == null) {
+          throw new java.lang.NullPointerException();
+        }
         try {
-          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+          boolean done = false;
+          while (!done) {
+            int tag = input.readTag();
+            switch (tag) {
+              case 0:
+                done = true;
+                break;
+              case 10: {
+                projectRoot_ = input.readStringRequireUtf8();
+                bitField0_ |= 0x00000001;
+                break;
+              } // case 10
+              case 18: {
+                scriptName_ = input.readStringRequireUtf8();
+                bitField0_ |= 0x00000002;
+                break;
+              } // case 18
+              case 24: {
+                forceReload_ = input.readBool();
+                bitField0_ |= 0x00000004;
+                break;
+              } // case 24
+              default: {
+                if (!super.parseUnknownField(input, extensionRegistry, tag)) {
+                  done = true; // was an endgroup tag
+                }
+                break;
+              } // default:
+            } // switch (tag)
+          } // while (!done)
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (com.giyeok.bibix.intellij.BibixIntellijProto.LoadProjectReq) e.getUnfinishedMessage();
           throw e.unwrapIOException();
         } finally {
-          if (parsedMessage != null) {
-            mergeFrom(parsedMessage);
-          }
-        }
+          onChanged();
+        } // finally
         return this;
       }
+      private int bitField0_;
 
       private java.lang.Object projectRoot_ = "";
       /**
@@ -609,11 +555,9 @@ public final class BibixIntellijProto {
        */
       public Builder setProjectRoot(
           java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
+        if (value == null) { throw new NullPointerException(); }
         projectRoot_ = value;
+        bitField0_ |= 0x00000001;
         onChanged();
         return this;
       }
@@ -622,8 +566,8 @@ public final class BibixIntellijProto {
        * @return This builder for chaining.
        */
       public Builder clearProjectRoot() {
-        
         projectRoot_ = getDefaultInstance().getProjectRoot();
+        bitField0_ = (bitField0_ & ~0x00000001);
         onChanged();
         return this;
       }
@@ -634,12 +578,10 @@ public final class BibixIntellijProto {
        */
       public Builder setProjectRootBytes(
           com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
+        if (value == null) { throw new NullPointerException(); }
+        checkByteStringIsUtf8(value);
         projectRoot_ = value;
+        bitField0_ |= 0x00000001;
         onChanged();
         return this;
       }
@@ -685,11 +627,9 @@ public final class BibixIntellijProto {
        */
       public Builder setScriptName(
           java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
+        if (value == null) { throw new NullPointerException(); }
         scriptName_ = value;
+        bitField0_ |= 0x00000002;
         onChanged();
         return this;
       }
@@ -698,8 +638,8 @@ public final class BibixIntellijProto {
        * @return This builder for chaining.
        */
       public Builder clearScriptName() {
-        
         scriptName_ = getDefaultInstance().getScriptName();
+        bitField0_ = (bitField0_ & ~0x00000002);
         onChanged();
         return this;
       }
@@ -710,12 +650,10 @@ public final class BibixIntellijProto {
        */
       public Builder setScriptNameBytes(
           com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
+        if (value == null) { throw new NullPointerException(); }
+        checkByteStringIsUtf8(value);
         scriptName_ = value;
+        bitField0_ |= 0x00000002;
         onChanged();
         return this;
       }
@@ -735,8 +673,9 @@ public final class BibixIntellijProto {
        * @return This builder for chaining.
        */
       public Builder setForceReload(boolean value) {
-        
+
         forceReload_ = value;
+        bitField0_ |= 0x00000004;
         onChanged();
         return this;
       }
@@ -745,7 +684,7 @@ public final class BibixIntellijProto {
        * @return This builder for chaining.
        */
       public Builder clearForceReload() {
-        
+        bitField0_ = (bitField0_ & ~0x00000004);
         forceReload_ = false;
         onChanged();
         return this;
@@ -783,7 +722,18 @@ public final class BibixIntellijProto {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return new LoadProjectReq(input, extensionRegistry);
+        Builder builder = newBuilder();
+        try {
+          builder.mergeFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          throw e.setUnfinishedMessage(builder.buildPartial());
+        } catch (com.google.protobuf.UninitializedMessageException e) {
+          throw e.asInvalidProtocolBufferException().setUnfinishedMessage(builder.buildPartial());
+        } catch (java.io.IOException e) {
+          throw new com.google.protobuf.InvalidProtocolBufferException(e)
+              .setUnfinishedMessage(builder.buildPartial());
+        }
+        return builder.buildPartial();
       }
     };
 
@@ -970,122 +920,6 @@ public final class BibixIntellijProto {
       return new BibixProjectInfo();
     }
 
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-      return this.unknownFields;
-    }
-    private BibixProjectInfo(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      this();
-      if (extensionRegistry == null) {
-        throw new java.lang.NullPointerException();
-      }
-      int mutable_bitField0_ = 0;
-      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder();
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            case 10: {
-              java.lang.String s = input.readStringRequireUtf8();
-
-              projectId_ = s;
-              break;
-            }
-            case 18: {
-              java.lang.String s = input.readStringRequireUtf8();
-
-              projectName_ = s;
-              break;
-            }
-            case 26: {
-              if (!((mutable_bitField0_ & 0x00000001) != 0)) {
-                usingSdks_ = new java.util.ArrayList<com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion>();
-                mutable_bitField0_ |= 0x00000001;
-              }
-              usingSdks_.add(
-                  input.readMessage(com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion.parser(), extensionRegistry));
-              break;
-            }
-            case 34: {
-              if (!((mutable_bitField0_ & 0x00000002) != 0)) {
-                modules_ = new java.util.ArrayList<com.giyeok.bibix.intellij.BibixIntellijProto.Module>();
-                mutable_bitField0_ |= 0x00000002;
-              }
-              modules_.add(
-                  input.readMessage(com.giyeok.bibix.intellij.BibixIntellijProto.Module.parser(), extensionRegistry));
-              break;
-            }
-            case 42: {
-              if (!((mutable_bitField0_ & 0x00000004) != 0)) {
-                externalLibraries_ = new java.util.ArrayList<com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary>();
-                mutable_bitField0_ |= 0x00000004;
-              }
-              externalLibraries_.add(
-                  input.readMessage(com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary.parser(), extensionRegistry));
-              break;
-            }
-            case 50: {
-              com.giyeok.bibix.intellij.BibixIntellijProto.SdkInfo.Builder subBuilder = null;
-              if (sdkInfo_ != null) {
-                subBuilder = sdkInfo_.toBuilder();
-              }
-              sdkInfo_ = input.readMessage(com.giyeok.bibix.intellij.BibixIntellijProto.SdkInfo.parser(), extensionRegistry);
-              if (subBuilder != null) {
-                subBuilder.mergeFrom(sdkInfo_);
-                sdkInfo_ = subBuilder.buildPartial();
-              }
-
-              break;
-            }
-            case 58: {
-              if (!((mutable_bitField0_ & 0x00000008) != 0)) {
-                actions_ = new java.util.ArrayList<com.giyeok.bibix.intellij.BibixIntellijProto.Action>();
-                mutable_bitField0_ |= 0x00000008;
-              }
-              actions_.add(
-                  input.readMessage(com.giyeok.bibix.intellij.BibixIntellijProto.Action.parser(), extensionRegistry));
-              break;
-            }
-            default: {
-              if (!parseUnknownField(
-                  input, unknownFields, extensionRegistry, tag)) {
-                done = true;
-              }
-              break;
-            }
-          }
-        }
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw e.setUnfinishedMessage(this);
-      } catch (java.io.IOException e) {
-        throw new com.google.protobuf.InvalidProtocolBufferException(
-            e).setUnfinishedMessage(this);
-      } finally {
-        if (((mutable_bitField0_ & 0x00000001) != 0)) {
-          usingSdks_ = java.util.Collections.unmodifiableList(usingSdks_);
-        }
-        if (((mutable_bitField0_ & 0x00000002) != 0)) {
-          modules_ = java.util.Collections.unmodifiableList(modules_);
-        }
-        if (((mutable_bitField0_ & 0x00000004) != 0)) {
-          externalLibraries_ = java.util.Collections.unmodifiableList(externalLibraries_);
-        }
-        if (((mutable_bitField0_ & 0x00000008) != 0)) {
-          actions_ = java.util.Collections.unmodifiableList(actions_);
-        }
-        this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
-      }
-    }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
       return com.giyeok.bibix.intellij.BibixIntellijProto.internal_static_com_giyeok_bibix_intellij_BibixProjectInfo_descriptor;
@@ -1100,7 +934,8 @@ public final class BibixIntellijProto {
     }
 
     public static final int PROJECT_ID_FIELD_NUMBER = 1;
-    private volatile java.lang.Object projectId_;
+    @SuppressWarnings("serial")
+    private volatile java.lang.Object projectId_ = "";
     /**
      * <code>string project_id = 1;</code>
      * @return The projectId.
@@ -1138,7 +973,8 @@ public final class BibixIntellijProto {
     }
 
     public static final int PROJECT_NAME_FIELD_NUMBER = 2;
-    private volatile java.lang.Object projectName_;
+    @SuppressWarnings("serial")
+    private volatile java.lang.Object projectName_ = "";
     /**
      * <code>string project_name = 2;</code>
      * @return The projectName.
@@ -1176,6 +1012,7 @@ public final class BibixIntellijProto {
     }
 
     public static final int USING_SDKS_FIELD_NUMBER = 3;
+    @SuppressWarnings("serial")
     private java.util.List<com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion> usingSdks_;
     /**
      * <code>repeated .com.giyeok.bibix.intellij.SdkVersion using_sdks = 3;</code>
@@ -1216,6 +1053,7 @@ public final class BibixIntellijProto {
     }
 
     public static final int MODULES_FIELD_NUMBER = 4;
+    @SuppressWarnings("serial")
     private java.util.List<com.giyeok.bibix.intellij.BibixIntellijProto.Module> modules_;
     /**
      * <code>repeated .com.giyeok.bibix.intellij.Module modules = 4;</code>
@@ -1256,6 +1094,7 @@ public final class BibixIntellijProto {
     }
 
     public static final int EXTERNAL_LIBRARIES_FIELD_NUMBER = 5;
+    @SuppressWarnings("serial")
     private java.util.List<com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary> externalLibraries_;
     /**
      * <code>repeated .com.giyeok.bibix.intellij.ExternalLibrary external_libraries = 5;</code>
@@ -1318,10 +1157,11 @@ public final class BibixIntellijProto {
      */
     @java.lang.Override
     public com.giyeok.bibix.intellij.BibixIntellijProto.SdkInfoOrBuilder getSdkInfoOrBuilder() {
-      return getSdkInfo();
+      return sdkInfo_ == null ? com.giyeok.bibix.intellij.BibixIntellijProto.SdkInfo.getDefaultInstance() : sdkInfo_;
     }
 
     public static final int ACTIONS_FIELD_NUMBER = 7;
+    @SuppressWarnings("serial")
     private java.util.List<com.giyeok.bibix.intellij.BibixIntellijProto.Action> actions_;
     /**
      * <code>repeated .com.giyeok.bibix.intellij.Action actions = 7;</code>
@@ -1396,7 +1236,7 @@ public final class BibixIntellijProto {
       for (int i = 0; i < actions_.size(); i++) {
         output.writeMessage(7, actions_.get(i));
       }
-      unknownFields.writeTo(output);
+      getUnknownFields().writeTo(output);
     }
 
     @java.lang.Override
@@ -1431,7 +1271,7 @@ public final class BibixIntellijProto {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(7, actions_.get(i));
       }
-      size += unknownFields.getSerializedSize();
+      size += getUnknownFields().getSerializedSize();
       memoizedSize = size;
       return size;
     }
@@ -1463,7 +1303,7 @@ public final class BibixIntellijProto {
       }
       if (!getActionsList()
           .equals(other.getActionsList())) return false;
-      if (!unknownFields.equals(other.unknownFields)) return false;
+      if (!getUnknownFields().equals(other.getUnknownFields())) return false;
       return true;
     }
 
@@ -1498,7 +1338,7 @@ public final class BibixIntellijProto {
         hash = (37 * hash) + ACTIONS_FIELD_NUMBER;
         hash = (53 * hash) + getActionsList().hashCode();
       }
-      hash = (29 * hash) + unknownFields.hashCode();
+      hash = (29 * hash) + getUnknownFields().hashCode();
       memoizedHashCode = hash;
       return hash;
     }
@@ -1615,60 +1455,53 @@ public final class BibixIntellijProto {
 
       // Construct using com.giyeok.bibix.intellij.BibixIntellijProto.BibixProjectInfo.newBuilder()
       private Builder() {
-        maybeForceBuilderInitialization();
+
       }
 
       private Builder(
           com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
         super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
-          getUsingSdksFieldBuilder();
-          getModulesFieldBuilder();
-          getExternalLibrariesFieldBuilder();
-          getActionsFieldBuilder();
-        }
+
       }
       @java.lang.Override
       public Builder clear() {
         super.clear();
+        bitField0_ = 0;
         projectId_ = "";
-
         projectName_ = "";
-
         if (usingSdksBuilder_ == null) {
           usingSdks_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000001);
         } else {
+          usingSdks_ = null;
           usingSdksBuilder_.clear();
         }
+        bitField0_ = (bitField0_ & ~0x00000004);
         if (modulesBuilder_ == null) {
           modules_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000002);
         } else {
+          modules_ = null;
           modulesBuilder_.clear();
         }
+        bitField0_ = (bitField0_ & ~0x00000008);
         if (externalLibrariesBuilder_ == null) {
           externalLibraries_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000004);
         } else {
+          externalLibraries_ = null;
           externalLibrariesBuilder_.clear();
         }
-        if (sdkInfoBuilder_ == null) {
-          sdkInfo_ = null;
-        } else {
-          sdkInfo_ = null;
+        bitField0_ = (bitField0_ & ~0x00000010);
+        sdkInfo_ = null;
+        if (sdkInfoBuilder_ != null) {
+          sdkInfoBuilder_.dispose();
           sdkInfoBuilder_ = null;
         }
         if (actionsBuilder_ == null) {
           actions_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000008);
         } else {
+          actions_ = null;
           actionsBuilder_.clear();
         }
+        bitField0_ = (bitField0_ & ~0x00000040);
         return this;
       }
 
@@ -1695,86 +1528,66 @@ public final class BibixIntellijProto {
       @java.lang.Override
       public com.giyeok.bibix.intellij.BibixIntellijProto.BibixProjectInfo buildPartial() {
         com.giyeok.bibix.intellij.BibixIntellijProto.BibixProjectInfo result = new com.giyeok.bibix.intellij.BibixIntellijProto.BibixProjectInfo(this);
-        int from_bitField0_ = bitField0_;
-        result.projectId_ = projectId_;
-        result.projectName_ = projectName_;
+        buildPartialRepeatedFields(result);
+        if (bitField0_ != 0) { buildPartial0(result); }
+        onBuilt();
+        return result;
+      }
+
+      private void buildPartialRepeatedFields(com.giyeok.bibix.intellij.BibixIntellijProto.BibixProjectInfo result) {
         if (usingSdksBuilder_ == null) {
-          if (((bitField0_ & 0x00000001) != 0)) {
+          if (((bitField0_ & 0x00000004) != 0)) {
             usingSdks_ = java.util.Collections.unmodifiableList(usingSdks_);
-            bitField0_ = (bitField0_ & ~0x00000001);
+            bitField0_ = (bitField0_ & ~0x00000004);
           }
           result.usingSdks_ = usingSdks_;
         } else {
           result.usingSdks_ = usingSdksBuilder_.build();
         }
         if (modulesBuilder_ == null) {
-          if (((bitField0_ & 0x00000002) != 0)) {
+          if (((bitField0_ & 0x00000008) != 0)) {
             modules_ = java.util.Collections.unmodifiableList(modules_);
-            bitField0_ = (bitField0_ & ~0x00000002);
+            bitField0_ = (bitField0_ & ~0x00000008);
           }
           result.modules_ = modules_;
         } else {
           result.modules_ = modulesBuilder_.build();
         }
         if (externalLibrariesBuilder_ == null) {
-          if (((bitField0_ & 0x00000004) != 0)) {
+          if (((bitField0_ & 0x00000010) != 0)) {
             externalLibraries_ = java.util.Collections.unmodifiableList(externalLibraries_);
-            bitField0_ = (bitField0_ & ~0x00000004);
+            bitField0_ = (bitField0_ & ~0x00000010);
           }
           result.externalLibraries_ = externalLibraries_;
         } else {
           result.externalLibraries_ = externalLibrariesBuilder_.build();
         }
-        if (sdkInfoBuilder_ == null) {
-          result.sdkInfo_ = sdkInfo_;
-        } else {
-          result.sdkInfo_ = sdkInfoBuilder_.build();
-        }
         if (actionsBuilder_ == null) {
-          if (((bitField0_ & 0x00000008) != 0)) {
+          if (((bitField0_ & 0x00000040) != 0)) {
             actions_ = java.util.Collections.unmodifiableList(actions_);
-            bitField0_ = (bitField0_ & ~0x00000008);
+            bitField0_ = (bitField0_ & ~0x00000040);
           }
           result.actions_ = actions_;
         } else {
           result.actions_ = actionsBuilder_.build();
         }
-        onBuilt();
-        return result;
       }
 
-      @java.lang.Override
-      public Builder clone() {
-        return super.clone();
+      private void buildPartial0(com.giyeok.bibix.intellij.BibixIntellijProto.BibixProjectInfo result) {
+        int from_bitField0_ = bitField0_;
+        if (((from_bitField0_ & 0x00000001) != 0)) {
+          result.projectId_ = projectId_;
+        }
+        if (((from_bitField0_ & 0x00000002) != 0)) {
+          result.projectName_ = projectName_;
+        }
+        if (((from_bitField0_ & 0x00000020) != 0)) {
+          result.sdkInfo_ = sdkInfoBuilder_ == null
+              ? sdkInfo_
+              : sdkInfoBuilder_.build();
+        }
       }
-      @java.lang.Override
-      public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return super.setField(field, value);
-      }
-      @java.lang.Override
-      public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return super.clearField(field);
-      }
-      @java.lang.Override
-      public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return super.clearOneof(oneof);
-      }
-      @java.lang.Override
-      public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, java.lang.Object value) {
-        return super.setRepeatedField(field, index, value);
-      }
-      @java.lang.Override
-      public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return super.addRepeatedField(field, value);
-      }
+
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof com.giyeok.bibix.intellij.BibixIntellijProto.BibixProjectInfo) {
@@ -1789,17 +1602,19 @@ public final class BibixIntellijProto {
         if (other == com.giyeok.bibix.intellij.BibixIntellijProto.BibixProjectInfo.getDefaultInstance()) return this;
         if (!other.getProjectId().isEmpty()) {
           projectId_ = other.projectId_;
+          bitField0_ |= 0x00000001;
           onChanged();
         }
         if (!other.getProjectName().isEmpty()) {
           projectName_ = other.projectName_;
+          bitField0_ |= 0x00000002;
           onChanged();
         }
         if (usingSdksBuilder_ == null) {
           if (!other.usingSdks_.isEmpty()) {
             if (usingSdks_.isEmpty()) {
               usingSdks_ = other.usingSdks_;
-              bitField0_ = (bitField0_ & ~0x00000001);
+              bitField0_ = (bitField0_ & ~0x00000004);
             } else {
               ensureUsingSdksIsMutable();
               usingSdks_.addAll(other.usingSdks_);
@@ -1812,7 +1627,7 @@ public final class BibixIntellijProto {
               usingSdksBuilder_.dispose();
               usingSdksBuilder_ = null;
               usingSdks_ = other.usingSdks_;
-              bitField0_ = (bitField0_ & ~0x00000001);
+              bitField0_ = (bitField0_ & ~0x00000004);
               usingSdksBuilder_ = 
                 com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
                    getUsingSdksFieldBuilder() : null;
@@ -1825,7 +1640,7 @@ public final class BibixIntellijProto {
           if (!other.modules_.isEmpty()) {
             if (modules_.isEmpty()) {
               modules_ = other.modules_;
-              bitField0_ = (bitField0_ & ~0x00000002);
+              bitField0_ = (bitField0_ & ~0x00000008);
             } else {
               ensureModulesIsMutable();
               modules_.addAll(other.modules_);
@@ -1838,7 +1653,7 @@ public final class BibixIntellijProto {
               modulesBuilder_.dispose();
               modulesBuilder_ = null;
               modules_ = other.modules_;
-              bitField0_ = (bitField0_ & ~0x00000002);
+              bitField0_ = (bitField0_ & ~0x00000008);
               modulesBuilder_ = 
                 com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
                    getModulesFieldBuilder() : null;
@@ -1851,7 +1666,7 @@ public final class BibixIntellijProto {
           if (!other.externalLibraries_.isEmpty()) {
             if (externalLibraries_.isEmpty()) {
               externalLibraries_ = other.externalLibraries_;
-              bitField0_ = (bitField0_ & ~0x00000004);
+              bitField0_ = (bitField0_ & ~0x00000010);
             } else {
               ensureExternalLibrariesIsMutable();
               externalLibraries_.addAll(other.externalLibraries_);
@@ -1864,7 +1679,7 @@ public final class BibixIntellijProto {
               externalLibrariesBuilder_.dispose();
               externalLibrariesBuilder_ = null;
               externalLibraries_ = other.externalLibraries_;
-              bitField0_ = (bitField0_ & ~0x00000004);
+              bitField0_ = (bitField0_ & ~0x00000010);
               externalLibrariesBuilder_ = 
                 com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
                    getExternalLibrariesFieldBuilder() : null;
@@ -1880,7 +1695,7 @@ public final class BibixIntellijProto {
           if (!other.actions_.isEmpty()) {
             if (actions_.isEmpty()) {
               actions_ = other.actions_;
-              bitField0_ = (bitField0_ & ~0x00000008);
+              bitField0_ = (bitField0_ & ~0x00000040);
             } else {
               ensureActionsIsMutable();
               actions_.addAll(other.actions_);
@@ -1893,7 +1708,7 @@ public final class BibixIntellijProto {
               actionsBuilder_.dispose();
               actionsBuilder_ = null;
               actions_ = other.actions_;
-              bitField0_ = (bitField0_ & ~0x00000008);
+              bitField0_ = (bitField0_ & ~0x00000040);
               actionsBuilder_ = 
                 com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
                    getActionsFieldBuilder() : null;
@@ -1902,7 +1717,7 @@ public final class BibixIntellijProto {
             }
           }
         }
-        this.mergeUnknownFields(other.unknownFields);
+        this.mergeUnknownFields(other.getUnknownFields());
         onChanged();
         return this;
       }
@@ -1917,17 +1732,99 @@ public final class BibixIntellijProto {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        com.giyeok.bibix.intellij.BibixIntellijProto.BibixProjectInfo parsedMessage = null;
+        if (extensionRegistry == null) {
+          throw new java.lang.NullPointerException();
+        }
         try {
-          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+          boolean done = false;
+          while (!done) {
+            int tag = input.readTag();
+            switch (tag) {
+              case 0:
+                done = true;
+                break;
+              case 10: {
+                projectId_ = input.readStringRequireUtf8();
+                bitField0_ |= 0x00000001;
+                break;
+              } // case 10
+              case 18: {
+                projectName_ = input.readStringRequireUtf8();
+                bitField0_ |= 0x00000002;
+                break;
+              } // case 18
+              case 26: {
+                com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion m =
+                    input.readMessage(
+                        com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion.parser(),
+                        extensionRegistry);
+                if (usingSdksBuilder_ == null) {
+                  ensureUsingSdksIsMutable();
+                  usingSdks_.add(m);
+                } else {
+                  usingSdksBuilder_.addMessage(m);
+                }
+                break;
+              } // case 26
+              case 34: {
+                com.giyeok.bibix.intellij.BibixIntellijProto.Module m =
+                    input.readMessage(
+                        com.giyeok.bibix.intellij.BibixIntellijProto.Module.parser(),
+                        extensionRegistry);
+                if (modulesBuilder_ == null) {
+                  ensureModulesIsMutable();
+                  modules_.add(m);
+                } else {
+                  modulesBuilder_.addMessage(m);
+                }
+                break;
+              } // case 34
+              case 42: {
+                com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary m =
+                    input.readMessage(
+                        com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary.parser(),
+                        extensionRegistry);
+                if (externalLibrariesBuilder_ == null) {
+                  ensureExternalLibrariesIsMutable();
+                  externalLibraries_.add(m);
+                } else {
+                  externalLibrariesBuilder_.addMessage(m);
+                }
+                break;
+              } // case 42
+              case 50: {
+                input.readMessage(
+                    getSdkInfoFieldBuilder().getBuilder(),
+                    extensionRegistry);
+                bitField0_ |= 0x00000020;
+                break;
+              } // case 50
+              case 58: {
+                com.giyeok.bibix.intellij.BibixIntellijProto.Action m =
+                    input.readMessage(
+                        com.giyeok.bibix.intellij.BibixIntellijProto.Action.parser(),
+                        extensionRegistry);
+                if (actionsBuilder_ == null) {
+                  ensureActionsIsMutable();
+                  actions_.add(m);
+                } else {
+                  actionsBuilder_.addMessage(m);
+                }
+                break;
+              } // case 58
+              default: {
+                if (!super.parseUnknownField(input, extensionRegistry, tag)) {
+                  done = true; // was an endgroup tag
+                }
+                break;
+              } // default:
+            } // switch (tag)
+          } // while (!done)
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (com.giyeok.bibix.intellij.BibixIntellijProto.BibixProjectInfo) e.getUnfinishedMessage();
           throw e.unwrapIOException();
         } finally {
-          if (parsedMessage != null) {
-            mergeFrom(parsedMessage);
-          }
-        }
+          onChanged();
+        } // finally
         return this;
       }
       private int bitField0_;
@@ -1973,11 +1870,9 @@ public final class BibixIntellijProto {
        */
       public Builder setProjectId(
           java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
+        if (value == null) { throw new NullPointerException(); }
         projectId_ = value;
+        bitField0_ |= 0x00000001;
         onChanged();
         return this;
       }
@@ -1986,8 +1881,8 @@ public final class BibixIntellijProto {
        * @return This builder for chaining.
        */
       public Builder clearProjectId() {
-        
         projectId_ = getDefaultInstance().getProjectId();
+        bitField0_ = (bitField0_ & ~0x00000001);
         onChanged();
         return this;
       }
@@ -1998,12 +1893,10 @@ public final class BibixIntellijProto {
        */
       public Builder setProjectIdBytes(
           com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
+        if (value == null) { throw new NullPointerException(); }
+        checkByteStringIsUtf8(value);
         projectId_ = value;
+        bitField0_ |= 0x00000001;
         onChanged();
         return this;
       }
@@ -2049,11 +1942,9 @@ public final class BibixIntellijProto {
        */
       public Builder setProjectName(
           java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
+        if (value == null) { throw new NullPointerException(); }
         projectName_ = value;
+        bitField0_ |= 0x00000002;
         onChanged();
         return this;
       }
@@ -2062,8 +1953,8 @@ public final class BibixIntellijProto {
        * @return This builder for chaining.
        */
       public Builder clearProjectName() {
-        
         projectName_ = getDefaultInstance().getProjectName();
+        bitField0_ = (bitField0_ & ~0x00000002);
         onChanged();
         return this;
       }
@@ -2074,12 +1965,10 @@ public final class BibixIntellijProto {
        */
       public Builder setProjectNameBytes(
           com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
+        if (value == null) { throw new NullPointerException(); }
+        checkByteStringIsUtf8(value);
         projectName_ = value;
+        bitField0_ |= 0x00000002;
         onChanged();
         return this;
       }
@@ -2087,9 +1976,9 @@ public final class BibixIntellijProto {
       private java.util.List<com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion> usingSdks_ =
         java.util.Collections.emptyList();
       private void ensureUsingSdksIsMutable() {
-        if (!((bitField0_ & 0x00000001) != 0)) {
+        if (!((bitField0_ & 0x00000004) != 0)) {
           usingSdks_ = new java.util.ArrayList<com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion>(usingSdks_);
-          bitField0_ |= 0x00000001;
+          bitField0_ |= 0x00000004;
          }
       }
 
@@ -2239,7 +2128,7 @@ public final class BibixIntellijProto {
       public Builder clearUsingSdks() {
         if (usingSdksBuilder_ == null) {
           usingSdks_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000001);
+          bitField0_ = (bitField0_ & ~0x00000004);
           onChanged();
         } else {
           usingSdksBuilder_.clear();
@@ -2316,7 +2205,7 @@ public final class BibixIntellijProto {
           usingSdksBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
               com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion, com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion.Builder, com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersionOrBuilder>(
                   usingSdks_,
-                  ((bitField0_ & 0x00000001) != 0),
+                  ((bitField0_ & 0x00000004) != 0),
                   getParentForChildren(),
                   isClean());
           usingSdks_ = null;
@@ -2327,9 +2216,9 @@ public final class BibixIntellijProto {
       private java.util.List<com.giyeok.bibix.intellij.BibixIntellijProto.Module> modules_ =
         java.util.Collections.emptyList();
       private void ensureModulesIsMutable() {
-        if (!((bitField0_ & 0x00000002) != 0)) {
+        if (!((bitField0_ & 0x00000008) != 0)) {
           modules_ = new java.util.ArrayList<com.giyeok.bibix.intellij.BibixIntellijProto.Module>(modules_);
-          bitField0_ |= 0x00000002;
+          bitField0_ |= 0x00000008;
          }
       }
 
@@ -2479,7 +2368,7 @@ public final class BibixIntellijProto {
       public Builder clearModules() {
         if (modulesBuilder_ == null) {
           modules_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000002);
+          bitField0_ = (bitField0_ & ~0x00000008);
           onChanged();
         } else {
           modulesBuilder_.clear();
@@ -2556,7 +2445,7 @@ public final class BibixIntellijProto {
           modulesBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
               com.giyeok.bibix.intellij.BibixIntellijProto.Module, com.giyeok.bibix.intellij.BibixIntellijProto.Module.Builder, com.giyeok.bibix.intellij.BibixIntellijProto.ModuleOrBuilder>(
                   modules_,
-                  ((bitField0_ & 0x00000002) != 0),
+                  ((bitField0_ & 0x00000008) != 0),
                   getParentForChildren(),
                   isClean());
           modules_ = null;
@@ -2567,9 +2456,9 @@ public final class BibixIntellijProto {
       private java.util.List<com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary> externalLibraries_ =
         java.util.Collections.emptyList();
       private void ensureExternalLibrariesIsMutable() {
-        if (!((bitField0_ & 0x00000004) != 0)) {
+        if (!((bitField0_ & 0x00000010) != 0)) {
           externalLibraries_ = new java.util.ArrayList<com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary>(externalLibraries_);
-          bitField0_ |= 0x00000004;
+          bitField0_ |= 0x00000010;
          }
       }
 
@@ -2719,7 +2608,7 @@ public final class BibixIntellijProto {
       public Builder clearExternalLibraries() {
         if (externalLibrariesBuilder_ == null) {
           externalLibraries_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000004);
+          bitField0_ = (bitField0_ & ~0x00000010);
           onChanged();
         } else {
           externalLibrariesBuilder_.clear();
@@ -2796,7 +2685,7 @@ public final class BibixIntellijProto {
           externalLibrariesBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
               com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary, com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary.Builder, com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibraryOrBuilder>(
                   externalLibraries_,
-                  ((bitField0_ & 0x00000004) != 0),
+                  ((bitField0_ & 0x00000010) != 0),
                   getParentForChildren(),
                   isClean());
           externalLibraries_ = null;
@@ -2812,7 +2701,7 @@ public final class BibixIntellijProto {
        * @return Whether the sdkInfo field is set.
        */
       public boolean hasSdkInfo() {
-        return sdkInfoBuilder_ != null || sdkInfo_ != null;
+        return ((bitField0_ & 0x00000020) != 0);
       }
       /**
        * <code>.com.giyeok.bibix.intellij.SdkInfo sdk_info = 6;</code>
@@ -2834,11 +2723,11 @@ public final class BibixIntellijProto {
             throw new NullPointerException();
           }
           sdkInfo_ = value;
-          onChanged();
         } else {
           sdkInfoBuilder_.setMessage(value);
         }
-
+        bitField0_ |= 0x00000020;
+        onChanged();
         return this;
       }
       /**
@@ -2848,11 +2737,11 @@ public final class BibixIntellijProto {
           com.giyeok.bibix.intellij.BibixIntellijProto.SdkInfo.Builder builderForValue) {
         if (sdkInfoBuilder_ == null) {
           sdkInfo_ = builderForValue.build();
-          onChanged();
         } else {
           sdkInfoBuilder_.setMessage(builderForValue.build());
         }
-
+        bitField0_ |= 0x00000020;
+        onChanged();
         return this;
       }
       /**
@@ -2860,38 +2749,38 @@ public final class BibixIntellijProto {
        */
       public Builder mergeSdkInfo(com.giyeok.bibix.intellij.BibixIntellijProto.SdkInfo value) {
         if (sdkInfoBuilder_ == null) {
-          if (sdkInfo_ != null) {
-            sdkInfo_ =
-              com.giyeok.bibix.intellij.BibixIntellijProto.SdkInfo.newBuilder(sdkInfo_).mergeFrom(value).buildPartial();
+          if (((bitField0_ & 0x00000020) != 0) &&
+            sdkInfo_ != null &&
+            sdkInfo_ != com.giyeok.bibix.intellij.BibixIntellijProto.SdkInfo.getDefaultInstance()) {
+            getSdkInfoBuilder().mergeFrom(value);
           } else {
             sdkInfo_ = value;
           }
-          onChanged();
         } else {
           sdkInfoBuilder_.mergeFrom(value);
         }
-
+        bitField0_ |= 0x00000020;
+        onChanged();
         return this;
       }
       /**
        * <code>.com.giyeok.bibix.intellij.SdkInfo sdk_info = 6;</code>
        */
       public Builder clearSdkInfo() {
-        if (sdkInfoBuilder_ == null) {
-          sdkInfo_ = null;
-          onChanged();
-        } else {
-          sdkInfo_ = null;
+        bitField0_ = (bitField0_ & ~0x00000020);
+        sdkInfo_ = null;
+        if (sdkInfoBuilder_ != null) {
+          sdkInfoBuilder_.dispose();
           sdkInfoBuilder_ = null;
         }
-
+        onChanged();
         return this;
       }
       /**
        * <code>.com.giyeok.bibix.intellij.SdkInfo sdk_info = 6;</code>
        */
       public com.giyeok.bibix.intellij.BibixIntellijProto.SdkInfo.Builder getSdkInfoBuilder() {
-        
+        bitField0_ |= 0x00000020;
         onChanged();
         return getSdkInfoFieldBuilder().getBuilder();
       }
@@ -2926,9 +2815,9 @@ public final class BibixIntellijProto {
       private java.util.List<com.giyeok.bibix.intellij.BibixIntellijProto.Action> actions_ =
         java.util.Collections.emptyList();
       private void ensureActionsIsMutable() {
-        if (!((bitField0_ & 0x00000008) != 0)) {
+        if (!((bitField0_ & 0x00000040) != 0)) {
           actions_ = new java.util.ArrayList<com.giyeok.bibix.intellij.BibixIntellijProto.Action>(actions_);
-          bitField0_ |= 0x00000008;
+          bitField0_ |= 0x00000040;
          }
       }
 
@@ -3078,7 +2967,7 @@ public final class BibixIntellijProto {
       public Builder clearActions() {
         if (actionsBuilder_ == null) {
           actions_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000008);
+          bitField0_ = (bitField0_ & ~0x00000040);
           onChanged();
         } else {
           actionsBuilder_.clear();
@@ -3155,7 +3044,7 @@ public final class BibixIntellijProto {
           actionsBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
               com.giyeok.bibix.intellij.BibixIntellijProto.Action, com.giyeok.bibix.intellij.BibixIntellijProto.Action.Builder, com.giyeok.bibix.intellij.BibixIntellijProto.ActionOrBuilder>(
                   actions_,
-                  ((bitField0_ & 0x00000008) != 0),
+                  ((bitField0_ & 0x00000040) != 0),
                   getParentForChildren(),
                   isClean());
           actions_ = null;
@@ -3195,7 +3084,18 @@ public final class BibixIntellijProto {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return new BibixProjectInfo(input, extensionRegistry);
+        Builder builder = newBuilder();
+        try {
+          builder.mergeFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          throw e.setUnfinishedMessage(builder.buildPartial());
+        } catch (com.google.protobuf.UninitializedMessageException e) {
+          throw e.asInvalidProtocolBufferException().setUnfinishedMessage(builder.buildPartial());
+        } catch (java.io.IOException e) {
+          throw new com.google.protobuf.InvalidProtocolBufferException(e)
+              .setUnfinishedMessage(builder.buildPartial());
+        }
+        return builder.buildPartial();
       }
     };
 
@@ -3431,8 +3331,10 @@ public final class BibixIntellijProto {
       moduleRootPath_ = "";
       contentRoots_ = java.util.Collections.emptyList();
       usingSdks_ = java.util.Collections.emptyList();
-      moduleDeps_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-      libraryDeps_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      moduleDeps_ =
+          com.google.protobuf.LazyStringArrayList.emptyList();
+      libraryDeps_ =
+          com.google.protobuf.LazyStringArrayList.emptyList();
     }
 
     @java.lang.Override
@@ -3442,115 +3344,6 @@ public final class BibixIntellijProto {
       return new Module();
     }
 
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-      return this.unknownFields;
-    }
-    private Module(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      this();
-      if (extensionRegistry == null) {
-        throw new java.lang.NullPointerException();
-      }
-      int mutable_bitField0_ = 0;
-      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder();
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            case 10: {
-              java.lang.String s = input.readStringRequireUtf8();
-
-              moduleName_ = s;
-              break;
-            }
-            case 18: {
-              java.lang.String s = input.readStringRequireUtf8();
-
-              moduleType_ = s;
-              break;
-            }
-            case 26: {
-              java.lang.String s = input.readStringRequireUtf8();
-
-              moduleRootPath_ = s;
-              break;
-            }
-            case 34: {
-              if (!((mutable_bitField0_ & 0x00000001) != 0)) {
-                contentRoots_ = new java.util.ArrayList<com.giyeok.bibix.intellij.BibixIntellijProto.ContentRoot>();
-                mutable_bitField0_ |= 0x00000001;
-              }
-              contentRoots_.add(
-                  input.readMessage(com.giyeok.bibix.intellij.BibixIntellijProto.ContentRoot.parser(), extensionRegistry));
-              break;
-            }
-            case 42: {
-              if (!((mutable_bitField0_ & 0x00000002) != 0)) {
-                usingSdks_ = new java.util.ArrayList<com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion>();
-                mutable_bitField0_ |= 0x00000002;
-              }
-              usingSdks_.add(
-                  input.readMessage(com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion.parser(), extensionRegistry));
-              break;
-            }
-            case 50: {
-              java.lang.String s = input.readStringRequireUtf8();
-              if (!((mutable_bitField0_ & 0x00000004) != 0)) {
-                moduleDeps_ = new com.google.protobuf.LazyStringArrayList();
-                mutable_bitField0_ |= 0x00000004;
-              }
-              moduleDeps_.add(s);
-              break;
-            }
-            case 58: {
-              java.lang.String s = input.readStringRequireUtf8();
-              if (!((mutable_bitField0_ & 0x00000008) != 0)) {
-                libraryDeps_ = new com.google.protobuf.LazyStringArrayList();
-                mutable_bitField0_ |= 0x00000008;
-              }
-              libraryDeps_.add(s);
-              break;
-            }
-            default: {
-              if (!parseUnknownField(
-                  input, unknownFields, extensionRegistry, tag)) {
-                done = true;
-              }
-              break;
-            }
-          }
-        }
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw e.setUnfinishedMessage(this);
-      } catch (java.io.IOException e) {
-        throw new com.google.protobuf.InvalidProtocolBufferException(
-            e).setUnfinishedMessage(this);
-      } finally {
-        if (((mutable_bitField0_ & 0x00000001) != 0)) {
-          contentRoots_ = java.util.Collections.unmodifiableList(contentRoots_);
-        }
-        if (((mutable_bitField0_ & 0x00000002) != 0)) {
-          usingSdks_ = java.util.Collections.unmodifiableList(usingSdks_);
-        }
-        if (((mutable_bitField0_ & 0x00000004) != 0)) {
-          moduleDeps_ = moduleDeps_.getUnmodifiableView();
-        }
-        if (((mutable_bitField0_ & 0x00000008) != 0)) {
-          libraryDeps_ = libraryDeps_.getUnmodifiableView();
-        }
-        this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
-      }
-    }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
       return com.giyeok.bibix.intellij.BibixIntellijProto.internal_static_com_giyeok_bibix_intellij_Module_descriptor;
@@ -3565,7 +3358,8 @@ public final class BibixIntellijProto {
     }
 
     public static final int MODULE_NAME_FIELD_NUMBER = 1;
-    private volatile java.lang.Object moduleName_;
+    @SuppressWarnings("serial")
+    private volatile java.lang.Object moduleName_ = "";
     /**
      * <code>string module_name = 1;</code>
      * @return The moduleName.
@@ -3603,7 +3397,8 @@ public final class BibixIntellijProto {
     }
 
     public static final int MODULE_TYPE_FIELD_NUMBER = 2;
-    private volatile java.lang.Object moduleType_;
+    @SuppressWarnings("serial")
+    private volatile java.lang.Object moduleType_ = "";
     /**
      * <pre>
      * java, ktjvm, scala, ...
@@ -3649,7 +3444,8 @@ public final class BibixIntellijProto {
     }
 
     public static final int MODULE_ROOT_PATH_FIELD_NUMBER = 3;
-    private volatile java.lang.Object moduleRootPath_;
+    @SuppressWarnings("serial")
+    private volatile java.lang.Object moduleRootPath_ = "";
     /**
      * <code>string module_root_path = 3;</code>
      * @return The moduleRootPath.
@@ -3687,6 +3483,7 @@ public final class BibixIntellijProto {
     }
 
     public static final int CONTENT_ROOTS_FIELD_NUMBER = 4;
+    @SuppressWarnings("serial")
     private java.util.List<com.giyeok.bibix.intellij.BibixIntellijProto.ContentRoot> contentRoots_;
     /**
      * <pre>
@@ -3747,6 +3544,7 @@ public final class BibixIntellijProto {
     }
 
     public static final int USING_SDKS_FIELD_NUMBER = 5;
+    @SuppressWarnings("serial")
     private java.util.List<com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion> usingSdks_;
     /**
      * <code>repeated .com.giyeok.bibix.intellij.SdkVersion using_sdks = 5;</code>
@@ -3787,7 +3585,9 @@ public final class BibixIntellijProto {
     }
 
     public static final int MODULE_DEPS_FIELD_NUMBER = 6;
-    private com.google.protobuf.LazyStringList moduleDeps_;
+    @SuppressWarnings("serial")
+    private com.google.protobuf.LazyStringArrayList moduleDeps_ =
+        com.google.protobuf.LazyStringArrayList.emptyList();
     /**
      * <pre>
      * dependent한 module 이름 목록
@@ -3838,7 +3638,9 @@ public final class BibixIntellijProto {
     }
 
     public static final int LIBRARY_DEPS_FIELD_NUMBER = 7;
-    private com.google.protobuf.LazyStringList libraryDeps_;
+    @SuppressWarnings("serial")
+    private com.google.protobuf.LazyStringArrayList libraryDeps_ =
+        com.google.protobuf.LazyStringArrayList.emptyList();
     /**
      * <pre>
      * dependent한 라이브러리 id 목록
@@ -3923,7 +3725,7 @@ public final class BibixIntellijProto {
       for (int i = 0; i < libraryDeps_.size(); i++) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 7, libraryDeps_.getRaw(i));
       }
-      unknownFields.writeTo(output);
+      getUnknownFields().writeTo(output);
     }
 
     @java.lang.Override
@@ -3965,7 +3767,7 @@ public final class BibixIntellijProto {
         size += dataSize;
         size += 1 * getLibraryDepsList().size();
       }
-      size += unknownFields.getSerializedSize();
+      size += getUnknownFields().getSerializedSize();
       memoizedSize = size;
       return size;
     }
@@ -3994,7 +3796,7 @@ public final class BibixIntellijProto {
           .equals(other.getModuleDepsList())) return false;
       if (!getLibraryDepsList()
           .equals(other.getLibraryDepsList())) return false;
-      if (!unknownFields.equals(other.unknownFields)) return false;
+      if (!getUnknownFields().equals(other.getUnknownFields())) return false;
       return true;
     }
 
@@ -4027,7 +3829,7 @@ public final class BibixIntellijProto {
         hash = (37 * hash) + LIBRARY_DEPS_FIELD_NUMBER;
         hash = (53 * hash) + getLibraryDepsList().hashCode();
       }
-      hash = (29 * hash) + unknownFields.hashCode();
+      hash = (29 * hash) + getUnknownFields().hashCode();
       memoizedHashCode = hash;
       return hash;
     }
@@ -4144,46 +3946,39 @@ public final class BibixIntellijProto {
 
       // Construct using com.giyeok.bibix.intellij.BibixIntellijProto.Module.newBuilder()
       private Builder() {
-        maybeForceBuilderInitialization();
+
       }
 
       private Builder(
           com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
         super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
-          getContentRootsFieldBuilder();
-          getUsingSdksFieldBuilder();
-        }
+
       }
       @java.lang.Override
       public Builder clear() {
         super.clear();
+        bitField0_ = 0;
         moduleName_ = "";
-
         moduleType_ = "";
-
         moduleRootPath_ = "";
-
         if (contentRootsBuilder_ == null) {
           contentRoots_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000001);
         } else {
+          contentRoots_ = null;
           contentRootsBuilder_.clear();
         }
+        bitField0_ = (bitField0_ & ~0x00000008);
         if (usingSdksBuilder_ == null) {
           usingSdks_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000002);
         } else {
+          usingSdks_ = null;
           usingSdksBuilder_.clear();
         }
-        moduleDeps_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-        bitField0_ = (bitField0_ & ~0x00000004);
-        libraryDeps_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-        bitField0_ = (bitField0_ & ~0x00000008);
+        bitField0_ = (bitField0_ & ~0x00000010);
+        moduleDeps_ =
+            com.google.protobuf.LazyStringArrayList.emptyList();
+        libraryDeps_ =
+            com.google.protobuf.LazyStringArrayList.emptyList();
         return this;
       }
 
@@ -4210,74 +4005,54 @@ public final class BibixIntellijProto {
       @java.lang.Override
       public com.giyeok.bibix.intellij.BibixIntellijProto.Module buildPartial() {
         com.giyeok.bibix.intellij.BibixIntellijProto.Module result = new com.giyeok.bibix.intellij.BibixIntellijProto.Module(this);
-        int from_bitField0_ = bitField0_;
-        result.moduleName_ = moduleName_;
-        result.moduleType_ = moduleType_;
-        result.moduleRootPath_ = moduleRootPath_;
+        buildPartialRepeatedFields(result);
+        if (bitField0_ != 0) { buildPartial0(result); }
+        onBuilt();
+        return result;
+      }
+
+      private void buildPartialRepeatedFields(com.giyeok.bibix.intellij.BibixIntellijProto.Module result) {
         if (contentRootsBuilder_ == null) {
-          if (((bitField0_ & 0x00000001) != 0)) {
+          if (((bitField0_ & 0x00000008) != 0)) {
             contentRoots_ = java.util.Collections.unmodifiableList(contentRoots_);
-            bitField0_ = (bitField0_ & ~0x00000001);
+            bitField0_ = (bitField0_ & ~0x00000008);
           }
           result.contentRoots_ = contentRoots_;
         } else {
           result.contentRoots_ = contentRootsBuilder_.build();
         }
         if (usingSdksBuilder_ == null) {
-          if (((bitField0_ & 0x00000002) != 0)) {
+          if (((bitField0_ & 0x00000010) != 0)) {
             usingSdks_ = java.util.Collections.unmodifiableList(usingSdks_);
-            bitField0_ = (bitField0_ & ~0x00000002);
+            bitField0_ = (bitField0_ & ~0x00000010);
           }
           result.usingSdks_ = usingSdks_;
         } else {
           result.usingSdks_ = usingSdksBuilder_.build();
         }
-        if (((bitField0_ & 0x00000004) != 0)) {
-          moduleDeps_ = moduleDeps_.getUnmodifiableView();
-          bitField0_ = (bitField0_ & ~0x00000004);
-        }
-        result.moduleDeps_ = moduleDeps_;
-        if (((bitField0_ & 0x00000008) != 0)) {
-          libraryDeps_ = libraryDeps_.getUnmodifiableView();
-          bitField0_ = (bitField0_ & ~0x00000008);
-        }
-        result.libraryDeps_ = libraryDeps_;
-        onBuilt();
-        return result;
       }
 
-      @java.lang.Override
-      public Builder clone() {
-        return super.clone();
+      private void buildPartial0(com.giyeok.bibix.intellij.BibixIntellijProto.Module result) {
+        int from_bitField0_ = bitField0_;
+        if (((from_bitField0_ & 0x00000001) != 0)) {
+          result.moduleName_ = moduleName_;
+        }
+        if (((from_bitField0_ & 0x00000002) != 0)) {
+          result.moduleType_ = moduleType_;
+        }
+        if (((from_bitField0_ & 0x00000004) != 0)) {
+          result.moduleRootPath_ = moduleRootPath_;
+        }
+        if (((from_bitField0_ & 0x00000020) != 0)) {
+          moduleDeps_.makeImmutable();
+          result.moduleDeps_ = moduleDeps_;
+        }
+        if (((from_bitField0_ & 0x00000040) != 0)) {
+          libraryDeps_.makeImmutable();
+          result.libraryDeps_ = libraryDeps_;
+        }
       }
-      @java.lang.Override
-      public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return super.setField(field, value);
-      }
-      @java.lang.Override
-      public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return super.clearField(field);
-      }
-      @java.lang.Override
-      public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return super.clearOneof(oneof);
-      }
-      @java.lang.Override
-      public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, java.lang.Object value) {
-        return super.setRepeatedField(field, index, value);
-      }
-      @java.lang.Override
-      public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return super.addRepeatedField(field, value);
-      }
+
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof com.giyeok.bibix.intellij.BibixIntellijProto.Module) {
@@ -4292,21 +4067,24 @@ public final class BibixIntellijProto {
         if (other == com.giyeok.bibix.intellij.BibixIntellijProto.Module.getDefaultInstance()) return this;
         if (!other.getModuleName().isEmpty()) {
           moduleName_ = other.moduleName_;
+          bitField0_ |= 0x00000001;
           onChanged();
         }
         if (!other.getModuleType().isEmpty()) {
           moduleType_ = other.moduleType_;
+          bitField0_ |= 0x00000002;
           onChanged();
         }
         if (!other.getModuleRootPath().isEmpty()) {
           moduleRootPath_ = other.moduleRootPath_;
+          bitField0_ |= 0x00000004;
           onChanged();
         }
         if (contentRootsBuilder_ == null) {
           if (!other.contentRoots_.isEmpty()) {
             if (contentRoots_.isEmpty()) {
               contentRoots_ = other.contentRoots_;
-              bitField0_ = (bitField0_ & ~0x00000001);
+              bitField0_ = (bitField0_ & ~0x00000008);
             } else {
               ensureContentRootsIsMutable();
               contentRoots_.addAll(other.contentRoots_);
@@ -4319,7 +4097,7 @@ public final class BibixIntellijProto {
               contentRootsBuilder_.dispose();
               contentRootsBuilder_ = null;
               contentRoots_ = other.contentRoots_;
-              bitField0_ = (bitField0_ & ~0x00000001);
+              bitField0_ = (bitField0_ & ~0x00000008);
               contentRootsBuilder_ = 
                 com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
                    getContentRootsFieldBuilder() : null;
@@ -4332,7 +4110,7 @@ public final class BibixIntellijProto {
           if (!other.usingSdks_.isEmpty()) {
             if (usingSdks_.isEmpty()) {
               usingSdks_ = other.usingSdks_;
-              bitField0_ = (bitField0_ & ~0x00000002);
+              bitField0_ = (bitField0_ & ~0x00000010);
             } else {
               ensureUsingSdksIsMutable();
               usingSdks_.addAll(other.usingSdks_);
@@ -4345,7 +4123,7 @@ public final class BibixIntellijProto {
               usingSdksBuilder_.dispose();
               usingSdksBuilder_ = null;
               usingSdks_ = other.usingSdks_;
-              bitField0_ = (bitField0_ & ~0x00000002);
+              bitField0_ = (bitField0_ & ~0x00000010);
               usingSdksBuilder_ = 
                 com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
                    getUsingSdksFieldBuilder() : null;
@@ -4357,7 +4135,7 @@ public final class BibixIntellijProto {
         if (!other.moduleDeps_.isEmpty()) {
           if (moduleDeps_.isEmpty()) {
             moduleDeps_ = other.moduleDeps_;
-            bitField0_ = (bitField0_ & ~0x00000004);
+            bitField0_ |= 0x00000020;
           } else {
             ensureModuleDepsIsMutable();
             moduleDeps_.addAll(other.moduleDeps_);
@@ -4367,14 +4145,14 @@ public final class BibixIntellijProto {
         if (!other.libraryDeps_.isEmpty()) {
           if (libraryDeps_.isEmpty()) {
             libraryDeps_ = other.libraryDeps_;
-            bitField0_ = (bitField0_ & ~0x00000008);
+            bitField0_ |= 0x00000040;
           } else {
             ensureLibraryDepsIsMutable();
             libraryDeps_.addAll(other.libraryDeps_);
           }
           onChanged();
         }
-        this.mergeUnknownFields(other.unknownFields);
+        this.mergeUnknownFields(other.getUnknownFields());
         onChanged();
         return this;
       }
@@ -4389,17 +4167,83 @@ public final class BibixIntellijProto {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        com.giyeok.bibix.intellij.BibixIntellijProto.Module parsedMessage = null;
+        if (extensionRegistry == null) {
+          throw new java.lang.NullPointerException();
+        }
         try {
-          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+          boolean done = false;
+          while (!done) {
+            int tag = input.readTag();
+            switch (tag) {
+              case 0:
+                done = true;
+                break;
+              case 10: {
+                moduleName_ = input.readStringRequireUtf8();
+                bitField0_ |= 0x00000001;
+                break;
+              } // case 10
+              case 18: {
+                moduleType_ = input.readStringRequireUtf8();
+                bitField0_ |= 0x00000002;
+                break;
+              } // case 18
+              case 26: {
+                moduleRootPath_ = input.readStringRequireUtf8();
+                bitField0_ |= 0x00000004;
+                break;
+              } // case 26
+              case 34: {
+                com.giyeok.bibix.intellij.BibixIntellijProto.ContentRoot m =
+                    input.readMessage(
+                        com.giyeok.bibix.intellij.BibixIntellijProto.ContentRoot.parser(),
+                        extensionRegistry);
+                if (contentRootsBuilder_ == null) {
+                  ensureContentRootsIsMutable();
+                  contentRoots_.add(m);
+                } else {
+                  contentRootsBuilder_.addMessage(m);
+                }
+                break;
+              } // case 34
+              case 42: {
+                com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion m =
+                    input.readMessage(
+                        com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion.parser(),
+                        extensionRegistry);
+                if (usingSdksBuilder_ == null) {
+                  ensureUsingSdksIsMutable();
+                  usingSdks_.add(m);
+                } else {
+                  usingSdksBuilder_.addMessage(m);
+                }
+                break;
+              } // case 42
+              case 50: {
+                java.lang.String s = input.readStringRequireUtf8();
+                ensureModuleDepsIsMutable();
+                moduleDeps_.add(s);
+                break;
+              } // case 50
+              case 58: {
+                java.lang.String s = input.readStringRequireUtf8();
+                ensureLibraryDepsIsMutable();
+                libraryDeps_.add(s);
+                break;
+              } // case 58
+              default: {
+                if (!super.parseUnknownField(input, extensionRegistry, tag)) {
+                  done = true; // was an endgroup tag
+                }
+                break;
+              } // default:
+            } // switch (tag)
+          } // while (!done)
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (com.giyeok.bibix.intellij.BibixIntellijProto.Module) e.getUnfinishedMessage();
           throw e.unwrapIOException();
         } finally {
-          if (parsedMessage != null) {
-            mergeFrom(parsedMessage);
-          }
-        }
+          onChanged();
+        } // finally
         return this;
       }
       private int bitField0_;
@@ -4445,11 +4289,9 @@ public final class BibixIntellijProto {
        */
       public Builder setModuleName(
           java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
+        if (value == null) { throw new NullPointerException(); }
         moduleName_ = value;
+        bitField0_ |= 0x00000001;
         onChanged();
         return this;
       }
@@ -4458,8 +4300,8 @@ public final class BibixIntellijProto {
        * @return This builder for chaining.
        */
       public Builder clearModuleName() {
-        
         moduleName_ = getDefaultInstance().getModuleName();
+        bitField0_ = (bitField0_ & ~0x00000001);
         onChanged();
         return this;
       }
@@ -4470,12 +4312,10 @@ public final class BibixIntellijProto {
        */
       public Builder setModuleNameBytes(
           com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
+        if (value == null) { throw new NullPointerException(); }
+        checkByteStringIsUtf8(value);
         moduleName_ = value;
+        bitField0_ |= 0x00000001;
         onChanged();
         return this;
       }
@@ -4533,11 +4373,9 @@ public final class BibixIntellijProto {
        */
       public Builder setModuleType(
           java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
+        if (value == null) { throw new NullPointerException(); }
         moduleType_ = value;
+        bitField0_ |= 0x00000002;
         onChanged();
         return this;
       }
@@ -4550,8 +4388,8 @@ public final class BibixIntellijProto {
        * @return This builder for chaining.
        */
       public Builder clearModuleType() {
-        
         moduleType_ = getDefaultInstance().getModuleType();
+        bitField0_ = (bitField0_ & ~0x00000002);
         onChanged();
         return this;
       }
@@ -4566,12 +4404,10 @@ public final class BibixIntellijProto {
        */
       public Builder setModuleTypeBytes(
           com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
+        if (value == null) { throw new NullPointerException(); }
+        checkByteStringIsUtf8(value);
         moduleType_ = value;
+        bitField0_ |= 0x00000002;
         onChanged();
         return this;
       }
@@ -4617,11 +4453,9 @@ public final class BibixIntellijProto {
        */
       public Builder setModuleRootPath(
           java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
+        if (value == null) { throw new NullPointerException(); }
         moduleRootPath_ = value;
+        bitField0_ |= 0x00000004;
         onChanged();
         return this;
       }
@@ -4630,8 +4464,8 @@ public final class BibixIntellijProto {
        * @return This builder for chaining.
        */
       public Builder clearModuleRootPath() {
-        
         moduleRootPath_ = getDefaultInstance().getModuleRootPath();
+        bitField0_ = (bitField0_ & ~0x00000004);
         onChanged();
         return this;
       }
@@ -4642,12 +4476,10 @@ public final class BibixIntellijProto {
        */
       public Builder setModuleRootPathBytes(
           com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
+        if (value == null) { throw new NullPointerException(); }
+        checkByteStringIsUtf8(value);
         moduleRootPath_ = value;
+        bitField0_ |= 0x00000004;
         onChanged();
         return this;
       }
@@ -4655,9 +4487,9 @@ public final class BibixIntellijProto {
       private java.util.List<com.giyeok.bibix.intellij.BibixIntellijProto.ContentRoot> contentRoots_ =
         java.util.Collections.emptyList();
       private void ensureContentRootsIsMutable() {
-        if (!((bitField0_ & 0x00000001) != 0)) {
+        if (!((bitField0_ & 0x00000008) != 0)) {
           contentRoots_ = new java.util.ArrayList<com.giyeok.bibix.intellij.BibixIntellijProto.ContentRoot>(contentRoots_);
-          bitField0_ |= 0x00000001;
+          bitField0_ |= 0x00000008;
          }
       }
 
@@ -4851,7 +4683,7 @@ public final class BibixIntellijProto {
       public Builder clearContentRoots() {
         if (contentRootsBuilder_ == null) {
           contentRoots_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000001);
+          bitField0_ = (bitField0_ & ~0x00000008);
           onChanged();
         } else {
           contentRootsBuilder_.clear();
@@ -4956,7 +4788,7 @@ public final class BibixIntellijProto {
           contentRootsBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
               com.giyeok.bibix.intellij.BibixIntellijProto.ContentRoot, com.giyeok.bibix.intellij.BibixIntellijProto.ContentRoot.Builder, com.giyeok.bibix.intellij.BibixIntellijProto.ContentRootOrBuilder>(
                   contentRoots_,
-                  ((bitField0_ & 0x00000001) != 0),
+                  ((bitField0_ & 0x00000008) != 0),
                   getParentForChildren(),
                   isClean());
           contentRoots_ = null;
@@ -4967,9 +4799,9 @@ public final class BibixIntellijProto {
       private java.util.List<com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion> usingSdks_ =
         java.util.Collections.emptyList();
       private void ensureUsingSdksIsMutable() {
-        if (!((bitField0_ & 0x00000002) != 0)) {
+        if (!((bitField0_ & 0x00000010) != 0)) {
           usingSdks_ = new java.util.ArrayList<com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion>(usingSdks_);
-          bitField0_ |= 0x00000002;
+          bitField0_ |= 0x00000010;
          }
       }
 
@@ -5119,7 +4951,7 @@ public final class BibixIntellijProto {
       public Builder clearUsingSdks() {
         if (usingSdksBuilder_ == null) {
           usingSdks_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000002);
+          bitField0_ = (bitField0_ & ~0x00000010);
           onChanged();
         } else {
           usingSdksBuilder_.clear();
@@ -5196,7 +5028,7 @@ public final class BibixIntellijProto {
           usingSdksBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
               com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion, com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion.Builder, com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersionOrBuilder>(
                   usingSdks_,
-                  ((bitField0_ & 0x00000002) != 0),
+                  ((bitField0_ & 0x00000010) != 0),
                   getParentForChildren(),
                   isClean());
           usingSdks_ = null;
@@ -5204,12 +5036,13 @@ public final class BibixIntellijProto {
         return usingSdksBuilder_;
       }
 
-      private com.google.protobuf.LazyStringList moduleDeps_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      private com.google.protobuf.LazyStringArrayList moduleDeps_ =
+          com.google.protobuf.LazyStringArrayList.emptyList();
       private void ensureModuleDepsIsMutable() {
-        if (!((bitField0_ & 0x00000004) != 0)) {
+        if (!moduleDeps_.isModifiable()) {
           moduleDeps_ = new com.google.protobuf.LazyStringArrayList(moduleDeps_);
-          bitField0_ |= 0x00000004;
-         }
+        }
+        bitField0_ |= 0x00000020;
       }
       /**
        * <pre>
@@ -5221,7 +5054,8 @@ public final class BibixIntellijProto {
        */
       public com.google.protobuf.ProtocolStringList
           getModuleDepsList() {
-        return moduleDeps_.getUnmodifiableView();
+        moduleDeps_.makeImmutable();
+        return moduleDeps_;
       }
       /**
        * <pre>
@@ -5271,11 +5105,10 @@ public final class BibixIntellijProto {
        */
       public Builder setModuleDeps(
           int index, java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  ensureModuleDepsIsMutable();
+        if (value == null) { throw new NullPointerException(); }
+        ensureModuleDepsIsMutable();
         moduleDeps_.set(index, value);
+        bitField0_ |= 0x00000020;
         onChanged();
         return this;
       }
@@ -5290,11 +5123,10 @@ public final class BibixIntellijProto {
        */
       public Builder addModuleDeps(
           java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  ensureModuleDepsIsMutable();
+        if (value == null) { throw new NullPointerException(); }
+        ensureModuleDepsIsMutable();
         moduleDeps_.add(value);
+        bitField0_ |= 0x00000020;
         onChanged();
         return this;
       }
@@ -5312,6 +5144,7 @@ public final class BibixIntellijProto {
         ensureModuleDepsIsMutable();
         com.google.protobuf.AbstractMessageLite.Builder.addAll(
             values, moduleDeps_);
+        bitField0_ |= 0x00000020;
         onChanged();
         return this;
       }
@@ -5324,8 +5157,9 @@ public final class BibixIntellijProto {
        * @return This builder for chaining.
        */
       public Builder clearModuleDeps() {
-        moduleDeps_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-        bitField0_ = (bitField0_ & ~0x00000004);
+        moduleDeps_ =
+          com.google.protobuf.LazyStringArrayList.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000020);;
         onChanged();
         return this;
       }
@@ -5340,22 +5174,22 @@ public final class BibixIntellijProto {
        */
       public Builder addModuleDepsBytes(
           com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
+        if (value == null) { throw new NullPointerException(); }
+        checkByteStringIsUtf8(value);
         ensureModuleDepsIsMutable();
         moduleDeps_.add(value);
+        bitField0_ |= 0x00000020;
         onChanged();
         return this;
       }
 
-      private com.google.protobuf.LazyStringList libraryDeps_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      private com.google.protobuf.LazyStringArrayList libraryDeps_ =
+          com.google.protobuf.LazyStringArrayList.emptyList();
       private void ensureLibraryDepsIsMutable() {
-        if (!((bitField0_ & 0x00000008) != 0)) {
+        if (!libraryDeps_.isModifiable()) {
           libraryDeps_ = new com.google.protobuf.LazyStringArrayList(libraryDeps_);
-          bitField0_ |= 0x00000008;
-         }
+        }
+        bitField0_ |= 0x00000040;
       }
       /**
        * <pre>
@@ -5367,7 +5201,8 @@ public final class BibixIntellijProto {
        */
       public com.google.protobuf.ProtocolStringList
           getLibraryDepsList() {
-        return libraryDeps_.getUnmodifiableView();
+        libraryDeps_.makeImmutable();
+        return libraryDeps_;
       }
       /**
        * <pre>
@@ -5417,11 +5252,10 @@ public final class BibixIntellijProto {
        */
       public Builder setLibraryDeps(
           int index, java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  ensureLibraryDepsIsMutable();
+        if (value == null) { throw new NullPointerException(); }
+        ensureLibraryDepsIsMutable();
         libraryDeps_.set(index, value);
+        bitField0_ |= 0x00000040;
         onChanged();
         return this;
       }
@@ -5436,11 +5270,10 @@ public final class BibixIntellijProto {
        */
       public Builder addLibraryDeps(
           java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  ensureLibraryDepsIsMutable();
+        if (value == null) { throw new NullPointerException(); }
+        ensureLibraryDepsIsMutable();
         libraryDeps_.add(value);
+        bitField0_ |= 0x00000040;
         onChanged();
         return this;
       }
@@ -5458,6 +5291,7 @@ public final class BibixIntellijProto {
         ensureLibraryDepsIsMutable();
         com.google.protobuf.AbstractMessageLite.Builder.addAll(
             values, libraryDeps_);
+        bitField0_ |= 0x00000040;
         onChanged();
         return this;
       }
@@ -5470,8 +5304,9 @@ public final class BibixIntellijProto {
        * @return This builder for chaining.
        */
       public Builder clearLibraryDeps() {
-        libraryDeps_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-        bitField0_ = (bitField0_ & ~0x00000008);
+        libraryDeps_ =
+          com.google.protobuf.LazyStringArrayList.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000040);;
         onChanged();
         return this;
       }
@@ -5486,12 +5321,11 @@ public final class BibixIntellijProto {
        */
       public Builder addLibraryDepsBytes(
           com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
+        if (value == null) { throw new NullPointerException(); }
+        checkByteStringIsUtf8(value);
         ensureLibraryDepsIsMutable();
         libraryDeps_.add(value);
+        bitField0_ |= 0x00000040;
         onChanged();
         return this;
       }
@@ -5528,7 +5362,18 @@ public final class BibixIntellijProto {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return new Module(input, extensionRegistry);
+        Builder builder = newBuilder();
+        try {
+          builder.mergeFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          throw e.setUnfinishedMessage(builder.buildPartial());
+        } catch (com.google.protobuf.UninitializedMessageException e) {
+          throw e.asInvalidProtocolBufferException().setUnfinishedMessage(builder.buildPartial());
+        } catch (java.io.IOException e) {
+          throw new com.google.protobuf.InvalidProtocolBufferException(e)
+              .setUnfinishedMessage(builder.buildPartial());
+        }
+        return builder.buildPartial();
       }
     };
 
@@ -5613,66 +5458,6 @@ public final class BibixIntellijProto {
       return new ContentRoot();
     }
 
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-      return this.unknownFields;
-    }
-    private ContentRoot(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      this();
-      if (extensionRegistry == null) {
-        throw new java.lang.NullPointerException();
-      }
-      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder();
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            case 10: {
-              java.lang.String s = input.readStringRequireUtf8();
-
-              contentRootName_ = s;
-              break;
-            }
-            case 18: {
-              java.lang.String s = input.readStringRequireUtf8();
-
-              contentRootType_ = s;
-              break;
-            }
-            case 26: {
-              java.lang.String s = input.readStringRequireUtf8();
-
-              contentRootPath_ = s;
-              break;
-            }
-            default: {
-              if (!parseUnknownField(
-                  input, unknownFields, extensionRegistry, tag)) {
-                done = true;
-              }
-              break;
-            }
-          }
-        }
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw e.setUnfinishedMessage(this);
-      } catch (java.io.IOException e) {
-        throw new com.google.protobuf.InvalidProtocolBufferException(
-            e).setUnfinishedMessage(this);
-      } finally {
-        this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
-      }
-    }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
       return com.giyeok.bibix.intellij.BibixIntellijProto.internal_static_com_giyeok_bibix_intellij_ContentRoot_descriptor;
@@ -5687,7 +5472,8 @@ public final class BibixIntellijProto {
     }
 
     public static final int CONTENT_ROOT_NAME_FIELD_NUMBER = 1;
-    private volatile java.lang.Object contentRootName_;
+    @SuppressWarnings("serial")
+    private volatile java.lang.Object contentRootName_ = "";
     /**
      * <code>string content_root_name = 1;</code>
      * @return The contentRootName.
@@ -5725,7 +5511,8 @@ public final class BibixIntellijProto {
     }
 
     public static final int CONTENT_ROOT_TYPE_FIELD_NUMBER = 2;
-    private volatile java.lang.Object contentRootType_;
+    @SuppressWarnings("serial")
+    private volatile java.lang.Object contentRootType_ = "";
     /**
      * <code>string content_root_type = 2;</code>
      * @return The contentRootType.
@@ -5763,7 +5550,8 @@ public final class BibixIntellijProto {
     }
 
     public static final int CONTENT_ROOT_PATH_FIELD_NUMBER = 3;
-    private volatile java.lang.Object contentRootPath_;
+    @SuppressWarnings("serial")
+    private volatile java.lang.Object contentRootPath_ = "";
     /**
      * <code>string content_root_path = 3;</code>
      * @return The contentRootPath.
@@ -5823,7 +5611,7 @@ public final class BibixIntellijProto {
       if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(contentRootPath_)) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 3, contentRootPath_);
       }
-      unknownFields.writeTo(output);
+      getUnknownFields().writeTo(output);
     }
 
     @java.lang.Override
@@ -5841,7 +5629,7 @@ public final class BibixIntellijProto {
       if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(contentRootPath_)) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, contentRootPath_);
       }
-      size += unknownFields.getSerializedSize();
+      size += getUnknownFields().getSerializedSize();
       memoizedSize = size;
       return size;
     }
@@ -5862,7 +5650,7 @@ public final class BibixIntellijProto {
           .equals(other.getContentRootType())) return false;
       if (!getContentRootPath()
           .equals(other.getContentRootPath())) return false;
-      if (!unknownFields.equals(other.unknownFields)) return false;
+      if (!getUnknownFields().equals(other.getUnknownFields())) return false;
       return true;
     }
 
@@ -5879,7 +5667,7 @@ public final class BibixIntellijProto {
       hash = (53 * hash) + getContentRootType().hashCode();
       hash = (37 * hash) + CONTENT_ROOT_PATH_FIELD_NUMBER;
       hash = (53 * hash) + getContentRootPath().hashCode();
-      hash = (29 * hash) + unknownFields.hashCode();
+      hash = (29 * hash) + getUnknownFields().hashCode();
       memoizedHashCode = hash;
       return hash;
     }
@@ -5996,28 +5784,21 @@ public final class BibixIntellijProto {
 
       // Construct using com.giyeok.bibix.intellij.BibixIntellijProto.ContentRoot.newBuilder()
       private Builder() {
-        maybeForceBuilderInitialization();
+
       }
 
       private Builder(
           com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
         super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
-        }
+
       }
       @java.lang.Override
       public Builder clear() {
         super.clear();
+        bitField0_ = 0;
         contentRootName_ = "";
-
         contentRootType_ = "";
-
         contentRootPath_ = "";
-
         return this;
       }
 
@@ -6044,45 +5825,24 @@ public final class BibixIntellijProto {
       @java.lang.Override
       public com.giyeok.bibix.intellij.BibixIntellijProto.ContentRoot buildPartial() {
         com.giyeok.bibix.intellij.BibixIntellijProto.ContentRoot result = new com.giyeok.bibix.intellij.BibixIntellijProto.ContentRoot(this);
-        result.contentRootName_ = contentRootName_;
-        result.contentRootType_ = contentRootType_;
-        result.contentRootPath_ = contentRootPath_;
+        if (bitField0_ != 0) { buildPartial0(result); }
         onBuilt();
         return result;
       }
 
-      @java.lang.Override
-      public Builder clone() {
-        return super.clone();
+      private void buildPartial0(com.giyeok.bibix.intellij.BibixIntellijProto.ContentRoot result) {
+        int from_bitField0_ = bitField0_;
+        if (((from_bitField0_ & 0x00000001) != 0)) {
+          result.contentRootName_ = contentRootName_;
+        }
+        if (((from_bitField0_ & 0x00000002) != 0)) {
+          result.contentRootType_ = contentRootType_;
+        }
+        if (((from_bitField0_ & 0x00000004) != 0)) {
+          result.contentRootPath_ = contentRootPath_;
+        }
       }
-      @java.lang.Override
-      public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return super.setField(field, value);
-      }
-      @java.lang.Override
-      public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return super.clearField(field);
-      }
-      @java.lang.Override
-      public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return super.clearOneof(oneof);
-      }
-      @java.lang.Override
-      public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, java.lang.Object value) {
-        return super.setRepeatedField(field, index, value);
-      }
-      @java.lang.Override
-      public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return super.addRepeatedField(field, value);
-      }
+
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof com.giyeok.bibix.intellij.BibixIntellijProto.ContentRoot) {
@@ -6097,17 +5857,20 @@ public final class BibixIntellijProto {
         if (other == com.giyeok.bibix.intellij.BibixIntellijProto.ContentRoot.getDefaultInstance()) return this;
         if (!other.getContentRootName().isEmpty()) {
           contentRootName_ = other.contentRootName_;
+          bitField0_ |= 0x00000001;
           onChanged();
         }
         if (!other.getContentRootType().isEmpty()) {
           contentRootType_ = other.contentRootType_;
+          bitField0_ |= 0x00000002;
           onChanged();
         }
         if (!other.getContentRootPath().isEmpty()) {
           contentRootPath_ = other.contentRootPath_;
+          bitField0_ |= 0x00000004;
           onChanged();
         }
-        this.mergeUnknownFields(other.unknownFields);
+        this.mergeUnknownFields(other.getUnknownFields());
         onChanged();
         return this;
       }
@@ -6122,19 +5885,48 @@ public final class BibixIntellijProto {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        com.giyeok.bibix.intellij.BibixIntellijProto.ContentRoot parsedMessage = null;
+        if (extensionRegistry == null) {
+          throw new java.lang.NullPointerException();
+        }
         try {
-          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+          boolean done = false;
+          while (!done) {
+            int tag = input.readTag();
+            switch (tag) {
+              case 0:
+                done = true;
+                break;
+              case 10: {
+                contentRootName_ = input.readStringRequireUtf8();
+                bitField0_ |= 0x00000001;
+                break;
+              } // case 10
+              case 18: {
+                contentRootType_ = input.readStringRequireUtf8();
+                bitField0_ |= 0x00000002;
+                break;
+              } // case 18
+              case 26: {
+                contentRootPath_ = input.readStringRequireUtf8();
+                bitField0_ |= 0x00000004;
+                break;
+              } // case 26
+              default: {
+                if (!super.parseUnknownField(input, extensionRegistry, tag)) {
+                  done = true; // was an endgroup tag
+                }
+                break;
+              } // default:
+            } // switch (tag)
+          } // while (!done)
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (com.giyeok.bibix.intellij.BibixIntellijProto.ContentRoot) e.getUnfinishedMessage();
           throw e.unwrapIOException();
         } finally {
-          if (parsedMessage != null) {
-            mergeFrom(parsedMessage);
-          }
-        }
+          onChanged();
+        } // finally
         return this;
       }
+      private int bitField0_;
 
       private java.lang.Object contentRootName_ = "";
       /**
@@ -6177,11 +5969,9 @@ public final class BibixIntellijProto {
        */
       public Builder setContentRootName(
           java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
+        if (value == null) { throw new NullPointerException(); }
         contentRootName_ = value;
+        bitField0_ |= 0x00000001;
         onChanged();
         return this;
       }
@@ -6190,8 +5980,8 @@ public final class BibixIntellijProto {
        * @return This builder for chaining.
        */
       public Builder clearContentRootName() {
-        
         contentRootName_ = getDefaultInstance().getContentRootName();
+        bitField0_ = (bitField0_ & ~0x00000001);
         onChanged();
         return this;
       }
@@ -6202,12 +5992,10 @@ public final class BibixIntellijProto {
        */
       public Builder setContentRootNameBytes(
           com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
+        if (value == null) { throw new NullPointerException(); }
+        checkByteStringIsUtf8(value);
         contentRootName_ = value;
+        bitField0_ |= 0x00000001;
         onChanged();
         return this;
       }
@@ -6253,11 +6041,9 @@ public final class BibixIntellijProto {
        */
       public Builder setContentRootType(
           java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
+        if (value == null) { throw new NullPointerException(); }
         contentRootType_ = value;
+        bitField0_ |= 0x00000002;
         onChanged();
         return this;
       }
@@ -6266,8 +6052,8 @@ public final class BibixIntellijProto {
        * @return This builder for chaining.
        */
       public Builder clearContentRootType() {
-        
         contentRootType_ = getDefaultInstance().getContentRootType();
+        bitField0_ = (bitField0_ & ~0x00000002);
         onChanged();
         return this;
       }
@@ -6278,12 +6064,10 @@ public final class BibixIntellijProto {
        */
       public Builder setContentRootTypeBytes(
           com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
+        if (value == null) { throw new NullPointerException(); }
+        checkByteStringIsUtf8(value);
         contentRootType_ = value;
+        bitField0_ |= 0x00000002;
         onChanged();
         return this;
       }
@@ -6329,11 +6113,9 @@ public final class BibixIntellijProto {
        */
       public Builder setContentRootPath(
           java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
+        if (value == null) { throw new NullPointerException(); }
         contentRootPath_ = value;
+        bitField0_ |= 0x00000004;
         onChanged();
         return this;
       }
@@ -6342,8 +6124,8 @@ public final class BibixIntellijProto {
        * @return This builder for chaining.
        */
       public Builder clearContentRootPath() {
-        
         contentRootPath_ = getDefaultInstance().getContentRootPath();
+        bitField0_ = (bitField0_ & ~0x00000004);
         onChanged();
         return this;
       }
@@ -6354,12 +6136,10 @@ public final class BibixIntellijProto {
        */
       public Builder setContentRootPathBytes(
           com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
+        if (value == null) { throw new NullPointerException(); }
+        checkByteStringIsUtf8(value);
         contentRootPath_ = value;
+        bitField0_ |= 0x00000004;
         onChanged();
         return this;
       }
@@ -6396,7 +6176,18 @@ public final class BibixIntellijProto {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return new ContentRoot(input, extensionRegistry);
+        Builder builder = newBuilder();
+        try {
+          builder.mergeFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          throw e.setUnfinishedMessage(builder.buildPartial());
+        } catch (com.google.protobuf.UninitializedMessageException e) {
+          throw e.asInvalidProtocolBufferException().setUnfinishedMessage(builder.buildPartial());
+        } catch (java.io.IOException e) {
+          throw new com.google.protobuf.InvalidProtocolBufferException(e)
+              .setUnfinishedMessage(builder.buildPartial());
+        }
+        return builder.buildPartial();
       }
     };
 
@@ -6471,7 +6262,7 @@ public final class BibixIntellijProto {
     com.google.protobuf.ByteString
         getScalaSdkVersionBytes();
 
-    public com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion.SdkCase getSdkCase();
+    com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion.SdkCase getSdkCase();
   }
   /**
    * Protobuf type {@code com.giyeok.bibix.intellij.SdkVersion}
@@ -6495,66 +6286,6 @@ public final class BibixIntellijProto {
       return new SdkVersion();
     }
 
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-      return this.unknownFields;
-    }
-    private SdkVersion(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      this();
-      if (extensionRegistry == null) {
-        throw new java.lang.NullPointerException();
-      }
-      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder();
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            case 10: {
-              java.lang.String s = input.readStringRequireUtf8();
-              sdkCase_ = 1;
-              sdk_ = s;
-              break;
-            }
-            case 18: {
-              java.lang.String s = input.readStringRequireUtf8();
-              sdkCase_ = 2;
-              sdk_ = s;
-              break;
-            }
-            case 26: {
-              java.lang.String s = input.readStringRequireUtf8();
-              sdkCase_ = 3;
-              sdk_ = s;
-              break;
-            }
-            default: {
-              if (!parseUnknownField(
-                  input, unknownFields, extensionRegistry, tag)) {
-                done = true;
-              }
-              break;
-            }
-          }
-        }
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw e.setUnfinishedMessage(this);
-      } catch (java.io.IOException e) {
-        throw new com.google.protobuf.InvalidProtocolBufferException(
-            e).setUnfinishedMessage(this);
-      } finally {
-        this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
-      }
-    }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
       return com.giyeok.bibix.intellij.BibixIntellijProto.internal_static_com_giyeok_bibix_intellij_SdkVersion_descriptor;
@@ -6569,6 +6300,7 @@ public final class BibixIntellijProto {
     }
 
     private int sdkCase_ = 0;
+    @SuppressWarnings("serial")
     private java.lang.Object sdk_;
     public enum SdkCase
         implements com.google.protobuf.Internal.EnumLite,
@@ -6790,7 +6522,7 @@ public final class BibixIntellijProto {
       if (sdkCase_ == 3) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 3, sdk_);
       }
-      unknownFields.writeTo(output);
+      getUnknownFields().writeTo(output);
     }
 
     @java.lang.Override
@@ -6808,7 +6540,7 @@ public final class BibixIntellijProto {
       if (sdkCase_ == 3) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, sdk_);
       }
-      size += unknownFields.getSerializedSize();
+      size += getUnknownFields().getSerializedSize();
       memoizedSize = size;
       return size;
     }
@@ -6840,7 +6572,7 @@ public final class BibixIntellijProto {
         case 0:
         default:
       }
-      if (!unknownFields.equals(other.unknownFields)) return false;
+      if (!getUnknownFields().equals(other.getUnknownFields())) return false;
       return true;
     }
 
@@ -6867,7 +6599,7 @@ public final class BibixIntellijProto {
         case 0:
         default:
       }
-      hash = (29 * hash) + unknownFields.hashCode();
+      hash = (29 * hash) + getUnknownFields().hashCode();
       memoizedHashCode = hash;
       return hash;
     }
@@ -6984,22 +6716,18 @@ public final class BibixIntellijProto {
 
       // Construct using com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion.newBuilder()
       private Builder() {
-        maybeForceBuilderInitialization();
+
       }
 
       private Builder(
           com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
         super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
-        }
+
       }
       @java.lang.Override
       public Builder clear() {
         super.clear();
+        bitField0_ = 0;
         sdkCase_ = 0;
         sdk_ = null;
         return this;
@@ -7028,52 +6756,21 @@ public final class BibixIntellijProto {
       @java.lang.Override
       public com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion buildPartial() {
         com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion result = new com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion(this);
-        if (sdkCase_ == 1) {
-          result.sdk_ = sdk_;
-        }
-        if (sdkCase_ == 2) {
-          result.sdk_ = sdk_;
-        }
-        if (sdkCase_ == 3) {
-          result.sdk_ = sdk_;
-        }
-        result.sdkCase_ = sdkCase_;
+        if (bitField0_ != 0) { buildPartial0(result); }
+        buildPartialOneofs(result);
         onBuilt();
         return result;
       }
 
-      @java.lang.Override
-      public Builder clone() {
-        return super.clone();
+      private void buildPartial0(com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion result) {
+        int from_bitField0_ = bitField0_;
       }
-      @java.lang.Override
-      public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return super.setField(field, value);
+
+      private void buildPartialOneofs(com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion result) {
+        result.sdkCase_ = sdkCase_;
+        result.sdk_ = this.sdk_;
       }
-      @java.lang.Override
-      public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return super.clearField(field);
-      }
-      @java.lang.Override
-      public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return super.clearOneof(oneof);
-      }
-      @java.lang.Override
-      public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, java.lang.Object value) {
-        return super.setRepeatedField(field, index, value);
-      }
-      @java.lang.Override
-      public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return super.addRepeatedField(field, value);
-      }
+
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion) {
@@ -7109,7 +6806,7 @@ public final class BibixIntellijProto {
             break;
           }
         }
-        this.mergeUnknownFields(other.unknownFields);
+        this.mergeUnknownFields(other.getUnknownFields());
         onChanged();
         return this;
       }
@@ -7124,17 +6821,48 @@ public final class BibixIntellijProto {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion parsedMessage = null;
+        if (extensionRegistry == null) {
+          throw new java.lang.NullPointerException();
+        }
         try {
-          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+          boolean done = false;
+          while (!done) {
+            int tag = input.readTag();
+            switch (tag) {
+              case 0:
+                done = true;
+                break;
+              case 10: {
+                java.lang.String s = input.readStringRequireUtf8();
+                sdkCase_ = 1;
+                sdk_ = s;
+                break;
+              } // case 10
+              case 18: {
+                java.lang.String s = input.readStringRequireUtf8();
+                sdkCase_ = 2;
+                sdk_ = s;
+                break;
+              } // case 18
+              case 26: {
+                java.lang.String s = input.readStringRequireUtf8();
+                sdkCase_ = 3;
+                sdk_ = s;
+                break;
+              } // case 26
+              default: {
+                if (!super.parseUnknownField(input, extensionRegistry, tag)) {
+                  done = true; // was an endgroup tag
+                }
+                break;
+              } // default:
+            } // switch (tag)
+          } // while (!done)
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion) e.getUnfinishedMessage();
           throw e.unwrapIOException();
         } finally {
-          if (parsedMessage != null) {
-            mergeFrom(parsedMessage);
-          }
-        }
+          onChanged();
+        } // finally
         return this;
       }
       private int sdkCase_ = 0;
@@ -7152,6 +6880,7 @@ public final class BibixIntellijProto {
         return this;
       }
 
+      private int bitField0_;
 
       /**
        * <code>string jdk_version = 1;</code>
@@ -7213,10 +6942,8 @@ public final class BibixIntellijProto {
        */
       public Builder setJdkVersion(
           java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  sdkCase_ = 1;
+        if (value == null) { throw new NullPointerException(); }
+        sdkCase_ = 1;
         sdk_ = value;
         onChanged();
         return this;
@@ -7240,10 +6967,8 @@ public final class BibixIntellijProto {
        */
       public Builder setJdkVersionBytes(
           com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
+        if (value == null) { throw new NullPointerException(); }
+        checkByteStringIsUtf8(value);
         sdkCase_ = 1;
         sdk_ = value;
         onChanged();
@@ -7310,10 +7035,8 @@ public final class BibixIntellijProto {
        */
       public Builder setKtjvmSdkVersion(
           java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  sdkCase_ = 2;
+        if (value == null) { throw new NullPointerException(); }
+        sdkCase_ = 2;
         sdk_ = value;
         onChanged();
         return this;
@@ -7337,10 +7060,8 @@ public final class BibixIntellijProto {
        */
       public Builder setKtjvmSdkVersionBytes(
           com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
+        if (value == null) { throw new NullPointerException(); }
+        checkByteStringIsUtf8(value);
         sdkCase_ = 2;
         sdk_ = value;
         onChanged();
@@ -7407,10 +7128,8 @@ public final class BibixIntellijProto {
        */
       public Builder setScalaSdkVersion(
           java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  sdkCase_ = 3;
+        if (value == null) { throw new NullPointerException(); }
+        sdkCase_ = 3;
         sdk_ = value;
         onChanged();
         return this;
@@ -7434,10 +7153,8 @@ public final class BibixIntellijProto {
        */
       public Builder setScalaSdkVersionBytes(
           com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
+        if (value == null) { throw new NullPointerException(); }
+        checkByteStringIsUtf8(value);
         sdkCase_ = 3;
         sdk_ = value;
         onChanged();
@@ -7476,7 +7193,18 @@ public final class BibixIntellijProto {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return new SdkVersion(input, extensionRegistry);
+        Builder builder = newBuilder();
+        try {
+          builder.mergeFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          throw e.setUnfinishedMessage(builder.buildPartial());
+        } catch (com.google.protobuf.UninitializedMessageException e) {
+          throw e.asInvalidProtocolBufferException().setUnfinishedMessage(builder.buildPartial());
+        } catch (java.io.IOException e) {
+          throw new com.google.protobuf.InvalidProtocolBufferException(e)
+              .setUnfinishedMessage(builder.buildPartial());
+        }
+        return builder.buildPartial();
       }
     };
 
@@ -7589,8 +7317,10 @@ public final class BibixIntellijProto {
     private ExternalLibrary() {
       libraryId_ = "";
       description_ = "";
-      classpaths_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-      sources_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      classpaths_ =
+          com.google.protobuf.LazyStringArrayList.emptyList();
+      sources_ =
+          com.google.protobuf.LazyStringArrayList.emptyList();
     }
 
     @java.lang.Override
@@ -7600,85 +7330,6 @@ public final class BibixIntellijProto {
       return new ExternalLibrary();
     }
 
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-      return this.unknownFields;
-    }
-    private ExternalLibrary(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      this();
-      if (extensionRegistry == null) {
-        throw new java.lang.NullPointerException();
-      }
-      int mutable_bitField0_ = 0;
-      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder();
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            case 10: {
-              java.lang.String s = input.readStringRequireUtf8();
-
-              libraryId_ = s;
-              break;
-            }
-            case 18: {
-              java.lang.String s = input.readStringRequireUtf8();
-
-              description_ = s;
-              break;
-            }
-            case 26: {
-              java.lang.String s = input.readStringRequireUtf8();
-              if (!((mutable_bitField0_ & 0x00000001) != 0)) {
-                classpaths_ = new com.google.protobuf.LazyStringArrayList();
-                mutable_bitField0_ |= 0x00000001;
-              }
-              classpaths_.add(s);
-              break;
-            }
-            case 34: {
-              java.lang.String s = input.readStringRequireUtf8();
-              if (!((mutable_bitField0_ & 0x00000002) != 0)) {
-                sources_ = new com.google.protobuf.LazyStringArrayList();
-                mutable_bitField0_ |= 0x00000002;
-              }
-              sources_.add(s);
-              break;
-            }
-            default: {
-              if (!parseUnknownField(
-                  input, unknownFields, extensionRegistry, tag)) {
-                done = true;
-              }
-              break;
-            }
-          }
-        }
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw e.setUnfinishedMessage(this);
-      } catch (java.io.IOException e) {
-        throw new com.google.protobuf.InvalidProtocolBufferException(
-            e).setUnfinishedMessage(this);
-      } finally {
-        if (((mutable_bitField0_ & 0x00000001) != 0)) {
-          classpaths_ = classpaths_.getUnmodifiableView();
-        }
-        if (((mutable_bitField0_ & 0x00000002) != 0)) {
-          sources_ = sources_.getUnmodifiableView();
-        }
-        this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
-      }
-    }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
       return com.giyeok.bibix.intellij.BibixIntellijProto.internal_static_com_giyeok_bibix_intellij_ExternalLibrary_descriptor;
@@ -7693,7 +7344,8 @@ public final class BibixIntellijProto {
     }
 
     public static final int LIBRARY_ID_FIELD_NUMBER = 1;
-    private volatile java.lang.Object libraryId_;
+    @SuppressWarnings("serial")
+    private volatile java.lang.Object libraryId_ = "";
     /**
      * <code>string library_id = 1;</code>
      * @return The libraryId.
@@ -7731,7 +7383,8 @@ public final class BibixIntellijProto {
     }
 
     public static final int DESCRIPTION_FIELD_NUMBER = 2;
-    private volatile java.lang.Object description_;
+    @SuppressWarnings("serial")
+    private volatile java.lang.Object description_ = "";
     /**
      * <code>string description = 2;</code>
      * @return The description.
@@ -7769,7 +7422,9 @@ public final class BibixIntellijProto {
     }
 
     public static final int CLASSPATHS_FIELD_NUMBER = 3;
-    private com.google.protobuf.LazyStringList classpaths_;
+    @SuppressWarnings("serial")
+    private com.google.protobuf.LazyStringArrayList classpaths_ =
+        com.google.protobuf.LazyStringArrayList.emptyList();
     /**
      * <code>repeated string classpaths = 3;</code>
      * @return A list containing the classpaths.
@@ -7804,7 +7459,9 @@ public final class BibixIntellijProto {
     }
 
     public static final int SOURCES_FIELD_NUMBER = 4;
-    private com.google.protobuf.LazyStringList sources_;
+    @SuppressWarnings("serial")
+    private com.google.protobuf.LazyStringArrayList sources_ =
+        com.google.protobuf.LazyStringArrayList.emptyList();
     /**
      * <code>repeated string sources = 4;</code>
      * @return A list containing the sources.
@@ -7864,7 +7521,7 @@ public final class BibixIntellijProto {
       for (int i = 0; i < sources_.size(); i++) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 4, sources_.getRaw(i));
       }
-      unknownFields.writeTo(output);
+      getUnknownFields().writeTo(output);
     }
 
     @java.lang.Override
@@ -7895,7 +7552,7 @@ public final class BibixIntellijProto {
         size += dataSize;
         size += 1 * getSourcesList().size();
       }
-      size += unknownFields.getSerializedSize();
+      size += getUnknownFields().getSerializedSize();
       memoizedSize = size;
       return size;
     }
@@ -7918,7 +7575,7 @@ public final class BibixIntellijProto {
           .equals(other.getClasspathsList())) return false;
       if (!getSourcesList()
           .equals(other.getSourcesList())) return false;
-      if (!unknownFields.equals(other.unknownFields)) return false;
+      if (!getUnknownFields().equals(other.getUnknownFields())) return false;
       return true;
     }
 
@@ -7941,7 +7598,7 @@ public final class BibixIntellijProto {
         hash = (37 * hash) + SOURCES_FIELD_NUMBER;
         hash = (53 * hash) + getSourcesList().hashCode();
       }
-      hash = (29 * hash) + unknownFields.hashCode();
+      hash = (29 * hash) + getUnknownFields().hashCode();
       memoizedHashCode = hash;
       return hash;
     }
@@ -8058,30 +7715,24 @@ public final class BibixIntellijProto {
 
       // Construct using com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary.newBuilder()
       private Builder() {
-        maybeForceBuilderInitialization();
+
       }
 
       private Builder(
           com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
         super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
-        }
+
       }
       @java.lang.Override
       public Builder clear() {
         super.clear();
+        bitField0_ = 0;
         libraryId_ = "";
-
         description_ = "";
-
-        classpaths_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-        bitField0_ = (bitField0_ & ~0x00000001);
-        sources_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-        bitField0_ = (bitField0_ & ~0x00000002);
+        classpaths_ =
+            com.google.protobuf.LazyStringArrayList.emptyList();
+        sources_ =
+            com.google.protobuf.LazyStringArrayList.emptyList();
         return this;
       }
 
@@ -8108,55 +7759,29 @@ public final class BibixIntellijProto {
       @java.lang.Override
       public com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary buildPartial() {
         com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary result = new com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary(this);
-        int from_bitField0_ = bitField0_;
-        result.libraryId_ = libraryId_;
-        result.description_ = description_;
-        if (((bitField0_ & 0x00000001) != 0)) {
-          classpaths_ = classpaths_.getUnmodifiableView();
-          bitField0_ = (bitField0_ & ~0x00000001);
-        }
-        result.classpaths_ = classpaths_;
-        if (((bitField0_ & 0x00000002) != 0)) {
-          sources_ = sources_.getUnmodifiableView();
-          bitField0_ = (bitField0_ & ~0x00000002);
-        }
-        result.sources_ = sources_;
+        if (bitField0_ != 0) { buildPartial0(result); }
         onBuilt();
         return result;
       }
 
-      @java.lang.Override
-      public Builder clone() {
-        return super.clone();
+      private void buildPartial0(com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary result) {
+        int from_bitField0_ = bitField0_;
+        if (((from_bitField0_ & 0x00000001) != 0)) {
+          result.libraryId_ = libraryId_;
+        }
+        if (((from_bitField0_ & 0x00000002) != 0)) {
+          result.description_ = description_;
+        }
+        if (((from_bitField0_ & 0x00000004) != 0)) {
+          classpaths_.makeImmutable();
+          result.classpaths_ = classpaths_;
+        }
+        if (((from_bitField0_ & 0x00000008) != 0)) {
+          sources_.makeImmutable();
+          result.sources_ = sources_;
+        }
       }
-      @java.lang.Override
-      public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return super.setField(field, value);
-      }
-      @java.lang.Override
-      public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return super.clearField(field);
-      }
-      @java.lang.Override
-      public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return super.clearOneof(oneof);
-      }
-      @java.lang.Override
-      public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, java.lang.Object value) {
-        return super.setRepeatedField(field, index, value);
-      }
-      @java.lang.Override
-      public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return super.addRepeatedField(field, value);
-      }
+
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary) {
@@ -8171,16 +7796,18 @@ public final class BibixIntellijProto {
         if (other == com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary.getDefaultInstance()) return this;
         if (!other.getLibraryId().isEmpty()) {
           libraryId_ = other.libraryId_;
+          bitField0_ |= 0x00000001;
           onChanged();
         }
         if (!other.getDescription().isEmpty()) {
           description_ = other.description_;
+          bitField0_ |= 0x00000002;
           onChanged();
         }
         if (!other.classpaths_.isEmpty()) {
           if (classpaths_.isEmpty()) {
             classpaths_ = other.classpaths_;
-            bitField0_ = (bitField0_ & ~0x00000001);
+            bitField0_ |= 0x00000004;
           } else {
             ensureClasspathsIsMutable();
             classpaths_.addAll(other.classpaths_);
@@ -8190,14 +7817,14 @@ public final class BibixIntellijProto {
         if (!other.sources_.isEmpty()) {
           if (sources_.isEmpty()) {
             sources_ = other.sources_;
-            bitField0_ = (bitField0_ & ~0x00000002);
+            bitField0_ |= 0x00000008;
           } else {
             ensureSourcesIsMutable();
             sources_.addAll(other.sources_);
           }
           onChanged();
         }
-        this.mergeUnknownFields(other.unknownFields);
+        this.mergeUnknownFields(other.getUnknownFields());
         onChanged();
         return this;
       }
@@ -8212,17 +7839,52 @@ public final class BibixIntellijProto {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary parsedMessage = null;
+        if (extensionRegistry == null) {
+          throw new java.lang.NullPointerException();
+        }
         try {
-          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+          boolean done = false;
+          while (!done) {
+            int tag = input.readTag();
+            switch (tag) {
+              case 0:
+                done = true;
+                break;
+              case 10: {
+                libraryId_ = input.readStringRequireUtf8();
+                bitField0_ |= 0x00000001;
+                break;
+              } // case 10
+              case 18: {
+                description_ = input.readStringRequireUtf8();
+                bitField0_ |= 0x00000002;
+                break;
+              } // case 18
+              case 26: {
+                java.lang.String s = input.readStringRequireUtf8();
+                ensureClasspathsIsMutable();
+                classpaths_.add(s);
+                break;
+              } // case 26
+              case 34: {
+                java.lang.String s = input.readStringRequireUtf8();
+                ensureSourcesIsMutable();
+                sources_.add(s);
+                break;
+              } // case 34
+              default: {
+                if (!super.parseUnknownField(input, extensionRegistry, tag)) {
+                  done = true; // was an endgroup tag
+                }
+                break;
+              } // default:
+            } // switch (tag)
+          } // while (!done)
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary) e.getUnfinishedMessage();
           throw e.unwrapIOException();
         } finally {
-          if (parsedMessage != null) {
-            mergeFrom(parsedMessage);
-          }
-        }
+          onChanged();
+        } // finally
         return this;
       }
       private int bitField0_;
@@ -8268,11 +7930,9 @@ public final class BibixIntellijProto {
        */
       public Builder setLibraryId(
           java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
+        if (value == null) { throw new NullPointerException(); }
         libraryId_ = value;
+        bitField0_ |= 0x00000001;
         onChanged();
         return this;
       }
@@ -8281,8 +7941,8 @@ public final class BibixIntellijProto {
        * @return This builder for chaining.
        */
       public Builder clearLibraryId() {
-        
         libraryId_ = getDefaultInstance().getLibraryId();
+        bitField0_ = (bitField0_ & ~0x00000001);
         onChanged();
         return this;
       }
@@ -8293,12 +7953,10 @@ public final class BibixIntellijProto {
        */
       public Builder setLibraryIdBytes(
           com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
+        if (value == null) { throw new NullPointerException(); }
+        checkByteStringIsUtf8(value);
         libraryId_ = value;
+        bitField0_ |= 0x00000001;
         onChanged();
         return this;
       }
@@ -8344,11 +8002,9 @@ public final class BibixIntellijProto {
        */
       public Builder setDescription(
           java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
+        if (value == null) { throw new NullPointerException(); }
         description_ = value;
+        bitField0_ |= 0x00000002;
         onChanged();
         return this;
       }
@@ -8357,8 +8013,8 @@ public final class BibixIntellijProto {
        * @return This builder for chaining.
        */
       public Builder clearDescription() {
-        
         description_ = getDefaultInstance().getDescription();
+        bitField0_ = (bitField0_ & ~0x00000002);
         onChanged();
         return this;
       }
@@ -8369,22 +8025,21 @@ public final class BibixIntellijProto {
        */
       public Builder setDescriptionBytes(
           com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
+        if (value == null) { throw new NullPointerException(); }
+        checkByteStringIsUtf8(value);
         description_ = value;
+        bitField0_ |= 0x00000002;
         onChanged();
         return this;
       }
 
-      private com.google.protobuf.LazyStringList classpaths_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      private com.google.protobuf.LazyStringArrayList classpaths_ =
+          com.google.protobuf.LazyStringArrayList.emptyList();
       private void ensureClasspathsIsMutable() {
-        if (!((bitField0_ & 0x00000001) != 0)) {
+        if (!classpaths_.isModifiable()) {
           classpaths_ = new com.google.protobuf.LazyStringArrayList(classpaths_);
-          bitField0_ |= 0x00000001;
-         }
+        }
+        bitField0_ |= 0x00000004;
       }
       /**
        * <code>repeated string classpaths = 3;</code>
@@ -8392,7 +8047,8 @@ public final class BibixIntellijProto {
        */
       public com.google.protobuf.ProtocolStringList
           getClasspathsList() {
-        return classpaths_.getUnmodifiableView();
+        classpaths_.makeImmutable();
+        return classpaths_;
       }
       /**
        * <code>repeated string classpaths = 3;</code>
@@ -8426,11 +8082,10 @@ public final class BibixIntellijProto {
        */
       public Builder setClasspaths(
           int index, java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  ensureClasspathsIsMutable();
+        if (value == null) { throw new NullPointerException(); }
+        ensureClasspathsIsMutable();
         classpaths_.set(index, value);
+        bitField0_ |= 0x00000004;
         onChanged();
         return this;
       }
@@ -8441,11 +8096,10 @@ public final class BibixIntellijProto {
        */
       public Builder addClasspaths(
           java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  ensureClasspathsIsMutable();
+        if (value == null) { throw new NullPointerException(); }
+        ensureClasspathsIsMutable();
         classpaths_.add(value);
+        bitField0_ |= 0x00000004;
         onChanged();
         return this;
       }
@@ -8459,6 +8113,7 @@ public final class BibixIntellijProto {
         ensureClasspathsIsMutable();
         com.google.protobuf.AbstractMessageLite.Builder.addAll(
             values, classpaths_);
+        bitField0_ |= 0x00000004;
         onChanged();
         return this;
       }
@@ -8467,8 +8122,9 @@ public final class BibixIntellijProto {
        * @return This builder for chaining.
        */
       public Builder clearClasspaths() {
-        classpaths_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-        bitField0_ = (bitField0_ & ~0x00000001);
+        classpaths_ =
+          com.google.protobuf.LazyStringArrayList.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000004);;
         onChanged();
         return this;
       }
@@ -8479,22 +8135,22 @@ public final class BibixIntellijProto {
        */
       public Builder addClasspathsBytes(
           com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
+        if (value == null) { throw new NullPointerException(); }
+        checkByteStringIsUtf8(value);
         ensureClasspathsIsMutable();
         classpaths_.add(value);
+        bitField0_ |= 0x00000004;
         onChanged();
         return this;
       }
 
-      private com.google.protobuf.LazyStringList sources_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      private com.google.protobuf.LazyStringArrayList sources_ =
+          com.google.protobuf.LazyStringArrayList.emptyList();
       private void ensureSourcesIsMutable() {
-        if (!((bitField0_ & 0x00000002) != 0)) {
+        if (!sources_.isModifiable()) {
           sources_ = new com.google.protobuf.LazyStringArrayList(sources_);
-          bitField0_ |= 0x00000002;
-         }
+        }
+        bitField0_ |= 0x00000008;
       }
       /**
        * <code>repeated string sources = 4;</code>
@@ -8502,7 +8158,8 @@ public final class BibixIntellijProto {
        */
       public com.google.protobuf.ProtocolStringList
           getSourcesList() {
-        return sources_.getUnmodifiableView();
+        sources_.makeImmutable();
+        return sources_;
       }
       /**
        * <code>repeated string sources = 4;</code>
@@ -8536,11 +8193,10 @@ public final class BibixIntellijProto {
        */
       public Builder setSources(
           int index, java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  ensureSourcesIsMutable();
+        if (value == null) { throw new NullPointerException(); }
+        ensureSourcesIsMutable();
         sources_.set(index, value);
+        bitField0_ |= 0x00000008;
         onChanged();
         return this;
       }
@@ -8551,11 +8207,10 @@ public final class BibixIntellijProto {
        */
       public Builder addSources(
           java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  ensureSourcesIsMutable();
+        if (value == null) { throw new NullPointerException(); }
+        ensureSourcesIsMutable();
         sources_.add(value);
+        bitField0_ |= 0x00000008;
         onChanged();
         return this;
       }
@@ -8569,6 +8224,7 @@ public final class BibixIntellijProto {
         ensureSourcesIsMutable();
         com.google.protobuf.AbstractMessageLite.Builder.addAll(
             values, sources_);
+        bitField0_ |= 0x00000008;
         onChanged();
         return this;
       }
@@ -8577,8 +8233,9 @@ public final class BibixIntellijProto {
        * @return This builder for chaining.
        */
       public Builder clearSources() {
-        sources_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-        bitField0_ = (bitField0_ & ~0x00000002);
+        sources_ =
+          com.google.protobuf.LazyStringArrayList.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000008);;
         onChanged();
         return this;
       }
@@ -8589,12 +8246,11 @@ public final class BibixIntellijProto {
        */
       public Builder addSourcesBytes(
           com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
+        if (value == null) { throw new NullPointerException(); }
+        checkByteStringIsUtf8(value);
         ensureSourcesIsMutable();
         sources_.add(value);
+        bitField0_ |= 0x00000008;
         onChanged();
         return this;
       }
@@ -8631,7 +8287,18 @@ public final class BibixIntellijProto {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return new ExternalLibrary(input, extensionRegistry);
+        Builder builder = newBuilder();
+        try {
+          builder.mergeFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          throw e.setUnfinishedMessage(builder.buildPartial());
+        } catch (com.google.protobuf.UninitializedMessageException e) {
+          throw e.asInvalidProtocolBufferException().setUnfinishedMessage(builder.buildPartial());
+        } catch (java.io.IOException e) {
+          throw new com.google.protobuf.InvalidProtocolBufferException(e)
+              .setUnfinishedMessage(builder.buildPartial());
+        }
+        return builder.buildPartial();
       }
     };
 
@@ -8727,73 +8394,6 @@ public final class BibixIntellijProto {
       return new SdkInfo();
     }
 
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-      return this.unknownFields;
-    }
-    private SdkInfo(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      this();
-      if (extensionRegistry == null) {
-        throw new java.lang.NullPointerException();
-      }
-      int mutable_bitField0_ = 0;
-      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder();
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            case 10: {
-              if (!((mutable_bitField0_ & 0x00000001) != 0)) {
-                ktjvmSdks_ = new java.util.ArrayList<com.giyeok.bibix.intellij.BibixIntellijProto.KotlinJvmSdk>();
-                mutable_bitField0_ |= 0x00000001;
-              }
-              ktjvmSdks_.add(
-                  input.readMessage(com.giyeok.bibix.intellij.BibixIntellijProto.KotlinJvmSdk.parser(), extensionRegistry));
-              break;
-            }
-            case 18: {
-              if (!((mutable_bitField0_ & 0x00000002) != 0)) {
-                scalaSdks_ = new java.util.ArrayList<com.giyeok.bibix.intellij.BibixIntellijProto.ScalaSdk>();
-                mutable_bitField0_ |= 0x00000002;
-              }
-              scalaSdks_.add(
-                  input.readMessage(com.giyeok.bibix.intellij.BibixIntellijProto.ScalaSdk.parser(), extensionRegistry));
-              break;
-            }
-            default: {
-              if (!parseUnknownField(
-                  input, unknownFields, extensionRegistry, tag)) {
-                done = true;
-              }
-              break;
-            }
-          }
-        }
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw e.setUnfinishedMessage(this);
-      } catch (java.io.IOException e) {
-        throw new com.google.protobuf.InvalidProtocolBufferException(
-            e).setUnfinishedMessage(this);
-      } finally {
-        if (((mutable_bitField0_ & 0x00000001) != 0)) {
-          ktjvmSdks_ = java.util.Collections.unmodifiableList(ktjvmSdks_);
-        }
-        if (((mutable_bitField0_ & 0x00000002) != 0)) {
-          scalaSdks_ = java.util.Collections.unmodifiableList(scalaSdks_);
-        }
-        this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
-      }
-    }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
       return com.giyeok.bibix.intellij.BibixIntellijProto.internal_static_com_giyeok_bibix_intellij_SdkInfo_descriptor;
@@ -8808,6 +8408,7 @@ public final class BibixIntellijProto {
     }
 
     public static final int KTJVM_SDKS_FIELD_NUMBER = 1;
+    @SuppressWarnings("serial")
     private java.util.List<com.giyeok.bibix.intellij.BibixIntellijProto.KotlinJvmSdk> ktjvmSdks_;
     /**
      * <code>repeated .com.giyeok.bibix.intellij.KotlinJvmSdk ktjvm_sdks = 1;</code>
@@ -8848,6 +8449,7 @@ public final class BibixIntellijProto {
     }
 
     public static final int SCALA_SDKS_FIELD_NUMBER = 2;
+    @SuppressWarnings("serial")
     private java.util.List<com.giyeok.bibix.intellij.BibixIntellijProto.ScalaSdk> scalaSdks_;
     /**
      * <code>repeated .com.giyeok.bibix.intellij.ScalaSdk scala_sdks = 2;</code>
@@ -8907,7 +8509,7 @@ public final class BibixIntellijProto {
       for (int i = 0; i < scalaSdks_.size(); i++) {
         output.writeMessage(2, scalaSdks_.get(i));
       }
-      unknownFields.writeTo(output);
+      getUnknownFields().writeTo(output);
     }
 
     @java.lang.Override
@@ -8924,7 +8526,7 @@ public final class BibixIntellijProto {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(2, scalaSdks_.get(i));
       }
-      size += unknownFields.getSerializedSize();
+      size += getUnknownFields().getSerializedSize();
       memoizedSize = size;
       return size;
     }
@@ -8943,7 +8545,7 @@ public final class BibixIntellijProto {
           .equals(other.getKtjvmSdksList())) return false;
       if (!getScalaSdksList()
           .equals(other.getScalaSdksList())) return false;
-      if (!unknownFields.equals(other.unknownFields)) return false;
+      if (!getUnknownFields().equals(other.getUnknownFields())) return false;
       return true;
     }
 
@@ -8962,7 +8564,7 @@ public final class BibixIntellijProto {
         hash = (37 * hash) + SCALA_SDKS_FIELD_NUMBER;
         hash = (53 * hash) + getScalaSdksList().hashCode();
       }
-      hash = (29 * hash) + unknownFields.hashCode();
+      hash = (29 * hash) + getUnknownFields().hashCode();
       memoizedHashCode = hash;
       return hash;
     }
@@ -9079,36 +8681,32 @@ public final class BibixIntellijProto {
 
       // Construct using com.giyeok.bibix.intellij.BibixIntellijProto.SdkInfo.newBuilder()
       private Builder() {
-        maybeForceBuilderInitialization();
+
       }
 
       private Builder(
           com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
         super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
-          getKtjvmSdksFieldBuilder();
-          getScalaSdksFieldBuilder();
-        }
+
       }
       @java.lang.Override
       public Builder clear() {
         super.clear();
+        bitField0_ = 0;
         if (ktjvmSdksBuilder_ == null) {
           ktjvmSdks_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000001);
         } else {
+          ktjvmSdks_ = null;
           ktjvmSdksBuilder_.clear();
         }
+        bitField0_ = (bitField0_ & ~0x00000001);
         if (scalaSdksBuilder_ == null) {
           scalaSdks_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000002);
         } else {
+          scalaSdks_ = null;
           scalaSdksBuilder_.clear();
         }
+        bitField0_ = (bitField0_ & ~0x00000002);
         return this;
       }
 
@@ -9135,7 +8733,13 @@ public final class BibixIntellijProto {
       @java.lang.Override
       public com.giyeok.bibix.intellij.BibixIntellijProto.SdkInfo buildPartial() {
         com.giyeok.bibix.intellij.BibixIntellijProto.SdkInfo result = new com.giyeok.bibix.intellij.BibixIntellijProto.SdkInfo(this);
-        int from_bitField0_ = bitField0_;
+        buildPartialRepeatedFields(result);
+        if (bitField0_ != 0) { buildPartial0(result); }
+        onBuilt();
+        return result;
+      }
+
+      private void buildPartialRepeatedFields(com.giyeok.bibix.intellij.BibixIntellijProto.SdkInfo result) {
         if (ktjvmSdksBuilder_ == null) {
           if (((bitField0_ & 0x00000001) != 0)) {
             ktjvmSdks_ = java.util.Collections.unmodifiableList(ktjvmSdks_);
@@ -9154,42 +8758,12 @@ public final class BibixIntellijProto {
         } else {
           result.scalaSdks_ = scalaSdksBuilder_.build();
         }
-        onBuilt();
-        return result;
       }
 
-      @java.lang.Override
-      public Builder clone() {
-        return super.clone();
+      private void buildPartial0(com.giyeok.bibix.intellij.BibixIntellijProto.SdkInfo result) {
+        int from_bitField0_ = bitField0_;
       }
-      @java.lang.Override
-      public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return super.setField(field, value);
-      }
-      @java.lang.Override
-      public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return super.clearField(field);
-      }
-      @java.lang.Override
-      public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return super.clearOneof(oneof);
-      }
-      @java.lang.Override
-      public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, java.lang.Object value) {
-        return super.setRepeatedField(field, index, value);
-      }
-      @java.lang.Override
-      public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return super.addRepeatedField(field, value);
-      }
+
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof com.giyeok.bibix.intellij.BibixIntellijProto.SdkInfo) {
@@ -9254,7 +8828,7 @@ public final class BibixIntellijProto {
             }
           }
         }
-        this.mergeUnknownFields(other.unknownFields);
+        this.mergeUnknownFields(other.getUnknownFields());
         onChanged();
         return this;
       }
@@ -9269,17 +8843,56 @@ public final class BibixIntellijProto {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        com.giyeok.bibix.intellij.BibixIntellijProto.SdkInfo parsedMessage = null;
+        if (extensionRegistry == null) {
+          throw new java.lang.NullPointerException();
+        }
         try {
-          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+          boolean done = false;
+          while (!done) {
+            int tag = input.readTag();
+            switch (tag) {
+              case 0:
+                done = true;
+                break;
+              case 10: {
+                com.giyeok.bibix.intellij.BibixIntellijProto.KotlinJvmSdk m =
+                    input.readMessage(
+                        com.giyeok.bibix.intellij.BibixIntellijProto.KotlinJvmSdk.parser(),
+                        extensionRegistry);
+                if (ktjvmSdksBuilder_ == null) {
+                  ensureKtjvmSdksIsMutable();
+                  ktjvmSdks_.add(m);
+                } else {
+                  ktjvmSdksBuilder_.addMessage(m);
+                }
+                break;
+              } // case 10
+              case 18: {
+                com.giyeok.bibix.intellij.BibixIntellijProto.ScalaSdk m =
+                    input.readMessage(
+                        com.giyeok.bibix.intellij.BibixIntellijProto.ScalaSdk.parser(),
+                        extensionRegistry);
+                if (scalaSdksBuilder_ == null) {
+                  ensureScalaSdksIsMutable();
+                  scalaSdks_.add(m);
+                } else {
+                  scalaSdksBuilder_.addMessage(m);
+                }
+                break;
+              } // case 18
+              default: {
+                if (!super.parseUnknownField(input, extensionRegistry, tag)) {
+                  done = true; // was an endgroup tag
+                }
+                break;
+              } // default:
+            } // switch (tag)
+          } // while (!done)
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (com.giyeok.bibix.intellij.BibixIntellijProto.SdkInfo) e.getUnfinishedMessage();
           throw e.unwrapIOException();
         } finally {
-          if (parsedMessage != null) {
-            mergeFrom(parsedMessage);
-          }
-        }
+          onChanged();
+        } // finally
         return this;
       }
       private int bitField0_;
@@ -9796,7 +9409,18 @@ public final class BibixIntellijProto {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return new SdkInfo(input, extensionRegistry);
+        Builder builder = newBuilder();
+        try {
+          builder.mergeFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          throw e.setUnfinishedMessage(builder.buildPartial());
+        } catch (com.google.protobuf.UninitializedMessageException e) {
+          throw e.asInvalidProtocolBufferException().setUnfinishedMessage(builder.buildPartial());
+        } catch (java.io.IOException e) {
+          throw new com.google.protobuf.InvalidProtocolBufferException(e)
+              .setUnfinishedMessage(builder.buildPartial());
+        }
+        return builder.buildPartial();
       }
     };
 
@@ -9871,7 +9495,8 @@ public final class BibixIntellijProto {
     }
     private KotlinJvmSdk() {
       version_ = "";
-      sdkLibraryIds_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      sdkLibraryIds_ =
+          com.google.protobuf.LazyStringArrayList.emptyList();
     }
 
     @java.lang.Override
@@ -9881,67 +9506,6 @@ public final class BibixIntellijProto {
       return new KotlinJvmSdk();
     }
 
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-      return this.unknownFields;
-    }
-    private KotlinJvmSdk(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      this();
-      if (extensionRegistry == null) {
-        throw new java.lang.NullPointerException();
-      }
-      int mutable_bitField0_ = 0;
-      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder();
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            case 10: {
-              java.lang.String s = input.readStringRequireUtf8();
-
-              version_ = s;
-              break;
-            }
-            case 18: {
-              java.lang.String s = input.readStringRequireUtf8();
-              if (!((mutable_bitField0_ & 0x00000001) != 0)) {
-                sdkLibraryIds_ = new com.google.protobuf.LazyStringArrayList();
-                mutable_bitField0_ |= 0x00000001;
-              }
-              sdkLibraryIds_.add(s);
-              break;
-            }
-            default: {
-              if (!parseUnknownField(
-                  input, unknownFields, extensionRegistry, tag)) {
-                done = true;
-              }
-              break;
-            }
-          }
-        }
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw e.setUnfinishedMessage(this);
-      } catch (java.io.IOException e) {
-        throw new com.google.protobuf.InvalidProtocolBufferException(
-            e).setUnfinishedMessage(this);
-      } finally {
-        if (((mutable_bitField0_ & 0x00000001) != 0)) {
-          sdkLibraryIds_ = sdkLibraryIds_.getUnmodifiableView();
-        }
-        this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
-      }
-    }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
       return com.giyeok.bibix.intellij.BibixIntellijProto.internal_static_com_giyeok_bibix_intellij_KotlinJvmSdk_descriptor;
@@ -9956,7 +9520,8 @@ public final class BibixIntellijProto {
     }
 
     public static final int VERSION_FIELD_NUMBER = 1;
-    private volatile java.lang.Object version_;
+    @SuppressWarnings("serial")
+    private volatile java.lang.Object version_ = "";
     /**
      * <code>string version = 1;</code>
      * @return The version.
@@ -9994,7 +9559,9 @@ public final class BibixIntellijProto {
     }
 
     public static final int SDK_LIBRARY_IDS_FIELD_NUMBER = 2;
-    private com.google.protobuf.LazyStringList sdkLibraryIds_;
+    @SuppressWarnings("serial")
+    private com.google.protobuf.LazyStringArrayList sdkLibraryIds_ =
+        com.google.protobuf.LazyStringArrayList.emptyList();
     /**
      * <code>repeated string sdk_library_ids = 2;</code>
      * @return A list containing the sdkLibraryIds.
@@ -10048,7 +9615,7 @@ public final class BibixIntellijProto {
       for (int i = 0; i < sdkLibraryIds_.size(); i++) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 2, sdkLibraryIds_.getRaw(i));
       }
-      unknownFields.writeTo(output);
+      getUnknownFields().writeTo(output);
     }
 
     @java.lang.Override
@@ -10068,7 +9635,7 @@ public final class BibixIntellijProto {
         size += dataSize;
         size += 1 * getSdkLibraryIdsList().size();
       }
-      size += unknownFields.getSerializedSize();
+      size += getUnknownFields().getSerializedSize();
       memoizedSize = size;
       return size;
     }
@@ -10087,7 +9654,7 @@ public final class BibixIntellijProto {
           .equals(other.getVersion())) return false;
       if (!getSdkLibraryIdsList()
           .equals(other.getSdkLibraryIdsList())) return false;
-      if (!unknownFields.equals(other.unknownFields)) return false;
+      if (!getUnknownFields().equals(other.getUnknownFields())) return false;
       return true;
     }
 
@@ -10104,7 +9671,7 @@ public final class BibixIntellijProto {
         hash = (37 * hash) + SDK_LIBRARY_IDS_FIELD_NUMBER;
         hash = (53 * hash) + getSdkLibraryIdsList().hashCode();
       }
-      hash = (29 * hash) + unknownFields.hashCode();
+      hash = (29 * hash) + getUnknownFields().hashCode();
       memoizedHashCode = hash;
       return hash;
     }
@@ -10221,26 +9788,21 @@ public final class BibixIntellijProto {
 
       // Construct using com.giyeok.bibix.intellij.BibixIntellijProto.KotlinJvmSdk.newBuilder()
       private Builder() {
-        maybeForceBuilderInitialization();
+
       }
 
       private Builder(
           com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
         super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
-        }
+
       }
       @java.lang.Override
       public Builder clear() {
         super.clear();
+        bitField0_ = 0;
         version_ = "";
-
-        sdkLibraryIds_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-        bitField0_ = (bitField0_ & ~0x00000001);
+        sdkLibraryIds_ =
+            com.google.protobuf.LazyStringArrayList.emptyList();
         return this;
       }
 
@@ -10267,49 +9829,22 @@ public final class BibixIntellijProto {
       @java.lang.Override
       public com.giyeok.bibix.intellij.BibixIntellijProto.KotlinJvmSdk buildPartial() {
         com.giyeok.bibix.intellij.BibixIntellijProto.KotlinJvmSdk result = new com.giyeok.bibix.intellij.BibixIntellijProto.KotlinJvmSdk(this);
-        int from_bitField0_ = bitField0_;
-        result.version_ = version_;
-        if (((bitField0_ & 0x00000001) != 0)) {
-          sdkLibraryIds_ = sdkLibraryIds_.getUnmodifiableView();
-          bitField0_ = (bitField0_ & ~0x00000001);
-        }
-        result.sdkLibraryIds_ = sdkLibraryIds_;
+        if (bitField0_ != 0) { buildPartial0(result); }
         onBuilt();
         return result;
       }
 
-      @java.lang.Override
-      public Builder clone() {
-        return super.clone();
+      private void buildPartial0(com.giyeok.bibix.intellij.BibixIntellijProto.KotlinJvmSdk result) {
+        int from_bitField0_ = bitField0_;
+        if (((from_bitField0_ & 0x00000001) != 0)) {
+          result.version_ = version_;
+        }
+        if (((from_bitField0_ & 0x00000002) != 0)) {
+          sdkLibraryIds_.makeImmutable();
+          result.sdkLibraryIds_ = sdkLibraryIds_;
+        }
       }
-      @java.lang.Override
-      public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return super.setField(field, value);
-      }
-      @java.lang.Override
-      public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return super.clearField(field);
-      }
-      @java.lang.Override
-      public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return super.clearOneof(oneof);
-      }
-      @java.lang.Override
-      public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, java.lang.Object value) {
-        return super.setRepeatedField(field, index, value);
-      }
-      @java.lang.Override
-      public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return super.addRepeatedField(field, value);
-      }
+
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof com.giyeok.bibix.intellij.BibixIntellijProto.KotlinJvmSdk) {
@@ -10324,19 +9859,20 @@ public final class BibixIntellijProto {
         if (other == com.giyeok.bibix.intellij.BibixIntellijProto.KotlinJvmSdk.getDefaultInstance()) return this;
         if (!other.getVersion().isEmpty()) {
           version_ = other.version_;
+          bitField0_ |= 0x00000001;
           onChanged();
         }
         if (!other.sdkLibraryIds_.isEmpty()) {
           if (sdkLibraryIds_.isEmpty()) {
             sdkLibraryIds_ = other.sdkLibraryIds_;
-            bitField0_ = (bitField0_ & ~0x00000001);
+            bitField0_ |= 0x00000002;
           } else {
             ensureSdkLibraryIdsIsMutable();
             sdkLibraryIds_.addAll(other.sdkLibraryIds_);
           }
           onChanged();
         }
-        this.mergeUnknownFields(other.unknownFields);
+        this.mergeUnknownFields(other.getUnknownFields());
         onChanged();
         return this;
       }
@@ -10351,17 +9887,41 @@ public final class BibixIntellijProto {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        com.giyeok.bibix.intellij.BibixIntellijProto.KotlinJvmSdk parsedMessage = null;
+        if (extensionRegistry == null) {
+          throw new java.lang.NullPointerException();
+        }
         try {
-          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+          boolean done = false;
+          while (!done) {
+            int tag = input.readTag();
+            switch (tag) {
+              case 0:
+                done = true;
+                break;
+              case 10: {
+                version_ = input.readStringRequireUtf8();
+                bitField0_ |= 0x00000001;
+                break;
+              } // case 10
+              case 18: {
+                java.lang.String s = input.readStringRequireUtf8();
+                ensureSdkLibraryIdsIsMutable();
+                sdkLibraryIds_.add(s);
+                break;
+              } // case 18
+              default: {
+                if (!super.parseUnknownField(input, extensionRegistry, tag)) {
+                  done = true; // was an endgroup tag
+                }
+                break;
+              } // default:
+            } // switch (tag)
+          } // while (!done)
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (com.giyeok.bibix.intellij.BibixIntellijProto.KotlinJvmSdk) e.getUnfinishedMessage();
           throw e.unwrapIOException();
         } finally {
-          if (parsedMessage != null) {
-            mergeFrom(parsedMessage);
-          }
-        }
+          onChanged();
+        } // finally
         return this;
       }
       private int bitField0_;
@@ -10407,11 +9967,9 @@ public final class BibixIntellijProto {
        */
       public Builder setVersion(
           java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
+        if (value == null) { throw new NullPointerException(); }
         version_ = value;
+        bitField0_ |= 0x00000001;
         onChanged();
         return this;
       }
@@ -10420,8 +9978,8 @@ public final class BibixIntellijProto {
        * @return This builder for chaining.
        */
       public Builder clearVersion() {
-        
         version_ = getDefaultInstance().getVersion();
+        bitField0_ = (bitField0_ & ~0x00000001);
         onChanged();
         return this;
       }
@@ -10432,22 +9990,21 @@ public final class BibixIntellijProto {
        */
       public Builder setVersionBytes(
           com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
+        if (value == null) { throw new NullPointerException(); }
+        checkByteStringIsUtf8(value);
         version_ = value;
+        bitField0_ |= 0x00000001;
         onChanged();
         return this;
       }
 
-      private com.google.protobuf.LazyStringList sdkLibraryIds_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      private com.google.protobuf.LazyStringArrayList sdkLibraryIds_ =
+          com.google.protobuf.LazyStringArrayList.emptyList();
       private void ensureSdkLibraryIdsIsMutable() {
-        if (!((bitField0_ & 0x00000001) != 0)) {
+        if (!sdkLibraryIds_.isModifiable()) {
           sdkLibraryIds_ = new com.google.protobuf.LazyStringArrayList(sdkLibraryIds_);
-          bitField0_ |= 0x00000001;
-         }
+        }
+        bitField0_ |= 0x00000002;
       }
       /**
        * <code>repeated string sdk_library_ids = 2;</code>
@@ -10455,7 +10012,8 @@ public final class BibixIntellijProto {
        */
       public com.google.protobuf.ProtocolStringList
           getSdkLibraryIdsList() {
-        return sdkLibraryIds_.getUnmodifiableView();
+        sdkLibraryIds_.makeImmutable();
+        return sdkLibraryIds_;
       }
       /**
        * <code>repeated string sdk_library_ids = 2;</code>
@@ -10489,11 +10047,10 @@ public final class BibixIntellijProto {
        */
       public Builder setSdkLibraryIds(
           int index, java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  ensureSdkLibraryIdsIsMutable();
+        if (value == null) { throw new NullPointerException(); }
+        ensureSdkLibraryIdsIsMutable();
         sdkLibraryIds_.set(index, value);
+        bitField0_ |= 0x00000002;
         onChanged();
         return this;
       }
@@ -10504,11 +10061,10 @@ public final class BibixIntellijProto {
        */
       public Builder addSdkLibraryIds(
           java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  ensureSdkLibraryIdsIsMutable();
+        if (value == null) { throw new NullPointerException(); }
+        ensureSdkLibraryIdsIsMutable();
         sdkLibraryIds_.add(value);
+        bitField0_ |= 0x00000002;
         onChanged();
         return this;
       }
@@ -10522,6 +10078,7 @@ public final class BibixIntellijProto {
         ensureSdkLibraryIdsIsMutable();
         com.google.protobuf.AbstractMessageLite.Builder.addAll(
             values, sdkLibraryIds_);
+        bitField0_ |= 0x00000002;
         onChanged();
         return this;
       }
@@ -10530,8 +10087,9 @@ public final class BibixIntellijProto {
        * @return This builder for chaining.
        */
       public Builder clearSdkLibraryIds() {
-        sdkLibraryIds_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-        bitField0_ = (bitField0_ & ~0x00000001);
+        sdkLibraryIds_ =
+          com.google.protobuf.LazyStringArrayList.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000002);;
         onChanged();
         return this;
       }
@@ -10542,12 +10100,11 @@ public final class BibixIntellijProto {
        */
       public Builder addSdkLibraryIdsBytes(
           com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
+        if (value == null) { throw new NullPointerException(); }
+        checkByteStringIsUtf8(value);
         ensureSdkLibraryIdsIsMutable();
         sdkLibraryIds_.add(value);
+        bitField0_ |= 0x00000002;
         onChanged();
         return this;
       }
@@ -10584,7 +10141,18 @@ public final class BibixIntellijProto {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return new KotlinJvmSdk(input, extensionRegistry);
+        Builder builder = newBuilder();
+        try {
+          builder.mergeFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          throw e.setUnfinishedMessage(builder.buildPartial());
+        } catch (com.google.protobuf.UninitializedMessageException e) {
+          throw e.asInvalidProtocolBufferException().setUnfinishedMessage(builder.buildPartial());
+        } catch (java.io.IOException e) {
+          throw new com.google.protobuf.InvalidProtocolBufferException(e)
+              .setUnfinishedMessage(builder.buildPartial());
+        }
+        return builder.buildPartial();
       }
     };
 
@@ -10697,8 +10265,10 @@ public final class BibixIntellijProto {
     private ScalaSdk() {
       version_ = "";
       scalaLanguageVersion_ = "";
-      compilerClasspaths_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-      sdkLibraryIds_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      compilerClasspaths_ =
+          com.google.protobuf.LazyStringArrayList.emptyList();
+      sdkLibraryIds_ =
+          com.google.protobuf.LazyStringArrayList.emptyList();
     }
 
     @java.lang.Override
@@ -10708,85 +10278,6 @@ public final class BibixIntellijProto {
       return new ScalaSdk();
     }
 
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-      return this.unknownFields;
-    }
-    private ScalaSdk(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      this();
-      if (extensionRegistry == null) {
-        throw new java.lang.NullPointerException();
-      }
-      int mutable_bitField0_ = 0;
-      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder();
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            case 10: {
-              java.lang.String s = input.readStringRequireUtf8();
-
-              version_ = s;
-              break;
-            }
-            case 18: {
-              java.lang.String s = input.readStringRequireUtf8();
-
-              scalaLanguageVersion_ = s;
-              break;
-            }
-            case 26: {
-              java.lang.String s = input.readStringRequireUtf8();
-              if (!((mutable_bitField0_ & 0x00000001) != 0)) {
-                compilerClasspaths_ = new com.google.protobuf.LazyStringArrayList();
-                mutable_bitField0_ |= 0x00000001;
-              }
-              compilerClasspaths_.add(s);
-              break;
-            }
-            case 34: {
-              java.lang.String s = input.readStringRequireUtf8();
-              if (!((mutable_bitField0_ & 0x00000002) != 0)) {
-                sdkLibraryIds_ = new com.google.protobuf.LazyStringArrayList();
-                mutable_bitField0_ |= 0x00000002;
-              }
-              sdkLibraryIds_.add(s);
-              break;
-            }
-            default: {
-              if (!parseUnknownField(
-                  input, unknownFields, extensionRegistry, tag)) {
-                done = true;
-              }
-              break;
-            }
-          }
-        }
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw e.setUnfinishedMessage(this);
-      } catch (java.io.IOException e) {
-        throw new com.google.protobuf.InvalidProtocolBufferException(
-            e).setUnfinishedMessage(this);
-      } finally {
-        if (((mutable_bitField0_ & 0x00000001) != 0)) {
-          compilerClasspaths_ = compilerClasspaths_.getUnmodifiableView();
-        }
-        if (((mutable_bitField0_ & 0x00000002) != 0)) {
-          sdkLibraryIds_ = sdkLibraryIds_.getUnmodifiableView();
-        }
-        this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
-      }
-    }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
       return com.giyeok.bibix.intellij.BibixIntellijProto.internal_static_com_giyeok_bibix_intellij_ScalaSdk_descriptor;
@@ -10801,7 +10292,8 @@ public final class BibixIntellijProto {
     }
 
     public static final int VERSION_FIELD_NUMBER = 1;
-    private volatile java.lang.Object version_;
+    @SuppressWarnings("serial")
+    private volatile java.lang.Object version_ = "";
     /**
      * <code>string version = 1;</code>
      * @return The version.
@@ -10839,7 +10331,8 @@ public final class BibixIntellijProto {
     }
 
     public static final int SCALA_LANGUAGE_VERSION_FIELD_NUMBER = 2;
-    private volatile java.lang.Object scalaLanguageVersion_;
+    @SuppressWarnings("serial")
+    private volatile java.lang.Object scalaLanguageVersion_ = "";
     /**
      * <code>string scala_language_version = 2;</code>
      * @return The scalaLanguageVersion.
@@ -10877,7 +10370,9 @@ public final class BibixIntellijProto {
     }
 
     public static final int COMPILER_CLASSPATHS_FIELD_NUMBER = 3;
-    private com.google.protobuf.LazyStringList compilerClasspaths_;
+    @SuppressWarnings("serial")
+    private com.google.protobuf.LazyStringArrayList compilerClasspaths_ =
+        com.google.protobuf.LazyStringArrayList.emptyList();
     /**
      * <code>repeated string compiler_classpaths = 3;</code>
      * @return A list containing the compilerClasspaths.
@@ -10912,7 +10407,9 @@ public final class BibixIntellijProto {
     }
 
     public static final int SDK_LIBRARY_IDS_FIELD_NUMBER = 4;
-    private com.google.protobuf.LazyStringList sdkLibraryIds_;
+    @SuppressWarnings("serial")
+    private com.google.protobuf.LazyStringArrayList sdkLibraryIds_ =
+        com.google.protobuf.LazyStringArrayList.emptyList();
     /**
      * <code>repeated string sdk_library_ids = 4;</code>
      * @return A list containing the sdkLibraryIds.
@@ -10972,7 +10469,7 @@ public final class BibixIntellijProto {
       for (int i = 0; i < sdkLibraryIds_.size(); i++) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 4, sdkLibraryIds_.getRaw(i));
       }
-      unknownFields.writeTo(output);
+      getUnknownFields().writeTo(output);
     }
 
     @java.lang.Override
@@ -11003,7 +10500,7 @@ public final class BibixIntellijProto {
         size += dataSize;
         size += 1 * getSdkLibraryIdsList().size();
       }
-      size += unknownFields.getSerializedSize();
+      size += getUnknownFields().getSerializedSize();
       memoizedSize = size;
       return size;
     }
@@ -11026,7 +10523,7 @@ public final class BibixIntellijProto {
           .equals(other.getCompilerClasspathsList())) return false;
       if (!getSdkLibraryIdsList()
           .equals(other.getSdkLibraryIdsList())) return false;
-      if (!unknownFields.equals(other.unknownFields)) return false;
+      if (!getUnknownFields().equals(other.getUnknownFields())) return false;
       return true;
     }
 
@@ -11049,7 +10546,7 @@ public final class BibixIntellijProto {
         hash = (37 * hash) + SDK_LIBRARY_IDS_FIELD_NUMBER;
         hash = (53 * hash) + getSdkLibraryIdsList().hashCode();
       }
-      hash = (29 * hash) + unknownFields.hashCode();
+      hash = (29 * hash) + getUnknownFields().hashCode();
       memoizedHashCode = hash;
       return hash;
     }
@@ -11166,30 +10663,24 @@ public final class BibixIntellijProto {
 
       // Construct using com.giyeok.bibix.intellij.BibixIntellijProto.ScalaSdk.newBuilder()
       private Builder() {
-        maybeForceBuilderInitialization();
+
       }
 
       private Builder(
           com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
         super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
-        }
+
       }
       @java.lang.Override
       public Builder clear() {
         super.clear();
+        bitField0_ = 0;
         version_ = "";
-
         scalaLanguageVersion_ = "";
-
-        compilerClasspaths_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-        bitField0_ = (bitField0_ & ~0x00000001);
-        sdkLibraryIds_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-        bitField0_ = (bitField0_ & ~0x00000002);
+        compilerClasspaths_ =
+            com.google.protobuf.LazyStringArrayList.emptyList();
+        sdkLibraryIds_ =
+            com.google.protobuf.LazyStringArrayList.emptyList();
         return this;
       }
 
@@ -11216,55 +10707,29 @@ public final class BibixIntellijProto {
       @java.lang.Override
       public com.giyeok.bibix.intellij.BibixIntellijProto.ScalaSdk buildPartial() {
         com.giyeok.bibix.intellij.BibixIntellijProto.ScalaSdk result = new com.giyeok.bibix.intellij.BibixIntellijProto.ScalaSdk(this);
-        int from_bitField0_ = bitField0_;
-        result.version_ = version_;
-        result.scalaLanguageVersion_ = scalaLanguageVersion_;
-        if (((bitField0_ & 0x00000001) != 0)) {
-          compilerClasspaths_ = compilerClasspaths_.getUnmodifiableView();
-          bitField0_ = (bitField0_ & ~0x00000001);
-        }
-        result.compilerClasspaths_ = compilerClasspaths_;
-        if (((bitField0_ & 0x00000002) != 0)) {
-          sdkLibraryIds_ = sdkLibraryIds_.getUnmodifiableView();
-          bitField0_ = (bitField0_ & ~0x00000002);
-        }
-        result.sdkLibraryIds_ = sdkLibraryIds_;
+        if (bitField0_ != 0) { buildPartial0(result); }
         onBuilt();
         return result;
       }
 
-      @java.lang.Override
-      public Builder clone() {
-        return super.clone();
+      private void buildPartial0(com.giyeok.bibix.intellij.BibixIntellijProto.ScalaSdk result) {
+        int from_bitField0_ = bitField0_;
+        if (((from_bitField0_ & 0x00000001) != 0)) {
+          result.version_ = version_;
+        }
+        if (((from_bitField0_ & 0x00000002) != 0)) {
+          result.scalaLanguageVersion_ = scalaLanguageVersion_;
+        }
+        if (((from_bitField0_ & 0x00000004) != 0)) {
+          compilerClasspaths_.makeImmutable();
+          result.compilerClasspaths_ = compilerClasspaths_;
+        }
+        if (((from_bitField0_ & 0x00000008) != 0)) {
+          sdkLibraryIds_.makeImmutable();
+          result.sdkLibraryIds_ = sdkLibraryIds_;
+        }
       }
-      @java.lang.Override
-      public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return super.setField(field, value);
-      }
-      @java.lang.Override
-      public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return super.clearField(field);
-      }
-      @java.lang.Override
-      public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return super.clearOneof(oneof);
-      }
-      @java.lang.Override
-      public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, java.lang.Object value) {
-        return super.setRepeatedField(field, index, value);
-      }
-      @java.lang.Override
-      public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return super.addRepeatedField(field, value);
-      }
+
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof com.giyeok.bibix.intellij.BibixIntellijProto.ScalaSdk) {
@@ -11279,16 +10744,18 @@ public final class BibixIntellijProto {
         if (other == com.giyeok.bibix.intellij.BibixIntellijProto.ScalaSdk.getDefaultInstance()) return this;
         if (!other.getVersion().isEmpty()) {
           version_ = other.version_;
+          bitField0_ |= 0x00000001;
           onChanged();
         }
         if (!other.getScalaLanguageVersion().isEmpty()) {
           scalaLanguageVersion_ = other.scalaLanguageVersion_;
+          bitField0_ |= 0x00000002;
           onChanged();
         }
         if (!other.compilerClasspaths_.isEmpty()) {
           if (compilerClasspaths_.isEmpty()) {
             compilerClasspaths_ = other.compilerClasspaths_;
-            bitField0_ = (bitField0_ & ~0x00000001);
+            bitField0_ |= 0x00000004;
           } else {
             ensureCompilerClasspathsIsMutable();
             compilerClasspaths_.addAll(other.compilerClasspaths_);
@@ -11298,14 +10765,14 @@ public final class BibixIntellijProto {
         if (!other.sdkLibraryIds_.isEmpty()) {
           if (sdkLibraryIds_.isEmpty()) {
             sdkLibraryIds_ = other.sdkLibraryIds_;
-            bitField0_ = (bitField0_ & ~0x00000002);
+            bitField0_ |= 0x00000008;
           } else {
             ensureSdkLibraryIdsIsMutable();
             sdkLibraryIds_.addAll(other.sdkLibraryIds_);
           }
           onChanged();
         }
-        this.mergeUnknownFields(other.unknownFields);
+        this.mergeUnknownFields(other.getUnknownFields());
         onChanged();
         return this;
       }
@@ -11320,17 +10787,52 @@ public final class BibixIntellijProto {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        com.giyeok.bibix.intellij.BibixIntellijProto.ScalaSdk parsedMessage = null;
+        if (extensionRegistry == null) {
+          throw new java.lang.NullPointerException();
+        }
         try {
-          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+          boolean done = false;
+          while (!done) {
+            int tag = input.readTag();
+            switch (tag) {
+              case 0:
+                done = true;
+                break;
+              case 10: {
+                version_ = input.readStringRequireUtf8();
+                bitField0_ |= 0x00000001;
+                break;
+              } // case 10
+              case 18: {
+                scalaLanguageVersion_ = input.readStringRequireUtf8();
+                bitField0_ |= 0x00000002;
+                break;
+              } // case 18
+              case 26: {
+                java.lang.String s = input.readStringRequireUtf8();
+                ensureCompilerClasspathsIsMutable();
+                compilerClasspaths_.add(s);
+                break;
+              } // case 26
+              case 34: {
+                java.lang.String s = input.readStringRequireUtf8();
+                ensureSdkLibraryIdsIsMutable();
+                sdkLibraryIds_.add(s);
+                break;
+              } // case 34
+              default: {
+                if (!super.parseUnknownField(input, extensionRegistry, tag)) {
+                  done = true; // was an endgroup tag
+                }
+                break;
+              } // default:
+            } // switch (tag)
+          } // while (!done)
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (com.giyeok.bibix.intellij.BibixIntellijProto.ScalaSdk) e.getUnfinishedMessage();
           throw e.unwrapIOException();
         } finally {
-          if (parsedMessage != null) {
-            mergeFrom(parsedMessage);
-          }
-        }
+          onChanged();
+        } // finally
         return this;
       }
       private int bitField0_;
@@ -11376,11 +10878,9 @@ public final class BibixIntellijProto {
        */
       public Builder setVersion(
           java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
+        if (value == null) { throw new NullPointerException(); }
         version_ = value;
+        bitField0_ |= 0x00000001;
         onChanged();
         return this;
       }
@@ -11389,8 +10889,8 @@ public final class BibixIntellijProto {
        * @return This builder for chaining.
        */
       public Builder clearVersion() {
-        
         version_ = getDefaultInstance().getVersion();
+        bitField0_ = (bitField0_ & ~0x00000001);
         onChanged();
         return this;
       }
@@ -11401,12 +10901,10 @@ public final class BibixIntellijProto {
        */
       public Builder setVersionBytes(
           com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
+        if (value == null) { throw new NullPointerException(); }
+        checkByteStringIsUtf8(value);
         version_ = value;
+        bitField0_ |= 0x00000001;
         onChanged();
         return this;
       }
@@ -11452,11 +10950,9 @@ public final class BibixIntellijProto {
        */
       public Builder setScalaLanguageVersion(
           java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
+        if (value == null) { throw new NullPointerException(); }
         scalaLanguageVersion_ = value;
+        bitField0_ |= 0x00000002;
         onChanged();
         return this;
       }
@@ -11465,8 +10961,8 @@ public final class BibixIntellijProto {
        * @return This builder for chaining.
        */
       public Builder clearScalaLanguageVersion() {
-        
         scalaLanguageVersion_ = getDefaultInstance().getScalaLanguageVersion();
+        bitField0_ = (bitField0_ & ~0x00000002);
         onChanged();
         return this;
       }
@@ -11477,22 +10973,21 @@ public final class BibixIntellijProto {
        */
       public Builder setScalaLanguageVersionBytes(
           com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
+        if (value == null) { throw new NullPointerException(); }
+        checkByteStringIsUtf8(value);
         scalaLanguageVersion_ = value;
+        bitField0_ |= 0x00000002;
         onChanged();
         return this;
       }
 
-      private com.google.protobuf.LazyStringList compilerClasspaths_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      private com.google.protobuf.LazyStringArrayList compilerClasspaths_ =
+          com.google.protobuf.LazyStringArrayList.emptyList();
       private void ensureCompilerClasspathsIsMutable() {
-        if (!((bitField0_ & 0x00000001) != 0)) {
+        if (!compilerClasspaths_.isModifiable()) {
           compilerClasspaths_ = new com.google.protobuf.LazyStringArrayList(compilerClasspaths_);
-          bitField0_ |= 0x00000001;
-         }
+        }
+        bitField0_ |= 0x00000004;
       }
       /**
        * <code>repeated string compiler_classpaths = 3;</code>
@@ -11500,7 +10995,8 @@ public final class BibixIntellijProto {
        */
       public com.google.protobuf.ProtocolStringList
           getCompilerClasspathsList() {
-        return compilerClasspaths_.getUnmodifiableView();
+        compilerClasspaths_.makeImmutable();
+        return compilerClasspaths_;
       }
       /**
        * <code>repeated string compiler_classpaths = 3;</code>
@@ -11534,11 +11030,10 @@ public final class BibixIntellijProto {
        */
       public Builder setCompilerClasspaths(
           int index, java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  ensureCompilerClasspathsIsMutable();
+        if (value == null) { throw new NullPointerException(); }
+        ensureCompilerClasspathsIsMutable();
         compilerClasspaths_.set(index, value);
+        bitField0_ |= 0x00000004;
         onChanged();
         return this;
       }
@@ -11549,11 +11044,10 @@ public final class BibixIntellijProto {
        */
       public Builder addCompilerClasspaths(
           java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  ensureCompilerClasspathsIsMutable();
+        if (value == null) { throw new NullPointerException(); }
+        ensureCompilerClasspathsIsMutable();
         compilerClasspaths_.add(value);
+        bitField0_ |= 0x00000004;
         onChanged();
         return this;
       }
@@ -11567,6 +11061,7 @@ public final class BibixIntellijProto {
         ensureCompilerClasspathsIsMutable();
         com.google.protobuf.AbstractMessageLite.Builder.addAll(
             values, compilerClasspaths_);
+        bitField0_ |= 0x00000004;
         onChanged();
         return this;
       }
@@ -11575,8 +11070,9 @@ public final class BibixIntellijProto {
        * @return This builder for chaining.
        */
       public Builder clearCompilerClasspaths() {
-        compilerClasspaths_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-        bitField0_ = (bitField0_ & ~0x00000001);
+        compilerClasspaths_ =
+          com.google.protobuf.LazyStringArrayList.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000004);;
         onChanged();
         return this;
       }
@@ -11587,22 +11083,22 @@ public final class BibixIntellijProto {
        */
       public Builder addCompilerClasspathsBytes(
           com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
+        if (value == null) { throw new NullPointerException(); }
+        checkByteStringIsUtf8(value);
         ensureCompilerClasspathsIsMutable();
         compilerClasspaths_.add(value);
+        bitField0_ |= 0x00000004;
         onChanged();
         return this;
       }
 
-      private com.google.protobuf.LazyStringList sdkLibraryIds_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      private com.google.protobuf.LazyStringArrayList sdkLibraryIds_ =
+          com.google.protobuf.LazyStringArrayList.emptyList();
       private void ensureSdkLibraryIdsIsMutable() {
-        if (!((bitField0_ & 0x00000002) != 0)) {
+        if (!sdkLibraryIds_.isModifiable()) {
           sdkLibraryIds_ = new com.google.protobuf.LazyStringArrayList(sdkLibraryIds_);
-          bitField0_ |= 0x00000002;
-         }
+        }
+        bitField0_ |= 0x00000008;
       }
       /**
        * <code>repeated string sdk_library_ids = 4;</code>
@@ -11610,7 +11106,8 @@ public final class BibixIntellijProto {
        */
       public com.google.protobuf.ProtocolStringList
           getSdkLibraryIdsList() {
-        return sdkLibraryIds_.getUnmodifiableView();
+        sdkLibraryIds_.makeImmutable();
+        return sdkLibraryIds_;
       }
       /**
        * <code>repeated string sdk_library_ids = 4;</code>
@@ -11644,11 +11141,10 @@ public final class BibixIntellijProto {
        */
       public Builder setSdkLibraryIds(
           int index, java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  ensureSdkLibraryIdsIsMutable();
+        if (value == null) { throw new NullPointerException(); }
+        ensureSdkLibraryIdsIsMutable();
         sdkLibraryIds_.set(index, value);
+        bitField0_ |= 0x00000008;
         onChanged();
         return this;
       }
@@ -11659,11 +11155,10 @@ public final class BibixIntellijProto {
        */
       public Builder addSdkLibraryIds(
           java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  ensureSdkLibraryIdsIsMutable();
+        if (value == null) { throw new NullPointerException(); }
+        ensureSdkLibraryIdsIsMutable();
         sdkLibraryIds_.add(value);
+        bitField0_ |= 0x00000008;
         onChanged();
         return this;
       }
@@ -11677,6 +11172,7 @@ public final class BibixIntellijProto {
         ensureSdkLibraryIdsIsMutable();
         com.google.protobuf.AbstractMessageLite.Builder.addAll(
             values, sdkLibraryIds_);
+        bitField0_ |= 0x00000008;
         onChanged();
         return this;
       }
@@ -11685,8 +11181,9 @@ public final class BibixIntellijProto {
        * @return This builder for chaining.
        */
       public Builder clearSdkLibraryIds() {
-        sdkLibraryIds_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-        bitField0_ = (bitField0_ & ~0x00000002);
+        sdkLibraryIds_ =
+          com.google.protobuf.LazyStringArrayList.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000008);;
         onChanged();
         return this;
       }
@@ -11697,12 +11194,11 @@ public final class BibixIntellijProto {
        */
       public Builder addSdkLibraryIdsBytes(
           com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
+        if (value == null) { throw new NullPointerException(); }
+        checkByteStringIsUtf8(value);
         ensureSdkLibraryIdsIsMutable();
         sdkLibraryIds_.add(value);
+        bitField0_ |= 0x00000008;
         onChanged();
         return this;
       }
@@ -11739,7 +11235,18 @@ public final class BibixIntellijProto {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return new ScalaSdk(input, extensionRegistry);
+        Builder builder = newBuilder();
+        try {
+          builder.mergeFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          throw e.setUnfinishedMessage(builder.buildPartial());
+        } catch (com.google.protobuf.UninitializedMessageException e) {
+          throw e.asInvalidProtocolBufferException().setUnfinishedMessage(builder.buildPartial());
+        } catch (java.io.IOException e) {
+          throw new com.google.protobuf.InvalidProtocolBufferException(e)
+              .setUnfinishedMessage(builder.buildPartial());
+        }
+        return builder.buildPartial();
       }
     };
 
@@ -11806,54 +11313,6 @@ public final class BibixIntellijProto {
       return new Action();
     }
 
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-      return this.unknownFields;
-    }
-    private Action(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      this();
-      if (extensionRegistry == null) {
-        throw new java.lang.NullPointerException();
-      }
-      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder();
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            case 10: {
-              java.lang.String s = input.readStringRequireUtf8();
-
-              actionName_ = s;
-              break;
-            }
-            default: {
-              if (!parseUnknownField(
-                  input, unknownFields, extensionRegistry, tag)) {
-                done = true;
-              }
-              break;
-            }
-          }
-        }
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw e.setUnfinishedMessage(this);
-      } catch (java.io.IOException e) {
-        throw new com.google.protobuf.InvalidProtocolBufferException(
-            e).setUnfinishedMessage(this);
-      } finally {
-        this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
-      }
-    }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
       return com.giyeok.bibix.intellij.BibixIntellijProto.internal_static_com_giyeok_bibix_intellij_Action_descriptor;
@@ -11868,7 +11327,8 @@ public final class BibixIntellijProto {
     }
 
     public static final int ACTION_NAME_FIELD_NUMBER = 1;
-    private volatile java.lang.Object actionName_;
+    @SuppressWarnings("serial")
+    private volatile java.lang.Object actionName_ = "";
     /**
      * <pre>
      * TODO definition
@@ -11930,7 +11390,7 @@ public final class BibixIntellijProto {
       if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(actionName_)) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 1, actionName_);
       }
-      unknownFields.writeTo(output);
+      getUnknownFields().writeTo(output);
     }
 
     @java.lang.Override
@@ -11942,7 +11402,7 @@ public final class BibixIntellijProto {
       if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(actionName_)) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, actionName_);
       }
-      size += unknownFields.getSerializedSize();
+      size += getUnknownFields().getSerializedSize();
       memoizedSize = size;
       return size;
     }
@@ -11959,7 +11419,7 @@ public final class BibixIntellijProto {
 
       if (!getActionName()
           .equals(other.getActionName())) return false;
-      if (!unknownFields.equals(other.unknownFields)) return false;
+      if (!getUnknownFields().equals(other.getUnknownFields())) return false;
       return true;
     }
 
@@ -11972,7 +11432,7 @@ public final class BibixIntellijProto {
       hash = (19 * hash) + getDescriptor().hashCode();
       hash = (37 * hash) + ACTION_NAME_FIELD_NUMBER;
       hash = (53 * hash) + getActionName().hashCode();
-      hash = (29 * hash) + unknownFields.hashCode();
+      hash = (29 * hash) + getUnknownFields().hashCode();
       memoizedHashCode = hash;
       return hash;
     }
@@ -12089,24 +11549,19 @@ public final class BibixIntellijProto {
 
       // Construct using com.giyeok.bibix.intellij.BibixIntellijProto.Action.newBuilder()
       private Builder() {
-        maybeForceBuilderInitialization();
+
       }
 
       private Builder(
           com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
         super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
-        }
+
       }
       @java.lang.Override
       public Builder clear() {
         super.clear();
+        bitField0_ = 0;
         actionName_ = "";
-
         return this;
       }
 
@@ -12133,43 +11588,18 @@ public final class BibixIntellijProto {
       @java.lang.Override
       public com.giyeok.bibix.intellij.BibixIntellijProto.Action buildPartial() {
         com.giyeok.bibix.intellij.BibixIntellijProto.Action result = new com.giyeok.bibix.intellij.BibixIntellijProto.Action(this);
-        result.actionName_ = actionName_;
+        if (bitField0_ != 0) { buildPartial0(result); }
         onBuilt();
         return result;
       }
 
-      @java.lang.Override
-      public Builder clone() {
-        return super.clone();
+      private void buildPartial0(com.giyeok.bibix.intellij.BibixIntellijProto.Action result) {
+        int from_bitField0_ = bitField0_;
+        if (((from_bitField0_ & 0x00000001) != 0)) {
+          result.actionName_ = actionName_;
+        }
       }
-      @java.lang.Override
-      public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return super.setField(field, value);
-      }
-      @java.lang.Override
-      public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return super.clearField(field);
-      }
-      @java.lang.Override
-      public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return super.clearOneof(oneof);
-      }
-      @java.lang.Override
-      public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, java.lang.Object value) {
-        return super.setRepeatedField(field, index, value);
-      }
-      @java.lang.Override
-      public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return super.addRepeatedField(field, value);
-      }
+
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof com.giyeok.bibix.intellij.BibixIntellijProto.Action) {
@@ -12184,9 +11614,10 @@ public final class BibixIntellijProto {
         if (other == com.giyeok.bibix.intellij.BibixIntellijProto.Action.getDefaultInstance()) return this;
         if (!other.getActionName().isEmpty()) {
           actionName_ = other.actionName_;
+          bitField0_ |= 0x00000001;
           onChanged();
         }
-        this.mergeUnknownFields(other.unknownFields);
+        this.mergeUnknownFields(other.getUnknownFields());
         onChanged();
         return this;
       }
@@ -12201,19 +11632,38 @@ public final class BibixIntellijProto {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        com.giyeok.bibix.intellij.BibixIntellijProto.Action parsedMessage = null;
+        if (extensionRegistry == null) {
+          throw new java.lang.NullPointerException();
+        }
         try {
-          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+          boolean done = false;
+          while (!done) {
+            int tag = input.readTag();
+            switch (tag) {
+              case 0:
+                done = true;
+                break;
+              case 10: {
+                actionName_ = input.readStringRequireUtf8();
+                bitField0_ |= 0x00000001;
+                break;
+              } // case 10
+              default: {
+                if (!super.parseUnknownField(input, extensionRegistry, tag)) {
+                  done = true; // was an endgroup tag
+                }
+                break;
+              } // default:
+            } // switch (tag)
+          } // while (!done)
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (com.giyeok.bibix.intellij.BibixIntellijProto.Action) e.getUnfinishedMessage();
           throw e.unwrapIOException();
         } finally {
-          if (parsedMessage != null) {
-            mergeFrom(parsedMessage);
-          }
-        }
+          onChanged();
+        } // finally
         return this;
       }
+      private int bitField0_;
 
       private java.lang.Object actionName_ = "";
       /**
@@ -12268,11 +11718,9 @@ public final class BibixIntellijProto {
        */
       public Builder setActionName(
           java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
+        if (value == null) { throw new NullPointerException(); }
         actionName_ = value;
+        bitField0_ |= 0x00000001;
         onChanged();
         return this;
       }
@@ -12285,8 +11733,8 @@ public final class BibixIntellijProto {
        * @return This builder for chaining.
        */
       public Builder clearActionName() {
-        
         actionName_ = getDefaultInstance().getActionName();
+        bitField0_ = (bitField0_ & ~0x00000001);
         onChanged();
         return this;
       }
@@ -12301,12 +11749,10 @@ public final class BibixIntellijProto {
        */
       public Builder setActionNameBytes(
           com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
+        if (value == null) { throw new NullPointerException(); }
+        checkByteStringIsUtf8(value);
         actionName_ = value;
+        bitField0_ |= 0x00000001;
         onChanged();
         return this;
       }
@@ -12343,7 +11789,18 @@ public final class BibixIntellijProto {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return new Action(input, extensionRegistry);
+        Builder builder = newBuilder();
+        try {
+          builder.mergeFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          throw e.setUnfinishedMessage(builder.buildPartial());
+        } catch (com.google.protobuf.UninitializedMessageException e) {
+          throw e.asInvalidProtocolBufferException().setUnfinishedMessage(builder.buildPartial());
+        } catch (java.io.IOException e) {
+          throw new com.google.protobuf.InvalidProtocolBufferException(e)
+              .setUnfinishedMessage(builder.buildPartial());
+        }
+        return builder.buildPartial();
       }
     };
 
@@ -12418,7 +11875,8 @@ public final class BibixIntellijProto {
     }
     private BuildTargetsReq() {
       projectId_ = "";
-      buildTargets_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      buildTargets_ =
+          com.google.protobuf.LazyStringArrayList.emptyList();
     }
 
     @java.lang.Override
@@ -12428,67 +11886,6 @@ public final class BibixIntellijProto {
       return new BuildTargetsReq();
     }
 
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-      return this.unknownFields;
-    }
-    private BuildTargetsReq(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      this();
-      if (extensionRegistry == null) {
-        throw new java.lang.NullPointerException();
-      }
-      int mutable_bitField0_ = 0;
-      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder();
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            case 10: {
-              java.lang.String s = input.readStringRequireUtf8();
-
-              projectId_ = s;
-              break;
-            }
-            case 18: {
-              java.lang.String s = input.readStringRequireUtf8();
-              if (!((mutable_bitField0_ & 0x00000001) != 0)) {
-                buildTargets_ = new com.google.protobuf.LazyStringArrayList();
-                mutable_bitField0_ |= 0x00000001;
-              }
-              buildTargets_.add(s);
-              break;
-            }
-            default: {
-              if (!parseUnknownField(
-                  input, unknownFields, extensionRegistry, tag)) {
-                done = true;
-              }
-              break;
-            }
-          }
-        }
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw e.setUnfinishedMessage(this);
-      } catch (java.io.IOException e) {
-        throw new com.google.protobuf.InvalidProtocolBufferException(
-            e).setUnfinishedMessage(this);
-      } finally {
-        if (((mutable_bitField0_ & 0x00000001) != 0)) {
-          buildTargets_ = buildTargets_.getUnmodifiableView();
-        }
-        this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
-      }
-    }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
       return com.giyeok.bibix.intellij.BibixIntellijProto.internal_static_com_giyeok_bibix_intellij_BuildTargetsReq_descriptor;
@@ -12503,7 +11900,8 @@ public final class BibixIntellijProto {
     }
 
     public static final int PROJECT_ID_FIELD_NUMBER = 1;
-    private volatile java.lang.Object projectId_;
+    @SuppressWarnings("serial")
+    private volatile java.lang.Object projectId_ = "";
     /**
      * <code>string project_id = 1;</code>
      * @return The projectId.
@@ -12541,7 +11939,9 @@ public final class BibixIntellijProto {
     }
 
     public static final int BUILD_TARGETS_FIELD_NUMBER = 2;
-    private com.google.protobuf.LazyStringList buildTargets_;
+    @SuppressWarnings("serial")
+    private com.google.protobuf.LazyStringArrayList buildTargets_ =
+        com.google.protobuf.LazyStringArrayList.emptyList();
     /**
      * <code>repeated string build_targets = 2;</code>
      * @return A list containing the buildTargets.
@@ -12595,7 +11995,7 @@ public final class BibixIntellijProto {
       for (int i = 0; i < buildTargets_.size(); i++) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 2, buildTargets_.getRaw(i));
       }
-      unknownFields.writeTo(output);
+      getUnknownFields().writeTo(output);
     }
 
     @java.lang.Override
@@ -12615,7 +12015,7 @@ public final class BibixIntellijProto {
         size += dataSize;
         size += 1 * getBuildTargetsList().size();
       }
-      size += unknownFields.getSerializedSize();
+      size += getUnknownFields().getSerializedSize();
       memoizedSize = size;
       return size;
     }
@@ -12634,7 +12034,7 @@ public final class BibixIntellijProto {
           .equals(other.getProjectId())) return false;
       if (!getBuildTargetsList()
           .equals(other.getBuildTargetsList())) return false;
-      if (!unknownFields.equals(other.unknownFields)) return false;
+      if (!getUnknownFields().equals(other.getUnknownFields())) return false;
       return true;
     }
 
@@ -12651,7 +12051,7 @@ public final class BibixIntellijProto {
         hash = (37 * hash) + BUILD_TARGETS_FIELD_NUMBER;
         hash = (53 * hash) + getBuildTargetsList().hashCode();
       }
-      hash = (29 * hash) + unknownFields.hashCode();
+      hash = (29 * hash) + getUnknownFields().hashCode();
       memoizedHashCode = hash;
       return hash;
     }
@@ -12768,26 +12168,21 @@ public final class BibixIntellijProto {
 
       // Construct using com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsReq.newBuilder()
       private Builder() {
-        maybeForceBuilderInitialization();
+
       }
 
       private Builder(
           com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
         super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
-        }
+
       }
       @java.lang.Override
       public Builder clear() {
         super.clear();
+        bitField0_ = 0;
         projectId_ = "";
-
-        buildTargets_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-        bitField0_ = (bitField0_ & ~0x00000001);
+        buildTargets_ =
+            com.google.protobuf.LazyStringArrayList.emptyList();
         return this;
       }
 
@@ -12814,49 +12209,22 @@ public final class BibixIntellijProto {
       @java.lang.Override
       public com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsReq buildPartial() {
         com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsReq result = new com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsReq(this);
-        int from_bitField0_ = bitField0_;
-        result.projectId_ = projectId_;
-        if (((bitField0_ & 0x00000001) != 0)) {
-          buildTargets_ = buildTargets_.getUnmodifiableView();
-          bitField0_ = (bitField0_ & ~0x00000001);
-        }
-        result.buildTargets_ = buildTargets_;
+        if (bitField0_ != 0) { buildPartial0(result); }
         onBuilt();
         return result;
       }
 
-      @java.lang.Override
-      public Builder clone() {
-        return super.clone();
+      private void buildPartial0(com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsReq result) {
+        int from_bitField0_ = bitField0_;
+        if (((from_bitField0_ & 0x00000001) != 0)) {
+          result.projectId_ = projectId_;
+        }
+        if (((from_bitField0_ & 0x00000002) != 0)) {
+          buildTargets_.makeImmutable();
+          result.buildTargets_ = buildTargets_;
+        }
       }
-      @java.lang.Override
-      public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return super.setField(field, value);
-      }
-      @java.lang.Override
-      public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return super.clearField(field);
-      }
-      @java.lang.Override
-      public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return super.clearOneof(oneof);
-      }
-      @java.lang.Override
-      public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, java.lang.Object value) {
-        return super.setRepeatedField(field, index, value);
-      }
-      @java.lang.Override
-      public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return super.addRepeatedField(field, value);
-      }
+
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsReq) {
@@ -12871,19 +12239,20 @@ public final class BibixIntellijProto {
         if (other == com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsReq.getDefaultInstance()) return this;
         if (!other.getProjectId().isEmpty()) {
           projectId_ = other.projectId_;
+          bitField0_ |= 0x00000001;
           onChanged();
         }
         if (!other.buildTargets_.isEmpty()) {
           if (buildTargets_.isEmpty()) {
             buildTargets_ = other.buildTargets_;
-            bitField0_ = (bitField0_ & ~0x00000001);
+            bitField0_ |= 0x00000002;
           } else {
             ensureBuildTargetsIsMutable();
             buildTargets_.addAll(other.buildTargets_);
           }
           onChanged();
         }
-        this.mergeUnknownFields(other.unknownFields);
+        this.mergeUnknownFields(other.getUnknownFields());
         onChanged();
         return this;
       }
@@ -12898,17 +12267,41 @@ public final class BibixIntellijProto {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsReq parsedMessage = null;
+        if (extensionRegistry == null) {
+          throw new java.lang.NullPointerException();
+        }
         try {
-          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+          boolean done = false;
+          while (!done) {
+            int tag = input.readTag();
+            switch (tag) {
+              case 0:
+                done = true;
+                break;
+              case 10: {
+                projectId_ = input.readStringRequireUtf8();
+                bitField0_ |= 0x00000001;
+                break;
+              } // case 10
+              case 18: {
+                java.lang.String s = input.readStringRequireUtf8();
+                ensureBuildTargetsIsMutable();
+                buildTargets_.add(s);
+                break;
+              } // case 18
+              default: {
+                if (!super.parseUnknownField(input, extensionRegistry, tag)) {
+                  done = true; // was an endgroup tag
+                }
+                break;
+              } // default:
+            } // switch (tag)
+          } // while (!done)
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsReq) e.getUnfinishedMessage();
           throw e.unwrapIOException();
         } finally {
-          if (parsedMessage != null) {
-            mergeFrom(parsedMessage);
-          }
-        }
+          onChanged();
+        } // finally
         return this;
       }
       private int bitField0_;
@@ -12954,11 +12347,9 @@ public final class BibixIntellijProto {
        */
       public Builder setProjectId(
           java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
+        if (value == null) { throw new NullPointerException(); }
         projectId_ = value;
+        bitField0_ |= 0x00000001;
         onChanged();
         return this;
       }
@@ -12967,8 +12358,8 @@ public final class BibixIntellijProto {
        * @return This builder for chaining.
        */
       public Builder clearProjectId() {
-        
         projectId_ = getDefaultInstance().getProjectId();
+        bitField0_ = (bitField0_ & ~0x00000001);
         onChanged();
         return this;
       }
@@ -12979,22 +12370,21 @@ public final class BibixIntellijProto {
        */
       public Builder setProjectIdBytes(
           com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
+        if (value == null) { throw new NullPointerException(); }
+        checkByteStringIsUtf8(value);
         projectId_ = value;
+        bitField0_ |= 0x00000001;
         onChanged();
         return this;
       }
 
-      private com.google.protobuf.LazyStringList buildTargets_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      private com.google.protobuf.LazyStringArrayList buildTargets_ =
+          com.google.protobuf.LazyStringArrayList.emptyList();
       private void ensureBuildTargetsIsMutable() {
-        if (!((bitField0_ & 0x00000001) != 0)) {
+        if (!buildTargets_.isModifiable()) {
           buildTargets_ = new com.google.protobuf.LazyStringArrayList(buildTargets_);
-          bitField0_ |= 0x00000001;
-         }
+        }
+        bitField0_ |= 0x00000002;
       }
       /**
        * <code>repeated string build_targets = 2;</code>
@@ -13002,7 +12392,8 @@ public final class BibixIntellijProto {
        */
       public com.google.protobuf.ProtocolStringList
           getBuildTargetsList() {
-        return buildTargets_.getUnmodifiableView();
+        buildTargets_.makeImmutable();
+        return buildTargets_;
       }
       /**
        * <code>repeated string build_targets = 2;</code>
@@ -13036,11 +12427,10 @@ public final class BibixIntellijProto {
        */
       public Builder setBuildTargets(
           int index, java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  ensureBuildTargetsIsMutable();
+        if (value == null) { throw new NullPointerException(); }
+        ensureBuildTargetsIsMutable();
         buildTargets_.set(index, value);
+        bitField0_ |= 0x00000002;
         onChanged();
         return this;
       }
@@ -13051,11 +12441,10 @@ public final class BibixIntellijProto {
        */
       public Builder addBuildTargets(
           java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  ensureBuildTargetsIsMutable();
+        if (value == null) { throw new NullPointerException(); }
+        ensureBuildTargetsIsMutable();
         buildTargets_.add(value);
+        bitField0_ |= 0x00000002;
         onChanged();
         return this;
       }
@@ -13069,6 +12458,7 @@ public final class BibixIntellijProto {
         ensureBuildTargetsIsMutable();
         com.google.protobuf.AbstractMessageLite.Builder.addAll(
             values, buildTargets_);
+        bitField0_ |= 0x00000002;
         onChanged();
         return this;
       }
@@ -13077,8 +12467,9 @@ public final class BibixIntellijProto {
        * @return This builder for chaining.
        */
       public Builder clearBuildTargets() {
-        buildTargets_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-        bitField0_ = (bitField0_ & ~0x00000001);
+        buildTargets_ =
+          com.google.protobuf.LazyStringArrayList.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000002);;
         onChanged();
         return this;
       }
@@ -13089,12 +12480,11 @@ public final class BibixIntellijProto {
        */
       public Builder addBuildTargetsBytes(
           com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
+        if (value == null) { throw new NullPointerException(); }
+        checkByteStringIsUtf8(value);
         ensureBuildTargetsIsMutable();
         buildTargets_.add(value);
+        bitField0_ |= 0x00000002;
         onChanged();
         return this;
       }
@@ -13131,7 +12521,18 @@ public final class BibixIntellijProto {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return new BuildTargetsReq(input, extensionRegistry);
+        Builder builder = newBuilder();
+        try {
+          builder.mergeFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          throw e.setUnfinishedMessage(builder.buildPartial());
+        } catch (com.google.protobuf.UninitializedMessageException e) {
+          throw e.asInvalidProtocolBufferException().setUnfinishedMessage(builder.buildPartial());
+        } catch (java.io.IOException e) {
+          throw new com.google.protobuf.InvalidProtocolBufferException(e)
+              .setUnfinishedMessage(builder.buildPartial());
+        }
+        return builder.buildPartial();
       }
     };
 
@@ -13177,48 +12578,6 @@ public final class BibixIntellijProto {
       return new BuildTargetsRes();
     }
 
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-      return this.unknownFields;
-    }
-    private BuildTargetsRes(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      this();
-      if (extensionRegistry == null) {
-        throw new java.lang.NullPointerException();
-      }
-      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder();
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            default: {
-              if (!parseUnknownField(
-                  input, unknownFields, extensionRegistry, tag)) {
-                done = true;
-              }
-              break;
-            }
-          }
-        }
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw e.setUnfinishedMessage(this);
-      } catch (java.io.IOException e) {
-        throw new com.google.protobuf.InvalidProtocolBufferException(
-            e).setUnfinishedMessage(this);
-      } finally {
-        this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
-      }
-    }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
       return com.giyeok.bibix.intellij.BibixIntellijProto.internal_static_com_giyeok_bibix_intellij_BuildTargetsRes_descriptor;
@@ -13246,7 +12605,7 @@ public final class BibixIntellijProto {
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
-      unknownFields.writeTo(output);
+      getUnknownFields().writeTo(output);
     }
 
     @java.lang.Override
@@ -13255,7 +12614,7 @@ public final class BibixIntellijProto {
       if (size != -1) return size;
 
       size = 0;
-      size += unknownFields.getSerializedSize();
+      size += getUnknownFields().getSerializedSize();
       memoizedSize = size;
       return size;
     }
@@ -13270,7 +12629,7 @@ public final class BibixIntellijProto {
       }
       com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsRes other = (com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsRes) obj;
 
-      if (!unknownFields.equals(other.unknownFields)) return false;
+      if (!getUnknownFields().equals(other.getUnknownFields())) return false;
       return true;
     }
 
@@ -13281,7 +12640,7 @@ public final class BibixIntellijProto {
       }
       int hash = 41;
       hash = (19 * hash) + getDescriptor().hashCode();
-      hash = (29 * hash) + unknownFields.hashCode();
+      hash = (29 * hash) + getUnknownFields().hashCode();
       memoizedHashCode = hash;
       return hash;
     }
@@ -13398,18 +12757,13 @@ public final class BibixIntellijProto {
 
       // Construct using com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsRes.newBuilder()
       private Builder() {
-        maybeForceBuilderInitialization();
+
       }
 
       private Builder(
           com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
         super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
-        }
+
       }
       @java.lang.Override
       public Builder clear() {
@@ -13445,38 +12799,6 @@ public final class BibixIntellijProto {
       }
 
       @java.lang.Override
-      public Builder clone() {
-        return super.clone();
-      }
-      @java.lang.Override
-      public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return super.setField(field, value);
-      }
-      @java.lang.Override
-      public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return super.clearField(field);
-      }
-      @java.lang.Override
-      public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return super.clearOneof(oneof);
-      }
-      @java.lang.Override
-      public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, java.lang.Object value) {
-        return super.setRepeatedField(field, index, value);
-      }
-      @java.lang.Override
-      public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return super.addRepeatedField(field, value);
-      }
-      @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsRes) {
           return mergeFrom((com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsRes)other);
@@ -13488,7 +12810,7 @@ public final class BibixIntellijProto {
 
       public Builder mergeFrom(com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsRes other) {
         if (other == com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsRes.getDefaultInstance()) return this;
-        this.mergeUnknownFields(other.unknownFields);
+        this.mergeUnknownFields(other.getUnknownFields());
         onChanged();
         return this;
       }
@@ -13503,17 +12825,30 @@ public final class BibixIntellijProto {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsRes parsedMessage = null;
+        if (extensionRegistry == null) {
+          throw new java.lang.NullPointerException();
+        }
         try {
-          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+          boolean done = false;
+          while (!done) {
+            int tag = input.readTag();
+            switch (tag) {
+              case 0:
+                done = true;
+                break;
+              default: {
+                if (!super.parseUnknownField(input, extensionRegistry, tag)) {
+                  done = true; // was an endgroup tag
+                }
+                break;
+              } // default:
+            } // switch (tag)
+          } // while (!done)
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsRes) e.getUnfinishedMessage();
           throw e.unwrapIOException();
         } finally {
-          if (parsedMessage != null) {
-            mergeFrom(parsedMessage);
-          }
-        }
+          onChanged();
+        } // finally
         return this;
       }
       @java.lang.Override
@@ -13549,7 +12884,18 @@ public final class BibixIntellijProto {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return new BuildTargetsRes(input, extensionRegistry);
+        Builder builder = newBuilder();
+        try {
+          builder.mergeFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          throw e.setUnfinishedMessage(builder.buildPartial());
+        } catch (com.google.protobuf.UninitializedMessageException e) {
+          throw e.asInvalidProtocolBufferException().setUnfinishedMessage(builder.buildPartial());
+        } catch (java.io.IOException e) {
+          throw new com.google.protobuf.InvalidProtocolBufferException(e)
+              .setUnfinishedMessage(builder.buildPartial());
+        }
+        return builder.buildPartial();
       }
     };
 
@@ -13599,48 +12945,6 @@ public final class BibixIntellijProto {
       return new BuildTargetsUpdate();
     }
 
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-      return this.unknownFields;
-    }
-    private BuildTargetsUpdate(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      this();
-      if (extensionRegistry == null) {
-        throw new java.lang.NullPointerException();
-      }
-      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder();
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            default: {
-              if (!parseUnknownField(
-                  input, unknownFields, extensionRegistry, tag)) {
-                done = true;
-              }
-              break;
-            }
-          }
-        }
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw e.setUnfinishedMessage(this);
-      } catch (java.io.IOException e) {
-        throw new com.google.protobuf.InvalidProtocolBufferException(
-            e).setUnfinishedMessage(this);
-      } finally {
-        this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
-      }
-    }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
       return com.giyeok.bibix.intellij.BibixIntellijProto.internal_static_com_giyeok_bibix_intellij_BuildTargetsUpdate_descriptor;
@@ -13668,7 +12972,7 @@ public final class BibixIntellijProto {
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
-      unknownFields.writeTo(output);
+      getUnknownFields().writeTo(output);
     }
 
     @java.lang.Override
@@ -13677,7 +12981,7 @@ public final class BibixIntellijProto {
       if (size != -1) return size;
 
       size = 0;
-      size += unknownFields.getSerializedSize();
+      size += getUnknownFields().getSerializedSize();
       memoizedSize = size;
       return size;
     }
@@ -13692,7 +12996,7 @@ public final class BibixIntellijProto {
       }
       com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsUpdate other = (com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsUpdate) obj;
 
-      if (!unknownFields.equals(other.unknownFields)) return false;
+      if (!getUnknownFields().equals(other.getUnknownFields())) return false;
       return true;
     }
 
@@ -13703,7 +13007,7 @@ public final class BibixIntellijProto {
       }
       int hash = 41;
       hash = (19 * hash) + getDescriptor().hashCode();
-      hash = (29 * hash) + unknownFields.hashCode();
+      hash = (29 * hash) + getUnknownFields().hashCode();
       memoizedHashCode = hash;
       return hash;
     }
@@ -13824,18 +13128,13 @@ public final class BibixIntellijProto {
 
       // Construct using com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsUpdate.newBuilder()
       private Builder() {
-        maybeForceBuilderInitialization();
+
       }
 
       private Builder(
           com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
         super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
-        }
+
       }
       @java.lang.Override
       public Builder clear() {
@@ -13871,38 +13170,6 @@ public final class BibixIntellijProto {
       }
 
       @java.lang.Override
-      public Builder clone() {
-        return super.clone();
-      }
-      @java.lang.Override
-      public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return super.setField(field, value);
-      }
-      @java.lang.Override
-      public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return super.clearField(field);
-      }
-      @java.lang.Override
-      public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return super.clearOneof(oneof);
-      }
-      @java.lang.Override
-      public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, java.lang.Object value) {
-        return super.setRepeatedField(field, index, value);
-      }
-      @java.lang.Override
-      public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return super.addRepeatedField(field, value);
-      }
-      @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsUpdate) {
           return mergeFrom((com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsUpdate)other);
@@ -13914,7 +13181,7 @@ public final class BibixIntellijProto {
 
       public Builder mergeFrom(com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsUpdate other) {
         if (other == com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsUpdate.getDefaultInstance()) return this;
-        this.mergeUnknownFields(other.unknownFields);
+        this.mergeUnknownFields(other.getUnknownFields());
         onChanged();
         return this;
       }
@@ -13929,17 +13196,30 @@ public final class BibixIntellijProto {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsUpdate parsedMessage = null;
+        if (extensionRegistry == null) {
+          throw new java.lang.NullPointerException();
+        }
         try {
-          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+          boolean done = false;
+          while (!done) {
+            int tag = input.readTag();
+            switch (tag) {
+              case 0:
+                done = true;
+                break;
+              default: {
+                if (!super.parseUnknownField(input, extensionRegistry, tag)) {
+                  done = true; // was an endgroup tag
+                }
+                break;
+              } // default:
+            } // switch (tag)
+          } // while (!done)
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsUpdate) e.getUnfinishedMessage();
           throw e.unwrapIOException();
         } finally {
-          if (parsedMessage != null) {
-            mergeFrom(parsedMessage);
-          }
-        }
+          onChanged();
+        } // finally
         return this;
       }
       @java.lang.Override
@@ -13975,7 +13255,18 @@ public final class BibixIntellijProto {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return new BuildTargetsUpdate(input, extensionRegistry);
+        Builder builder = newBuilder();
+        try {
+          builder.mergeFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          throw e.setUnfinishedMessage(builder.buildPartial());
+        } catch (com.google.protobuf.UninitializedMessageException e) {
+          throw e.asInvalidProtocolBufferException().setUnfinishedMessage(builder.buildPartial());
+        } catch (java.io.IOException e) {
+          throw new com.google.protobuf.InvalidProtocolBufferException(e)
+              .setUnfinishedMessage(builder.buildPartial());
+        }
+        return builder.buildPartial();
       }
     };
 
@@ -14050,7 +13341,8 @@ public final class BibixIntellijProto {
     }
     private ExecuteActionsReq() {
       projectId_ = "";
-      actions_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      actions_ =
+          com.google.protobuf.LazyStringArrayList.emptyList();
     }
 
     @java.lang.Override
@@ -14060,67 +13352,6 @@ public final class BibixIntellijProto {
       return new ExecuteActionsReq();
     }
 
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-      return this.unknownFields;
-    }
-    private ExecuteActionsReq(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      this();
-      if (extensionRegistry == null) {
-        throw new java.lang.NullPointerException();
-      }
-      int mutable_bitField0_ = 0;
-      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder();
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            case 10: {
-              java.lang.String s = input.readStringRequireUtf8();
-
-              projectId_ = s;
-              break;
-            }
-            case 18: {
-              java.lang.String s = input.readStringRequireUtf8();
-              if (!((mutable_bitField0_ & 0x00000001) != 0)) {
-                actions_ = new com.google.protobuf.LazyStringArrayList();
-                mutable_bitField0_ |= 0x00000001;
-              }
-              actions_.add(s);
-              break;
-            }
-            default: {
-              if (!parseUnknownField(
-                  input, unknownFields, extensionRegistry, tag)) {
-                done = true;
-              }
-              break;
-            }
-          }
-        }
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw e.setUnfinishedMessage(this);
-      } catch (java.io.IOException e) {
-        throw new com.google.protobuf.InvalidProtocolBufferException(
-            e).setUnfinishedMessage(this);
-      } finally {
-        if (((mutable_bitField0_ & 0x00000001) != 0)) {
-          actions_ = actions_.getUnmodifiableView();
-        }
-        this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
-      }
-    }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
       return com.giyeok.bibix.intellij.BibixIntellijProto.internal_static_com_giyeok_bibix_intellij_ExecuteActionsReq_descriptor;
@@ -14135,7 +13366,8 @@ public final class BibixIntellijProto {
     }
 
     public static final int PROJECT_ID_FIELD_NUMBER = 1;
-    private volatile java.lang.Object projectId_;
+    @SuppressWarnings("serial")
+    private volatile java.lang.Object projectId_ = "";
     /**
      * <code>string project_id = 1;</code>
      * @return The projectId.
@@ -14173,7 +13405,9 @@ public final class BibixIntellijProto {
     }
 
     public static final int ACTIONS_FIELD_NUMBER = 2;
-    private com.google.protobuf.LazyStringList actions_;
+    @SuppressWarnings("serial")
+    private com.google.protobuf.LazyStringArrayList actions_ =
+        com.google.protobuf.LazyStringArrayList.emptyList();
     /**
      * <code>repeated string actions = 2;</code>
      * @return A list containing the actions.
@@ -14227,7 +13461,7 @@ public final class BibixIntellijProto {
       for (int i = 0; i < actions_.size(); i++) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 2, actions_.getRaw(i));
       }
-      unknownFields.writeTo(output);
+      getUnknownFields().writeTo(output);
     }
 
     @java.lang.Override
@@ -14247,7 +13481,7 @@ public final class BibixIntellijProto {
         size += dataSize;
         size += 1 * getActionsList().size();
       }
-      size += unknownFields.getSerializedSize();
+      size += getUnknownFields().getSerializedSize();
       memoizedSize = size;
       return size;
     }
@@ -14266,7 +13500,7 @@ public final class BibixIntellijProto {
           .equals(other.getProjectId())) return false;
       if (!getActionsList()
           .equals(other.getActionsList())) return false;
-      if (!unknownFields.equals(other.unknownFields)) return false;
+      if (!getUnknownFields().equals(other.getUnknownFields())) return false;
       return true;
     }
 
@@ -14283,7 +13517,7 @@ public final class BibixIntellijProto {
         hash = (37 * hash) + ACTIONS_FIELD_NUMBER;
         hash = (53 * hash) + getActionsList().hashCode();
       }
-      hash = (29 * hash) + unknownFields.hashCode();
+      hash = (29 * hash) + getUnknownFields().hashCode();
       memoizedHashCode = hash;
       return hash;
     }
@@ -14400,26 +13634,21 @@ public final class BibixIntellijProto {
 
       // Construct using com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsReq.newBuilder()
       private Builder() {
-        maybeForceBuilderInitialization();
+
       }
 
       private Builder(
           com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
         super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
-        }
+
       }
       @java.lang.Override
       public Builder clear() {
         super.clear();
+        bitField0_ = 0;
         projectId_ = "";
-
-        actions_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-        bitField0_ = (bitField0_ & ~0x00000001);
+        actions_ =
+            com.google.protobuf.LazyStringArrayList.emptyList();
         return this;
       }
 
@@ -14446,49 +13675,22 @@ public final class BibixIntellijProto {
       @java.lang.Override
       public com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsReq buildPartial() {
         com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsReq result = new com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsReq(this);
-        int from_bitField0_ = bitField0_;
-        result.projectId_ = projectId_;
-        if (((bitField0_ & 0x00000001) != 0)) {
-          actions_ = actions_.getUnmodifiableView();
-          bitField0_ = (bitField0_ & ~0x00000001);
-        }
-        result.actions_ = actions_;
+        if (bitField0_ != 0) { buildPartial0(result); }
         onBuilt();
         return result;
       }
 
-      @java.lang.Override
-      public Builder clone() {
-        return super.clone();
+      private void buildPartial0(com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsReq result) {
+        int from_bitField0_ = bitField0_;
+        if (((from_bitField0_ & 0x00000001) != 0)) {
+          result.projectId_ = projectId_;
+        }
+        if (((from_bitField0_ & 0x00000002) != 0)) {
+          actions_.makeImmutable();
+          result.actions_ = actions_;
+        }
       }
-      @java.lang.Override
-      public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return super.setField(field, value);
-      }
-      @java.lang.Override
-      public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return super.clearField(field);
-      }
-      @java.lang.Override
-      public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return super.clearOneof(oneof);
-      }
-      @java.lang.Override
-      public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, java.lang.Object value) {
-        return super.setRepeatedField(field, index, value);
-      }
-      @java.lang.Override
-      public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return super.addRepeatedField(field, value);
-      }
+
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsReq) {
@@ -14503,19 +13705,20 @@ public final class BibixIntellijProto {
         if (other == com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsReq.getDefaultInstance()) return this;
         if (!other.getProjectId().isEmpty()) {
           projectId_ = other.projectId_;
+          bitField0_ |= 0x00000001;
           onChanged();
         }
         if (!other.actions_.isEmpty()) {
           if (actions_.isEmpty()) {
             actions_ = other.actions_;
-            bitField0_ = (bitField0_ & ~0x00000001);
+            bitField0_ |= 0x00000002;
           } else {
             ensureActionsIsMutable();
             actions_.addAll(other.actions_);
           }
           onChanged();
         }
-        this.mergeUnknownFields(other.unknownFields);
+        this.mergeUnknownFields(other.getUnknownFields());
         onChanged();
         return this;
       }
@@ -14530,17 +13733,41 @@ public final class BibixIntellijProto {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsReq parsedMessage = null;
+        if (extensionRegistry == null) {
+          throw new java.lang.NullPointerException();
+        }
         try {
-          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+          boolean done = false;
+          while (!done) {
+            int tag = input.readTag();
+            switch (tag) {
+              case 0:
+                done = true;
+                break;
+              case 10: {
+                projectId_ = input.readStringRequireUtf8();
+                bitField0_ |= 0x00000001;
+                break;
+              } // case 10
+              case 18: {
+                java.lang.String s = input.readStringRequireUtf8();
+                ensureActionsIsMutable();
+                actions_.add(s);
+                break;
+              } // case 18
+              default: {
+                if (!super.parseUnknownField(input, extensionRegistry, tag)) {
+                  done = true; // was an endgroup tag
+                }
+                break;
+              } // default:
+            } // switch (tag)
+          } // while (!done)
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsReq) e.getUnfinishedMessage();
           throw e.unwrapIOException();
         } finally {
-          if (parsedMessage != null) {
-            mergeFrom(parsedMessage);
-          }
-        }
+          onChanged();
+        } // finally
         return this;
       }
       private int bitField0_;
@@ -14586,11 +13813,9 @@ public final class BibixIntellijProto {
        */
       public Builder setProjectId(
           java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
+        if (value == null) { throw new NullPointerException(); }
         projectId_ = value;
+        bitField0_ |= 0x00000001;
         onChanged();
         return this;
       }
@@ -14599,8 +13824,8 @@ public final class BibixIntellijProto {
        * @return This builder for chaining.
        */
       public Builder clearProjectId() {
-        
         projectId_ = getDefaultInstance().getProjectId();
+        bitField0_ = (bitField0_ & ~0x00000001);
         onChanged();
         return this;
       }
@@ -14611,22 +13836,21 @@ public final class BibixIntellijProto {
        */
       public Builder setProjectIdBytes(
           com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
+        if (value == null) { throw new NullPointerException(); }
+        checkByteStringIsUtf8(value);
         projectId_ = value;
+        bitField0_ |= 0x00000001;
         onChanged();
         return this;
       }
 
-      private com.google.protobuf.LazyStringList actions_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      private com.google.protobuf.LazyStringArrayList actions_ =
+          com.google.protobuf.LazyStringArrayList.emptyList();
       private void ensureActionsIsMutable() {
-        if (!((bitField0_ & 0x00000001) != 0)) {
+        if (!actions_.isModifiable()) {
           actions_ = new com.google.protobuf.LazyStringArrayList(actions_);
-          bitField0_ |= 0x00000001;
-         }
+        }
+        bitField0_ |= 0x00000002;
       }
       /**
        * <code>repeated string actions = 2;</code>
@@ -14634,7 +13858,8 @@ public final class BibixIntellijProto {
        */
       public com.google.protobuf.ProtocolStringList
           getActionsList() {
-        return actions_.getUnmodifiableView();
+        actions_.makeImmutable();
+        return actions_;
       }
       /**
        * <code>repeated string actions = 2;</code>
@@ -14668,11 +13893,10 @@ public final class BibixIntellijProto {
        */
       public Builder setActions(
           int index, java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  ensureActionsIsMutable();
+        if (value == null) { throw new NullPointerException(); }
+        ensureActionsIsMutable();
         actions_.set(index, value);
+        bitField0_ |= 0x00000002;
         onChanged();
         return this;
       }
@@ -14683,11 +13907,10 @@ public final class BibixIntellijProto {
        */
       public Builder addActions(
           java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  ensureActionsIsMutable();
+        if (value == null) { throw new NullPointerException(); }
+        ensureActionsIsMutable();
         actions_.add(value);
+        bitField0_ |= 0x00000002;
         onChanged();
         return this;
       }
@@ -14701,6 +13924,7 @@ public final class BibixIntellijProto {
         ensureActionsIsMutable();
         com.google.protobuf.AbstractMessageLite.Builder.addAll(
             values, actions_);
+        bitField0_ |= 0x00000002;
         onChanged();
         return this;
       }
@@ -14709,8 +13933,9 @@ public final class BibixIntellijProto {
        * @return This builder for chaining.
        */
       public Builder clearActions() {
-        actions_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-        bitField0_ = (bitField0_ & ~0x00000001);
+        actions_ =
+          com.google.protobuf.LazyStringArrayList.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000002);;
         onChanged();
         return this;
       }
@@ -14721,12 +13946,11 @@ public final class BibixIntellijProto {
        */
       public Builder addActionsBytes(
           com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
+        if (value == null) { throw new NullPointerException(); }
+        checkByteStringIsUtf8(value);
         ensureActionsIsMutable();
         actions_.add(value);
+        bitField0_ |= 0x00000002;
         onChanged();
         return this;
       }
@@ -14763,7 +13987,18 @@ public final class BibixIntellijProto {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return new ExecuteActionsReq(input, extensionRegistry);
+        Builder builder = newBuilder();
+        try {
+          builder.mergeFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          throw e.setUnfinishedMessage(builder.buildPartial());
+        } catch (com.google.protobuf.UninitializedMessageException e) {
+          throw e.asInvalidProtocolBufferException().setUnfinishedMessage(builder.buildPartial());
+        } catch (java.io.IOException e) {
+          throw new com.google.protobuf.InvalidProtocolBufferException(e)
+              .setUnfinishedMessage(builder.buildPartial());
+        }
+        return builder.buildPartial();
       }
     };
 
@@ -14809,48 +14044,6 @@ public final class BibixIntellijProto {
       return new ExecuteActionsRes();
     }
 
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-      return this.unknownFields;
-    }
-    private ExecuteActionsRes(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      this();
-      if (extensionRegistry == null) {
-        throw new java.lang.NullPointerException();
-      }
-      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder();
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            default: {
-              if (!parseUnknownField(
-                  input, unknownFields, extensionRegistry, tag)) {
-                done = true;
-              }
-              break;
-            }
-          }
-        }
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw e.setUnfinishedMessage(this);
-      } catch (java.io.IOException e) {
-        throw new com.google.protobuf.InvalidProtocolBufferException(
-            e).setUnfinishedMessage(this);
-      } finally {
-        this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
-      }
-    }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
       return com.giyeok.bibix.intellij.BibixIntellijProto.internal_static_com_giyeok_bibix_intellij_ExecuteActionsRes_descriptor;
@@ -14878,7 +14071,7 @@ public final class BibixIntellijProto {
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
-      unknownFields.writeTo(output);
+      getUnknownFields().writeTo(output);
     }
 
     @java.lang.Override
@@ -14887,7 +14080,7 @@ public final class BibixIntellijProto {
       if (size != -1) return size;
 
       size = 0;
-      size += unknownFields.getSerializedSize();
+      size += getUnknownFields().getSerializedSize();
       memoizedSize = size;
       return size;
     }
@@ -14902,7 +14095,7 @@ public final class BibixIntellijProto {
       }
       com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsRes other = (com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsRes) obj;
 
-      if (!unknownFields.equals(other.unknownFields)) return false;
+      if (!getUnknownFields().equals(other.getUnknownFields())) return false;
       return true;
     }
 
@@ -14913,7 +14106,7 @@ public final class BibixIntellijProto {
       }
       int hash = 41;
       hash = (19 * hash) + getDescriptor().hashCode();
-      hash = (29 * hash) + unknownFields.hashCode();
+      hash = (29 * hash) + getUnknownFields().hashCode();
       memoizedHashCode = hash;
       return hash;
     }
@@ -15030,18 +14223,13 @@ public final class BibixIntellijProto {
 
       // Construct using com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsRes.newBuilder()
       private Builder() {
-        maybeForceBuilderInitialization();
+
       }
 
       private Builder(
           com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
         super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
-        }
+
       }
       @java.lang.Override
       public Builder clear() {
@@ -15077,38 +14265,6 @@ public final class BibixIntellijProto {
       }
 
       @java.lang.Override
-      public Builder clone() {
-        return super.clone();
-      }
-      @java.lang.Override
-      public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return super.setField(field, value);
-      }
-      @java.lang.Override
-      public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return super.clearField(field);
-      }
-      @java.lang.Override
-      public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return super.clearOneof(oneof);
-      }
-      @java.lang.Override
-      public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, java.lang.Object value) {
-        return super.setRepeatedField(field, index, value);
-      }
-      @java.lang.Override
-      public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return super.addRepeatedField(field, value);
-      }
-      @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsRes) {
           return mergeFrom((com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsRes)other);
@@ -15120,7 +14276,7 @@ public final class BibixIntellijProto {
 
       public Builder mergeFrom(com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsRes other) {
         if (other == com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsRes.getDefaultInstance()) return this;
-        this.mergeUnknownFields(other.unknownFields);
+        this.mergeUnknownFields(other.getUnknownFields());
         onChanged();
         return this;
       }
@@ -15135,17 +14291,30 @@ public final class BibixIntellijProto {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsRes parsedMessage = null;
+        if (extensionRegistry == null) {
+          throw new java.lang.NullPointerException();
+        }
         try {
-          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+          boolean done = false;
+          while (!done) {
+            int tag = input.readTag();
+            switch (tag) {
+              case 0:
+                done = true;
+                break;
+              default: {
+                if (!super.parseUnknownField(input, extensionRegistry, tag)) {
+                  done = true; // was an endgroup tag
+                }
+                break;
+              } // default:
+            } // switch (tag)
+          } // while (!done)
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsRes) e.getUnfinishedMessage();
           throw e.unwrapIOException();
         } finally {
-          if (parsedMessage != null) {
-            mergeFrom(parsedMessage);
-          }
-        }
+          onChanged();
+        } // finally
         return this;
       }
       @java.lang.Override
@@ -15181,7 +14350,18 @@ public final class BibixIntellijProto {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return new ExecuteActionsRes(input, extensionRegistry);
+        Builder builder = newBuilder();
+        try {
+          builder.mergeFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          throw e.setUnfinishedMessage(builder.buildPartial());
+        } catch (com.google.protobuf.UninitializedMessageException e) {
+          throw e.asInvalidProtocolBufferException().setUnfinishedMessage(builder.buildPartial());
+        } catch (java.io.IOException e) {
+          throw new com.google.protobuf.InvalidProtocolBufferException(e)
+              .setUnfinishedMessage(builder.buildPartial());
+        }
+        return builder.buildPartial();
       }
     };
 
@@ -15231,48 +14411,6 @@ public final class BibixIntellijProto {
       return new ExecuteActionUpdate();
     }
 
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-      return this.unknownFields;
-    }
-    private ExecuteActionUpdate(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      this();
-      if (extensionRegistry == null) {
-        throw new java.lang.NullPointerException();
-      }
-      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder();
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            default: {
-              if (!parseUnknownField(
-                  input, unknownFields, extensionRegistry, tag)) {
-                done = true;
-              }
-              break;
-            }
-          }
-        }
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw e.setUnfinishedMessage(this);
-      } catch (java.io.IOException e) {
-        throw new com.google.protobuf.InvalidProtocolBufferException(
-            e).setUnfinishedMessage(this);
-      } finally {
-        this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
-      }
-    }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
       return com.giyeok.bibix.intellij.BibixIntellijProto.internal_static_com_giyeok_bibix_intellij_ExecuteActionUpdate_descriptor;
@@ -15300,7 +14438,7 @@ public final class BibixIntellijProto {
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
-      unknownFields.writeTo(output);
+      getUnknownFields().writeTo(output);
     }
 
     @java.lang.Override
@@ -15309,7 +14447,7 @@ public final class BibixIntellijProto {
       if (size != -1) return size;
 
       size = 0;
-      size += unknownFields.getSerializedSize();
+      size += getUnknownFields().getSerializedSize();
       memoizedSize = size;
       return size;
     }
@@ -15324,7 +14462,7 @@ public final class BibixIntellijProto {
       }
       com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionUpdate other = (com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionUpdate) obj;
 
-      if (!unknownFields.equals(other.unknownFields)) return false;
+      if (!getUnknownFields().equals(other.getUnknownFields())) return false;
       return true;
     }
 
@@ -15335,7 +14473,7 @@ public final class BibixIntellijProto {
       }
       int hash = 41;
       hash = (19 * hash) + getDescriptor().hashCode();
-      hash = (29 * hash) + unknownFields.hashCode();
+      hash = (29 * hash) + getUnknownFields().hashCode();
       memoizedHashCode = hash;
       return hash;
     }
@@ -15456,18 +14594,13 @@ public final class BibixIntellijProto {
 
       // Construct using com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionUpdate.newBuilder()
       private Builder() {
-        maybeForceBuilderInitialization();
+
       }
 
       private Builder(
           com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
         super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
-        }
+
       }
       @java.lang.Override
       public Builder clear() {
@@ -15503,38 +14636,6 @@ public final class BibixIntellijProto {
       }
 
       @java.lang.Override
-      public Builder clone() {
-        return super.clone();
-      }
-      @java.lang.Override
-      public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return super.setField(field, value);
-      }
-      @java.lang.Override
-      public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return super.clearField(field);
-      }
-      @java.lang.Override
-      public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return super.clearOneof(oneof);
-      }
-      @java.lang.Override
-      public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, java.lang.Object value) {
-        return super.setRepeatedField(field, index, value);
-      }
-      @java.lang.Override
-      public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return super.addRepeatedField(field, value);
-      }
-      @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionUpdate) {
           return mergeFrom((com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionUpdate)other);
@@ -15546,7 +14647,7 @@ public final class BibixIntellijProto {
 
       public Builder mergeFrom(com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionUpdate other) {
         if (other == com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionUpdate.getDefaultInstance()) return this;
-        this.mergeUnknownFields(other.unknownFields);
+        this.mergeUnknownFields(other.getUnknownFields());
         onChanged();
         return this;
       }
@@ -15561,17 +14662,30 @@ public final class BibixIntellijProto {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionUpdate parsedMessage = null;
+        if (extensionRegistry == null) {
+          throw new java.lang.NullPointerException();
+        }
         try {
-          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+          boolean done = false;
+          while (!done) {
+            int tag = input.readTag();
+            switch (tag) {
+              case 0:
+                done = true;
+                break;
+              default: {
+                if (!super.parseUnknownField(input, extensionRegistry, tag)) {
+                  done = true; // was an endgroup tag
+                }
+                break;
+              } // default:
+            } // switch (tag)
+          } // while (!done)
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionUpdate) e.getUnfinishedMessage();
           throw e.unwrapIOException();
         } finally {
-          if (parsedMessage != null) {
-            mergeFrom(parsedMessage);
-          }
-        }
+          onChanged();
+        } // finally
         return this;
       }
       @java.lang.Override
@@ -15607,7 +14721,18 @@ public final class BibixIntellijProto {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return new ExecuteActionUpdate(input, extensionRegistry);
+        Builder builder = newBuilder();
+        try {
+          builder.mergeFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          throw e.setUnfinishedMessage(builder.buildPartial());
+        } catch (com.google.protobuf.UninitializedMessageException e) {
+          throw e.asInvalidProtocolBufferException().setUnfinishedMessage(builder.buildPartial());
+        } catch (java.io.IOException e) {
+          throw new com.google.protobuf.InvalidProtocolBufferException(e)
+              .setUnfinishedMessage(builder.buildPartial());
+        }
+        return builder.buildPartial();
       }
     };
 

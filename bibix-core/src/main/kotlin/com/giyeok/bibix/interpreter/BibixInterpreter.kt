@@ -108,4 +108,6 @@ class BibixInterpreter(
     context: NameLookupContext,
     name: List<String>
   ): Definition = nameLookup.lookupName(requester, context, name)
+
+  val taskDescriptor: TaskDescriptor = TaskDescriptor(g, sourceManager)
 }

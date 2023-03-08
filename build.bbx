@@ -1,173 +1,205 @@
-import git("https://github.com/Joonsoo/jparser.git") as jparser
-import maven
 import jvm
-from bibix.plugins import java
-from bibix.plugins import ktjvm
+import maven
+import file
 from bibix.plugins import scala
+from bibix.plugins import ktjvm
 from bibix.plugins import protobuf
-from bibix.plugins import junit5
 from bibix.plugins import grpc
+from bibix.plugins import java
 
-gitTest = git("https://github.com/Joonsoo/jparser.git")
-mavenTest = maven.artifact("org.codehaus.plexus", "plexus-classworlds", "2.6.0")
-xxxTest = xxx.abc
-jparserlib = jvm.lib("lib/jparser-base-0.2.3.jar")
+jparserDeps = [
+  jvm.lib("lib/jparser-base-0.3.1.jar"),
+  jvm.lib("lib/jparser-base-proto-0.3.1.jar"),
+  jvm.lib("lib/jparser-naive-0.3.1.jar"),
+  jvm.lib("lib/jparser-fast-0.3.1.jar"),
+  jvm.lib("lib/jparser-fast-proto-0.3.1.jar"),
+  jvm.lib("lib/jparser-utils-0.3.1.jar"),
+  jvm.lib("lib/jparser-ktlib-0.3.1.jar"),
+]
 
-jparserVersion = "0.5"
-
-var kotlinVersion: string = "1.8.0"
+kotlinVersion = "1.8.10"
 var ktjvm.kotlinVersion = kotlinVersion
 
-var jdkVersion: string = "19"
-var ktjvm.outVersion = jdkVersion
-var scala.outVersion = jdkVersion
-var java.jdkVersion = jdkVersion
-var java.srcVersion = jdkVersion
-var java.outVersion = jdkVersion
-// -> ktjvm.kotlinVersion arg의 기본값을 변경. 이렇게 해도 여전히 cli에서 값 변경 가능
-// -> 다만 ktjvm.kotlinVersion과 kotlinVersion을 동시에 설정하면 오류 발생
+kotlinxCoroutinesVersion = "1.6.0"
+kotlinxCoroutinesDeps = [
+  maven.artifact("org.jetbrains.kotlinx", "kotlinx-coroutines-core", kotlinxCoroutinesVersion),
+  maven.artifact("org.jetbrains.kotlinx", "kotlinx-coroutines-jdk8", kotlinxCoroutinesVersion),
+]
+
+protobufVersion = "3.22.0"
+protobufDeps = [
+  maven.artifact("com.google.protobuf", "protobuf-java", protobufVersion),
+  maven.artifact("com.google.protobuf", "protobuf-java-util", protobufVersion),
+  maven.artifact("com.google.protobuf", "protobuf-kotlin", protobufVersion),
+]
 
 floggerVersion = "0.7.4"
+floggerDeps = [
+  maven.artifact("com.google.flogger", "flogger", floggerVersion),
+  maven.artifact("com.google.flogger", "flogger-system-backend", floggerVersion),
+  maven.artifact("org.slf4j", "slf4j-api", "1.7.36"),
+]
 
-// parserData = jparser.parsergen(
-//   src = "bibix.cdg",
-//   objectName = "BibixAst",
-//   parserDataFile = "parserdata.pb"
-// )
+testDeps = [
+  // maven.artifact("junit", "junit", "4.12"),
+  maven.artifact("org.junit.jupiter", "junit-jupiter-api", "5.8.2"),
+  maven.artifact("org.jetbrains.kotlin", "kotlin-test", kotlinVersion),
+]
 
-// ast = scala.library(
-//   srcs = [parserData.astCode],
-//   deps = [
-//     jparser.base,
-//     jparser.fast,
-//     maven.artifact("org.scala-lang", "scala-library", "2.13.8"),
-//   ],
-//   resources = [parserData.parserData]
-// )
+truthVersion = "1.1.3"
+truthDeps = [
+  maven.artifact("com.google.truth", "truth", truthVersion),
+  maven.artifact("com.google.truth.extensions", "truth-proto-extension", truthVersion),
+]
 
-ast0 = scala.library(
-  srcs = [
-    "bibix-ast/src/generated/scala/com/giyeok/bibix/ast/BibixAst.scala",
-  ],
-  deps = [
-    jvm.lib("lib/jparser-base-0.2.3.jar"),
-    jvm.lib("lib/jparser-fast-0.2.3.jar"),
-    jvm.lib("lib/jparser-naive-0.2.3.jar"),
-    jvm.lib("lib/jparser-utils-0.2.3.jar"),
-    maven.artifact("org.scala-lang", "scala-library", "2.13.8"),
-    maven.artifact("com.google.protobuf", "protobuf-java", "3.19.4"),
-    maven.artifact("com.google.protobuf", "protobuf-java-util", "3.19.4"),
-  ],
-  resources = ["bibix-ast/src/generated/resources/parserdata.pb"],
-)
+jimfsDep = maven.artifact("com.google.jimfs", "jimfs", "1.2")
 
-ast0Jar = jvm.jar(deps=[ast0], jarFileName="bibix-ast-0.0.3.jar")
+grpcVersion = "1.53.0"
+grpcDeps = [
+  maven.artifact("io.grpc", "grpc-services", grpcVersion),
+  maven.artifact("io.grpc", "grpc-netty-shaded", grpcVersion),
+  maven.artifact("io.grpc", "grpc-kotlin-stub", "1.3.0"),
+]
 
-proto {
-  schema = protobuf.schema(
+base {
+  proto {
+    schema = protobuf.schema(glob("bibix-base/src/proto/*.proto"))
+
+    javacode = protobuf.java(schema)
+    kotlincode = protobuf.kotlin(schema)
+
+    action generate {
+      file.clearDirectory("bibix-base/src/generated/proto/java")
+      file.clearDirectory("bibix-base/src/generated/proto/kotlin")
+      file.copyDirectory(javacode.rootDir, "bibix-base/src/generated/proto/java")
+      file.copyDirectory(kotlincode.rootDir, "bibix-base/src/generated/proto/kotlin")
+    }
+  }
+
+  main = ktjvm.library(
     srcs = [
-      "bibix-core/src/main/protobuf/ids.proto",
-      "bibix-core/src/main/protobuf/repo.proto",
-      "bibix-core/src/main/protobuf/run_config.proto",
-      "bibix-core/src/main/protobuf/values.proto",
+      ...glob("bibix-base/src/generated/proto/java/**/*.java"),
+      // 코틀린 컴파일러는 자바도 지원함
+      ...glob("bibix-base/src/generated/proto/kotlin/**/*.kt"),
+      ...glob("bibix-base/src/main/kotlin/**/*.kt"),
+    ],
+    deps = [
+      ...kotlinxCoroutinesDeps,
+      ...protobufDeps,
     ]
-  )
-
-  protoset = protobuf.protoset(schema=schema)
-  javaprotosrc = protobuf.java(schema)
-  javagrpcsrc = grpc.java(schema)
-  javalib = java.library(
-    srcs = [...javaprotosrc, ...javagrpcsrc],
-    deps = [
-      maven.artifact("com.google.protobuf", "protobuf-java", "3.19.4"),
-      maven.artifact("io.grpc", "grpc-all", "1.46.0"),
-      maven.artifact("javax.annotation", "javax.annotation-api", "1.3.2"),
-    ],
-  )
-  kotlinprotosrc = protobuf.kotlin(schema)
-  kotlingrpcsrc = grpc.kotlin(schema)
-  kotlinlib = ktjvm.library(
-    srcs = [...kotlinprotosrc, ...kotlingrpcsrc],
-    deps = [
-      javalib,
-      maven.artifact("com.google.protobuf", "protobuf-kotlin", "3.19.4"),
-      maven.artifact("org.jetbrains.kotlin", "kotlin-stdlib-jdk8", kotlinVersion),
-      maven.artifact("org.jetbrains.kotlinx", "kotlinx-coroutines-core", "1.6.1"),
-      maven.artifact("org.jetbrains.kotlinx", "kotlinx-coroutines-jdk8", "1.6.1"),
-      maven.artifact("io.grpc", "grpc-kotlin-stub", "1.2.1"),
-    ],
-    optIns = ["kotlin.RequiresOptIn"]
   )
 }
 
-base = ktjvm.library(
-  srcs = glob("bibix-base/src/main/kotlin/**/*.kt"),
-  deps = [
-    maven.artifact("org.jetbrains.kotlin", "kotlin-stdlib-jdk8", kotlinVersion),
-    // proto.javalib,
-    proto.kotlinlib,
-  ]
-)
+parser {
+  main = ktjvm.library(
+    srcs = glob("bibix-parser/src/generated/kotlin/**/*.kt"),
+    resources = glob("bibix-parser/src/generated/resources/**"),
+    deps = [
+      ...jparserDeps,
+      maven.artifact("org.scala-lang", "scala-library", "2.13.10"),
+      ...protobufDeps
+    ],
+  )
 
-core = ktjvm.library(
-  srcs = glob("bibix-core/src/main/kotlin/**/*.kt"),
-  deps = [
-    base,
-    ast0,
+  test = ktjvm.library(
+    srcs = glob("bibix-parser/src/test/kotlin/**/*.kt"),
+    deps = [...testDeps, parser.main]
+  )
+}
 
-    maven.artifact("org.jetbrains.kotlin", "kotlin-stdlib-jdk8", kotlinVersion),
-    maven.artifact("org.jetbrains.kotlin", "kotlin-reflect", kotlinVersion),
-    maven.artifact("org.jetbrains.kotlinx", "kotlinx-coroutines-core", "1.6.1"),
-    maven.artifact("org.jetbrains.kotlinx", "kotlinx-coroutines-jdk8", "1.6.1"),
+mavenResolverVersion = "1.9.5"
 
-    maven.artifact("com.google.protobuf", "protobuf-java-util", "3.19.4"),
-    maven.artifact("com.fasterxml.jackson.core", "jackson-databind", "2.13.1"),
-    maven.artifact("com.fasterxml.jackson.module", "jackson-module-kotlin", "2.13.1"),
+core {
+  main = ktjvm.library(
+    srcs = glob("bibix-core/src/main/kotlin/**/*.kt"),
+    deps = [
+      base.main,
+      parser.main,
+      ...kotlinxCoroutinesDeps,
+      ...protobufDeps,
+      maven.artifact("org.codehaus.plexus", "plexus-classworlds", "2.6.0"),
+      maven.artifact("org.eclipse.jgit", "org.eclipse.jgit", "6.4.0.202211300538-r"),
 
-    maven.artifact("io.grpc", "grpc-netty-shaded", "1.41.0"),
-    maven.artifact("io.grpc", "grpc-services", "1.41.0"),
-    maven.artifact("io.grpc", "grpc-kotlin-stub", "1.2.1"),
+      maven.artifact("org.apache.maven", "maven-resolver-provider", "3.6.1"),
+      maven.artifact("org.apache.maven.resolver", "maven-resolver-api", mavenResolverVersion),
+      maven.artifact("org.apache.maven.resolver", "maven-resolver-spi", mavenResolverVersion),
+      maven.artifact("org.apache.maven.resolver", "maven-resolver-impl", mavenResolverVersion),
+      maven.artifact("org.apache.maven.resolver", "maven-resolver-util", mavenResolverVersion),
+      maven.artifact("org.apache.maven.resolver", "maven-resolver-connector-basic", mavenResolverVersion),
+      maven.artifact("org.apache.maven.resolver", "maven-resolver-transport-file", mavenResolverVersion),
+      maven.artifact("org.apache.maven.resolver", "maven-resolver-transport-http", mavenResolverVersion),
 
-    maven.artifact("org.codehaus.plexus", "plexus-classworlds", "2.6.0"),
-    maven.artifact("org.eclipse.jgit", "org.eclipse.jgit", "6.1.0.202203080745-r"),
-    maven.artifact("org.apache.maven", "maven-resolver-provider", "3.8.5"),
-    maven.artifact("org.apache.maven.resolver", "maven-resolver-connector-basic", "1.7.3"),
-    maven.artifact("org.apache.maven.resolver", "maven-resolver-transport-file", "1.7.3"),
-    maven.artifact("org.apache.maven.resolver", "maven-resolver-transport-http", "1.7.3"),
+      maven.artifact("commons-codec", "commons-codec", "1.15"),
 
-    maven.artifact("com.google.flogger", "flogger", floggerVersion),
-    maven.artifact("com.google.flogger", "flogger-system-backend", floggerVersion),
-    maven.artifact("commons-logging", "commons-logging", "1.2"),
-  ],
-)
+      ...floggerDeps,
+    ]
+  )
 
-junitVersion = "5.8.2"
+  test = ktjvm.library(
+    srcs = glob("bibix-core/src/test/kotlin/**/*.kt"),
+    deps = [
+      ...testDeps,
+      ...truthDeps,
+      jimfsDep,
+      main,
+    ],
+  )
 
-testDeps = [
-  maven.artifact("com.google.jimfs", "jimfs", "1.2"),
-  maven.artifact("org.junit.jupiter", "junit-jupiter-api", junitVersion, scope=maven.ScopeType.test),
-  maven.artifact("com.google.truth", "truth", "1.1.3"),
-  // runtime deps?
-  maven.artifact("org.junit.jupiter", "junit-jupiter-engine", junitVersion, scope=maven.ScopeType.test),
-]
+  uberJar = jvm.uberJar([main])
+}
 
-action coreTest = junit5.runTests(
-  deps=[
-    ktjvm.library(
-      srcs = glob("bibix-core/src/test/kotlin/**/*.kt"),
-      deps = [core, ...testDeps],
-    ),
-  ]
-)
+intellij {
+  proto {
+    schema = protobuf.schema(glob("bibix-intellij/src/proto/*.proto"))
 
-uberJar = jvm.executableUberJar(
-  deps = [core],
-  mainClass = "com.giyeok.bibix.frontend.cli.BibixCli",
-  jarFileName = "bibix-uberjar.jar"
-)
+    protoJavaCode = protobuf.java(schema)
+    protoKotlinCode = protobuf.kotlin(schema)
 
-action run(args) = jvm.run(
-  deps = [core],
-  mainClass = "com.giyeok.bibix.frontend.cli.BibixCli",
-  args = args,
-)
+    grpcJavaCode = grpc.java(schema)
+    grpcKotlinCode = grpc.kotlin(schema)
+
+    action generate {
+      file.clearDirectory("bibix-intellij/src/generated/proto/java")
+      file.clearDirectory("bibix-intellij/src/generated/proto/kotlin")
+      file.copyDirectory(protoJavaCode.rootDir, "bibix-intellij/src/generated/proto/java")
+      file.copyDirectory(protoKotlinCode.rootDir, "bibix-intellij/src/generated/proto/kotlin")
+
+      file.clearDirectory("bibix-intellij/src/generated/grpc/java")
+      file.clearDirectory("bibix-intellij/src/generated/grpc/kotlin")
+      file.copyDirectory(grpcJavaCode.rootDir, "bibix-intellij/src/generated/grpc/java")
+      file.copyDirectory(grpcKotlinCode.rootDir, "bibix-intellij/src/generated/grpc/kotlin")
+    }
+  }
+
+  generated = ktjvm.library(
+    srcs = [
+      ...glob("bibix-intellij/src/generated/proto/java/**/*.java"),
+      ...glob("bibix-intellij/src/generated/proto/kotlin/**/*.kt"),
+      ...glob("bibix-intellij/src/generated/grpc/java/**/*.java"),
+      ...glob("bibix-intellij/src/generated/grpc/kotlin/**/*.kt"),
+    ],
+    deps = [
+      ...kotlinxCoroutinesDeps,
+      ...protobufDeps,
+      ...grpcDeps,
+    ]
+  )
+
+  main = ktjvm.library(
+    srcs = glob("bibix-intellij/src/main/kotlin/**/*.kt"),
+    deps = [
+      generated,
+      core.main,
+    ]
+  )
+
+  test = ktjvm.library(
+    srcs = glob("bibix-intellij/src/test/kotlin/**/*.kt"),
+    deps = [
+      ...testDeps,
+      ...truthDeps,
+      jimfsDep,
+      intellij.main,
+    ]
+  )
+}

@@ -37,6 +37,7 @@ class NameLookup(
 
     check(!nameLookupTable.isImported(context.sourceId, import.scopeName()))
 
+    // TODO 여러 군데서 동시에 같은 소스를 loadImport하는 경우에 문제가 있는듯
     when (import) {
       is BibixAst.ImportAll -> resolveImportAll(task, context, lookupResult, import)
       is BibixAst.ImportFrom -> resolveImportFrom(task, context, lookupResult, import)

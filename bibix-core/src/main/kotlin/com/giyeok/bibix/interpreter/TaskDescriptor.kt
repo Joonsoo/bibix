@@ -12,9 +12,13 @@ class TaskDescriptor(val g: TaskRelGraph, val sourceManager: SourceManager) {
       is Task.EvalExpr -> runBlocking {
         val astNode = g.getReferredNodeById(task.sourceId, task.exprId)
         val projectPath = sourceManager.getProjectRoot(task.sourceId)
-        val taskText = sourceManager.sourceText(task.sourceId, astNode!!)
-        writer.println("EvalExpr ${task.sourceId} $projectPath ${astNode::class.simpleName} ${astNode.start}-${astNode.end}")
-        writer.println(taskText)
+        if (astNode == null) {
+          writer.println("EvalExpr ${task.sourceId} $projectPath $astNode")
+        } else {
+          val taskText = sourceManager.sourceText(task.sourceId, astNode)
+          writer.println("EvalExpr ${task.sourceId} $projectPath ${astNode::class.simpleName} ${astNode.start}-${astNode.end}")
+          writer.println(taskText)
+        }
       }
 
       is Task.EvalCallExpr -> runBlocking {
@@ -27,7 +31,14 @@ class TaskDescriptor(val g: TaskRelGraph, val sourceManager: SourceManager) {
 
       is Task.EvalDefinitionTask -> {}
       is Task.EvalName -> {}
-      is Task.EvalType -> {}
+      is Task.EvalType -> runBlocking {
+        val astNode = g.getReferredNodeById(task.sourceId, task.typeExprId)
+        val projectPath = sourceManager.getProjectRoot(task.sourceId)
+        val taskText = sourceManager.sourceText(task.sourceId, astNode!!)
+        writer.println("EvalCallExpr at ${task.sourceId} $projectPath ${astNode.start}-${astNode.end}")
+        writer.println(taskText)
+      }
+
       is Task.ExecuteAction -> {}
       is Task.ExecuteActionCall -> {}
       is Task.FindVarRedefsTask -> runBlocking {

@@ -107,10 +107,9 @@ class BuildFrontend(
             val writer = StringWriter()
             val pwriter = PrintWriter(writer)
             pwriter.println("Task trace (size=${e.trace.size}):")
-            val descriptor = TaskDescriptor(interpreter.g, interpreter.sourceManager)
             e.trace.forEach { task ->
               pwriter.println(task)
-              descriptor.printTaskDescription(task, pwriter)
+              interpreter.taskDescriptor.printTaskDescription(task, pwriter)
             }
             pwriter.println("===")
             System.err.println(writer.toString())
