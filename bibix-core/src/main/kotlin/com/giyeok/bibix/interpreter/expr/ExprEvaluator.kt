@@ -2,10 +2,7 @@ package com.giyeok.bibix.interpreter.expr
 
 import com.giyeok.bibix.ast.BibixAst
 import com.giyeok.bibix.base.*
-import com.giyeok.bibix.interpreter.BibixExecutionException
-import com.giyeok.bibix.interpreter.BibixInterpreter
-import com.giyeok.bibix.interpreter.PluginImplProvider
-import com.giyeok.bibix.interpreter.SourceManager
+import com.giyeok.bibix.interpreter.*
 import com.giyeok.bibix.interpreter.task.Task
 import com.giyeok.bibix.interpreter.task.TaskRelGraph
 import com.giyeok.bibix.repo.DirectoryLocker
@@ -27,14 +24,14 @@ class ExprEvaluator(
 
   suspend fun coerce(
     task: Task,
-    context: NameLookupContext,
+    context: ExprEvalContext,
     value: BibixValue,
     type: BibixType
   ): BibixValue = coercer.coerce(task, context, value, type)
 
   suspend fun evaluateType(
     requester: Task,
-    context: NameLookupContext,
+    context: ExprEvalContext,
     type: BibixAst.TypeExpr,
   ): BibixType = g.withTask(requester, g.evalTypeTask(context.sourceId, type)) { task ->
     when (type) {
@@ -49,7 +46,8 @@ class ExprEvaluator(
           listOf("actionrule") -> ActionRuleDefType
           listOf("type") -> TypeType
           else -> {
-            when (val definition = interpreter.lookupName(task, context, name)) {
+            val (definition, _) = interpreter.lookupName(task, context, name)
+            when (definition) {
               is Definition.ClassDef -> {
                 val packageName = sourceManager.getPackageName(definition.cname.sourceId)
                   ?: throw IllegalStateException(
@@ -112,7 +110,7 @@ class ExprEvaluator(
 
   suspend fun evaluateName(
     task: Task,
-    context: NameLookupContext,
+    context: ExprEvalContext,
     name: BibixAst.Name,
     thisValue: BibixValue?,
     outputNames: Set<CName>,
@@ -121,32 +119,38 @@ class ExprEvaluator(
 
   suspend fun evaluateName(
     requester: Task,
-    context: NameLookupContext,
+    context: ExprEvalContext,
     name: List<String>,
     thisValue: BibixValue?,
     outputNames: Set<CName>,
   ): EvaluationResult =
-    g.withTask(requester, g.evalNameTask(context, name, thisValue)) { task ->
-      evaluateDefinition(task, interpreter.lookupName(task, context, name), thisValue, outputNames)
+    g.withTask(requester, g.evalNameTask(context.nameLookupContext, name, thisValue)) { task ->
+      val (definition, varsCtx) = interpreter.lookupName(task, context, name)
+      evaluateDefinition(task, varsCtx, definition, thisValue, outputNames)
     }
 
   suspend fun evaluateDefinition(
     requester: Task,
+    varsContext: VarsContext,
     definition: Definition,
     thisValue: BibixValue?,
     outputNames: Set<CName>,
   ): EvaluationResult = g.withTask(requester, g.evalDefinitionTask(definition, thisValue)) { task ->
     when (definition) {
       is Definition.ImportDef -> TODO()
-      is Definition.NamespaceDef -> EvaluationResult.Namespace(NameLookupContext(definition.cname))
+      is Definition.NamespaceDef ->
+        EvaluationResult.Namespace(
+          ExprEvalContext(NameLookupContext(definition.cname), varsContext)
+        )
+
       is Definition.TargetDef -> {
         val name = definition.cname
-        val defContext = NameLookupContext(name).dropLastToken()
-        evaluateExpr(task, defContext, definition.target.value, thisValue, outputNames + name)
+        val context = ExprEvalContext(NameLookupContext(name).dropLastToken(), varsContext)
+        evaluateExpr(task, context, definition.target.value, thisValue, outputNames + name)
       }
 
       is Definition.ActionDef -> TODO()
-      is Definition.ClassDef -> callExprEvaluator.resolveClassDef(task, definition)
+      is Definition.ClassDef -> callExprEvaluator.resolveClassDef(task, varsContext, definition)
 
       is Definition.EnumDef -> {
         val sourceId = definition.cname.sourceId
@@ -163,33 +167,21 @@ class ExprEvaluator(
       is Definition.VarDef -> {
         val varDef = varsManager.getVarDef(definition.cname)
         check(varDef.def == definition.varDef)
-        // TODO 프로그램 argument 지원
-        // TODO 지금은 main에서의 redef만 인정하도록 해놨는데 어떻게 하는게 좋을지 더 고민
-        val redefines = varsManager.findVarRedefs(task, definition.cname)
-          .filter { it.redefContext.sourceId == MainSourceId }
-        if (redefines.isNotEmpty()) {
-          // TODO redefinition이 여러개 발견되면 어떻게 처리하지..?
-          if (redefines.size != 1) {
-            throw BibixExecutionException(
-              "more than one redefinition for ${definition.cname} found: $redefines",
-              g.upstreamPathTo(task)
-            )
-          }
-          val redefine = redefines.first()
-          evaluateExpr(task, redefine.redefContext, redefine.def.redefValue, null, setOf())
+        val redef = varsContext.overriddenVars[definition.cname.tokens]
+        if (redef != null) {
+          evaluateExpr(task, redef.first, redef.second, null, setOf())
         } else {
+          val context = ExprEvalContext(varDef.defContext, varsContext)
           val defaultValueExpr = varDef.def.defaultValue ?: throw IllegalStateException("???")
-          evaluateExpr(task, varDef.defContext, defaultValueExpr, null, setOf())
+          evaluateExpr(task, context, defaultValueExpr, null, setOf())
         }
       }
 
-      is Definition.VarRedef -> TODO()
-
       is Definition.BuildRule ->
-        callExprEvaluator.resolveBuildRule(task, thisValue, definition)
+        callExprEvaluator.resolveBuildRule(task, varsContext, thisValue, definition)
 
       is Definition.ActionRule ->
-        callExprEvaluator.resolveActionRule(task, thisValue, definition)
+        callExprEvaluator.resolveActionRule(task, varsContext, thisValue, definition)
     }
   }
 
@@ -199,8 +191,8 @@ class ExprEvaluator(
     typeName: String
   ): EvaluationResult? {
     val sourceId = sourceManager.getSourceIdFromPackageName(packageName) ?: return null
-    val lookupCtx = NameLookupContext(sourceId, listOf())
-    return evaluateName(task, lookupCtx, typeName.split('.'), null, setOf())
+    val context = ExprEvalContext(NameLookupContext(sourceId, listOf()), VarsContext())
+    return evaluateName(task, context, typeName.split('.'), null, setOf())
   }
 
   private fun findMember(targetExpr: BibixAst.Expr, value: BibixValue, name: String): BibixValue =
@@ -240,7 +232,7 @@ class ExprEvaluator(
 
   suspend fun evaluateExpr(
     requester: Task,
-    context: NameLookupContext,
+    context: ExprEvalContext,
     expr: BibixAst.Expr,
     thisValue: BibixValue?,
     outputNames: Set<CName>,
@@ -249,7 +241,7 @@ class ExprEvaluator(
   // directBindings는 action의 args처럼 가장 가까운 스코프에서 값을 직접 할당하려는 경우 사용
   suspend fun evaluateExpr(
     requester: Task,
-    context: NameLookupContext,
+    context: ExprEvalContext,
     expr: BibixAst.Expr,
     thisValue: BibixValue?,
     directBindings: Map<String, BibixValue>,
@@ -289,12 +281,18 @@ class ExprEvaluator(
           when (val target =
             evaluateExpr(task, context, expr.target, thisValue, directBindings, setOf())) {
             is EvaluationResult.Namespace ->
-              evaluateName(task, target.context, listOf(expr.name), thisValue, outputNames)
+              evaluateName(
+                task,
+                target.context,
+                listOf(expr.name),
+                thisValue,
+                outputNames
+              )
 
             is EvaluationResult.Value ->
               EvaluationResult.Value(findMember(expr.target, target.value, expr.name))
 
-            is EvaluationResult.ValueWithObjectHash ->
+            is EvaluationResult.ValueWithTargetId ->
               EvaluationResult.Value(findMember(expr.target, target.value, expr.name))
 
             is EvaluationResult.EnumDef -> {
@@ -432,7 +430,7 @@ class ExprEvaluator(
 
   suspend fun executeAction(
     requester: Task,
-    context: NameLookupContext,
+    context: ExprEvalContext,
     expr: BibixAst.Expr,
     args: Pair<String, List<String>>?,
   ) = g.withTask(requester, Task.ExecuteAction(context.sourceId, expr.nodeId)) { task ->

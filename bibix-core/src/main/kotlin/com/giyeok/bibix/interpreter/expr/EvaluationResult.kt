@@ -2,6 +2,7 @@ package com.giyeok.bibix.interpreter.expr
 
 import com.giyeok.bibix.ast.BibixAst
 import com.giyeok.bibix.base.*
+import com.giyeok.bibix.interpreter.ExprEvalContext
 import com.giyeok.bibix.repo.ObjectHash
 
 sealed class EvaluationResult {
@@ -15,12 +16,12 @@ sealed class EvaluationResult {
     override fun tryEnsureValue(): BibixValue = value
   }
 
-  data class ValueWithObjectHash(val value: BibixValue, val objectHash: ObjectHash) :
+  data class ValueWithTargetId(val value: BibixValue, val objectHash: ObjectHash) :
     EvaluationResult() {
     override fun tryEnsureValue(): BibixValue = value
   }
 
-  data class Namespace(val context: NameLookupContext) : EvaluationResult()
+  data class Namespace(val context: ExprEvalContext) : EvaluationResult()
 
   data class Param(
     val name: String,
@@ -32,7 +33,7 @@ sealed class EvaluationResult {
   }
 
   sealed class Callable : EvaluationResult() {
-    abstract val context: NameLookupContext
+    abstract val context: ExprEvalContext
     abstract val params: List<Param>
   }
 
@@ -46,7 +47,7 @@ sealed class EvaluationResult {
 
       data class NativeBuildRuleDef(
         override val name: CName,
-        override val context: NameLookupContext,
+        override val context: ExprEvalContext,
         override val params: List<Param>,
         override val returnType: BibixType,
         val implInstance: Any,
@@ -57,7 +58,7 @@ sealed class EvaluationResult {
 
       data class UserBuildRuleDef(
         override val name: CName,
-        override val context: NameLookupContext,
+        override val context: ExprEvalContext,
         val implTarget: List<String>,
         val thisValue: BibixValue?,
         override val params: List<Param>,
@@ -75,7 +76,7 @@ sealed class EvaluationResult {
     sealed class ActionRuleDef : RuleDef() {
       data class PreloadedActionRuleDef(
         override val name: CName,
-        override val context: NameLookupContext,
+        override val context: ExprEvalContext,
         override val params: List<Param>,
         val implInstance: Any,
         override val methodName: String,
@@ -85,7 +86,7 @@ sealed class EvaluationResult {
 
       data class UserActionRuleDef(
         override val name: CName,
-        override val context: NameLookupContext,
+        override val context: ExprEvalContext,
         val implTarget: List<String>,
         val thisValue: BibixValue?,
         override val params: List<Param>,
@@ -101,7 +102,7 @@ sealed class EvaluationResult {
   }
 
   data class DataClassDef(
-    override val context: NameLookupContext,
+    override val context: ExprEvalContext,
     val packageName: String,
     val className: String,
     override val params: List<Param>,
@@ -112,7 +113,7 @@ sealed class EvaluationResult {
   }
 
   data class SuperClassDef(
-    val context: NameLookupContext,
+    val context: ExprEvalContext,
     val packageName: String,
     val className: String,
     val subClasses: List<String>,

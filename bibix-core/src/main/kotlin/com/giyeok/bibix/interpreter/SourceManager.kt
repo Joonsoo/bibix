@@ -97,10 +97,11 @@ class SourceManager {
 
     val (scriptText, buildScript) = parseScript(project)
 
-    val sourceId = ExternSourceId(externSourceIdCounter)
-    mutex.withLock {
+    val sourceId = mutex.withLock {
       externSourceIdCounter += 1
-      externSources[project] = sourceId
+      val id = ExternSourceId(externSourceIdCounter)
+      externSources[project] = id
+      id
     }
     return registerScript(
       sourceId,

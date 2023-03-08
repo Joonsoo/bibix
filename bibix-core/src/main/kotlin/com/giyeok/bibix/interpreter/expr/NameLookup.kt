@@ -4,13 +4,11 @@ import com.giyeok.bibix.ast.BibixAst
 import com.giyeok.bibix.base.*
 import com.giyeok.bibix.interpreter.BibixExecutionException
 import com.giyeok.bibix.interpreter.BibixProject
+import com.giyeok.bibix.interpreter.ExprEvalContext
 import com.giyeok.bibix.interpreter.SourceManager
-import com.giyeok.bibix.interpreter.TaskDescriptor
 import com.giyeok.bibix.interpreter.task.Task
 import com.giyeok.bibix.interpreter.task.TaskRelGraph
 import com.giyeok.bibix.plugins.PreloadedPlugin
-import java.io.PrintWriter
-import java.io.StringWriter
 
 class NameLookup(
   private val g: TaskRelGraph,
@@ -18,45 +16,110 @@ class NameLookup(
   private val preloadedPlugins: Map<String, PreloadedPlugin>,
   private val exprEvaluator: ExprEvaluator,
   private val sourceManager: SourceManager,
+  private val varsManager: VarsManager,
 ) {
   suspend fun lookupName(
     requester: Task,
-    context: NameLookupContext,
+    context: ExprEvalContext,
     name: List<String>
-  ): Definition = g.withTask(requester, g.lookupNameTask(context, name)) { task ->
-    val lookupResult = nameLookupTable.lookup(context, name)
-    handleLookupResult(task, context, name, lookupResult)
+  ): Pair<Definition, VarsContext> {
+    check(name.isNotEmpty())
+
+    suspend fun lookup(
+      lookupCtx: NameLookupContext,
+      varsCtx: VarsContext,
+      definition: Definition,
+      tokens: List<String>
+    ): Pair<Definition, VarsContext> = when (definition) {
+      is Definition.ImportDef -> {
+        // TODO load import
+        val imported = nameLookupTable.getImport(definition.cname)
+          ?: loadImport(
+            requester,
+            ExprEvalContext(lookupCtx, varsCtx),
+            definition.cname,
+            definition.import
+          )
+        // TODO update varsCtx
+        val redefs = varsManager.redefsInSource(context.sourceId)
+        // redefs 중 imported의 var를 가리키고 있는 것들을 추려서 newVarsCtx 구성
+        println(redefs)
+        val effectiveRedefs = redefs
+          .filter { redef ->
+            val redefTargetLookup = nameLookupTable.lookup(redef.redefContext, redef.def.nameTokens)
+            // 위에서 우리가 관심있는 import는 loadImport가 완료된 상태이기 때문에, ImportRequired가 나온다면 우리가 관심 없는 import라는 의미이므로 제외
+            redefTargetLookup is LookupResult.DefinitionFound &&
+              redefTargetLookup.definition.cname.sourceId == imported.sourceId
+          }
+        val newVarsCtx = varsCtx.push(imported.sourceId, effectiveRedefs.associate { redef ->
+          // TODO redef.def.nameTokens에서 실제로 import된 프로젝트 안의 이름만 추출. 땜빵으로 drop(1) 해놨음
+          redef.def.nameTokens.drop(1) to Pair(
+            // TODO 여기서 varsCtx가 맞나?
+            ExprEvalContext(redef.redefContext, varsCtx),
+            redef.def.redefValue
+          )
+        })
+        when (imported) {
+          is ImportedSource.ImportedNames -> {
+            if (tokens.isNotEmpty()) {
+              lookupName(requester, ExprEvalContext(imported.nameLookupContext, newVarsCtx), tokens)
+            } else {
+              Pair(Definition.NamespaceDef(imported.nameLookupContext.toCName()), newVarsCtx)
+            }
+          }
+
+          is ImportedSource.ImportedDefinition -> {
+            check(tokens.isEmpty())
+            Pair(imported.definition, newVarsCtx)
+          }
+        }
+      }
+
+      is Definition.NamespaceDef -> if (tokens.isEmpty()) {
+        Pair(definition, varsCtx)
+      } else {
+        lookupName(requester, ExprEvalContext(NameLookupContext(definition.cname), varsCtx), tokens)
+      }
+
+      else -> {
+        check(tokens.isEmpty())
+        Pair(definition, varsCtx)
+      }
+    }
+
+    val firstDef = nameLookupTable.findFirstToken(context.nameLookupContext, name.first())
+      ?: throw BibixExecutionException("", g.upstreamPathTo(requester))
+    return lookup(context.nameLookupContext, context.varsContext, firstDef, name.drop(1))
   }
 
-  private suspend fun loadImport(
+  // TODO 여러 군데서 동시에 같은 소스를 loadImport하는 경우에 문제가 있는듯
+  suspend fun loadImport(
     task: Task,
-    context: NameLookupContext,
-    lookupResult: LookupResult.ImportRequired
-  ) {
-    val import = lookupResult.import.import
-
+    context: ExprEvalContext,
+    importName: CName,
+    import: BibixAst.ImportDef
+  ): ImportedSource {
     check(!nameLookupTable.isImported(context.sourceId, import.scopeName()))
 
-    // TODO 여러 군데서 동시에 같은 소스를 loadImport하는 경우에 문제가 있는듯
-    when (import) {
-      is BibixAst.ImportAll -> resolveImportAll(task, context, lookupResult, import)
-      is BibixAst.ImportFrom -> resolveImportFrom(task, context, lookupResult, import)
+    return when (import) {
+      is BibixAst.ImportAll -> resolveImportAll(task, context, importName, import)
+      is BibixAst.ImportFrom -> resolveImportFrom(task, context, importName, import)
       else -> TODO()
     }
   }
 
   suspend fun tryLookupName(
     requester: Task,
-    context: NameLookupContext,
+    context: ExprEvalContext,
     name: List<String>
   ): LookupResult = g.withTask(requester, g.lookupNameTask(context, name)) { task ->
     suspend fun tryLookup(): LookupResult {
-      return when (val lookupResult = nameLookupTable.lookup(context, name)) {
+      return when (val lookupResult = nameLookupTable.lookup(context.nameLookupContext, name)) {
         is LookupResult.DefinitionFound, LookupResult.NameNotFound ->
           lookupResult
 
         is LookupResult.ImportRequired -> {
-          loadImport(task, context, lookupResult)
+          loadImport(task, context, lookupResult.import.cname, lookupResult.import.import)
           tryLookup()
         }
       }
@@ -67,7 +130,7 @@ class NameLookup(
 
   private suspend fun handleLookupResult(
     task: Task,
-    context: NameLookupContext,
+    context: ExprEvalContext,
     name: List<String>,
     lookupResult: LookupResult
   ): Definition =
@@ -76,8 +139,8 @@ class NameLookup(
         lookupResult.definition
 
       is LookupResult.ImportRequired -> {
-        loadImport(task, context, lookupResult)
-        val nextLookupResult = nameLookupTable.lookup(context, name)
+        loadImport(task, context, lookupResult.import.cname, lookupResult.import.import)
+        val nextLookupResult = nameLookupTable.lookup(context.nameLookupContext, name)
         handleLookupResult(task, context, name, nextLookupResult)
       }
 
@@ -92,30 +155,35 @@ class NameLookup(
 
   private suspend fun resolveImportAll(
     requester: Task,
-    context: NameLookupContext,
-    lookupResult: LookupResult.ImportRequired,
+    context: ExprEvalContext,
+    importName: CName,
     import: BibixAst.ImportAll
-  ): Unit = g.withTask(requester, g.resolveImportTask(context.sourceId, import)) { task ->
-    val importSource = resolveImportSource(task, context, lookupResult, import.source)
-    nameLookupTable.addImport(lookupResult.import.cname, NameLookupContext(importSource, listOf()))
+  ): ImportedSource = g.withTask(requester, g.resolveImportTask(context.sourceId, import)) { task ->
+    val importSource = resolveImportSource(task, context, importName, import.source)
+    nameLookupTable.addImport(importName, NameLookupContext(importSource, listOf()))
   }
 
   private suspend fun resolveImportFrom(
     requester: Task,
-    context: NameLookupContext,
-    lookupResult: LookupResult.ImportRequired,
+    context: ExprEvalContext,
+    importName: CName,
     import: BibixAst.ImportFrom
-  ): Unit = g.withTask(requester, g.resolveImportTask(context.sourceId, import)) { task ->
-    val importSource = resolveImportSource(task, context, lookupResult, import.source)
+  ): ImportedSource = g.withTask(requester, g.resolveImportTask(context.sourceId, import)) { task ->
+    val importSource = resolveImportSource(task, context, importName, import.source)
     // lookupResult가 임포트하려던 것이 Definition을 직접 가리키고 있으면 그 definition을 등록
     val importedScope = NameLookupContext(importSource, listOf())
     val importingName = import.importing.tokens
     val importLookup = nameLookupTable.lookup(importedScope, importingName)
-    val definition = handleLookupResult(task, importedScope, importingName, importLookup)
+    val definition = handleLookupResult(
+      task,
+      ExprEvalContext(importedScope, context.varsContext),
+      importingName,
+      importLookup
+    )
     if (definition is Definition.NamespaceDef) {
-      nameLookupTable.addImport(lookupResult.import.cname, NameLookupContext(definition.cname))
+      nameLookupTable.addImport(importName, NameLookupContext(definition.cname))
     } else {
-      nameLookupTable.addImport(lookupResult.import.cname, definition)
+      nameLookupTable.addImport(importName, definition)
     }
   }
 
@@ -123,8 +191,8 @@ class NameLookup(
   // 기본적으로는 evaluateExpr을 하고, 그러면 Bibix
   private suspend fun resolveImportSource(
     requester: Task,
-    context: NameLookupContext,
-    lookupResult: LookupResult.ImportRequired,
+    context: ExprEvalContext,
+    importName: CName,
     importSource: BibixAst.Expr
   ): SourceId {
     suspend fun process(task: Task): SourceId {
@@ -137,7 +205,7 @@ class NameLookup(
           val sourceId = PreloadedSourceId(importSource.name)
           val importedContext = NameLookupContext(sourceId, listOf())
           nameLookupTable.add(importedContext, plugin.defs)
-          nameLookupTable.addImport(lookupResult.import.cname, importedContext)
+          nameLookupTable.addImport(importName, importedContext)
           return sourceId
         }
       }

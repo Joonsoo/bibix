@@ -12,7 +12,7 @@ class Coercer(
 ) {
   suspend fun coerce(
     task: Task,
-    context: NameLookupContext,
+    context: ExprEvalContext,
     value: BibixValue,
     type: BibixType
   ): BibixValue = tryCoerce(task, context, value, type)
@@ -22,7 +22,7 @@ class Coercer(
 
   suspend fun tryCoerce(
     task: Task,
-    context: NameLookupContext,
+    context: ExprEvalContext,
     value: BibixValue,
     type: BibixType
   ): BibixValue? {
@@ -214,9 +214,13 @@ class Coercer(
     packageName: String,
     className: String
   ): EvaluationResult.DataClassDef {
-    val typeDefinedContext = NameLookupContext(
-      sourceManager.getSourceIdFromPackageName(packageName)!!,
-      listOf()
+    val typeDefinedContext = ExprEvalContext(
+      NameLookupContext(
+        sourceManager.getSourceIdFromPackageName(packageName)!!,
+        listOf()
+      ),
+      // 타입 정보 확인할 시에는 vars context 불필요
+      VarsContext()
     )
     val classDef =
       exprEvaluator.evaluateName(task, typeDefinedContext, className.split('.'), null, setOf())
@@ -226,7 +230,7 @@ class Coercer(
 
   private suspend fun tryCoerceClassInstanceValue(
     task: Task,
-    context: NameLookupContext,
+    context: ExprEvalContext,
     value: ClassInstanceValue,
     type: DataClassType
   ): ClassInstanceValue? {
@@ -292,9 +296,13 @@ class Coercer(
       return false
     }
 
-    val typContext = NameLookupContext(
-      sourceManager.getSourceIdFromPackageName(superClass.packageName)!!,
-      listOf()
+    val typContext = ExprEvalContext(
+      NameLookupContext(
+        sourceManager.getSourceIdFromPackageName(superClass.packageName)!!,
+        listOf()
+      ),
+      // 타입을 확인할 때는 vars context가 의미가 없음
+      VarsContext()
     )
 
     suspend fun traverse(superClassName: String): Boolean {
@@ -318,7 +326,7 @@ class Coercer(
 
   private suspend fun tryCoerceFromValue(
     task: Task,
-    context: NameLookupContext,
+    context: ExprEvalContext,
     value: BibixValue,
     type: BibixType
   ): BibixValue? {

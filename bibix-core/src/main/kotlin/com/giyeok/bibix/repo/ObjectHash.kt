@@ -4,7 +4,6 @@ import com.giyeok.bibix.BibixIdProto
 import com.giyeok.bibix.base.BibixValue
 import com.giyeok.bibix.interpreter.expr.EvaluationResult
 import com.giyeok.bibix.objectIdData
-import com.giyeok.bibix.utils.toHexString
 import com.google.protobuf.ByteString
 
 data class ObjectHash(
@@ -25,6 +24,6 @@ data class BibixValueWithObjectHash(val value: BibixValue, val objectHash: Objec
   fun toEvaluationResult(): EvaluationResult = if (objectHash == null) {
     EvaluationResult.Value(value)
   } else {
-    EvaluationResult.ValueWithObjectHash(value, objectHash)
+    EvaluationResult.ValueWithTargetId(value, objectHash)
   }
 }

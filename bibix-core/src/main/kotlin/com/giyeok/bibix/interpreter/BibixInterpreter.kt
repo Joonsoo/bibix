@@ -41,7 +41,7 @@ class BibixInterpreter(
     ExprEvaluator(this, g, sourceManager, varsManager, pluginImplProvider, repo.directoryLocker)
 
   private val nameLookup =
-    NameLookup(g, nameLookupTable, preloadedPlugins, exprEvaluator, sourceManager)
+    NameLookup(g, nameLookupTable, preloadedPlugins, exprEvaluator, sourceManager, varsManager)
 
   init {
     runBlocking {
@@ -59,16 +59,16 @@ class BibixInterpreter(
   suspend fun userBuildRequest(nameTokens: List<String>): BibixValue {
     val task = Task.UserBuildRequest(nameTokens)
     return withContext(currentCoroutineContext() + TaskElement(task)) {
-      val mainContext = NameLookupContext(MainSourceId, listOf())
-      val definition = lookupName(task, mainContext, nameTokens)
+      val mainContext = ExprEvalContext(NameLookupContext(MainSourceId, listOf()), VarsContext())
+      val (definition, varsCtx) = nameLookup.lookupName(task, mainContext, nameTokens)
       // task가 targetDef이면 evaluateExpr, action def이면 executeAction, 그 외의 다른 것이면 오류
       val defName = definition.cname
 
-      val defContext = NameLookupContext(defName).dropLastToken()
+      val context = ExprEvalContext(NameLookupContext(defName).dropLastToken(), varsCtx)
 
       when (definition) {
         is Definition.TargetDef ->
-          exprEvaluator.evaluateName(task, defContext, defName.tokens, null, setOf())
+          exprEvaluator.evaluateName(task, context, defName.tokens, null, setOf())
             .ensureValue()
 
         is Definition.ActionDef -> {
@@ -78,7 +78,7 @@ class BibixInterpreter(
               throw IllegalStateException("action args is not used")
             }
             val args = if (argName == null) null else Pair(argName, actionArgs)
-            exprEvaluator.executeAction(task, defContext, actionExpr, args)
+            exprEvaluator.executeAction(task, context, actionExpr, args)
           }
 
           when (val body = definition.action.body) {
@@ -97,17 +97,11 @@ class BibixInterpreter(
     }
   }
 
-  suspend fun tryLookupName(
-    requester: Task,
-    context: NameLookupContext,
-    name: List<String>
-  ): LookupResult = nameLookup.tryLookupName(requester, context, name)
-
   suspend fun lookupName(
     requester: Task,
-    context: NameLookupContext,
+    context: ExprEvalContext,
     name: List<String>
-  ): Definition = nameLookup.lookupName(requester, context, name)
+  ): Pair<Definition, VarsContext> = nameLookup.lookupName(requester, context, name)
 
   val taskDescriptor: TaskDescriptor = TaskDescriptor(g, sourceManager)
 }

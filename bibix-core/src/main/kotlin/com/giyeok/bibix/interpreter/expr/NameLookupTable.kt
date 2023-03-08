@@ -26,7 +26,7 @@ class NameLookupTable(private val varsManager: VarsManager) {
   }
 
   suspend fun add(context: NameLookupContext, defs: List<BibixAst.Def>) = defsMutex.withLock {
-    fun traverse(scope: List<String>, defs: List<BibixAst.Def>) {
+    suspend fun traverse(scope: List<String>, defs: List<BibixAst.Def>) {
       defs.forEach { def ->
         when (def) {
           is BibixAst.ImportDef -> {
@@ -99,20 +99,30 @@ class NameLookupTable(private val varsManager: VarsManager) {
     traverse(context.scopePath, defs)
   }
 
-  suspend fun addImport(importCName: CName, context: NameLookupContext) = importsMutex.withLock {
-    imports[importCName] = ImportedSource.ImportedNames(context)
+  suspend fun addImport(
+    importCName: CName,
+    context: NameLookupContext
+  ): ImportedSource.ImportedNames = importsMutex.withLock {
+    val imported = ImportedSource.ImportedNames(context)
+    imports[importCName] = imported
+    imported
   }
 
-  suspend fun addImport(importCName: CName, definition: Definition) = importsMutex.withLock {
-    imports[importCName] = ImportedSource.ImportedDefinition(definition)
+  suspend fun addImport(
+    importCName: CName,
+    definition: Definition
+  ): ImportedSource.ImportedDefinition = importsMutex.withLock {
+    val imported = ImportedSource.ImportedDefinition(definition)
+    imports[importCName] = imported
+    imported
   }
 
   suspend fun isImported(sourceId: SourceId, name: String): Boolean = importsMutex.withLock {
     imports.containsKey(CName(sourceId, listOf(name)))
   }
 
-  suspend fun lookup(context: NameLookupContext, name: List<String>): LookupResult {
-    fun findFirstToken(firstToken: String): Definition? {
+  suspend fun findFirstToken(context: NameLookupContext, firstToken: String): Definition? =
+    defsMutex.withLock {
       val scopePath = context.scopePath.toMutableList()
       while (true) {
         val def = definitions[CName(context.sourceId, scopePath + firstToken)]
@@ -124,8 +134,11 @@ class NameLookupTable(private val varsManager: VarsManager) {
       return definitions[CName(PreludeSourceId, firstToken)]
     }
 
+  suspend fun getImport(cname: CName): ImportedSource? = importsMutex.withLock { imports[cname] }
+
+  suspend fun lookup(context: NameLookupContext, name: List<String>): LookupResult {
     check(name.isNotEmpty())
-    val firstDefinition = defsMutex.withLock { findFirstToken(name.first()) }
+    val firstDefinition = findFirstToken(context, name.first())
       ?: return LookupResult.NameNotFound
     if (firstDefinition is Definition.ImportDef) {
       val imported = importsMutex.withLock { imports[firstDefinition.cname] }
@@ -176,7 +189,6 @@ sealed class Definition {
   data class ClassDef(override val cname: CName, val classDef: BibixAst.ClassDef) : Definition()
   data class EnumDef(override val cname: CName, val enumDef: BibixAst.EnumDef) : Definition()
   data class VarDef(override val cname: CName, val varDef: BibixAst.VarDef) : Definition()
-  data class VarRedef(override val cname: CName, val varRedef: BibixAst.VarRedef) : Definition()
 
   data class BuildRule(override val cname: CName, val buildRule: BibixAst.BuildRuleDef) :
     Definition()
@@ -194,8 +206,17 @@ sealed class LookupResult {
 }
 
 sealed class ImportedSource {
-  data class ImportedNames(val nameLookupContext: NameLookupContext) : ImportedSource()
-  data class ImportedDefinition(val definition: Definition) : ImportedSource()
+  abstract val sourceId: SourceId
+
+  data class ImportedNames(val nameLookupContext: NameLookupContext) : ImportedSource() {
+    override val sourceId: SourceId
+      get() = nameLookupContext.sourceId
+  }
+
+  data class ImportedDefinition(val definition: Definition) : ImportedSource() {
+    override val sourceId: SourceId
+      get() = definition.cname.sourceId
+  }
 }
 
 fun BibixAst.ImportDef.scopeName(): String = when (this) {

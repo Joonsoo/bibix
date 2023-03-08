@@ -8,10 +8,12 @@ import com.giyeok.bibix.frontend.NoopProgressNotifier
 import com.giyeok.bibix.intellij.*
 import com.giyeok.bibix.interpreter.BibixExecutionException
 import com.giyeok.bibix.interpreter.BibixProject
+import com.giyeok.bibix.interpreter.ExprEvalContext
 import com.giyeok.bibix.interpreter.TaskDescriptor
 import com.giyeok.bibix.interpreter.expr.Definition
 import com.giyeok.bibix.interpreter.expr.EvaluationResult
 import com.giyeok.bibix.interpreter.expr.NameLookupContext
+import com.giyeok.bibix.interpreter.expr.VarsContext
 import com.giyeok.bibix.plugins.jvm.*
 import com.giyeok.bibix.plugins.maven.Artifact
 import com.giyeok.bibix.utils.toHexString
@@ -193,7 +195,7 @@ object ProjectStructureExtractor {
         if (definition is Definition.TargetDef) {
           if (definition.target.value is BibixAst.CallExpr) {
             val callTarget = buildFrontend.blockingEvaluateName(
-              NameLookupContext(definition.cname).dropLastToken(),
+              ExprEvalContext(NameLookupContext(definition.cname).dropLastToken(), VarsContext()),
               (definition.target.value as BibixAst.CallExpr).name.tokens,
             )
             when (callTarget) {

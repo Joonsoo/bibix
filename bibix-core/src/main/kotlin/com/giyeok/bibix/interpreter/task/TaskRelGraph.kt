@@ -5,14 +5,13 @@ import com.giyeok.bibix.base.BibixValue
 import com.giyeok.bibix.base.CName
 import com.giyeok.bibix.base.SourceId
 import com.giyeok.bibix.interpreter.BibixExecutionException
-import com.giyeok.bibix.interpreter.TaskDescriptor
+import com.giyeok.bibix.interpreter.ExprEvalContext
 import com.giyeok.bibix.interpreter.coroutine.TaskElement
 import com.giyeok.bibix.interpreter.expr.Definition
 import com.giyeok.bibix.interpreter.expr.NameLookupContext
 import com.giyeok.bibix.repo.BibixValueWithObjectHash
 import com.giyeok.bibix.repo.ObjectHash
 import com.google.common.annotations.VisibleForTesting
-import com.google.common.collect.BiMap
 import com.google.common.collect.HashBiMap
 import com.google.protobuf.ByteString
 import kotlinx.coroutines.CoroutineScope
@@ -173,8 +172,9 @@ class TaskRelGraph {
     return Task.FindVarRedefsTask(cname)
   }
 
-  fun lookupNameTask(nameLookupContext: NameLookupContext, name: List<String>): Task.LookupName {
-    return Task.LookupName(nameLookupContext, name)
+  fun lookupNameTask(context: ExprEvalContext, name: List<String>): Task.LookupName {
+    // TODO 이게 맞나..?
+    return Task.LookupName(context.nameLookupContext, name)
   }
 
   fun getReferredNodeById(sourceId: SourceId, nodeId: Int): BibixAst.AstNode? =

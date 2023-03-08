@@ -5,6 +5,7 @@ import com.giyeok.bibix.BibixIdProto.TargetIdData
 import com.giyeok.bibix.ast.BibixAst
 import com.giyeok.bibix.base.*
 import com.giyeok.bibix.interpreter.BibixInterpreter
+import com.giyeok.bibix.interpreter.ExprEvalContext
 import com.giyeok.bibix.interpreter.PluginImplProvider
 import com.giyeok.bibix.interpreter.SourceManager
 import com.giyeok.bibix.interpreter.expr.EvaluationResult.RuleDef.ActionRuleDef
@@ -38,7 +39,7 @@ class CallExprEvaluator(
 ) {
   private suspend fun paramDefs(
     task: Task,
-    context: NameLookupContext,
+    context: ExprEvalContext,
     params: List<BibixAst.ParamDef>
   ): List<EvaluationResult.Param> =
     params.map { param ->
@@ -53,7 +54,7 @@ class CallExprEvaluator(
 
   private suspend fun prepareClassPathsForPlugin(
     task: Task,
-    context: NameLookupContext,
+    context: ExprEvalContext,
     implValue: BibixValue
   ): List<Path> {
     val cpType = DataClassType("com.giyeok.bibix.plugins.jvm", "ClassPkg")
@@ -84,9 +85,10 @@ class CallExprEvaluator(
 
   suspend fun resolveClassDef(
     task: Task,
+    varsContext: VarsContext,
     definition: Definition.ClassDef
   ): EvaluationResult {
-    val context = NameLookupContext(definition.cname).dropLastToken()
+    val context = ExprEvalContext(NameLookupContext(definition.cname).dropLastToken(), varsContext)
     val sourceId = context.sourceId
     val packageName = sourceManager.getPackageName(sourceId)
       ?: throw IllegalStateException("Package name for class ${definition.cname} not specified")
@@ -110,13 +112,14 @@ class CallExprEvaluator(
 
   suspend fun resolveBuildRule(
     task: Task,
+    varsContext: VarsContext,
     thisValue: BibixValue?,
     definition: Definition.BuildRule,
   ): BuildRuleDef {
     val buildRule = definition.buildRule
 
     val defName = definition.cname
-    val defCtx = NameLookupContext(defName).dropLastToken()
+    val defCtx = ExprEvalContext(NameLookupContext(defName).dropLastToken(), varsContext)
 
     val params = paramDefs(task, defCtx, buildRule.params)
     val returnType = exprEvaluator.evaluateType(task, defCtx, buildRule.returnType)
@@ -163,13 +166,14 @@ class CallExprEvaluator(
 
   suspend fun resolveActionRule(
     task: Task,
+    varsContext: VarsContext,
     thisValue: BibixValue?,
     definition: Definition.ActionRule,
   ): ActionRuleDef {
     val actionRule = definition.actionRule
     val defName = definition.cname
 
-    val defContext = NameLookupContext(defName).dropLastToken()
+    val defContext = ExprEvalContext(NameLookupContext(defName).dropLastToken(), varsContext)
 
     val params = paramDefs(task, defContext, actionRule.params)
 
@@ -215,7 +219,7 @@ class CallExprEvaluator(
 
   private suspend fun organizeParams(
     requester: Task,
-    context: NameLookupContext,
+    context: ExprEvalContext,
     callable: EvaluationResult.Callable,
     params: BibixAst.CallParams,
     thisValue: BibixValue?,
@@ -282,7 +286,7 @@ class CallExprEvaluator(
   // TODO organizeParams와 겹치는 코드 리팩토링
   private suspend fun organizeParamsFromPlugin(
     requester: Task,
-    context: NameLookupContext,
+    context: ExprEvalContext,
     callable: EvaluationResult.Callable,
     namedParamsMap: Map<String, BibixValue>,
     thisValue: BibixValue?,
@@ -332,7 +336,7 @@ class CallExprEvaluator(
 
   private suspend fun getTypeDetails(
     task: Task,
-    context: NameLookupContext,
+    context: ExprEvalContext,
     typeNames: List<TypeName>,
     relativeNames: List<String>
   ): TypeDetailsMap {
@@ -367,7 +371,7 @@ class CallExprEvaluator(
 
   private suspend fun callBuildRuleFromPlugin(
     task: Task,
-    context: NameLookupContext,
+    context: ExprEvalContext,
     ruleName: String,
     params: Map<String, BibixValue>,
   ): BibixValue {
@@ -380,7 +384,7 @@ class CallExprEvaluator(
 
   private suspend fun handleBuildRuleReturnValue(
     task: Task,
-    context: NameLookupContext,
+    context: ExprEvalContext,
     returnValue: Any,
   ): BibixValue {
     when (returnValue) {
@@ -419,7 +423,7 @@ class CallExprEvaluator(
 
   private suspend fun handleNClassInstanceValue(
     task: Task,
-    context: NameLookupContext,
+    context: ExprEvalContext,
     value: BibixValue
   ): BibixValue = when (value) {
     is NClassInstanceValue -> {
@@ -487,7 +491,7 @@ class CallExprEvaluator(
 
   private suspend fun callBuildRule(
     task: Task,
-    context: NameLookupContext,
+    context: ExprEvalContext,
     buildRule: BuildRuleDef,
     params: Map<String, BibixValue>,
     outputNames: Set<CName>,
@@ -520,7 +524,9 @@ class CallExprEvaluator(
           buildRule.implTarget,
           buildRule.thisValue,
           setOf()
-        ) as EvaluationResult.ValueWithObjectHash
+        )
+
+        impl as EvaluationResult.ValueWithTargetId
 
         pluginInstance = pluginImplProvider.getPluginImplInstance(
           context.sourceId,
@@ -605,7 +611,7 @@ class CallExprEvaluator(
 
   suspend fun evaluateCallExpr(
     requester: Task,
-    context: NameLookupContext,
+    context: ExprEvalContext,
     expr: BibixAst.CallExpr,
     thisValue: BibixValue?,
     outputNames: Set<CName>,
@@ -657,7 +663,7 @@ class CallExprEvaluator(
 
   private suspend fun handleActionReturnValue(
     task: Task,
-    context: NameLookupContext,
+    context: ExprEvalContext,
     returnValue: Any,
   ) {
     when (returnValue) {
@@ -694,7 +700,7 @@ class CallExprEvaluator(
 
   suspend fun executeActionCallExpr(
     requester: Task,
-    context: NameLookupContext,
+    context: ExprEvalContext,
     expr: BibixAst.CallExpr,
     args: Pair<String, List<String>>?
   ): Unit = g.withTask(requester, Task.ExecuteActionCall(context.sourceId, expr.nodeId)) { task ->

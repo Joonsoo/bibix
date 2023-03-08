@@ -138,7 +138,7 @@ class BuildFrontend(
   }
 
   fun blockingEvaluateName(
-    nameLookupContext: NameLookupContext,
+    context: ExprEvalContext,
     nameTokens: List<String>
   ): EvaluationResult {
     threadPool.setLocalProgressIndicator()
@@ -146,7 +146,7 @@ class BuildFrontend(
       interpreter.g.clear()
       interpreter.exprEvaluator.evaluateName(
         Task.RootTask,
-        nameLookupContext,
+        context,
         nameTokens,
         null,
         setOf()
