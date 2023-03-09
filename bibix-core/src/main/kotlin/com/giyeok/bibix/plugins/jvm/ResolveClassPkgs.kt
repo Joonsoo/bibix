@@ -2,6 +2,7 @@ package com.giyeok.bibix.plugins.jvm
 
 import com.giyeok.bibix.base.*
 import java.nio.file.Path
+import java.util.LinkedList
 import kotlin.io.path.absolute
 import kotlin.math.min
 
@@ -29,17 +30,31 @@ class ResolveClassPkgs {
       return cpsMap.toMap()
     }
 
+    data class MavenVersionDepths(
+      val depth: Int,
+      val paths: MutableList<List<ClassOrigin>>,
+    )
+
     fun mavenArtifactVersionsToUse(classPkgs: List<ClassPkg>): Map<MavenArtifact, MavenDep> {
       // value는 버젼명 -> root로부터의 거리
-      val depthMap = mutableMapOf<MavenArtifact, MutableMap<MavenDep, Int>>()
+      val depthMap = mutableMapOf<MavenArtifact, MutableMap<MavenDep, MavenVersionDepths>>()
+      val path = LinkedList<ClassOrigin>()
 
       fun traversePkg(pkg: ClassPkg, depth: Int) {
         if (pkg.origin is MavenDep) {
-          val depths = depthMap.getOrPut(pkg.origin.toMavenArtifact()) { mutableMapOf() }
-          depths[pkg.origin] = min(depths.getOrDefault(pkg.origin, depth), depth)
+          path.push(pkg.origin)
+          val key = pkg.origin.toMavenArtifact()
+          val depths = depthMap.getOrPut(key) { mutableMapOf() }
+          val existingDepth = depths[pkg.origin]
+          if (existingDepth == null || depth < existingDepth.depth) {
+            depths[pkg.origin] = MavenVersionDepths(depth, mutableListOf(path.toList()))
+          } else if (depth == existingDepth.depth) {
+            existingDepth.paths.add(path.toList())
+          }
           pkg.deps.forEach {
             traversePkg(it, depth + 1)
           }
+          path.pop()
         } else {
           pkg.deps.forEach {
             traversePkg(it, depth)
@@ -51,8 +66,8 @@ class ResolveClassPkgs {
       }
 
       val versionsToUse = depthMap.mapValues { (artifactName, depthsMap) ->
-        val minDepth = depthsMap.minBy { it.value }.value
-        val minDepthVersions = depthsMap.filter { it.value == minDepth }.keys
+        val minDepth = depthsMap.minBy { it.value.depth }.value.depth
+        val minDepthVersions = depthsMap.filter { it.value.depth == minDepth }.keys
 
         if (minDepthVersions.size > 1) {
           throw IllegalStateException("conflicting versions: $artifactName, $depthsMap")
