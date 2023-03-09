@@ -37,6 +37,7 @@ class ExprEvaluator(
     when (type) {
       is BibixAst.Name -> {
         when (val name = type.tokens) {
+          listOf("any") -> AnyType
           listOf("boolean") -> BooleanType
           listOf("string") -> StringType
           listOf("file") -> FileType

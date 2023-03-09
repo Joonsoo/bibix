@@ -171,7 +171,13 @@ intellij {
   jar = jvm.jar([main])
 }
 
+from bibix.plugins import mustache
+
 action buildJars {
+  file.copyFile(
+    mustache.render("bibix-base/src/template/Constants.kt.template", [("BIBIX_VERSION", bibixVersion)]),
+    "bibix-base/src/main/kotlin/com/giyeok/bibix/base/Constants.kt"
+  )
   file.clearDirectory("releases")
   file.copyFile(base.uberJar, "releases")
   file.copyFile(core.uberJar, "releases")
