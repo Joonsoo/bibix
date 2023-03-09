@@ -1,6 +1,7 @@
 package com.giyeok.bibix.plugins.bibix
 
 import com.giyeok.bibix.base.FileValue
+import com.giyeok.bibix.interpreter.BibixExecutionException
 import com.giyeok.bibix.interpreter.testInterpreter
 import com.giyeok.bibix.plugins.prelude.preludePlugin
 import com.google.common.jimfs.Jimfs
@@ -165,7 +166,7 @@ class GenTypesKtTests {
       preludePlugin = preludePlugin
     )
 
-    assertThrows<IllegalStateException> {
+    assertThrows<BibixExecutionException> {
       interpreter.userBuildRequest("aaa")
     }
   }

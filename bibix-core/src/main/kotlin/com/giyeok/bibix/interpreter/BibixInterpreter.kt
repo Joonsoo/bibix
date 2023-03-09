@@ -68,7 +68,7 @@ class BibixInterpreter(
 
       when (definition) {
         is Definition.TargetDef ->
-          exprEvaluator.evaluateName(task, context, defName.tokens, null, setOf())
+          exprEvaluator.evaluateName(task, context, listOf(defName.tokens.last()), null, setOf())
             .ensureValue()
 
         is Definition.ActionDef -> {

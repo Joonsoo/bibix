@@ -9,6 +9,9 @@ import com.giyeok.bibix.interpreter.SourceManager
 import com.giyeok.bibix.interpreter.task.Task
 import com.giyeok.bibix.interpreter.task.TaskRelGraph
 import com.giyeok.bibix.plugins.PreloadedPlugin
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 
 class NameLookup(
   private val g: TaskRelGraph,
@@ -113,7 +116,7 @@ class NameLookup(
     return lookup(context.nameLookupContext, context.varsContext, firstDef, name.drop(1))
   }
 
-  // TODO 여러 군데서 동시에 같은 소스를 loadImport하는 경우에 문제가 있는듯
+  // TODO 여러 군데서 동시에 같은 소스를 loadImport하는 경우에 문제가 있는듯. 수정 필요. StateFlow로 해야될듯?
   suspend fun loadImport(
     task: Task,
     context: ExprEvalContext,
@@ -123,30 +126,12 @@ class NameLookup(
     check(!nameLookupTable.isImported(context.sourceId, import.scopeName()))
 
     return when (import) {
-      is BibixAst.ImportAll -> resolveImportAll(task, context, importName, import)
-      is BibixAst.ImportFrom -> resolveImportFrom(task, context, importName, import)
-      else -> TODO()
+      is BibixAst.ImportAll ->
+        resolveImportAll(task, context, importName, import)
+
+      is BibixAst.ImportFrom ->
+        resolveImportFrom(task, context, importName, import)
     }
-  }
-
-  suspend fun tryLookupName(
-    requester: Task,
-    context: ExprEvalContext,
-    name: List<String>
-  ): LookupResult = g.withTask(requester, g.lookupNameTask(context, name)) { task ->
-    suspend fun tryLookup(): LookupResult {
-      return when (val lookupResult = nameLookupTable.lookup(context.nameLookupContext, name)) {
-        is LookupResult.DefinitionFound, LookupResult.NameNotFound ->
-          lookupResult
-
-        is LookupResult.ImportRequired -> {
-          loadImport(task, context, lookupResult.import.cname, lookupResult.import.import)
-          tryLookup()
-        }
-      }
-    }
-
-    tryLookup()
   }
 
   private suspend fun handleLookupResult(
@@ -174,14 +159,40 @@ class NameLookup(
       }
     }
 
+  private val importMutex = Mutex()
+  private val importLoadFlows = mutableMapOf<CName, StateFlow<ImportedSource?>>()
+
+  private suspend fun cachedImport(
+    importName: CName,
+    body: suspend () -> ImportedSource
+  ): ImportedSource {
+    val (flow, isNew) = importMutex.withLock {
+      val existing = importLoadFlows[importName]
+      if (existing == null) {
+        val newFlow = MutableStateFlow<ImportedSource?>(null)
+        importLoadFlows[importName] = newFlow
+        Pair(newFlow, true)
+      } else {
+        Pair(existing, false)
+      }
+    }
+    if (isNew) {
+      val imported = body()
+      (flow as MutableStateFlow).emit(imported)
+    }
+    return flow.filterNotNull().first()
+  }
+
   private suspend fun resolveImportAll(
     requester: Task,
     context: ExprEvalContext,
     importName: CName,
     import: BibixAst.ImportAll
-  ): ImportedSource = g.withTask(requester, g.resolveImportTask(context.sourceId, import)) { task ->
-    val importSource = resolveImportSource(task, context, importName, import.source)
-    nameLookupTable.addImport(importName, NameLookupContext(importSource, listOf()))
+  ): ImportedSource = cachedImport(importName) {
+    g.withTask(requester, g.resolveImportTask(context.sourceId, import)) { task ->
+      val importSource = resolveImportSource(task, context, importName, import.source)
+      nameLookupTable.addImport(importName, NameLookupContext(importSource, listOf()))
+    }
   }
 
   private suspend fun resolveImportFrom(
@@ -189,22 +200,24 @@ class NameLookup(
     context: ExprEvalContext,
     importName: CName,
     import: BibixAst.ImportFrom
-  ): ImportedSource = g.withTask(requester, g.resolveImportTask(context.sourceId, import)) { task ->
-    val importSource = resolveImportSource(task, context, importName, import.source)
-    // lookupResult가 임포트하려던 것이 Definition을 직접 가리키고 있으면 그 definition을 등록
-    val importedScope = NameLookupContext(importSource, listOf())
-    val importingName = import.importing.tokens
-    val importLookup = nameLookupTable.lookup(importedScope, importingName)
-    val definition = handleLookupResult(
-      task,
-      ExprEvalContext(importedScope, context.varsContext),
-      importingName,
-      importLookup
-    )
-    if (definition is Definition.NamespaceDef) {
-      nameLookupTable.addImport(importName, NameLookupContext(definition.cname))
-    } else {
-      nameLookupTable.addImport(importName, definition)
+  ): ImportedSource = cachedImport(importName) {
+    g.withTask(requester, g.resolveImportTask(context.sourceId, import)) { task ->
+      val importSource = resolveImportSource(task, context, importName, import.source)
+      // lookupResult가 임포트하려던 것이 Definition을 직접 가리키고 있으면 그 definition을 등록
+      val importedScope = NameLookupContext(importSource, listOf())
+      val importingName = import.importing.tokens
+      val importLookup = nameLookupTable.lookup(importedScope, importingName)
+      val definition = handleLookupResult(
+        task,
+        ExprEvalContext(importedScope, context.varsContext),
+        importingName,
+        importLookup
+      )
+      if (definition is Definition.NamespaceDef) {
+        nameLookupTable.addImport(importName, NameLookupContext(definition.cname))
+      } else {
+        nameLookupTable.addImport(importName, definition)
+      }
     }
   }
 

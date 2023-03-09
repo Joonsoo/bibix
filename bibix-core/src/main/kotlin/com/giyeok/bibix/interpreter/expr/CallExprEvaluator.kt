@@ -4,10 +4,7 @@ import com.giyeok.bibix.*
 import com.giyeok.bibix.BibixIdProto.TargetIdData
 import com.giyeok.bibix.ast.BibixAst
 import com.giyeok.bibix.base.*
-import com.giyeok.bibix.interpreter.BibixInterpreter
-import com.giyeok.bibix.interpreter.ExprEvalContext
-import com.giyeok.bibix.interpreter.PluginImplProvider
-import com.giyeok.bibix.interpreter.SourceManager
+import com.giyeok.bibix.interpreter.*
 import com.giyeok.bibix.interpreter.expr.EvaluationResult.RuleDef.ActionRuleDef
 import com.giyeok.bibix.interpreter.expr.EvaluationResult.RuleDef.BuildRuleDef
 import com.giyeok.bibix.interpreter.task.Task
@@ -592,15 +589,17 @@ class CallExprEvaluator(
       check(method.trySetAccessible())
 
       progressIndicator.logInfo("Calling ${buildRule.context}...")
-      val returnValue = try {
-        method.invoke(pluginInstance, buildContext)
+      val result = try {
+        val returnValue = method.invoke(pluginInstance, buildContext)
+        progressIndicator.logInfo("Continuing from ${buildRule.context}...")
+        handleBuildRuleReturnValue(task, buildRule.context, returnValue)
       } catch (e: Exception) {
         interpreter.repo.targetBuildingFailed(targetIdBytes, e.message ?: "")
-        throw IllegalStateException("Error from the plugin", e)
+        val trace = g.upstreamPathTo(task)
+        throw BibixExecutionException("Error from plugin", trace, e)
       }
-      progressIndicator.logInfo("Continuing from ${buildRule.context}...")
-
-      handleBuildRuleReturnValue(task, buildRule.context, returnValue)
+      progressIndicator.logInfo("Finished ${buildRule.context}...")
+      result
     }
 
     val result =

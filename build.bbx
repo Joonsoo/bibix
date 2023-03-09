@@ -20,20 +20,28 @@ base {
       file.copyDirectory(javacode.rootDir, "bibix-base/src/generated/proto/java")
       file.copyDirectory(kotlincode.rootDir, "bibix-base/src/generated/proto/kotlin")
     }
+
+    javalib = java.library(
+      srcs = glob("bibix-base/src/generated/proto/java/**/*.java"),
+      deps = protobufDeps
+    )
+
+    lib = ktjvm.library(
+      srcs = glob("bibix-base/src/generated/proto/kotlin/**/*.kt"),
+      deps = [javalib]
+    )
   }
 
   main = ktjvm.library(
-    srcs = [
-      ...glob("bibix-base/src/generated/proto/java/**/*.java"),
-      // 코틀린 컴파일러는 자바도 지원함
-      ...glob("bibix-base/src/generated/proto/kotlin/**/*.kt"),
-      ...glob("bibix-base/src/main/kotlin/**/*.kt"),
-    ],
+    srcs = glob("bibix-base/src/main/kotlin/**/*.kt"),
     deps = [
       ...kotlinxCoroutinesDeps,
       ...protobufDeps,
+      base.proto.lib,
     ]
   )
+
+  jar = jvm.jar([main])
 }
 
 parser {
@@ -161,7 +169,8 @@ jparserDeps = [
 ]
 
 kotlinVersion = "1.8.10"
-var ktjvm.kotlinVersion = kotlinVersion
+var ktjvm.compilerVersion = kotlinVersion
+var ktjvm.sdkVersion = kotlinVersion
 
 kotlinxCoroutinesVersion = "1.6.0"
 kotlinxCoroutinesDeps = [
