@@ -101,7 +101,11 @@ core {
     ],
   )
 
-  uberJar = jvm.uberJar([main], "bibix-$bibixVersion.jar")
+  uberJar = jvm.executableUberJar(
+    [main],
+    mainClass="com.giyeok.bibix.frontend.cli.BibixCli",
+    jarfileName="bibix-$bibixVersion.jar"
+  )
 }
 
 intellij {
@@ -166,22 +170,24 @@ intellij {
     ]
   )
 
-  uberJar = jvm.uberJar([main], "bibix-intellij-daemon-$bibixVersion.jar")
-
-  jar = jvm.jar([main])
+  uberJar = jvm.executableUberJar(
+    [main],
+    mainClass="com.giyeok.bibix.intellij.service.BibixIntellijServiceGrpcServerMain",
+    jarfileName="bibix-intellij-daemon-$bibixVersion.jar"
+  )
 }
 
 from bibix.plugins import mustache
 
-action buildJars {
+action buildRelease {
   file.copyFile(
     mustache.render("bibix-base/src/template/Constants.kt.template", [("BIBIX_VERSION", bibixVersion)]),
     "bibix-base/src/main/kotlin/com/giyeok/bibix/base/Constants.kt"
   )
-  file.clearDirectory("releases")
-  file.copyFile(base.uberJar, "releases")
-  file.copyFile(core.uberJar, "releases")
-  file.copyFile(intellij.uberJar, "releases")
+  file.clearDirectory("release")
+  file.copyFile(base.uberJar, "release")
+  file.copyFile(core.uberJar, "release")
+  file.copyFile(intellij.uberJar, "release")
 }
 
 jparserDeps = [
