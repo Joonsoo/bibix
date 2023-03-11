@@ -43,7 +43,7 @@ base {
     ]
   )
 
-  uberJar = jvm.uberJar([main], "bibix-base-$bibixVersion.jar")
+  uberJar = jvm.uberJar([main], "bibix-base-$bibixVersion-all.jar")
 }
 
 parser {
@@ -104,7 +104,7 @@ core {
   uberJar = jvm.executableUberJar(
     [main],
     mainClass="com.giyeok.bibix.frontend.cli.BibixCli",
-    jarfileName="bibix-$bibixVersion.jar"
+    jarFileName="bibix-$bibixVersion-all.jar"
   )
 }
 
@@ -173,7 +173,7 @@ intellij {
   uberJar = jvm.executableUberJar(
     [main],
     mainClass="com.giyeok.bibix.intellij.service.BibixIntellijServiceGrpcServerMain",
-    jarfileName="bibix-intellij-daemon-$bibixVersion.jar"
+    jarFileName="bibix-intellij-daemon-$bibixVersion-all.jar"
   )
 }
 
