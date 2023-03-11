@@ -73,6 +73,7 @@ core {
       parser.main,
       ...kotlinxCoroutinesDeps,
       ...protobufDeps,
+      maven.artifact("org.jetbrains.kotlin", "kotlin-reflect", kotlinVersion),
       maven.artifact("org.codehaus.plexus", "plexus-classworlds", "2.6.0"),
       maven.artifact("org.eclipse.jgit", "org.eclipse.jgit", "6.4.0.202211300538-r"),
 
@@ -148,6 +149,7 @@ intellij {
       deps = [
         javalib,
         ...kotlinxCoroutinesDeps,
+        ...grpcDeps,
       ],
     )
   }

@@ -55,6 +55,7 @@ dependencies {
     implementation group: 'com.google.guava', name: 'guava', version: '31.1-jre'
 
     implementation group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib', version: kotlinVersion
+    implementation group: 'org.jetbrains.kotlin', name: 'kotlin-reflect', version: kotlinVersion
     implementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-core', version: '1.6.0'
     implementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-jdk8', version: '1.6.0'
 

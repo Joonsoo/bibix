@@ -123,7 +123,7 @@ class NameLookup(
     importName: CName,
     import: BibixAst.ImportDef
   ): ImportedSource {
-    check(!nameLookupTable.isImported(context.sourceId, import.scopeName()))
+    // check(!nameLookupTable.isImported(context.sourceId, import.scopeName()))
 
     return when (import) {
       is BibixAst.ImportAll ->

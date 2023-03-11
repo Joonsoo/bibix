@@ -25,11 +25,19 @@ class Jar {
       .map { ClassPkg.fromBibix(it) }
     ZipOutputStream(destFile.outputStream().buffered()).use { zos ->
       deps.forEach { classPkg ->
-        addClasspathToJar(classPkg.cpinfo, zos)
+        addClasspathToJar(classPkg.cpinfo, zos) { false }
       }
     }
 
     return FileValue(destFile)
+  }
+
+  // TODO filter를 parameter로 사용자에게 노출
+  private val skipFiles = { path: String ->
+    // "META-INF/*.SF", "META-INF/*.DSA", "META-INF/*.RSA"
+    path == "META-INF/MANIFEST.MF" ||
+      (path.startsWith("META-INF/") && (
+        path.endsWith(".SF") || path.endsWith(".DSA") || path.endsWith(".RSA")))
   }
 
   fun uberJar(context: BuildContext): BuildRuleReturn {
@@ -51,10 +59,10 @@ class Jar {
         cps.forEach { cp ->
           if (cp.isRegularFile()) {
             // TODO dep is jar file
-            addAnotherJarToJar(cp, zos)
+            addAnotherJarToJar(cp, zos, skipFiles)
           } else {
             check(cp.isDirectory())
-            addDirectoryToJar(cp, zos)
+            addDirectoryToJar(cp, zos, skipFiles)
           }
         }
       }
@@ -81,10 +89,10 @@ class Jar {
       ZipOutputStream(destFile.outputStream().buffered()).use { zos ->
         cps.forEach { cp ->
           if (cp.isRegularFile()) {
-            addAnotherJarToJar(cp, zos)
+            addAnotherJarToJar(cp, zos, skipFiles)
           } else {
             check(cp.isDirectory())
-            addDirectoryToJar(cp, zos)
+            addDirectoryToJar(cp, zos, skipFiles)
           }
         }
 
@@ -99,31 +107,28 @@ class Jar {
     }
   }
 
-  fun addClasspathToJar(cp: CpInfo, dest: ZipOutputStream) {
+  fun addClasspathToJar(cp: CpInfo, dest: ZipOutputStream, skipEntry: (String) -> Boolean) {
     when (cp) {
       is ClassesInfo -> {
         cp.classDirs.forEach { classDir ->
-          addDirectoryToJar(classDir, dest)
+          addDirectoryToJar(classDir, dest, skipEntry)
         }
         cp.resDirs.forEach { resDir ->
-          addDirectoryToJar(resDir, dest)
+          addDirectoryToJar(resDir, dest, skipEntry)
         }
       }
 
       is JarInfo -> {
-        addAnotherJarToJar(cp.jar, dest)
+        addAnotherJarToJar(cp.jar, dest, skipEntry)
       }
     }
   }
 
-  fun addAnotherJarToJar(inputJar: Path, dest: ZipOutputStream) {
+  fun addAnotherJarToJar(inputJar: Path, dest: ZipOutputStream, skipEntry: (String) -> Boolean) {
     ZipInputStream(inputJar.inputStream().buffered()).use { zis ->
       var entry = zis.nextEntry
       while (entry != null) {
-        if (!entry.isDirectory &&
-          !entry.name.startsWith("META-INF/") &&
-          entry.name != "module-info.class"
-        ) {
+        if (!entry.isDirectory && !skipEntry(entry.name)) {
           try {
             dest.putNextEntry(ZipEntry(entry.name))
             transferFromStreamToStream(zis, dest)
@@ -138,11 +143,11 @@ class Jar {
     }
   }
 
-  fun addDirectoryToJar(inputDir: Path, dest: ZipOutputStream) {
+  fun addDirectoryToJar(inputDir: Path, dest: ZipOutputStream, skipEntry: (String) -> Boolean) {
     Files.walk(inputDir).toList().forEach { path ->
       if (path.isRegularFile()) {
         val filePath = path.absolute().relativeTo(inputDir.absolute()).pathString
-        if (!filePath.startsWith("META-INF") && filePath != "module-info.class") {
+        if (!skipEntry(filePath)) {
           try {
             dest.putNextEntry(ZipEntry(filePath))
             transferFromStreamToStream(path.toFile().inputStream().buffered(), dest)
