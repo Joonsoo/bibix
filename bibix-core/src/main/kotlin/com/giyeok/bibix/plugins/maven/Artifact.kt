@@ -130,12 +130,16 @@ class Artifact {
 
       fun traverse(node: DependencyNode): ClassPkg {
         val artifactResult = artifactsMap.getValue(node.artifact)
+        // TODO provided, system은 어떻게 하는게 맞지? 일단 나는 안 쓰고 있어서..
+        val availableChildren = node.children.filter { artifactsMap.containsKey(it.artifact) }
+        val compileDeps = availableChildren.filter { it.dependency.scope == "compile" }
+        val runtimeDeps = availableChildren.filter { it.dependency.scope == "runtime" }
         return ClassPkg(
           mavenDep("central", artifactResult.artifact),
           JarInfo(artifactResult.artifact.file.toPath(), null),
-          node.children.filter { artifactsMap.containsKey(it.artifact) }.map { traverse(it) },
+          compileDeps.map { traverse(it) },
           // TODO runtimeDeps
-          listOf(),
+          runtimeDeps.map { traverse(it) },
         )
       }
 

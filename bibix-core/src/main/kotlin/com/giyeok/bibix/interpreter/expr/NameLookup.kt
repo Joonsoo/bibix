@@ -112,7 +112,7 @@ class NameLookup(
     }
 
     val firstDef = nameLookupTable.findFirstToken(context.nameLookupContext, name.first())
-      ?: throw BibixExecutionException("", g.upstreamPathTo(requester))
+      ?: throw BibixExecutionException("Failed to find name $name", g.upstreamPathTo(requester))
     return lookup(context.nameLookupContext, context.varsContext, firstDef, name.drop(1))
   }
 

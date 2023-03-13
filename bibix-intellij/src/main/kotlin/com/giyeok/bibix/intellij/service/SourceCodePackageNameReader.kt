@@ -105,6 +105,11 @@ class SourceCodePackageNameReader(val reader: Reader) {
   fun nextNameToken(): String {
     val builder = StringBuilder()
     var char = nextChar()
+    var backticked = false
+    if (char == '`') {
+      char = nextChar()
+      backticked = true
+    }
     check(('a'..'z').contains(char) || ('A'..'Z').contains(char) || char == '_')
     while (('a'..'z').contains(char) || ('A'..'Z').contains(char) ||
       char == '_' || ('0'..'9').contains(char)
@@ -112,7 +117,11 @@ class SourceCodePackageNameReader(val reader: Reader) {
       builder.append(char)
       char = nextChar()
     }
-    unconsumeLastChar()
+    if (backticked) {
+      check(char == '`')
+    } else {
+      unconsumeLastChar()
+    }
     return builder.toString()
   }
 }
