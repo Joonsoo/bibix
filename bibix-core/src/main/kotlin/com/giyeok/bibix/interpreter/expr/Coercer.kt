@@ -241,16 +241,34 @@ class Coercer(
     val classDef = findDataClassDef(task, type.packageName, type.className)
 
     val fieldDefs = classDef.params.associateBy { it.name }
-    val missingFields = fieldDefs.keys - value.fieldValues.keys
-    if (missingFields.any { !fieldDefs.getValue(it).optional }) {
+
+    // field default value 처리
+    // optional인 경우/아닌 경우, defaultValue가 있는 경우/없는 경우, 사용자가 field value를 지정한 경우/지정하지 않거나 none으로 지정한 경우
+    // (사용자가 none 값을 준 경우 지정하지 않은 것과 동일하게 취급)
+
+    val userFields = value.fieldValues.filter { it.value != NoneValue }
+
+    val missingFields = fieldDefs.keys - userFields.keys
+    if (missingFields.any { fieldName ->
+        val fieldDef = fieldDefs.getValue(fieldName)
+        !fieldDef.optional && fieldDef.defaultValue == null
+      }) {
       // optional이 아닌데 빠진 필드가 있으면 실패
       return null
     }
-    if ((value.fieldValues.keys - fieldDefs.keys).isNotEmpty()) {
+    val defaultValues = missingFields
+      .mapNotNull { fieldName ->
+        val fieldDef = fieldDefs.getValue(fieldName)
+        if (fieldDef.defaultValue == null) null else
+          fieldName to
+            exprEvaluator.evaluateExpr(task, classDef.context, fieldDef.defaultValue, null, setOf())
+              .ensureValue()
+      }.toMap()
+    if ((userFields.keys - fieldDefs.keys).isNotEmpty()) {
       // 모르는 필드 이름이 있으면 실패
       return null
     }
-    val coercedFields = value.fieldValues.mapValues { field ->
+    val coercedFields = (userFields + defaultValues).mapValues { field ->
       val fieldDef = fieldDefs.getValue(field.key)
       if (fieldDef.optional && field.value == NoneValue) {
         NoneValue
@@ -262,10 +280,9 @@ class Coercer(
       // 필드 중 coerce 실패하는 것이 있으면 실패
       return null
     }
-    return ClassInstanceValue(
-      value.packageName,
-      value.className,
-      coercedFields.mapValues { it.value!! } + missingFields.map { it to NoneValue })
+    val finalFields =
+      coercedFields.mapValues { it.value!! } + (missingFields - defaultValues.keys).map { it to NoneValue }
+    return ClassInstanceValue(value.packageName, value.className, finalFields)
   }
 
   private suspend fun isValidValueOf(

@@ -127,6 +127,7 @@ class ResolveClassPkgs {
     val classPkgs = classPkgBibixValues.values.map { ClassPkg.fromBibix(it) }
 
     val cps = resolveClassPkgs(classPkgs)
-    return ClassPaths(cps.toList()).toBibix()
+    // TODO runtimeCps
+    return ClassPaths(cps.toList(), listOf()).toBibix()
   }
 }

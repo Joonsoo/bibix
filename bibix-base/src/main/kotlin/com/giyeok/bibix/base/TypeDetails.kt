@@ -9,6 +9,8 @@ data class DataClassTypeDetails(
   val className: String,
   val fields: List<RuleParam>
 ) : ClassTypeDetails() {
+  val typeName = TypeName(packageName, className)
+
   override fun toString(): String = "class $className"
 }
 
@@ -18,6 +20,8 @@ data class SuperClassTypeDetails(
   // subclass들은 모두 같은 패키지(같은 스크립트) 안에 속해야 함
   val subClasses: List<String>
 ) : ClassTypeDetails() {
+  val typeName = TypeName(packageName, className)
+
   override fun toString(): String = "super class $className"
 }
 
@@ -25,4 +29,6 @@ data class EnumTypeDetails(
   val packageName: String,
   val enumName: String,
   val values: List<String>
-) : TypeDetails()
+) : TypeDetails() {
+  val typeName = TypeName(packageName, enumName)
+}

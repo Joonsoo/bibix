@@ -5,6 +5,7 @@ import java.nio.file.Path
 
 data class ClassPaths(
   val cps: List<Path>,
+  val runtimeCps: List<Path>,
 ) {
   companion object {
     fun fromBibix(value: BibixValue): ClassPaths {
@@ -12,6 +13,7 @@ data class ClassPaths(
 //      check(value.className.tokens == listOf("ClassPaths"))
       return ClassPaths(
         cps = (value["cps"]!! as SetValue).values.map { (it as PathValue).path },
+        runtimeCps = (value["runtimeCps"]!! as SetValue).values.map { (it as PathValue).path },
       )
     }
   }
@@ -29,6 +31,7 @@ data class ClassPkg(
   val origin: ClassOrigin,
   val cpinfo: CpInfo,
   val deps: List<ClassPkg>,
+  val runtimeDeps: List<ClassPkg>,
 ) {
   companion object {
     fun fromBibix(value: BibixValue): ClassPkg {
@@ -37,7 +40,8 @@ data class ClassPkg(
       return ClassPkg(
         origin = ClassOrigin.fromBibix(value["origin"]!!),
         cpinfo = CpInfo.fromBibix(value["cpinfo"]!!),
-        deps = (value["deps"]!! as SetValue).values.map { ClassPkg.fromBibix(it) },
+        deps = (value["deps"]!! as SetValue).values.map { fromBibix(it) },
+        runtimeDeps = (value["runtimeDeps"]!! as SetValue).values.map { fromBibix(it) },
       )
     }
   }

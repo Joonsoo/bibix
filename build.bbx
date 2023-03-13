@@ -6,6 +6,7 @@ from bibix.plugins import ktjvm
 from bibix.plugins import protobuf
 from bibix.plugins import grpc
 from bibix.plugins import java
+from bibix.plugins import jar
 
 bibixVersion = "0.5.0"
 
@@ -25,12 +26,12 @@ base {
 
     javalib = java.library(
       srcs = glob("bibix-base/src/generated/proto/java/**/*.java"),
-      deps = protobufDeps
+      deps = protobufDeps,
     )
 
     lib = ktjvm.library(
       srcs = glob("bibix-base/src/generated/proto/kotlin/**/*.kt"),
-      deps = [javalib]
+      deps = [javalib],
     )
   }
 
@@ -43,7 +44,7 @@ base {
     ]
   )
 
-  uberJar = jvm.uberJar([main], "bibix-base-$bibixVersion-all.jar")
+  uberJar = jar.uberJar([main], "bibix-base-$bibixVersion-all.jar")
 }
 
 parser {
@@ -102,7 +103,7 @@ core {
     ],
   )
 
-  uberJar = jvm.executableUberJar(
+  uberJar = jar.executableUberJar(
     [main],
     mainClass="com.giyeok.bibix.frontend.cli.BibixCli",
     jarFileName="bibix-$bibixVersion-all.jar"
@@ -172,7 +173,7 @@ intellij {
     ]
   )
 
-  uberJar = jvm.executableUberJar(
+  uberJar = jar.executableUberJar(
     [main],
     mainClass="com.giyeok.bibix.intellij.service.BibixIntellijServiceGrpcServerMain",
     jarFileName="bibix-intellij-daemon-$bibixVersion-all.jar"

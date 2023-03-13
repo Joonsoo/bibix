@@ -31,6 +31,7 @@ val bibixPlugin = PreloadedPlugin.fromScript(
     def genTypesKt(
       types: set<type>,
       packageName: string,
+      generateRelatedTypes: boolean = true,
       fileName: string = "BibixTypes.kt",
       outerClassName?: string,
     ): file = native:com.giyeok.bibix.plugins.bibix.GenTypesKt

@@ -2,11 +2,9 @@ package com.giyeok.bibix.plugins.bibix
 
 import com.giyeok.bibix.base.*
 import java.io.PrintWriter
-import java.nio.file.Files
 import java.nio.file.Path
 import kotlin.io.path.bufferedWriter
 import kotlin.io.path.createDirectories
-import kotlin.io.path.deleteIfExists
 
 class GenTypesKt {
   companion object {
@@ -130,9 +128,9 @@ class GenTypesKt {
       p.println("$indent}")
     }
 
-    fun superClassesMap(typeDetails: TypeDetailsMap): Map<TypeName, List<String>> {
+    fun superClassesMap(typeDetails: Map<TypeName, TypeDetails>): Map<TypeName, List<String>> {
       val map = mutableMapOf<TypeName, MutableList<String>>()
-      typeDetails.canonicalNamed.forEach { (typeName, details) ->
+      typeDetails.forEach { (typeName, details) ->
         if (details is SuperClassTypeDetails) {
           details.subClasses.forEach { subClass ->
             map.getOrPut(TypeName(typeName.packageName, subClass)) { mutableListOf() }
@@ -144,11 +142,54 @@ class GenTypesKt {
     }
   }
 
+  private val requiredTypeNames = mutableSetOf<TypeName>()
+  private val typeDetailsMap = mutableMapOf<TypeName, TypeDetails>()
+
+  fun getTypeDetails(
+    generateRelatedTypes: Boolean,
+    whenDone: (Map<TypeName, TypeDetails>) -> BuildRuleReturn
+  ): BuildRuleReturn =
+    BuildRuleReturn.getTypeDetails((requiredTypeNames - typeDetailsMap.keys).toList()) { result ->
+      check(result.relativeNamed.isEmpty())
+      typeDetailsMap.putAll(result.canonicalNamed)
+      if (generateRelatedTypes) {
+        result.canonicalNamed.values.forEach { typeDetails ->
+          when (typeDetails) {
+            is DataClassTypeDetails ->
+              typeDetails.fields.forEach { field ->
+                val requiredFieldType = when (val fieldType = field.type) {
+                  is TypeValue.DataClassTypeValue -> fieldType.typeName
+                  is TypeValue.EnumTypeValue -> fieldType.typeName
+                  is TypeValue.SuperClassTypeValue -> fieldType.typeName
+                  else -> null
+                }
+                if (requiredFieldType != null) {
+                  requiredTypeNames.add(requiredFieldType)
+                }
+              }
+
+            is SuperClassTypeDetails ->
+              typeDetails.subClasses.forEach { subClass ->
+                requiredTypeNames.add(TypeName(typeDetails.packageName, subClass))
+              }
+
+            is EnumTypeDetails -> {}// Do nothing
+          }
+        }
+      }
+      if (generateRelatedTypes && !typeDetailsMap.keys.containsAll(requiredTypeNames)) {
+        getTypeDetails(true, whenDone)
+      } else {
+        whenDone(typeDetailsMap.toMap())
+      }
+    }
+
   fun build(context: BuildContext): BuildRuleReturn {
     val types = (context.arguments.getValue("types") as SetValue).values.map {
       it as TypeValue
     }
     val packageName = (context.arguments["packageName"] as? StringValue)?.value
+    val generateRelatedTypes = (context.arguments["generateRelatedTypes"] as BooleanValue).value
     val fileName = (context.arguments.getValue("fileName") as StringValue).value
     val outerClassName = (context.arguments["outerClassName"] as? StringValue)?.value
 
@@ -165,7 +206,9 @@ class GenTypesKt {
       }
 
       val classTypes = types.filterIsInstance<TypeValue.PackageNamed>()
-      return BuildRuleReturn.getTypeDetails(classTypes.map { it.typeName }) { classTypeDetails ->
+
+      requiredTypeNames.addAll(classTypes.map { it.typeName })
+      return getTypeDetails(generateRelatedTypes) { classTypeDetails ->
         PrintWriter(targetFile.bufferedWriter()).use { printer ->
           if (packageName != null) {
             printer.println("package $packageName")
@@ -179,31 +222,24 @@ class GenTypesKt {
           }
           val superClassesMap = superClassesMap(classTypeDetails)
           val indent = if (outerClassName == null) "" else "  "
-          types.forEachIndexed { idx, type ->
+          classTypeDetails.values.forEachIndexed { idx, typeDetail ->
             if (idx > 0) {
               printer.println()
             }
-            when (type) {
-              is TypeValue.DataClassTypeValue -> {
-                val detail =
-                  classTypeDetails.canonicalNamed.getValue(type.typeName) as DataClassTypeDetails
-                val superClasses = superClassesMap[type.typeName] ?: listOf()
-                generateDataClassType(printer, detail, superClasses, indent)
+            when (typeDetail) {
+              is DataClassTypeDetails -> {
+                val superClasses = superClassesMap[typeDetail.typeName] ?: listOf()
+                generateDataClassType(printer, typeDetail, superClasses, indent)
               }
 
-              is TypeValue.SuperClassTypeValue -> {
-                val detail =
-                  classTypeDetails.canonicalNamed.getValue(type.typeName) as SuperClassTypeDetails
-                val superClasses = superClassesMap[type.typeName] ?: listOf()
-                val subClasses =
-                  findSubDataClassesOf(type.typeName, classTypeDetails.canonicalNamed)
-                generateSuperClassType(printer, detail, superClasses, subClasses, indent)
+              is SuperClassTypeDetails -> {
+                val superClasses = superClassesMap[typeDetail.typeName] ?: listOf()
+                val subClasses = findSubDataClassesOf(typeDetail.typeName, classTypeDetails)
+                generateSuperClassType(printer, typeDetail, superClasses, subClasses, indent)
               }
 
-              is TypeValue.EnumTypeValue -> {
-                val detail =
-                  classTypeDetails.canonicalNamed.getValue(type.typeName) as EnumTypeDetails
-                generateEnumType(printer, detail, indent)
+              is EnumTypeDetails -> {
+                generateEnumType(printer, typeDetail, indent)
               }
 
               else -> TODO()

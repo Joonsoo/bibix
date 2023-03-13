@@ -13,6 +13,7 @@ class Base {
     return ClassPkg(
       LocalLib(classpath),
       JarInfo(classpath, null),
+      listOf(),
       listOf()
     ).toBibix()
   }

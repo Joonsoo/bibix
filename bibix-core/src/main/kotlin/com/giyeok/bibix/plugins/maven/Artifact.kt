@@ -134,6 +134,8 @@ class Artifact {
           mavenDep("central", artifactResult.artifact),
           JarInfo(artifactResult.artifact.file.toPath(), null),
           node.children.filter { artifactsMap.containsKey(it.artifact) }.map { traverse(it) },
+          // TODO runtimeDeps
+          listOf(),
         )
       }
 
