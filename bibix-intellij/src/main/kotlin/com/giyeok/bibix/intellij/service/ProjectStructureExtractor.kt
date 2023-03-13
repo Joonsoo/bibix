@@ -212,6 +212,7 @@ object ProjectStructureExtractor {
     }
     moduleTargets.keys.forEach { target ->
       try {
+        println("Starting $target")
         val result = buildFrontend.blockingBuildTargets(listOf(target))
         println(result)
       } catch (e: Exception) {
@@ -397,7 +398,7 @@ object ProjectStructureExtractor {
       scalaVersion to listOf(compiler, reflect, library)
     }
     val scalaCompilerClasspaths = scalaCompilers.mapValues { (_, classPkgs) ->
-      ResolveClassPkgs.resolveClassPkgs(classPkgs).map { it.absolutePathString() }
+      ResolveClassPkgs.resolveClassPkgs(classPkgs).cps.map { it.absolutePathString() }
     }
 
     return sdkInfo {

@@ -9,6 +9,8 @@ import org.eclipse.aether.*
 import org.eclipse.aether.artifact.Artifact
 import org.eclipse.aether.artifact.DefaultArtifact
 import org.eclipse.aether.collection.CollectRequest
+import org.eclipse.aether.collection.DependencyCollectionContext
+import org.eclipse.aether.collection.DependencySelector
 import org.eclipse.aether.connector.basic.BasicRepositoryConnectorFactory
 import org.eclipse.aether.graph.Dependency
 import org.eclipse.aether.graph.DependencyNode
@@ -138,7 +140,6 @@ class Artifact {
           mavenDep("central", artifactResult.artifact),
           JarInfo(artifactResult.artifact.file.toPath(), null),
           compileDeps.map { traverse(it) },
-          // TODO runtimeDeps
           runtimeDeps.map { traverse(it) },
         )
       }
@@ -177,6 +178,17 @@ class Artifact {
       session.transferListener = ConsoleTransferListener()
       session.repositoryListener = ConsoleRepositoryListener()
       session.updatePolicy = RepositoryPolicy.UPDATE_POLICY_DAILY
+
+      session.dependencySelector = object : DependencySelector {
+        override fun selectDependency(dependency: Dependency): Boolean {
+          // TODO 그 외 scope은? 일단 test는 bibix에서는 필요 없을 것 같긴 한데
+          return dependency.scope == "compile" || dependency.scope == "runtime"
+        }
+
+        override fun deriveChildSelector(context: DependencyCollectionContext): DependencySelector {
+          return this
+        }
+      }
 
       // uncomment to generate dirty trees
       // session.setDependencyGraphTransformer( null );

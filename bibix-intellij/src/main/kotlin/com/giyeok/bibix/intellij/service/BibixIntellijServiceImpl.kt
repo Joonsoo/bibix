@@ -49,6 +49,8 @@ class BibixIntellijServiceImpl(
     }
     memos[key] = Pair(scriptHash, loaded)
 
+    println("Done")
+
     return loaded
   }
 

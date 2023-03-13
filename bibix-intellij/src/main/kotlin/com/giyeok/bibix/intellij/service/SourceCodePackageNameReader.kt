@@ -8,7 +8,11 @@ class SourceCodePackageNameReader(val reader: Reader) {
       val reader = SourceCodePackageNameReader(srcReaderStream)
       return try {
         reader.skipWhitespace()
-        if (reader.nextToken() == "package") {
+        var nextToken = reader.nextToken()
+        if (nextToken == "@") {
+          reader.skipWhitespace()
+          TODO()
+        } else if (nextToken == "package") {
           reader.skipWhitespace()
           val tokens = mutableListOf<String>()
           tokens.add(reader.nextNameToken())
