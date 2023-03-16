@@ -161,6 +161,33 @@ class Coercer(
             }
           }
 
+          is NamedTupleValue -> {
+            val classDef = findDataClassDef(task, type.packageName, type.className)
+            if (classDef.params.map { it.name }.containsAll(value.names())) {
+              TODO()
+            }
+          }
+
+          is TupleValue -> {
+            val classDef = findDataClassDef(task, type.packageName, type.className)
+            if (classDef.params.size == value.values.size) {
+              val fieldValues = classDef.params.zip(value.values).map { (param, fieldValue) ->
+                val fieldValue = if (param.optional && fieldValue == NoneValue) {
+                  NoneValue
+                } else {
+                  tryCoerce(task, context, fieldValue, param.type)
+                }
+                param.name to fieldValue
+              }.toMap()
+              if (!fieldValues.containsValue(null)) {
+                return ClassInstanceValue(
+                  type.packageName,
+                  type.className,
+                  fieldValues.mapValues { it.value!! })
+              }
+            }
+          }
+
           else -> {}
         }
       }

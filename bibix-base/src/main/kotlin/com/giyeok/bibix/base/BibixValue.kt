@@ -2,7 +2,10 @@ package com.giyeok.bibix.base
 
 import java.nio.file.Path
 
-sealed class BibixValue
+sealed class BibixValue {
+  inline fun <reified T> nullOr(): T? =
+    if (this == NoneValue) null else this as T
+}
 
 data class BooleanValue(val value: Boolean) : BibixValue() {
   override fun toString(): String = "$value"

@@ -40,6 +40,8 @@ import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 
 class Artifact {
+  data class MavenArtifactName(val group: String, val artifact: String, val version: String?)
+
   fun build(context: BuildContext): BuildRuleReturn {
     if (!context.hashChanged &&
       context.prevBuildTime != null &&
@@ -75,6 +77,14 @@ class Artifact {
 //        (tuple.pairs[1].second as StringValue).value
 //      )
       }
+      val excludes = (context.arguments.getValue("excludes") as SetValue).values.map { value ->
+        value as ClassInstanceValue
+        MavenArtifactName(
+          (value.fieldValues.getValue("group") as StringValue).value,
+          (value.fieldValues.getValue("artifact") as StringValue).value,
+          (value.fieldValues.getValue("version").nullOr<StringValue>())?.value,
+        )
+      }.toSet()
 
 //    val repositories = listOf(
 //      RemoteRepository.Builder("central", "default", "https://repo.maven.apache.org/maven2").build()
@@ -88,7 +98,8 @@ class Artifact {
         version,
         scope,
         javaScope,
-        repos
+        repos,
+        excludes,
       )
       BuildRuleReturn.value(dep.toBibix())
     }
@@ -104,7 +115,8 @@ class Artifact {
       version: String?,
       scope: String,
       javaScope: String,
-      repos: List<Int>
+      repos: List<Int>,
+      excludes: Set<MavenArtifactName>,
     ): ClassPkg {
       val system: RepositorySystem = newRepositorySystem()
       val session: RepositorySystemSession = newRepositorySystemSession(mavenReposDir, system)
@@ -124,6 +136,12 @@ class Artifact {
       collectRequest.repositories = repositories
       val classpathFilter = DependencyFilterUtils.classpathFilter(javaScope)
       val dependencyRequest = DependencyRequest(collectRequest, classpathFilter)
+      dependencyRequest.setFilter { node, parents ->
+        val name1 =
+          MavenArtifactName(node.artifact.groupId, node.artifact.artifactId, node.artifact.version)
+        val name2 = MavenArtifactName(node.artifact.groupId, node.artifact.artifactId, null)
+        !excludes.contains(name1) && !excludes.contains(name2)
+      }
       val dependencyResult = system.resolveDependencies(session, dependencyRequest)
 //    println("dependencies: $dependencyResult")
 //    println(dependencyResult.artifactResults)

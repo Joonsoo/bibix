@@ -11,6 +11,8 @@ class SourceCodePackageNameReader(val reader: Reader) {
         var nextToken = reader.nextToken()
         if (nextToken == "@") {
           reader.skipWhitespace()
+          check(reader.nextToken() == "file")
+          check(reader.nextToken() == ":")
           TODO()
         } else if (nextToken == "package") {
           reader.skipWhitespace()

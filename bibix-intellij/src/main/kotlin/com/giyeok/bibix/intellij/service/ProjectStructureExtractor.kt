@@ -373,7 +373,8 @@ object ProjectStructureExtractor {
         version = scalaVersion,
         scope = "compile",
         javaScope = "jar",
-        repos = listOf()
+        repos = listOf(),
+        excludes = setOf(),
       )
       val reflect = Artifact.resolveArtifact(
         buildFrontend.repo.prepareSharedDirectory(Artifact.sharedRepoName),
@@ -383,7 +384,8 @@ object ProjectStructureExtractor {
         version = scalaVersion,
         scope = "compile",
         javaScope = "jar",
-        repos = listOf()
+        repos = listOf(),
+        excludes = setOf(),
       )
       val library = Artifact.resolveArtifact(
         buildFrontend.repo.prepareSharedDirectory(Artifact.sharedRepoName),
@@ -393,7 +395,8 @@ object ProjectStructureExtractor {
         version = scalaVersion,
         scope = "compile",
         javaScope = "jar",
-        repos = listOf()
+        repos = listOf(),
+        excludes = setOf(),
       )
       scalaVersion to listOf(compiler, reflect, library)
     }

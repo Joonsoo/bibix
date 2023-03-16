@@ -16,6 +16,9 @@ val mavenPlugin = PreloadedPlugin.fromScript(
     }
     class MavenRepo(name: string, repoType: RepoType, url: string)
     
+    class MavenArtifactName(group: string, artifact: string, version?: string)
+    var excludes: set<MavenArtifactName> = []
+    
     var defaultRepos: list<MavenRepo> = [
       MavenRepo("Maven central", RepoType.remote, "http://repo.maven.apache.org/maven2/")
     ]
@@ -27,6 +30,7 @@ val mavenPlugin = PreloadedPlugin.fromScript(
       scope: ScopeType = ScopeType.compile,
       extension: string = "jar",
       repos: list<MavenRepo> = defaultRepos,
+      excludes: set<MavenArtifactName> = excludes,
     ): jvm.ClassPkg = native:com.giyeok.bibix.plugins.maven.Artifact
     
     action def deploy(
