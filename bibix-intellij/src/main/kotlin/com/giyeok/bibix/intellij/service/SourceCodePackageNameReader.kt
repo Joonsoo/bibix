@@ -13,7 +13,8 @@ class SourceCodePackageNameReader(val reader: Reader) {
           reader.skipWhitespace()
           check(reader.nextToken() == "file")
           check(reader.nextToken() == ":")
-          TODO()
+          // TODO
+          null
         } else if (nextToken == "package") {
           reader.skipWhitespace()
           val tokens = mutableListOf<String>()

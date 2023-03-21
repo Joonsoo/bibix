@@ -29,6 +29,7 @@ object ProjectStructureExtractor {
   fun getContentRoots(module: ModuleData): List<BibixIntellijProto.ContentRoot> {
     // 공통 ancestor directory 및 각 파일의 package 이름을 고려해서 content root
     val sourceCodeRoots = module.sources.associate { sourcePath ->
+      println("sourcePackage: ${sourcePath.absolutePathString()}")
       val sourcePackage = sourcePath.bufferedReader().use {
         SourceCodePackageNameReader.readPackageName(it)
       }
@@ -164,7 +165,6 @@ object ProjectStructureExtractor {
     is MavenDep -> "maven: ${origin.group}:${origin.artifact}:${origin.version}"
   }
 
-  @VisibleForTesting
   fun loadProject(projectRoot: Path, scriptName: String?): BibixIntellijProto.BibixProjectInfo {
     val javaModulesCollector = ModulesCollector("java", null)
     val ktjvmModulesCollector =
@@ -210,10 +210,10 @@ object ProjectStructureExtractor {
         } else false
       }
     }
-    moduleTargets.keys.forEach { target ->
+    moduleTargets.keys.forEachIndexed { index, target ->
       try {
-        println("Starting $target")
-        val result = buildFrontend.blockingBuildTargets(listOf(target))
+        println("${index + 1}/${moduleTargets.keys.size}: Starting $target")
+        val result = buildFrontend.buildTargets(listOf(target))
         println(result)
       } catch (e: Exception) {
         if (e is BibixExecutionException) {
