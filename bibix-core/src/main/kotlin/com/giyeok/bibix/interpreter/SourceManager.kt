@@ -1,12 +1,13 @@
 package com.giyeok.bibix.interpreter
 
 import com.giyeok.bibix.ast.BibixAst
+import com.giyeok.bibix.ast.BibixParser
 import com.giyeok.bibix.base.*
 import com.giyeok.bibix.interpreter.expr.NameLookupContext
 import com.giyeok.bibix.interpreter.expr.NameLookupTable
 import com.giyeok.bibix.plugins.PluginInstanceProvider
 import com.giyeok.bibix.plugins.PreloadedPlugin
-import com.giyeok.jparser.ParsingErrors
+import com.giyeok.jparser.ktlib.ParsingErrorKt
 import com.google.common.annotations.VisibleForTesting
 import com.google.common.collect.BiMap
 import com.google.common.collect.HashBiMap
@@ -37,9 +38,9 @@ class SourceManager {
 
     return try {
       val scriptText = scriptPath.readText()
-      val parsed = BibixAst.parse(scriptText)
+      val parsed = BibixParser.parse(scriptText)
       Pair(scriptText, parsed)
-    } catch (e: ParsingErrors.ParsingError) {
+    } catch (e: ParsingErrorKt) {
       throw IllegalStateException("Failed to parse script: $project (${e.message})", e)
     }
   }

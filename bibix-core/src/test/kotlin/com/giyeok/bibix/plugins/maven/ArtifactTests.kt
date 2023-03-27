@@ -15,7 +15,8 @@ class ArtifactTests {
       "1.9.5",
       "compile",
       "jar",
-      listOf()
+      listOf(),
+      setOf()
     )
   }
 }

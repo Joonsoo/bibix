@@ -31,13 +31,11 @@ sourceSets {
 }
 
 dependencies {
-    implementation files("../lib/jparser-base-0.3.1.jar")
-    implementation files("../lib/jparser-base-proto-0.3.1.jar")
-    implementation files("../lib/jparser-naive-0.3.1.jar")
-    implementation files("../lib/jparser-fast-0.3.1.jar")
-    implementation files("../lib/jparser-fast-proto-0.3.1.jar")
-    implementation files("../lib/jparser-utils-0.3.1.jar")
-    implementation files("../lib/jparser-ktlib-0.3.1.jar")
+    implementation files("../lib/jparser-base-proto-0.5.0.jar")
+    implementation files("../lib/jparser-milestone2-proto-0.5.0.jar")
+    implementation files("../lib/jparser-mgroup2-proto-0.5.0.jar")
+    implementation files("../lib/jparser-ktlib-0.5.0.jar")
+    implementation files("../lib/jparser-ktparser-0.5.0.jar")
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib:1.8.10"
 

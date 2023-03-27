@@ -1,39 +1,49 @@
 package com.giyeok.bibix.ast
 
 import org.junit.jupiter.api.Test
+import java.io.File
+import java.time.Duration
+import java.time.Instant
 
 class KtAstTest {
-  @Test
-  fun test4() {
-    val code = """
-      a = "abc" + "def" as file
-      b = ("abc" + "def") as file
-      c = "abc" + ("def" as file)
-    """.trimIndent()
-    val parsed = BibixAst.parse(code)
-    println(parsed)
+  fun <T> measureAndPrintTime(description: String, body: () -> T): T {
+    val startTime = Instant.now()
+    val result = body()
+    val endTime = Instant.now()
+    println("elapsed for $description: ${Duration.between(startTime, endTime)}")
+    return result
   }
 
   @Test
-  fun test3() {
-    val code = "a = this"
-    val parsed = BibixAst.parse(code)
+  fun test1() {
+    val code = "str = \"hello \$fgh\""
+    val parsed = measureAndPrintTime("parse") { BibixParser.parse(code) }
     println(parsed)
   }
 
   @Test
   fun test2() {
-    val code = "str = \"hello \$fgh\""
-    val result = `BibixAst0$`.`MODULE$`.parse(code)
-    println(result.left().get().trees().size())
-    val parsed = BibixAst.parse(code)
+    val code = "a = this"
+    val parsed = BibixParser.parse(code)
     println(parsed)
   }
 
   @Test
-  fun test() {
-    val parsed = BibixAst.parse(
-      """
+  fun test3() {
+    val code = """
+      a = "abc" + "def" as file
+      b = ("abc" + "def") as file
+      c = "abc" + ("def" as file)
+    """.trimIndent()
+    val parsed = BibixParser.parse(code)
+    println(parsed)
+  }
+
+  @Test
+  fun test4() {
+    val parsed = measureAndPrintTime("parse") {
+      BibixParser.parse(
+        """
       class ClassPaths(cps: set<path>)
 
       class ClassPkg(origin: ClassOrigin, cpinfo: CpInfo, deps: set<ClassPkg>) {
@@ -90,8 +100,16 @@ class KtAstTest {
         args: list<string> = [],
       ) = native:com.giyeok.bibix.plugins.jvm.Run
       """.trimIndent()
-    )
+      )
+    }
 
+    println(parsed)
+  }
+
+  @Test
+  fun test5() {
+    val code = File("../build.bbx").readText()
+    val parsed = measureAndPrintTime("parse") { BibixParser.parse(code) }
     println(parsed)
   }
 }

@@ -8,7 +8,7 @@ from bibix.plugins import grpc
 from bibix.plugins import java
 from bibix.plugins import jar
 
-bibixVersion = "0.5.2"
+bibixVersion = "0.5.3"
 
 base {
   proto {
@@ -194,13 +194,11 @@ action buildRelease {
 }
 
 jparserDeps = [
-  jvm.lib("lib/jparser-base-0.3.1.jar"),
-  jvm.lib("lib/jparser-base-proto-0.3.1.jar"),
-  jvm.lib("lib/jparser-naive-0.3.1.jar"),
-  jvm.lib("lib/jparser-fast-0.3.1.jar"),
-  jvm.lib("lib/jparser-fast-proto-0.3.1.jar"),
-  jvm.lib("lib/jparser-utils-0.3.1.jar"),
-  jvm.lib("lib/jparser-ktlib-0.3.1.jar"),
+  jvm.lib("lib/jparser-base-proto-0.5.0.jar"),
+  jvm.lib("lib/jparser-milestone2-proto-0.5.0.jar"),
+  jvm.lib("lib/jparser-mgroup2-proto-0.5.0.jar"),
+  jvm.lib("lib/jparser-ktlib-0.5.0.jar"),
+  jvm.lib("lib/jparser-ktparser-0.5.0.jar"),
 ]
 
 kotlinVersion = "1.8.10"
