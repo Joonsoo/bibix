@@ -1,0 +1,51 @@
+// macro까지는 모르겠지만 for loop은 있으면 좋을 것 같음.. jparser에서 문법 generate 하는 부분에서 반복이 너무 많아서 헷갈림
+// 그런데 이렇게 되면 실은 bibix의 실행 모델이 좀 바뀔 필요가 있을 것 같음. 지금처럼 완전히 on-demand로 evaluate할 수가 없게 될듯
+//  -> blaze 같은 것들처럼 전체적으로 실행을 해서 이름을 파악하고 각 이름별로 dependency 정도는 파악한 다음에 실행이 가능해질듯
+// 다만 고민되는 것은.. 원래 bibix의 핵심 중 하나는 "쓰는 사람은 귀찮고 읽는 사람은 쉬운" 스크립트인데 이 기능이 들어가면 상충되는 것이 아닐까?
+
+examples {
+  generate {
+    toGenerate = [("metalang3", "MetaLang3"), ("bibix2", "Bibix2"), ("asdl", "Asdl"), ("j1", "J1")]
+
+    macro generateMilestone2ParserData(grammarName: string) {
+      `${grammarName}m2` = genKtAstMilestone2(
+        cdgFile = "examples/metalang3/resources/$grammarName/grammar.cdg",
+        astifierClassName = "com.giyeok.jparser.ktlib.test.${astName}Ast",
+        parserDataFileName = "$grammarName-m2-parserdata.pb",
+        trimParserData = false,
+      )
+    }
+
+    allGenerated = []
+    for (grammarName, astName) in toGenerate {
+      // expression 중간에서도 `$grammarName` 같은식으로 이름을 지정할 수 있도록..
+      // if 문 같은 것들도 필요할 듯 한데
+      // list builder같은 것도 필요할까?
+
+      generateMilestone2ParserData(grammarName)
+
+      `${grammarName}mg2` = genKtAstMgroup2(
+        cdgFile = "examples/metalang3/resources/$grammarName/grammar.cdg",
+        astifierClassName = "com.giyeok.jparser.ktlib.test.${astName}Ast",
+        parserDataFileName = "$grammarName-mg2-parserdata.pb",
+        trimParserData = false,
+      )
+
+      `${grammarName}mg2trimmed` = genKtAstMgroup2(
+        cdgFile = "examples/metalang3/resources/$grammarName/grammar.cdg",
+        astifierClassName = "com.giyeok.jparser.ktlib.test.${astName}Ast",
+        parserDataFileName = "$grammarName-mg2-parserdata-trimmed.pb",
+        trimParserData = true,
+      )
+    }
+  }
+
+  action generateAll {
+    for (grammarName, _) in toGenerate {
+      file.copyFile(zip.gzip(generate.`${grammarName}m2`.parserData), "examples/generated/resources")
+      file.copyFile(zip.gzip(generate.`${grammarName}mg2`.parserData), "examples/generated/resources")
+      file.copyFile(zip.gzip(generate.`${grammarName}mg2trimmed`.parserData), "examples/generated/resources")
+      file.copyDirectory(generate.`${grammarName}mg2trimmed`.parserData, "examples/generated/kotlin")
+    }
+  }
+}
