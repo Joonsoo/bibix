@@ -18,9 +18,13 @@ class PackageGraph(
 
     private fun traverseModule(module: ModuleData) {
       nodes.add(module.origin)
-      module.dependencies.forEach { traverseDependency(module.origin, it) }
-      if (module.sdk != null) {
-        traverseDependency(module.origin, module.sdk.second)
+      val flattened =
+        ResolveClassPkgs.flattenClassPkgs(module.dependencies + listOfNotNull(module.sdk?.second))
+      (flattened.compileDeps + flattened.runtimeDeps).forEach { (origin, pkg) ->
+        if (!isModule(origin)) {
+          nonModulePkgs[origin] = pkg
+        }
+        edges.add(Pair(module.origin, origin))
       }
     }
 

@@ -15,6 +15,20 @@ class ResolveClassPkgs {
       is JarInfo -> listOf(this.jar)
     }
 
+    fun flattenDeps(classPkgs: List<ClassPkg>): Map<ClassOrigin, ClassPkg> {
+      val cpsMap = mutableMapOf<ClassOrigin, ClassPkg>()
+
+      fun traversePkg(pkg: ClassPkg) {
+        cpsMap[pkg.origin] = pkg
+        pkg.deps.forEach { traversePkg(it) }
+        pkg.runtimeDeps.forEach { traversePkg(it) }
+      }
+
+      classPkgs.forEach { traversePkg(it) }
+
+      return cpsMap.toMap()
+    }
+
     fun cpsMap(classPkgs: List<ClassPkg>): Map<ClassOrigin, CpInfo> {
       val cpsMap = mutableMapOf<ClassOrigin, CpInfo>()
 
@@ -56,7 +70,7 @@ class ResolveClassPkgs {
           path.pop()
         } else {
           pkg.deps.forEach {
-            traversePkg(it, depth)
+            traversePkg(it, depth + 1)
           }
         }
       }
@@ -69,7 +83,13 @@ class ResolveClassPkgs {
         val minDepthVersions = depthsMap.filter { it.value.depth == minDepth }.keys
 
         if (minDepthVersions.size > 1) {
-          throw IllegalStateException("conflicting versions: $artifactName, $depthsMap")
+          val depthsMapString =
+            depthsMap.values.sortedBy { it.depth }.joinToString("\n") { pathSet ->
+              pathSet.paths.joinToString("\n") { path ->
+                "${pathSet.depth}: " + path.reversed().toString()
+              }
+            }
+          throw IllegalStateException("conflicting versions: $artifactName\n$depthsMapString")
         }
         minDepthVersions.first()
       }
@@ -106,27 +126,45 @@ class ResolveClassPkgs {
       return deps.toSet()
     }
 
-    fun resolveClassPkgs(classPkgs: List<ClassPkg>): ClassPaths {
-      val cpsMap = cpsMap(classPkgs)
+    data class FlattenedClassPkgs(
+      val compileDeps: Map<ClassOrigin, ClassPkg>,
+      val runtimeDeps: Map<ClassOrigin, ClassPkg>,
+    )
+
+    fun flattenClassPkgs(classPkgs: List<ClassPkg>): FlattenedClassPkgs {
+      val pkgsMap = flattenDeps(classPkgs)
       val mavenVersions = mavenArtifactVersionsToUse(classPkgs)
 
-      val compileDeps = compileDeps(classPkgs).map { origin ->
-        when (origin) {
-          is MavenDep -> mavenVersions[origin.toMavenArtifact()]!!
-          else -> origin
-        }
-      }.toSet()
-      val runtimeDeps = runtimeDeps(classPkgs).map { origin ->
-        when (origin) {
-          is MavenDep -> mavenVersions[origin.toMavenArtifact()]!!
-          else -> origin
-        }
-      }.toSet()
+      fun filterMavenDeps(origins: Collection<ClassOrigin>): Set<ClassOrigin> =
+        origins.mapNotNull { origin ->
+          when (origin) {
+            is MavenDep -> {
+              val chosen = mavenVersions[origin.toMavenArtifact()]!!
+              if (chosen == origin) chosen else null
+            }
 
-      fun depsToPaths(deps: Collection<ClassOrigin>): List<Path> =
-        deps.flatMap { cpsMap[it]!!.toPaths() }
+            else -> origin
+          }
+        }.toSet()
 
-      return ClassPaths(depsToPaths(compileDeps), depsToPaths(runtimeDeps - compileDeps))
+      val compileDeps = filterMavenDeps(compileDeps(classPkgs))
+      val runtimeDeps = filterMavenDeps(runtimeDeps(classPkgs))
+
+      return FlattenedClassPkgs(
+        compileDeps.associateWith { pkgsMap[it]!! },
+        runtimeDeps.associateWith { pkgsMap[it]!! })
+    }
+
+    fun resolveClassPkgs(classPkgs: List<ClassPkg>): ClassPaths {
+      val flattened = flattenClassPkgs(classPkgs)
+
+      fun depsToPaths(cps: Collection<ClassPkg>): List<Path> =
+        cps.flatMap { it.cpinfo.toPaths() }
+
+      return ClassPaths(
+        depsToPaths(flattened.compileDeps.values),
+        depsToPaths(flattened.runtimeDeps.filterKeys { flattened.compileDeps.contains(it) }.values)
+      )
     }
   }
 

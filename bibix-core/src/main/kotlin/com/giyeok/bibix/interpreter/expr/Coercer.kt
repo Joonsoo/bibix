@@ -5,6 +5,7 @@ import com.giyeok.bibix.base.*
 import com.giyeok.bibix.interpreter.*
 import com.giyeok.bibix.interpreter.task.Task
 import java.nio.file.Path
+import kotlin.io.path.absolutePathString
 
 class Coercer(
   private val sourceManager: SourceManager,
@@ -36,6 +37,9 @@ class Coercer(
 
       StringType -> when (value) {
         is StringValue -> return value
+        is PathValue -> return StringValue(value.path.absolutePathString())
+        is FileValue -> return StringValue(value.file.absolutePathString())
+        is DirectoryValue -> return StringValue(value.directory.absolutePathString())
         else -> {}
       }
 

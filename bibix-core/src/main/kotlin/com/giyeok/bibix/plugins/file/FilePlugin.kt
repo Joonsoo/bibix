@@ -28,9 +28,14 @@ val filePlugin = PreloadedPlugin.fromScript(
     action def clearDirectory(
       dest: directory,
     ) = native:com.giyeok.bibix.plugins.file.Clear:clearDirectory
+
+    action def makeDirectory(
+      dest: path,
+    ) = native:com.giyeok.bibix.plugins.file.MakeDir:makeDirectory
   """.trimIndent(),
   PluginInstanceProvider(
     Clear::class.java,
     Copy::class.java,
+    MakeDir::class.java,
   )
 )
