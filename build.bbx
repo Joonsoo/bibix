@@ -201,10 +201,11 @@ kotlinVersion = "1.8.10"
 var ktjvm.compilerVersion = kotlinVersion
 var ktjvm.sdkVersion = kotlinVersion
 
-kotlinxCoroutinesVersion = "1.6.0"
+kotlinxCoroutinesVersion = "1.6.4"
 kotlinxCoroutinesDeps = [
   maven.artifact("org.jetbrains.kotlinx", "kotlinx-coroutines-core", kotlinxCoroutinesVersion),
-  maven.artifact("org.jetbrains.kotlinx", "kotlinx-coroutines-jdk8", kotlinxCoroutinesVersion),
+  maven.artifact("org.jetbrains.kotlinx", "kotlinx-coroutines-core-jvm", kotlinxCoroutinesVersion),
+  maven.artifact("org.jetbrains.kotlinx", "kotlinx-coroutines-jdk9", kotlinxCoroutinesVersion),
 ]
 
 protobufVersion = "3.22.0"
