@@ -76,10 +76,10 @@ class ResolveClassPkgs {
         } else {
           path.push(pkg.origin)
           pkg.deps.forEach {
-            traversePkg(priority, it, depth + 1)
+            traversePkg(priority, it, depth)
           }
           pkg.runtimeDeps.forEach {
-            traversePkg(priority, it, depth + 1)
+            traversePkg(priority, it, depth)
           }
           path.pop()
         }
