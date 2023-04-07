@@ -53,6 +53,7 @@ data class ClassPkg(
       "origin" to this.origin.toBibix(),
       "cpinfo" to this.cpinfo.toBibix(),
       "deps" to SetValue(this.deps.map { it.toBibix() }),
+      "runtimeDeps" to SetValue(this.runtimeDeps.map { it.toBibix() }),
     )
   )
 }

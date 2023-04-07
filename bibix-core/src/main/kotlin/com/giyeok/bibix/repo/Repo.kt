@@ -39,7 +39,7 @@ class Repo(
   val sharedDirectoriesMap: MutableMap<String, Path>,
   val directoryLocker: DirectoryLocker,
   val debuggingMode: Boolean = false,
-) : BaseRepo {
+): BaseRepo {
   private fun now() = Timestamps.fromMillis(System.currentTimeMillis())
 
   private val mutex = Mutex()
@@ -134,11 +134,17 @@ class Repo(
 
   private suspend fun repoDataUpdated() {
     // TODO 임의로 5초에 한번만 저장하게 했는데 더 잘 할 수 없을까..
-    val last = mutex.withLock { lastUpdated }
-    if (last == null || Duration.between(last, Instant.now()) >= Duration.ofSeconds(5)) {
-      mutex.withLock {
+    val updateNeeded = mutex.withLock {
+      if (lastUpdated == null ||
+        Duration.between(lastUpdated, Instant.now()) >= Duration.ofSeconds(5)
+      ) {
         lastUpdated = Instant.now()
+        true
+      } else {
+        false
       }
+    }
+    if (updateNeeded) {
       commitRepoData()
     }
   }

@@ -1,11 +1,9 @@
 package com.giyeok.bibix.frontend
 
-import com.giyeok.bibix.ast.BibixAst
 import com.giyeok.bibix.base.*
 import com.giyeok.bibix.interpreter.*
 import com.giyeok.bibix.interpreter.coroutine.TaskElement
 import com.giyeok.bibix.interpreter.expr.EvaluationResult
-import com.giyeok.bibix.interpreter.expr.NameLookupContext
 import com.giyeok.bibix.interpreter.task.Task
 import com.giyeok.bibix.plugins.PreloadedPlugin
 import com.giyeok.bibix.plugins.bibix.bibixPlugin

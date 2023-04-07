@@ -17,16 +17,18 @@ class ModulesCollector(val languageType: String, val sdkArtifactName: Pair<Strin
     val resDirs =
       ResourceDirectoryExtractor.findResourceDirectoriesOf(resources.values.map { (it as FileValue).file })
     val deps = context.arguments.getValue("deps") as SetValue
+    val runtimeDeps = context.arguments.getValue("runtimeDeps") as SetValue
     val origin = LocalBuilt(context.targetId, "ModulesCollector")
 
     _modules[context.targetId] = ModuleData(
-      languageType,
-      origin,
-      srcs.values.map { (it as FileValue).file }.toSet(),
-      resDirs,
-      sdk,
-      deps.values.map { ClassPkg.fromBibix(it) },
-      context.arguments
+      languageType = languageType,
+      origin = origin,
+      sources = srcs.values.map { (it as FileValue).file }.toSet(),
+      resourceDirs = resDirs,
+      sdk = sdk,
+      deps = deps.values.map { ClassPkg.fromBibix(it) },
+      runtimeDeps = runtimeDeps.values.map { ClassPkg.fromBibix(it) },
+      allArgs = context.arguments
     )
     val cpinfo = ClassInstanceValue(
       "com.giyeok.bibix.plugins.jvm",
@@ -44,7 +46,8 @@ class ModulesCollector(val languageType: String, val sdkArtifactName: Pair<Strin
         mapOf(
           "origin" to origin.toBibix(),
           "cpinfo" to cpinfo,
-          "deps" to SetValue(listOfNotNull(sdk?.second?.toBibix()) + deps.values)
+          "deps" to SetValue(listOfNotNull(sdk?.second?.toBibix()) + deps.values),
+          "runtimeDeps" to SetValue(runtimeDeps.values),
         )
       )
     )
@@ -76,6 +79,7 @@ data class ModuleData(
   val sources: Set<Path>,
   val resourceDirs: Set<Path>,
   val sdk: Pair<String, ClassPkg>?,
-  val dependencies: List<ClassPkg>,
+  val deps: List<ClassPkg>,
+  val runtimeDeps: List<ClassPkg>,
   val allArgs: Map<String, BibixValue>
 )

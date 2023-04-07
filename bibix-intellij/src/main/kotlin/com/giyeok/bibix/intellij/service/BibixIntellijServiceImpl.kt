@@ -14,7 +14,6 @@ import kotlinx.coroutines.sync.withLock
 import java.nio.file.FileSystem
 import java.nio.file.FileSystems
 import java.nio.file.Path
-import java.time.Instant
 import java.time.LocalDateTime
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
@@ -46,6 +45,8 @@ class BibixIntellijServiceImpl(
         e.printStackTrace()
         throw StatusException(Status.FAILED_PRECONDITION)
       }
+
+      println(loaded)
       println("Done")
 
       runBlocking {

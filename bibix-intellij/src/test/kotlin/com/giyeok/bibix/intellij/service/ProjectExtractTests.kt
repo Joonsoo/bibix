@@ -13,4 +13,13 @@ class ProjectExtractTests {
     })
     println(project)
   }
+
+  @Test
+  fun testRuntimeDeps(): Unit = runBlocking {
+    val impl = BibixIntellijServiceImpl()
+    val project = impl.loadProject(loadProjectReq {
+      this.projectRoot = "/home/joonsoo/Documents/workspace/datclub3/server"
+    })
+    println(project)
+  }
 }

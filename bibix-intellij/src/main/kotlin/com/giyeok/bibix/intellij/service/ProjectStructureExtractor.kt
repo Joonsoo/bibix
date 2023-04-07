@@ -215,7 +215,7 @@ object ProjectStructureExtractor {
     moduleTargets.keys.forEachIndexed { index, target ->
       try {
         println("${index + 1}/${moduleTargets.keys.size}: Starting $target")
-        val result = buildFrontend.buildTargets(listOf(target))
+        val result = buildFrontend.blockingBuildTargets(listOf(target))
         println(result)
       } catch (e: Exception) {
         if (e is BibixExecutionException) {
@@ -248,40 +248,26 @@ object ProjectStructureExtractor {
       }
     }
 
-    val pkgGraph = PackageGraph.create(modules.values, objectNamesMap)
+    val moduleTargetIds = modules.values.map { it.origin.objHash }.toSet()
 
     fun moduleName(targetId: String): String =
       "$rootModuleName." + (objectNamesMap[targetId] ?: targetId)
 
-    val externalLibraries = pkgGraph.nonModulePkgs.values.map { pkg ->
-      externalLibrary {
-        this.libraryId = libIdFromOrigin(pkg.origin)
-        when (val cpinfo = pkg.cpinfo) {
-          is ClassesInfo -> {
-            this.classpaths.addAll(cpinfo.classDirs.map { it.absolutePathString() })
-            this.classpaths.addAll(cpinfo.resDirs.map { it.absolutePathString() })
-            cpinfo.srcs?.let { srcs ->
-              this.sources.addAll(srcs.map { it.absolutePathString() })
-            }
-          }
-
-          is JarInfo -> {
-            this.classpaths.add(cpinfo.jar.absolutePathString())
-            cpinfo.sourceJar?.let { sourceJar ->
-              this.sources.add(sourceJar.absolutePathString())
-            }
-          }
-        }
-      }
+    fun isModule(origin: ClassOrigin) = when (origin) {
+      is LocalBuilt -> moduleTargetIds.contains(origin.objHash)
+      else -> false
     }
 
-    val moduleContentRoots = pkgGraph.modules.mapValues { (moduleId, module) ->
-      getContentRoots(module)
+    val moduleContentRoots = modules.values.associate { module ->
+      module.origin to getContentRoots(module)
     }
 
     val moduleRoots = assignModuleRoots(projectRoot, moduleContentRoots)
 
-    val projectModules = pkgGraph.modules.map { (moduleId, module) ->
+    val externalLibraries = mutableMapOf<ClassOrigin, ClassPkg>()
+
+    val projectModules = modules.values.map { module ->
+      val moduleId = module.origin
       val moduleRoot = moduleRoots[moduleId]?.absolutePathString()
       module {
         this.moduleName = moduleName(module.origin.objHash)
@@ -318,27 +304,29 @@ object ProjectStructureExtractor {
           })
         }
         val deps =
-          ResolveClassPkgs.flattenClassPkgs(listOfNotNull(module.sdk?.second) + module.dependencies)
-        deps.compileDeps.values.forEach { (origin, pkg) ->
-          if (origin is LocalBuilt && pkgGraph.isModule(origin)) {
+          ResolveClassPkgs.flattenClassPkgs(listOfNotNull(module.sdk?.second) + module.deps)
+        (deps.inputDeps + deps.compileDeps).forEach { (origin, pkg) ->
+          if (origin is LocalBuilt && isModule(origin)) {
             this.moduleDeps.add(ModuleDep.newBuilder().also {
               it.moduleName = moduleName(origin.objHash)
               it.dependencyType = BibixIntellijProto.DependencyType.COMPILE_DEPENDENCY
             }.build())
           } else {
+            externalLibraries[origin] = pkg
             this.libraryDeps.add(LibraryDep.newBuilder().also {
               it.libraryName = libIdFromOrigin(origin)
               it.dependencyType = BibixIntellijProto.DependencyType.COMPILE_DEPENDENCY
             }.build())
           }
         }
-        deps.runtimeDeps.values.forEach { (origin, pkg) ->
-          if (origin is LocalBuilt && pkgGraph.isModule(origin)) {
+        deps.runtimeDeps.forEach { (origin, pkg) ->
+          if (origin is LocalBuilt && isModule(origin)) {
             this.moduleDeps.add(ModuleDep.newBuilder().also {
               it.moduleName = moduleName(origin.objHash)
               it.dependencyType = BibixIntellijProto.DependencyType.RUNTIME_DEPENDENCY
             }.build())
           } else {
+            externalLibraries[origin] = pkg
             this.libraryDeps.add(LibraryDep.newBuilder().also {
               it.libraryName = libIdFromOrigin(origin)
               it.dependencyType = BibixIntellijProto.DependencyType.RUNTIME_DEPENDENCY
@@ -348,7 +336,7 @@ object ProjectStructureExtractor {
       }
     }
 
-    val sdks = getSdksForModules(buildFrontend, pkgGraph.modules)
+    val sdks = getSdksForModules(buildFrontend, modules.values)
 
     return bibixProjectInfo {
       this.projectId = "--"
@@ -369,20 +357,41 @@ object ProjectStructureExtractor {
         })
       })
       this.modules.addAll(projectModules)
-      this.externalLibraries.addAll(externalLibraries)
+      externalLibraries.values.forEach { pkg ->
+        this.externalLibraries.add(externalLibrary {
+          this.libraryId = libIdFromOrigin(pkg.origin)
+          when (val cpinfo = pkg.cpinfo) {
+            is ClassesInfo -> {
+              this.classpaths.addAll(cpinfo.classDirs.map { it.absolutePathString() })
+              this.classpaths.addAll(cpinfo.resDirs.map { it.absolutePathString() })
+              cpinfo.srcs?.let { srcs ->
+                this.sources.addAll(srcs.map { it.absolutePathString() })
+              }
+            }
+
+            is JarInfo -> {
+              this.classpaths.add(cpinfo.jar.absolutePathString())
+              cpinfo.sourceJar?.let { sourceJar ->
+                this.sources.add(sourceJar.absolutePathString())
+              }
+            }
+          }
+        }
+        )
+      }
       this.sdkInfo = sdks
     }
   }
 
   private fun getSdksForModules(
     buildFrontend: BuildFrontend,
-    modules: Map<LocalBuilt, ModuleData>
+    modules: Collection<ModuleData>
   ): BibixIntellijProto.SdkInfo {
-    val ktjvmModules = modules.filterValues { it.languageType == "ktjvm" }
-    val scalaModules = modules.filterValues { it.languageType == "scala" }
+    val ktjvmModules = modules.filter { it.languageType == "ktjvm" }
+    val scalaModules = modules.filter { it.languageType == "scala" }
 
-    val kotlinSdkVersions = ktjvmModules.values.mapNotNull { it.sdk }.distinctBy { it.first }
-    val scalaSdkVersions = scalaModules.values.mapNotNull { it.sdk }.distinctBy { it.first }
+    val kotlinSdkVersions = ktjvmModules.mapNotNull { it.sdk }.distinctBy { it.first }
+    val scalaSdkVersions = scalaModules.mapNotNull { it.sdk }.distinctBy { it.first }
 
     val scalaCompilers = scalaSdkVersions.associate { (scalaVersion, _) ->
       val compiler = Artifact.resolveArtifact(

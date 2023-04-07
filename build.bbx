@@ -96,10 +96,10 @@ core {
   test = ktjvm.library(
     srcs = glob("bibix-core/src/test/kotlin/**/*.kt"),
     deps = [
+      main,
       ...testDeps,
       ...truthDeps,
       jimfsDep,
-      main,
     ],
   )
 
@@ -132,27 +132,23 @@ intellij {
       file.copyDirectory(grpcKotlinCode.rootDir, "bibix-intellij/src/generated/grpc/kotlin")
     }
 
-    javalib = java.library(
-      srcs = [
-        ...glob("bibix-intellij/src/generated/proto/java/**/*.java"),
-        ...glob("bibix-intellij/src/generated/grpc/java/**/*.java"),
-      ],
-      deps = [
-        ...protobufDeps,
-        ...grpcDeps,
-      ],
+    javaProtoLib = java.library(
+      srcs = glob("bibix-intellij/src/generated/proto/java/**/*.java"),
+      deps = protobufDeps,
     )
-    lib = ktjvm.library(
-      srcs = [
-        ...glob("bibix-intellij/src/generated/proto/kotlin/**/*.kt"),
-        ...glob("bibix-intellij/src/generated/grpc/kotlin/**/*.kt"),
-      ],
-      deps = [
-        javalib,
-        ...kotlinxCoroutinesDeps,
-        ...grpcDeps,
-      ],
+    javaGrpcLib = java.library(
+      srcs = glob("bibix-intellij/src/generated/grpc/java/**/*.java"),
+      deps = [javaProtoLib, ...grpcDeps],
     )
+    kotlinProtoLib = ktjvm.library(
+      srcs = glob("bibix-intellij/src/generated/proto/kotlin/**/*.kt"),
+      deps = [javaGrpcLib],
+    )
+    kotlinGrpcLib = ktjvm.library(
+      srcs = glob("bibix-intellij/src/generated/grpc/kotlin/**/*.kt"),
+      deps = [kotlinProtoLib, ...kotlinxCoroutinesDeps],
+    )
+    lib = kotlinGrpcLib
   }
 
   main = ktjvm.library(
@@ -160,13 +156,13 @@ intellij {
     deps = [
       intellij.proto.lib,
       core.main,
-      ...grpcDeps,
     ]
   )
 
   test = ktjvm.library(
     srcs = glob("bibix-intellij/src/test/kotlin/**/*.kt"),
     deps = [
+      main,
       ...testDeps,
       ...truthDeps,
       jimfsDep,

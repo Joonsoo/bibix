@@ -69,10 +69,16 @@ class ResolveClassPkgs {
           pkg.deps.forEach {
             traversePkg(priority, it, depth + 1)
           }
+          pkg.runtimeDeps.forEach {
+            traversePkg(priority, it, depth + 1)
+          }
           path.pop()
         } else {
           path.push(pkg.origin)
           pkg.deps.forEach {
+            traversePkg(priority, it, depth + 1)
+          }
+          pkg.runtimeDeps.forEach {
             traversePkg(priority, it, depth + 1)
           }
           path.pop()
@@ -104,12 +110,17 @@ class ResolveClassPkgs {
       return versionsToUse
     }
 
-    fun compileDeps(classPkgs: List<ClassPkg>): Set<ClassOrigin> {
+    fun collectCompileDeps(classPkgs: List<ClassPkg>): Set<ClassOrigin> {
       val deps = mutableSetOf<ClassOrigin>()
 
       fun traversePkg(pkg: ClassPkg) {
-        deps.add(pkg.origin)
-        pkg.deps.forEach { traversePkg(it) }
+        pkg.deps.forEach {
+          deps.add(it.origin)
+          traversePkg(it)
+        }
+        pkg.runtimeDeps.forEach {
+          traversePkg(it)
+        }
       }
 
       classPkgs.forEach {
@@ -119,22 +130,28 @@ class ResolveClassPkgs {
       return deps.toSet()
     }
 
-    fun runtimeDeps(classPkgs: List<ClassPkg>): Set<ClassOrigin> {
+    fun collectRuntimeDeps(classPkgs: List<ClassPkg>): Set<ClassOrigin> {
       val deps = mutableSetOf<ClassOrigin>()
 
       fun traversePkg(pkg: ClassPkg) {
-        deps.add(pkg.origin)
-        pkg.runtimeDeps.forEach { traversePkg(it) }
+        pkg.runtimeDeps.forEach {
+          deps.add(it.origin)
+          traversePkg(it)
+        }
+        pkg.deps.forEach {
+          traversePkg(it)
+        }
       }
 
-      classPkgs.forEach { pkg ->
-        pkg.runtimeDeps.forEach { traversePkg(it) }
+      classPkgs.forEach {
+        traversePkg(it)
       }
 
       return deps.toSet()
     }
 
     data class FlattenedClassPkgs(
+      val inputDeps: Map<ClassOrigin, ClassPkg>,
       val compileDeps: Map<ClassOrigin, ClassPkg>,
       val runtimeDeps: Map<ClassOrigin, ClassPkg>,
     )
@@ -155,14 +172,17 @@ class ResolveClassPkgs {
           }
         }.toSet()
 
-      val compileDeps = filterMavenDeps(compileDeps(classPkgs))
-      val runtimeDeps = filterMavenDeps(runtimeDeps(classPkgs))
+      val inputDeps = filterMavenDeps(classPkgs.map { it.origin })
+      val compileDeps = filterMavenDeps(collectCompileDeps(classPkgs))
+      val runtimeDeps = filterMavenDeps(collectRuntimeDeps(classPkgs)) - compileDeps
 
       return FlattenedClassPkgs(
+        inputDeps.associateWith { pkgsMap[it]!! },
         compileDeps.associateWith { pkgsMap[it]!! },
         runtimeDeps.associateWith { pkgsMap[it]!! })
     }
 
+    // classPkgs를 classpath로 주기 위해서 필요한 jar나 디렉토리 목록을 반환
     fun resolveClassPkgs(classPkgs: List<ClassPkg>): ClassPaths {
       val flattened = flattenClassPkgs(classPkgs)
 
@@ -170,8 +190,8 @@ class ResolveClassPkgs {
         cps.flatMap { it.cpinfo.toPaths() }
 
       return ClassPaths(
-        depsToPaths(flattened.compileDeps.values),
-        depsToPaths(flattened.runtimeDeps.filterKeys { flattened.compileDeps.contains(it) }.values)
+        depsToPaths((flattened.inputDeps + flattened.compileDeps).values),
+        depsToPaths(flattened.runtimeDeps.values)
       )
     }
   }
