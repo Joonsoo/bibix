@@ -23,6 +23,7 @@ data class ClassPaths(
     "ClassPaths",
     mapOf(
       "cps" to SetValue(this.cps.map { PathValue(it) }),
+      "runtimeCps" to SetValue(this.runtimeCps.map { PathValue(it) }),
     )
   )
 }
@@ -76,7 +77,7 @@ sealed class CpInfo {
 data class JarInfo(
   val jar: Path,
   val sourceJar: Path?,
-) : CpInfo() {
+): CpInfo() {
   companion object {
     fun fromBibix(value: BibixValue): JarInfo {
       value as ClassInstanceValue
@@ -102,7 +103,7 @@ data class ClassesInfo(
   val classDirs: List<Path>,
   val resDirs: List<Path>,
   val srcs: List<Path>?,
-) : CpInfo() {
+): CpInfo() {
   companion object {
     fun fromBibix(value: BibixValue): ClassesInfo {
       value as ClassInstanceValue
@@ -147,7 +148,7 @@ data class MavenDep(
   val group: String,
   val artifact: String,
   val version: String,
-) : ClassOrigin() {
+): ClassOrigin() {
   companion object {
     fun fromBibix(value: BibixValue): MavenDep {
       value as ClassInstanceValue
@@ -176,7 +177,7 @@ data class MavenDep(
 data class LocalBuilt(
   val objHash: String,
   val builderName: String,
-) : ClassOrigin() {
+): ClassOrigin() {
   companion object {
     fun fromBibix(value: BibixValue): LocalBuilt {
       value as ClassInstanceValue
@@ -200,7 +201,7 @@ data class LocalBuilt(
 
 data class LocalLib(
   val path: Path,
-) : ClassOrigin() {
+): ClassOrigin() {
   companion object {
     fun fromBibix(value: BibixValue): LocalLib {
       value as ClassInstanceValue
