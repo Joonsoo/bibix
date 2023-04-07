@@ -93,9 +93,13 @@ class ResolveClassPkgs {
                 "${pathSet.depth}: " + path.reversed().toString()
               }
             }
-          println("Warning: Possibly conflicting versions: $artifactName\n$depthsMapString")
+          val chosen = minDepths.minBy { it.value.priority }.key
+          println("Warning: Possibly conflicting versions of $artifactName\n$depthsMapString\nChosen: $chosen")
+          chosen
+        } else {
+          // minDepths.keys에 딱 하나밖에 없음
+          minDepths.keys.first()
         }
-        minDepths.minBy { it.value.priority }.key
       }
       return versionsToUse
     }
