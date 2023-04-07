@@ -91,6 +91,7 @@ class Artifact {
 //    )
 
       val dep = resolveArtifact(
+        context.buildEnv,
         mavenReposDir,
         groupId,
         artifactId,
@@ -108,6 +109,7 @@ class Artifact {
   companion object {
     const val sharedRepoName = "com.giyeok.bibix.plugins.maven"
     fun resolveArtifact(
+      buildEnv: BuildEnv,
       mavenReposDir: Path,
       groupId: String,
       artifactId: String,
@@ -119,7 +121,8 @@ class Artifact {
       excludes: Set<MavenArtifactName>,
     ): ClassPkg {
       val system: RepositorySystem = newRepositorySystem()
-      val session: RepositorySystemSession = newRepositorySystemSession(mavenReposDir, system)
+      val session: RepositorySystemSession =
+        newRepositorySystemSession(mavenReposDir, system, buildEnv)
 
       val artifact = DefaultArtifact(groupId, artifactId, "", extension, version)
       val repositories = newRepositories(system, session)
@@ -177,7 +180,7 @@ class Artifact {
       )
       locator.addService(TransporterFactory::class.java, FileTransporterFactory::class.java)
       locator.addService(TransporterFactory::class.java, HttpTransporterFactory::class.java)
-      locator.setErrorHandler(object : DefaultServiceLocator.ErrorHandler() {
+      locator.setErrorHandler(object: DefaultServiceLocator.ErrorHandler() {
         override fun serviceCreationFailed(type: Class<*>?, impl: Class<*>?, exception: Throwable) {
           exception.printStackTrace()
         }
@@ -187,7 +190,8 @@ class Artifact {
 
     fun newRepositorySystemSession(
       localRepoBaseDirectory: Path,
-      system: RepositorySystem
+      system: RepositorySystem,
+      buildEnv: BuildEnv,
     ): DefaultRepositorySystemSession {
       val session = MavenRepositorySystemUtils.newSession()
 
@@ -197,7 +201,24 @@ class Artifact {
       session.repositoryListener = ConsoleRepositoryListener()
       session.updatePolicy = RepositoryPolicy.UPDATE_POLICY_DAILY
 
-      session.dependencySelector = object : DependencySelector {
+      // -Dos.detected.name=linux -Dos.detected.arch=x86_64 -Dos.detected.classifier=linux-x86_64
+      val osName = when (buildEnv.os) {
+        is OS.Linux -> "linux"
+        is OS.MacOSX -> "macosx"
+        is OS.Windows -> "windows"
+        OS.Unknown -> "???"
+      }
+      session.setSystemProperty("os.detected.name", osName)
+      val archName = when (buildEnv.arch) {
+        Architecture.X86_64 -> "x86_64"
+        Architecture.X86 -> "x86"
+        Architecture.Aarch_64 -> "aarch_64"
+        Architecture.Unknown -> "???"
+      }
+      session.setSystemProperty("os.detected.arch", archName)
+      session.setSystemProperty("os.detected.classifier", "$osName-$archName")
+
+      session.dependencySelector = object: DependencySelector {
         override fun selectDependency(dependency: Dependency): Boolean {
           // TODO 그 외 scope은? 일단 test는 bibix에서는 필요 없을 것 같긴 한데
           return dependency.scope == "compile" || dependency.scope == "runtime"
@@ -225,7 +246,7 @@ class Artifact {
       )
     }
 
-    class ConsoleTransferListener @JvmOverloads constructor(out: PrintStream? = null) :
+    class ConsoleTransferListener @JvmOverloads constructor(out: PrintStream? = null):
       AbstractTransferListener() {
       private val out: PrintStream
       private val downloads: MutableMap<TransferResource, Long> =
@@ -329,7 +350,7 @@ class Artifact {
       }
     }
 
-    class ConsoleRepositoryListener @JvmOverloads constructor(out: PrintStream? = null) :
+    class ConsoleRepositoryListener @JvmOverloads constructor(out: PrintStream? = null):
       AbstractRepositoryListener() {
       private val out: PrintStream
 

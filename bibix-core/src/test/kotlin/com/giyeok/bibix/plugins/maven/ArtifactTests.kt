@@ -1,5 +1,8 @@
 package com.giyeok.bibix.plugins.maven
 
+import com.giyeok.bibix.base.Architecture
+import com.giyeok.bibix.base.BuildEnv
+import com.giyeok.bibix.base.OS
 import com.giyeok.bibix.plugins.jvm.MavenDep
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test
@@ -9,6 +12,7 @@ class ArtifactTests {
   @Test
   fun test(): Unit = runBlocking {
     val artifact = Artifact.resolveArtifact(
+      BuildEnv(OS.Linux("debian", "???"), Architecture.X86_64),
       Path("bbxbuild/shared/com.giyeok.bibix.plugins.maven"),
       "org.apache.maven.resolver",
       "maven-resolver-transport-http",
@@ -26,6 +30,7 @@ class ArtifactTests {
     // TODO ${os.detected.classifier} 때문에 실행 안됨. 수정 필요
     // maven.artifact("com.google.firebase", "firebase-admin", "9.1.1")
     val artifact = Artifact.resolveArtifact(
+      BuildEnv(OS.Linux("debian", "???"), Architecture.X86_64),
       Path("bbxbuild/shared/com.giyeok.bibix.plugins.maven"),
       "com.google.firebase",
       "firebase-admin",
@@ -43,6 +48,7 @@ class ArtifactTests {
   fun testGrpcNettyShaded(): Unit = runBlocking {
     // maven.artifact("io.grpc", "grpc-netty-shaded", grpcVersion)
     val artifact = Artifact.resolveArtifact(
+      BuildEnv(OS.Linux("debian", "???"), Architecture.X86_64),
       Path("bbxbuild/shared/com.giyeok.bibix.plugins.maven"),
       "io.grpc",
       "grpc-netty-shaded",

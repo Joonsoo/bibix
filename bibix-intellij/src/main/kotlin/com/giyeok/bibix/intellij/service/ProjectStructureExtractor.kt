@@ -395,6 +395,7 @@ object ProjectStructureExtractor {
 
     val scalaCompilers = scalaSdkVersions.associate { (scalaVersion, _) ->
       val compiler = Artifact.resolveArtifact(
+        buildFrontend.buildEnv,
         buildFrontend.repo.prepareSharedDirectory(Artifact.sharedRepoName),
         groupId = "org.scala-lang",
         artifactId = "scala-compiler",
@@ -406,6 +407,7 @@ object ProjectStructureExtractor {
         excludes = setOf(),
       )
       val reflect = Artifact.resolveArtifact(
+        buildFrontend.buildEnv,
         buildFrontend.repo.prepareSharedDirectory(Artifact.sharedRepoName),
         groupId = "org.scala-lang",
         artifactId = "scala-reflect",
@@ -417,6 +419,7 @@ object ProjectStructureExtractor {
         excludes = setOf(),
       )
       val library = Artifact.resolveArtifact(
+        buildFrontend.buildEnv,
         buildFrontend.repo.prepareSharedDirectory(Artifact.sharedRepoName),
         groupId = "org.scala-lang",
         artifactId = "scala-library",
