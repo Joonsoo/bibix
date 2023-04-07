@@ -269,10 +269,9 @@ public object ModuleKt {
      * dependent한 module 이름 목록
      * ```
      *
-     * `repeated string module_deps = 6;`
-     * @return A list containing the moduleDeps.
+     * `repeated .com.giyeok.bibix.intellij.Module.ModuleDep module_deps = 6;`
      */
-    public val moduleDeps: com.google.protobuf.kotlin.DslList<kotlin.String, ModuleDepsProxy>
+     public val moduleDeps: com.google.protobuf.kotlin.DslList<com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDep, ModuleDepsProxy>
       @kotlin.jvm.JvmSynthetic
       get() = com.google.protobuf.kotlin.DslList(
         _builder.getModuleDepsList()
@@ -282,12 +281,12 @@ public object ModuleKt {
      * dependent한 module 이름 목록
      * ```
      *
-     * `repeated string module_deps = 6;`
+     * `repeated .com.giyeok.bibix.intellij.Module.ModuleDep module_deps = 6;`
      * @param value The moduleDeps to add.
      */
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("addModuleDeps")
-    public fun com.google.protobuf.kotlin.DslList<kotlin.String, ModuleDepsProxy>.add(value: kotlin.String) {
+    public fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDep, ModuleDepsProxy>.add(value: com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDep) {
       _builder.addModuleDeps(value)
     }
     /**
@@ -295,13 +294,13 @@ public object ModuleKt {
      * dependent한 module 이름 목록
      * ```
      *
-     * `repeated string module_deps = 6;`
+     * `repeated .com.giyeok.bibix.intellij.Module.ModuleDep module_deps = 6;`
      * @param value The moduleDeps to add.
      */
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("plusAssignModuleDeps")
     @Suppress("NOTHING_TO_INLINE")
-    public inline operator fun com.google.protobuf.kotlin.DslList<kotlin.String, ModuleDepsProxy>.plusAssign(value: kotlin.String) {
+    public inline operator fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDep, ModuleDepsProxy>.plusAssign(value: com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDep) {
       add(value)
     }
     /**
@@ -309,12 +308,12 @@ public object ModuleKt {
      * dependent한 module 이름 목록
      * ```
      *
-     * `repeated string module_deps = 6;`
+     * `repeated .com.giyeok.bibix.intellij.Module.ModuleDep module_deps = 6;`
      * @param values The moduleDeps to add.
      */
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("addAllModuleDeps")
-    public fun com.google.protobuf.kotlin.DslList<kotlin.String, ModuleDepsProxy>.addAll(values: kotlin.collections.Iterable<kotlin.String>) {
+    public fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDep, ModuleDepsProxy>.addAll(values: kotlin.collections.Iterable<com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDep>) {
       _builder.addAllModuleDeps(values)
     }
     /**
@@ -322,13 +321,13 @@ public object ModuleKt {
      * dependent한 module 이름 목록
      * ```
      *
-     * `repeated string module_deps = 6;`
+     * `repeated .com.giyeok.bibix.intellij.Module.ModuleDep module_deps = 6;`
      * @param values The moduleDeps to add.
      */
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("plusAssignAllModuleDeps")
     @Suppress("NOTHING_TO_INLINE")
-    public inline operator fun com.google.protobuf.kotlin.DslList<kotlin.String, ModuleDepsProxy>.plusAssign(values: kotlin.collections.Iterable<kotlin.String>) {
+    public inline operator fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDep, ModuleDepsProxy>.plusAssign(values: kotlin.collections.Iterable<com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDep>) {
       addAll(values)
     }
     /**
@@ -336,26 +335,29 @@ public object ModuleKt {
      * dependent한 module 이름 목록
      * ```
      *
-     * `repeated string module_deps = 6;`
+     * `repeated .com.giyeok.bibix.intellij.Module.ModuleDep module_deps = 6;`
      * @param index The index to set the value at.
      * @param value The moduleDeps to set.
      */
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("setModuleDeps")
-    public operator fun com.google.protobuf.kotlin.DslList<kotlin.String, ModuleDepsProxy>.set(index: kotlin.Int, value: kotlin.String) {
+    public operator fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDep, ModuleDepsProxy>.set(index: kotlin.Int, value: com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDep) {
       _builder.setModuleDeps(index, value)
-    }/**
+    }
+    /**
      * ```
      * dependent한 module 이름 목록
      * ```
      *
-     * `repeated string module_deps = 6;`
+     * `repeated .com.giyeok.bibix.intellij.Module.ModuleDep module_deps = 6;`
      */
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("clearModuleDeps")
-    public fun com.google.protobuf.kotlin.DslList<kotlin.String, ModuleDepsProxy>.clear() {
+    public fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDep, ModuleDepsProxy>.clear() {
       _builder.clearModuleDeps()
     }
+
+
     /**
      * An uninstantiable, behaviorless type to represent the field in
      * generics.
@@ -367,10 +369,9 @@ public object ModuleKt {
      * dependent한 라이브러리 id 목록
      * ```
      *
-     * `repeated string library_deps = 7;`
-     * @return A list containing the libraryDeps.
+     * `repeated .com.giyeok.bibix.intellij.Module.LibraryDep library_deps = 7;`
      */
-    public val libraryDeps: com.google.protobuf.kotlin.DslList<kotlin.String, LibraryDepsProxy>
+     public val libraryDeps: com.google.protobuf.kotlin.DslList<com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDep, LibraryDepsProxy>
       @kotlin.jvm.JvmSynthetic
       get() = com.google.protobuf.kotlin.DslList(
         _builder.getLibraryDepsList()
@@ -380,12 +381,12 @@ public object ModuleKt {
      * dependent한 라이브러리 id 목록
      * ```
      *
-     * `repeated string library_deps = 7;`
+     * `repeated .com.giyeok.bibix.intellij.Module.LibraryDep library_deps = 7;`
      * @param value The libraryDeps to add.
      */
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("addLibraryDeps")
-    public fun com.google.protobuf.kotlin.DslList<kotlin.String, LibraryDepsProxy>.add(value: kotlin.String) {
+    public fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDep, LibraryDepsProxy>.add(value: com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDep) {
       _builder.addLibraryDeps(value)
     }
     /**
@@ -393,13 +394,13 @@ public object ModuleKt {
      * dependent한 라이브러리 id 목록
      * ```
      *
-     * `repeated string library_deps = 7;`
+     * `repeated .com.giyeok.bibix.intellij.Module.LibraryDep library_deps = 7;`
      * @param value The libraryDeps to add.
      */
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("plusAssignLibraryDeps")
     @Suppress("NOTHING_TO_INLINE")
-    public inline operator fun com.google.protobuf.kotlin.DslList<kotlin.String, LibraryDepsProxy>.plusAssign(value: kotlin.String) {
+    public inline operator fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDep, LibraryDepsProxy>.plusAssign(value: com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDep) {
       add(value)
     }
     /**
@@ -407,12 +408,12 @@ public object ModuleKt {
      * dependent한 라이브러리 id 목록
      * ```
      *
-     * `repeated string library_deps = 7;`
+     * `repeated .com.giyeok.bibix.intellij.Module.LibraryDep library_deps = 7;`
      * @param values The libraryDeps to add.
      */
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("addAllLibraryDeps")
-    public fun com.google.protobuf.kotlin.DslList<kotlin.String, LibraryDepsProxy>.addAll(values: kotlin.collections.Iterable<kotlin.String>) {
+    public fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDep, LibraryDepsProxy>.addAll(values: kotlin.collections.Iterable<com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDep>) {
       _builder.addAllLibraryDeps(values)
     }
     /**
@@ -420,13 +421,13 @@ public object ModuleKt {
      * dependent한 라이브러리 id 목록
      * ```
      *
-     * `repeated string library_deps = 7;`
+     * `repeated .com.giyeok.bibix.intellij.Module.LibraryDep library_deps = 7;`
      * @param values The libraryDeps to add.
      */
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("plusAssignAllLibraryDeps")
     @Suppress("NOTHING_TO_INLINE")
-    public inline operator fun com.google.protobuf.kotlin.DslList<kotlin.String, LibraryDepsProxy>.plusAssign(values: kotlin.collections.Iterable<kotlin.String>) {
+    public inline operator fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDep, LibraryDepsProxy>.plusAssign(values: kotlin.collections.Iterable<com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDep>) {
       addAll(values)
     }
     /**
@@ -434,29 +435,170 @@ public object ModuleKt {
      * dependent한 라이브러리 id 목록
      * ```
      *
-     * `repeated string library_deps = 7;`
+     * `repeated .com.giyeok.bibix.intellij.Module.LibraryDep library_deps = 7;`
      * @param index The index to set the value at.
      * @param value The libraryDeps to set.
      */
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("setLibraryDeps")
-    public operator fun com.google.protobuf.kotlin.DslList<kotlin.String, LibraryDepsProxy>.set(index: kotlin.Int, value: kotlin.String) {
+    public operator fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDep, LibraryDepsProxy>.set(index: kotlin.Int, value: com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDep) {
       _builder.setLibraryDeps(index, value)
-    }/**
+    }
+    /**
      * ```
      * dependent한 라이브러리 id 목록
      * ```
      *
-     * `repeated string library_deps = 7;`
+     * `repeated .com.giyeok.bibix.intellij.Module.LibraryDep library_deps = 7;`
      */
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("clearLibraryDeps")
-    public fun com.google.protobuf.kotlin.DslList<kotlin.String, LibraryDepsProxy>.clear() {
+    public fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDep, LibraryDepsProxy>.clear() {
       _builder.clearLibraryDeps()
-    }}
+    }
+
+  }
+  @kotlin.jvm.JvmName("-initializemoduleDep")
+  public inline fun moduleDep(block: com.giyeok.bibix.intellij.ModuleKt.ModuleDepKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDep =
+    com.giyeok.bibix.intellij.ModuleKt.ModuleDepKt.Dsl._create(com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDep.newBuilder()).apply { block() }._build()
+  /**
+   * Protobuf type `com.giyeok.bibix.intellij.Module.ModuleDep`
+   */
+  public object ModuleDepKt {
+    @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
+    @com.google.protobuf.kotlin.ProtoDslMarker
+    public class Dsl private constructor(
+      private val _builder: com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDep.Builder
+    ) {
+      public companion object {
+        @kotlin.jvm.JvmSynthetic
+        @kotlin.PublishedApi
+        internal fun _create(builder: com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDep.Builder): Dsl = Dsl(builder)
+      }
+
+      @kotlin.jvm.JvmSynthetic
+      @kotlin.PublishedApi
+      internal fun _build(): com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDep = _builder.build()
+
+      /**
+       * `string module_name = 1;`
+       */
+      public var moduleName: kotlin.String
+        @JvmName("getModuleName")
+        get() = _builder.getModuleName()
+        @JvmName("setModuleName")
+        set(value) {
+          _builder.setModuleName(value)
+        }
+      /**
+       * `string module_name = 1;`
+       */
+      public fun clearModuleName() {
+        _builder.clearModuleName()
+      }
+
+      /**
+       * `.com.giyeok.bibix.intellij.DependencyType dependency_type = 2;`
+       */
+      public var dependencyType: com.giyeok.bibix.intellij.BibixIntellijProto.DependencyType
+        @JvmName("getDependencyType")
+        get() = _builder.getDependencyType()
+        @JvmName("setDependencyType")
+        set(value) {
+          _builder.setDependencyType(value)
+        }
+      public var dependencyTypeValue: kotlin.Int
+        @JvmName("getDependencyTypeValue")
+        get() = _builder.getDependencyTypeValue()
+        @JvmName("setDependencyTypeValue")
+        set(value) {
+          _builder.setDependencyTypeValue(value)
+        }
+      /**
+       * `.com.giyeok.bibix.intellij.DependencyType dependency_type = 2;`
+       */
+      public fun clearDependencyType() {
+        _builder.clearDependencyType()
+      }
+    }
+  }
+  @kotlin.jvm.JvmName("-initializelibraryDep")
+  public inline fun libraryDep(block: com.giyeok.bibix.intellij.ModuleKt.LibraryDepKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDep =
+    com.giyeok.bibix.intellij.ModuleKt.LibraryDepKt.Dsl._create(com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDep.newBuilder()).apply { block() }._build()
+  /**
+   * Protobuf type `com.giyeok.bibix.intellij.Module.LibraryDep`
+   */
+  public object LibraryDepKt {
+    @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
+    @com.google.protobuf.kotlin.ProtoDslMarker
+    public class Dsl private constructor(
+      private val _builder: com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDep.Builder
+    ) {
+      public companion object {
+        @kotlin.jvm.JvmSynthetic
+        @kotlin.PublishedApi
+        internal fun _create(builder: com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDep.Builder): Dsl = Dsl(builder)
+      }
+
+      @kotlin.jvm.JvmSynthetic
+      @kotlin.PublishedApi
+      internal fun _build(): com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDep = _builder.build()
+
+      /**
+       * `string library_name = 1;`
+       */
+      public var libraryName: kotlin.String
+        @JvmName("getLibraryName")
+        get() = _builder.getLibraryName()
+        @JvmName("setLibraryName")
+        set(value) {
+          _builder.setLibraryName(value)
+        }
+      /**
+       * `string library_name = 1;`
+       */
+      public fun clearLibraryName() {
+        _builder.clearLibraryName()
+      }
+
+      /**
+       * `.com.giyeok.bibix.intellij.DependencyType dependency_type = 2;`
+       */
+      public var dependencyType: com.giyeok.bibix.intellij.BibixIntellijProto.DependencyType
+        @JvmName("getDependencyType")
+        get() = _builder.getDependencyType()
+        @JvmName("setDependencyType")
+        set(value) {
+          _builder.setDependencyType(value)
+        }
+      public var dependencyTypeValue: kotlin.Int
+        @JvmName("getDependencyTypeValue")
+        get() = _builder.getDependencyTypeValue()
+        @JvmName("setDependencyTypeValue")
+        set(value) {
+          _builder.setDependencyTypeValue(value)
+        }
+      /**
+       * `.com.giyeok.bibix.intellij.DependencyType dependency_type = 2;`
+       */
+      public fun clearDependencyType() {
+        _builder.clearDependencyType()
+      }
+    }
+  }
 }
 @kotlin.jvm.JvmSynthetic
 @com.google.errorprone.annotations.CheckReturnValue
 public inline fun com.giyeok.bibix.intellij.BibixIntellijProto.Module.copy(block: com.giyeok.bibix.intellij.ModuleKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.intellij.BibixIntellijProto.Module =
   com.giyeok.bibix.intellij.ModuleKt.Dsl._create(this.toBuilder()).apply { block() }._build()
+
+@kotlin.jvm.JvmSynthetic
+@com.google.errorprone.annotations.CheckReturnValue
+public inline fun com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDep.copy(block: com.giyeok.bibix.intellij.ModuleKt.ModuleDepKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDep =
+  com.giyeok.bibix.intellij.ModuleKt.ModuleDepKt.Dsl._create(this.toBuilder()).apply { block() }._build()
+
+@kotlin.jvm.JvmSynthetic
+@com.google.errorprone.annotations.CheckReturnValue
+public inline fun com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDep.copy(block: com.giyeok.bibix.intellij.ModuleKt.LibraryDepKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDep =
+  com.giyeok.bibix.intellij.ModuleKt.LibraryDepKt.Dsl._create(this.toBuilder()).apply { block() }._build()
 

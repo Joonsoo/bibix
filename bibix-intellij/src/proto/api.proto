@@ -38,9 +38,24 @@ message Module {
   repeated ContentRoot content_roots = 4;
   repeated SdkVersion using_sdks = 5;
   // dependent한 module 이름 목록
-  repeated string module_deps = 6;
+  repeated ModuleDep module_deps = 6;
   // dependent한 라이브러리 id 목록
-  repeated string library_deps = 7;
+  repeated LibraryDep library_deps = 7;
+
+  message ModuleDep {
+    string module_name = 1;
+    DependencyType dependency_type = 2;
+  }
+  message LibraryDep {
+    string library_name = 1;
+    DependencyType dependency_type = 2;
+  }
+}
+
+enum DependencyType {
+  DEPENDENCY_UNSPECIFIED = 0;
+  COMPILE_DEPENDENCY = 1;
+  RUNTIME_DEPENDENCY = 2;
 }
 
 message ContentRoot {

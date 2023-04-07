@@ -14,6 +14,123 @@ public final class BibixIntellijProto {
     registerAllExtensions(
         (com.google.protobuf.ExtensionRegistryLite) registry);
   }
+  /**
+   * Protobuf enum {@code com.giyeok.bibix.intellij.DependencyType}
+   */
+  public enum DependencyType
+      implements com.google.protobuf.ProtocolMessageEnum {
+    /**
+     * <code>DEPENDENCY_UNSPECIFIED = 0;</code>
+     */
+    DEPENDENCY_UNSPECIFIED(0),
+    /**
+     * <code>COMPILE_DEPENDENCY = 1;</code>
+     */
+    COMPILE_DEPENDENCY(1),
+    /**
+     * <code>RUNTIME_DEPENDENCY = 2;</code>
+     */
+    RUNTIME_DEPENDENCY(2),
+    UNRECOGNIZED(-1),
+    ;
+
+    /**
+     * <code>DEPENDENCY_UNSPECIFIED = 0;</code>
+     */
+    public static final int DEPENDENCY_UNSPECIFIED_VALUE = 0;
+    /**
+     * <code>COMPILE_DEPENDENCY = 1;</code>
+     */
+    public static final int COMPILE_DEPENDENCY_VALUE = 1;
+    /**
+     * <code>RUNTIME_DEPENDENCY = 2;</code>
+     */
+    public static final int RUNTIME_DEPENDENCY_VALUE = 2;
+
+
+    public final int getNumber() {
+      if (this == UNRECOGNIZED) {
+        throw new java.lang.IllegalArgumentException(
+            "Can't get the number of an unknown enum value.");
+      }
+      return value;
+    }
+
+    /**
+     * @param value The numeric wire value of the corresponding enum entry.
+     * @return The enum associated with the given numeric wire value.
+     * @deprecated Use {@link #forNumber(int)} instead.
+     */
+    @java.lang.Deprecated
+    public static DependencyType valueOf(int value) {
+      return forNumber(value);
+    }
+
+    /**
+     * @param value The numeric wire value of the corresponding enum entry.
+     * @return The enum associated with the given numeric wire value.
+     */
+    public static DependencyType forNumber(int value) {
+      switch (value) {
+        case 0: return DEPENDENCY_UNSPECIFIED;
+        case 1: return COMPILE_DEPENDENCY;
+        case 2: return RUNTIME_DEPENDENCY;
+        default: return null;
+      }
+    }
+
+    public static com.google.protobuf.Internal.EnumLiteMap<DependencyType>
+        internalGetValueMap() {
+      return internalValueMap;
+    }
+    private static final com.google.protobuf.Internal.EnumLiteMap<
+        DependencyType> internalValueMap =
+          new com.google.protobuf.Internal.EnumLiteMap<DependencyType>() {
+            public DependencyType findValueByNumber(int number) {
+              return DependencyType.forNumber(number);
+            }
+          };
+
+    public final com.google.protobuf.Descriptors.EnumValueDescriptor
+        getValueDescriptor() {
+      if (this == UNRECOGNIZED) {
+        throw new java.lang.IllegalStateException(
+            "Can't get the descriptor of an unrecognized enum value.");
+      }
+      return getDescriptor().getValues().get(ordinal());
+    }
+    public final com.google.protobuf.Descriptors.EnumDescriptor
+        getDescriptorForType() {
+      return getDescriptor();
+    }
+    public static final com.google.protobuf.Descriptors.EnumDescriptor
+        getDescriptor() {
+      return com.giyeok.bibix.intellij.BibixIntellijProto.getDescriptor().getEnumTypes().get(0);
+    }
+
+    private static final DependencyType[] VALUES = values();
+
+    public static DependencyType valueOf(
+        com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
+      if (desc.getType() != getDescriptor()) {
+        throw new java.lang.IllegalArgumentException(
+          "EnumValueDescriptor is not for this type.");
+      }
+      if (desc.getIndex() == -1) {
+        return UNRECOGNIZED;
+      }
+      return VALUES[desc.getIndex()];
+    }
+
+    private final int value;
+
+    private DependencyType(int value) {
+      this.value = value;
+    }
+
+    // @@protoc_insertion_point(enum_scope:com.giyeok.bibix.intellij.DependencyType)
+  }
+
   public interface LoadProjectReqOrBuilder extends
       // @@protoc_insertion_point(interface_extends:com.giyeok.bibix.intellij.LoadProjectReq)
       com.google.protobuf.MessageOrBuilder {
@@ -3236,18 +3353,24 @@ public final class BibixIntellijProto {
      * dependent한 module 이름 목록
      * </pre>
      *
-     * <code>repeated string module_deps = 6;</code>
-     * @return A list containing the moduleDeps.
+     * <code>repeated .com.giyeok.bibix.intellij.Module.ModuleDep module_deps = 6;</code>
      */
-    java.util.List<java.lang.String>
+    java.util.List<com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDep> 
         getModuleDepsList();
     /**
      * <pre>
      * dependent한 module 이름 목록
      * </pre>
      *
-     * <code>repeated string module_deps = 6;</code>
-     * @return The count of moduleDeps.
+     * <code>repeated .com.giyeok.bibix.intellij.Module.ModuleDep module_deps = 6;</code>
+     */
+    com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDep getModuleDeps(int index);
+    /**
+     * <pre>
+     * dependent한 module 이름 목록
+     * </pre>
+     *
+     * <code>repeated .com.giyeok.bibix.intellij.Module.ModuleDep module_deps = 6;</code>
      */
     int getModuleDepsCount();
     /**
@@ -3255,40 +3378,43 @@ public final class BibixIntellijProto {
      * dependent한 module 이름 목록
      * </pre>
      *
-     * <code>repeated string module_deps = 6;</code>
-     * @param index The index of the element to return.
-     * @return The moduleDeps at the given index.
+     * <code>repeated .com.giyeok.bibix.intellij.Module.ModuleDep module_deps = 6;</code>
      */
-    java.lang.String getModuleDeps(int index);
+    java.util.List<? extends com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDepOrBuilder> 
+        getModuleDepsOrBuilderList();
     /**
      * <pre>
      * dependent한 module 이름 목록
      * </pre>
      *
-     * <code>repeated string module_deps = 6;</code>
-     * @param index The index of the value to return.
-     * @return The bytes of the moduleDeps at the given index.
+     * <code>repeated .com.giyeok.bibix.intellij.Module.ModuleDep module_deps = 6;</code>
      */
-    com.google.protobuf.ByteString
-        getModuleDepsBytes(int index);
+    com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDepOrBuilder getModuleDepsOrBuilder(
+        int index);
 
     /**
      * <pre>
      * dependent한 라이브러리 id 목록
      * </pre>
      *
-     * <code>repeated string library_deps = 7;</code>
-     * @return A list containing the libraryDeps.
+     * <code>repeated .com.giyeok.bibix.intellij.Module.LibraryDep library_deps = 7;</code>
      */
-    java.util.List<java.lang.String>
+    java.util.List<com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDep> 
         getLibraryDepsList();
     /**
      * <pre>
      * dependent한 라이브러리 id 목록
      * </pre>
      *
-     * <code>repeated string library_deps = 7;</code>
-     * @return The count of libraryDeps.
+     * <code>repeated .com.giyeok.bibix.intellij.Module.LibraryDep library_deps = 7;</code>
+     */
+    com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDep getLibraryDeps(int index);
+    /**
+     * <pre>
+     * dependent한 라이브러리 id 목록
+     * </pre>
+     *
+     * <code>repeated .com.giyeok.bibix.intellij.Module.LibraryDep library_deps = 7;</code>
      */
     int getLibraryDepsCount();
     /**
@@ -3296,22 +3422,19 @@ public final class BibixIntellijProto {
      * dependent한 라이브러리 id 목록
      * </pre>
      *
-     * <code>repeated string library_deps = 7;</code>
-     * @param index The index of the element to return.
-     * @return The libraryDeps at the given index.
+     * <code>repeated .com.giyeok.bibix.intellij.Module.LibraryDep library_deps = 7;</code>
      */
-    java.lang.String getLibraryDeps(int index);
+    java.util.List<? extends com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDepOrBuilder> 
+        getLibraryDepsOrBuilderList();
     /**
      * <pre>
      * dependent한 라이브러리 id 목록
      * </pre>
      *
-     * <code>repeated string library_deps = 7;</code>
-     * @param index The index of the value to return.
-     * @return The bytes of the libraryDeps at the given index.
+     * <code>repeated .com.giyeok.bibix.intellij.Module.LibraryDep library_deps = 7;</code>
      */
-    com.google.protobuf.ByteString
-        getLibraryDepsBytes(int index);
+    com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDepOrBuilder getLibraryDepsOrBuilder(
+        int index);
   }
   /**
    * Protobuf type {@code com.giyeok.bibix.intellij.Module}
@@ -3331,10 +3454,8 @@ public final class BibixIntellijProto {
       moduleRootPath_ = "";
       contentRoots_ = java.util.Collections.emptyList();
       usingSdks_ = java.util.Collections.emptyList();
-      moduleDeps_ =
-          com.google.protobuf.LazyStringArrayList.emptyList();
-      libraryDeps_ =
-          com.google.protobuf.LazyStringArrayList.emptyList();
+      moduleDeps_ = java.util.Collections.emptyList();
+      libraryDeps_ = java.util.Collections.emptyList();
     }
 
     @java.lang.Override
@@ -3355,6 +3476,1252 @@ public final class BibixIntellijProto {
       return com.giyeok.bibix.intellij.BibixIntellijProto.internal_static_com_giyeok_bibix_intellij_Module_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               com.giyeok.bibix.intellij.BibixIntellijProto.Module.class, com.giyeok.bibix.intellij.BibixIntellijProto.Module.Builder.class);
+    }
+
+    public interface ModuleDepOrBuilder extends
+        // @@protoc_insertion_point(interface_extends:com.giyeok.bibix.intellij.Module.ModuleDep)
+        com.google.protobuf.MessageOrBuilder {
+
+      /**
+       * <code>string module_name = 1;</code>
+       * @return The moduleName.
+       */
+      java.lang.String getModuleName();
+      /**
+       * <code>string module_name = 1;</code>
+       * @return The bytes for moduleName.
+       */
+      com.google.protobuf.ByteString
+          getModuleNameBytes();
+
+      /**
+       * <code>.com.giyeok.bibix.intellij.DependencyType dependency_type = 2;</code>
+       * @return The enum numeric value on the wire for dependencyType.
+       */
+      int getDependencyTypeValue();
+      /**
+       * <code>.com.giyeok.bibix.intellij.DependencyType dependency_type = 2;</code>
+       * @return The dependencyType.
+       */
+      com.giyeok.bibix.intellij.BibixIntellijProto.DependencyType getDependencyType();
+    }
+    /**
+     * Protobuf type {@code com.giyeok.bibix.intellij.Module.ModuleDep}
+     */
+    public static final class ModuleDep extends
+        com.google.protobuf.GeneratedMessageV3 implements
+        // @@protoc_insertion_point(message_implements:com.giyeok.bibix.intellij.Module.ModuleDep)
+        ModuleDepOrBuilder {
+    private static final long serialVersionUID = 0L;
+      // Use ModuleDep.newBuilder() to construct.
+      private ModuleDep(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+        super(builder);
+      }
+      private ModuleDep() {
+        moduleName_ = "";
+        dependencyType_ = 0;
+      }
+
+      @java.lang.Override
+      @SuppressWarnings({"unused"})
+      protected java.lang.Object newInstance(
+          UnusedPrivateParameter unused) {
+        return new ModuleDep();
+      }
+
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return com.giyeok.bibix.intellij.BibixIntellijProto.internal_static_com_giyeok_bibix_intellij_Module_ModuleDep_descriptor;
+      }
+
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return com.giyeok.bibix.intellij.BibixIntellijProto.internal_static_com_giyeok_bibix_intellij_Module_ModuleDep_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDep.class, com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDep.Builder.class);
+      }
+
+      public static final int MODULE_NAME_FIELD_NUMBER = 1;
+      @SuppressWarnings("serial")
+      private volatile java.lang.Object moduleName_ = "";
+      /**
+       * <code>string module_name = 1;</code>
+       * @return The moduleName.
+       */
+      @java.lang.Override
+      public java.lang.String getModuleName() {
+        java.lang.Object ref = moduleName_;
+        if (ref instanceof java.lang.String) {
+          return (java.lang.String) ref;
+        } else {
+          com.google.protobuf.ByteString bs = 
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          moduleName_ = s;
+          return s;
+        }
+      }
+      /**
+       * <code>string module_name = 1;</code>
+       * @return The bytes for moduleName.
+       */
+      @java.lang.Override
+      public com.google.protobuf.ByteString
+          getModuleNameBytes() {
+        java.lang.Object ref = moduleName_;
+        if (ref instanceof java.lang.String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          moduleName_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+
+      public static final int DEPENDENCY_TYPE_FIELD_NUMBER = 2;
+      private int dependencyType_ = 0;
+      /**
+       * <code>.com.giyeok.bibix.intellij.DependencyType dependency_type = 2;</code>
+       * @return The enum numeric value on the wire for dependencyType.
+       */
+      @java.lang.Override public int getDependencyTypeValue() {
+        return dependencyType_;
+      }
+      /**
+       * <code>.com.giyeok.bibix.intellij.DependencyType dependency_type = 2;</code>
+       * @return The dependencyType.
+       */
+      @java.lang.Override public com.giyeok.bibix.intellij.BibixIntellijProto.DependencyType getDependencyType() {
+        com.giyeok.bibix.intellij.BibixIntellijProto.DependencyType result = com.giyeok.bibix.intellij.BibixIntellijProto.DependencyType.forNumber(dependencyType_);
+        return result == null ? com.giyeok.bibix.intellij.BibixIntellijProto.DependencyType.UNRECOGNIZED : result;
+      }
+
+      private byte memoizedIsInitialized = -1;
+      @java.lang.Override
+      public final boolean isInitialized() {
+        byte isInitialized = memoizedIsInitialized;
+        if (isInitialized == 1) return true;
+        if (isInitialized == 0) return false;
+
+        memoizedIsInitialized = 1;
+        return true;
+      }
+
+      @java.lang.Override
+      public void writeTo(com.google.protobuf.CodedOutputStream output)
+                          throws java.io.IOException {
+        if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(moduleName_)) {
+          com.google.protobuf.GeneratedMessageV3.writeString(output, 1, moduleName_);
+        }
+        if (dependencyType_ != com.giyeok.bibix.intellij.BibixIntellijProto.DependencyType.DEPENDENCY_UNSPECIFIED.getNumber()) {
+          output.writeEnum(2, dependencyType_);
+        }
+        getUnknownFields().writeTo(output);
+      }
+
+      @java.lang.Override
+      public int getSerializedSize() {
+        int size = memoizedSize;
+        if (size != -1) return size;
+
+        size = 0;
+        if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(moduleName_)) {
+          size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, moduleName_);
+        }
+        if (dependencyType_ != com.giyeok.bibix.intellij.BibixIntellijProto.DependencyType.DEPENDENCY_UNSPECIFIED.getNumber()) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeEnumSize(2, dependencyType_);
+        }
+        size += getUnknownFields().getSerializedSize();
+        memoizedSize = size;
+        return size;
+      }
+
+      @java.lang.Override
+      public boolean equals(final java.lang.Object obj) {
+        if (obj == this) {
+         return true;
+        }
+        if (!(obj instanceof com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDep)) {
+          return super.equals(obj);
+        }
+        com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDep other = (com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDep) obj;
+
+        if (!getModuleName()
+            .equals(other.getModuleName())) return false;
+        if (dependencyType_ != other.dependencyType_) return false;
+        if (!getUnknownFields().equals(other.getUnknownFields())) return false;
+        return true;
+      }
+
+      @java.lang.Override
+      public int hashCode() {
+        if (memoizedHashCode != 0) {
+          return memoizedHashCode;
+        }
+        int hash = 41;
+        hash = (19 * hash) + getDescriptor().hashCode();
+        hash = (37 * hash) + MODULE_NAME_FIELD_NUMBER;
+        hash = (53 * hash) + getModuleName().hashCode();
+        hash = (37 * hash) + DEPENDENCY_TYPE_FIELD_NUMBER;
+        hash = (53 * hash) + dependencyType_;
+        hash = (29 * hash) + getUnknownFields().hashCode();
+        memoizedHashCode = hash;
+        return hash;
+      }
+
+      public static com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDep parseFrom(
+          java.nio.ByteBuffer data)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+      }
+      public static com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDep parseFrom(
+          java.nio.ByteBuffer data,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+      }
+      public static com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDep parseFrom(
+          com.google.protobuf.ByteString data)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+      }
+      public static com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDep parseFrom(
+          com.google.protobuf.ByteString data,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+      }
+      public static com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDep parseFrom(byte[] data)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+      }
+      public static com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDep parseFrom(
+          byte[] data,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+      }
+      public static com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDep parseFrom(java.io.InputStream input)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseWithIOException(PARSER, input);
+      }
+      public static com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDep parseFrom(
+          java.io.InputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseWithIOException(PARSER, input, extensionRegistry);
+      }
+      public static com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDep parseDelimitedFrom(java.io.InputStream input)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseDelimitedWithIOException(PARSER, input);
+      }
+      public static com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDep parseDelimitedFrom(
+          java.io.InputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+      }
+      public static com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDep parseFrom(
+          com.google.protobuf.CodedInputStream input)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseWithIOException(PARSER, input);
+      }
+      public static com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDep parseFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseWithIOException(PARSER, input, extensionRegistry);
+      }
+
+      @java.lang.Override
+      public Builder newBuilderForType() { return newBuilder(); }
+      public static Builder newBuilder() {
+        return DEFAULT_INSTANCE.toBuilder();
+      }
+      public static Builder newBuilder(com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDep prototype) {
+        return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+      }
+      @java.lang.Override
+      public Builder toBuilder() {
+        return this == DEFAULT_INSTANCE
+            ? new Builder() : new Builder().mergeFrom(this);
+      }
+
+      @java.lang.Override
+      protected Builder newBuilderForType(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        Builder builder = new Builder(parent);
+        return builder;
+      }
+      /**
+       * Protobuf type {@code com.giyeok.bibix.intellij.Module.ModuleDep}
+       */
+      public static final class Builder extends
+          com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+          // @@protoc_insertion_point(builder_implements:com.giyeok.bibix.intellij.Module.ModuleDep)
+          com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDepOrBuilder {
+        public static final com.google.protobuf.Descriptors.Descriptor
+            getDescriptor() {
+          return com.giyeok.bibix.intellij.BibixIntellijProto.internal_static_com_giyeok_bibix_intellij_Module_ModuleDep_descriptor;
+        }
+
+        @java.lang.Override
+        protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+            internalGetFieldAccessorTable() {
+          return com.giyeok.bibix.intellij.BibixIntellijProto.internal_static_com_giyeok_bibix_intellij_Module_ModuleDep_fieldAccessorTable
+              .ensureFieldAccessorsInitialized(
+                  com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDep.class, com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDep.Builder.class);
+        }
+
+        // Construct using com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDep.newBuilder()
+        private Builder() {
+
+        }
+
+        private Builder(
+            com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+          super(parent);
+
+        }
+        @java.lang.Override
+        public Builder clear() {
+          super.clear();
+          bitField0_ = 0;
+          moduleName_ = "";
+          dependencyType_ = 0;
+          return this;
+        }
+
+        @java.lang.Override
+        public com.google.protobuf.Descriptors.Descriptor
+            getDescriptorForType() {
+          return com.giyeok.bibix.intellij.BibixIntellijProto.internal_static_com_giyeok_bibix_intellij_Module_ModuleDep_descriptor;
+        }
+
+        @java.lang.Override
+        public com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDep getDefaultInstanceForType() {
+          return com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDep.getDefaultInstance();
+        }
+
+        @java.lang.Override
+        public com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDep build() {
+          com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDep result = buildPartial();
+          if (!result.isInitialized()) {
+            throw newUninitializedMessageException(result);
+          }
+          return result;
+        }
+
+        @java.lang.Override
+        public com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDep buildPartial() {
+          com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDep result = new com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDep(this);
+          if (bitField0_ != 0) { buildPartial0(result); }
+          onBuilt();
+          return result;
+        }
+
+        private void buildPartial0(com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDep result) {
+          int from_bitField0_ = bitField0_;
+          if (((from_bitField0_ & 0x00000001) != 0)) {
+            result.moduleName_ = moduleName_;
+          }
+          if (((from_bitField0_ & 0x00000002) != 0)) {
+            result.dependencyType_ = dependencyType_;
+          }
+        }
+
+        @java.lang.Override
+        public Builder mergeFrom(com.google.protobuf.Message other) {
+          if (other instanceof com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDep) {
+            return mergeFrom((com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDep)other);
+          } else {
+            super.mergeFrom(other);
+            return this;
+          }
+        }
+
+        public Builder mergeFrom(com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDep other) {
+          if (other == com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDep.getDefaultInstance()) return this;
+          if (!other.getModuleName().isEmpty()) {
+            moduleName_ = other.moduleName_;
+            bitField0_ |= 0x00000001;
+            onChanged();
+          }
+          if (other.dependencyType_ != 0) {
+            setDependencyTypeValue(other.getDependencyTypeValue());
+          }
+          this.mergeUnknownFields(other.getUnknownFields());
+          onChanged();
+          return this;
+        }
+
+        @java.lang.Override
+        public final boolean isInitialized() {
+          return true;
+        }
+
+        @java.lang.Override
+        public Builder mergeFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
+          if (extensionRegistry == null) {
+            throw new java.lang.NullPointerException();
+          }
+          try {
+            boolean done = false;
+            while (!done) {
+              int tag = input.readTag();
+              switch (tag) {
+                case 0:
+                  done = true;
+                  break;
+                case 10: {
+                  moduleName_ = input.readStringRequireUtf8();
+                  bitField0_ |= 0x00000001;
+                  break;
+                } // case 10
+                case 16: {
+                  dependencyType_ = input.readEnum();
+                  bitField0_ |= 0x00000002;
+                  break;
+                } // case 16
+                default: {
+                  if (!super.parseUnknownField(input, extensionRegistry, tag)) {
+                    done = true; // was an endgroup tag
+                  }
+                  break;
+                } // default:
+              } // switch (tag)
+            } // while (!done)
+          } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+            throw e.unwrapIOException();
+          } finally {
+            onChanged();
+          } // finally
+          return this;
+        }
+        private int bitField0_;
+
+        private java.lang.Object moduleName_ = "";
+        /**
+         * <code>string module_name = 1;</code>
+         * @return The moduleName.
+         */
+        public java.lang.String getModuleName() {
+          java.lang.Object ref = moduleName_;
+          if (!(ref instanceof java.lang.String)) {
+            com.google.protobuf.ByteString bs =
+                (com.google.protobuf.ByteString) ref;
+            java.lang.String s = bs.toStringUtf8();
+            moduleName_ = s;
+            return s;
+          } else {
+            return (java.lang.String) ref;
+          }
+        }
+        /**
+         * <code>string module_name = 1;</code>
+         * @return The bytes for moduleName.
+         */
+        public com.google.protobuf.ByteString
+            getModuleNameBytes() {
+          java.lang.Object ref = moduleName_;
+          if (ref instanceof String) {
+            com.google.protobuf.ByteString b = 
+                com.google.protobuf.ByteString.copyFromUtf8(
+                    (java.lang.String) ref);
+            moduleName_ = b;
+            return b;
+          } else {
+            return (com.google.protobuf.ByteString) ref;
+          }
+        }
+        /**
+         * <code>string module_name = 1;</code>
+         * @param value The moduleName to set.
+         * @return This builder for chaining.
+         */
+        public Builder setModuleName(
+            java.lang.String value) {
+          if (value == null) { throw new NullPointerException(); }
+          moduleName_ = value;
+          bitField0_ |= 0x00000001;
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>string module_name = 1;</code>
+         * @return This builder for chaining.
+         */
+        public Builder clearModuleName() {
+          moduleName_ = getDefaultInstance().getModuleName();
+          bitField0_ = (bitField0_ & ~0x00000001);
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>string module_name = 1;</code>
+         * @param value The bytes for moduleName to set.
+         * @return This builder for chaining.
+         */
+        public Builder setModuleNameBytes(
+            com.google.protobuf.ByteString value) {
+          if (value == null) { throw new NullPointerException(); }
+          checkByteStringIsUtf8(value);
+          moduleName_ = value;
+          bitField0_ |= 0x00000001;
+          onChanged();
+          return this;
+        }
+
+        private int dependencyType_ = 0;
+        /**
+         * <code>.com.giyeok.bibix.intellij.DependencyType dependency_type = 2;</code>
+         * @return The enum numeric value on the wire for dependencyType.
+         */
+        @java.lang.Override public int getDependencyTypeValue() {
+          return dependencyType_;
+        }
+        /**
+         * <code>.com.giyeok.bibix.intellij.DependencyType dependency_type = 2;</code>
+         * @param value The enum numeric value on the wire for dependencyType to set.
+         * @return This builder for chaining.
+         */
+        public Builder setDependencyTypeValue(int value) {
+          dependencyType_ = value;
+          bitField0_ |= 0x00000002;
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>.com.giyeok.bibix.intellij.DependencyType dependency_type = 2;</code>
+         * @return The dependencyType.
+         */
+        @java.lang.Override
+        public com.giyeok.bibix.intellij.BibixIntellijProto.DependencyType getDependencyType() {
+          com.giyeok.bibix.intellij.BibixIntellijProto.DependencyType result = com.giyeok.bibix.intellij.BibixIntellijProto.DependencyType.forNumber(dependencyType_);
+          return result == null ? com.giyeok.bibix.intellij.BibixIntellijProto.DependencyType.UNRECOGNIZED : result;
+        }
+        /**
+         * <code>.com.giyeok.bibix.intellij.DependencyType dependency_type = 2;</code>
+         * @param value The dependencyType to set.
+         * @return This builder for chaining.
+         */
+        public Builder setDependencyType(com.giyeok.bibix.intellij.BibixIntellijProto.DependencyType value) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          bitField0_ |= 0x00000002;
+          dependencyType_ = value.getNumber();
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>.com.giyeok.bibix.intellij.DependencyType dependency_type = 2;</code>
+         * @return This builder for chaining.
+         */
+        public Builder clearDependencyType() {
+          bitField0_ = (bitField0_ & ~0x00000002);
+          dependencyType_ = 0;
+          onChanged();
+          return this;
+        }
+        @java.lang.Override
+        public final Builder setUnknownFields(
+            final com.google.protobuf.UnknownFieldSet unknownFields) {
+          return super.setUnknownFields(unknownFields);
+        }
+
+        @java.lang.Override
+        public final Builder mergeUnknownFields(
+            final com.google.protobuf.UnknownFieldSet unknownFields) {
+          return super.mergeUnknownFields(unknownFields);
+        }
+
+
+        // @@protoc_insertion_point(builder_scope:com.giyeok.bibix.intellij.Module.ModuleDep)
+      }
+
+      // @@protoc_insertion_point(class_scope:com.giyeok.bibix.intellij.Module.ModuleDep)
+      private static final com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDep DEFAULT_INSTANCE;
+      static {
+        DEFAULT_INSTANCE = new com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDep();
+      }
+
+      public static com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDep getDefaultInstance() {
+        return DEFAULT_INSTANCE;
+      }
+
+      private static final com.google.protobuf.Parser<ModuleDep>
+          PARSER = new com.google.protobuf.AbstractParser<ModuleDep>() {
+        @java.lang.Override
+        public ModuleDep parsePartialFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+          Builder builder = newBuilder();
+          try {
+            builder.mergeFrom(input, extensionRegistry);
+          } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+            throw e.setUnfinishedMessage(builder.buildPartial());
+          } catch (com.google.protobuf.UninitializedMessageException e) {
+            throw e.asInvalidProtocolBufferException().setUnfinishedMessage(builder.buildPartial());
+          } catch (java.io.IOException e) {
+            throw new com.google.protobuf.InvalidProtocolBufferException(e)
+                .setUnfinishedMessage(builder.buildPartial());
+          }
+          return builder.buildPartial();
+        }
+      };
+
+      public static com.google.protobuf.Parser<ModuleDep> parser() {
+        return PARSER;
+      }
+
+      @java.lang.Override
+      public com.google.protobuf.Parser<ModuleDep> getParserForType() {
+        return PARSER;
+      }
+
+      @java.lang.Override
+      public com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDep getDefaultInstanceForType() {
+        return DEFAULT_INSTANCE;
+      }
+
+    }
+
+    public interface LibraryDepOrBuilder extends
+        // @@protoc_insertion_point(interface_extends:com.giyeok.bibix.intellij.Module.LibraryDep)
+        com.google.protobuf.MessageOrBuilder {
+
+      /**
+       * <code>string library_name = 1;</code>
+       * @return The libraryName.
+       */
+      java.lang.String getLibraryName();
+      /**
+       * <code>string library_name = 1;</code>
+       * @return The bytes for libraryName.
+       */
+      com.google.protobuf.ByteString
+          getLibraryNameBytes();
+
+      /**
+       * <code>.com.giyeok.bibix.intellij.DependencyType dependency_type = 2;</code>
+       * @return The enum numeric value on the wire for dependencyType.
+       */
+      int getDependencyTypeValue();
+      /**
+       * <code>.com.giyeok.bibix.intellij.DependencyType dependency_type = 2;</code>
+       * @return The dependencyType.
+       */
+      com.giyeok.bibix.intellij.BibixIntellijProto.DependencyType getDependencyType();
+    }
+    /**
+     * Protobuf type {@code com.giyeok.bibix.intellij.Module.LibraryDep}
+     */
+    public static final class LibraryDep extends
+        com.google.protobuf.GeneratedMessageV3 implements
+        // @@protoc_insertion_point(message_implements:com.giyeok.bibix.intellij.Module.LibraryDep)
+        LibraryDepOrBuilder {
+    private static final long serialVersionUID = 0L;
+      // Use LibraryDep.newBuilder() to construct.
+      private LibraryDep(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+        super(builder);
+      }
+      private LibraryDep() {
+        libraryName_ = "";
+        dependencyType_ = 0;
+      }
+
+      @java.lang.Override
+      @SuppressWarnings({"unused"})
+      protected java.lang.Object newInstance(
+          UnusedPrivateParameter unused) {
+        return new LibraryDep();
+      }
+
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return com.giyeok.bibix.intellij.BibixIntellijProto.internal_static_com_giyeok_bibix_intellij_Module_LibraryDep_descriptor;
+      }
+
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return com.giyeok.bibix.intellij.BibixIntellijProto.internal_static_com_giyeok_bibix_intellij_Module_LibraryDep_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDep.class, com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDep.Builder.class);
+      }
+
+      public static final int LIBRARY_NAME_FIELD_NUMBER = 1;
+      @SuppressWarnings("serial")
+      private volatile java.lang.Object libraryName_ = "";
+      /**
+       * <code>string library_name = 1;</code>
+       * @return The libraryName.
+       */
+      @java.lang.Override
+      public java.lang.String getLibraryName() {
+        java.lang.Object ref = libraryName_;
+        if (ref instanceof java.lang.String) {
+          return (java.lang.String) ref;
+        } else {
+          com.google.protobuf.ByteString bs = 
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          libraryName_ = s;
+          return s;
+        }
+      }
+      /**
+       * <code>string library_name = 1;</code>
+       * @return The bytes for libraryName.
+       */
+      @java.lang.Override
+      public com.google.protobuf.ByteString
+          getLibraryNameBytes() {
+        java.lang.Object ref = libraryName_;
+        if (ref instanceof java.lang.String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          libraryName_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+
+      public static final int DEPENDENCY_TYPE_FIELD_NUMBER = 2;
+      private int dependencyType_ = 0;
+      /**
+       * <code>.com.giyeok.bibix.intellij.DependencyType dependency_type = 2;</code>
+       * @return The enum numeric value on the wire for dependencyType.
+       */
+      @java.lang.Override public int getDependencyTypeValue() {
+        return dependencyType_;
+      }
+      /**
+       * <code>.com.giyeok.bibix.intellij.DependencyType dependency_type = 2;</code>
+       * @return The dependencyType.
+       */
+      @java.lang.Override public com.giyeok.bibix.intellij.BibixIntellijProto.DependencyType getDependencyType() {
+        com.giyeok.bibix.intellij.BibixIntellijProto.DependencyType result = com.giyeok.bibix.intellij.BibixIntellijProto.DependencyType.forNumber(dependencyType_);
+        return result == null ? com.giyeok.bibix.intellij.BibixIntellijProto.DependencyType.UNRECOGNIZED : result;
+      }
+
+      private byte memoizedIsInitialized = -1;
+      @java.lang.Override
+      public final boolean isInitialized() {
+        byte isInitialized = memoizedIsInitialized;
+        if (isInitialized == 1) return true;
+        if (isInitialized == 0) return false;
+
+        memoizedIsInitialized = 1;
+        return true;
+      }
+
+      @java.lang.Override
+      public void writeTo(com.google.protobuf.CodedOutputStream output)
+                          throws java.io.IOException {
+        if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(libraryName_)) {
+          com.google.protobuf.GeneratedMessageV3.writeString(output, 1, libraryName_);
+        }
+        if (dependencyType_ != com.giyeok.bibix.intellij.BibixIntellijProto.DependencyType.DEPENDENCY_UNSPECIFIED.getNumber()) {
+          output.writeEnum(2, dependencyType_);
+        }
+        getUnknownFields().writeTo(output);
+      }
+
+      @java.lang.Override
+      public int getSerializedSize() {
+        int size = memoizedSize;
+        if (size != -1) return size;
+
+        size = 0;
+        if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(libraryName_)) {
+          size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, libraryName_);
+        }
+        if (dependencyType_ != com.giyeok.bibix.intellij.BibixIntellijProto.DependencyType.DEPENDENCY_UNSPECIFIED.getNumber()) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeEnumSize(2, dependencyType_);
+        }
+        size += getUnknownFields().getSerializedSize();
+        memoizedSize = size;
+        return size;
+      }
+
+      @java.lang.Override
+      public boolean equals(final java.lang.Object obj) {
+        if (obj == this) {
+         return true;
+        }
+        if (!(obj instanceof com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDep)) {
+          return super.equals(obj);
+        }
+        com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDep other = (com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDep) obj;
+
+        if (!getLibraryName()
+            .equals(other.getLibraryName())) return false;
+        if (dependencyType_ != other.dependencyType_) return false;
+        if (!getUnknownFields().equals(other.getUnknownFields())) return false;
+        return true;
+      }
+
+      @java.lang.Override
+      public int hashCode() {
+        if (memoizedHashCode != 0) {
+          return memoizedHashCode;
+        }
+        int hash = 41;
+        hash = (19 * hash) + getDescriptor().hashCode();
+        hash = (37 * hash) + LIBRARY_NAME_FIELD_NUMBER;
+        hash = (53 * hash) + getLibraryName().hashCode();
+        hash = (37 * hash) + DEPENDENCY_TYPE_FIELD_NUMBER;
+        hash = (53 * hash) + dependencyType_;
+        hash = (29 * hash) + getUnknownFields().hashCode();
+        memoizedHashCode = hash;
+        return hash;
+      }
+
+      public static com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDep parseFrom(
+          java.nio.ByteBuffer data)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+      }
+      public static com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDep parseFrom(
+          java.nio.ByteBuffer data,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+      }
+      public static com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDep parseFrom(
+          com.google.protobuf.ByteString data)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+      }
+      public static com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDep parseFrom(
+          com.google.protobuf.ByteString data,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+      }
+      public static com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDep parseFrom(byte[] data)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+      }
+      public static com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDep parseFrom(
+          byte[] data,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+      }
+      public static com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDep parseFrom(java.io.InputStream input)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseWithIOException(PARSER, input);
+      }
+      public static com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDep parseFrom(
+          java.io.InputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseWithIOException(PARSER, input, extensionRegistry);
+      }
+      public static com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDep parseDelimitedFrom(java.io.InputStream input)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseDelimitedWithIOException(PARSER, input);
+      }
+      public static com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDep parseDelimitedFrom(
+          java.io.InputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+      }
+      public static com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDep parseFrom(
+          com.google.protobuf.CodedInputStream input)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseWithIOException(PARSER, input);
+      }
+      public static com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDep parseFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseWithIOException(PARSER, input, extensionRegistry);
+      }
+
+      @java.lang.Override
+      public Builder newBuilderForType() { return newBuilder(); }
+      public static Builder newBuilder() {
+        return DEFAULT_INSTANCE.toBuilder();
+      }
+      public static Builder newBuilder(com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDep prototype) {
+        return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+      }
+      @java.lang.Override
+      public Builder toBuilder() {
+        return this == DEFAULT_INSTANCE
+            ? new Builder() : new Builder().mergeFrom(this);
+      }
+
+      @java.lang.Override
+      protected Builder newBuilderForType(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        Builder builder = new Builder(parent);
+        return builder;
+      }
+      /**
+       * Protobuf type {@code com.giyeok.bibix.intellij.Module.LibraryDep}
+       */
+      public static final class Builder extends
+          com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+          // @@protoc_insertion_point(builder_implements:com.giyeok.bibix.intellij.Module.LibraryDep)
+          com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDepOrBuilder {
+        public static final com.google.protobuf.Descriptors.Descriptor
+            getDescriptor() {
+          return com.giyeok.bibix.intellij.BibixIntellijProto.internal_static_com_giyeok_bibix_intellij_Module_LibraryDep_descriptor;
+        }
+
+        @java.lang.Override
+        protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+            internalGetFieldAccessorTable() {
+          return com.giyeok.bibix.intellij.BibixIntellijProto.internal_static_com_giyeok_bibix_intellij_Module_LibraryDep_fieldAccessorTable
+              .ensureFieldAccessorsInitialized(
+                  com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDep.class, com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDep.Builder.class);
+        }
+
+        // Construct using com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDep.newBuilder()
+        private Builder() {
+
+        }
+
+        private Builder(
+            com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+          super(parent);
+
+        }
+        @java.lang.Override
+        public Builder clear() {
+          super.clear();
+          bitField0_ = 0;
+          libraryName_ = "";
+          dependencyType_ = 0;
+          return this;
+        }
+
+        @java.lang.Override
+        public com.google.protobuf.Descriptors.Descriptor
+            getDescriptorForType() {
+          return com.giyeok.bibix.intellij.BibixIntellijProto.internal_static_com_giyeok_bibix_intellij_Module_LibraryDep_descriptor;
+        }
+
+        @java.lang.Override
+        public com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDep getDefaultInstanceForType() {
+          return com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDep.getDefaultInstance();
+        }
+
+        @java.lang.Override
+        public com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDep build() {
+          com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDep result = buildPartial();
+          if (!result.isInitialized()) {
+            throw newUninitializedMessageException(result);
+          }
+          return result;
+        }
+
+        @java.lang.Override
+        public com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDep buildPartial() {
+          com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDep result = new com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDep(this);
+          if (bitField0_ != 0) { buildPartial0(result); }
+          onBuilt();
+          return result;
+        }
+
+        private void buildPartial0(com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDep result) {
+          int from_bitField0_ = bitField0_;
+          if (((from_bitField0_ & 0x00000001) != 0)) {
+            result.libraryName_ = libraryName_;
+          }
+          if (((from_bitField0_ & 0x00000002) != 0)) {
+            result.dependencyType_ = dependencyType_;
+          }
+        }
+
+        @java.lang.Override
+        public Builder mergeFrom(com.google.protobuf.Message other) {
+          if (other instanceof com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDep) {
+            return mergeFrom((com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDep)other);
+          } else {
+            super.mergeFrom(other);
+            return this;
+          }
+        }
+
+        public Builder mergeFrom(com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDep other) {
+          if (other == com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDep.getDefaultInstance()) return this;
+          if (!other.getLibraryName().isEmpty()) {
+            libraryName_ = other.libraryName_;
+            bitField0_ |= 0x00000001;
+            onChanged();
+          }
+          if (other.dependencyType_ != 0) {
+            setDependencyTypeValue(other.getDependencyTypeValue());
+          }
+          this.mergeUnknownFields(other.getUnknownFields());
+          onChanged();
+          return this;
+        }
+
+        @java.lang.Override
+        public final boolean isInitialized() {
+          return true;
+        }
+
+        @java.lang.Override
+        public Builder mergeFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
+          if (extensionRegistry == null) {
+            throw new java.lang.NullPointerException();
+          }
+          try {
+            boolean done = false;
+            while (!done) {
+              int tag = input.readTag();
+              switch (tag) {
+                case 0:
+                  done = true;
+                  break;
+                case 10: {
+                  libraryName_ = input.readStringRequireUtf8();
+                  bitField0_ |= 0x00000001;
+                  break;
+                } // case 10
+                case 16: {
+                  dependencyType_ = input.readEnum();
+                  bitField0_ |= 0x00000002;
+                  break;
+                } // case 16
+                default: {
+                  if (!super.parseUnknownField(input, extensionRegistry, tag)) {
+                    done = true; // was an endgroup tag
+                  }
+                  break;
+                } // default:
+              } // switch (tag)
+            } // while (!done)
+          } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+            throw e.unwrapIOException();
+          } finally {
+            onChanged();
+          } // finally
+          return this;
+        }
+        private int bitField0_;
+
+        private java.lang.Object libraryName_ = "";
+        /**
+         * <code>string library_name = 1;</code>
+         * @return The libraryName.
+         */
+        public java.lang.String getLibraryName() {
+          java.lang.Object ref = libraryName_;
+          if (!(ref instanceof java.lang.String)) {
+            com.google.protobuf.ByteString bs =
+                (com.google.protobuf.ByteString) ref;
+            java.lang.String s = bs.toStringUtf8();
+            libraryName_ = s;
+            return s;
+          } else {
+            return (java.lang.String) ref;
+          }
+        }
+        /**
+         * <code>string library_name = 1;</code>
+         * @return The bytes for libraryName.
+         */
+        public com.google.protobuf.ByteString
+            getLibraryNameBytes() {
+          java.lang.Object ref = libraryName_;
+          if (ref instanceof String) {
+            com.google.protobuf.ByteString b = 
+                com.google.protobuf.ByteString.copyFromUtf8(
+                    (java.lang.String) ref);
+            libraryName_ = b;
+            return b;
+          } else {
+            return (com.google.protobuf.ByteString) ref;
+          }
+        }
+        /**
+         * <code>string library_name = 1;</code>
+         * @param value The libraryName to set.
+         * @return This builder for chaining.
+         */
+        public Builder setLibraryName(
+            java.lang.String value) {
+          if (value == null) { throw new NullPointerException(); }
+          libraryName_ = value;
+          bitField0_ |= 0x00000001;
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>string library_name = 1;</code>
+         * @return This builder for chaining.
+         */
+        public Builder clearLibraryName() {
+          libraryName_ = getDefaultInstance().getLibraryName();
+          bitField0_ = (bitField0_ & ~0x00000001);
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>string library_name = 1;</code>
+         * @param value The bytes for libraryName to set.
+         * @return This builder for chaining.
+         */
+        public Builder setLibraryNameBytes(
+            com.google.protobuf.ByteString value) {
+          if (value == null) { throw new NullPointerException(); }
+          checkByteStringIsUtf8(value);
+          libraryName_ = value;
+          bitField0_ |= 0x00000001;
+          onChanged();
+          return this;
+        }
+
+        private int dependencyType_ = 0;
+        /**
+         * <code>.com.giyeok.bibix.intellij.DependencyType dependency_type = 2;</code>
+         * @return The enum numeric value on the wire for dependencyType.
+         */
+        @java.lang.Override public int getDependencyTypeValue() {
+          return dependencyType_;
+        }
+        /**
+         * <code>.com.giyeok.bibix.intellij.DependencyType dependency_type = 2;</code>
+         * @param value The enum numeric value on the wire for dependencyType to set.
+         * @return This builder for chaining.
+         */
+        public Builder setDependencyTypeValue(int value) {
+          dependencyType_ = value;
+          bitField0_ |= 0x00000002;
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>.com.giyeok.bibix.intellij.DependencyType dependency_type = 2;</code>
+         * @return The dependencyType.
+         */
+        @java.lang.Override
+        public com.giyeok.bibix.intellij.BibixIntellijProto.DependencyType getDependencyType() {
+          com.giyeok.bibix.intellij.BibixIntellijProto.DependencyType result = com.giyeok.bibix.intellij.BibixIntellijProto.DependencyType.forNumber(dependencyType_);
+          return result == null ? com.giyeok.bibix.intellij.BibixIntellijProto.DependencyType.UNRECOGNIZED : result;
+        }
+        /**
+         * <code>.com.giyeok.bibix.intellij.DependencyType dependency_type = 2;</code>
+         * @param value The dependencyType to set.
+         * @return This builder for chaining.
+         */
+        public Builder setDependencyType(com.giyeok.bibix.intellij.BibixIntellijProto.DependencyType value) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          bitField0_ |= 0x00000002;
+          dependencyType_ = value.getNumber();
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>.com.giyeok.bibix.intellij.DependencyType dependency_type = 2;</code>
+         * @return This builder for chaining.
+         */
+        public Builder clearDependencyType() {
+          bitField0_ = (bitField0_ & ~0x00000002);
+          dependencyType_ = 0;
+          onChanged();
+          return this;
+        }
+        @java.lang.Override
+        public final Builder setUnknownFields(
+            final com.google.protobuf.UnknownFieldSet unknownFields) {
+          return super.setUnknownFields(unknownFields);
+        }
+
+        @java.lang.Override
+        public final Builder mergeUnknownFields(
+            final com.google.protobuf.UnknownFieldSet unknownFields) {
+          return super.mergeUnknownFields(unknownFields);
+        }
+
+
+        // @@protoc_insertion_point(builder_scope:com.giyeok.bibix.intellij.Module.LibraryDep)
+      }
+
+      // @@protoc_insertion_point(class_scope:com.giyeok.bibix.intellij.Module.LibraryDep)
+      private static final com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDep DEFAULT_INSTANCE;
+      static {
+        DEFAULT_INSTANCE = new com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDep();
+      }
+
+      public static com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDep getDefaultInstance() {
+        return DEFAULT_INSTANCE;
+      }
+
+      private static final com.google.protobuf.Parser<LibraryDep>
+          PARSER = new com.google.protobuf.AbstractParser<LibraryDep>() {
+        @java.lang.Override
+        public LibraryDep parsePartialFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+          Builder builder = newBuilder();
+          try {
+            builder.mergeFrom(input, extensionRegistry);
+          } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+            throw e.setUnfinishedMessage(builder.buildPartial());
+          } catch (com.google.protobuf.UninitializedMessageException e) {
+            throw e.asInvalidProtocolBufferException().setUnfinishedMessage(builder.buildPartial());
+          } catch (java.io.IOException e) {
+            throw new com.google.protobuf.InvalidProtocolBufferException(e)
+                .setUnfinishedMessage(builder.buildPartial());
+          }
+          return builder.buildPartial();
+        }
+      };
+
+      public static com.google.protobuf.Parser<LibraryDep> parser() {
+        return PARSER;
+      }
+
+      @java.lang.Override
+      public com.google.protobuf.Parser<LibraryDep> getParserForType() {
+        return PARSER;
+      }
+
+      @java.lang.Override
+      public com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDep getDefaultInstanceForType() {
+        return DEFAULT_INSTANCE;
+      }
+
     }
 
     public static final int MODULE_NAME_FIELD_NUMBER = 1;
@@ -3586,18 +4953,16 @@ public final class BibixIntellijProto {
 
     public static final int MODULE_DEPS_FIELD_NUMBER = 6;
     @SuppressWarnings("serial")
-    private com.google.protobuf.LazyStringArrayList moduleDeps_ =
-        com.google.protobuf.LazyStringArrayList.emptyList();
+    private java.util.List<com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDep> moduleDeps_;
     /**
      * <pre>
      * dependent한 module 이름 목록
      * </pre>
      *
-     * <code>repeated string module_deps = 6;</code>
-     * @return A list containing the moduleDeps.
+     * <code>repeated .com.giyeok.bibix.intellij.Module.ModuleDep module_deps = 6;</code>
      */
-    public com.google.protobuf.ProtocolStringList
-        getModuleDepsList() {
+    @java.lang.Override
+    public java.util.List<com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDep> getModuleDepsList() {
       return moduleDeps_;
     }
     /**
@@ -3605,9 +4970,21 @@ public final class BibixIntellijProto {
      * dependent한 module 이름 목록
      * </pre>
      *
-     * <code>repeated string module_deps = 6;</code>
-     * @return The count of moduleDeps.
+     * <code>repeated .com.giyeok.bibix.intellij.Module.ModuleDep module_deps = 6;</code>
      */
+    @java.lang.Override
+    public java.util.List<? extends com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDepOrBuilder> 
+        getModuleDepsOrBuilderList() {
+      return moduleDeps_;
+    }
+    /**
+     * <pre>
+     * dependent한 module 이름 목록
+     * </pre>
+     *
+     * <code>repeated .com.giyeok.bibix.intellij.Module.ModuleDep module_deps = 6;</code>
+     */
+    @java.lang.Override
     public int getModuleDepsCount() {
       return moduleDeps_.size();
     }
@@ -3616,11 +4993,10 @@ public final class BibixIntellijProto {
      * dependent한 module 이름 목록
      * </pre>
      *
-     * <code>repeated string module_deps = 6;</code>
-     * @param index The index of the element to return.
-     * @return The moduleDeps at the given index.
+     * <code>repeated .com.giyeok.bibix.intellij.Module.ModuleDep module_deps = 6;</code>
      */
-    public java.lang.String getModuleDeps(int index) {
+    @java.lang.Override
+    public com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDep getModuleDeps(int index) {
       return moduleDeps_.get(index);
     }
     /**
@@ -3628,29 +5004,26 @@ public final class BibixIntellijProto {
      * dependent한 module 이름 목록
      * </pre>
      *
-     * <code>repeated string module_deps = 6;</code>
-     * @param index The index of the value to return.
-     * @return The bytes of the moduleDeps at the given index.
+     * <code>repeated .com.giyeok.bibix.intellij.Module.ModuleDep module_deps = 6;</code>
      */
-    public com.google.protobuf.ByteString
-        getModuleDepsBytes(int index) {
-      return moduleDeps_.getByteString(index);
+    @java.lang.Override
+    public com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDepOrBuilder getModuleDepsOrBuilder(
+        int index) {
+      return moduleDeps_.get(index);
     }
 
     public static final int LIBRARY_DEPS_FIELD_NUMBER = 7;
     @SuppressWarnings("serial")
-    private com.google.protobuf.LazyStringArrayList libraryDeps_ =
-        com.google.protobuf.LazyStringArrayList.emptyList();
+    private java.util.List<com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDep> libraryDeps_;
     /**
      * <pre>
      * dependent한 라이브러리 id 목록
      * </pre>
      *
-     * <code>repeated string library_deps = 7;</code>
-     * @return A list containing the libraryDeps.
+     * <code>repeated .com.giyeok.bibix.intellij.Module.LibraryDep library_deps = 7;</code>
      */
-    public com.google.protobuf.ProtocolStringList
-        getLibraryDepsList() {
+    @java.lang.Override
+    public java.util.List<com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDep> getLibraryDepsList() {
       return libraryDeps_;
     }
     /**
@@ -3658,9 +5031,21 @@ public final class BibixIntellijProto {
      * dependent한 라이브러리 id 목록
      * </pre>
      *
-     * <code>repeated string library_deps = 7;</code>
-     * @return The count of libraryDeps.
+     * <code>repeated .com.giyeok.bibix.intellij.Module.LibraryDep library_deps = 7;</code>
      */
+    @java.lang.Override
+    public java.util.List<? extends com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDepOrBuilder> 
+        getLibraryDepsOrBuilderList() {
+      return libraryDeps_;
+    }
+    /**
+     * <pre>
+     * dependent한 라이브러리 id 목록
+     * </pre>
+     *
+     * <code>repeated .com.giyeok.bibix.intellij.Module.LibraryDep library_deps = 7;</code>
+     */
+    @java.lang.Override
     public int getLibraryDepsCount() {
       return libraryDeps_.size();
     }
@@ -3669,11 +5054,10 @@ public final class BibixIntellijProto {
      * dependent한 라이브러리 id 목록
      * </pre>
      *
-     * <code>repeated string library_deps = 7;</code>
-     * @param index The index of the element to return.
-     * @return The libraryDeps at the given index.
+     * <code>repeated .com.giyeok.bibix.intellij.Module.LibraryDep library_deps = 7;</code>
      */
-    public java.lang.String getLibraryDeps(int index) {
+    @java.lang.Override
+    public com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDep getLibraryDeps(int index) {
       return libraryDeps_.get(index);
     }
     /**
@@ -3681,13 +5065,12 @@ public final class BibixIntellijProto {
      * dependent한 라이브러리 id 목록
      * </pre>
      *
-     * <code>repeated string library_deps = 7;</code>
-     * @param index The index of the value to return.
-     * @return The bytes of the libraryDeps at the given index.
+     * <code>repeated .com.giyeok.bibix.intellij.Module.LibraryDep library_deps = 7;</code>
      */
-    public com.google.protobuf.ByteString
-        getLibraryDepsBytes(int index) {
-      return libraryDeps_.getByteString(index);
+    @java.lang.Override
+    public com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDepOrBuilder getLibraryDepsOrBuilder(
+        int index) {
+      return libraryDeps_.get(index);
     }
 
     private byte memoizedIsInitialized = -1;
@@ -3720,10 +5103,10 @@ public final class BibixIntellijProto {
         output.writeMessage(5, usingSdks_.get(i));
       }
       for (int i = 0; i < moduleDeps_.size(); i++) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 6, moduleDeps_.getRaw(i));
+        output.writeMessage(6, moduleDeps_.get(i));
       }
       for (int i = 0; i < libraryDeps_.size(); i++) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 7, libraryDeps_.getRaw(i));
+        output.writeMessage(7, libraryDeps_.get(i));
       }
       getUnknownFields().writeTo(output);
     }
@@ -3751,21 +5134,13 @@ public final class BibixIntellijProto {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(5, usingSdks_.get(i));
       }
-      {
-        int dataSize = 0;
-        for (int i = 0; i < moduleDeps_.size(); i++) {
-          dataSize += computeStringSizeNoTag(moduleDeps_.getRaw(i));
-        }
-        size += dataSize;
-        size += 1 * getModuleDepsList().size();
+      for (int i = 0; i < moduleDeps_.size(); i++) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(6, moduleDeps_.get(i));
       }
-      {
-        int dataSize = 0;
-        for (int i = 0; i < libraryDeps_.size(); i++) {
-          dataSize += computeStringSizeNoTag(libraryDeps_.getRaw(i));
-        }
-        size += dataSize;
-        size += 1 * getLibraryDepsList().size();
+      for (int i = 0; i < libraryDeps_.size(); i++) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(7, libraryDeps_.get(i));
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSize = size;
@@ -3975,10 +5350,20 @@ public final class BibixIntellijProto {
           usingSdksBuilder_.clear();
         }
         bitField0_ = (bitField0_ & ~0x00000010);
-        moduleDeps_ =
-            com.google.protobuf.LazyStringArrayList.emptyList();
-        libraryDeps_ =
-            com.google.protobuf.LazyStringArrayList.emptyList();
+        if (moduleDepsBuilder_ == null) {
+          moduleDeps_ = java.util.Collections.emptyList();
+        } else {
+          moduleDeps_ = null;
+          moduleDepsBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000020);
+        if (libraryDepsBuilder_ == null) {
+          libraryDeps_ = java.util.Collections.emptyList();
+        } else {
+          libraryDeps_ = null;
+          libraryDepsBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000040);
         return this;
       }
 
@@ -4030,6 +5415,24 @@ public final class BibixIntellijProto {
         } else {
           result.usingSdks_ = usingSdksBuilder_.build();
         }
+        if (moduleDepsBuilder_ == null) {
+          if (((bitField0_ & 0x00000020) != 0)) {
+            moduleDeps_ = java.util.Collections.unmodifiableList(moduleDeps_);
+            bitField0_ = (bitField0_ & ~0x00000020);
+          }
+          result.moduleDeps_ = moduleDeps_;
+        } else {
+          result.moduleDeps_ = moduleDepsBuilder_.build();
+        }
+        if (libraryDepsBuilder_ == null) {
+          if (((bitField0_ & 0x00000040) != 0)) {
+            libraryDeps_ = java.util.Collections.unmodifiableList(libraryDeps_);
+            bitField0_ = (bitField0_ & ~0x00000040);
+          }
+          result.libraryDeps_ = libraryDeps_;
+        } else {
+          result.libraryDeps_ = libraryDepsBuilder_.build();
+        }
       }
 
       private void buildPartial0(com.giyeok.bibix.intellij.BibixIntellijProto.Module result) {
@@ -4042,14 +5445,6 @@ public final class BibixIntellijProto {
         }
         if (((from_bitField0_ & 0x00000004) != 0)) {
           result.moduleRootPath_ = moduleRootPath_;
-        }
-        if (((from_bitField0_ & 0x00000020) != 0)) {
-          moduleDeps_.makeImmutable();
-          result.moduleDeps_ = moduleDeps_;
-        }
-        if (((from_bitField0_ & 0x00000040) != 0)) {
-          libraryDeps_.makeImmutable();
-          result.libraryDeps_ = libraryDeps_;
         }
       }
 
@@ -4132,25 +5527,57 @@ public final class BibixIntellijProto {
             }
           }
         }
-        if (!other.moduleDeps_.isEmpty()) {
-          if (moduleDeps_.isEmpty()) {
-            moduleDeps_ = other.moduleDeps_;
-            bitField0_ |= 0x00000020;
-          } else {
-            ensureModuleDepsIsMutable();
-            moduleDeps_.addAll(other.moduleDeps_);
+        if (moduleDepsBuilder_ == null) {
+          if (!other.moduleDeps_.isEmpty()) {
+            if (moduleDeps_.isEmpty()) {
+              moduleDeps_ = other.moduleDeps_;
+              bitField0_ = (bitField0_ & ~0x00000020);
+            } else {
+              ensureModuleDepsIsMutable();
+              moduleDeps_.addAll(other.moduleDeps_);
+            }
+            onChanged();
           }
-          onChanged();
+        } else {
+          if (!other.moduleDeps_.isEmpty()) {
+            if (moduleDepsBuilder_.isEmpty()) {
+              moduleDepsBuilder_.dispose();
+              moduleDepsBuilder_ = null;
+              moduleDeps_ = other.moduleDeps_;
+              bitField0_ = (bitField0_ & ~0x00000020);
+              moduleDepsBuilder_ = 
+                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                   getModuleDepsFieldBuilder() : null;
+            } else {
+              moduleDepsBuilder_.addAllMessages(other.moduleDeps_);
+            }
+          }
         }
-        if (!other.libraryDeps_.isEmpty()) {
-          if (libraryDeps_.isEmpty()) {
-            libraryDeps_ = other.libraryDeps_;
-            bitField0_ |= 0x00000040;
-          } else {
-            ensureLibraryDepsIsMutable();
-            libraryDeps_.addAll(other.libraryDeps_);
+        if (libraryDepsBuilder_ == null) {
+          if (!other.libraryDeps_.isEmpty()) {
+            if (libraryDeps_.isEmpty()) {
+              libraryDeps_ = other.libraryDeps_;
+              bitField0_ = (bitField0_ & ~0x00000040);
+            } else {
+              ensureLibraryDepsIsMutable();
+              libraryDeps_.addAll(other.libraryDeps_);
+            }
+            onChanged();
           }
-          onChanged();
+        } else {
+          if (!other.libraryDeps_.isEmpty()) {
+            if (libraryDepsBuilder_.isEmpty()) {
+              libraryDepsBuilder_.dispose();
+              libraryDepsBuilder_ = null;
+              libraryDeps_ = other.libraryDeps_;
+              bitField0_ = (bitField0_ & ~0x00000040);
+              libraryDepsBuilder_ = 
+                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                   getLibraryDepsFieldBuilder() : null;
+            } else {
+              libraryDepsBuilder_.addAllMessages(other.libraryDeps_);
+            }
+          }
         }
         this.mergeUnknownFields(other.getUnknownFields());
         onChanged();
@@ -4220,15 +5647,29 @@ public final class BibixIntellijProto {
                 break;
               } // case 42
               case 50: {
-                java.lang.String s = input.readStringRequireUtf8();
-                ensureModuleDepsIsMutable();
-                moduleDeps_.add(s);
+                com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDep m =
+                    input.readMessage(
+                        com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDep.parser(),
+                        extensionRegistry);
+                if (moduleDepsBuilder_ == null) {
+                  ensureModuleDepsIsMutable();
+                  moduleDeps_.add(m);
+                } else {
+                  moduleDepsBuilder_.addMessage(m);
+                }
                 break;
               } // case 50
               case 58: {
-                java.lang.String s = input.readStringRequireUtf8();
-                ensureLibraryDepsIsMutable();
-                libraryDeps_.add(s);
+                com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDep m =
+                    input.readMessage(
+                        com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDep.parser(),
+                        extensionRegistry);
+                if (libraryDepsBuilder_ == null) {
+                  ensureLibraryDepsIsMutable();
+                  libraryDeps_.add(m);
+                } else {
+                  libraryDepsBuilder_.addMessage(m);
+                }
                 break;
               } // case 58
               default: {
@@ -5036,227 +6477,391 @@ public final class BibixIntellijProto {
         return usingSdksBuilder_;
       }
 
-      private com.google.protobuf.LazyStringArrayList moduleDeps_ =
-          com.google.protobuf.LazyStringArrayList.emptyList();
+      private java.util.List<com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDep> moduleDeps_ =
+        java.util.Collections.emptyList();
       private void ensureModuleDepsIsMutable() {
-        if (!moduleDeps_.isModifiable()) {
-          moduleDeps_ = new com.google.protobuf.LazyStringArrayList(moduleDeps_);
-        }
-        bitField0_ |= 0x00000020;
-      }
-      /**
-       * <pre>
-       * dependent한 module 이름 목록
-       * </pre>
-       *
-       * <code>repeated string module_deps = 6;</code>
-       * @return A list containing the moduleDeps.
-       */
-      public com.google.protobuf.ProtocolStringList
-          getModuleDepsList() {
-        moduleDeps_.makeImmutable();
-        return moduleDeps_;
-      }
-      /**
-       * <pre>
-       * dependent한 module 이름 목록
-       * </pre>
-       *
-       * <code>repeated string module_deps = 6;</code>
-       * @return The count of moduleDeps.
-       */
-      public int getModuleDepsCount() {
-        return moduleDeps_.size();
-      }
-      /**
-       * <pre>
-       * dependent한 module 이름 목록
-       * </pre>
-       *
-       * <code>repeated string module_deps = 6;</code>
-       * @param index The index of the element to return.
-       * @return The moduleDeps at the given index.
-       */
-      public java.lang.String getModuleDeps(int index) {
-        return moduleDeps_.get(index);
-      }
-      /**
-       * <pre>
-       * dependent한 module 이름 목록
-       * </pre>
-       *
-       * <code>repeated string module_deps = 6;</code>
-       * @param index The index of the value to return.
-       * @return The bytes of the moduleDeps at the given index.
-       */
-      public com.google.protobuf.ByteString
-          getModuleDepsBytes(int index) {
-        return moduleDeps_.getByteString(index);
-      }
-      /**
-       * <pre>
-       * dependent한 module 이름 목록
-       * </pre>
-       *
-       * <code>repeated string module_deps = 6;</code>
-       * @param index The index to set the value at.
-       * @param value The moduleDeps to set.
-       * @return This builder for chaining.
-       */
-      public Builder setModuleDeps(
-          int index, java.lang.String value) {
-        if (value == null) { throw new NullPointerException(); }
-        ensureModuleDepsIsMutable();
-        moduleDeps_.set(index, value);
-        bitField0_ |= 0x00000020;
-        onChanged();
-        return this;
-      }
-      /**
-       * <pre>
-       * dependent한 module 이름 목록
-       * </pre>
-       *
-       * <code>repeated string module_deps = 6;</code>
-       * @param value The moduleDeps to add.
-       * @return This builder for chaining.
-       */
-      public Builder addModuleDeps(
-          java.lang.String value) {
-        if (value == null) { throw new NullPointerException(); }
-        ensureModuleDepsIsMutable();
-        moduleDeps_.add(value);
-        bitField0_ |= 0x00000020;
-        onChanged();
-        return this;
-      }
-      /**
-       * <pre>
-       * dependent한 module 이름 목록
-       * </pre>
-       *
-       * <code>repeated string module_deps = 6;</code>
-       * @param values The moduleDeps to add.
-       * @return This builder for chaining.
-       */
-      public Builder addAllModuleDeps(
-          java.lang.Iterable<java.lang.String> values) {
-        ensureModuleDepsIsMutable();
-        com.google.protobuf.AbstractMessageLite.Builder.addAll(
-            values, moduleDeps_);
-        bitField0_ |= 0x00000020;
-        onChanged();
-        return this;
-      }
-      /**
-       * <pre>
-       * dependent한 module 이름 목록
-       * </pre>
-       *
-       * <code>repeated string module_deps = 6;</code>
-       * @return This builder for chaining.
-       */
-      public Builder clearModuleDeps() {
-        moduleDeps_ =
-          com.google.protobuf.LazyStringArrayList.emptyList();
-        bitField0_ = (bitField0_ & ~0x00000020);;
-        onChanged();
-        return this;
-      }
-      /**
-       * <pre>
-       * dependent한 module 이름 목록
-       * </pre>
-       *
-       * <code>repeated string module_deps = 6;</code>
-       * @param value The bytes of the moduleDeps to add.
-       * @return This builder for chaining.
-       */
-      public Builder addModuleDepsBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) { throw new NullPointerException(); }
-        checkByteStringIsUtf8(value);
-        ensureModuleDepsIsMutable();
-        moduleDeps_.add(value);
-        bitField0_ |= 0x00000020;
-        onChanged();
-        return this;
+        if (!((bitField0_ & 0x00000020) != 0)) {
+          moduleDeps_ = new java.util.ArrayList<com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDep>(moduleDeps_);
+          bitField0_ |= 0x00000020;
+         }
       }
 
-      private com.google.protobuf.LazyStringArrayList libraryDeps_ =
-          com.google.protobuf.LazyStringArrayList.emptyList();
-      private void ensureLibraryDepsIsMutable() {
-        if (!libraryDeps_.isModifiable()) {
-          libraryDeps_ = new com.google.protobuf.LazyStringArrayList(libraryDeps_);
-        }
-        bitField0_ |= 0x00000040;
-      }
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDep, com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDep.Builder, com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDepOrBuilder> moduleDepsBuilder_;
+
       /**
        * <pre>
-       * dependent한 라이브러리 id 목록
+       * dependent한 module 이름 목록
        * </pre>
        *
-       * <code>repeated string library_deps = 7;</code>
-       * @return A list containing the libraryDeps.
+       * <code>repeated .com.giyeok.bibix.intellij.Module.ModuleDep module_deps = 6;</code>
        */
-      public com.google.protobuf.ProtocolStringList
-          getLibraryDepsList() {
-        libraryDeps_.makeImmutable();
-        return libraryDeps_;
+      public java.util.List<com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDep> getModuleDepsList() {
+        if (moduleDepsBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(moduleDeps_);
+        } else {
+          return moduleDepsBuilder_.getMessageList();
+        }
+      }
+      /**
+       * <pre>
+       * dependent한 module 이름 목록
+       * </pre>
+       *
+       * <code>repeated .com.giyeok.bibix.intellij.Module.ModuleDep module_deps = 6;</code>
+       */
+      public int getModuleDepsCount() {
+        if (moduleDepsBuilder_ == null) {
+          return moduleDeps_.size();
+        } else {
+          return moduleDepsBuilder_.getCount();
+        }
+      }
+      /**
+       * <pre>
+       * dependent한 module 이름 목록
+       * </pre>
+       *
+       * <code>repeated .com.giyeok.bibix.intellij.Module.ModuleDep module_deps = 6;</code>
+       */
+      public com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDep getModuleDeps(int index) {
+        if (moduleDepsBuilder_ == null) {
+          return moduleDeps_.get(index);
+        } else {
+          return moduleDepsBuilder_.getMessage(index);
+        }
+      }
+      /**
+       * <pre>
+       * dependent한 module 이름 목록
+       * </pre>
+       *
+       * <code>repeated .com.giyeok.bibix.intellij.Module.ModuleDep module_deps = 6;</code>
+       */
+      public Builder setModuleDeps(
+          int index, com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDep value) {
+        if (moduleDepsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureModuleDepsIsMutable();
+          moduleDeps_.set(index, value);
+          onChanged();
+        } else {
+          moduleDepsBuilder_.setMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       * dependent한 module 이름 목록
+       * </pre>
+       *
+       * <code>repeated .com.giyeok.bibix.intellij.Module.ModuleDep module_deps = 6;</code>
+       */
+      public Builder setModuleDeps(
+          int index, com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDep.Builder builderForValue) {
+        if (moduleDepsBuilder_ == null) {
+          ensureModuleDepsIsMutable();
+          moduleDeps_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          moduleDepsBuilder_.setMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       * dependent한 module 이름 목록
+       * </pre>
+       *
+       * <code>repeated .com.giyeok.bibix.intellij.Module.ModuleDep module_deps = 6;</code>
+       */
+      public Builder addModuleDeps(com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDep value) {
+        if (moduleDepsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureModuleDepsIsMutable();
+          moduleDeps_.add(value);
+          onChanged();
+        } else {
+          moduleDepsBuilder_.addMessage(value);
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       * dependent한 module 이름 목록
+       * </pre>
+       *
+       * <code>repeated .com.giyeok.bibix.intellij.Module.ModuleDep module_deps = 6;</code>
+       */
+      public Builder addModuleDeps(
+          int index, com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDep value) {
+        if (moduleDepsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureModuleDepsIsMutable();
+          moduleDeps_.add(index, value);
+          onChanged();
+        } else {
+          moduleDepsBuilder_.addMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       * dependent한 module 이름 목록
+       * </pre>
+       *
+       * <code>repeated .com.giyeok.bibix.intellij.Module.ModuleDep module_deps = 6;</code>
+       */
+      public Builder addModuleDeps(
+          com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDep.Builder builderForValue) {
+        if (moduleDepsBuilder_ == null) {
+          ensureModuleDepsIsMutable();
+          moduleDeps_.add(builderForValue.build());
+          onChanged();
+        } else {
+          moduleDepsBuilder_.addMessage(builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       * dependent한 module 이름 목록
+       * </pre>
+       *
+       * <code>repeated .com.giyeok.bibix.intellij.Module.ModuleDep module_deps = 6;</code>
+       */
+      public Builder addModuleDeps(
+          int index, com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDep.Builder builderForValue) {
+        if (moduleDepsBuilder_ == null) {
+          ensureModuleDepsIsMutable();
+          moduleDeps_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          moduleDepsBuilder_.addMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       * dependent한 module 이름 목록
+       * </pre>
+       *
+       * <code>repeated .com.giyeok.bibix.intellij.Module.ModuleDep module_deps = 6;</code>
+       */
+      public Builder addAllModuleDeps(
+          java.lang.Iterable<? extends com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDep> values) {
+        if (moduleDepsBuilder_ == null) {
+          ensureModuleDepsIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, moduleDeps_);
+          onChanged();
+        } else {
+          moduleDepsBuilder_.addAllMessages(values);
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       * dependent한 module 이름 목록
+       * </pre>
+       *
+       * <code>repeated .com.giyeok.bibix.intellij.Module.ModuleDep module_deps = 6;</code>
+       */
+      public Builder clearModuleDeps() {
+        if (moduleDepsBuilder_ == null) {
+          moduleDeps_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000020);
+          onChanged();
+        } else {
+          moduleDepsBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       * dependent한 module 이름 목록
+       * </pre>
+       *
+       * <code>repeated .com.giyeok.bibix.intellij.Module.ModuleDep module_deps = 6;</code>
+       */
+      public Builder removeModuleDeps(int index) {
+        if (moduleDepsBuilder_ == null) {
+          ensureModuleDepsIsMutable();
+          moduleDeps_.remove(index);
+          onChanged();
+        } else {
+          moduleDepsBuilder_.remove(index);
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       * dependent한 module 이름 목록
+       * </pre>
+       *
+       * <code>repeated .com.giyeok.bibix.intellij.Module.ModuleDep module_deps = 6;</code>
+       */
+      public com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDep.Builder getModuleDepsBuilder(
+          int index) {
+        return getModuleDepsFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <pre>
+       * dependent한 module 이름 목록
+       * </pre>
+       *
+       * <code>repeated .com.giyeok.bibix.intellij.Module.ModuleDep module_deps = 6;</code>
+       */
+      public com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDepOrBuilder getModuleDepsOrBuilder(
+          int index) {
+        if (moduleDepsBuilder_ == null) {
+          return moduleDeps_.get(index);  } else {
+          return moduleDepsBuilder_.getMessageOrBuilder(index);
+        }
+      }
+      /**
+       * <pre>
+       * dependent한 module 이름 목록
+       * </pre>
+       *
+       * <code>repeated .com.giyeok.bibix.intellij.Module.ModuleDep module_deps = 6;</code>
+       */
+      public java.util.List<? extends com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDepOrBuilder> 
+           getModuleDepsOrBuilderList() {
+        if (moduleDepsBuilder_ != null) {
+          return moduleDepsBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(moduleDeps_);
+        }
+      }
+      /**
+       * <pre>
+       * dependent한 module 이름 목록
+       * </pre>
+       *
+       * <code>repeated .com.giyeok.bibix.intellij.Module.ModuleDep module_deps = 6;</code>
+       */
+      public com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDep.Builder addModuleDepsBuilder() {
+        return getModuleDepsFieldBuilder().addBuilder(
+            com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDep.getDefaultInstance());
+      }
+      /**
+       * <pre>
+       * dependent한 module 이름 목록
+       * </pre>
+       *
+       * <code>repeated .com.giyeok.bibix.intellij.Module.ModuleDep module_deps = 6;</code>
+       */
+      public com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDep.Builder addModuleDepsBuilder(
+          int index) {
+        return getModuleDepsFieldBuilder().addBuilder(
+            index, com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDep.getDefaultInstance());
+      }
+      /**
+       * <pre>
+       * dependent한 module 이름 목록
+       * </pre>
+       *
+       * <code>repeated .com.giyeok.bibix.intellij.Module.ModuleDep module_deps = 6;</code>
+       */
+      public java.util.List<com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDep.Builder> 
+           getModuleDepsBuilderList() {
+        return getModuleDepsFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDep, com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDep.Builder, com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDepOrBuilder> 
+          getModuleDepsFieldBuilder() {
+        if (moduleDepsBuilder_ == null) {
+          moduleDepsBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+              com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDep, com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDep.Builder, com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDepOrBuilder>(
+                  moduleDeps_,
+                  ((bitField0_ & 0x00000020) != 0),
+                  getParentForChildren(),
+                  isClean());
+          moduleDeps_ = null;
+        }
+        return moduleDepsBuilder_;
+      }
+
+      private java.util.List<com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDep> libraryDeps_ =
+        java.util.Collections.emptyList();
+      private void ensureLibraryDepsIsMutable() {
+        if (!((bitField0_ & 0x00000040) != 0)) {
+          libraryDeps_ = new java.util.ArrayList<com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDep>(libraryDeps_);
+          bitField0_ |= 0x00000040;
+         }
+      }
+
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDep, com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDep.Builder, com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDepOrBuilder> libraryDepsBuilder_;
+
+      /**
+       * <pre>
+       * dependent한 라이브러리 id 목록
+       * </pre>
+       *
+       * <code>repeated .com.giyeok.bibix.intellij.Module.LibraryDep library_deps = 7;</code>
+       */
+      public java.util.List<com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDep> getLibraryDepsList() {
+        if (libraryDepsBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(libraryDeps_);
+        } else {
+          return libraryDepsBuilder_.getMessageList();
+        }
       }
       /**
        * <pre>
        * dependent한 라이브러리 id 목록
        * </pre>
        *
-       * <code>repeated string library_deps = 7;</code>
-       * @return The count of libraryDeps.
+       * <code>repeated .com.giyeok.bibix.intellij.Module.LibraryDep library_deps = 7;</code>
        */
       public int getLibraryDepsCount() {
-        return libraryDeps_.size();
+        if (libraryDepsBuilder_ == null) {
+          return libraryDeps_.size();
+        } else {
+          return libraryDepsBuilder_.getCount();
+        }
       }
       /**
        * <pre>
        * dependent한 라이브러리 id 목록
        * </pre>
        *
-       * <code>repeated string library_deps = 7;</code>
-       * @param index The index of the element to return.
-       * @return The libraryDeps at the given index.
+       * <code>repeated .com.giyeok.bibix.intellij.Module.LibraryDep library_deps = 7;</code>
        */
-      public java.lang.String getLibraryDeps(int index) {
-        return libraryDeps_.get(index);
+      public com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDep getLibraryDeps(int index) {
+        if (libraryDepsBuilder_ == null) {
+          return libraryDeps_.get(index);
+        } else {
+          return libraryDepsBuilder_.getMessage(index);
+        }
       }
       /**
        * <pre>
        * dependent한 라이브러리 id 목록
        * </pre>
        *
-       * <code>repeated string library_deps = 7;</code>
-       * @param index The index of the value to return.
-       * @return The bytes of the libraryDeps at the given index.
-       */
-      public com.google.protobuf.ByteString
-          getLibraryDepsBytes(int index) {
-        return libraryDeps_.getByteString(index);
-      }
-      /**
-       * <pre>
-       * dependent한 라이브러리 id 목록
-       * </pre>
-       *
-       * <code>repeated string library_deps = 7;</code>
-       * @param index The index to set the value at.
-       * @param value The libraryDeps to set.
-       * @return This builder for chaining.
+       * <code>repeated .com.giyeok.bibix.intellij.Module.LibraryDep library_deps = 7;</code>
        */
       public Builder setLibraryDeps(
-          int index, java.lang.String value) {
-        if (value == null) { throw new NullPointerException(); }
-        ensureLibraryDepsIsMutable();
-        libraryDeps_.set(index, value);
-        bitField0_ |= 0x00000040;
-        onChanged();
+          int index, com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDep value) {
+        if (libraryDepsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureLibraryDepsIsMutable();
+          libraryDeps_.set(index, value);
+          onChanged();
+        } else {
+          libraryDepsBuilder_.setMessage(index, value);
+        }
         return this;
       }
       /**
@@ -5264,17 +6869,58 @@ public final class BibixIntellijProto {
        * dependent한 라이브러리 id 목록
        * </pre>
        *
-       * <code>repeated string library_deps = 7;</code>
-       * @param value The libraryDeps to add.
-       * @return This builder for chaining.
+       * <code>repeated .com.giyeok.bibix.intellij.Module.LibraryDep library_deps = 7;</code>
+       */
+      public Builder setLibraryDeps(
+          int index, com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDep.Builder builderForValue) {
+        if (libraryDepsBuilder_ == null) {
+          ensureLibraryDepsIsMutable();
+          libraryDeps_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          libraryDepsBuilder_.setMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       * dependent한 라이브러리 id 목록
+       * </pre>
+       *
+       * <code>repeated .com.giyeok.bibix.intellij.Module.LibraryDep library_deps = 7;</code>
+       */
+      public Builder addLibraryDeps(com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDep value) {
+        if (libraryDepsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureLibraryDepsIsMutable();
+          libraryDeps_.add(value);
+          onChanged();
+        } else {
+          libraryDepsBuilder_.addMessage(value);
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       * dependent한 라이브러리 id 목록
+       * </pre>
+       *
+       * <code>repeated .com.giyeok.bibix.intellij.Module.LibraryDep library_deps = 7;</code>
        */
       public Builder addLibraryDeps(
-          java.lang.String value) {
-        if (value == null) { throw new NullPointerException(); }
-        ensureLibraryDepsIsMutable();
-        libraryDeps_.add(value);
-        bitField0_ |= 0x00000040;
-        onChanged();
+          int index, com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDep value) {
+        if (libraryDepsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureLibraryDepsIsMutable();
+          libraryDeps_.add(index, value);
+          onChanged();
+        } else {
+          libraryDepsBuilder_.addMessage(index, value);
+        }
         return this;
       }
       /**
@@ -5282,17 +6928,54 @@ public final class BibixIntellijProto {
        * dependent한 라이브러리 id 목록
        * </pre>
        *
-       * <code>repeated string library_deps = 7;</code>
-       * @param values The libraryDeps to add.
-       * @return This builder for chaining.
+       * <code>repeated .com.giyeok.bibix.intellij.Module.LibraryDep library_deps = 7;</code>
+       */
+      public Builder addLibraryDeps(
+          com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDep.Builder builderForValue) {
+        if (libraryDepsBuilder_ == null) {
+          ensureLibraryDepsIsMutable();
+          libraryDeps_.add(builderForValue.build());
+          onChanged();
+        } else {
+          libraryDepsBuilder_.addMessage(builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       * dependent한 라이브러리 id 목록
+       * </pre>
+       *
+       * <code>repeated .com.giyeok.bibix.intellij.Module.LibraryDep library_deps = 7;</code>
+       */
+      public Builder addLibraryDeps(
+          int index, com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDep.Builder builderForValue) {
+        if (libraryDepsBuilder_ == null) {
+          ensureLibraryDepsIsMutable();
+          libraryDeps_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          libraryDepsBuilder_.addMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       * dependent한 라이브러리 id 목록
+       * </pre>
+       *
+       * <code>repeated .com.giyeok.bibix.intellij.Module.LibraryDep library_deps = 7;</code>
        */
       public Builder addAllLibraryDeps(
-          java.lang.Iterable<java.lang.String> values) {
-        ensureLibraryDepsIsMutable();
-        com.google.protobuf.AbstractMessageLite.Builder.addAll(
-            values, libraryDeps_);
-        bitField0_ |= 0x00000040;
-        onChanged();
+          java.lang.Iterable<? extends com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDep> values) {
+        if (libraryDepsBuilder_ == null) {
+          ensureLibraryDepsIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, libraryDeps_);
+          onChanged();
+        } else {
+          libraryDepsBuilder_.addAllMessages(values);
+        }
         return this;
       }
       /**
@@ -5300,14 +6983,16 @@ public final class BibixIntellijProto {
        * dependent한 라이브러리 id 목록
        * </pre>
        *
-       * <code>repeated string library_deps = 7;</code>
-       * @return This builder for chaining.
+       * <code>repeated .com.giyeok.bibix.intellij.Module.LibraryDep library_deps = 7;</code>
        */
       public Builder clearLibraryDeps() {
-        libraryDeps_ =
-          com.google.protobuf.LazyStringArrayList.emptyList();
-        bitField0_ = (bitField0_ & ~0x00000040);;
-        onChanged();
+        if (libraryDepsBuilder_ == null) {
+          libraryDeps_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000040);
+          onChanged();
+        } else {
+          libraryDepsBuilder_.clear();
+        }
         return this;
       }
       /**
@@ -5315,19 +7000,105 @@ public final class BibixIntellijProto {
        * dependent한 라이브러리 id 목록
        * </pre>
        *
-       * <code>repeated string library_deps = 7;</code>
-       * @param value The bytes of the libraryDeps to add.
-       * @return This builder for chaining.
+       * <code>repeated .com.giyeok.bibix.intellij.Module.LibraryDep library_deps = 7;</code>
        */
-      public Builder addLibraryDepsBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) { throw new NullPointerException(); }
-        checkByteStringIsUtf8(value);
-        ensureLibraryDepsIsMutable();
-        libraryDeps_.add(value);
-        bitField0_ |= 0x00000040;
-        onChanged();
+      public Builder removeLibraryDeps(int index) {
+        if (libraryDepsBuilder_ == null) {
+          ensureLibraryDepsIsMutable();
+          libraryDeps_.remove(index);
+          onChanged();
+        } else {
+          libraryDepsBuilder_.remove(index);
+        }
         return this;
+      }
+      /**
+       * <pre>
+       * dependent한 라이브러리 id 목록
+       * </pre>
+       *
+       * <code>repeated .com.giyeok.bibix.intellij.Module.LibraryDep library_deps = 7;</code>
+       */
+      public com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDep.Builder getLibraryDepsBuilder(
+          int index) {
+        return getLibraryDepsFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <pre>
+       * dependent한 라이브러리 id 목록
+       * </pre>
+       *
+       * <code>repeated .com.giyeok.bibix.intellij.Module.LibraryDep library_deps = 7;</code>
+       */
+      public com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDepOrBuilder getLibraryDepsOrBuilder(
+          int index) {
+        if (libraryDepsBuilder_ == null) {
+          return libraryDeps_.get(index);  } else {
+          return libraryDepsBuilder_.getMessageOrBuilder(index);
+        }
+      }
+      /**
+       * <pre>
+       * dependent한 라이브러리 id 목록
+       * </pre>
+       *
+       * <code>repeated .com.giyeok.bibix.intellij.Module.LibraryDep library_deps = 7;</code>
+       */
+      public java.util.List<? extends com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDepOrBuilder> 
+           getLibraryDepsOrBuilderList() {
+        if (libraryDepsBuilder_ != null) {
+          return libraryDepsBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(libraryDeps_);
+        }
+      }
+      /**
+       * <pre>
+       * dependent한 라이브러리 id 목록
+       * </pre>
+       *
+       * <code>repeated .com.giyeok.bibix.intellij.Module.LibraryDep library_deps = 7;</code>
+       */
+      public com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDep.Builder addLibraryDepsBuilder() {
+        return getLibraryDepsFieldBuilder().addBuilder(
+            com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDep.getDefaultInstance());
+      }
+      /**
+       * <pre>
+       * dependent한 라이브러리 id 목록
+       * </pre>
+       *
+       * <code>repeated .com.giyeok.bibix.intellij.Module.LibraryDep library_deps = 7;</code>
+       */
+      public com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDep.Builder addLibraryDepsBuilder(
+          int index) {
+        return getLibraryDepsFieldBuilder().addBuilder(
+            index, com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDep.getDefaultInstance());
+      }
+      /**
+       * <pre>
+       * dependent한 라이브러리 id 목록
+       * </pre>
+       *
+       * <code>repeated .com.giyeok.bibix.intellij.Module.LibraryDep library_deps = 7;</code>
+       */
+      public java.util.List<com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDep.Builder> 
+           getLibraryDepsBuilderList() {
+        return getLibraryDepsFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDep, com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDep.Builder, com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDepOrBuilder> 
+          getLibraryDepsFieldBuilder() {
+        if (libraryDepsBuilder_ == null) {
+          libraryDepsBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+              com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDep, com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDep.Builder, com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDepOrBuilder>(
+                  libraryDeps_,
+                  ((bitField0_ & 0x00000040) != 0),
+                  getParentForChildren(),
+                  isClean());
+          libraryDeps_ = null;
+        }
+        return libraryDepsBuilder_;
       }
       @java.lang.Override
       public final Builder setUnknownFields(
@@ -14768,6 +16539,16 @@ public final class BibixIntellijProto {
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_com_giyeok_bibix_intellij_Module_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_com_giyeok_bibix_intellij_Module_ModuleDep_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_com_giyeok_bibix_intellij_Module_ModuleDep_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_com_giyeok_bibix_intellij_Module_LibraryDep_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_com_giyeok_bibix_intellij_Module_LibraryDep_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_com_giyeok_bibix_intellij_ContentRoot_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
@@ -14852,50 +16633,59 @@ public final class BibixIntellijProto {
       "\003(\0132*.com.giyeok.bibix.intellij.External" +
       "Library\0224\n\010sdk_info\030\006 \001(\0132\".com.giyeok.b" +
       "ibix.intellij.SdkInfo\0222\n\007actions\030\007 \003(\0132!" +
-      ".com.giyeok.bibix.intellij.Action\"\361\001\n\006Mo" +
+      ".com.giyeok.bibix.intellij.Action\"\232\004\n\006Mo" +
       "dule\022\023\n\013module_name\030\001 \001(\t\022\023\n\013module_type" +
       "\030\002 \001(\t\022\030\n\020module_root_path\030\003 \001(\t\022=\n\rcont" +
       "ent_roots\030\004 \003(\0132&.com.giyeok.bibix.intel" +
       "lij.ContentRoot\0229\n\nusing_sdks\030\005 \003(\0132%.co" +
-      "m.giyeok.bibix.intellij.SdkVersion\022\023\n\013mo" +
-      "dule_deps\030\006 \003(\t\022\024\n\014library_deps\030\007 \003(\t\"^\n" +
-      "\013ContentRoot\022\031\n\021content_root_name\030\001 \001(\t\022" +
-      "\031\n\021content_root_type\030\002 \001(\t\022\031\n\021content_ro" +
-      "ot_path\030\003 \001(\t\"d\n\nSdkVersion\022\025\n\013jdk_versi" +
-      "on\030\001 \001(\tH\000\022\033\n\021ktjvm_sdk_version\030\002 \001(\tH\000\022" +
-      "\033\n\021scala_sdk_version\030\003 \001(\tH\000B\005\n\003sdk\"_\n\017E" +
-      "xternalLibrary\022\022\n\nlibrary_id\030\001 \001(\t\022\023\n\013de" +
-      "scription\030\002 \001(\t\022\022\n\nclasspaths\030\003 \003(\t\022\017\n\007s" +
-      "ources\030\004 \003(\t\"\177\n\007SdkInfo\022;\n\nktjvm_sdks\030\001 " +
-      "\003(\0132\'.com.giyeok.bibix.intellij.KotlinJv" +
-      "mSdk\0227\n\nscala_sdks\030\002 \003(\0132#.com.giyeok.bi" +
-      "bix.intellij.ScalaSdk\"8\n\014KotlinJvmSdk\022\017\n" +
-      "\007version\030\001 \001(\t\022\027\n\017sdk_library_ids\030\002 \003(\t\"" +
-      "q\n\010ScalaSdk\022\017\n\007version\030\001 \001(\t\022\036\n\026scala_la" +
-      "nguage_version\030\002 \001(\t\022\033\n\023compiler_classpa" +
-      "ths\030\003 \003(\t\022\027\n\017sdk_library_ids\030\004 \003(\t\"\035\n\006Ac" +
-      "tion\022\023\n\013action_name\030\001 \001(\t\"<\n\017BuildTarget" +
-      "sReq\022\022\n\nproject_id\030\001 \001(\t\022\025\n\rbuild_target" +
-      "s\030\002 \003(\t\"\021\n\017BuildTargetsRes\"\024\n\022BuildTarge" +
-      "tsUpdate\"8\n\021ExecuteActionsReq\022\022\n\nproject" +
-      "_id\030\001 \001(\t\022\017\n\007actions\030\002 \003(\t\"\023\n\021ExecuteAct" +
-      "ionsRes\"\025\n\023ExecuteActionUpdate2\302\004\n\024Bibix" +
-      "IntellijService\022e\n\013loadProject\022).com.giy" +
-      "eok.bibix.intellij.LoadProjectReq\032+.com." +
-      "giyeok.bibix.intellij.BibixProjectInfo\022f" +
-      "\n\014buildTargets\022*.com.giyeok.bibix.intell" +
-      "ij.BuildTargetsReq\032*.com.giyeok.bibix.in" +
-      "tellij.BuildTargetsRes\022t\n\025buildTargetsSt" +
-      "reaming\022*.com.giyeok.bibix.intellij.Buil" +
-      "dTargetsReq\032-.com.giyeok.bibix.intellij." +
-      "BuildTargetsUpdate0\001\022l\n\016executeActions\022," +
-      ".com.giyeok.bibix.intellij.ExecuteAction" +
-      "sReq\032,.com.giyeok.bibix.intellij.Execute" +
-      "ActionsRes\022w\n\027executeActionsStreaming\022*." +
-      "com.giyeok.bibix.intellij.BuildTargetsRe" +
-      "q\032..com.giyeok.bibix.intellij.ExecuteAct" +
-      "ionUpdate0\001B\024B\022BibixIntellijProtob\006proto" +
-      "3"
+      "m.giyeok.bibix.intellij.SdkVersion\022@\n\013mo" +
+      "dule_deps\030\006 \003(\0132+.com.giyeok.bibix.intel" +
+      "lij.Module.ModuleDep\022B\n\014library_deps\030\007 \003" +
+      "(\0132,.com.giyeok.bibix.intellij.Module.Li" +
+      "braryDep\032d\n\tModuleDep\022\023\n\013module_name\030\001 \001" +
+      "(\t\022B\n\017dependency_type\030\002 \001(\0162).com.giyeok" +
+      ".bibix.intellij.DependencyType\032f\n\nLibrar" +
+      "yDep\022\024\n\014library_name\030\001 \001(\t\022B\n\017dependency" +
+      "_type\030\002 \001(\0162).com.giyeok.bibix.intellij." +
+      "DependencyType\"^\n\013ContentRoot\022\031\n\021content" +
+      "_root_name\030\001 \001(\t\022\031\n\021content_root_type\030\002 " +
+      "\001(\t\022\031\n\021content_root_path\030\003 \001(\t\"d\n\nSdkVer" +
+      "sion\022\025\n\013jdk_version\030\001 \001(\tH\000\022\033\n\021ktjvm_sdk" +
+      "_version\030\002 \001(\tH\000\022\033\n\021scala_sdk_version\030\003 " +
+      "\001(\tH\000B\005\n\003sdk\"_\n\017ExternalLibrary\022\022\n\nlibra" +
+      "ry_id\030\001 \001(\t\022\023\n\013description\030\002 \001(\t\022\022\n\nclas" +
+      "spaths\030\003 \003(\t\022\017\n\007sources\030\004 \003(\t\"\177\n\007SdkInfo" +
+      "\022;\n\nktjvm_sdks\030\001 \003(\0132\'.com.giyeok.bibix." +
+      "intellij.KotlinJvmSdk\0227\n\nscala_sdks\030\002 \003(" +
+      "\0132#.com.giyeok.bibix.intellij.ScalaSdk\"8" +
+      "\n\014KotlinJvmSdk\022\017\n\007version\030\001 \001(\t\022\027\n\017sdk_l" +
+      "ibrary_ids\030\002 \003(\t\"q\n\010ScalaSdk\022\017\n\007version\030" +
+      "\001 \001(\t\022\036\n\026scala_language_version\030\002 \001(\t\022\033\n" +
+      "\023compiler_classpaths\030\003 \003(\t\022\027\n\017sdk_librar" +
+      "y_ids\030\004 \003(\t\"\035\n\006Action\022\023\n\013action_name\030\001 \001" +
+      "(\t\"<\n\017BuildTargetsReq\022\022\n\nproject_id\030\001 \001(" +
+      "\t\022\025\n\rbuild_targets\030\002 \003(\t\"\021\n\017BuildTargets" +
+      "Res\"\024\n\022BuildTargetsUpdate\"8\n\021ExecuteActi" +
+      "onsReq\022\022\n\nproject_id\030\001 \001(\t\022\017\n\007actions\030\002 " +
+      "\003(\t\"\023\n\021ExecuteActionsRes\"\025\n\023ExecuteActio" +
+      "nUpdate*\\\n\016DependencyType\022\032\n\026DEPENDENCY_" +
+      "UNSPECIFIED\020\000\022\026\n\022COMPILE_DEPENDENCY\020\001\022\026\n" +
+      "\022RUNTIME_DEPENDENCY\020\0022\302\004\n\024BibixIntellijS" +
+      "ervice\022e\n\013loadProject\022).com.giyeok.bibix" +
+      ".intellij.LoadProjectReq\032+.com.giyeok.bi" +
+      "bix.intellij.BibixProjectInfo\022f\n\014buildTa" +
+      "rgets\022*.com.giyeok.bibix.intellij.BuildT" +
+      "argetsReq\032*.com.giyeok.bibix.intellij.Bu" +
+      "ildTargetsRes\022t\n\025buildTargetsStreaming\022*" +
+      ".com.giyeok.bibix.intellij.BuildTargetsR" +
+      "eq\032-.com.giyeok.bibix.intellij.BuildTarg" +
+      "etsUpdate0\001\022l\n\016executeActions\022,.com.giye" +
+      "ok.bibix.intellij.ExecuteActionsReq\032,.co" +
+      "m.giyeok.bibix.intellij.ExecuteActionsRe" +
+      "s\022w\n\027executeActionsStreaming\022*.com.giyeo" +
+      "k.bibix.intellij.BuildTargetsReq\032..com.g" +
+      "iyeok.bibix.intellij.ExecuteActionUpdate" +
+      "0\001B\024B\022BibixIntellijProtob\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -14919,6 +16709,18 @@ public final class BibixIntellijProto {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_giyeok_bibix_intellij_Module_descriptor,
         new java.lang.String[] { "ModuleName", "ModuleType", "ModuleRootPath", "ContentRoots", "UsingSdks", "ModuleDeps", "LibraryDeps", });
+    internal_static_com_giyeok_bibix_intellij_Module_ModuleDep_descriptor =
+      internal_static_com_giyeok_bibix_intellij_Module_descriptor.getNestedTypes().get(0);
+    internal_static_com_giyeok_bibix_intellij_Module_ModuleDep_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_com_giyeok_bibix_intellij_Module_ModuleDep_descriptor,
+        new java.lang.String[] { "ModuleName", "DependencyType", });
+    internal_static_com_giyeok_bibix_intellij_Module_LibraryDep_descriptor =
+      internal_static_com_giyeok_bibix_intellij_Module_descriptor.getNestedTypes().get(1);
+    internal_static_com_giyeok_bibix_intellij_Module_LibraryDep_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_com_giyeok_bibix_intellij_Module_LibraryDep_descriptor,
+        new java.lang.String[] { "LibraryName", "DependencyType", });
     internal_static_com_giyeok_bibix_intellij_ContentRoot_descriptor =
       getDescriptor().getMessageTypes().get(3);
     internal_static_com_giyeok_bibix_intellij_ContentRoot_fieldAccessorTable = new

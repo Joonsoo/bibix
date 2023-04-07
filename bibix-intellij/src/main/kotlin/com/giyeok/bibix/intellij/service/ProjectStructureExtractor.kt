@@ -6,6 +6,8 @@ import com.giyeok.bibix.base.StringValue
 import com.giyeok.bibix.frontend.BuildFrontend
 import com.giyeok.bibix.frontend.NoopProgressNotifier
 import com.giyeok.bibix.intellij.*
+import com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDep
+import com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDep
 import com.giyeok.bibix.interpreter.BibixExecutionException
 import com.giyeok.bibix.interpreter.BibixProject
 import com.giyeok.bibix.interpreter.ExprEvalContext
@@ -47,7 +49,7 @@ object ProjectStructureExtractor {
         }
         sourcePath to path
       } else {
-        sourcePath to sourcePath
+        sourcePath to sourcePath.parent
       }
     }
 
@@ -246,7 +248,7 @@ object ProjectStructureExtractor {
       }
     }
 
-    val pkgGraph = PackageGraph.create(modules.values)
+    val pkgGraph = PackageGraph.create(modules.values, objectNamesMap)
 
     fun moduleName(targetId: String): String =
       "$rootModuleName." + (objectNamesMap[targetId] ?: targetId)
@@ -315,16 +317,34 @@ object ProjectStructureExtractor {
             this.jdkVersion = jdkVersion
           })
         }
-        val deps = pkgGraph.dependentNodesOf(module.origin)
-        // TODO LocalBuilt이지만 main에서 빌드한게 아니면 module이 아니고 library
-        // TODO main에서 java, ktjvm, scala의 library 빌드룰 호출하는게 아니면 중단
-        this.moduleDeps.addAll(deps
-          .filterIsInstance<LocalBuilt>()
-          .filter { pkgGraph.isModule(it) }
-          .map { moduleName(it.objHash) })
-        this.libraryDeps.addAll(deps
-          .filter { !pkgGraph.isModule(it) }
-          .map { libIdFromOrigin(it) })
+        val deps =
+          ResolveClassPkgs.flattenClassPkgs(listOfNotNull(module.sdk?.second) + module.dependencies)
+        deps.compileDeps.values.forEach { (origin, pkg) ->
+          if (origin is LocalBuilt && pkgGraph.isModule(origin)) {
+            this.moduleDeps.add(ModuleDep.newBuilder().also {
+              it.moduleName = moduleName(origin.objHash)
+              it.dependencyType = BibixIntellijProto.DependencyType.COMPILE_DEPENDENCY
+            }.build())
+          } else {
+            this.libraryDeps.add(LibraryDep.newBuilder().also {
+              it.libraryName = libIdFromOrigin(origin)
+              it.dependencyType = BibixIntellijProto.DependencyType.COMPILE_DEPENDENCY
+            }.build())
+          }
+        }
+        deps.runtimeDeps.values.forEach { (origin, pkg) ->
+          if (origin is LocalBuilt && pkgGraph.isModule(origin)) {
+            this.moduleDeps.add(ModuleDep.newBuilder().also {
+              it.moduleName = moduleName(origin.objHash)
+              it.dependencyType = BibixIntellijProto.DependencyType.RUNTIME_DEPENDENCY
+            }.build())
+          } else {
+            this.libraryDeps.add(LibraryDep.newBuilder().also {
+              it.libraryName = libIdFromOrigin(origin)
+              it.dependencyType = BibixIntellijProto.DependencyType.RUNTIME_DEPENDENCY
+            }.build())
+          }
+        }
       }
     }
 

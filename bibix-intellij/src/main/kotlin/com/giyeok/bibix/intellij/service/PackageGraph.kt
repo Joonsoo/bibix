@@ -10,7 +10,7 @@ class PackageGraph(
   val edges: Set<Pair<ClassOrigin, ClassOrigin>>,
   val edgesByStart: Map<ClassOrigin, Set<ClassOrigin>>,
 ) {
-  class Builder(val modules: Map<LocalBuilt, ModuleData>) {
+  class Builder(val modules: Map<LocalBuilt, ModuleData>, val objectNamesMap: Map<String, String>) {
     private val moduleTargetIds = modules.keys.map { it.objHash }.toSet()
     private val nodes = mutableSetOf<ClassOrigin>()
     private val nonModulePkgs = mutableMapOf<ClassOrigin, ClassPkg>()
@@ -18,8 +18,13 @@ class PackageGraph(
 
     private fun traverseModule(module: ModuleData) {
       nodes.add(module.origin)
-      val flattened =
+      val flattened = try {
         ResolveClassPkgs.flattenClassPkgs(module.dependencies + listOfNotNull(module.sdk?.second))
+      } catch (e: IllegalStateException) {
+        throw IllegalStateException(
+          "Failed during ${objectNamesMap[module.origin.objHash] ?: module.origin.objHash}", e
+        )
+      }
       (flattened.compileDeps + flattened.runtimeDeps).forEach { (origin, pkg) ->
         if (!isModule(origin)) {
           nonModulePkgs[origin] = pkg
@@ -83,7 +88,7 @@ class PackageGraph(
   }
 
   companion object {
-    fun create(modules: Collection<ModuleData>): PackageGraph =
-      Builder(modules.associateBy { it.origin }).build()
+    fun create(modules: Collection<ModuleData>, objectNamesMap: Map<String, String>): PackageGraph =
+      Builder(modules.associateBy { it.origin }, objectNamesMap).build()
   }
 }

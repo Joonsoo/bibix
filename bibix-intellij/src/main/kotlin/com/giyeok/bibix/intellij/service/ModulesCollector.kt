@@ -44,7 +44,7 @@ class ModulesCollector(val languageType: String, val sdkArtifactName: Pair<Strin
         mapOf(
           "origin" to origin.toBibix(),
           "cpinfo" to cpinfo,
-          "deps" to SetValue()
+          "deps" to SetValue(listOfNotNull(sdk?.second?.toBibix()) + deps.values)
         )
       )
     )

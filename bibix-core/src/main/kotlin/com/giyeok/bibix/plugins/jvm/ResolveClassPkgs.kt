@@ -45,53 +45,57 @@ class ResolveClassPkgs {
 
     data class MavenVersionDepths(
       val depth: Int,
+      val priority: Int,
       val paths: MutableList<List<ClassOrigin>>,
     )
 
+    // TODO 깊이가 같은 dependency가 있을 경우 앞에 나온 것 먼저
     fun mavenArtifactVersionsToUse(classPkgs: List<ClassPkg>): Map<MavenArtifact, MavenDep> {
       // value는 버젼명 -> root로부터의 거리
       val depthMap = mutableMapOf<MavenArtifact, MutableMap<MavenDep, MavenVersionDepths>>()
       val path = LinkedList<ClassOrigin>()
 
-      fun traversePkg(pkg: ClassPkg, depth: Int) {
+      fun traversePkg(priority: Int, pkg: ClassPkg, depth: Int) {
         if (pkg.origin is MavenDep) {
           path.push(pkg.origin)
           val key = pkg.origin.toMavenArtifact()
           val depths = depthMap.getOrPut(key) { mutableMapOf() }
           val existingDepth = depths[pkg.origin]
           if (existingDepth == null || depth < existingDepth.depth) {
-            depths[pkg.origin] = MavenVersionDepths(depth, mutableListOf(path.toList()))
+            depths[pkg.origin] = MavenVersionDepths(depth, priority, mutableListOf(path.toList()))
           } else if (depth == existingDepth.depth) {
             existingDepth.paths.add(path.toList())
           }
           pkg.deps.forEach {
-            traversePkg(it, depth + 1)
+            traversePkg(priority, it, depth + 1)
           }
           path.pop()
         } else {
+          path.push(pkg.origin)
           pkg.deps.forEach {
-            traversePkg(it, depth + 1)
+            traversePkg(priority, it, depth + 1)
           }
+          path.pop()
         }
       }
-      classPkgs.forEach {
-        traversePkg(it, 0)
+      classPkgs.forEachIndexed { index, classPkg ->
+        traversePkg(index, classPkg, 0)
       }
 
       val versionsToUse = depthMap.mapValues { (artifactName, depthsMap) ->
         val minDepth = depthsMap.minBy { it.value.depth }.value.depth
-        val minDepthVersions = depthsMap.filter { it.value.depth == minDepth }.keys
+        val minDepths = depthsMap.filter { it.value.depth == minDepth }
 
-        if (minDepthVersions.size > 1) {
+        if (minDepths.size > 1) {
           val depthsMapString =
             depthsMap.values.sortedBy { it.depth }.joinToString("\n") { pathSet ->
               pathSet.paths.joinToString("\n") { path ->
                 "${pathSet.depth}: " + path.reversed().toString()
               }
             }
-          throw IllegalStateException("conflicting versions: $artifactName\n$depthsMapString")
+          println("Warning: Possibly conflicting versions: $artifactName\n$depthsMapString")
         }
-        minDepthVersions.first()
+        minDepths.minBy { it.value.priority }.key
       }
       return versionsToUse
     }
