@@ -7,6 +7,15 @@ from bibix.plugins import protobuf
 from bibix.plugins import grpc
 from bibix.plugins import java
 from bibix.plugins import jar
+from bibix.plugins import zip
+
+import git("https://github.com/Joonsoo/jparser.git") as jparser
+var java.jdkVersion = "19"
+var java.srcVersion = "19"
+var java.outVersion = "19"
+var ktjvm.compilerVersion = "1.9.0"
+var ktjvm.sdkVersion = "1.9.0"
+var ktjvm.outVersion = "19"
 
 bibixVersion = "0.5.4"
 
@@ -48,13 +57,25 @@ base {
 }
 
 parser {
+  gen = jparser.genKtAstMgroup2(
+    cdgFile = "grammar/bibix.cdg",
+    astifierClassName = "com.giyeok.bibix.ast.BibixAst",
+    parserDataFileName = "bibix2-mg2-parserdata-trimmed.pb",
+  )
+
+  action generate {
+    file.copyDirectory(gen.srcsRoot, "bibix-parser/src/generated/kotlin")
+    file.copyFile(zip.gzip(gen.parserData), "bibix-parser/src/generated/resources")
+  }
+
   main = ktjvm.library(
     srcs = glob("bibix-parser/src/generated/kotlin/**/*.kt"),
     resources = glob("bibix-parser/src/generated/resources/**"),
     deps = [
-      ...jparserDeps,
-      maven.artifact("org.scala-lang", "scala-library", "2.13.10"),
-      ...protobufDeps
+      jparser.ktparser.main,
+      // ...jparserDeps,
+      // maven.artifact("org.scala-lang", "scala-library", "2.13.10"),
+      // ...protobufDeps
     ],
   )
 
@@ -201,8 +222,9 @@ kotlinVersion = "1.8.10"
 var ktjvm.compilerVersion = kotlinVersion
 var ktjvm.sdkVersion = kotlinVersion
 
-kotlinxCoroutinesVersion = "1.6.4"
+kotlinxCoroutinesVersion = "1.7.3"
 kotlinxCoroutinesDeps = [
+  maven.artifact("org.jetbrains.kotlinx", "kotlinx-coroutines-core-jvm", kotlinxCoroutinesVersion),
   maven.artifact("org.jetbrains.kotlinx", "kotlinx-coroutines-core", kotlinxCoroutinesVersion),
   maven.artifact("org.jetbrains.kotlinx", "kotlinx-coroutines-core-jvm", kotlinxCoroutinesVersion),
   maven.artifact("org.jetbrains.kotlinx", "kotlinx-coroutines-jdk9", kotlinxCoroutinesVersion),

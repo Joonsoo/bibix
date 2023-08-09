@@ -70,7 +70,7 @@ class TaskRelGraph {
 
   // startId에서 endId로 가는 경로가 있으면 그 경로를 반환. 없으면 null 반환
   private suspend fun reachable(startId: Int, endId: Int): List<Int>? = depsMutex.withLock {
-    return null
+    // return null
     val visited = mutableSetOf<Int>()
     val path = LinkedList<Int>()
 

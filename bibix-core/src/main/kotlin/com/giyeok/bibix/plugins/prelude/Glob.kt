@@ -6,6 +6,7 @@ import com.giyeok.bibix.base.SetValue
 import com.giyeok.bibix.base.StringValue
 import java.nio.file.Files
 import kotlin.io.path.absolute
+import kotlin.io.path.absolutePathString
 import kotlin.io.path.pathString
 
 class Glob {
@@ -14,7 +15,7 @@ class Glob {
     val matcher = when (val pattern = context.arguments.getValue("pattern")) {
       is StringValue -> {
         val matcherPattern =
-          "glob:" + (context.callerBaseDirectory!!.absolute()).resolve(pattern.value).pathString
+          "glob:" + (context.callerBaseDirectory!!.absolutePathString() + "/" + pattern.value)
         fileSystem.getPathMatcher(matcherPattern)
       }
 
