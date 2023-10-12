@@ -36,10 +36,9 @@ class NameLookupTable(private val varsManager: VarsManager) {
           }
 
           is BibixAst.NamespaceDef -> {
-            check(def.body.packageName == null) { "namespace cannot have package name" }
             val cname = CName(context.sourceId, scope + def.name)
             addDefinition(cname, Definition.NamespaceDef(cname))
-            traverse(scope + def.name, def.body.defs)
+            traverse(scope + def.name, def.body)
           }
 
           is BibixAst.TargetDef -> {

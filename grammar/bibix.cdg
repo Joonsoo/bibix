@@ -14,8 +14,9 @@ Def: Def = ImportDef
   | VarRedefs
   | BuildRuleDef
   | ActionRuleDef
+  | DefsWithVarRedefs
 
-NamespaceDef = SimpleName WS '{' BuildScript '}' {NamespaceDef(name=$0, body=$3)}
+NamespaceDef = SimpleName WS '{' (WS Defs)? WS '}' {NamespaceDef(name=$0, body=$3 ?: [])}
 
 ImportDef: ImportDef = "import"&Tk WS Primary (WS "as"&Tk WS SimpleName)? {ImportAll(source=$2, rename=$3)}
   | "from"&Tk WS Expr WS "import"&Tk WS Name (WS "as"&Tk WS SimpleName)? {ImportFrom(source=$2, importing=$6, rename=$7)}
@@ -60,7 +61,12 @@ Expr: Expr = Expr WS "as"&Tk WS NoUnionType {CastExpr(expr=$0, castTo=$4)}
 MergeOpOrPrimary: MergeOpOrPrimary = Expr WS '+' WS Primary {MergeOp(lhs=$0, rhs=$4)}
   | Primary
 
-ActionExpr = CallExpr
+// TODO ActionExpr to run other actions
+ActionExpr: ActionExpr = CallExpr
+  | Name
+
+DefsWithVarRedefs = "with"&Tk WS VarRedef (WS ',' WS VarRedef)* WS '{' WS Defs WS '}'
+                    {DefsWithVarRedefs(redefs=[$2] + $3, defs=$7)}
 
 Primary: Primary = CallExpr
   | Primary WS '.' WS SimpleName {MemberAccess(target=$0, name=$4)}

@@ -72,13 +72,19 @@ class BibixInterpreter(
             .ensureValue()
 
         is Definition.ActionDef -> {
-          suspend fun executeActionExpr(actionExpr: BibixAst.CallExpr) {
+          suspend fun executeActionExpr(actionExpr: BibixAst.ActionExpr) {
             val argName = definition.action.argsName
             if (argName == null && actionArgs.isNotEmpty()) {
               throw IllegalStateException("action args is not used")
             }
             val args = if (argName == null) null else Pair(argName, actionArgs)
-            exprEvaluator.executeAction(task, context, actionExpr, args)
+            when (actionExpr) {
+              is BibixAst.CallExpr -> {
+                exprEvaluator.executeAction(task, context, actionExpr, args)
+              }
+
+              is BibixAst.Name -> TODO()
+            }
           }
 
           when (val body = definition.action.body) {

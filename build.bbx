@@ -13,8 +13,8 @@ import git("https://github.com/Joonsoo/jparser.git") as jparser
 var java.jdkVersion = "19"
 var java.srcVersion = "19"
 var java.outVersion = "19"
-var ktjvm.compilerVersion = "1.9.0"
-var ktjvm.sdkVersion = "1.9.0"
+var ktjvm.compilerVersion = "1.9.10"
+var ktjvm.sdkVersion = "1.9.10"
 var ktjvm.outVersion = "19"
 
 bibixVersion = "0.5.4"
@@ -116,6 +116,7 @@ core {
 
   test = ktjvm.library(
     srcs = glob("bibix-core/src/test/kotlin/**/*.kt"),
+    resources = glob("bibix-core/src/test/resources/**"),
     deps = [
       main,
       ...testDeps,
