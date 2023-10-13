@@ -82,7 +82,7 @@ fun traverseAst(ast: BibixAst.AstNode, visitor: (BibixAst.AstNode) -> Unit) {
     }
 
     is BibixAst.DefsWithVarRedefs -> {
-      ast.redefs.forEach(visitChild)
+      ast.varRedefs.forEach(visitChild)
       ast.defs.forEach(visitChild)
     }
 

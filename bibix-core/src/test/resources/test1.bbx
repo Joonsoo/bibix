@@ -1,10 +1,6 @@
-import file
-import git("https://github.com/Joonsoo/sugarproto.git") as sugarproto
 import maven
-from bibix.plugins import java
 from bibix.plugins import ktjvm
-from bibix.plugins import protobuf
-from bibix.plugins import grpc
+from bibix.plugins import java
 
 abc = ktjvm.library(
   srcs = glob("srcs/**/*.kt"),
@@ -16,10 +12,16 @@ abc = ktjvm.library(
 kotlinVersion = "1.9.0"
 var ktjvm.compilerVersion = kotlinVersion
 var ktjvm.sdkVersion = kotlinVersion
+var java.compilerVersion = "11"
 
-protobufVersion = "3.23.4"
-var protobuf.protobufVersion = protobufVersion
-grpcVersion = "1.56.1"
-var grpc.grpcVersion = grpcVersion
 ktxCoroutinesVersion = "1.7.0"
-floggerVersion = "0.7.4"
+
+with ktjvm.compilerVersion = "1.7.0", ktjvm.sdkVersion = "1.7.1", java.javaVersion = "11" {
+  xyz = ktjvm.library(
+    srcs = glob("srcs2/**/*.kt")
+  )
+}
+
+qwe = ktjvm.library(
+  srcs = glob("srcs3/**/*.kt")
+)

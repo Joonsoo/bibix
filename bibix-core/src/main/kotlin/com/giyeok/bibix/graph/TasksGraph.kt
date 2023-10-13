@@ -1,17 +1,17 @@
 package com.giyeok.bibix.graph
 
 import com.giyeok.bibix.ast.BibixAst
-import kotlin.reflect.KClass
 
 
 // TasksGraph는 프로젝트 하나(즉 스크립트 하나)의 내용만 포함한다.
 // import해서 사용하는 다른 프로젝트의 def들은 별도의 TasksGraph로 관리한다.
 class TasksGraph(
-  val nodeIds: Map<Int, BibixAst.AstNode>,
+  val astNodes: Map<Int, BibixAst.AstNode>,
   val nameLookup: NameLookupTable,
   val nodes: Map<TaskId, TaskNode>,
   val edges: List<TaskEdge>,
   val scriptVars: Map<String, TaskId>,
+  val varRedefs: Map<TaskId, Map<String, TaskId>>,
 ) {
   val edgesByStart = edges.groupBy { it.start }
   val edgesByEnd = edges.groupBy { it.end }
@@ -21,51 +21,58 @@ class TasksGraph(
       val nodeIdsMap = mutableMapOf<Int, BibixAst.AstNode>()
       traverseAst(script) { nodeIdsMap[it.nodeId] = it }
       val nameLookup = NameLookupTable.fromScript(script)
-      val builder = Builder(nodeIdsMap, nameLookup, mutableMapOf(), mutableListOf(), mutableMapOf())
+      val builder = Builder(nodeIdsMap, nameLookup)
       val rootNameScope = ScopedNameLookupTable(listOf(), nameLookup, null)
-      builder.addDefs(script.defs, NameLookupContext(nameLookup, preludeNames, rootNameScope))
+      val nameLookupCtx = NameLookupContext(nameLookup, preludeNames, rootNameScope, mapOf())
+      builder.addDefs(script.defs, nameLookupCtx, true)
       return builder.build()
     }
   }
 
   class Builder(
-    val nodeIds: Map<Int, BibixAst.AstNode>,
+    val astNodes: Map<Int, BibixAst.AstNode>,
     val nameLookup: NameLookupTable,
-    val nodes: MutableMap<TaskId, TaskNode>,
-    val edges: MutableList<TaskEdge>,
-    val scriptVars: MutableMap<String, TaskId>,
+    val nodes: MutableMap<TaskId, TaskNode> = mutableMapOf(),
+    val edges: MutableList<TaskEdge> = mutableListOf(),
+    val scriptVars: MutableMap<String, TaskId> = mutableMapOf(),
+    val varRedefs: MutableMap<TaskId, Map<String, TaskId>> = mutableMapOf(),
   ) {
-    private val edgePairs: MutableSet<Pair<TaskId, TaskId>> =
-      edges.map { Pair(it.start, it.end) }.toMutableSet()
+    private val edgePairs: MutableMap<Pair<TaskId, TaskId>, TaskEdge> =
+      edges.associateBy { Pair(it.start, it.end) }.toMutableMap()
 
-    fun build(): TasksGraph = TasksGraph(nodeIds, nameLookup, nodes, edges, scriptVars)
+    fun build() = TasksGraph(astNodes, nameLookup, nodes, edges, scriptVars, varRedefs)
 
-    fun addDefs(defs: List<BibixAst.Def>, nameLookupCtx: NameLookupContext) {
+    fun addDefs(
+      defs: List<BibixAst.Def>,
+      nameLookupCtx: NameLookupContext,
+      isRoot: Boolean
+    ) {
       defs.forEach { def ->
         when (def) {
           is BibixAst.ImportDef -> {
+            check(isRoot) { "import must be in the root" }
             val importNode = addNode(ImportNode(def))
             when (def) {
               is BibixAst.ImportAll -> {
                 val source = addExpr(def.source, nameLookupCtx)
-                addEdge(importNode, source, ValueDependencyEdge)
+                addEdge(importNode, source, TaskEdgeType.ValueDependency)
               }
 
               is BibixAst.ImportFrom -> {
                 val source = addExpr(def.source, nameLookupCtx)
-                addEdge(importNode, source, ValueDependencyEdge)
+                addEdge(importNode, source, TaskEdgeType.ValueDependency)
               }
             }
           }
 
           is BibixAst.NamespaceDef -> {
-            addDefs(def.body, nameLookupCtx.innerNamespace(def.name))
+            addDefs(def.body, nameLookupCtx.innerNamespace(def.name), false)
           }
 
           is BibixAst.TargetDef -> {
             val targetNode = addNode(TargetNode(def))
             val valueNode = addExpr(def.value, nameLookupCtx)
-            addEdge(targetNode, valueNode, DefinitionEdge)
+            addEdge(targetNode, valueNode, TaskEdgeType.Definition)
           }
 
           is BibixAst.ActionDef -> {
@@ -85,11 +92,41 @@ class TasksGraph(
           }
 
           is BibixAst.VarDef -> {
-            // TODO
+            check(isRoot) { "variable only can be defined in the root" }
+            val varNode = addNode(VarNode(def))
+            def.typ?.let { typ ->
+              val typeNode = addType(typ, nameLookupCtx)
+              addEdge(varNode, typeNode, TaskEdgeType.TypeDependency)
+            }
+            def.defaultValue?.let { defaultValue ->
+              val valueNode = addExpr(defaultValue, nameLookupCtx)
+              addEdge(varNode, valueNode, TaskEdgeType.DefaultValueDependency)
+            }
+            check(def.name !in scriptVars)
+            scriptVars[def.name] = varNode
           }
 
           is BibixAst.VarRedefs -> {
-            // TODO
+            check(isRoot) { "variable redefs must be in the root. Consider using with instead" }
+            compileVarRedefs(def.redefs, nameLookupCtx).forEach { (import, redefs) ->
+              val existingRedefs = this.varRedefs[import]
+              if (existingRedefs == null) {
+                this.varRedefs[import] = redefs
+              } else {
+                val duplicateRedefs = existingRedefs.keys.intersect(redefs.keys)
+                check(duplicateRedefs.isEmpty()) {
+                  // TODO improve error message
+                  val importNode = astNodes.getValue(import.nodeId) as BibixAst.ImportDef
+                  val importName = when (importNode) {
+                    is BibixAst.ImportAll -> importNode.rename ?: importNode.source.toString()
+                    is BibixAst.ImportFrom -> importNode.rename
+                      ?: importNode.importing.tokens.joinToString(".")
+                  }
+                  "Duplicate var redef for $importName $duplicateRedefs"
+                }
+                this.varRedefs[import] = existingRedefs + redefs
+              }
+            }
           }
 
           is BibixAst.BuildRuleDef -> {
@@ -101,17 +138,68 @@ class TasksGraph(
           }
 
           is BibixAst.DefsWithVarRedefs -> {
-            // TODO
+            val varRedefs = compileVarRedefs(def.varRedefs, nameLookupCtx)
+            val importWithRedefs = varRedefs.map { (importNodeId, varRedefs) ->
+              val importInstanceNode = addNode(ImportInstanceNode(importNodeId, varRedefs))
+              addEdge(importInstanceNode, importNodeId, TaskEdgeType.ImportInstance)
+              varRedefs.values.forEach {
+                addEdge(
+                  importInstanceNode,
+                  it,
+                  TaskEdgeType.ValueDependency
+                )
+              }
+              importNodeId to importInstanceNode
+            }.toMap()
+            println(varRedefs)
+            println(importWithRedefs)
+            addDefs(def.defs, nameLookupCtx.withVarRedefsCtx(importWithRedefs), false)
           }
         }
       }
     }
 
-    fun BibixAst.Name.toContextString(): String =
-      "${this.tokens.joinToString(".")} at ${this.start}..${this.end}"
+    fun compileVarRedefs(varRedefs: List<BibixAst.VarRedef>, nameLookupCtx: NameLookupContext) =
+      varRedefs.map { varRedef ->
+        val lookupResult = nameLookupCtx.lookupName(varRedef.nameTokens, varRedef)
+        check(lookupResult is NameInImport)
+        check(lookupResult.remaining.size == 1)
+        val import = lookupResult.importEntry.id
+        val redefVarName = lookupResult.remaining.first()
+        val redefValue = addExpr(varRedef.redefValue, nameLookupCtx)
+        import to (redefVarName to redefValue)
+      }.groupBy { it.first }.mapValues { (_, importAndRedefs) ->
+        val redefs = importAndRedefs.map { it.second }
+        check(redefs.map { it.first }.hasNoDuplicate())
+        redefs.toMap()
+      }
 
     fun List<String>.hasNoDuplicate(): Boolean =
       this.toSet().size == this.size
+
+    fun addType(type: BibixAst.TypeExpr, nameLookupCtx: NameLookupContext): TaskId = TODO()
+
+    fun lookupResultToId(lookupResult: NameLookupResult, varRedefsCtx: Map<TaskId, TaskId>) =
+      when (lookupResult) {
+        is NameEntryFound -> lookupResult.entry.id
+
+        is NameInImport -> {
+          val rawImportNode = lookupResult.importEntry.id
+          val redefedImportNode = varRedefsCtx[rawImportNode]
+          val importNode = redefedImportNode ?: rawImportNode
+          if (lookupResult.remaining.isEmpty()) {
+            importNode
+          } else {
+            val importedName = addNode(ImportedTaskNode(importNode, lookupResult.remaining))
+            addEdge(importedName, importNode, TaskEdgeType.ImportDependency)
+            importedName
+          }
+        }
+
+        is NameFromPrelude -> addNode(PreludeTaskNode(lookupResult.name))
+
+        is NamespaceFound -> throw IllegalStateException("Name not found: ${lookupResult.name}")
+      }
 
     fun addExpr(expr: BibixAst.Expr, nameLookupCtx: NameLookupContext): TaskId = when (expr) {
       is BibixAst.CastExpr -> addExpr(expr.expr, nameLookupCtx)
@@ -119,42 +207,24 @@ class TasksGraph(
         val mergedNode = addNode(ExprNode(expr))
         val lhsNode = addExpr(expr.lhs, nameLookupCtx)
         val rhsNode = addExpr(expr.rhs, nameLookupCtx)
-        addEdge(mergedNode, lhsNode, ValueDependencyEdge)
-        addEdge(mergedNode, rhsNode, ValueDependencyEdge)
+        addEdge(mergedNode, lhsNode, TaskEdgeType.ValueDependency)
+        addEdge(mergedNode, rhsNode, TaskEdgeType.ValueDependency)
         mergedNode
       }
 
       is BibixAst.CallExpr -> {
         val calledNode = addNode(ExprNode(expr))
-        when (val lookupResult = nameLookupCtx.lookupName(expr.name)) {
-          is NameEntryFound -> {
-            val ruleEntry = lookupResult.entry.id
-            addEdge(calledNode, ruleEntry, RuleDependencyEdge)
-          }
-
-          is NameInImport -> {
-            check(lookupResult.remaining.isNotEmpty())
-            // TODO 이 시점에서 사용한 import된 프로젝트의 var들이 어떻게 redef되어서 사용되는지 관리해야 함
-            val importedName =
-              addNode(ImportedTaskNode(lookupResult.importEntry.id, lookupResult.remaining))
-            addEdge(importedName, lookupResult.importEntry.id, ImportDependencyEdge)
-            addEdge(calledNode, importedName, RuleDependencyEdge)
-          }
-
-          is NameFromPrelude -> {
-            // TODO
-          }
-
-          is NamespaceFound -> throw IllegalStateException("Invalid rule: ${expr.name.toContextString()}")
-        }
+        val foundNode =
+          lookupResultToId(nameLookupCtx.lookupName(expr.name), nameLookupCtx.varRedefsCtx)
+        addEdge(calledNode, foundNode, TaskEdgeType.RuleDependency)
         expr.params.posParams.forEach { param ->
           val paramNode = addExpr(param, nameLookupCtx)
-          addEdge(calledNode, paramNode, ValueDependencyEdge)
+          addEdge(calledNode, paramNode, TaskEdgeType.ValueDependency)
         }
         check(expr.params.namedParams.map { it.name }.hasNoDuplicate())
         expr.params.namedParams.forEach { (_, param) ->
           val paramNode = addExpr(param, nameLookupCtx)
-          addEdge(calledNode, paramNode, ValueDependencyEdge)
+          addEdge(calledNode, paramNode, TaskEdgeType.ValueDependency)
         }
         calledNode
       }
@@ -165,12 +235,12 @@ class TasksGraph(
           when (elem) {
             is BibixAst.EllipsisElem -> {
               val elemNode = addExpr(elem.value, nameLookupCtx)
-              addEdge(listNode, elemNode, ValueDependencyEdge)
+              addEdge(listNode, elemNode, TaskEdgeType.ValueDependency)
             }
 
             is BibixAst.Expr -> {
               val elemNode = addExpr(elem, nameLookupCtx)
-              addEdge(listNode, elemNode, ValueDependencyEdge)
+              addEdge(listNode, elemNode, TaskEdgeType.ValueDependency)
             }
           }
         }
@@ -188,7 +258,7 @@ class TasksGraph(
 
             is BibixAst.ComplexExpr -> {
               val exprNode = addExpr(elem.expr, nameLookupCtx)
-              addEdge(stringNode, exprNode, ValueDependencyEdge)
+              addEdge(stringNode, exprNode, TaskEdgeType.ValueDependency)
             }
 
             is BibixAst.SimpleExpr -> {
@@ -203,32 +273,15 @@ class TasksGraph(
       is BibixAst.MemberAccess -> {
         val accessNode = addNode(ExprNode(expr))
         val targetNode = addExpr(expr.target, nameLookupCtx)
-        addEdge(accessNode, targetNode, ValueDependencyEdge)
+        addEdge(accessNode, targetNode, TaskEdgeType.ValueDependency)
         accessNode
       }
 
       is BibixAst.NameRef -> {
         val nameNode = addNode(ExprNode(expr))
-        when (val lookupResult = nameLookupCtx.lookupName(expr)) {
-          is NameEntryFound -> {
-            addEdge(nameNode, lookupResult.entry.id, ReferenceEdge)
-          }
-
-          is NameInImport -> {
-            // TODO
-            println(lookupResult)
-          }
-
-          is NamespaceFound -> {
-            // TODO
-            println(lookupResult)
-          }
-
-          is NameFromPrelude -> {
-            // TODO
-            println(lookupResult)
-          }
-        }
+        val referedNode =
+          lookupResultToId(nameLookupCtx.lookupName(expr), nameLookupCtx.varRedefsCtx)
+        addEdge(nameNode, referedNode, TaskEdgeType.Reference)
         nameNode
       }
 
@@ -236,7 +289,7 @@ class TasksGraph(
         val tupleNode = addNode(ExprNode(expr))
         expr.elems.forEach { elem ->
           val elemNode = addExpr(elem.expr, nameLookupCtx)
-          addEdge(tupleNode, elemNode, ValueDependencyEdge)
+          addEdge(tupleNode, elemNode, TaskEdgeType.ValueDependency)
         }
         tupleNode
       }
@@ -247,21 +300,28 @@ class TasksGraph(
         val tupleNode = addNode(ExprNode(expr))
         expr.elems.forEach { elem ->
           val elemNode = addExpr(elem, nameLookupCtx)
-          addEdge(tupleNode, elemNode, ValueDependencyEdge)
+          addEdge(tupleNode, elemNode, TaskEdgeType.ValueDependency)
         }
         tupleNode
       }
     }
 
     fun addNode(node: TaskNode): TaskId {
-      check(!nodes.contains(node.id))
+      val existing = nodes[node.id]
+      // ktjvm.library 같은 것들 때문에 두번 이상 등록될 수는 있지만 내용은 같아야 함
+      check(existing == null || existing == node)
       nodes[node.id] = node
       return node.id
     }
 
     fun addEdge(start: TaskId, end: TaskId, edgeType: TaskEdgeType) {
-      check(!edgePairs.contains(Pair(start, end)))
-      edges.add(TaskEdge(start, end, edgeType))
+      val existing = edgePairs[Pair(start, end)]
+      val edge = TaskEdge(start, end, edgeType)
+      check(existing == null || existing == edge)
+      if (existing == null) {
+        edgePairs[Pair(start, end)] = edge
+        edges.add(edge)
+      }
     }
   }
 }
@@ -280,7 +340,12 @@ data class ImportNode(val import: BibixAst.ImportDef): TaskNode() {
 }
 
 data class ImportedTaskNode(val importNode: TaskId, val remainingNames: List<String>): TaskNode() {
-  override val id: TaskId = TaskId(importNode.nodeId, remainingNames)
+  override val id: TaskId = TaskId(importNode.nodeId, Pair(importNode, remainingNames))
+}
+
+data class ImportInstanceNode(val importNode: TaskId, val varRedefs: Map<String, TaskId>):
+  TaskNode() {
+  override val id: TaskId = TaskId(importNode.nodeId, varRedefs)
 }
 
 data class TargetNode(val def: BibixAst.TargetDef): TaskNode() {
@@ -291,14 +356,19 @@ data class ExprNode(val expr: BibixAst.Expr): TaskNode() {
   override val id: TaskId = TaskId(expr.nodeId)
 }
 
+data class VarNode(val def: BibixAst.VarDef): TaskNode() {
+  override val id: TaskId = TaskId(def.nodeId)
+}
+
+data class PreludeTaskNode(val name: String): TaskNode() {
+  override val id: TaskId = TaskId(0, name)
+}
+
 data class TaskEdge(val start: TaskId, val end: TaskId, val edgeType: TaskEdgeType)
 
-// TODO import한 다른 프로젝트의 var redef 정보들 모아서 관리
-data class ImportVarRedef(val importDef: TaskId, val varName: String, val redefValue: TaskId)
+enum class TaskEdgeType {
+  Definition, ValueDependency, RuleDependency, Reference, ImportDependency, TypeDependency, ImportInstance,
 
-sealed class TaskEdgeType
-data object DefinitionEdge: TaskEdgeType()
-data object ValueDependencyEdge: TaskEdgeType()
-data object RuleDependencyEdge: TaskEdgeType()
-data object ReferenceEdge: TaskEdgeType()
-data object ImportDependencyEdge: TaskEdgeType()
+  // default value는 evaluation할 때 빠질 수도 있다는 의미
+  DefaultValueDependency
+}

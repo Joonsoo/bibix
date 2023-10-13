@@ -80,7 +80,7 @@ class NameLookupTable(
     val ns = namespaces[firstToken]
     if (ns != null) {
       return if (tokens.size == 1) {
-        NamespaceFound(ns)
+        NamespaceFound(tokens.joinToString("."), nameNode)
       } else {
         ns.lookupName(tokens.drop(1), nameNode)
       }
@@ -106,7 +106,7 @@ data class ActionRuleNameEntry(override val def: BibixAst.ActionRuleDef): NameEn
 
 sealed class NameLookupResult
 data class NameEntryFound(val entry: NameEntry): NameLookupResult()
-data class NamespaceFound(val namespace: NameLookupTable): NameLookupResult()
+data class NamespaceFound(val name: String, val context: BibixAst.AstNode?): NameLookupResult()
 data class NameInImport(val importEntry: NameEntry, val remaining: List<String>): NameLookupResult()
 data class NameFromPrelude(val name: String): NameLookupResult()
 

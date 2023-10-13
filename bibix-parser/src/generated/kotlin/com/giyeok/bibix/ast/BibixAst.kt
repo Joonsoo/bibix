@@ -174,7 +174,7 @@ data class SingleCallAction(
 sealed interface ActionExpr: AstNode
 
 data class DefsWithVarRedefs(
-  val redefs: List<VarRedef>,
+  val varRedefs: List<VarRedef>,
   val defs: List<Def>,
   override val nodeId: Int,
   override val start: Int,

@@ -28,15 +28,18 @@ fun dotGraphFrom(graph: TasksGraph, source: String): String {
   writer.writeLine("digraph tasks {")
   writer.indent {
     graph.nodes.forEach { (id, node) ->
-      val astNode = graph.nodeIds.getValue(id.nodeId)
-      val nodeSource = source.substring(astNode.start, astNode.end)
+      val astNode = graph.astNodes[id.nodeId]
+      val nodeSource = astNode?.let { source.substring(it.start, it.end) }
       val nodeDescription = when (node) {
-        is ExprNode -> "expr $nodeSource"
-        is ImportNode -> "import $nodeSource"
-        is TargetNode -> "target $nodeSource"
-        is ImportedTaskNode -> "imported $nodeSource ${node.remainingNames}"
+        is ExprNode -> "expr\n$nodeSource"
+        is ImportNode -> "import\n$nodeSource"
+        is TargetNode -> "target\n$nodeSource"
+        is ImportedTaskNode -> "imported(${node.remainingNames})\n$nodeSource"
+        is VarNode -> "var\n$nodeSource"
+        is PreludeTaskNode -> "prelude ${node.name}"
+        is ImportInstanceNode -> "import instance\n$nodeSource"
       }
-      val lines = nodeDescription.lines()
+      val lines = "${node.id.nodeId} $nodeDescription".lines()
       val linesTrimmed = if (lines.size <= 1) {
         lines
       } else {

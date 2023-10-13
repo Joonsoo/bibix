@@ -5,7 +5,8 @@ import com.giyeok.bibix.ast.BibixAst
 data class NameLookupContext(
   val table: NameLookupTable,
   val preludeNames: Set<String>,
-  val currentScope: ScopedNameLookupTable
+  val currentScope: ScopedNameLookupTable,
+  val varRedefsCtx: Map<TaskId, TaskId>,
 ) {
   fun innerNamespace(namespaceName: String): NameLookupContext {
     // 현재 namespace scope 안에 `namespaceName`가 존재하는지 확인
@@ -14,9 +15,13 @@ data class NameLookupContext(
     return NameLookupContext(
       table,
       preludeNames,
-      ScopedNameLookupTable(currentScope.namePath + namespaceName, innerScope, currentScope)
+      ScopedNameLookupTable(currentScope.namePath + namespaceName, innerScope, currentScope),
+      varRedefsCtx
     )
   }
+
+  fun withVarRedefsCtx(redefsCtx: Map<TaskId, TaskId>) =
+    copy(varRedefsCtx = varRedefsCtx + redefsCtx)
 
   fun lookupName(tokens: List<String>, nameNode: BibixAst.AstNode? = null): NameLookupResult {
     check(tokens.isNotEmpty())
