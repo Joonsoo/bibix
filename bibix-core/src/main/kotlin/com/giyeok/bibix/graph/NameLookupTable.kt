@@ -92,7 +92,7 @@ class NameLookupTable(
 sealed class NameEntry {
   abstract val def: BibixAst.Def
 
-  val id: TaskId get() = TaskId.fromAstNode(def)
+  val id: TaskId get() = TaskId(def.nodeId)
 }
 
 data class ImportNameEntry(override val def: BibixAst.ImportDef): NameEntry()

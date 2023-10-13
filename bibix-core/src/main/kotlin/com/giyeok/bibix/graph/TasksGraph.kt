@@ -1,42 +1,61 @@
 package com.giyeok.bibix.graph
 
 import com.giyeok.bibix.ast.BibixAst
+import kotlin.reflect.KClass
 
 
 // TasksGraph는 프로젝트 하나(즉 스크립트 하나)의 내용만 포함한다.
 // import해서 사용하는 다른 프로젝트의 def들은 별도의 TasksGraph로 관리한다.
 class TasksGraph(
+  val nodeIds: Map<Int, BibixAst.AstNode>,
   val nameLookup: NameLookupTable,
   val nodes: Map<TaskId, TaskNode>,
-  val edges: Map<TaskEdge, TaskEdgeType>,
+  val edges: List<TaskEdge>,
   val scriptVars: Map<String, TaskId>,
 ) {
-  val edgesByStart = edges.keys.groupBy { it.start }
-  val edgesByEnd = edges.keys.groupBy { it.end }
+  val edgesByStart = edges.groupBy { it.start }
+  val edgesByEnd = edges.groupBy { it.end }
 
   companion object {
-    fun fromScript(script: BibixAst.BuildScript): TasksGraph {
+    fun fromScript(script: BibixAst.BuildScript, preludeNames: Set<String>): TasksGraph {
+      val nodeIdsMap = mutableMapOf<Int, BibixAst.AstNode>()
+      traverseAst(script) { nodeIdsMap[it.nodeId] = it }
       val nameLookup = NameLookupTable.fromScript(script)
-      val builder = Builder(nameLookup, mutableMapOf(), mutableMapOf(), mutableMapOf())
+      val builder = Builder(nodeIdsMap, nameLookup, mutableMapOf(), mutableListOf(), mutableMapOf())
       val rootNameScope = ScopedNameLookupTable(listOf(), nameLookup, null)
-      builder.addDefs(script.defs, NameLookupContext(nameLookup, setOf("glob"), rootNameScope))
+      builder.addDefs(script.defs, NameLookupContext(nameLookup, preludeNames, rootNameScope))
       return builder.build()
     }
   }
 
   class Builder(
+    val nodeIds: Map<Int, BibixAst.AstNode>,
     val nameLookup: NameLookupTable,
     val nodes: MutableMap<TaskId, TaskNode>,
-    val edges: MutableMap<TaskEdge, TaskEdgeType>,
+    val edges: MutableList<TaskEdge>,
     val scriptVars: MutableMap<String, TaskId>,
   ) {
-    fun build(): TasksGraph = TasksGraph(nameLookup, nodes, edges, scriptVars)
+    private val edgePairs: MutableSet<Pair<TaskId, TaskId>> =
+      edges.map { Pair(it.start, it.end) }.toMutableSet()
+
+    fun build(): TasksGraph = TasksGraph(nodeIds, nameLookup, nodes, edges, scriptVars)
 
     fun addDefs(defs: List<BibixAst.Def>, nameLookupCtx: NameLookupContext) {
       defs.forEach { def ->
         when (def) {
           is BibixAst.ImportDef -> {
-            addNode(ImportNode(def))
+            val importNode = addNode(ImportNode(def))
+            when (def) {
+              is BibixAst.ImportAll -> {
+                val source = addExpr(def.source, nameLookupCtx)
+                addEdge(importNode, source, ValueDependencyEdge)
+              }
+
+              is BibixAst.ImportFrom -> {
+                val source = addExpr(def.source, nameLookupCtx)
+                addEdge(importNode, source, ValueDependencyEdge)
+              }
+            }
           }
 
           is BibixAst.NamespaceDef -> {
@@ -85,7 +104,6 @@ class TasksGraph(
             // TODO
           }
         }
-        val id = TaskId.fromAstNode(def)
       }
     }
 
@@ -116,11 +134,11 @@ class TasksGraph(
 
           is NameInImport -> {
             check(lookupResult.remaining.isNotEmpty())
-            addEdge(
-              calledNode,
-              lookupResult.importEntry.id,
-              ImportDependencyEdge(lookupResult.remaining)
-            )
+            // TODO 이 시점에서 사용한 import된 프로젝트의 var들이 어떻게 redef되어서 사용되는지 관리해야 함
+            val importedName =
+              addNode(ImportedTaskNode(lookupResult.importEntry.id, lookupResult.remaining))
+            addEdge(importedName, lookupResult.importEntry.id, ImportDependencyEdge)
+            addEdge(calledNode, importedName, RuleDependencyEdge)
           }
 
           is NameFromPrelude -> {
@@ -242,7 +260,8 @@ class TasksGraph(
     }
 
     fun addEdge(start: TaskId, end: TaskId, edgeType: TaskEdgeType) {
-      edges[TaskEdge(start, end)] = edgeType
+      check(!edgePairs.contains(Pair(start, end)))
+      edges.add(TaskEdge(start, end, edgeType))
     }
   }
 }
@@ -250,29 +269,29 @@ class TasksGraph(
 // TasksGraph에서 TaskId는 스크립트 내에서 해당 task가 정의된 위치로 정의된다.
 // TasksGraph는 스크립트 내의 def들의 관계를 나타낼 뿐이고
 // 실제 해당 task가 어떻게 쓰이고 어떤 값으로 evaluate되는지는 다음 문제.
-data class TaskId(val nodeId: Int, val start: Int, val end: Int) {
-  companion object {
-    fun fromAstNode(astNode: BibixAst.AstNode) = TaskId(astNode.nodeId, astNode.start, astNode.end)
-  }
-}
+data class TaskId(val nodeId: Int, val additionalId: Any? = null)
 
 sealed class TaskNode {
   abstract val id: TaskId
 }
 
 data class ImportNode(val import: BibixAst.ImportDef): TaskNode() {
-  override val id: TaskId = TaskId.fromAstNode(import)
+  override val id: TaskId = TaskId(import.nodeId)
+}
+
+data class ImportedTaskNode(val importNode: TaskId, val remainingNames: List<String>): TaskNode() {
+  override val id: TaskId = TaskId(importNode.nodeId, remainingNames)
 }
 
 data class TargetNode(val def: BibixAst.TargetDef): TaskNode() {
-  override val id: TaskId = TaskId.fromAstNode(def)
+  override val id: TaskId = TaskId(def.nodeId)
 }
 
 data class ExprNode(val expr: BibixAst.Expr): TaskNode() {
-  override val id: TaskId = TaskId.fromAstNode(expr)
+  override val id: TaskId = TaskId(expr.nodeId)
 }
 
-data class TaskEdge(val start: TaskId, val end: TaskId)
+data class TaskEdge(val start: TaskId, val end: TaskId, val edgeType: TaskEdgeType)
 
 // TODO import한 다른 프로젝트의 var redef 정보들 모아서 관리
 data class ImportVarRedef(val importDef: TaskId, val varName: String, val redefValue: TaskId)
@@ -282,4 +301,4 @@ data object DefinitionEdge: TaskEdgeType()
 data object ValueDependencyEdge: TaskEdgeType()
 data object RuleDependencyEdge: TaskEdgeType()
 data object ReferenceEdge: TaskEdgeType()
-data class ImportDependencyEdge(val remainingName: List<String>): TaskEdgeType()
+data object ImportDependencyEdge: TaskEdgeType()
