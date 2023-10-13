@@ -1,6 +1,8 @@
 package com.giyeok.bibix.graph
 
+import com.giyeok.bibix.ast.BibixAst
 import com.giyeok.bibix.ast.BibixParser
+import com.giyeok.bibix.frontend.BuildFrontend
 import org.junit.jupiter.api.Test
 import kotlin.math.absoluteValue
 
@@ -11,7 +13,22 @@ class TasksGraphTest {
       this::class.java.getResourceAsStream("/test1.bbx")!!.readAllBytes().decodeToString()
     val script = BibixParser.parse(source)
 
-    val graph = TasksGraph.fromScript(script, setOf("glob", "git", "env", "bibix"))
+    val preloadedPluginNames = BuildFrontend.defaultPreloadedPlugins.keys
+    val preludeNames = setOf(
+      "bibix",
+      "Env",
+      "OS",
+      "Linux",
+      "OSX",
+      "Windows",
+      "Arch",
+      "BibixProject",
+      "git",
+      "glob",
+      "env",
+      "currentEnv"
+    )
+    val graph = TasksGraph.fromScript(script, preloadedPluginNames, preludeNames)
     println(graph)
 
     println(dotGraphFrom(graph, source))
@@ -36,6 +53,7 @@ fun dotGraphFrom(graph: TasksGraph, source: String): String {
         is TargetNode -> "target\n$nodeSource"
         is ImportedTaskNode -> "imported(${node.remainingNames})\n$nodeSource"
         is VarNode -> "var\n$nodeSource"
+        is PreloadedPluginNode -> "preloaded ${node.name}"
         is PreludeTaskNode -> "prelude ${node.name}"
         is ImportInstanceNode -> "import instance\n$nodeSource"
       }
@@ -60,7 +78,23 @@ fun dotGraphFrom(graph: TasksGraph, source: String): String {
     }
 
     graph.edges.forEach { edge ->
-      writer.writeLine("${edge.start.toNodeId()} -> ${edge.end.toNodeId()};")
+      val edgeLabel = when (edge.edgeType) {
+        TaskEdgeType.Definition -> "def"
+        TaskEdgeType.ValueDependency -> "val"
+        TaskEdgeType.RuleDependency -> "rule"
+        TaskEdgeType.Reference -> "ref"
+        TaskEdgeType.ImportDependency -> "import"
+        TaskEdgeType.TypeDependency -> "type"
+        TaskEdgeType.ImportInstance -> "import"
+        TaskEdgeType.DefaultValueDependency -> "defval"
+      }
+      writer.writeLine("${edge.start.toNodeId()} -> ${edge.end.toNodeId()} [label=\"$edgeLabel\"];")
+    }
+
+    graph.varRedefs.forEach { (pluginId, varRedef) ->
+      varRedef.forEach { (varName, varRedefValue) ->
+        writer.writeLine("${pluginId.toNodeId()} -> ${varRedefValue.toNodeId()} [label=\"redef $varName\"];")
+      }
     }
   }
   writer.writeLine("}")

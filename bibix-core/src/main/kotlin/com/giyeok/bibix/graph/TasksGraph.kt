@@ -17,16 +17,33 @@ class TasksGraph(
   val edgesByEnd = edges.groupBy { it.end }
 
   companion object {
-    fun fromScript(script: BibixAst.BuildScript, preludeNames: Set<String>): TasksGraph {
+    fun fromScript(
+      script: BibixAst.BuildScript,
+      preloadedPluginNames: Set<String>,
+      preludeNames: Set<String>
+    ): TasksGraph {
       val nodeIdsMap = mutableMapOf<Int, BibixAst.AstNode>()
       traverseAst(script) { nodeIdsMap[it.nodeId] = it }
       val nameLookup = NameLookupTable.fromScript(script)
       val builder = Builder(nodeIdsMap, nameLookup)
       val rootNameScope = ScopedNameLookupTable(listOf(), nameLookup, null)
-      val nameLookupCtx = NameLookupContext(nameLookup, preludeNames, rootNameScope, mapOf())
-      builder.addDefs(script.defs, nameLookupCtx, true)
+      val nameLookupCtx =
+        NameLookupContext(nameLookup, preloadedPluginNames, preludeNames, rootNameScope)
+      val ctx = GraphBuildContext(nameLookupCtx, mapOf())
+      builder.addDefs(script.defs, ctx, true)
       return builder.build()
     }
+  }
+
+  data class GraphBuildContext(
+    val nameLookupCtx: NameLookupContext,
+    val varRedefsCtx: Map<TaskId, TaskId>,
+  ) {
+    fun withVarRedefsCtx(redefsCtx: Map<TaskId, TaskId>) =
+      copy(varRedefsCtx = varRedefsCtx + redefsCtx)
+
+    fun innerNamespace(namespaceName: String) =
+      copy(nameLookupCtx = nameLookupCtx.innerNamespace(namespaceName))
   }
 
   class Builder(
@@ -42,11 +59,16 @@ class TasksGraph(
 
     fun build() = TasksGraph(astNodes, nameLookup, nodes, edges, scriptVars, varRedefs)
 
-    fun addDefs(
-      defs: List<BibixAst.Def>,
-      nameLookupCtx: NameLookupContext,
-      isRoot: Boolean
-    ) {
+    fun addImportSource(source: BibixAst.Expr, ctx: GraphBuildContext): TaskId {
+      if (source is BibixAst.NameRef) {
+        if (source.name in ctx.nameLookupCtx.preloadedPluginNames) {
+          return addNode(PreloadedPluginNode(source.name))
+        }
+      }
+      return addExpr(source, ctx)
+    }
+
+    fun addDefs(defs: List<BibixAst.Def>, ctx: GraphBuildContext, isRoot: Boolean) {
       defs.forEach { def ->
         when (def) {
           is BibixAst.ImportDef -> {
@@ -54,24 +76,24 @@ class TasksGraph(
             val importNode = addNode(ImportNode(def))
             when (def) {
               is BibixAst.ImportAll -> {
-                val source = addExpr(def.source, nameLookupCtx)
+                val source = addImportSource(def.source, ctx)
                 addEdge(importNode, source, TaskEdgeType.ValueDependency)
               }
 
               is BibixAst.ImportFrom -> {
-                val source = addExpr(def.source, nameLookupCtx)
+                val source = addImportSource(def.source, ctx)
                 addEdge(importNode, source, TaskEdgeType.ValueDependency)
               }
             }
           }
 
           is BibixAst.NamespaceDef -> {
-            addDefs(def.body, nameLookupCtx.innerNamespace(def.name), false)
+            addDefs(def.body, ctx.innerNamespace(def.name), false)
           }
 
           is BibixAst.TargetDef -> {
             val targetNode = addNode(TargetNode(def))
-            val valueNode = addExpr(def.value, nameLookupCtx)
+            val valueNode = addExpr(def.value, ctx)
             addEdge(targetNode, valueNode, TaskEdgeType.Definition)
           }
 
@@ -95,11 +117,11 @@ class TasksGraph(
             check(isRoot) { "variable only can be defined in the root" }
             val varNode = addNode(VarNode(def))
             def.typ?.let { typ ->
-              val typeNode = addType(typ, nameLookupCtx)
+              val typeNode = addType(typ, ctx)
               addEdge(varNode, typeNode, TaskEdgeType.TypeDependency)
             }
             def.defaultValue?.let { defaultValue ->
-              val valueNode = addExpr(defaultValue, nameLookupCtx)
+              val valueNode = addExpr(defaultValue, ctx)
               addEdge(varNode, valueNode, TaskEdgeType.DefaultValueDependency)
             }
             check(def.name !in scriptVars)
@@ -108,7 +130,7 @@ class TasksGraph(
 
           is BibixAst.VarRedefs -> {
             check(isRoot) { "variable redefs must be in the root. Consider using with instead" }
-            compileVarRedefs(def.redefs, nameLookupCtx).forEach { (import, redefs) ->
+            compileVarRedefs(def.redefs, ctx).forEach { (import, redefs) ->
               val existingRedefs = this.varRedefs[import]
               if (existingRedefs == null) {
                 this.varRedefs[import] = redefs
@@ -138,7 +160,7 @@ class TasksGraph(
           }
 
           is BibixAst.DefsWithVarRedefs -> {
-            val varRedefs = compileVarRedefs(def.varRedefs, nameLookupCtx)
+            val varRedefs = compileVarRedefs(def.varRedefs, ctx)
             val importWithRedefs = varRedefs.map { (importNodeId, varRedefs) ->
               val importInstanceNode = addNode(ImportInstanceNode(importNodeId, varRedefs))
               addEdge(importInstanceNode, importNodeId, TaskEdgeType.ImportInstance)
@@ -153,20 +175,20 @@ class TasksGraph(
             }.toMap()
             println(varRedefs)
             println(importWithRedefs)
-            addDefs(def.defs, nameLookupCtx.withVarRedefsCtx(importWithRedefs), false)
+            addDefs(def.defs, ctx.withVarRedefsCtx(importWithRedefs), false)
           }
         }
       }
     }
 
-    fun compileVarRedefs(varRedefs: List<BibixAst.VarRedef>, nameLookupCtx: NameLookupContext) =
+    fun compileVarRedefs(varRedefs: List<BibixAst.VarRedef>, ctx: GraphBuildContext) =
       varRedefs.map { varRedef ->
-        val lookupResult = nameLookupCtx.lookupName(varRedef.nameTokens, varRedef)
+        val lookupResult = ctx.nameLookupCtx.lookupName(varRedef.nameTokens, varRedef)
         check(lookupResult is NameInImport)
         check(lookupResult.remaining.size == 1)
         val import = lookupResult.importEntry.id
         val redefVarName = lookupResult.remaining.first()
-        val redefValue = addExpr(varRedef.redefValue, nameLookupCtx)
+        val redefValue = addExpr(varRedef.redefValue, ctx)
         import to (redefVarName to redefValue)
       }.groupBy { it.first }.mapValues { (_, importAndRedefs) ->
         val redefs = importAndRedefs.map { it.second }
@@ -177,7 +199,7 @@ class TasksGraph(
     fun List<String>.hasNoDuplicate(): Boolean =
       this.toSet().size == this.size
 
-    fun addType(type: BibixAst.TypeExpr, nameLookupCtx: NameLookupContext): TaskId = TODO()
+    fun addType(type: BibixAst.TypeExpr, ctx: GraphBuildContext): TaskId = TODO()
 
     fun lookupResultToId(lookupResult: NameLookupResult, varRedefsCtx: Map<TaskId, TaskId>) =
       when (lookupResult) {
@@ -197,16 +219,22 @@ class TasksGraph(
         }
 
         is NameFromPrelude -> addNode(PreludeTaskNode(lookupResult.name))
+        is NameOfPreloadedPlugin ->
+          if (lookupResult.isPrelude) {
+            addNode(PreloadedPluginNode(lookupResult.name))
+          } else {
+            throw IllegalStateException("Name not found: ${lookupResult.name}")
+          }
 
         is NamespaceFound -> throw IllegalStateException("Name not found: ${lookupResult.name}")
       }
 
-    fun addExpr(expr: BibixAst.Expr, nameLookupCtx: NameLookupContext): TaskId = when (expr) {
-      is BibixAst.CastExpr -> addExpr(expr.expr, nameLookupCtx)
+    fun addExpr(expr: BibixAst.Expr, ctx: GraphBuildContext): TaskId = when (expr) {
+      is BibixAst.CastExpr -> addExpr(expr.expr, ctx)
       is BibixAst.MergeOp -> {
         val mergedNode = addNode(ExprNode(expr))
-        val lhsNode = addExpr(expr.lhs, nameLookupCtx)
-        val rhsNode = addExpr(expr.rhs, nameLookupCtx)
+        val lhsNode = addExpr(expr.lhs, ctx)
+        val rhsNode = addExpr(expr.rhs, ctx)
         addEdge(mergedNode, lhsNode, TaskEdgeType.ValueDependency)
         addEdge(mergedNode, rhsNode, TaskEdgeType.ValueDependency)
         mergedNode
@@ -215,15 +243,15 @@ class TasksGraph(
       is BibixAst.CallExpr -> {
         val calledNode = addNode(ExprNode(expr))
         val foundNode =
-          lookupResultToId(nameLookupCtx.lookupName(expr.name), nameLookupCtx.varRedefsCtx)
+          lookupResultToId(ctx.nameLookupCtx.lookupName(expr.name), ctx.varRedefsCtx)
         addEdge(calledNode, foundNode, TaskEdgeType.RuleDependency)
         expr.params.posParams.forEach { param ->
-          val paramNode = addExpr(param, nameLookupCtx)
+          val paramNode = addExpr(param, ctx)
           addEdge(calledNode, paramNode, TaskEdgeType.ValueDependency)
         }
         check(expr.params.namedParams.map { it.name }.hasNoDuplicate())
         expr.params.namedParams.forEach { (_, param) ->
-          val paramNode = addExpr(param, nameLookupCtx)
+          val paramNode = addExpr(param, ctx)
           addEdge(calledNode, paramNode, TaskEdgeType.ValueDependency)
         }
         calledNode
@@ -234,12 +262,12 @@ class TasksGraph(
         expr.elems.forEach { elem ->
           when (elem) {
             is BibixAst.EllipsisElem -> {
-              val elemNode = addExpr(elem.value, nameLookupCtx)
+              val elemNode = addExpr(elem.value, ctx)
               addEdge(listNode, elemNode, TaskEdgeType.ValueDependency)
             }
 
             is BibixAst.Expr -> {
-              val elemNode = addExpr(elem, nameLookupCtx)
+              val elemNode = addExpr(elem, ctx)
               addEdge(listNode, elemNode, TaskEdgeType.ValueDependency)
             }
           }
@@ -257,7 +285,7 @@ class TasksGraph(
             }
 
             is BibixAst.ComplexExpr -> {
-              val exprNode = addExpr(elem.expr, nameLookupCtx)
+              val exprNode = addExpr(elem.expr, ctx)
               addEdge(stringNode, exprNode, TaskEdgeType.ValueDependency)
             }
 
@@ -272,7 +300,7 @@ class TasksGraph(
 
       is BibixAst.MemberAccess -> {
         val accessNode = addNode(ExprNode(expr))
-        val targetNode = addExpr(expr.target, nameLookupCtx)
+        val targetNode = addExpr(expr.target, ctx)
         addEdge(accessNode, targetNode, TaskEdgeType.ValueDependency)
         accessNode
       }
@@ -280,7 +308,7 @@ class TasksGraph(
       is BibixAst.NameRef -> {
         val nameNode = addNode(ExprNode(expr))
         val referedNode =
-          lookupResultToId(nameLookupCtx.lookupName(expr), nameLookupCtx.varRedefsCtx)
+          lookupResultToId(ctx.nameLookupCtx.lookupName(expr), ctx.varRedefsCtx)
         addEdge(nameNode, referedNode, TaskEdgeType.Reference)
         nameNode
       }
@@ -288,18 +316,22 @@ class TasksGraph(
       is BibixAst.NamedTupleExpr -> {
         val tupleNode = addNode(ExprNode(expr))
         expr.elems.forEach { elem ->
-          val elemNode = addExpr(elem.expr, nameLookupCtx)
+          val elemNode = addExpr(elem.expr, ctx)
           addEdge(tupleNode, elemNode, TaskEdgeType.ValueDependency)
         }
         tupleNode
       }
 
-      is BibixAst.Paren -> addExpr(expr.expr, nameLookupCtx)
-      is BibixAst.This -> TODO()
+      is BibixAst.Paren -> addExpr(expr.expr, ctx)
+      is BibixAst.This -> {
+        // TODO this는 어떻게 처리하지? context에 뭔가 더 추가돼야될 듯 한데
+        addNode(ExprNode(expr))
+      }
+
       is BibixAst.TupleExpr -> {
         val tupleNode = addNode(ExprNode(expr))
         expr.elems.forEach { elem ->
-          val elemNode = addExpr(elem, nameLookupCtx)
+          val elemNode = addExpr(elem, ctx)
           addEdge(tupleNode, elemNode, TaskEdgeType.ValueDependency)
         }
         tupleNode
@@ -360,8 +392,12 @@ data class VarNode(val def: BibixAst.VarDef): TaskNode() {
   override val id: TaskId = TaskId(def.nodeId)
 }
 
+data class PreloadedPluginNode(val name: String): TaskNode() {
+  override val id: TaskId get() = TaskId(0, this)
+}
+
 data class PreludeTaskNode(val name: String): TaskNode() {
-  override val id: TaskId = TaskId(0, name)
+  override val id: TaskId = TaskId(0, this)
 }
 
 data class TaskEdge(val start: TaskId, val end: TaskId, val edgeType: TaskEdgeType)

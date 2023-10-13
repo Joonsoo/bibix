@@ -4,9 +4,9 @@ import com.giyeok.bibix.ast.BibixAst
 
 data class NameLookupContext(
   val table: NameLookupTable,
+  val preloadedPluginNames: Set<String>,
   val preludeNames: Set<String>,
   val currentScope: ScopedNameLookupTable,
-  val varRedefsCtx: Map<TaskId, TaskId>,
 ) {
   fun innerNamespace(namespaceName: String): NameLookupContext {
     // 현재 namespace scope 안에 `namespaceName`가 존재하는지 확인
@@ -14,14 +14,11 @@ data class NameLookupContext(
     checkNotNull(innerScope)
     return NameLookupContext(
       table,
+      preloadedPluginNames,
       preludeNames,
       ScopedNameLookupTable(currentScope.namePath + namespaceName, innerScope, currentScope),
-      varRedefsCtx
     )
   }
-
-  fun withVarRedefsCtx(redefsCtx: Map<TaskId, TaskId>) =
-    copy(varRedefsCtx = varRedefsCtx + redefsCtx)
 
   fun lookupName(tokens: List<String>, nameNode: BibixAst.AstNode? = null): NameLookupResult {
     check(tokens.isNotEmpty())
@@ -32,11 +29,16 @@ data class NameLookupContext(
     }
     if (current == null) {
       // 가장 상위 scope까지 확인해 봤는데도 이름이 없으면 prelude 이름에서 찾아봄
-      if (tokens.size == 1 && preludeNames.contains(tokens.first())) {
-        return NameFromPrelude(tokens.first())
-      } else {
-        throw NameNotFoundException(tokens, nameNode)
+      if (tokens.size == 1) {
+        val name = tokens.first()
+        if (preloadedPluginNames.contains(name)) {
+          return NameOfPreloadedPlugin(name, preludeNames.contains(name))
+        }
+        if (preludeNames.contains(name)) {
+          return NameFromPrelude(tokens.first())
+        }
       }
+      throw NameNotFoundException(tokens, nameNode)
     }
     return current.table.lookupName(tokens, nameNode)
   }

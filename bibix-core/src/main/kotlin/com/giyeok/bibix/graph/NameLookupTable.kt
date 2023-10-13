@@ -89,27 +89,6 @@ class NameLookupTable(
   }
 }
 
-sealed class NameEntry {
-  abstract val def: BibixAst.Def
-
-  val id: TaskId get() = TaskId(def.nodeId)
-}
-
-data class ImportNameEntry(override val def: BibixAst.ImportDef): NameEntry()
-data class TargetNameEntry(override val def: BibixAst.TargetDef): NameEntry()
-data class ActionNameEntry(override val def: BibixAst.ActionDef): NameEntry()
-data class ClassNameEntry(override val def: BibixAst.ClassDef): NameEntry()
-data class EnumNameEntry(override val def: BibixAst.EnumDef): NameEntry()
-data class VarNameEntry(override val def: BibixAst.VarDef): NameEntry()
-data class BuildRuleNameEntry(override val def: BibixAst.BuildRuleDef): NameEntry()
-data class ActionRuleNameEntry(override val def: BibixAst.ActionRuleDef): NameEntry()
-
-sealed class NameLookupResult
-data class NameEntryFound(val entry: NameEntry): NameLookupResult()
-data class NamespaceFound(val name: String, val context: BibixAst.AstNode?): NameLookupResult()
-data class NameInImport(val importEntry: NameEntry, val remaining: List<String>): NameLookupResult()
-data class NameFromPrelude(val name: String): NameLookupResult()
-
 data class NameNotFoundException(
   val nameTokens: List<String>,
   val nameNode: BibixAst.AstNode?
