@@ -1,12 +1,11 @@
 package com.giyeok.bibix.graph
 
-import com.giyeok.bibix.ast.BibixAst
 import com.giyeok.bibix.ast.BibixParser
 import com.giyeok.bibix.frontend.BuildFrontend
 import org.junit.jupiter.api.Test
 import kotlin.math.absoluteValue
 
-class TasksGraphTest {
+class TaskGraphTest {
   @Test
   fun test() {
     val source =
@@ -28,7 +27,7 @@ class TasksGraphTest {
       "env",
       "currentEnv"
     )
-    val graph = TasksGraph.fromScript(script, preloadedPluginNames, preludeNames)
+    val graph = TaskGraph.fromScript(script, preloadedPluginNames, preludeNames)
     println(graph)
 
     println(dotGraphFrom(graph, source))
@@ -40,7 +39,7 @@ fun String.indentWidth(): Int {
   return if (indent < 0) 0 else indent
 }
 
-fun dotGraphFrom(graph: TasksGraph, source: String): String {
+fun dotGraphFrom(graph: TaskGraph, source: String): String {
   val writer = CodeWriter()
   writer.writeLine("digraph tasks {")
   writer.indent {

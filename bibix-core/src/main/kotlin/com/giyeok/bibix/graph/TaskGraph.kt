@@ -3,9 +3,9 @@ package com.giyeok.bibix.graph
 import com.giyeok.bibix.ast.BibixAst
 
 
-// TasksGraph는 프로젝트 하나(즉 스크립트 하나)의 내용만 포함한다.
-// import해서 사용하는 다른 프로젝트의 def들은 별도의 TasksGraph로 관리한다.
-class TasksGraph(
+// TaskGraph는 프로젝트 하나(즉 스크립트 하나)의 내용만 포함한다.
+// import해서 사용하는 다른 프로젝트의 def들은 별도의 TaskGraph로 관리한다.
+class TaskGraph(
   val astNodes: Map<Int, BibixAst.AstNode>,
   val nameLookup: NameLookupTable,
   val nodes: Map<TaskId, TaskNode>,
@@ -21,7 +21,7 @@ class TasksGraph(
       script: BibixAst.BuildScript,
       preloadedPluginNames: Set<String>,
       preludeNames: Set<String>
-    ): TasksGraph {
+    ): TaskGraph {
       val nodeIdsMap = mutableMapOf<Int, BibixAst.AstNode>()
       traverseAst(script) { nodeIdsMap[it.nodeId] = it }
       val nameLookup = NameLookupTable.fromScript(script)
@@ -57,7 +57,7 @@ class TasksGraph(
     private val edgePairs: MutableMap<Pair<TaskId, TaskId>, TaskEdge> =
       edges.associateBy { Pair(it.start, it.end) }.toMutableMap()
 
-    fun build() = TasksGraph(astNodes, nameLookup, nodes, edges, scriptVars, varRedefs)
+    fun build() = TaskGraph(astNodes, nameLookup, nodes, edges, scriptVars, varRedefs)
 
     fun addImportSource(source: BibixAst.Expr, ctx: GraphBuildContext): TaskId {
       if (source is BibixAst.NameRef) {
@@ -230,111 +230,115 @@ class TasksGraph(
       }
 
     fun addExpr(expr: BibixAst.Expr, ctx: GraphBuildContext): TaskId = when (expr) {
-      is BibixAst.CastExpr -> addExpr(expr.expr, ctx)
+      is BibixAst.CastExpr -> {
+        val valueNode = addExpr(expr.expr, ctx)
+        val typeNode = addType(expr.castTo, ctx)
+        val exprNode = addNode(CastExprNode(expr, valueNode, typeNode))
+        addEdge(exprNode, valueNode, TaskEdgeType.ValueDependency)
+        addEdge(exprNode, typeNode, TaskEdgeType.TypeDependency)
+        exprNode
+      }
+
       is BibixAst.MergeOp -> {
-        val mergedNode = addNode(ExprNode(expr))
-        val lhsNode = addExpr(expr.lhs, ctx)
-        val rhsNode = addExpr(expr.rhs, ctx)
-        addEdge(mergedNode, lhsNode, TaskEdgeType.ValueDependency)
-        addEdge(mergedNode, rhsNode, TaskEdgeType.ValueDependency)
-        mergedNode
+        val lhs = addExpr(expr.lhs, ctx)
+        val rhs = addExpr(expr.rhs, ctx)
+        val exprNode = addNode(MergeExprNode(expr, lhs, rhs))
+        addEdge(exprNode, lhs, TaskEdgeType.ValueDependency)
+        addEdge(exprNode, rhs, TaskEdgeType.ValueDependency)
+        exprNode
       }
 
       is BibixAst.CallExpr -> {
-        val calledNode = addNode(ExprNode(expr))
-        val foundNode =
-          lookupResultToId(ctx.nameLookupCtx.lookupName(expr.name), ctx.varRedefsCtx)
-        addEdge(calledNode, foundNode, TaskEdgeType.RuleDependency)
-        expr.params.posParams.forEach { param ->
-          val paramNode = addExpr(param, ctx)
-          addEdge(calledNode, paramNode, TaskEdgeType.ValueDependency)
+        val rule = lookupResultToId(ctx.nameLookupCtx.lookupName(expr.name), ctx.varRedefsCtx)
+        val posParams = expr.params.posParams.map { param ->
+          addExpr(param, ctx)
         }
         check(expr.params.namedParams.map { it.name }.hasNoDuplicate())
-        expr.params.namedParams.forEach { (_, param) ->
-          val paramNode = addExpr(param, ctx)
-          addEdge(calledNode, paramNode, TaskEdgeType.ValueDependency)
+        val namedParams = expr.params.namedParams.associate { (name, param) ->
+          name to addExpr(param, ctx)
         }
-        calledNode
+        val exprNode = addNode(CallExprNode(expr, rule, posParams, namedParams))
+        addEdge(exprNode, rule, TaskEdgeType.RuleDependency)
+        posParams.forEach { addEdge(exprNode, it, TaskEdgeType.ValueDependency) }
+        namedParams.forEach { addEdge(exprNode, it.value, TaskEdgeType.ValueDependency) }
+        exprNode
       }
 
       is BibixAst.ListExpr -> {
-        val listNode = addNode(ExprNode(expr))
-        expr.elems.forEach { elem ->
+        val elems = expr.elems.map { elem ->
           when (elem) {
             is BibixAst.EllipsisElem -> {
-              val elemNode = addExpr(elem.value, ctx)
-              addEdge(listNode, elemNode, TaskEdgeType.ValueDependency)
+              ListExprNode.ListElem(addExpr(elem.value, ctx), true)
+//              addEdge(listNode, elemNode, TaskEdgeType.ValueDependency)
             }
 
             is BibixAst.Expr -> {
-              val elemNode = addExpr(elem, ctx)
-              addEdge(listNode, elemNode, TaskEdgeType.ValueDependency)
+              ListExprNode.ListElem(addExpr(elem, ctx), false)
+//              addEdge(listNode, elemNode, TaskEdgeType.ValueDependency)
             }
           }
         }
-        listNode
+        val exprNode = addNode(ListExprNode(expr, elems))
+        elems.forEach { addEdge(exprNode, it.valueNode, TaskEdgeType.ValueDependency) }
+        exprNode
       }
 
-      is BibixAst.BooleanLiteral, is BibixAst.NoneLiteral -> addNode(ExprNode(expr))
+      is BibixAst.BooleanLiteral -> addNode(LiteralNode(expr))
+      is BibixAst.NoneLiteral -> addNode(LiteralNode(expr))
+
       is BibixAst.StringLiteral -> {
-        val stringNode = addNode(ExprNode(expr))
-        expr.elems.forEach { elem ->
+        val exprElems = expr.elems.mapNotNull { elem ->
           when (elem) {
-            is BibixAst.EscapeChar, is BibixAst.JustChar -> {
-              // do nothing
-            }
+            is BibixAst.EscapeChar, is BibixAst.JustChar -> null
 
-            is BibixAst.ComplexExpr -> {
-              val exprNode = addExpr(elem.expr, ctx)
-              addEdge(stringNode, exprNode, TaskEdgeType.ValueDependency)
-            }
+            is BibixAst.ComplexExpr -> addExpr(elem.expr, ctx)
 
-            is BibixAst.SimpleExpr -> {
-              // TODO lookup
-              elem.name
-            }
+            is BibixAst.SimpleExpr ->
+              lookupResultToId(nameLookup.lookupName(listOf(elem.name), elem), ctx.varRedefsCtx)
           }
         }
-        stringNode
+        val exprNode = addNode(StringNode(expr, exprElems))
+        exprElems.forEach { addEdge(exprNode, it, TaskEdgeType.ValueDependency) }
+        exprNode
       }
 
       is BibixAst.MemberAccess -> {
-        val accessNode = addNode(ExprNode(expr))
-        val targetNode = addExpr(expr.target, ctx)
-        addEdge(accessNode, targetNode, TaskEdgeType.ValueDependency)
-        accessNode
+        val target = addExpr(expr.target, ctx)
+        val exprNode = addNode(MemberAccessNode(expr, target))
+        addEdge(exprNode, target, TaskEdgeType.ValueDependency)
+        exprNode
       }
 
       is BibixAst.NameRef -> {
-        val nameNode = addNode(ExprNode(expr))
         val referedNode =
           lookupResultToId(ctx.nameLookupCtx.lookupName(expr), ctx.varRedefsCtx)
-        addEdge(nameNode, referedNode, TaskEdgeType.Reference)
-        nameNode
+        val exprNode = addNode(NameRefNode(expr, referedNode))
+        addEdge(exprNode, referedNode, TaskEdgeType.Reference)
+        exprNode
       }
 
       is BibixAst.NamedTupleExpr -> {
-        val tupleNode = addNode(ExprNode(expr))
-        expr.elems.forEach { elem ->
-          val elemNode = addExpr(elem.expr, ctx)
-          addEdge(tupleNode, elemNode, TaskEdgeType.ValueDependency)
+        val elemNodes = expr.elems.map { elem ->
+          elem.name to addExpr(elem.expr, ctx)
         }
-        tupleNode
+        val exprNode = addNode(NamedTupleNode(expr, elemNodes))
+        elemNodes.forEach {
+          addEdge(exprNode, it.second, TaskEdgeType.ValueDependency)
+        }
+        exprNode
       }
 
       is BibixAst.Paren -> addExpr(expr.expr, ctx)
       is BibixAst.This -> {
         // TODO this는 어떻게 처리하지? context에 뭔가 더 추가돼야될 듯 한데
-        addNode(ExprNode(expr))
+        addNode(EtcExprNode(expr))
       }
 
       is BibixAst.TupleExpr -> {
-        val tupleNode = addNode(ExprNode(expr))
-        expr.elems.forEach { elem ->
-          val elemNode = addExpr(elem, ctx)
-          addEdge(tupleNode, elemNode, TaskEdgeType.ValueDependency)
-        }
-        tupleNode
+        val elemNodes = expr.elems.map { elem -> addExpr(elem, ctx) }
+        val exprNode = addNode(TupleNode(expr, elemNodes))
+        elemNodes.forEach { addEdge(exprNode, it, TaskEdgeType.ValueDependency) }
+        exprNode
       }
     }
 
@@ -362,49 +366,3 @@ class TasksGraph(
 // TasksGraph는 스크립트 내의 def들의 관계를 나타낼 뿐이고
 // 실제 해당 task가 어떻게 쓰이고 어떤 값으로 evaluate되는지는 다음 문제.
 data class TaskId(val nodeId: Int, val additionalId: Any? = null)
-
-sealed class TaskNode {
-  abstract val id: TaskId
-}
-
-data class ImportNode(val import: BibixAst.ImportDef): TaskNode() {
-  override val id: TaskId = TaskId(import.nodeId)
-}
-
-data class ImportedTaskNode(val importNode: TaskId, val remainingNames: List<String>): TaskNode() {
-  override val id: TaskId = TaskId(importNode.nodeId, Pair(importNode, remainingNames))
-}
-
-data class ImportInstanceNode(val importNode: TaskId, val varRedefs: Map<String, TaskId>):
-  TaskNode() {
-  override val id: TaskId = TaskId(importNode.nodeId, varRedefs)
-}
-
-data class TargetNode(val def: BibixAst.TargetDef): TaskNode() {
-  override val id: TaskId = TaskId(def.nodeId)
-}
-
-data class ExprNode(val expr: BibixAst.Expr): TaskNode() {
-  override val id: TaskId = TaskId(expr.nodeId)
-}
-
-data class VarNode(val def: BibixAst.VarDef): TaskNode() {
-  override val id: TaskId = TaskId(def.nodeId)
-}
-
-data class PreloadedPluginNode(val name: String): TaskNode() {
-  override val id: TaskId get() = TaskId(0, this)
-}
-
-data class PreludeTaskNode(val name: String): TaskNode() {
-  override val id: TaskId = TaskId(0, this)
-}
-
-data class TaskEdge(val start: TaskId, val end: TaskId, val edgeType: TaskEdgeType)
-
-enum class TaskEdgeType {
-  Definition, ValueDependency, RuleDependency, Reference, ImportDependency, TypeDependency, ImportInstance,
-
-  // default value는 evaluation할 때 빠질 수도 있다는 의미
-  DefaultValueDependency
-}
