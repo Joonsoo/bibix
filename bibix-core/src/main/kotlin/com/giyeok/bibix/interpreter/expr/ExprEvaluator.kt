@@ -46,6 +46,7 @@ class ExprEvaluator(
           listOf("buildrule") -> BuildRuleDefType
           listOf("actionrule") -> ActionRuleDefType
           listOf("type") -> TypeType
+          listOf("none") -> NoneType
           else -> {
             val (definition, _) = interpreter.lookupName(task, context, name)
             when (definition) {
@@ -75,7 +76,6 @@ class ExprEvaluator(
         }
       }
 
-      is BibixAst.NoneType -> NoneType
       is BibixAst.CollectionType -> {
         val typeParams = type.typeParams.params
         check(typeParams.size == 1) { "Invalid number of type parameters" }

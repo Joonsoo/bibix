@@ -72,7 +72,7 @@ class NameLookupTable(
         NameInImport(nameEntry, tokens.drop(1))
       } else {
         if (tokens.size != 1) {
-          throw NameNotFoundException(tokens, nameNode)
+          return NameNotFound(tokens, nameNode)
         }
         NameEntryFound(nameEntry)
       }
@@ -85,7 +85,7 @@ class NameLookupTable(
         ns.lookupName(tokens.drop(1), nameNode)
       }
     }
-    throw NameNotFoundException(tokens, nameNode)
+    return NameNotFound(tokens, nameNode)
   }
 }
 
@@ -98,4 +98,6 @@ data class NameNotFoundException(
   } else {
     "Name not found: ${nameTokens.joinToString(".")} at ${nameNode.start}..${nameNode.end}"
   }
-)
+) {
+  constructor(result: NameNotFound): this(result.nameTokens, result.nameNode)
+}

@@ -1,6 +1,7 @@
 package com.giyeok.bibix.graph
 
 import com.giyeok.bibix.ast.BibixAst
+import com.giyeok.bibix.base.*
 
 
 // TaskGraph는 프로젝트 하나(즉 스크립트 하나)의 내용만 포함한다.
@@ -37,10 +38,10 @@ class TaskGraph(
 
   data class GraphBuildContext(
     val nameLookupCtx: NameLookupContext,
-    val varRedefsCtx: Map<TaskId, TaskId>,
+    val importInstances: Map<TaskId, TaskId>,
   ) {
     fun withVarRedefsCtx(redefsCtx: Map<TaskId, TaskId>) =
-      copy(varRedefsCtx = varRedefsCtx + redefsCtx)
+      copy(importInstances = importInstances + redefsCtx)
 
     fun innerNamespace(namespaceName: String) =
       copy(nameLookupCtx = nameLookupCtx.innerNamespace(namespaceName))
@@ -85,6 +86,8 @@ class TaskGraph(
                 addEdge(importNode, source, TaskEdgeType.ValueDependency)
               }
             }
+            val defaultImportInstanceNode = addNode(ImportInstanceNode(importNode, mapOf()))
+            addEdge(defaultImportInstanceNode, importNode, TaskEdgeType.ImportInstance)
           }
 
           is BibixAst.NamespaceDef -> {
@@ -102,15 +105,40 @@ class TaskGraph(
           }
 
           is BibixAst.DataClassDef -> {
-            // TODO
+            val fieldTypes = def.fields.mapNotNull { field ->
+              field.typ?.let { field.name to addType(it, ctx) }
+            }.toMap()
+            val defaultValues = def.fields.mapNotNull { field ->
+              field.defaultValue?.let { field.name to addExpr(it, ctx) }
+            }.toMap()
+            val bodyElems = def.body.map { classElem ->
+              when (classElem) {
+                is BibixAst.ActionRuleDef -> TODO()
+                is BibixAst.ClassCastDef -> {
+                  val castTo = addType(classElem.castTo, ctx)
+                  val castExpr = addExpr(classElem.expr, ctx)
+                  addNode(ClassCastNode(classElem, castTo, castExpr))
+                }
+              }
+            }
+            val classNode = addNode(DataClassTypeNode(def, fieldTypes, defaultValues, bodyElems))
+            fieldTypes.forEach { addEdge(classNode, it.value, TaskEdgeType.TypeDependency) }
+            defaultValues.forEach { addEdge(classNode, it.value, TaskEdgeType.TypeDependency) }
+            bodyElems.forEach { addEdge(classNode, it, TaskEdgeType.ClassMember) }
           }
 
           is BibixAst.SuperClassDef -> {
-            // TODO
+            val subClasses = def.subs.associate { subClassName ->
+              val entry = nameLookup.names[subClassName]
+              check(entry is ClassNameEntry) { "Invalid subclass name" }
+              subClassName to TaskId(entry.def.nodeId)
+            }
+            val classNode = addNode(SuperClassTypeNode(def, subClasses))
+            subClasses.forEach { addEdge(classNode, it.value, TaskEdgeType.ClassInherit) }
           }
 
           is BibixAst.EnumDef -> {
-            // TODO
+            addNode(EnumTypeNode(def))
           }
 
           is BibixAst.VarDef -> {
@@ -152,7 +180,25 @@ class TaskGraph(
           }
 
           is BibixAst.BuildRuleDef -> {
-            // TODO
+            val paramTypes = def.params.associate { it.name to addType(checkNotNull(it.typ), ctx) }
+            val paramDefaultValues = def.params.mapNotNull { param ->
+              param.defaultValue?.let { param.name to addExpr(it, ctx) }
+            }.toMap()
+            val returnType = addType(def.returnType, ctx)
+            val implTarget = lookupResultToId(
+              nameLookup.lookupName(
+                def.impl.targetName.tokens,
+                def.impl.targetName
+              ), ctx.importInstances
+            )
+            val buildRule =
+              addNode(BuildRuleNode(def, paramTypes, paramDefaultValues, returnType, implTarget))
+            paramTypes.values.forEach { addEdge(buildRule, it, TaskEdgeType.TypeDependency) }
+            paramDefaultValues.values.forEach {
+              addEdge(buildRule, it, TaskEdgeType.DefaultValueDependency)
+            }
+            addEdge(buildRule, returnType, TaskEdgeType.TypeDependency)
+            addEdge(buildRule, implTarget, TaskEdgeType.ValueDependency)
           }
 
           is BibixAst.ActionRuleDef -> {
@@ -165,11 +211,7 @@ class TaskGraph(
               val importInstanceNode = addNode(ImportInstanceNode(importNodeId, varRedefs))
               addEdge(importInstanceNode, importNodeId, TaskEdgeType.ImportInstance)
               varRedefs.values.forEach {
-                addEdge(
-                  importInstanceNode,
-                  it,
-                  TaskEdgeType.ValueDependency
-                )
+                addEdge(importInstanceNode, it, TaskEdgeType.ValueDependency)
               }
               importNodeId to importInstanceNode
             }.toMap()
@@ -199,16 +241,70 @@ class TaskGraph(
     fun List<String>.hasNoDuplicate(): Boolean =
       this.toSet().size == this.size
 
-    fun addType(type: BibixAst.TypeExpr, ctx: GraphBuildContext): TaskId = TODO()
+    fun addType(type: BibixAst.TypeExpr, ctx: GraphBuildContext): TaskId =
+      when (type) {
+        is BibixAst.CollectionType -> {
+          val typeParams = type.typeParams.params.map { addType(it, ctx) }
+          val typeNode = addNode(CollectionTypeNode(type, typeParams))
+          typeParams.forEach { addEdge(typeNode, it, TaskEdgeType.TypeDependency) }
+          typeNode
+        }
 
-    fun lookupResultToId(lookupResult: NameLookupResult, varRedefsCtx: Map<TaskId, TaskId>) =
+        is BibixAst.Name -> {
+          val lookupResult = nameLookup.lookupName(type.tokens, type)
+          val referred = if (lookupResult is NameNotFound) {
+            val bibixType = when (type.tokens) {
+              listOf("any") -> AnyType
+              listOf("boolean") -> BooleanType
+              listOf("string") -> StringType
+              listOf("file") -> FileType
+              listOf("directory") -> DirectoryType
+              listOf("path") -> PathType
+              listOf("buildrule") -> BuildRuleDefType
+              listOf("actionrule") -> ActionRuleDefType
+              listOf("type") -> TypeType
+              listOf("none") -> NoneType
+              else -> throw NameNotFoundException(lookupResult)
+            }
+            addNode(BibixTypeNode(bibixType))
+          } else {
+            lookupResultToId(lookupResult, ctx.importInstances)
+          }
+          val nameNode = addNode(TypeNameNode(type))
+          addEdge(nameNode, referred, TaskEdgeType.TypeDependency)
+          nameNode
+        }
+
+        is BibixAst.TupleType -> {
+          val elemTypes = type.elems.map { addType(it, ctx) }
+          val tupleType = addNode(TupleTypeNode(type, elemTypes))
+          elemTypes.forEach { addEdge(tupleType, it, TaskEdgeType.TypeDependency) }
+          tupleType
+        }
+
+        is BibixAst.NamedTupleType -> {
+          val elemTypes = type.elems.associate { it.name to addType(it.typ, ctx) }
+          val namedTupleType = addNode(NamedTupleTypeNode(type, elemTypes))
+          elemTypes.forEach { addEdge(namedTupleType, it.value, TaskEdgeType.TypeDependency) }
+          namedTupleType
+        }
+
+        is BibixAst.UnionType -> {
+          val elemTypes = type.elems.map { addType(it, ctx) }
+          val unionType = addNode(UnionTypeNode(type, elemTypes))
+          elemTypes.forEach { addEdge(unionType, it, TaskEdgeType.TypeDependency) }
+          unionType
+        }
+      }
+
+    fun lookupResultToId(lookupResult: NameLookupResult, importInstances: Map<TaskId, TaskId>) =
       when (lookupResult) {
         is NameEntryFound -> lookupResult.entry.id
 
         is NameInImport -> {
-          val rawImportNode = lookupResult.importEntry.id
-          val redefedImportNode = varRedefsCtx[rawImportNode]
-          val importNode = redefedImportNode ?: rawImportNode
+          val importNode = importInstances[lookupResult.importEntry.id]
+            ?: addNode(ImportInstanceNode(lookupResult.importEntry.id, mapOf()))
+
           if (lookupResult.remaining.isEmpty()) {
             importNode
           } else {
@@ -227,6 +323,7 @@ class TaskGraph(
           }
 
         is NamespaceFound -> throw IllegalStateException("Name not found: ${lookupResult.name}")
+        is NameNotFound -> throw NameNotFoundException(lookupResult)
       }
 
     fun addExpr(expr: BibixAst.Expr, ctx: GraphBuildContext): TaskId = when (expr) {
@@ -249,7 +346,8 @@ class TaskGraph(
       }
 
       is BibixAst.CallExpr -> {
-        val rule = lookupResultToId(ctx.nameLookupCtx.lookupName(expr.name), ctx.varRedefsCtx)
+        val ruleOrClass =
+          lookupResultToId(ctx.nameLookupCtx.lookupName(expr.name), ctx.importInstances)
         val posParams = expr.params.posParams.map { param ->
           addExpr(param, ctx)
         }
@@ -257,8 +355,8 @@ class TaskGraph(
         val namedParams = expr.params.namedParams.associate { (name, param) ->
           name to addExpr(param, ctx)
         }
-        val exprNode = addNode(CallExprNode(expr, rule, posParams, namedParams))
-        addEdge(exprNode, rule, TaskEdgeType.RuleDependency)
+        val exprNode = addNode(CallExprNode(expr, ruleOrClass, posParams, namedParams))
+        addEdge(exprNode, ruleOrClass, TaskEdgeType.CalleeDependency)
         posParams.forEach { addEdge(exprNode, it, TaskEdgeType.ValueDependency) }
         namedParams.forEach { addEdge(exprNode, it.value, TaskEdgeType.ValueDependency) }
         exprNode
@@ -294,7 +392,7 @@ class TaskGraph(
             is BibixAst.ComplexExpr -> addExpr(elem.expr, ctx)
 
             is BibixAst.SimpleExpr ->
-              lookupResultToId(nameLookup.lookupName(listOf(elem.name), elem), ctx.varRedefsCtx)
+              lookupResultToId(nameLookup.lookupName(listOf(elem.name), elem), ctx.importInstances)
           }
         }
         val exprNode = addNode(StringNode(expr, exprElems))
@@ -311,7 +409,7 @@ class TaskGraph(
 
       is BibixAst.NameRef -> {
         val referedNode =
-          lookupResultToId(ctx.nameLookupCtx.lookupName(expr), ctx.varRedefsCtx)
+          lookupResultToId(ctx.nameLookupCtx.lookupName(expr), ctx.importInstances)
         val exprNode = addNode(NameRefNode(expr, referedNode))
         addEdge(exprNode, referedNode, TaskEdgeType.Reference)
         exprNode
@@ -361,8 +459,3 @@ class TaskGraph(
     }
   }
 }
-
-// TasksGraph에서 TaskId는 스크립트 내에서 해당 task가 정의된 위치로 정의된다.
-// TasksGraph는 스크립트 내의 def들의 관계를 나타낼 뿐이고
-// 실제 해당 task가 어떻게 쓰이고 어떤 값으로 evaluate되는지는 다음 문제.
-data class TaskId(val nodeId: Int, val additionalId: Any? = null)

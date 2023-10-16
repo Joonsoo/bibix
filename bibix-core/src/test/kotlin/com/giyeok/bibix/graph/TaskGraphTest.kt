@@ -47,7 +47,8 @@ fun dotGraphFrom(graph: TaskGraph, source: String): String {
       val astNode = graph.astNodes[id.nodeId]
       val nodeSource = astNode?.let { source.substring(it.start, it.end) }
       val nodeDescription = when (node) {
-        is ExprNode -> "expr\n$nodeSource"
+        is ExprNode<*> -> "expr\n$nodeSource"
+        is TypeNode<*> -> "type\n$nodeSource"
         is ImportNode -> "import\n$nodeSource"
         is TargetNode -> "target\n$nodeSource"
         is ImportedTaskNode -> "imported(${node.remainingNames})\n$nodeSource"
@@ -55,6 +56,12 @@ fun dotGraphFrom(graph: TaskGraph, source: String): String {
         is PreloadedPluginNode -> "preloaded ${node.name}"
         is PreludeTaskNode -> "prelude ${node.name}"
         is ImportInstanceNode -> "import instance\n$nodeSource"
+        is BuildRuleNode -> "buildrule\n$nodeSource"
+        is BibixTypeNode -> "bibixtype\n${node.bibixType}"
+        is DataClassTypeNode -> "class\n$nodeSource"
+        is SuperClassTypeNode -> "super class\n$nodeSource"
+        is EnumTypeNode -> "enum\n$nodeSource"
+        is ClassCastNode -> "class cast\n$nodeSource"
       }
       val lines = "${node.id.nodeId} $nodeDescription".lines()
       val linesTrimmed = if (lines.size <= 1) {
@@ -80,12 +87,14 @@ fun dotGraphFrom(graph: TaskGraph, source: String): String {
       val edgeLabel = when (edge.edgeType) {
         TaskEdgeType.Definition -> "def"
         TaskEdgeType.ValueDependency -> "val"
-        TaskEdgeType.RuleDependency -> "rule"
+        TaskEdgeType.CalleeDependency -> "rule"
         TaskEdgeType.Reference -> "ref"
         TaskEdgeType.ImportDependency -> "import"
         TaskEdgeType.TypeDependency -> "type"
         TaskEdgeType.ImportInstance -> "import"
         TaskEdgeType.DefaultValueDependency -> "defval"
+        TaskEdgeType.ClassInherit -> "inherit"
+        TaskEdgeType.ClassMember -> "member"
       }
       writer.writeLine("${edge.start.toNodeId()} -> ${edge.end.toNodeId()} [label=\"$edgeLabel\"];")
     }

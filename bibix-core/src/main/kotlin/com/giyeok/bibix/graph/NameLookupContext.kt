@@ -38,7 +38,7 @@ data class NameLookupContext(
           return NameFromPrelude(tokens.first())
         }
       }
-      throw NameNotFoundException(tokens, nameNode)
+      return NameNotFound(tokens, nameNode)
     }
     return current.table.lookupName(tokens, nameNode)
   }

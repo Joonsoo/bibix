@@ -190,10 +190,6 @@ fun traverseAst(ast: BibixAst.AstNode, visitor: (BibixAst.AstNode) -> Unit) {
       visitChild(ast.typ)
     }
 
-    is BibixAst.NoneType -> {
-      // do nothing
-    }
-
     is BibixAst.TupleType -> {
       ast.elems.forEach(visitChild)
     }

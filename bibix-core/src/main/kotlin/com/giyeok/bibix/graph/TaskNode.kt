@@ -1,9 +1,25 @@
 package com.giyeok.bibix.graph
 
 import com.giyeok.bibix.ast.BibixAst
+import com.giyeok.bibix.base.BibixType
+
+// TasksGraph에서 TaskId는 스크립트 내에서 해당 task가 정의된 위치로 정의된다.
+// TasksGraph는 스크립트 내의 def들의 관계를 나타낼 뿐이고
+// 실제 해당 task가 어떻게 쓰이고 어떤 값으로 evaluate되는지는 다음 문제.
+data class TaskId(val nodeId: Int, val additionalId: Any? = null)
 
 sealed class TaskNode {
   abstract val id: TaskId
+}
+
+data class BuildRuleNode(
+  val def: BibixAst.BuildRuleDef,
+  val paramTypes: Map<String, TaskId>,
+  val paramDefaultValues: Map<String, TaskId>,
+  val returnType: TaskId,
+  val implTarget: TaskId
+): TaskNode() {
+  override val id: TaskId = TaskId(def.nodeId)
 }
 
 data class ImportInstanceNode(val importNode: TaskId, val varRedefs: Map<String, TaskId>):
@@ -94,15 +110,75 @@ data class NamedTupleNode(
 
 data class EtcExprNode(val etcExpr: BibixAst.Expr): ExprNode<BibixAst.Expr>(etcExpr) {
   init {
-    check(etcExpr !is BibixAst.CallExpr)
+    check(etcExpr is BibixAst.NameRef)
   }
 }
 
 
+sealed class TypeNode<T: BibixAst.TypeExpr>(val typeExpr: T): TaskNode() {
+  override val id: TaskId = TaskId(typeExpr.nodeId)
+}
+
+data class DataClassTypeNode(
+  val defNode: BibixAst.DataClassDef,
+  val fieldTypes: Map<String, TaskId>,
+  val defaultValues: Map<String, TaskId>,
+  val elems: List<TaskId>
+): TaskNode() {
+  override val id: TaskId = TaskId(defNode.nodeId)
+}
+
+data class ClassCastNode(
+  val castDef: BibixAst.ClassCastDef,
+  val castType: TaskId,
+  val castExpr: TaskId
+): TaskNode() {
+  override val id: TaskId = TaskId(castDef.nodeId)
+}
+
+data class SuperClassTypeNode(
+  val defNode: BibixAst.SuperClassDef,
+  val subClasses: Map<String, TaskId>
+): TaskNode() {
+  override val id: TaskId = TaskId(defNode.nodeId)
+}
+
+data class EnumTypeNode(val defNode: BibixAst.EnumDef): TaskNode() {
+  override val id: TaskId = TaskId(defNode.nodeId)
+}
+
+data class CollectionTypeNode(
+  val collectionType: BibixAst.CollectionType,
+  val typeParams: List<TaskId>
+): TypeNode<BibixAst.CollectionType>(collectionType)
+
+data class TypeNameNode(val name: BibixAst.Name): TypeNode<BibixAst.Name>(name)
+
+data class BibixTypeNode(val bibixType: BibixType): TaskNode() {
+  override val id: TaskId = TaskId(0, bibixType)
+}
+
+data class TupleTypeNode(
+  val tupleType: BibixAst.TupleType,
+  val elems: List<TaskId>
+): TypeNode<BibixAst.TupleType>(tupleType)
+
+data class NamedTupleTypeNode(
+  val namedTupleType: BibixAst.NamedTupleType,
+  val elems: Map<String, TaskId>
+): TypeNode<BibixAst.NamedTupleType>(namedTupleType)
+
+data class UnionTypeNode(
+  val unionType: BibixAst.UnionType,
+  val elemTypes: List<TaskId>
+): TypeNode<BibixAst.UnionType>(unionType)
+
 data class TaskEdge(val start: TaskId, val end: TaskId, val edgeType: TaskEdgeType)
 
 enum class TaskEdgeType {
-  Definition, ValueDependency, RuleDependency, Reference, ImportDependency, TypeDependency, ImportInstance,
+  Definition, ValueDependency, CalleeDependency, Reference, ImportDependency, TypeDependency, ImportInstance,
+  ClassInherit,
+  ClassMember,
 
   // default value는 evaluation할 때 빠질 수도 있다는 의미
   DefaultValueDependency
