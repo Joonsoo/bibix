@@ -8,7 +8,10 @@ class NameLookupTable(
 ) {
   companion object {
     fun fromScript(script: BibixAst.BuildScript): NameLookupTable =
-      Builder(mutableMapOf(), mutableMapOf()).addDefs(script.defs).build()
+      fromDefs(script.defs)
+
+    fun fromDefs(defs: List<BibixAst.Def>): NameLookupTable =
+      Builder(mutableMapOf(), mutableMapOf()).addDefs(defs).build()
   }
 
   class Builder(

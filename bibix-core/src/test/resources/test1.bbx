@@ -1,6 +1,7 @@
 import maven
 from bibix.plugins import ktjvm
 from bibix.plugins import java
+import git("https://github.com/Joonsoo/jparser.git") as jparser
 
 abc = ktjvm.library(
   srcs = glob("srcs/**/*.kt"),
@@ -43,3 +44,11 @@ class MyClass2()
 enum MyEnum { A, B, C }
 
 yyy = MyClass("hello", MyClass2())
+
+zzz = jparser.generateParser("x.cdg")
+
+with jparser.grammarVersion = "1.2" {
+  zzz2 = jparser.generateParser("y.cdg")
+}
+
+zzzz = bibix.x86("123")

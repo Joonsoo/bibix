@@ -1,8 +1,12 @@
 package com.giyeok.bibix.graph
 
+import com.giyeok.bibix.ast.BibixAst
 import com.giyeok.bibix.ast.BibixParser
 import com.giyeok.bibix.frontend.BuildFrontend
+import com.giyeok.bibix.plugins.prelude.preludePlugin
+import com.giyeok.bibix.plugins.prelude.preludeSource
 import org.junit.jupiter.api.Test
+import java.lang.AssertionError
 import kotlin.math.absoluteValue
 
 class TaskGraphTest {
@@ -32,6 +36,12 @@ class TaskGraphTest {
 
     println(dotGraphFrom(graph, source))
   }
+
+  @Test
+  fun testPrelude() {
+    val preludeGraph = TaskGraph.fromDefs(preludePlugin.defs, setOf("bibix"), setOf("native"))
+    println(dotGraphFrom(preludeGraph, preludeSource))
+  }
 }
 
 fun String.indentWidth(): Int {
@@ -54,7 +64,9 @@ fun dotGraphFrom(graph: TaskGraph, source: String): String {
         is ImportedTaskNode -> "imported(${node.remainingNames})\n$nodeSource"
         is VarNode -> "var\n$nodeSource"
         is PreloadedPluginNode -> "preloaded ${node.name}"
+        is PreloadedPluginMemberNode -> "preloaded ${node.pluginName} ${node.remainingNames}"
         is PreludeTaskNode -> "prelude ${node.name}"
+        is PreludeMemberNode -> "prelude ${node.preludeName} ${node.remainingNames}"
         is ImportInstanceNode -> "import instance\n$nodeSource"
         is BuildRuleNode -> "buildrule\n$nodeSource"
         is BibixTypeNode -> "bibixtype\n${node.bibixType}"
@@ -87,7 +99,7 @@ fun dotGraphFrom(graph: TaskGraph, source: String): String {
       val edgeLabel = when (edge.edgeType) {
         TaskEdgeType.Definition -> "def"
         TaskEdgeType.ValueDependency -> "val"
-        TaskEdgeType.CalleeDependency -> "rule"
+        TaskEdgeType.CalleeDependency -> "callee"
         TaskEdgeType.Reference -> "ref"
         TaskEdgeType.ImportDependency -> "import"
         TaskEdgeType.TypeDependency -> "type"

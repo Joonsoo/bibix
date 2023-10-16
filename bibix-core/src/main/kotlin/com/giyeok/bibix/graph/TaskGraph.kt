@@ -22,16 +22,24 @@ class TaskGraph(
       script: BibixAst.BuildScript,
       preloadedPluginNames: Set<String>,
       preludeNames: Set<String>
+    ): TaskGraph = fromDefs(script.defs, preloadedPluginNames, preludeNames)
+
+    fun fromDefs(
+      defs: List<BibixAst.Def>,
+      preloadedPluginNames: Set<String>,
+      preludeNames: Set<String>
     ): TaskGraph {
       val nodeIdsMap = mutableMapOf<Int, BibixAst.AstNode>()
-      traverseAst(script) { nodeIdsMap[it.nodeId] = it }
-      val nameLookup = NameLookupTable.fromScript(script)
+      defs.forEach { def ->
+        traverseAst(def) { nodeIdsMap[it.nodeId] = it }
+      }
+      val nameLookup = NameLookupTable.fromDefs(defs)
       val builder = Builder(nodeIdsMap, nameLookup)
       val rootNameScope = ScopedNameLookupTable(listOf(), nameLookup, null)
       val nameLookupCtx =
         NameLookupContext(nameLookup, preloadedPluginNames, preludeNames, rootNameScope)
       val ctx = GraphBuildContext(nameLookupCtx, mapOf())
-      builder.addDefs(script.defs, ctx, true)
+      builder.addDefs(defs, ctx, true)
       return builder.build()
     }
   }
@@ -186,10 +194,8 @@ class TaskGraph(
             }.toMap()
             val returnType = addType(def.returnType, ctx)
             val implTarget = lookupResultToId(
-              nameLookup.lookupName(
-                def.impl.targetName.tokens,
-                def.impl.targetName
-              ), ctx.importInstances
+              ctx.nameLookupCtx.lookupName(def.impl.targetName.tokens, def.impl.targetName),
+              ctx.importInstances
             )
             val buildRule =
               addNode(BuildRuleNode(def, paramTypes, paramDefaultValues, returnType, implTarget))
@@ -314,13 +320,32 @@ class TaskGraph(
           }
         }
 
-        is NameFromPrelude -> addNode(PreludeTaskNode(lookupResult.name))
-        is NameOfPreloadedPlugin ->
-          if (lookupResult.isPrelude) {
+        is NameFromPrelude -> {
+          val preludeNode = addNode(PreludeTaskNode(lookupResult.name))
+          if (lookupResult.remaining.isEmpty()) {
+            preludeNode
+          } else {
+            val importedName = addNode(PreludeMemberNode(lookupResult.name, lookupResult.remaining))
+            addEdge(importedName, preludeNode, TaskEdgeType.ImportDependency)
+            importedName
+          }
+        }
+
+        is NameOfPreloadedPlugin -> {
+          val pluginNode = if (lookupResult.isPrelude) {
             addNode(PreloadedPluginNode(lookupResult.name))
           } else {
             throw IllegalStateException("Name not found: ${lookupResult.name}")
           }
+          if (lookupResult.remaining.isEmpty()) {
+            pluginNode
+          } else {
+            val importedName =
+              addNode(PreloadedPluginMemberNode(lookupResult.name, lookupResult.remaining))
+            addEdge(importedName, pluginNode, TaskEdgeType.ImportDependency)
+            importedName
+          }
+        }
 
         is NamespaceFound -> throw IllegalStateException("Name not found: ${lookupResult.name}")
         is NameNotFound -> throw NameNotFoundException(lookupResult)
@@ -346,7 +371,8 @@ class TaskGraph(
       }
 
       is BibixAst.CallExpr -> {
-        val ruleOrClass =
+        // callee는 rule 혹은 dependency
+        val callee =
           lookupResultToId(ctx.nameLookupCtx.lookupName(expr.name), ctx.importInstances)
         val posParams = expr.params.posParams.map { param ->
           addExpr(param, ctx)
@@ -355,8 +381,8 @@ class TaskGraph(
         val namedParams = expr.params.namedParams.associate { (name, param) ->
           name to addExpr(param, ctx)
         }
-        val exprNode = addNode(CallExprNode(expr, ruleOrClass, posParams, namedParams))
-        addEdge(exprNode, ruleOrClass, TaskEdgeType.CalleeDependency)
+        val exprNode = addNode(CallExprNode(expr, callee, posParams, namedParams))
+        addEdge(exprNode, callee, TaskEdgeType.CalleeDependency)
         posParams.forEach { addEdge(exprNode, it, TaskEdgeType.ValueDependency) }
         namedParams.forEach { addEdge(exprNode, it.value, TaskEdgeType.ValueDependency) }
         exprNode

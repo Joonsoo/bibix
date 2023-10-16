@@ -3,8 +3,7 @@ package com.giyeok.bibix.plugins.prelude
 import com.giyeok.bibix.plugins.PluginInstanceProvider
 import com.giyeok.bibix.plugins.PreloadedPlugin
 
-val preludePlugin = PreloadedPlugin.fromScript(
-  "com.giyeok.bibix.prelude",
+val preludeSource =
   // import bibix는 main script에서 별도로 "import bibix" 하지 않아도 bibix를 쓸 수 있도록 하기 위한 것
   """
     import bibix
@@ -24,7 +23,7 @@ val preludePlugin = PreloadedPlugin.fromScript(
     }
     
     class BibixProject(projectRoot: directory, scriptName?: string)
-    
+
     def git(
       url: string,
       tag?: string,
@@ -41,7 +40,10 @@ val preludePlugin = PreloadedPlugin.fromScript(
     env = currentEnv()
     
     def currentEnv(): Env = native:com.giyeok.bibix.plugins.prelude.CurrentEnv
-  """.trimIndent(),
+  """.trimIndent()
+val preludePlugin = PreloadedPlugin.fromScript(
+  "com.giyeok.bibix.prelude",
+  preludeSource,
   PluginInstanceProvider(
     Glob::class.java,
     Git::class.java,

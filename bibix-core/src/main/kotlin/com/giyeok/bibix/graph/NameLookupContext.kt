@@ -29,14 +29,11 @@ data class NameLookupContext(
     }
     if (current == null) {
       // 가장 상위 scope까지 확인해 봤는데도 이름이 없으면 prelude 이름에서 찾아봄
-      if (tokens.size == 1) {
-        val name = tokens.first()
-        if (preloadedPluginNames.contains(name)) {
-          return NameOfPreloadedPlugin(name, preludeNames.contains(name))
-        }
-        if (preludeNames.contains(name)) {
-          return NameFromPrelude(tokens.first())
-        }
+      if (preloadedPluginNames.contains(firstToken)) {
+        return NameOfPreloadedPlugin(firstToken, preludeNames.contains(firstToken), tokens.drop(1))
+      }
+      if (preludeNames.contains(firstToken)) {
+        return NameFromPrelude(tokens.first(), tokens.drop(1))
       }
       return NameNotFound(tokens, nameNode)
     }

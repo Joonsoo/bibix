@@ -39,7 +39,17 @@ data class PreloadedPluginNode(val name: String): TaskNode() {
   override val id: TaskId get() = TaskId(0, this)
 }
 
+data class PreloadedPluginMemberNode(val pluginName: String, val remainingNames: List<String>):
+  TaskNode() {
+  override val id: TaskId = TaskId(0, this)
+}
+
 data class PreludeTaskNode(val name: String): TaskNode() {
+  override val id: TaskId = TaskId(0, this)
+}
+
+data class PreludeMemberNode(val preludeName: String, val remainingNames: List<String>):
+  TaskNode() {
   override val id: TaskId = TaskId(0, this)
 }
 
