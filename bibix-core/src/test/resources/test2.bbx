@@ -1,0 +1,13 @@
+from bibix.plugins import ktjvm
+
+impl = ktjvm.library(srcs=glob("src/**/*.kt"))
+
+def abc(x: file) = impl:com.giyeok.bibix.Test
+
+class MyClass(a: file) {
+  as file = this.a
+}
+
+xxx = abc(
+  x=MyClass("hello.pbtxt")
+)

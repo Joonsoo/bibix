@@ -101,12 +101,15 @@ data class StringNode(
 data class MemberAccessNode(
   val memberAccessExpr: BibixAst.MemberAccess,
   val target: TaskId,
+  val memberNames: List<String>,
 ): ExprNode<BibixAst.MemberAccess>(memberAccessExpr)
 
 data class NameRefNode(
   val nameRefExpr: BibixAst.NameRef,
   val valueNode: TaskId
 ): ExprNode<BibixAst.NameRef>(nameRefExpr)
+
+data class ThisRefNode(val thisExpr: BibixAst.This): ExprNode<BibixAst.This>(thisExpr)
 
 data class TupleNode(
   val tupleExpr: BibixAst.TupleExpr,
@@ -117,12 +120,6 @@ data class NamedTupleNode(
   val namedTupleExpr: BibixAst.NamedTupleExpr,
   val elemNodes: List<Pair<String, TaskId>>,
 ): ExprNode<BibixAst.NamedTupleExpr>(namedTupleExpr)
-
-data class EtcExprNode(val etcExpr: BibixAst.Expr): ExprNode<BibixAst.Expr>(etcExpr) {
-  init {
-    check(etcExpr is BibixAst.NameRef)
-  }
-}
 
 
 sealed class TypeNode<T: BibixAst.TypeExpr>(val typeExpr: T): TaskNode() {
@@ -191,5 +188,8 @@ enum class TaskEdgeType {
   ClassMember,
 
   // default value는 evaluation할 때 빠질 수도 있다는 의미
-  DefaultValueDependency
+  DefaultValueDependency,
+
+  // OverridingValueDependency는 global edge에만 올 수 있음
+  OverridingValueDependency
 }

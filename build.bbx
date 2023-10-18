@@ -13,12 +13,14 @@ import git("https://github.com/Joonsoo/jparser.git") as jparser
 var java.jdkVersion = "19"
 var java.srcVersion = "19"
 var java.outVersion = "19"
-var ktjvm.compilerVersion = "1.9.10"
-var ktjvm.sdkVersion = "1.9.10"
+kotlinVersion = "1.8.10"
+var ktjvm.compilerVersion = kotlinVersion
+var ktjvm.sdkVersion = kotlinVersion
 var ktjvm.outVersion = "19"
 
 bibixVersion = "0.5.4"
 
+xx = base.proto.schema
 base {
   proto {
     schema = protobuf.schema(glob("bibix-base/src/proto/*.proto"))
@@ -219,10 +221,6 @@ jparserDeps = [
   jvm.lib("lib/jparser-ktlib-0.5.0.jar"),
   jvm.lib("lib/jparser-ktparser-0.5.0.jar"),
 ]
-
-kotlinVersion = "1.8.10"
-var ktjvm.compilerVersion = kotlinVersion
-var ktjvm.sdkVersion = kotlinVersion
 
 kotlinxCoroutinesVersion = "1.7.3"
 kotlinxCoroutinesDeps = [
