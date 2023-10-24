@@ -19,10 +19,10 @@ class TaskGraphBuilder(
   fun addImportSource(source: BibixAst.Expr, ctx: GraphBuildContext): TaskId {
     if (source is BibixAst.NameRef) {
       if (source.name in ctx.nameLookupCtx.preloadedPluginNames) {
-        val ref = addNode(PreloadedPluginNode(source.name))
-        val nameNode = addNode(NameRefNode(source, ref))
-        addEdge(nameNode, ref, TaskEdgeType.ValueDependency)
-        return nameNode
+        return addNode(PreloadedPluginNode(source.name))
+//        val nameNode = addNode(NameRefNode(source, ref))
+//        addEdge(nameNode, ref, TaskEdgeType.ValueDependency)
+//        return nameNode
       }
     }
     return addExpr(source, ctx)
@@ -33,19 +33,13 @@ class TaskGraphBuilder(
       when (def) {
         is BibixAst.ImportDef -> {
           check(isRoot) { "import must be in the root" }
-          val importNode = addNode(ImportNode(def))
-          when (def) {
-            is BibixAst.ImportAll -> {
-              val source = addImportSource(def.source, ctx)
-              addEdge(importNode, source, TaskEdgeType.ValueDependency)
-            }
-
-            is BibixAst.ImportFrom -> {
-              val source = addImportSource(def.source, ctx)
-              addEdge(importNode, source, TaskEdgeType.ValueDependency)
-            }
+          val source = when (def) {
+            is BibixAst.ImportAll -> addImportSource(def.source, ctx)
+            is BibixAst.ImportFrom -> addImportSource(def.source, ctx)
           }
-          val defaultImportInstanceNode = addNode(ImportInstanceNode(importNode, mapOf()))
+          val importNode = addNode(ImportNode(def, source))
+          addEdge(importNode, source, TaskEdgeType.ValueDependency)
+          val defaultImportInstanceNode = addNode(ImportInstanceNode(importNode, null, mapOf()))
           addEdge(defaultImportInstanceNode, importNode, TaskEdgeType.ImportInstance)
         }
 
@@ -172,10 +166,10 @@ class TaskGraphBuilder(
         is BibixAst.DefsWithVarRedefs -> {
           val varRedefs = compileVarRedefs(def.varRedefs, ctx)
           val importWithRedefs = varRedefs.map { (importNodeId, varRedefs) ->
-            val importInstanceNode = addNode(ImportInstanceNode(importNodeId, varRedefs))
+            val importInstanceNode = addNode(ImportInstanceNode(importNodeId, def, varRedefs))
             addEdge(importInstanceNode, importNodeId, TaskEdgeType.ImportInstance)
             varRedefs.values.forEach {
-              addEdge(importInstanceNode, it, TaskEdgeType.ValueDependency)
+              addEdge(importInstanceNode, it, TaskEdgeType.DefaultValueDependency)
             }
             importNodeId to importInstanceNode
           }.toMap()
@@ -272,7 +266,7 @@ class TaskGraphBuilder(
 
       is NameInImport -> {
         val importNode = importInstances[lookupResult.importEntry.id]
-          ?: addNode(ImportInstanceNode(lookupResult.importEntry.id, mapOf()))
+          ?: addNode(ImportInstanceNode(lookupResult.importEntry.id, null, mapOf()))
 
         if (lookupResult.remaining.isEmpty()) {
           importNode
@@ -300,12 +294,14 @@ class TaskGraphBuilder(
         } else {
           throw IllegalStateException("Name not found: ${lookupResult.name}")
         }
+        val pluginInstanceNode = importInstances[pluginNode]
+          ?: addNode(ImportInstanceNode(pluginNode, null, mapOf()))
+        addEdge(pluginInstanceNode, pluginNode, TaskEdgeType.ImportDependency)
         if (lookupResult.remaining.isEmpty()) {
-          pluginNode
+          pluginInstanceNode
         } else {
-          val importedName =
-            addNode(PreloadedPluginMemberNode(lookupResult.name, lookupResult.remaining))
-          addEdge(importedName, pluginNode, TaskEdgeType.ImportDependency)
+          val importedName = addNode(MemberAccessNode(pluginInstanceNode, lookupResult.remaining))
+          addEdge(importedName, pluginInstanceNode, TaskEdgeType.ImportDependency)
           importedName
         }
       }
@@ -419,12 +415,12 @@ class TaskGraphBuilder(
         if (firstTarget == null) {
           val lookupResult = ctx.nameLookupCtx.lookupName(memberNames, expr)
           val firstTargetNode = lookupResultToId(lookupResult, ctx.importInstances)
-          val exprNode = addNode(MemberAccessNode(expr, firstTargetNode, listOf()))
+          val exprNode = addNode(MemberAccessExprNode(expr, firstTargetNode, listOf()))
           addEdge(exprNode, firstTargetNode, TaskEdgeType.ValueDependency)
           exprNode
         } else {
           val target = addExpr(firstTarget, ctx)
-          val exprNode = addNode(MemberAccessNode(expr, target, memberNames))
+          val exprNode = addNode(MemberAccessExprNode(expr, target, memberNames))
           addEdge(exprNode, target, TaskEdgeType.ValueDependency)
           exprNode
         }

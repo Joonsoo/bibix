@@ -13,14 +13,22 @@ import kotlin.io.path.readText
 class GlobalTaskGraph private constructor(
   val projectLocations: BiMap<Int, BibixProjectLocation>,
   val projectGraphs: MutableMap<Int, TaskGraph>,
+  val projectSources: MutableMap<Int, String>,
   val globalEdges: MutableList<GlobalTaskEdge>,
 ) {
   constructor(
-    projects: Map<Int, Pair<BibixProjectLocation, TaskGraph>>,
+    projects: Map<Int, ProjectInfo>,
   ): this(
-    HashBiMap.create(projects.mapValues { it.value.first }),
-    projects.mapValues { it.value.second }.toMutableMap(),
+    HashBiMap.create(projects.mapValues { it.value.location }),
+    projects.mapValues { it.value.graph }.toMutableMap(),
+    projects.mapValues { it.value.scriptSource }.toMutableMap(),
     mutableListOf()
+  )
+
+  data class ProjectInfo(
+    val location: BibixProjectLocation,
+    val scriptSource: String,
+    val graph: TaskGraph,
   )
 
   private val edgesByStart =
@@ -28,17 +36,19 @@ class GlobalTaskGraph private constructor(
   private val edgesByEnd =
     mutableMapOf<GlobalTaskId, MutableMap<Pair<GlobalTaskId, GlobalTaskId>, GlobalTaskEdge>>()
 
-  fun addProject(projectId: Int, location: BibixProjectLocation, graph: TaskGraph) {
+  fun addProject(projectId: Int, location: BibixProjectLocation, graph: TaskGraph, source: String) {
     check(projectId !in projectGraphs)
     check(!projectLocations.containsValue(location))
     projectLocations[projectId] = location
     projectGraphs[projectId] = graph
+    projectSources[projectId] = source
   }
 
   // prelude, preloaded 플러그인도 일종의 프로젝트. 그들은 location은 없음
-  fun addProject(projectId: Int, graph: TaskGraph) {
+  fun addProject(projectId: Int, graph: TaskGraph, source: String) {
     check(projectId !in projectGraphs)
     projectGraphs[projectId] = graph
+    projectSources[projectId] = source
   }
 
   fun getProject(projectId: Int): TaskGraph =
@@ -65,10 +75,11 @@ class GlobalTaskGraph private constructor(
     byEndMap[edge.pair] = edge
   }
 
-  fun getNode(node: GlobalTaskId): TaskNode {
-    val project = getProject(node.projectInstanceId.projectId)
-    return project.nodes[node.taskId]
-      ?: throw IllegalStateException()
+  fun getNode(node: GlobalTaskId): TaskNode = getNode(node.projectInstanceId, node.taskId)
+
+  fun getNode(projectInstanceId: ProjectInstanceId, taskId: TaskId): TaskNode {
+    val project = getProject(projectInstanceId.projectId)
+    return project.nodes[taskId] ?: throw IllegalStateException()
   }
 
   fun edgesByStart(node: GlobalTaskId): Set<GlobalTaskEdge> {
@@ -138,8 +149,8 @@ data class BibixProjectLocation(val projectRoot: Path, val scriptName: String) {
 
 // A 프로젝트의 import instance node X -> import node Y. Y가 import하는 프로젝트가 B이면:
 // ImportInstanceId(Y, ImporterId(A, X))
-data class ImporterId(val importerProjectId: Int, val importInstanceTaskId: TaskId)
-data class ImportInstanceId(val projectId: Int, val importer: ImporterId)
+//data class ImporterId(val importer: ProjectInstanceId, val importTaskId: TaskId)
+//data class ImportInstanceId(val projectId: Int, val importer: ImporterId)
 
 sealed class ProjectInstanceId {
   abstract val projectId: Int
@@ -149,9 +160,10 @@ data object MainProjectId: ProjectInstanceId() {
   override val projectId: Int = 1
 }
 
-data class ImportedProjectId(val importInstanceId: ImportInstanceId): ProjectInstanceId() {
-  override val projectId: Int = importInstanceId.projectId
-}
+data class ImportedProjectId(
+  override val projectId: Int,
+  val importer: GlobalTaskId
+): ProjectInstanceId()
 
 data class GlobalTaskId(val projectInstanceId: ProjectInstanceId, val taskId: TaskId)
 

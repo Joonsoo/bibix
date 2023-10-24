@@ -1,10 +1,7 @@
 package com.giyeok.bibix.graph
 
 import com.giyeok.bibix.frontend.BuildFrontend
-import com.giyeok.bibix.graph.runner.BibixProjectLocation
-import com.giyeok.bibix.graph.runner.MainProjectId
-import com.giyeok.bibix.graph.runner.GlobalTaskId
-import com.giyeok.bibix.graph.runner.GlobalTaskRunner
+import com.giyeok.bibix.graph.runner.*
 import com.giyeok.bibix.plugins.prelude.preludePlugin
 import kotlinx.coroutines.*
 import org.junit.jupiter.api.Test
@@ -22,19 +19,36 @@ class GlobalTaskGraphTest {
         BuildFrontend.defaultPreloadedPlugins
       )
 
-      println(runner)
+      println(dotGraphFrom(runner))
+      println()
 
-      val targetTask = runner.getMainProjectTaskId("xyz")
+      val targetTask = runner.getMainProjectTaskId("abc")
 
       val job = CoroutineScope(Executors.newFixedThreadPool(4).asCoroutineDispatcher()).async {
         val depsGraph = runner.globalGraph.depsGraphFrom(setOf(targetTask))
-        for (nextNode in depsGraph.readyIds) {
-          runner.memoEvaluateNode(nextNode)
-          depsGraph.finishNode(nextNode)
-          if (depsGraph.isDone()) {
-            break
+        for (nextNode in depsGraph.nextNodeIds) {
+          when (val taskRunResult = runner.runTask(nextNode)) {
+            is GlobalTaskRunner.TaskRunResult.UnfulfilledPrerequisites -> {
+              val prerequisiteEdges = taskRunResult.prerequisites.map { (end, type) ->
+                GlobalTaskEdge(nextNode, end, type)
+              }
+              depsGraph.addEdges(prerequisiteEdges)
+            }
+
+            is GlobalTaskRunner.TaskRunResult.ImmediateResult -> {
+              taskRunResult.result
+              depsGraph.finishNode(nextNode)
+            }
+
+            is GlobalTaskRunner.TaskRunResult.LongRunningResult -> {
+              launch {
+                taskRunResult.runner()
+                depsGraph.finishNode(nextNode)
+              }
+            }
           }
         }
+        check(depsGraph.isDone())
         println(depsGraph)
       }
       job.await()

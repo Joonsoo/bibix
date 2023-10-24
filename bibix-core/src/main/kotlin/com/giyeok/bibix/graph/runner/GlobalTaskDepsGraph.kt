@@ -56,7 +56,7 @@ class GlobalTaskDepsGraph(
   private val ready = Channel<GlobalTaskId>(Channel.UNLIMITED)
 
   // readyIds = ready의 read-only 버전
-  val readyIds: ReceiveChannel<GlobalTaskId> = ready
+  val nextNodeIds: ReceiveChannel<GlobalTaskId> = ready
 
   init {
     nodes.filter { (depsCounts[it] ?: 0) == 0 }.forEach {
@@ -85,6 +85,8 @@ class GlobalTaskDepsGraph(
     }
     if (endIsReady) {
       ready.send(edge.start)
+    } else if (isDone()) {
+      ready.close()
     }
   }
 
@@ -100,5 +102,9 @@ class GlobalTaskDepsGraph(
 
   suspend fun isDone() = mutex.withLock {
     edges.size == finishedEdges.size
+  }
+
+  suspend fun addEdges(newEdges: List<GlobalTaskEdge>): Boolean {
+    return false
   }
 }

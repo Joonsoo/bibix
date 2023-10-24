@@ -26,26 +26,34 @@ data class NativeImplNode(val implTargetName: BibixAst.Name): TaskNode() {
   override val id: TaskId = TaskId(implTargetName.nodeId)
 }
 
-data class ImportInstanceNode(val importNode: TaskId, val varRedefs: Map<String, TaskId>):
-  TaskNode() {
-  override val id: TaskId = TaskId(importNode.nodeId, varRedefs)
+data class ImportInstanceNode(
+  val importNode: TaskId,
+  val withDef: BibixAst.DefsWithVarRedefs?,
+  val varRedefs: Map<String, TaskId>
+): TaskNode() {
+  override val id: TaskId =
+    TaskId(importNode.nodeId, Pair(importNode.additionalId, withDef?.nodeId ?: 0))
 }
 
-data class ImportNode(val import: BibixAst.ImportDef): TaskNode() {
+data class ImportNode(val import: BibixAst.ImportDef, val importSource: TaskId): TaskNode() {
   override val id: TaskId = TaskId(import.nodeId)
 }
 
-data class ImportedTaskNode(val importNode: TaskId, val remainingNames: List<String>): TaskNode() {
-  override val id: TaskId = TaskId(importNode.nodeId, Pair(importNode, remainingNames))
+data class ImportedTaskNode(
+  val importInstanceNode: TaskId,
+  val remainingNames: List<String>
+): TaskNode() {
+  override val id =
+    TaskId(importInstanceNode.nodeId, Pair(importInstanceNode.additionalId, remainingNames))
 }
 
 data class PreloadedPluginNode(val name: String): TaskNode() {
-  override val id: TaskId get() = TaskId(0, this)
+  override val id: TaskId = TaskId(0, this)
 }
 
-data class PreloadedPluginMemberNode(val pluginName: String, val remainingNames: List<String>):
+data class MemberAccessNode(val target: TaskId, val remainingNames: List<String>):
   TaskNode() {
-  override val id: TaskId = TaskId(0, this)
+  override val id: TaskId = TaskId(target.nodeId, Pair(target.additionalId, remainingNames))
 }
 
 data class PreludeTaskNode(val name: String): TaskNode() {
@@ -108,7 +116,7 @@ data class StringNode(
   val exprElems: List<TaskId>
 ): ExprNode<BibixAst.StringLiteral>(stringExpr)
 
-data class MemberAccessNode(
+data class MemberAccessExprNode(
   val memberAccessExpr: BibixAst.MemberAccess,
   val target: TaskId,
   val memberNames: List<String>,

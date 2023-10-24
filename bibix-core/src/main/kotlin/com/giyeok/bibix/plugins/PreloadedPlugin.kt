@@ -8,6 +8,7 @@ data class PreloadedPlugin(
   val packageName: String,
   val defs: List<BibixAst.Def>,
   val pluginInstanceProvider: PluginInstanceProvider,
+  val script: String,
 ) {
   companion object {
     fun fromScript(
@@ -22,7 +23,7 @@ data class PreloadedPlugin(
 
         throw IllegalStateException("Failed to parse build script at line $lines: ${e.message} (packageName=$packageName)")
       }
-      return PreloadedPlugin(packageName, parsed.defs, pluginInstanceProvider)
+      return PreloadedPlugin(packageName, parsed.defs, pluginInstanceProvider, script)
     }
   }
 }

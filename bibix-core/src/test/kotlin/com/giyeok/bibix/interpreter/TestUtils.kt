@@ -17,7 +17,7 @@ fun testInterpreter(
   fs: FileSystem,
   mainPath: String,
   preloadedPlugins: Map<String, PreloadedPlugin>,
-  preludePlugin: PreloadedPlugin = PreloadedPlugin("", listOf(), PluginInstanceProvider()),
+  preludePlugin: PreloadedPlugin = PreloadedPlugin("", listOf(), PluginInstanceProvider(), ""),
   pluginImplProvider: PluginImplProvider = FakePluginImplProvider { _, _, _ -> throw NotImplementedError() },
   actionArgs: List<String> = listOf()
 ) = BibixInterpreter(
