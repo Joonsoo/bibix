@@ -21,13 +21,15 @@ class TaskGraph(
       script: BibixAst.BuildScript,
       preloadedPluginNames: Set<String>,
       preludeNames: Set<String>
-    ): TaskGraph = fromDefs(script.packageName, script.defs, preloadedPluginNames, preludeNames)
+    ): TaskGraph =
+      fromDefs(script.packageName, script.defs, preloadedPluginNames, preludeNames, false)
 
     fun fromDefs(
       packageName: BibixAst.Name?,
       defs: List<BibixAst.Def>,
       preloadedPluginNames: Set<String>,
-      preludeNames: Set<String>
+      preludeNames: Set<String>,
+      nativeAllowed: Boolean,
     ): TaskGraph {
       val nodeIdsMap = mutableMapOf<Int, BibixAst.AstNode>()
       defs.forEach { def ->
@@ -38,15 +40,16 @@ class TaskGraph(
       val rootNameScope = ScopedNameLookupTable(listOf(), nameLookup, null)
       val nameLookupCtx =
         NameLookupContext(nameLookup, preloadedPluginNames, preludeNames, rootNameScope)
-      builder.addDefs(defs, GraphBuildContext(nameLookupCtx, mapOf(), false), true)
+      builder.addDefs(defs, GraphBuildContext(nameLookupCtx, mapOf(), false, nativeAllowed), true)
       return builder.build()
     }
 
     fun fromDefs(
       defs: List<BibixAst.Def>,
       preloadedPluginNames: Set<String>,
-      preludeNames: Set<String>
-    ): TaskGraph = fromDefs(null, defs, preloadedPluginNames, preludeNames)
+      preludeNames: Set<String>,
+      nativeAllowed: Boolean,
+    ): TaskGraph = fromDefs(null, defs, preloadedPluginNames, preludeNames, nativeAllowed)
   }
 
   fun reachableNodesFrom(tasks: List<TaskId>): Set<TaskId> {

@@ -22,6 +22,10 @@ data class BuildRuleNode(
   override val id: TaskId = TaskId(def.nodeId)
 }
 
+data class NativeImplNode(val implTargetName: BibixAst.Name): TaskNode() {
+  override val id: TaskId = TaskId(implTargetName.nodeId)
+}
+
 data class ImportInstanceNode(val importNode: TaskId, val varRedefs: Map<String, TaskId>):
   TaskNode() {
   override val id: TaskId = TaskId(importNode.nodeId, varRedefs)
@@ -91,7 +95,13 @@ data class ListExprNode(
   data class ListElem(val valueNode: TaskId, val isEllipsis: Boolean)
 }
 
-data class LiteralNode(val literal: BibixAst.Literal): ExprNode<BibixAst.Literal>(literal)
+data class BooleanLiteralNode(
+  val literal: BibixAst.BooleanLiteral
+): ExprNode<BibixAst.BooleanLiteral>(literal)
+
+data class NoneLiteralNode(
+  val literal: BibixAst.NoneLiteral
+): ExprNode<BibixAst.NoneLiteral>(literal)
 
 data class StringNode(
   val stringExpr: BibixAst.StringLiteral,
@@ -108,6 +118,11 @@ data class NameRefNode(
   val nameRefExpr: BibixAst.NameRef,
   val valueNode: TaskId
 ): ExprNode<BibixAst.NameRef>(nameRefExpr)
+
+data class ParenExprNode(
+  val parenExpr: BibixAst.Paren,
+  val body: TaskId
+): ExprNode<BibixAst.Paren>(parenExpr)
 
 data class ThisRefNode(val thisExpr: BibixAst.This): ExprNode<BibixAst.This>(thisExpr)
 
@@ -135,7 +150,7 @@ data class DataClassTypeNode(
   override val id: TaskId = TaskId(defNode.nodeId)
 }
 
-data class ClassCastNode(
+data class ClassElemCastNode(
   val castDef: BibixAst.ClassCastDef,
   val castType: TaskId,
   val castExpr: TaskId
@@ -152,6 +167,10 @@ data class SuperClassTypeNode(
 
 data class EnumTypeNode(val defNode: BibixAst.EnumDef): TaskNode() {
   override val id: TaskId = TaskId(defNode.nodeId)
+}
+
+data class EnumValueNode(val enumDef: BibixAst.EnumDef, val memberName: String): TaskNode() {
+  override val id: TaskId = TaskId(enumDef.nodeId, memberName)
 }
 
 data class CollectionTypeNode(

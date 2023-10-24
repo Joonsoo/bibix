@@ -75,8 +75,8 @@ class TaskGraphBuilder(
               is BibixAst.ActionRuleDef -> TODO()
               is BibixAst.ClassCastDef -> {
                 val castTo = addType(classElem.castTo, ctx)
-                val castExpr = addExpr(classElem.expr, ctx.thisRefAllowed())
-                addNode(ClassCastNode(classElem, castTo, castExpr))
+                val castExpr = addExpr(classElem.expr, ctx.withThisRefAllowed())
+                addNode(ClassElemCastNode(classElem, castTo, castExpr))
               }
             }
           }
@@ -146,10 +146,15 @@ class TaskGraphBuilder(
             param.defaultValue?.let { param.name to addExpr(it, ctx) }
           }.toMap()
           val returnType = addType(def.returnType, ctx)
-          val implTarget = lookupResultToId(
-            ctx.nameLookupCtx.lookupName(def.impl.targetName.tokens, def.impl.targetName),
-            ctx.importInstances
-          )
+          val implTarget =
+            if (ctx.nativeAllowed && def.impl.targetName.tokens == listOf("native")) {
+              addNode(NativeImplNode(def.impl.targetName))
+            } else {
+              lookupResultToId(
+                ctx.nameLookupCtx.lookupName(def.impl.targetName.tokens, def.impl.targetName),
+                ctx.importInstances
+              )
+            }
           val buildRule =
             addNode(BuildRuleNode(def, paramTypes, paramDefaultValues, returnType, implTarget))
           paramTypes.values.forEach { addEdge(buildRule, it, TaskEdgeType.TypeDependency) }
@@ -261,6 +266,10 @@ class TaskGraphBuilder(
     when (lookupResult) {
       is NameEntryFound -> lookupResult.entry.id
 
+      is EnumValueFound -> {
+        addNode(EnumValueNode(lookupResult.enum.def, lookupResult.enumMemberName))
+      }
+
       is NameInImport -> {
         val importNode = importInstances[lookupResult.importEntry.id]
           ?: addNode(ImportInstanceNode(lookupResult.importEntry.id, mapOf()))
@@ -366,8 +375,8 @@ class TaskGraphBuilder(
         exprNode
       }
 
-      is BibixAst.BooleanLiteral -> addNode(LiteralNode(expr))
-      is BibixAst.NoneLiteral -> addNode(LiteralNode(expr))
+      is BibixAst.BooleanLiteral -> addNode(BooleanLiteralNode(expr))
+      is BibixAst.NoneLiteral -> addNode(NoneLiteralNode(expr))
 
       is BibixAst.StringLiteral -> {
         // TODO CastToString이 들어가야 함
@@ -440,9 +449,16 @@ class TaskGraphBuilder(
         exprNode
       }
 
-      is BibixAst.Paren -> addExpr(expr.expr, ctx)
+      is BibixAst.Paren -> {
+        val bodyNode = addExpr(expr.expr, ctx)
+        val parenNode = addNode(ParenExprNode(expr, bodyNode))
+        addEdge(parenNode, bodyNode, TaskEdgeType.ValueDependency)
+        parenNode
+      }
+
       is BibixAst.This -> {
         // ThisRefNode는 실제 실행 시에는 일종의 placeholder로만 동작한다
+        check(ctx.thisRefAllowed) { "this is not allowed at ${expr.start}..${expr.end}" }
         addNode(ThisRefNode(expr))
       }
 
@@ -480,6 +496,7 @@ data class GraphBuildContext(
   val nameLookupCtx: NameLookupContext,
   val importInstances: Map<TaskId, TaskId>,
   val thisRefAllowed: Boolean,
+  val nativeAllowed: Boolean,
 ) {
   fun withVarRedefsCtx(redefsCtx: Map<TaskId, TaskId>) =
     copy(importInstances = importInstances + redefsCtx)
@@ -487,6 +504,6 @@ data class GraphBuildContext(
   fun innerNamespace(namespaceName: String) =
     copy(nameLookupCtx = nameLookupCtx.innerNamespace(namespaceName))
 
-  fun thisRefAllowed() =
+  fun withThisRefAllowed() =
     copy(thisRefAllowed = true)
 }

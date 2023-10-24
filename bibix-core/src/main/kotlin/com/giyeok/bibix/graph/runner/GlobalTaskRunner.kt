@@ -3,10 +3,10 @@ package com.giyeok.bibix.graph.runner
 import com.giyeok.bibix.BibixIdProto.ObjectIdData
 import com.giyeok.bibix.ast.BibixAst
 import com.giyeok.bibix.ast.BibixParser
-import com.giyeok.bibix.base.BibixValue
-import com.giyeok.bibix.base.StringValue
+import com.giyeok.bibix.base.*
 import com.giyeok.bibix.graph.*
 import com.giyeok.bibix.plugins.PreloadedPlugin
+import com.giyeok.bibix.plugins.prelude.preludePlugin
 import com.google.protobuf.ByteString
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
@@ -14,45 +14,49 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 
 class GlobalTaskRunner private constructor(
-  val preloadedPlugins: Map<String, PreloadedPlugin>,
-  val preludePlugin: PreloadedPlugin,
   val globalGraph: GlobalTaskGraph,
   val mainProjectId: Int,
+  val preludeProjectId: Int,
+  val preloadedPluginIds: Map<String, Int>,
   val callExprStates: MutableMap<GlobalTaskId, CallExprRunState>,
   val results: MutableMap<GlobalTaskId, BibixValue>,
   val importInstances: MutableMap<Int, MutableList<ImporterId>>,
 ) {
-  constructor(
-    mainProjectLocation: BibixProjectLocation,
-    mainProjectScript: BibixAst.BuildScript,
-    preludePlugin: PreloadedPlugin,
-    preloadedPlugins: Map<String, PreloadedPlugin>,
-  ): this(
-    preloadedPlugins,
-    preludePlugin,
-    GlobalTaskGraph(
-      mapOf(
-        1 to (mainProjectLocation to TaskGraph.fromScript(
-          mainProjectScript,
-          preloadedPlugins.keys,
-          NameLookupTable.fromDefs(preludePlugin.defs).names.keys
-        ))
-      )
-    ),
-    1,
-    mutableMapOf(),
-    mutableMapOf(),
-    mutableMapOf()
-  )
-
   companion object {
     suspend fun create(
       mainProjectLocation: BibixProjectLocation,
       preludePlugin: PreloadedPlugin,
       preloadedPlugins: Map<String, PreloadedPlugin>
     ): GlobalTaskRunner {
+      val preludeNames = NameLookupTable.fromDefs(preludePlugin.defs).names.keys
+
       val mainScript = BibixParser.parse(mainProjectLocation.readScript())
-      return GlobalTaskRunner(mainProjectLocation, mainScript, preludePlugin, preloadedPlugins)
+      val mainGraph =
+        TaskGraph.fromScript(mainScript, preloadedPlugins.keys, preludeNames)
+
+      val globalGraph = GlobalTaskGraph(mapOf(1 to (mainProjectLocation to mainGraph)))
+
+      globalGraph.addProject(
+        2,
+        TaskGraph.fromDefs(preludePlugin.defs, preloadedPlugins.keys, preludeNames, true)
+      )
+
+      var preloadedPluginIdCounter = 3
+      val preloadedPluginIds = mutableMapOf<String, Int>()
+      preloadedPlugins.forEach { (name, plugin) ->
+        preloadedPluginIds[name] = preloadedPluginIdCounter
+        globalGraph.addProject(
+          preloadedPluginIdCounter,
+          TaskGraph.fromDefs(plugin.defs, preloadedPlugins.keys, preludeNames, true)
+        )
+        preloadedPluginIdCounter += 1
+      }
+
+      // TODO prelude와 preloaded plugin간의 연결
+
+      return GlobalTaskRunner(
+        globalGraph, 1, 2, preloadedPluginIds, mutableMapOf(), mutableMapOf(), mutableMapOf()
+      )
     }
   }
 
@@ -96,53 +100,124 @@ class GlobalTaskRunner private constructor(
     flow.value ?: throw IllegalStateException()
   }
 
-  suspend fun evaluateNode(nodeId: GlobalTaskId): BibixValue =
-    when (val node = globalGraph.getNode(nodeId)) {
-      is MemberAccessNode -> {
-        StringValue("")
+  suspend fun evaluateNode(nodeId: GlobalTaskId): BibixValue {
+    val piId = nodeId.projectInstanceId
+    return when (val node = globalGraph.getNode(nodeId)) {
+      is ExprNode<*> -> {
+        when (node) {
+          is NoneLiteralNode -> NoneValue
+          is BooleanLiteralNode -> BooleanValue(node.literal.value)
+
+          is MemberAccessNode -> {
+            StringValue("")
+          }
+
+          is StringNode -> {
+            val builder = StringBuilder()
+            var elemCounter = 0
+            node.stringExpr.elems.forEach { elem ->
+              when (elem) {
+                is BibixAst.EscapeChar -> {
+                  // TODO escape
+                  builder.append("\\${elem.code}")
+                }
+
+                is BibixAst.JustChar -> builder.append(elem.chr)
+                is BibixAst.ComplexExpr -> {
+                  val elemValue = getNodeResult(GlobalTaskId(piId, node.exprElems[elemCounter++]))
+                  elemValue as StringValue
+                }
+
+                is BibixAst.SimpleExpr -> {
+                  val elemValue = getNodeResult(GlobalTaskId(piId, node.exprElems[elemCounter++]))
+                  elemValue as StringValue
+                }
+              }
+            }
+            check(elemCounter == node.exprElems.size)
+            StringValue(builder.toString())
+          }
+
+          is CallExprNode -> TODO()
+
+          is CastExprNode -> TODO()
+
+          is TupleNode -> {
+            val elems = node.elemNodes.map { getNodeResult(GlobalTaskId(piId, it)) }
+            TupleValue(elems)
+          }
+
+          is NamedTupleNode -> {
+            val elems = node.elemNodes.map { (name, valueNode) ->
+              name to getNodeResult(GlobalTaskId(piId, valueNode))
+            }
+            NamedTupleValue(elems)
+          }
+
+          is ListExprNode -> {
+            val elems = mutableListOf<BibixValue>()
+            node.elems.forEach { elem ->
+              val elemValue = getNodeResult(GlobalTaskId(piId, elem.valueNode))
+              if (!elem.isEllipsis) {
+                elems.add(elemValue)
+              } else {
+                when (elemValue) {
+                  is ListValue -> elems.addAll(elemValue.values)
+                  is SetValue -> elems.addAll(elemValue.values)
+                  else -> throw IllegalStateException()
+                }
+              }
+            }
+            ListValue(elems)
+          }
+
+          is MergeExprNode -> TODO()
+          is NameRefNode -> getNodeResult(GlobalTaskId(nodeId.projectInstanceId, node.valueNode))
+          is ParenExprNode -> getNodeResult(GlobalTaskId(nodeId.projectInstanceId, node.body))
+          is ThisRefNode -> TODO()
+        }
       }
+
+      is VarNode -> TODO()
 
       is PreloadedPluginNode -> {
         StringValue("")
       }
 
-      is StringNode -> {
-        val builder = StringBuilder()
-        var elemCounter = 0
-        node.stringExpr.elems.forEach { elem ->
-          when (elem) {
-            is BibixAst.EscapeChar -> {
-              // TODO escape
-              builder.append("\\${elem.code}")
-            }
-
-            is BibixAst.JustChar -> builder.append(elem.chr)
-            is BibixAst.ComplexExpr -> {
-              val elemValue =
-                getNodeResult(GlobalTaskId(nodeId.projectInstanceId, node.exprElems[elemCounter++]))
-              elemValue as StringValue
-            }
-
-            is BibixAst.SimpleExpr -> {
-              val elemValue =
-                getNodeResult(GlobalTaskId(nodeId.projectInstanceId, node.exprElems[elemCounter++]))
-              elemValue as StringValue
-            }
-          }
-        }
-        check(elemCounter == node.exprElems.size)
-        StringValue(builder.toString())
-      }
-
       is PreludeTaskNode -> {
-        preludePlugin.defs
+        preludeProjectId
         StringValue("TODO")
       }
 
-      else -> {
-        StringValue("TODO")
+      is BuildRuleNode -> TODO()
+      is NativeImplNode -> TODO()
+
+      is SuperClassTypeNode -> TODO()
+      is DataClassTypeNode -> TODO()
+      is ClassElemCastNode -> TODO()
+
+      is EnumTypeNode -> TODO()
+      is ImportInstanceNode -> TODO()
+      is ImportNode -> TODO()
+      is ImportedTaskNode -> TODO()
+      is PreloadedPluginMemberNode -> {
+        println(node)
+        val plugin = preloadedPluginIds.getValue(node.pluginName)
+        TODO()
       }
+
+      is PreludeMemberNode -> TODO()
+      is TargetNode -> TODO()
+
+      is BibixTypeNode -> TODO()
+      is CollectionTypeNode -> TODO()
+      is NamedTupleTypeNode -> TODO()
+      is TupleTypeNode -> TODO()
+      is TypeNameNode -> TODO()
+      is UnionTypeNode -> TODO()
+      is EnumValueNode -> TODO()
     }
+  }
 
   suspend fun memoEvaluateNode(nodeId: GlobalTaskId): BibixValue {
     // TODO literal같은 trivial value들은 굳이 memoize 하지 말자

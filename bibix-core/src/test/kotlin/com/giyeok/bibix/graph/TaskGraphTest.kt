@@ -36,7 +36,7 @@ class TaskGraphTest {
 
   @Test
   fun testPrelude() {
-    val preludeGraph = TaskGraph.fromDefs(preludePlugin.defs, setOf("bibix"), setOf("native"))
+    val preludeGraph = TaskGraph.fromDefs(preludePlugin.defs, setOf("bibix"), setOf(), true)
     println(dotGraphFrom(preludeGraph, preludeSource))
   }
 }

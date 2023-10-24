@@ -29,7 +29,9 @@ fun dotGraphFrom(graph: TaskGraph, source: String): String {
         is DataClassTypeNode -> "class\n$nodeSource"
         is SuperClassTypeNode -> "super class\n$nodeSource"
         is EnumTypeNode -> "enum\n$nodeSource"
-        is ClassCastNode -> "class cast\n$nodeSource"
+        is EnumValueNode -> "enum val\n${node.enumDef.name}.${node.memberName}"
+        is ClassElemCastNode -> "class cast\n$nodeSource"
+        is NativeImplNode -> "native"
       }
       val lines = "${node.id.nodeId} $nodeDescription".lines()
       val linesTrimmed = if (lines.size <= 1) {

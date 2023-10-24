@@ -11,9 +11,9 @@ import kotlin.io.path.readText
 
 // import된 프로젝트들을 포함해서 여러 프로젝트들의 TaskGraph를 통합
 class GlobalTaskGraph private constructor(
-  private val projectLocations: BiMap<Int, BibixProjectLocation>,
-  private val projectGraphs: MutableMap<Int, TaskGraph>,
-  private val globalEdges: MutableList<GlobalTaskEdge>,
+  val projectLocations: BiMap<Int, BibixProjectLocation>,
+  val projectGraphs: MutableMap<Int, TaskGraph>,
+  val globalEdges: MutableList<GlobalTaskEdge>,
 ) {
   constructor(
     projects: Map<Int, Pair<BibixProjectLocation, TaskGraph>>,
@@ -29,14 +29,23 @@ class GlobalTaskGraph private constructor(
     mutableMapOf<GlobalTaskId, MutableMap<Pair<GlobalTaskId, GlobalTaskId>, GlobalTaskEdge>>()
 
   fun addProject(projectId: Int, location: BibixProjectLocation, graph: TaskGraph) {
-    check(projectId !in projectLocations)
+    check(projectId !in projectGraphs)
     check(!projectLocations.containsValue(location))
     projectLocations[projectId] = location
     projectGraphs[projectId] = graph
   }
 
+  // prelude, preloaded 플러그인도 일종의 프로젝트. 그들은 location은 없음
+  fun addProject(projectId: Int, graph: TaskGraph) {
+    check(projectId !in projectGraphs)
+    projectGraphs[projectId] = graph
+  }
+
   fun getProject(projectId: Int): TaskGraph =
     projectGraphs[projectId] ?: throw IllegalStateException()
+
+  fun getProjectIdByLocation(location: BibixProjectLocation): Int? =
+    projectLocations.inverse().get(location)
 
   fun addGlobalEdge(edge: GlobalTaskEdge) {
     check(edge.start.projectInstanceId != edge.end.projectInstanceId)

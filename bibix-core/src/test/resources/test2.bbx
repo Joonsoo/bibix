@@ -2,7 +2,7 @@ from bibix.plugins import ktjvm
 
 impl = ktjvm.library(srcs=glob("src/**/*.kt"))
 
-def abc(x: file) = impl:com.giyeok.bibix.Test
+def abc(x: file): file = impl:com.giyeok.bibix.Test
 
 class MyClass(a: file) {
   as file = this.a
@@ -11,3 +11,5 @@ class MyClass(a: file) {
 xxx = abc(
   x=MyClass("hello.pbtxt")
 )
+
+zzz = (xxx)

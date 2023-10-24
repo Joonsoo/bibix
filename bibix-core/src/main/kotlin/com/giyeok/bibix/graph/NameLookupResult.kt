@@ -3,7 +3,10 @@ package com.giyeok.bibix.graph
 import com.giyeok.bibix.ast.BibixAst
 
 sealed class NameLookupResult
+
 data class NameEntryFound(val entry: NameEntry): NameLookupResult()
+
+data class EnumValueFound(val enum: EnumNameEntry, val enumMemberName: String): NameLookupResult()
 
 data class NameOfPreloadedPlugin(
   val name: String,

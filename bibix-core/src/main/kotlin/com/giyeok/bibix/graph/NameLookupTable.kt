@@ -75,6 +75,10 @@ class NameLookupTable(
         NameInImport(nameEntry, tokens.drop(1))
       } else {
         if (tokens.size != 1) {
+          if (tokens.size == 2 && nameEntry is EnumNameEntry) {
+            check(tokens[1] in nameEntry.def.values)
+            return EnumValueFound(nameEntry, tokens[1])
+          }
           return NameNotFound(tokens, nameNode)
         }
         NameEntryFound(nameEntry)
