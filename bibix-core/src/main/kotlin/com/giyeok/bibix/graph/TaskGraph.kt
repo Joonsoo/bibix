@@ -8,6 +8,7 @@ import com.giyeok.bibix.ast.BibixAst
 class TaskGraph(
   val astNodes: Map<Int, BibixAst.AstNode>,
   val nameLookupTable: NameLookupTable,
+  val packageName: String?,
   val nodes: Map<TaskId, TaskNode>,
   val edges: List<TaskEdge>,
   val scriptVars: Map<String, TaskId>,
@@ -21,11 +22,16 @@ class TaskGraph(
       script: BibixAst.BuildScript,
       preloadedPluginNames: Set<String>,
       preludeNames: Set<String>
-    ): TaskGraph =
-      fromDefs(script.packageName, script.defs, preloadedPluginNames, preludeNames, false)
+    ): TaskGraph = fromDefs(
+      script.packageName?.tokens?.joinToString("."),
+      script.defs,
+      preloadedPluginNames,
+      preludeNames,
+      false
+    )
 
     fun fromDefs(
-      packageName: BibixAst.Name?,
+      packageName: String?,
       defs: List<BibixAst.Def>,
       preloadedPluginNames: Set<String>,
       preludeNames: Set<String>,
@@ -36,7 +42,7 @@ class TaskGraph(
         traverseAst(def) { nodeIdsMap[it.nodeId] = it }
       }
       val nameLookup = NameLookupTable.fromDefs(defs)
-      val builder = TaskGraphBuilder(nodeIdsMap, nameLookup)
+      val builder = TaskGraphBuilder(nodeIdsMap, nameLookup, packageName)
       val rootNameScope = ScopedNameLookupTable(listOf(), nameLookup, null)
       val nameLookupCtx =
         NameLookupContext(nameLookup, preloadedPluginNames, preludeNames, rootNameScope)
@@ -44,12 +50,13 @@ class TaskGraph(
       return builder.build()
     }
 
-    fun fromDefs(
-      defs: List<BibixAst.Def>,
-      preloadedPluginNames: Set<String>,
-      preludeNames: Set<String>,
-      nativeAllowed: Boolean,
-    ): TaskGraph = fromDefs(null, defs, preloadedPluginNames, preludeNames, nativeAllowed)
+//    fun fromDefs(
+//      packageName: BibixAst.Name?,
+//      defs: List<BibixAst.Def>,
+//      preloadedPluginNames: Set<String>,
+//      preludeNames: Set<String>,
+//      nativeAllowed: Boolean,
+//    ): TaskGraph = fromDefs(packageName, defs, preloadedPluginNames, preludeNames, nativeAllowed)
   }
 
   fun reachableNodesFrom(tasks: List<TaskId>): Set<TaskId> {

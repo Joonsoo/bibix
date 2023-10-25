@@ -7,10 +7,12 @@ import com.giyeok.bibix.base.*
 import com.giyeok.bibix.graph.*
 import com.giyeok.bibix.plugins.PluginInstanceProvider
 import com.giyeok.bibix.plugins.PreloadedPlugin
+import com.giyeok.bibix.targetIdData
 import com.google.protobuf.ByteString
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import java.nio.file.FileSystems
+import java.nio.file.Path
 
 class GlobalTaskRunner private constructor(
   val globalGraph: GlobalTaskGraph,
@@ -42,7 +44,13 @@ class GlobalTaskRunner private constructor(
 
       globalGraph.addProject(
         2,
-        TaskGraph.fromDefs(preludePlugin.defs, preloadedPlugins.keys, preludeNames, true),
+        TaskGraph.fromDefs(
+          preludePlugin.packageName,
+          preludePlugin.defs,
+          preloadedPlugins.keys,
+          preludeNames,
+          true
+        ),
         preludePlugin.script
       )
       preloadedPluginInstanceProviders[2] = preludePlugin.pluginInstanceProvider
@@ -53,7 +61,13 @@ class GlobalTaskRunner private constructor(
         preloadedPluginIds[name] = preloadedPluginIdCounter
         globalGraph.addProject(
           preloadedPluginIdCounter,
-          TaskGraph.fromDefs(plugin.defs, preloadedPlugins.keys, preludeNames, true),
+          TaskGraph.fromDefs(
+            plugin.packageName,
+            plugin.defs,
+            preloadedPlugins.keys,
+            preludeNames,
+            true
+          ),
           plugin.script
         )
         preloadedPluginInstanceProviders[preloadedPluginIdCounter] = plugin.pluginInstanceProvider
@@ -145,7 +159,6 @@ class GlobalTaskRunner private constructor(
 
   fun runTask(taskId: GlobalTaskId): TaskRunResult {
     check(taskId !in results)
-    println(taskId.toNodeId())
 
     val prjInstanceId = taskId.projectInstanceId
 
@@ -234,7 +247,15 @@ class GlobalTaskRunner private constructor(
       }
 
       is BuildRuleNode -> {
-        TaskRunResult.ImmediateResult(NodeResult.BuildRuleResult(prjInstanceId, node))
+        val impl = getResult(prjInstanceId, node.implTarget)
+        if (impl == null) {
+          TaskRunResult.UnfulfilledPrerequisites(
+            listOf(GlobalTaskId(prjInstanceId, node.implTarget) to TaskEdgeType.ValueDependency)
+          )
+        } else {
+          check(impl is NodeResult.RunnableResult)
+          TaskRunResult.ImmediateResult(NodeResult.BuildRuleResult(prjInstanceId, node, impl))
+        }
       }
 
       is ClassElemCastNode -> {
@@ -242,22 +263,40 @@ class GlobalTaskRunner private constructor(
       }
 
       is DataClassTypeNode -> {
-        TODO()
+        val pkg = globalGraph.projectGraphs.getValue(prjInstanceId.projectId).packageName
+        checkNotNull(pkg) { "Package name is not set" }
+        TaskRunResult.ImmediateResult(NodeResult.TypeResult(DataClassType(pkg, node.defNode.name)))
       }
 
       is EnumTypeNode -> {
-        TODO()
+        val pkg = globalGraph.projectGraphs.getValue(prjInstanceId.projectId).packageName
+        checkNotNull(pkg) { "Package name is not set" }
+        TaskRunResult.ImmediateResult(NodeResult.TypeResult(EnumType(pkg, node.defNode.name)))
       }
 
       is EnumValueNode -> {
-        TODO()
+        val typeNodeResult = getResult(prjInstanceId, node.enumTypeNode)!!
+        check(typeNodeResult is NodeResult.TypeResult)
+        val enumType = typeNodeResult.type
+        check(enumType is EnumType)
+        // TODO check node.memberName is valid name for the enum type
+        TaskRunResult.ImmediateResult(
+          NodeResult.ValueResult(
+            EnumValue(enumType.packageName, enumType.enumName, node.memberName)
+          )
+        )
       }
 
       is NativeImplNode -> {
         val instanceProvider = preloadedPluginInstanceProviders.getValue(prjInstanceId.projectId)
-        println(instanceProvider)
         val impl = instanceProvider.getInstance(node.className)
-        TODO()
+        val method = try {
+          impl::class.java.getMethod(node.methodName ?: "build", BuildContext::class.java)
+        } catch (e: NoSuchMethodException) {
+          throw IllegalStateException("No such method", e)
+        }
+        check(method.trySetAccessible()) { "Method is not accessible" }
+        TaskRunResult.ImmediateResult(NodeResult.RunnableResult(impl, method))
       }
 
       is PreludeMemberNode -> {
@@ -291,7 +330,28 @@ class GlobalTaskRunner private constructor(
       }
 
       is CollectionTypeNode -> {
-        TODO()
+        when (val collectionName = node.collectionType.name) {
+          "set", "list" -> {
+            check(node.typeParams.size == 1)
+            val elemTypeNode = node.typeParams.first()
+            val elemType = getResult(prjInstanceId, elemTypeNode)
+            if (elemType == null) {
+              TaskRunResult.UnfulfilledPrerequisites(
+                listOf(GlobalTaskId(prjInstanceId, elemTypeNode) to TaskEdgeType.TypeDependency)
+              )
+            } else {
+              check(elemType is NodeResult.TypeResult)
+              val type = when (collectionName) {
+                "set" -> SetType(elemType.type)
+                "list" -> ListType(elemType.type)
+                else -> throw AssertionError()
+              }
+              TaskRunResult.ImmediateResult(NodeResult.TypeResult(type))
+            }
+          }
+
+          else -> throw IllegalStateException("Unknown collection type: ${node.collectionType.name}")
+        }
       }
 
       is NamedTupleTypeNode -> {
@@ -303,11 +363,19 @@ class GlobalTaskRunner private constructor(
       }
 
       is TypeNameNode -> {
-        TODO()
+        resultOrPrerequisite(node.typeNode, TaskEdgeType.TypeDependency)
       }
 
       is UnionTypeNode -> {
-        TODO()
+        val elemTypes = node.elemTypes.map { getResult(prjInstanceId, it) }
+        if (elemTypes.contains(null)) {
+          TaskRunResult.UnfulfilledPrerequisites(node.elemTypes.map {
+            GlobalTaskId(prjInstanceId, it) to TaskEdgeType.TypeDependency
+          })
+        } else {
+          val types = elemTypes.map { (it as NodeResult.TypeResult).type }
+          TaskRunResult.ImmediateResult(NodeResult.TypeResult(UnionType(types)))
+        }
       }
 
       is VarNode -> {
@@ -346,6 +414,35 @@ class GlobalTaskRunner private constructor(
 
   private fun v(value: BibixValue): TaskRunResult =
     TaskRunResult.ImmediateResult(NodeResult.ValueResult(value))
+
+  // TODO
+  private fun getBuildContext(args: Map<String, BibixValue>): BuildContext = BuildContext(
+    BuildEnv(OS.Linux("", ""), Architecture.X86_64),
+    FileSystems.getDefault(),
+    Path.of(""),
+    Path.of(""),
+    null,
+    args,
+    targetIdData { },
+    "",
+    false,
+    null,
+    null,
+    Path.of(""),
+    object: ProgressLogger {
+      override fun logInfo(message: String) {
+        println(message)
+      }
+
+      override fun logError(message: String) {
+        println(message)
+      }
+    },
+    object: BaseRepo {
+      override fun prepareSharedDirectory(sharedRepoName: String): Path =
+        Path.of("")
+    }
+  )
 
   fun evaluateExprNode(prjInstanceId: ProjectInstanceId, node: ExprNode<*>): TaskRunResult =
     when (node) {
@@ -432,13 +529,23 @@ class GlobalTaskRunner private constructor(
             } else {
               val defaultValues = defaults.mapValues { (_, value) -> value!! }
 
-              val args: Map<String, NodeResult> = posArgs + namedArgs + defaultValues
-              v(StringValue("TODO: CallExpr $args"))
+              val argResults: Map<String, NodeResult> = posArgs + namedArgs + defaultValues
+              check(argResults.all { it.value is NodeResult.ValueResult })
+              val args = argResults.mapValues { (_, result) ->
+                (result as NodeResult.ValueResult).value
+              }
+              TaskRunResult.LongRunningResult {
+                val buildContext = getBuildContext(args)
+                val result =
+                  callee.impl.method.invoke(callee.impl.instance, buildContext) as BibixValue
+                NodeResult.ValueResult(result)
+              }
             }
           }
 
-          is NodeResult.NativeImplResult -> TODO()
-          is NodeResult.RunnableResult -> TODO()
+          is NodeResult.RunnableResult -> {
+            TODO()
+          }
 
           else -> TODO()
         }

@@ -3,6 +3,7 @@ package com.giyeok.bibix.graph.runner
 import com.giyeok.bibix.base.BibixType
 import com.giyeok.bibix.base.BibixValue
 import com.giyeok.bibix.graph.BuildRuleNode
+import java.lang.reflect.Method
 
 sealed class NodeRunState
 
@@ -13,10 +14,9 @@ sealed class NodeResult {
   data class BuildRuleResult(
     // 이 build rule이 정의된 project instance id
     val prjInstanceId: ProjectInstanceId,
-    val buildRuleNode: BuildRuleNode
+    val buildRuleNode: BuildRuleNode,
+    val impl: RunnableResult
   ): NodeResult()
-
-  class NativeImplResult: NodeResult()
 
   data class ImportResult(val projectId: Int): NodeResult()
 
@@ -35,7 +35,7 @@ sealed class NodeResult {
 
   class VarResult: NodeResult()
 
-  class RunnableResult: NodeResult()
+  data class RunnableResult(val instance: Any, val method: Method): NodeResult()
 
   class TypeResult(val type: BibixType): NodeResult()
 }

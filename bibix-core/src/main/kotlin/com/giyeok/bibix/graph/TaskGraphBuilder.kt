@@ -6,6 +6,7 @@ import com.giyeok.bibix.base.*
 class TaskGraphBuilder(
   val astNodes: Map<Int, BibixAst.AstNode>,
   val nameLookupTable: NameLookupTable,
+  val packageName: String?,
   val nodes: MutableMap<TaskId, TaskNode> = mutableMapOf(),
   val edges: MutableList<TaskEdge> = mutableListOf(),
   val scriptVars: MutableMap<String, TaskId> = mutableMapOf(),
@@ -14,7 +15,15 @@ class TaskGraphBuilder(
   private val edgePairs: MutableMap<Pair<TaskId, TaskId>, TaskEdge> =
     edges.associateBy { Pair(it.start, it.end) }.toMutableMap()
 
-  fun build() = TaskGraph(astNodes, nameLookupTable, nodes, edges, scriptVars, varRedefs)
+  fun build() = TaskGraph(
+    astNodes = astNodes,
+    nameLookupTable = nameLookupTable,
+    packageName = packageName,
+    nodes = nodes,
+    edges = edges,
+    scriptVars = scriptVars,
+    varRedefs = varRedefs
+  )
 
   fun addImportSource(source: BibixAst.Expr, ctx: GraphBuildContext): TaskId {
     if (source is BibixAst.NameRef) {
@@ -230,7 +239,7 @@ class TaskGraphBuilder(
           val lookupResult = ctx.nameLookupCtx.lookupName(type.tokens, type)
           lookupResultToId(lookupResult, ctx.importInstances)
         }
-        val nameNode = addNode(TypeNameNode(type))
+        val nameNode = addNode(TypeNameNode(type, referred))
         addEdge(nameNode, referred, TaskEdgeType.TypeDependency)
         nameNode
       }
@@ -262,7 +271,11 @@ class TaskGraphBuilder(
       is NameEntryFound -> lookupResult.entry.id
 
       is EnumValueFound -> {
-        addNode(EnumValueNode(lookupResult.enum.def, lookupResult.enumMemberName))
+        val enumTypeNode = addNode(EnumTypeNode(lookupResult.enum.def))
+        val enumValueNode =
+          addNode(EnumValueNode(lookupResult.enum.def, lookupResult.enumMemberName, enumTypeNode))
+        addEdge(enumValueNode, enumTypeNode, TaskEdgeType.ClassMember)
+        enumValueNode
       }
 
       is NameInImport -> {

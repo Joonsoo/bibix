@@ -16,6 +16,9 @@ class GlobalTaskDepsGraph(
   private val finishedNodes = mutableSetOf<GlobalTaskId>()
   private val finishedEdges = mutableSetOf<GlobalTaskEdge>()
 
+  val allNodes get():Set<GlobalTaskId> = nodes
+  val allEdges get():Set<GlobalTaskEdge> = edges
+
   // depsCounts에 노드의 key가 아예 없다는 건 준비가 완료돼서 ready로 보내졌다는 의미이고
   // depsCounts[key] == 0 이면 준비는 됐지만 아직 ready로 보내지진 않았다는 뜻이다
   private val depsCounts = mutableMapOf<GlobalTaskId, Int>()
@@ -26,16 +29,31 @@ class GlobalTaskDepsGraph(
   val nextNodeIds: ReceiveChannel<GlobalTaskId> = ready
 
   init {
+    check(depsCounts.all { it.value > 0 })
     nodes.forEach { node ->
       if (node !in depsCounts) {
         runBlocking {
-          ready.send(node)
+          notifyNewReady(node)
         }
       }
     }
   }
 
+  private suspend fun notifyNewReady(node: GlobalTaskId) {
+    ready.send(node)
+  }
+
   private val mutex = Mutex()
+
+  suspend fun finishNode(node: GlobalTaskId) {
+    mutex.withLock {
+      check(node in nodes && node !in finishedNodes)
+      finishedNodes.add(node)
+      edgesByEnd[node]?.forEach { edge ->
+        finishEdge(edge)
+      }
+    }
+  }
 
   private suspend fun finishEdge(edge: GlobalTaskEdge) {
     check(edge in edges && edge !in finishedEdges)
@@ -53,24 +71,20 @@ class GlobalTaskDepsGraph(
     }
 
     if (endIsReady) {
-      ready.send(edge.start)
-    } else if (isDone()) {
+      notifyNewReady(edge.start)
+    } else if (isDone) {
       ready.close()
     }
   }
 
-  suspend fun finishNode(node: GlobalTaskId) {
-    mutex.withLock {
-      check(node in nodes)
-      finishedNodes.add(node)
-      edgesByEnd[node]?.forEach { edge ->
-        finishEdge(edge)
-      }
-    }
-  }
+  private val isDone get() = edges.size == finishedEdges.size
 
-  suspend fun isDone() = mutex.withLock {
-    edges.size == finishedEdges.size
+  suspend fun isDone(): Boolean = mutex.withLock { isDone }
+
+  private fun addEdge(edge: GlobalTaskEdge) {
+    check(edge !in edges)
+    edges.add(edge)
+    edgesByEnd.getOrPut(edge.end) { mutableSetOf() }.add(edge)
   }
 
   // rootNodes와, rootNodes로부터 접근 가능한 노드들을 모두 추가한다
@@ -90,7 +104,7 @@ class GlobalTaskDepsGraph(
               graph.edgesByStart[taskId]?.forEach { outgoing ->
                 check(outgoing.start == taskId)
                 val endNode = GlobalTaskId(prjInstanceId, outgoing.end)
-                edges.add(GlobalTaskEdge(globalTaskId, endNode, outgoing.edgeType))
+                addEdge(GlobalTaskEdge(globalTaskId, endNode, outgoing.edgeType))
                 depsCounts[globalTaskId] = (depsCounts[globalTaskId] ?: 0) + 1
                 traverse(outgoing.end)
               }
@@ -103,7 +117,7 @@ class GlobalTaskDepsGraph(
       newReadys.forEach { depsCounts.remove(it) }
       newReadys
     }
-    newReadys.forEach { ready.send(it) }
+    newReadys.forEach { notifyNewReady(it) }
   }
 
   suspend fun addEdges(newEdges: List<GlobalTaskEdge>) {
@@ -119,7 +133,7 @@ class GlobalTaskDepsGraph(
     val newReadys = mutex.withLock {
       realNewEdges.forEach { newEdge ->
         if (newEdge !in edges) {
-          edges.add(newEdge)
+          addEdge(newEdge)
           if (newEdge.end in finishedNodes) {
             finishedEdges.add(newEdge)
           } else {
@@ -132,6 +146,26 @@ class GlobalTaskDepsGraph(
       newReadys.forEach { depsCounts.remove(it) }
       newReadys
     }
-    newReadys.forEach { ready.send(it) }
+    newReadys.forEach { notifyNewReady(it) }
+  }
+
+  suspend fun printStatus() = mutex.withLock {
+    allNodes.forEach { node ->
+      println("${node.toNodeId()}: ${depsCounts[node]}")
+    }
+    println("finishedNodes: ${finishedNodes.size}")
+    println("finishedEdges: ${finishedEdges.size}")
+  }
+
+  suspend fun depsCountOf(taskId: GlobalTaskId): Int? = mutex.withLock {
+    depsCounts[taskId]
+  }
+
+  suspend fun isNodeFinished(node: GlobalTaskId): Boolean = mutex.withLock {
+    node in finishedNodes
+  }
+
+  suspend fun isEdgeFinished(edge: GlobalTaskEdge): Boolean = mutex.withLock {
+    edge in finishedEdges
   }
 }

@@ -31,6 +31,7 @@ class GlobalTaskGraphTest {
       val depsGraph = runner.globalGraph.depsGraphFrom(setOf(targetTask))
       val runnerMutex = Mutex()
       for (nextNode in depsGraph.nextNodeIds) {
+        println("runTask: ${nextNode.toNodeId()}")
         val taskRunResult = try {
           runnerMutex.withLock {
             runner.runTask(nextNode)
@@ -59,18 +60,12 @@ class GlobalTaskGraphTest {
             }
           }
         }
+
+        depsGraph.printStatus()
+        println(dotGraphFrom(depsGraph))
+        println(depsGraph)
       }
       check(depsGraph.isDone())
-
-//      val requiredImports = runner.findRequiredImportsFor(setOf(targetTask))
-//      val job = CoroutineScope(Executors.newFixedThreadPool(4).asCoroutineDispatcher()).async {
-//        val importTasks = requiredImports.keys.map { requiredImport ->
-//          async { runner.resolveImport(requiredImport) }
-//        }
-//        importTasks.awaitAll()
-//      }
-//      job.await()
-//      println(requiredImports)
     }
   }
 }

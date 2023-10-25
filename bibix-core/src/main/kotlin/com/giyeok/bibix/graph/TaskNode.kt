@@ -173,7 +173,11 @@ data class EnumTypeNode(val defNode: BibixAst.EnumDef): TaskNode() {
   override val id: TaskId = TaskId(defNode.nodeId)
 }
 
-data class EnumValueNode(val enumDef: BibixAst.EnumDef, val memberName: String): TaskNode() {
+data class EnumValueNode(
+  val enumDef: BibixAst.EnumDef,
+  val memberName: String,
+  val enumTypeNode: TaskId
+): TaskNode() {
   override val id: TaskId = TaskId(enumDef.nodeId, memberName)
 }
 
@@ -182,7 +186,8 @@ data class CollectionTypeNode(
   val typeParams: List<TaskId>
 ): TypeNode<BibixAst.CollectionType>(collectionType)
 
-data class TypeNameNode(val name: BibixAst.Name): TypeNode<BibixAst.Name>(name)
+data class TypeNameNode(val name: BibixAst.Name, val typeNode: TaskId):
+  TypeNode<BibixAst.Name>(name)
 
 data class BibixTypeNode(val bibixType: BibixType): TaskNode() {
   override val id: TaskId = TaskId(0, bibixType)
