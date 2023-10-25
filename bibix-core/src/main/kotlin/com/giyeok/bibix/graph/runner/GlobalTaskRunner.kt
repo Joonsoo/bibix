@@ -5,6 +5,7 @@ import com.giyeok.bibix.ast.BibixAst
 import com.giyeok.bibix.ast.BibixParser
 import com.giyeok.bibix.base.*
 import com.giyeok.bibix.graph.*
+import com.giyeok.bibix.plugins.PluginInstanceProvider
 import com.giyeok.bibix.plugins.PreloadedPlugin
 import com.google.protobuf.ByteString
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,9 +14,8 @@ import kotlinx.coroutines.sync.withLock
 
 class GlobalTaskRunner private constructor(
   val globalGraph: GlobalTaskGraph,
-  val mainProjectId: Int,
-  val preludeProjectId: Int,
   val preloadedPluginIds: Map<String, Int>,
+  val preloadedPluginInstanceProviders: Map<Int, PluginInstanceProvider>,
   val callExprStates: MutableMap<GlobalTaskId, CallExprRunState>,
   val exprResults: MutableMap<GlobalTaskId, BibixValue>,
   val importInstances: MutableMap<Int, MutableList<GlobalTaskId>>,
@@ -38,11 +38,14 @@ class GlobalTaskRunner private constructor(
         )
       )
 
+      val preloadedPluginInstanceProviders = mutableMapOf<Int, PluginInstanceProvider>()
+
       globalGraph.addProject(
         2,
         TaskGraph.fromDefs(preludePlugin.defs, preloadedPlugins.keys, preludeNames, true),
         preludePlugin.script
       )
+      preloadedPluginInstanceProviders[2] = preludePlugin.pluginInstanceProvider
 
       var preloadedPluginIdCounter = 3
       val preloadedPluginIds = mutableMapOf<String, Int>()
@@ -53,13 +56,19 @@ class GlobalTaskRunner private constructor(
           TaskGraph.fromDefs(plugin.defs, preloadedPlugins.keys, preludeNames, true),
           plugin.script
         )
+        preloadedPluginInstanceProviders[preloadedPluginIdCounter] = plugin.pluginInstanceProvider
         preloadedPluginIdCounter += 1
       }
 
       // TODO prelude와 preloaded plugin간의 연결
 
       return GlobalTaskRunner(
-        globalGraph, 1, 2, preloadedPluginIds, mutableMapOf(), mutableMapOf(), mutableMapOf()
+        globalGraph,
+        preloadedPluginIds,
+        preloadedPluginInstanceProviders,
+        mutableMapOf(),
+        mutableMapOf(),
+        mutableMapOf()
       )
     }
   }
@@ -71,7 +80,7 @@ class GlobalTaskRunner private constructor(
     return lastProjectId
   }
 
-  val mainProjectGraph get() = globalGraph.getProject(mainProjectId)
+  val mainProjectGraph get() = globalGraph.getProjectGraph(MainProjectId.projectId)
 
   fun getMainProjectTaskId(taskNameTokens: List<String>): GlobalTaskId {
     when (val lookupResult = mainProjectGraph.nameLookupTable.lookupName(taskNameTokens)) {
@@ -113,14 +122,37 @@ class GlobalTaskRunner private constructor(
     data class LongRunningResult(val runner: suspend () -> NodeResult): TaskRunResult()
   }
 
-  val results = mutableMapOf<GlobalTaskId, NodeResult>()
+  private val resultsMutex = Mutex()
+  private val results = mutableMapOf<GlobalTaskId, NodeResult>()
 
   fun getResult(prjInstanceId: ProjectInstanceId, taskId: TaskId): NodeResult? =
     results[GlobalTaskId(prjInstanceId, taskId)]
 
-  suspend fun runTask(taskId: GlobalTaskId): TaskRunResult {
+  fun globalResultOrPrerequisite(
+    prjInstanceId: ProjectInstanceId,
+    localTaskId: TaskId,
+    edgeType: TaskEdgeType
+  ): TaskRunResult {
+    val nodeResult = getResult(prjInstanceId, localTaskId)
+    return if (nodeResult != null) {
+      TaskRunResult.ImmediateResult(nodeResult)
+    } else {
+      TaskRunResult.UnfulfilledPrerequisites(
+        listOf(GlobalTaskId(prjInstanceId, localTaskId) to edgeType)
+      )
+    }
+  }
+
+  fun runTask(taskId: GlobalTaskId): TaskRunResult {
+    check(taskId !in results)
+    println(taskId.toNodeId())
+
     val prjInstanceId = taskId.projectInstanceId
-    when (val node = globalGraph.getNode(taskId)) {
+
+    fun resultOrPrerequisite(localTaskId: TaskId, edgeType: TaskEdgeType): TaskRunResult =
+      globalResultOrPrerequisite(prjInstanceId, localTaskId, edgeType)
+
+    val result: TaskRunResult = when (val node = globalGraph.getNode(taskId)) {
       is ExprNode<*> -> evaluateExprNode(prjInstanceId, node)
 
       is ImportNode -> {
@@ -141,65 +173,103 @@ class GlobalTaskRunner private constructor(
 
           else -> throw IllegalStateException()
         }
-        results[taskId] = ImportResult(importedProjectId)
-        // resolveImport(taskId.projectInstanceId, node)
-        println(node)
-      }
-
-      is ImportInstanceNode -> {
-        val importResult = getResult(prjInstanceId, node.importNode)
-        check(importResult is ImportResult)
-        results[taskId] = ImportInstanceResult(
-          importResult.projectId,
-          node.varRedefs.mapValues { (_, varValueTaskId) ->
-            GlobalTaskId(prjInstanceId, varValueTaskId)
-          })
-        importInstances.getOrPut(importResult.projectId) { mutableListOf() }.add(taskId)
-      }
-
-      is ImportedTaskNode -> {
-        val importInstance = getResult(prjInstanceId, node.importInstanceNode)
-        check(importInstance is ImportInstanceResult)
+        TaskRunResult.ImmediateResult(NodeResult.ImportResult(importedProjectId))
       }
 
       is PreloadedPluginNode -> {
         val preloadedPluginProjectId = preloadedPluginIds.getValue(node.name)
         // ImportedProjectId(preloadedPluginProjectId, taskId)
         println("$node $preloadedPluginProjectId")
-        results[taskId] = ImportResult(preloadedPluginProjectId)
         // importInstances.getOrPut(preloadedPluginProjectId) { mutableListOf() }.add(taskId)
         // 여기서는 특별히 할 일이 없는 것 같은데? projectId나 넣고 끝인듯?
+        TaskRunResult.ImmediateResult(NodeResult.ImportResult(preloadedPluginProjectId))
       }
 
-//      is PreloadedPluginInstanceNode -> {
-//        val preloadedPlugin =
-//          globalGraph.getNode(taskId.projectInstanceId, node.preloadedPluginNode)
-//        println("$node $preloadedPlugin")
-//      }
+      is ImportInstanceNode -> {
+        val importResult = getResult(prjInstanceId, node.importNode)
+        check(importResult is NodeResult.ImportResult)
+        importInstances.getOrPut(importResult.projectId) { mutableListOf() }.add(taskId)
+        TaskRunResult.ImmediateResult(
+          NodeResult.ImportInstanceResult(
+            ImportedProjectId(importResult.projectId, taskId),
+            node.varRedefs.mapValues { (_, varValueTaskId) ->
+              GlobalTaskId(prjInstanceId, varValueTaskId)
+            })
+        )
+      }
 
-      is MemberAccessNode -> {}
-      is BibixTypeNode -> {}
-      is BuildRuleNode -> {}
-      is ClassElemCastNode -> {}
-      is DataClassTypeNode -> {}
-      is EnumTypeNode -> {}
-      is EnumValueNode -> {}
-      is NativeImplNode -> {}
-      is PreludeMemberNode -> {}
+      is MemberAccessNode -> {
+        if (node.remainingNames.isEmpty()) {
+          return resultOrPrerequisite(node.target, TaskEdgeType.ValueDependency)
+        }
+        when (val target = getResult(prjInstanceId, node.target)) {
+          is NodeResult.ImportInstanceResult -> {
+            val importedGraph = globalGraph.getProjectGraph(target.projectId)
+            when (val nameLookupResult =
+              importedGraph.nameLookupTable.lookupName(node.remainingNames)) {
+              is NameEntryFound -> {
+                globalResultOrPrerequisite(
+                  target.prjInstanceId,
+                  nameLookupResult.entry.id,
+                  TaskEdgeType.ValueDependency
+                )
+              }
+
+              else -> {
+                println(nameLookupResult)
+                TODO()
+              }
+            }
+          }
+
+          is NodeResult.ValueResult -> TODO()
+          is NodeResult.TargetResult -> TODO()
+
+          else -> TODO()
+        }
+      }
+
+      is BibixTypeNode -> {
+        TaskRunResult.ImmediateResult(NodeResult.TypeResult(node.bibixType))
+      }
+
+      is BuildRuleNode -> {
+        TaskRunResult.ImmediateResult(NodeResult.BuildRuleResult(prjInstanceId, node))
+      }
+
+      is ClassElemCastNode -> {
+        TODO()
+      }
+
+      is DataClassTypeNode -> {
+        TODO()
+      }
+
+      is EnumTypeNode -> {
+        TODO()
+      }
+
+      is EnumValueNode -> {
+        TODO()
+      }
+
+      is NativeImplNode -> {
+        val instanceProvider = preloadedPluginInstanceProviders.getValue(prjInstanceId.projectId)
+        println(instanceProvider)
+        val impl = instanceProvider.getInstance(node.className)
+        TODO()
+      }
+
+      is PreludeMemberNode -> {
+        TODO()
+      }
 
       is PreludeTaskNode -> {
-        val preludeGraph = globalGraph.projectGraphs.getValue(preludeProjectId)
+        val preludeGraph = globalGraph.projectGraphs.getValue(PreludeProjectId.projectId)
         when (val lookupResult = preludeGraph.nameLookupTable.lookupName(listOf(node.name))) {
           is NameEntryFound -> {
             val entry = lookupResult.entry
-            val nodeResult = getResult(prjInstanceId, entry.id)
-            return if (nodeResult != null) {
-              TaskRunResult.ImmediateResult(nodeResult)
-            } else {
-              TaskRunResult.UnfulfilledPrerequisites(
-                listOf(GlobalTaskId(prjInstanceId, entry.id) to TaskEdgeType.Reference)
-              )
-            }
+            globalResultOrPrerequisite(PreludeProjectId, entry.id, TaskEdgeType.Reference)
           }
 
           is EnumValueFound -> TODO()
@@ -211,44 +281,87 @@ class GlobalTaskRunner private constructor(
         }
       }
 
-      is SuperClassTypeNode -> {}
-      is TargetNode -> {}
-      is CollectionTypeNode -> {}
-      is NamedTupleTypeNode -> {}
-      is TupleTypeNode -> {}
-      is TypeNameNode -> {}
-      is UnionTypeNode -> {}
-      is VarNode -> {}
+      is SuperClassTypeNode -> {
+        TODO()
+      }
+
+      is TargetNode -> {
+        println("$taskId $node")
+        resultOrPrerequisite(node.valueNode, TaskEdgeType.Definition)
+      }
+
+      is CollectionTypeNode -> {
+        TODO()
+      }
+
+      is NamedTupleTypeNode -> {
+        TODO()
+      }
+
+      is TupleTypeNode -> {
+        TODO()
+      }
+
+      is TypeNameNode -> {
+        TODO()
+      }
+
+      is UnionTypeNode -> {
+        TODO()
+      }
+
+      is VarNode -> {
+        TODO()
+      }
     }
-    // TODO
-    return TaskRunResult.ImmediateResult(BuildRuleResult())
+    when (result) {
+      is TaskRunResult.ImmediateResult -> {
+        results[taskId] = result.result
+      }
+
+      is TaskRunResult.LongRunningResult -> {
+        TaskRunResult.LongRunningResult {
+          val nodeResult = result.runner()
+          resultsMutex.withLock {
+            results[taskId] = nodeResult
+          }
+          nodeResult
+        }
+      }
+
+      is TaskRunResult.UnfulfilledPrerequisites -> {
+        // do nothing
+      }
+    }
+    return result
   }
 
-  private val mutex = Mutex()
-  private val evalResults = mutableMapOf<GlobalTaskId, MutableStateFlow<BibixValue?>>()
-
-  suspend fun getNodeResult(nodeId: GlobalTaskId): BibixValue = mutex.withLock {
-    val flow = evalResults[nodeId]
-    checkNotNull(flow)
-    flow.value ?: throw IllegalStateException()
+  fun getValResult(prjInstanceId: ProjectInstanceId, taskId: TaskId): BibixValue? {
+    val result = getResult(prjInstanceId, taskId)
+    return if (result == null) null else {
+      check(result is NodeResult.ValueResult)
+      result.value
+    }
   }
 
-  suspend fun getNodeResult(projectInstanceId: ProjectInstanceId, taskId: TaskId): BibixValue =
-    getNodeResult(GlobalTaskId(projectInstanceId, taskId))
+  private fun v(value: BibixValue): TaskRunResult =
+    TaskRunResult.ImmediateResult(NodeResult.ValueResult(value))
 
-  suspend fun evaluateExprNode(prjInstanceId: ProjectInstanceId, node: ExprNode<*>): BibixValue =
+  fun evaluateExprNode(prjInstanceId: ProjectInstanceId, node: ExprNode<*>): TaskRunResult =
     when (node) {
-      is NoneLiteralNode -> NoneValue
-      is BooleanLiteralNode -> BooleanValue(node.literal.value)
+      is NoneLiteralNode -> v(NoneValue)
+      is BooleanLiteralNode -> v(BooleanValue(node.literal.value))
 
       is MemberAccessExprNode -> {
+        val targetResult = getResult(prjInstanceId, node.target)!!
+        println(targetResult)
         val targetNode = globalGraph.getNode(prjInstanceId, node.target)
         if (node.memberNames.isEmpty()) {
           // targetNode의 실행 결과
         } else {
           // targetNode의 실행 결과에서 memberAccess
         }
-        StringValue("$node $targetNode ${node.memberNames}")
+        v(StringValue("$node $targetNode ${node.memberNames}"))
       }
 
       is StringNode -> {
@@ -263,42 +376,92 @@ class GlobalTaskRunner private constructor(
 
             is BibixAst.JustChar -> builder.append(elem.chr)
             is BibixAst.ComplexExpr -> {
-              val elemValue = getNodeResult(prjInstanceId, node.exprElems[elemCounter++])
+              val elemValue = getValResult(prjInstanceId, node.exprElems[elemCounter++])!!
+              // TODO coercion
               elemValue as StringValue
             }
 
             is BibixAst.SimpleExpr -> {
-              val elemValue = getNodeResult(prjInstanceId, node.exprElems[elemCounter++])
+              val elemValue = getValResult(prjInstanceId, node.exprElems[elemCounter++])
+              // TODO coercion
               elemValue as StringValue
             }
           }
         }
         check(elemCounter == node.exprElems.size)
-        StringValue(builder.toString())
+        v(StringValue(builder.toString()))
       }
 
       is CallExprNode -> {
-        StringValue("TODO")
+        val posParams = node.posParams.map { getResult(prjInstanceId, it)!! }
+        val namedArgs = node.namedParams.mapValues { (_, arg) ->
+          getResult(prjInstanceId, arg)!!
+        }
+        val callee = getResult(prjInstanceId, node.callee)!!
+        println("$callee($posParams, $namedArgs)")
+        when (callee) {
+          is NodeResult.BuildRuleResult -> {
+            // callee의 parameter 목록을 보고 posParams와 namedParams와 맞춰본다
+            val paramNames = callee.buildRuleNode.def.params.map { it.name }
+            val posArgs = posParams.zip(paramNames) { arg, name -> name to arg }.toMap()
+
+            val remainingParamNames = paramNames.drop(posParams.size).toSet()
+            check(remainingParamNames.containsAll(namedArgs.keys)) { "Unknown parameters" }
+
+            val ruleParams = callee.buildRuleNode.def.params.associateBy { it.name }
+            val unspecifiedParamNames = remainingParamNames - namedArgs.keys
+            check(unspecifiedParamNames.all { unspecified ->
+              val param = ruleParams.getValue(unspecified)
+              param.optional || param.defaultValue != null
+            }) { "Required parameters are not specified" }
+
+            // 만약 callee의 default param이 필요한데 그 값이 없으면 prerequisite으로 반환하고
+            // 모든 값이 충족되었으면 TaskRunResult.LongRunningResult 로 build rule을 실행하는 코드를 반환한다
+            val defaultParamTasks = unspecifiedParamNames.associateWith {
+              callee.buildRuleNode.paramDefaultValues.getValue(it)
+            }
+            val defaults = defaultParamTasks.mapValues { (_, value) ->
+              getResult(prjInstanceId, value)
+            }
+            val missingDefaults = defaults.filter { it.value == null }
+            if (missingDefaults.isNotEmpty()) {
+              TaskRunResult.UnfulfilledPrerequisites(missingDefaults.keys.map { missingParamName ->
+                val defaultParamTask = defaultParamTasks.getValue(missingParamName)
+                GlobalTaskId(callee.prjInstanceId, defaultParamTask) to TaskEdgeType.ValueDependency
+              })
+            } else {
+              val defaultValues = defaults.mapValues { (_, value) -> value!! }
+
+              val args: Map<String, NodeResult> = posArgs + namedArgs + defaultValues
+              v(StringValue("TODO: CallExpr $args"))
+            }
+          }
+
+          is NodeResult.NativeImplResult -> TODO()
+          is NodeResult.RunnableResult -> TODO()
+
+          else -> TODO()
+        }
       }
 
       is CastExprNode -> TODO()
 
       is TupleNode -> {
-        val elems = node.elemNodes.map { getNodeResult(prjInstanceId, it) }
-        TupleValue(elems)
+        val elems = node.elemNodes.map { getValResult(prjInstanceId, it)!! }
+        v(TupleValue(elems))
       }
 
       is NamedTupleNode -> {
         val elems = node.elemNodes.map { (name, valueNode) ->
-          name to getNodeResult(prjInstanceId, valueNode)
+          name to getValResult(prjInstanceId, valueNode)!!
         }
-        NamedTupleValue(elems)
+        v(NamedTupleValue(elems))
       }
 
       is ListExprNode -> {
         val elems = mutableListOf<BibixValue>()
         node.elems.forEach { elem ->
-          val elemValue = getNodeResult(prjInstanceId, elem.valueNode)
+          val elemValue = getValResult(prjInstanceId, elem.valueNode)!!
           if (!elem.isEllipsis) {
             elems.add(elemValue)
           } else {
@@ -309,56 +472,18 @@ class GlobalTaskRunner private constructor(
             }
           }
         }
-        ListValue(elems)
+        v(ListValue(elems))
       }
 
       is MergeExprNode -> TODO()
-      is NameRefNode -> getNodeResult(prjInstanceId, node.valueNode)
-      is ParenExprNode -> getNodeResult(prjInstanceId, node.body)
+      is NameRefNode -> {
+        val value = getValResult(prjInstanceId, node.valueNode)
+        v(value!!)
+      }
+
+      is ParenExprNode -> v(getValResult(prjInstanceId, node.body)!!)
       is ThisRefNode -> TODO()
     }
-//
-//  suspend fun memoEvaluateNode(nodeId: GlobalTaskId): BibixValue {
-//    // TODO literal같은 trivial value들은 굳이 memoize 하지 말자
-//    val memo: MutableStateFlow<BibixValue?>
-//    val toEvaluate: Boolean
-//    mutex.withLock {
-//      val memoFlow = evalResults[nodeId]
-//      if (memoFlow == null) {
-//        memo = MutableStateFlow(null)
-//        evalResults[nodeId] = memo
-//        toEvaluate = true
-//      } else {
-//        memo = memoFlow
-//        toEvaluate = false
-//      }
-//    }
-//    return if (toEvaluate) {
-//      val result = evaluateExprNode(nodeId)
-//      memo.value = result
-//      result
-//    } else {
-//      memo.first { it != null }!!
-//    }
-//  }
-//
-//  suspend fun resolveImport(importNodeId: GlobalTaskId) {
-//    val importNode = globalGraph.getNode(importNodeId)
-//    check(importNode is ImportNode)
-//    val sourceNodeId = when (val importDef = importNode.import) {
-//      is BibixAst.ImportAll -> {
-//        TaskId(importDef.source.nodeId)
-//      }
-//
-//      is BibixAst.ImportFrom -> {
-//        TaskId(importDef.source.nodeId)
-//      }
-//    }
-//    val sourceNode = globalGraph.getNode(
-//      GlobalTaskId(importNodeId.projectInstanceId, sourceNodeId)
-//    )
-//    println(sourceNode)
-//  }
 }
 
 data class CallExprRunState(

@@ -6,6 +6,7 @@ import com.giyeok.bibix.graph.TaskId
 import com.giyeok.bibix.graph.TaskNode
 import com.google.common.collect.BiMap
 import com.google.common.collect.HashBiMap
+import kotlinx.coroutines.runBlocking
 import java.nio.file.Path
 import kotlin.io.path.readText
 
@@ -51,7 +52,7 @@ class GlobalTaskGraph private constructor(
     projectSources[projectId] = source
   }
 
-  fun getProject(projectId: Int): TaskGraph =
+  fun getProjectGraph(projectId: Int): TaskGraph =
     projectGraphs[projectId] ?: throw IllegalStateException()
 
   fun getProjectIdByLocation(location: BibixProjectLocation): Int? =
@@ -78,8 +79,9 @@ class GlobalTaskGraph private constructor(
   fun getNode(node: GlobalTaskId): TaskNode = getNode(node.projectInstanceId, node.taskId)
 
   fun getNode(projectInstanceId: ProjectInstanceId, taskId: TaskId): TaskNode {
-    val project = getProject(projectInstanceId.projectId)
-    return project.nodes[taskId] ?: throw IllegalStateException()
+    val project = getProjectGraph(projectInstanceId.projectId)
+    return project.nodes[taskId]
+      ?: throw IllegalStateException()
   }
 
   fun edgesByStart(node: GlobalTaskId): Set<GlobalTaskEdge> {
@@ -119,20 +121,25 @@ class GlobalTaskGraph private constructor(
     return reachables
   }
 
-  fun depsGraphFrom(nodes: Collection<GlobalTaskId>): GlobalTaskDepsGraph {
-    val depsGraph = GlobalTaskDepsGraphBuilder(this)
-
-    fun traverse(nodeId: GlobalTaskId) {
-      if (!depsGraph.hasNode(nodeId)) {
-        depsGraph.addNode(nodeId)
-        edgesByStart(nodeId).forEach { outgoing ->
-          depsGraph.addEdge(outgoing)
-          traverse(outgoing.end)
-        }
-      }
+  fun depsGraphFrom(nodes: Set<GlobalTaskId>): GlobalTaskDepsGraph {
+//    val depsGraph = GlobalTaskDepsGraphBuilder(this)
+//
+//    fun traverse(nodeId: GlobalTaskId) {
+//      if (!depsGraph.hasNode(nodeId)) {
+//        depsGraph.addNode(nodeId)
+//        edgesByStart(nodeId).forEach { outgoing ->
+//          depsGraph.addEdge(outgoing)
+//          traverse(outgoing.end)
+//        }
+//      }
+//    }
+//    nodes.distinct().forEach { traverse(it) }
+//    return depsGraph.build()
+    val depsGraph = GlobalTaskDepsGraph(this)
+    runBlocking {
+      depsGraph.addNodesAndReachables(nodes)
     }
-    nodes.distinct().forEach { traverse(it) }
-    return depsGraph.build()
+    return depsGraph
   }
 }
 
@@ -158,6 +165,10 @@ sealed class ProjectInstanceId {
 
 data object MainProjectId: ProjectInstanceId() {
   override val projectId: Int = 1
+}
+
+data object PreludeProjectId: ProjectInstanceId() {
+  override val projectId: Int = 2
 }
 
 data class ImportedProjectId(

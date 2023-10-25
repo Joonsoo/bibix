@@ -22,7 +22,11 @@ data class BuildRuleNode(
   override val id: TaskId = TaskId(def.nodeId)
 }
 
-data class NativeImplNode(val implTargetName: BibixAst.Name): TaskNode() {
+data class NativeImplNode(
+  val implTargetName: BibixAst.Name,
+  val className: String,
+  val methodName: String?
+): TaskNode() {
   override val id: TaskId = TaskId(implTargetName.nodeId)
 }
 
@@ -37,14 +41,6 @@ data class ImportInstanceNode(
 
 data class ImportNode(val import: BibixAst.ImportDef, val importSource: TaskId): TaskNode() {
   override val id: TaskId = TaskId(import.nodeId)
-}
-
-data class ImportedTaskNode(
-  val importInstanceNode: TaskId,
-  val remainingNames: List<String>
-): TaskNode() {
-  override val id =
-    TaskId(importInstanceNode.nodeId, Pair(importInstanceNode.additionalId, remainingNames))
 }
 
 data class PreloadedPluginNode(val name: String): TaskNode() {
@@ -65,7 +61,7 @@ data class PreludeMemberNode(val preludeName: String, val remainingNames: List<S
   override val id: TaskId = TaskId(0, this)
 }
 
-data class TargetNode(val def: BibixAst.TargetDef): TaskNode() {
+data class TargetNode(val def: BibixAst.TargetDef, val valueNode: TaskId): TaskNode() {
   override val id: TaskId = TaskId(def.nodeId)
 }
 
@@ -91,7 +87,7 @@ data class MergeExprNode(
 
 data class CallExprNode(
   val callExpr: BibixAst.CallExpr,
-  val rule: TaskId,
+  val callee: TaskId,
   val posParams: List<TaskId>,
   val namedParams: Map<String, TaskId>
 ): ExprNode<BibixAst.CallExpr>(callExpr)

@@ -48,8 +48,8 @@ class TaskGraphBuilder(
         }
 
         is BibixAst.TargetDef -> {
-          val targetNode = addNode(TargetNode(def))
           val valueNode = addExpr(def.value, ctx)
+          val targetNode = addNode(TargetNode(def, valueNode))
           addEdge(targetNode, valueNode, TaskEdgeType.Definition)
         }
 
@@ -142,7 +142,8 @@ class TaskGraphBuilder(
           val returnType = addType(def.returnType, ctx)
           val implTarget =
             if (ctx.nativeAllowed && def.impl.targetName.tokens == listOf("native")) {
-              addNode(NativeImplNode(def.impl.targetName))
+              val className = def.impl.className.tokens.joinToString(".")
+              addNode(NativeImplNode(def.impl.targetName, className, def.impl.methodName))
             } else {
               lookupResultToId(
                 ctx.nameLookupCtx.lookupName(def.impl.targetName.tokens, def.impl.targetName),
@@ -271,7 +272,7 @@ class TaskGraphBuilder(
         if (lookupResult.remaining.isEmpty()) {
           importNode
         } else {
-          val importedName = addNode(ImportedTaskNode(importNode, lookupResult.remaining))
+          val importedName = addNode(MemberAccessNode(importNode, lookupResult.remaining))
           addEdge(importedName, importNode, TaskEdgeType.ImportDependency)
           importedName
         }

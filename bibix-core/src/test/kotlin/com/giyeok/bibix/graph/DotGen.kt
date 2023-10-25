@@ -31,7 +31,6 @@ fun writeGraphContent(
       is TypeNode<*> -> "type\n$nodeSource"
       is ImportNode -> "import\n$nodeSource"
       is TargetNode -> "target\n$nodeSource"
-      is ImportedTaskNode -> "imported(${node.remainingNames})\n$nodeSource"
       is VarNode -> "var\n$nodeSource"
       is PreloadedPluginNode -> "preloaded ${node.name}"
       is MemberAccessNode -> "member ${node.target} ${node.remainingNames}"
@@ -84,7 +83,7 @@ fun dotGraphFrom(runner: GlobalTaskRunner): String {
   writer.writeLine("digraph tasks {")
   writer.indent {
     val mainGraph = runner.mainProjectGraph
-    val mainSource = runner.globalGraph.projectSources.getValue(runner.mainProjectId)
+    val mainSource = runner.globalGraph.projectSources.getValue(MainProjectId.projectId)
     writeGraphContent(mainGraph, mainSource, writer, MainProjectId)
 
     runner.importInstances.forEach { (projectId, importerIds) ->
@@ -97,33 +96,6 @@ fun dotGraphFrom(runner: GlobalTaskRunner): String {
   }
   writer.writeLine("}")
   return writer.toString()
-}
-
-fun TaskId.toNodeId(projectInstanceId: ProjectInstanceId?): String =
-  if (projectInstanceId == null) {
-    this.toNodeId()
-  } else {
-    GlobalTaskId(projectInstanceId, this).toNodeId()
-  }
-
-fun TaskId.toNodeId(): String =
-  if (this.additionalId == null) "n${this.nodeId}" else "n${this.nodeId}_${this.additionalId.hashCode().absoluteValue}"
-
-fun GlobalTaskId.toNodeId(): String {
-  val projectInstanceId = when (val instanceId = this.projectInstanceId) {
-    MainProjectId -> "main_${instanceId.projectId}"
-    is ImportedProjectId -> {
-      val importer = instanceId.importer
-      val importerDesc = "${importer.projectInstanceId.toNodeId()}_${importer.taskId.toNodeId()}"
-      "imp_${instanceId.projectId}_${instanceId.projectId}_$importerDesc"
-    }
-  }
-  return "g_${projectInstanceId}_${this.taskId.toNodeId()}"
-}
-
-fun ProjectInstanceId.toNodeId(): String = when (this) {
-  is ImportedProjectId -> TODO()
-  MainProjectId -> "main"
 }
 
 fun TaskEdgeType.toLabelString(): String = when (this) {

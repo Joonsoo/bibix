@@ -4,6 +4,8 @@ import com.giyeok.bibix.frontend.BuildFrontend
 import com.giyeok.bibix.graph.runner.*
 import com.giyeok.bibix.plugins.prelude.preludePlugin
 import kotlinx.coroutines.*
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import org.junit.jupiter.api.Test
 import java.nio.file.Path
 import java.util.concurrent.Executors
@@ -24,34 +26,42 @@ class GlobalTaskGraphTest {
 
       val targetTask = runner.getMainProjectTaskId("abc")
 
-      val job = CoroutineScope(Executors.newFixedThreadPool(4).asCoroutineDispatcher()).async {
-        val depsGraph = runner.globalGraph.depsGraphFrom(setOf(targetTask))
-        for (nextNode in depsGraph.nextNodeIds) {
-          when (val taskRunResult = runner.runTask(nextNode)) {
-            is GlobalTaskRunner.TaskRunResult.UnfulfilledPrerequisites -> {
-              val prerequisiteEdges = taskRunResult.prerequisites.map { (end, type) ->
-                GlobalTaskEdge(nextNode, end, type)
-              }
-              depsGraph.addEdges(prerequisiteEdges)
-            }
+      val dispatcher = Executors.newFixedThreadPool(4).asCoroutineDispatcher()
 
-            is GlobalTaskRunner.TaskRunResult.ImmediateResult -> {
-              taskRunResult.result
+      val depsGraph = runner.globalGraph.depsGraphFrom(setOf(targetTask))
+      val runnerMutex = Mutex()
+      for (nextNode in depsGraph.nextNodeIds) {
+        val taskRunResult = try {
+          runnerMutex.withLock {
+            runner.runTask(nextNode)
+          }
+        } catch (e: Exception) {
+          e.printStackTrace()
+          throw e
+        }
+        when (taskRunResult) {
+          is GlobalTaskRunner.TaskRunResult.UnfulfilledPrerequisites -> {
+            val prerequisiteEdges = taskRunResult.prerequisites.map { (end, type) ->
+              GlobalTaskEdge(nextNode, end, type)
+            }
+            depsGraph.addEdges(prerequisiteEdges)
+          }
+
+          is GlobalTaskRunner.TaskRunResult.ImmediateResult -> {
+            taskRunResult.result
+            depsGraph.finishNode(nextNode)
+          }
+
+          is GlobalTaskRunner.TaskRunResult.LongRunningResult -> {
+            CoroutineScope(dispatcher).launch {
+              taskRunResult.runner()
               depsGraph.finishNode(nextNode)
-            }
-
-            is GlobalTaskRunner.TaskRunResult.LongRunningResult -> {
-              launch {
-                taskRunResult.runner()
-                depsGraph.finishNode(nextNode)
-              }
             }
           }
         }
-        check(depsGraph.isDone())
-        println(depsGraph)
       }
-      job.await()
+      check(depsGraph.isDone())
+
 //      val requiredImports = runner.findRequiredImportsFor(setOf(targetTask))
 //      val job = CoroutineScope(Executors.newFixedThreadPool(4).asCoroutineDispatcher()).async {
 //        val importTasks = requiredImports.keys.map { requiredImport ->
