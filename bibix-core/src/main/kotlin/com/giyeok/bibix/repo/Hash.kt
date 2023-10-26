@@ -43,7 +43,7 @@ fun BibixIdProto.ArgsMap.hashString(): ByteString {
 fun BibixIdProto.SourceId.hashString(): ByteString =
   sha1Hash(this.toByteArray())
 
-suspend fun inputHashesFromPaths(paths: List<String>): BibixIdProto.InputHashes {
+fun inputHashesFromPaths(paths: List<String>): BibixIdProto.InputHashes {
   fun fileHashOf(path: Path): BibixIdProto.FileHash {
     val digest = newDigest()
     val buffer = ByteArray(1000)
@@ -91,7 +91,7 @@ suspend fun inputHashesFromPaths(paths: List<String>): BibixIdProto.InputHashes 
 
 fun BibixValue.hashString() = this.toProto().hashString()
 
-suspend fun BibixIdProto.ArgsMap.extractInputHashes(): BibixIdProto.InputHashes {
+fun BibixIdProto.ArgsMap.extractInputHashes(): BibixIdProto.InputHashes {
   fun traverseValue(value: BibixValueProto.BibixValue): List<String> = when (value.valueCase) {
     BibixValueProto.BibixValue.ValueCase.PATH_VALUE -> listOf(value.pathValue)
     BibixValueProto.BibixValue.ValueCase.FILE_VALUE -> listOf(value.fileValue)

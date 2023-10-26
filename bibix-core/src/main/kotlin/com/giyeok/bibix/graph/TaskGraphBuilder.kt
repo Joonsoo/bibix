@@ -67,9 +67,9 @@ class TaskGraphBuilder(
         }
 
         is BibixAst.DataClassDef -> {
-          val fieldTypes = def.fields.mapNotNull { field ->
-            field.typ?.let { field.name to addType(it, ctx) }
-          }.toMap()
+          val fieldTypes = def.fields.map { field ->
+            field.name to addType(field.typ!!, ctx)
+          }
           val defaultValues = def.fields.mapNotNull { field ->
             field.defaultValue?.let { field.name to addExpr(it, ctx) }
           }.toMap()
@@ -84,7 +84,7 @@ class TaskGraphBuilder(
             }
           }
           val classNode = addNode(DataClassTypeNode(def, fieldTypes, defaultValues, bodyElems))
-          fieldTypes.forEach { addEdge(classNode, it.value, TaskEdgeType.TypeDependency) }
+          fieldTypes.forEach { addEdge(classNode, it.second, TaskEdgeType.TypeDependency) }
           defaultValues.forEach {
             addEdge(classNode, it.value, TaskEdgeType.DefaultValueDependency)
           }

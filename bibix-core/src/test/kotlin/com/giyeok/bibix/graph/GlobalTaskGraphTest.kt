@@ -1,9 +1,19 @@
 package com.giyeok.bibix.graph
 
+import com.giyeok.bibix.base.Architecture
+import com.giyeok.bibix.base.BuildEnv
+import com.giyeok.bibix.base.OS
 import com.giyeok.bibix.frontend.BuildFrontend
-import com.giyeok.bibix.graph.runner.*
+import com.giyeok.bibix.graph.runner.BibixProjectLocation
+import com.giyeok.bibix.graph.runner.GlobalTaskEdge
+import com.giyeok.bibix.graph.runner.GlobalTaskRunner
+import com.giyeok.bibix.graph.runner.toNodeId
 import com.giyeok.bibix.plugins.prelude.preludePlugin
-import kotlinx.coroutines.*
+import com.giyeok.bibix.repo.BibixRepo
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.asCoroutineDispatcher
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import org.junit.jupiter.api.Test
@@ -15,10 +25,16 @@ class GlobalTaskGraphTest {
   @Test
   fun test() {
     runBlocking {
+      val mainProjectLocation =
+        BibixProjectLocation(Path.of("bibix-core/src/test/resources").absolute(), "test1.bbx")
+      val buildEnv = BuildEnv(OS.Linux("", ""), Architecture.X86_64)
+      val repo = BibixRepo.load(mainProjectLocation.projectRoot)
       val runner = GlobalTaskRunner.create(
-        BibixProjectLocation(Path.of("bibix-core/src/test/resources").absolute(), "test1.bbx"),
+        mainProjectLocation,
         preludePlugin,
-        BuildFrontend.defaultPreloadedPlugins
+        BuildFrontend.defaultPreloadedPlugins,
+        buildEnv,
+        repo
       )
 
       println(dotGraphFrom(runner))
@@ -55,7 +71,13 @@ class GlobalTaskGraphTest {
 
           is GlobalTaskRunner.TaskRunResult.LongRunningResult -> {
             CoroutineScope(dispatcher).launch {
-              taskRunResult.runner()
+              try {
+                taskRunResult.runner()
+              } catch (e: Exception) {
+                e.printStackTrace()
+                // 실행을 종료해야 하는데..?
+                throw e
+              }
               depsGraph.finishNode(nextNode)
             }
           }

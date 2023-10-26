@@ -56,165 +56,35 @@ public object TargetIdDataKt {
      * string target_name = 2;
      * ```
      *
-     * `.com.giyeok.bibix.SourceId build_rule_source_id = 2;`
+     * `.com.giyeok.bibix.BuildRuleData build_rule = 2;`
      */
-    public var buildRuleSourceId: com.giyeok.bibix.BibixIdProto.SourceId
-      @JvmName("getBuildRuleSourceId")
-      get() = _builder.getBuildRuleSourceId()
-      @JvmName("setBuildRuleSourceId")
+    public var buildRule: com.giyeok.bibix.BibixIdProto.BuildRuleData
+      @JvmName("getBuildRule")
+      get() = _builder.getBuildRule()
+      @JvmName("setBuildRule")
       set(value) {
-        _builder.setBuildRuleSourceId(value)
+        _builder.setBuildRule(value)
       }
     /**
      * ```
      * string target_name = 2;
      * ```
      *
-     * `.com.giyeok.bibix.SourceId build_rule_source_id = 2;`
+     * `.com.giyeok.bibix.BuildRuleData build_rule = 2;`
      */
-    public fun clearBuildRuleSourceId() {
-      _builder.clearBuildRuleSourceId()
+    public fun clearBuildRule() {
+      _builder.clearBuildRule()
     }
     /**
      * ```
      * string target_name = 2;
      * ```
      *
-     * `.com.giyeok.bibix.SourceId build_rule_source_id = 2;`
-     * @return Whether the buildRuleSourceId field is set.
+     * `.com.giyeok.bibix.BuildRuleData build_rule = 2;`
+     * @return Whether the buildRule field is set.
      */
-    public fun hasBuildRuleSourceId(): kotlin.Boolean {
-      return _builder.hasBuildRuleSourceId()
-    }
-
-    /**
-     * `.google.protobuf.Empty native_impl = 3;`
-     */
-    public var nativeImpl: com.google.protobuf.Empty
-      @JvmName("getNativeImpl")
-      get() = _builder.getNativeImpl()
-      @JvmName("setNativeImpl")
-      set(value) {
-        _builder.setNativeImpl(value)
-      }
-    /**
-     * `.google.protobuf.Empty native_impl = 3;`
-     */
-    public fun clearNativeImpl() {
-      _builder.clearNativeImpl()
-    }
-    /**
-     * `.google.protobuf.Empty native_impl = 3;`
-     * @return Whether the nativeImpl field is set.
-     */
-    public fun hasNativeImpl(): kotlin.Boolean {
-      return _builder.hasNativeImpl()
-    }
-
-    /**
-     * ```
-     * 다른 플러그인을 호출해서 생성된 impl인 경우 build_rule_impl_id,
-     * ```
-     *
-     * `.com.giyeok.bibix.BuildRuleImplId build_rule_impl_id = 4;`
-     */
-    public var buildRuleImplId: com.giyeok.bibix.BibixIdProto.BuildRuleImplId
-      @JvmName("getBuildRuleImplId")
-      get() = _builder.getBuildRuleImplId()
-      @JvmName("setBuildRuleImplId")
-      set(value) {
-        _builder.setBuildRuleImplId(value)
-      }
-    /**
-     * ```
-     * 다른 플러그인을 호출해서 생성된 impl인 경우 build_rule_impl_id,
-     * ```
-     *
-     * `.com.giyeok.bibix.BuildRuleImplId build_rule_impl_id = 4;`
-     */
-    public fun clearBuildRuleImplId() {
-      _builder.clearBuildRuleImplId()
-    }
-    /**
-     * ```
-     * 다른 플러그인을 호출해서 생성된 impl인 경우 build_rule_impl_id,
-     * ```
-     *
-     * `.com.giyeok.bibix.BuildRuleImplId build_rule_impl_id = 4;`
-     * @return Whether the buildRuleImplId field is set.
-     */
-    public fun hasBuildRuleImplId(): kotlin.Boolean {
-      return _builder.hasBuildRuleImplId()
-    }
-
-    /**
-     * ```
-     * jvm.ClassPaths같은 data class를 사용한 경우 value의 해시값을 사용
-     * ```
-     *
-     * `bytes bibix_value_hash = 5;`
-     */
-    public var bibixValueHash: com.google.protobuf.ByteString
-      @JvmName("getBibixValueHash")
-      get() = _builder.getBibixValueHash()
-      @JvmName("setBibixValueHash")
-      set(value) {
-        _builder.setBibixValueHash(value)
-      }
-    /**
-     * ```
-     * jvm.ClassPaths같은 data class를 사용한 경우 value의 해시값을 사용
-     * ```
-     *
-     * `bytes bibix_value_hash = 5;`
-     */
-    public fun clearBibixValueHash() {
-      _builder.clearBibixValueHash()
-    }
-    /**
-     * ```
-     * jvm.ClassPaths같은 data class를 사용한 경우 value의 해시값을 사용
-     * ```
-     *
-     * `bytes bibix_value_hash = 5;`
-     * @return Whether the bibixValueHash field is set.
-     */
-    public fun hasBibixValueHash(): kotlin.Boolean {
-      return _builder.hasBibixValueHash()
-    }
-
-    /**
-     * `string build_rule_class_name = 6;`
-     */
-    public var buildRuleClassName: kotlin.String
-      @JvmName("getBuildRuleClassName")
-      get() = _builder.getBuildRuleClassName()
-      @JvmName("setBuildRuleClassName")
-      set(value) {
-        _builder.setBuildRuleClassName(value)
-      }
-    /**
-     * `string build_rule_class_name = 6;`
-     */
-    public fun clearBuildRuleClassName() {
-      _builder.clearBuildRuleClassName()
-    }
-
-    /**
-     * `string build_rule_method_name = 7;`
-     */
-    public var buildRuleMethodName: kotlin.String
-      @JvmName("getBuildRuleMethodName")
-      get() = _builder.getBuildRuleMethodName()
-      @JvmName("setBuildRuleMethodName")
-      set(value) {
-        _builder.setBuildRuleMethodName(value)
-      }
-    /**
-     * `string build_rule_method_name = 7;`
-     */
-    public fun clearBuildRuleMethodName() {
-      _builder.clearBuildRuleMethodName()
+    public fun hasBuildRule(): kotlin.Boolean {
+      return _builder.hasBuildRule()
     }
 
     /**
@@ -240,13 +110,6 @@ public object TargetIdDataKt {
     public fun hasArgsMap(): kotlin.Boolean {
       return _builder.hasArgsMap()
     }
-    public val buildRuleCase: com.giyeok.bibix.BibixIdProto.TargetIdData.BuildRuleCase
-      @JvmName("getBuildRuleCase")
-      get() = _builder.getBuildRuleCase()
-
-    public fun clearBuildRule() {
-      _builder.clearBuildRule()
-    }
   }
 }
 @kotlin.jvm.JvmSynthetic
@@ -257,14 +120,8 @@ public inline fun com.giyeok.bibix.BibixIdProto.TargetIdData.copy(block: com.giy
 public val com.giyeok.bibix.BibixIdProto.TargetIdDataOrBuilder.sourceIdOrNull: com.giyeok.bibix.BibixIdProto.SourceId?
   get() = if (hasSourceId()) getSourceId() else null
 
-public val com.giyeok.bibix.BibixIdProto.TargetIdDataOrBuilder.buildRuleSourceIdOrNull: com.giyeok.bibix.BibixIdProto.SourceId?
-  get() = if (hasBuildRuleSourceId()) getBuildRuleSourceId() else null
-
-public val com.giyeok.bibix.BibixIdProto.TargetIdDataOrBuilder.nativeImplOrNull: com.google.protobuf.Empty?
-  get() = if (hasNativeImpl()) getNativeImpl() else null
-
-public val com.giyeok.bibix.BibixIdProto.TargetIdDataOrBuilder.buildRuleImplIdOrNull: com.giyeok.bibix.BibixIdProto.BuildRuleImplId?
-  get() = if (hasBuildRuleImplId()) getBuildRuleImplId() else null
+public val com.giyeok.bibix.BibixIdProto.TargetIdDataOrBuilder.buildRuleOrNull: com.giyeok.bibix.BibixIdProto.BuildRuleData?
+  get() = if (hasBuildRule()) getBuildRule() else null
 
 public val com.giyeok.bibix.BibixIdProto.TargetIdDataOrBuilder.argsMapOrNull: com.giyeok.bibix.BibixIdProto.ArgsMap?
   get() = if (hasArgsMap()) getArgsMap() else null

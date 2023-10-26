@@ -8,10 +8,10 @@ import com.giyeok.bibix.frontend.ThreadState
 import com.giyeok.bibix.interpreter.coroutine.FakeProgressIndicatorContainer
 import com.giyeok.bibix.plugins.PluginInstanceProvider
 import com.giyeok.bibix.plugins.PreloadedPlugin
-import com.giyeok.bibix.repo.Repo
+import com.giyeok.bibix.repo.BibixRepo
 import java.nio.file.FileSystem
 
-fun testRepo(fs: FileSystem): Repo = Repo.load(fs.getPath("/"))
+fun testRepo(fs: FileSystem): BibixRepo = BibixRepo.load(fs.getPath("/"))
 
 fun testInterpreter(
   fs: FileSystem,

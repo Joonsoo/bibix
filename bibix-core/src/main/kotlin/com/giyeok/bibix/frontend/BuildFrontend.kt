@@ -12,7 +12,7 @@ import com.giyeok.bibix.plugins.file.filePlugin
 import com.giyeok.bibix.plugins.jvm.jvmPlugin
 import com.giyeok.bibix.plugins.maven.mavenPlugin
 import com.giyeok.bibix.plugins.prelude.preludePlugin
-import com.giyeok.bibix.repo.Repo
+import com.giyeok.bibix.repo.BibixRepo
 import kotlinx.coroutines.*
 import java.io.PrintWriter
 import java.io.StringWriter
@@ -38,7 +38,7 @@ class BuildFrontend(
     )
   }
 
-  val repo = Repo.load(mainProject.projectRoot, debuggingMode = debuggingMode)
+  val repo = BibixRepo.load(mainProject.projectRoot, debuggingMode = debuggingMode)
 
   val buildEnv = BuildEnv(getOsValue(), getArchValue())
 

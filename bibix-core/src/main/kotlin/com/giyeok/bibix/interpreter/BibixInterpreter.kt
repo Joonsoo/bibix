@@ -11,7 +11,7 @@ import com.giyeok.bibix.interpreter.expr.*
 import com.giyeok.bibix.interpreter.task.Task
 import com.giyeok.bibix.interpreter.task.TaskRelGraph
 import com.giyeok.bibix.plugins.PreloadedPlugin
-import com.giyeok.bibix.repo.Repo
+import com.giyeok.bibix.repo.BibixRepo
 import com.google.common.annotations.VisibleForTesting
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.runBlocking
@@ -23,7 +23,7 @@ class BibixInterpreter(
   val preloadedPlugins: Map<String, PreloadedPlugin>,
   val pluginImplProvider: PluginImplProvider,
   val mainProject: BibixProject,
-  val repo: Repo,
+  val repo: BibixRepo,
   val progressIndicatorContainer: ProgressIndicatorContainer,
   val actionArgs: List<String>,
 ) {

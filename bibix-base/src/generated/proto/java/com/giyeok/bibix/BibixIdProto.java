@@ -2271,112 +2271,27 @@ public final class BibixIdProto {
      * string target_name = 2;
      * </pre>
      *
-     * <code>.com.giyeok.bibix.SourceId build_rule_source_id = 2;</code>
-     * @return Whether the buildRuleSourceId field is set.
+     * <code>.com.giyeok.bibix.BuildRuleData build_rule = 2;</code>
+     * @return Whether the buildRule field is set.
      */
-    boolean hasBuildRuleSourceId();
+    boolean hasBuildRule();
     /**
      * <pre>
      * string target_name = 2;
      * </pre>
      *
-     * <code>.com.giyeok.bibix.SourceId build_rule_source_id = 2;</code>
-     * @return The buildRuleSourceId.
+     * <code>.com.giyeok.bibix.BuildRuleData build_rule = 2;</code>
+     * @return The buildRule.
      */
-    com.giyeok.bibix.BibixIdProto.SourceId getBuildRuleSourceId();
+    com.giyeok.bibix.BibixIdProto.BuildRuleData getBuildRule();
     /**
      * <pre>
      * string target_name = 2;
      * </pre>
      *
-     * <code>.com.giyeok.bibix.SourceId build_rule_source_id = 2;</code>
+     * <code>.com.giyeok.bibix.BuildRuleData build_rule = 2;</code>
      */
-    com.giyeok.bibix.BibixIdProto.SourceIdOrBuilder getBuildRuleSourceIdOrBuilder();
-
-    /**
-     * <code>.google.protobuf.Empty native_impl = 3;</code>
-     * @return Whether the nativeImpl field is set.
-     */
-    boolean hasNativeImpl();
-    /**
-     * <code>.google.protobuf.Empty native_impl = 3;</code>
-     * @return The nativeImpl.
-     */
-    com.google.protobuf.Empty getNativeImpl();
-    /**
-     * <code>.google.protobuf.Empty native_impl = 3;</code>
-     */
-    com.google.protobuf.EmptyOrBuilder getNativeImplOrBuilder();
-
-    /**
-     * <pre>
-     * 다른 플러그인을 호출해서 생성된 impl인 경우 build_rule_impl_id,
-     * </pre>
-     *
-     * <code>.com.giyeok.bibix.BuildRuleImplId build_rule_impl_id = 4;</code>
-     * @return Whether the buildRuleImplId field is set.
-     */
-    boolean hasBuildRuleImplId();
-    /**
-     * <pre>
-     * 다른 플러그인을 호출해서 생성된 impl인 경우 build_rule_impl_id,
-     * </pre>
-     *
-     * <code>.com.giyeok.bibix.BuildRuleImplId build_rule_impl_id = 4;</code>
-     * @return The buildRuleImplId.
-     */
-    com.giyeok.bibix.BibixIdProto.BuildRuleImplId getBuildRuleImplId();
-    /**
-     * <pre>
-     * 다른 플러그인을 호출해서 생성된 impl인 경우 build_rule_impl_id,
-     * </pre>
-     *
-     * <code>.com.giyeok.bibix.BuildRuleImplId build_rule_impl_id = 4;</code>
-     */
-    com.giyeok.bibix.BibixIdProto.BuildRuleImplIdOrBuilder getBuildRuleImplIdOrBuilder();
-
-    /**
-     * <pre>
-     * jvm.ClassPaths같은 data class를 사용한 경우 value의 해시값을 사용
-     * </pre>
-     *
-     * <code>bytes bibix_value_hash = 5;</code>
-     * @return Whether the bibixValueHash field is set.
-     */
-    boolean hasBibixValueHash();
-    /**
-     * <pre>
-     * jvm.ClassPaths같은 data class를 사용한 경우 value의 해시값을 사용
-     * </pre>
-     *
-     * <code>bytes bibix_value_hash = 5;</code>
-     * @return The bibixValueHash.
-     */
-    com.google.protobuf.ByteString getBibixValueHash();
-
-    /**
-     * <code>string build_rule_class_name = 6;</code>
-     * @return The buildRuleClassName.
-     */
-    java.lang.String getBuildRuleClassName();
-    /**
-     * <code>string build_rule_class_name = 6;</code>
-     * @return The bytes for buildRuleClassName.
-     */
-    com.google.protobuf.ByteString
-        getBuildRuleClassNameBytes();
-
-    /**
-     * <code>string build_rule_method_name = 7;</code>
-     * @return The buildRuleMethodName.
-     */
-    java.lang.String getBuildRuleMethodName();
-    /**
-     * <code>string build_rule_method_name = 7;</code>
-     * @return The bytes for buildRuleMethodName.
-     */
-    com.google.protobuf.ByteString
-        getBuildRuleMethodNameBytes();
+    com.giyeok.bibix.BibixIdProto.BuildRuleDataOrBuilder getBuildRuleOrBuilder();
 
     /**
      * <code>.com.giyeok.bibix.ArgsMap args_map = 8;</code>
@@ -2392,8 +2307,6 @@ public final class BibixIdProto {
      * <code>.com.giyeok.bibix.ArgsMap args_map = 8;</code>
      */
     com.giyeok.bibix.BibixIdProto.ArgsMapOrBuilder getArgsMapOrBuilder();
-
-    com.giyeok.bibix.BibixIdProto.TargetIdData.BuildRuleCase getBuildRuleCase();
   }
   /**
    * Protobuf type {@code com.giyeok.bibix.TargetIdData}
@@ -2408,8 +2321,6 @@ public final class BibixIdProto {
       super(builder);
     }
     private TargetIdData() {
-      buildRuleClassName_ = "";
-      buildRuleMethodName_ = "";
     }
 
     @java.lang.Override
@@ -2430,50 +2341,6 @@ public final class BibixIdProto {
       return com.giyeok.bibix.BibixIdProto.internal_static_com_giyeok_bibix_TargetIdData_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               com.giyeok.bibix.BibixIdProto.TargetIdData.class, com.giyeok.bibix.BibixIdProto.TargetIdData.Builder.class);
-    }
-
-    private int buildRuleCase_ = 0;
-    @SuppressWarnings("serial")
-    private java.lang.Object buildRule_;
-    public enum BuildRuleCase
-        implements com.google.protobuf.Internal.EnumLite,
-            com.google.protobuf.AbstractMessage.InternalOneOfEnum {
-      NATIVE_IMPL(3),
-      BUILD_RULE_IMPL_ID(4),
-      BIBIX_VALUE_HASH(5),
-      BUILDRULE_NOT_SET(0);
-      private final int value;
-      private BuildRuleCase(int value) {
-        this.value = value;
-      }
-      /**
-       * @param value The number of the enum to look for.
-       * @return The enum associated with the given number.
-       * @deprecated Use {@link #forNumber(int)} instead.
-       */
-      @java.lang.Deprecated
-      public static BuildRuleCase valueOf(int value) {
-        return forNumber(value);
-      }
-
-      public static BuildRuleCase forNumber(int value) {
-        switch (value) {
-          case 3: return NATIVE_IMPL;
-          case 4: return BUILD_RULE_IMPL_ID;
-          case 5: return BIBIX_VALUE_HASH;
-          case 0: return BUILDRULE_NOT_SET;
-          default: return null;
-        }
-      }
-      public int getNumber() {
-        return this.value;
-      }
-    };
-
-    public BuildRuleCase
-    getBuildRuleCase() {
-      return BuildRuleCase.forNumber(
-          buildRuleCase_);
     }
 
     public static final int SOURCE_ID_FIELD_NUMBER = 1;
@@ -2502,223 +2369,42 @@ public final class BibixIdProto {
       return sourceId_ == null ? com.giyeok.bibix.BibixIdProto.SourceId.getDefaultInstance() : sourceId_;
     }
 
-    public static final int BUILD_RULE_SOURCE_ID_FIELD_NUMBER = 2;
-    private com.giyeok.bibix.BibixIdProto.SourceId buildRuleSourceId_;
+    public static final int BUILD_RULE_FIELD_NUMBER = 2;
+    private com.giyeok.bibix.BibixIdProto.BuildRuleData buildRule_;
     /**
      * <pre>
      * string target_name = 2;
      * </pre>
      *
-     * <code>.com.giyeok.bibix.SourceId build_rule_source_id = 2;</code>
-     * @return Whether the buildRuleSourceId field is set.
+     * <code>.com.giyeok.bibix.BuildRuleData build_rule = 2;</code>
+     * @return Whether the buildRule field is set.
      */
     @java.lang.Override
-    public boolean hasBuildRuleSourceId() {
-      return buildRuleSourceId_ != null;
-    }
-    /**
-     * <pre>
-     * string target_name = 2;
-     * </pre>
-     *
-     * <code>.com.giyeok.bibix.SourceId build_rule_source_id = 2;</code>
-     * @return The buildRuleSourceId.
-     */
-    @java.lang.Override
-    public com.giyeok.bibix.BibixIdProto.SourceId getBuildRuleSourceId() {
-      return buildRuleSourceId_ == null ? com.giyeok.bibix.BibixIdProto.SourceId.getDefaultInstance() : buildRuleSourceId_;
+    public boolean hasBuildRule() {
+      return buildRule_ != null;
     }
     /**
      * <pre>
      * string target_name = 2;
      * </pre>
      *
-     * <code>.com.giyeok.bibix.SourceId build_rule_source_id = 2;</code>
+     * <code>.com.giyeok.bibix.BuildRuleData build_rule = 2;</code>
+     * @return The buildRule.
      */
     @java.lang.Override
-    public com.giyeok.bibix.BibixIdProto.SourceIdOrBuilder getBuildRuleSourceIdOrBuilder() {
-      return buildRuleSourceId_ == null ? com.giyeok.bibix.BibixIdProto.SourceId.getDefaultInstance() : buildRuleSourceId_;
-    }
-
-    public static final int NATIVE_IMPL_FIELD_NUMBER = 3;
-    /**
-     * <code>.google.protobuf.Empty native_impl = 3;</code>
-     * @return Whether the nativeImpl field is set.
-     */
-    @java.lang.Override
-    public boolean hasNativeImpl() {
-      return buildRuleCase_ == 3;
-    }
-    /**
-     * <code>.google.protobuf.Empty native_impl = 3;</code>
-     * @return The nativeImpl.
-     */
-    @java.lang.Override
-    public com.google.protobuf.Empty getNativeImpl() {
-      if (buildRuleCase_ == 3) {
-         return (com.google.protobuf.Empty) buildRule_;
-      }
-      return com.google.protobuf.Empty.getDefaultInstance();
-    }
-    /**
-     * <code>.google.protobuf.Empty native_impl = 3;</code>
-     */
-    @java.lang.Override
-    public com.google.protobuf.EmptyOrBuilder getNativeImplOrBuilder() {
-      if (buildRuleCase_ == 3) {
-         return (com.google.protobuf.Empty) buildRule_;
-      }
-      return com.google.protobuf.Empty.getDefaultInstance();
-    }
-
-    public static final int BUILD_RULE_IMPL_ID_FIELD_NUMBER = 4;
-    /**
-     * <pre>
-     * 다른 플러그인을 호출해서 생성된 impl인 경우 build_rule_impl_id,
-     * </pre>
-     *
-     * <code>.com.giyeok.bibix.BuildRuleImplId build_rule_impl_id = 4;</code>
-     * @return Whether the buildRuleImplId field is set.
-     */
-    @java.lang.Override
-    public boolean hasBuildRuleImplId() {
-      return buildRuleCase_ == 4;
+    public com.giyeok.bibix.BibixIdProto.BuildRuleData getBuildRule() {
+      return buildRule_ == null ? com.giyeok.bibix.BibixIdProto.BuildRuleData.getDefaultInstance() : buildRule_;
     }
     /**
      * <pre>
-     * 다른 플러그인을 호출해서 생성된 impl인 경우 build_rule_impl_id,
+     * string target_name = 2;
      * </pre>
      *
-     * <code>.com.giyeok.bibix.BuildRuleImplId build_rule_impl_id = 4;</code>
-     * @return The buildRuleImplId.
+     * <code>.com.giyeok.bibix.BuildRuleData build_rule = 2;</code>
      */
     @java.lang.Override
-    public com.giyeok.bibix.BibixIdProto.BuildRuleImplId getBuildRuleImplId() {
-      if (buildRuleCase_ == 4) {
-         return (com.giyeok.bibix.BibixIdProto.BuildRuleImplId) buildRule_;
-      }
-      return com.giyeok.bibix.BibixIdProto.BuildRuleImplId.getDefaultInstance();
-    }
-    /**
-     * <pre>
-     * 다른 플러그인을 호출해서 생성된 impl인 경우 build_rule_impl_id,
-     * </pre>
-     *
-     * <code>.com.giyeok.bibix.BuildRuleImplId build_rule_impl_id = 4;</code>
-     */
-    @java.lang.Override
-    public com.giyeok.bibix.BibixIdProto.BuildRuleImplIdOrBuilder getBuildRuleImplIdOrBuilder() {
-      if (buildRuleCase_ == 4) {
-         return (com.giyeok.bibix.BibixIdProto.BuildRuleImplId) buildRule_;
-      }
-      return com.giyeok.bibix.BibixIdProto.BuildRuleImplId.getDefaultInstance();
-    }
-
-    public static final int BIBIX_VALUE_HASH_FIELD_NUMBER = 5;
-    /**
-     * <pre>
-     * jvm.ClassPaths같은 data class를 사용한 경우 value의 해시값을 사용
-     * </pre>
-     *
-     * <code>bytes bibix_value_hash = 5;</code>
-     * @return Whether the bibixValueHash field is set.
-     */
-    @java.lang.Override
-    public boolean hasBibixValueHash() {
-      return buildRuleCase_ == 5;
-    }
-    /**
-     * <pre>
-     * jvm.ClassPaths같은 data class를 사용한 경우 value의 해시값을 사용
-     * </pre>
-     *
-     * <code>bytes bibix_value_hash = 5;</code>
-     * @return The bibixValueHash.
-     */
-    @java.lang.Override
-    public com.google.protobuf.ByteString getBibixValueHash() {
-      if (buildRuleCase_ == 5) {
-        return (com.google.protobuf.ByteString) buildRule_;
-      }
-      return com.google.protobuf.ByteString.EMPTY;
-    }
-
-    public static final int BUILD_RULE_CLASS_NAME_FIELD_NUMBER = 6;
-    @SuppressWarnings("serial")
-    private volatile java.lang.Object buildRuleClassName_ = "";
-    /**
-     * <code>string build_rule_class_name = 6;</code>
-     * @return The buildRuleClassName.
-     */
-    @java.lang.Override
-    public java.lang.String getBuildRuleClassName() {
-      java.lang.Object ref = buildRuleClassName_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        buildRuleClassName_ = s;
-        return s;
-      }
-    }
-    /**
-     * <code>string build_rule_class_name = 6;</code>
-     * @return The bytes for buildRuleClassName.
-     */
-    @java.lang.Override
-    public com.google.protobuf.ByteString
-        getBuildRuleClassNameBytes() {
-      java.lang.Object ref = buildRuleClassName_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        buildRuleClassName_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-
-    public static final int BUILD_RULE_METHOD_NAME_FIELD_NUMBER = 7;
-    @SuppressWarnings("serial")
-    private volatile java.lang.Object buildRuleMethodName_ = "";
-    /**
-     * <code>string build_rule_method_name = 7;</code>
-     * @return The buildRuleMethodName.
-     */
-    @java.lang.Override
-    public java.lang.String getBuildRuleMethodName() {
-      java.lang.Object ref = buildRuleMethodName_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        buildRuleMethodName_ = s;
-        return s;
-      }
-    }
-    /**
-     * <code>string build_rule_method_name = 7;</code>
-     * @return The bytes for buildRuleMethodName.
-     */
-    @java.lang.Override
-    public com.google.protobuf.ByteString
-        getBuildRuleMethodNameBytes() {
-      java.lang.Object ref = buildRuleMethodName_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        buildRuleMethodName_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
+    public com.giyeok.bibix.BibixIdProto.BuildRuleDataOrBuilder getBuildRuleOrBuilder() {
+      return buildRule_ == null ? com.giyeok.bibix.BibixIdProto.BuildRuleData.getDefaultInstance() : buildRule_;
     }
 
     public static final int ARGS_MAP_FIELD_NUMBER = 8;
@@ -2764,24 +2450,8 @@ public final class BibixIdProto {
       if (sourceId_ != null) {
         output.writeMessage(1, getSourceId());
       }
-      if (buildRuleSourceId_ != null) {
-        output.writeMessage(2, getBuildRuleSourceId());
-      }
-      if (buildRuleCase_ == 3) {
-        output.writeMessage(3, (com.google.protobuf.Empty) buildRule_);
-      }
-      if (buildRuleCase_ == 4) {
-        output.writeMessage(4, (com.giyeok.bibix.BibixIdProto.BuildRuleImplId) buildRule_);
-      }
-      if (buildRuleCase_ == 5) {
-        output.writeBytes(
-            5, (com.google.protobuf.ByteString) buildRule_);
-      }
-      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(buildRuleClassName_)) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 6, buildRuleClassName_);
-      }
-      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(buildRuleMethodName_)) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 7, buildRuleMethodName_);
+      if (buildRule_ != null) {
+        output.writeMessage(2, getBuildRule());
       }
       if (argsMap_ != null) {
         output.writeMessage(8, getArgsMap());
@@ -2799,28 +2469,9 @@ public final class BibixIdProto {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(1, getSourceId());
       }
-      if (buildRuleSourceId_ != null) {
+      if (buildRule_ != null) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(2, getBuildRuleSourceId());
-      }
-      if (buildRuleCase_ == 3) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(3, (com.google.protobuf.Empty) buildRule_);
-      }
-      if (buildRuleCase_ == 4) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(4, (com.giyeok.bibix.BibixIdProto.BuildRuleImplId) buildRule_);
-      }
-      if (buildRuleCase_ == 5) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(
-              5, (com.google.protobuf.ByteString) buildRule_);
-      }
-      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(buildRuleClassName_)) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(6, buildRuleClassName_);
-      }
-      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(buildRuleMethodName_)) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(7, buildRuleMethodName_);
+          .computeMessageSize(2, getBuildRule());
       }
       if (argsMap_ != null) {
         size += com.google.protobuf.CodedOutputStream
@@ -2846,36 +2497,15 @@ public final class BibixIdProto {
         if (!getSourceId()
             .equals(other.getSourceId())) return false;
       }
-      if (hasBuildRuleSourceId() != other.hasBuildRuleSourceId()) return false;
-      if (hasBuildRuleSourceId()) {
-        if (!getBuildRuleSourceId()
-            .equals(other.getBuildRuleSourceId())) return false;
+      if (hasBuildRule() != other.hasBuildRule()) return false;
+      if (hasBuildRule()) {
+        if (!getBuildRule()
+            .equals(other.getBuildRule())) return false;
       }
-      if (!getBuildRuleClassName()
-          .equals(other.getBuildRuleClassName())) return false;
-      if (!getBuildRuleMethodName()
-          .equals(other.getBuildRuleMethodName())) return false;
       if (hasArgsMap() != other.hasArgsMap()) return false;
       if (hasArgsMap()) {
         if (!getArgsMap()
             .equals(other.getArgsMap())) return false;
-      }
-      if (!getBuildRuleCase().equals(other.getBuildRuleCase())) return false;
-      switch (buildRuleCase_) {
-        case 3:
-          if (!getNativeImpl()
-              .equals(other.getNativeImpl())) return false;
-          break;
-        case 4:
-          if (!getBuildRuleImplId()
-              .equals(other.getBuildRuleImplId())) return false;
-          break;
-        case 5:
-          if (!getBibixValueHash()
-              .equals(other.getBibixValueHash())) return false;
-          break;
-        case 0:
-        default:
       }
       if (!getUnknownFields().equals(other.getUnknownFields())) return false;
       return true;
@@ -2892,33 +2522,13 @@ public final class BibixIdProto {
         hash = (37 * hash) + SOURCE_ID_FIELD_NUMBER;
         hash = (53 * hash) + getSourceId().hashCode();
       }
-      if (hasBuildRuleSourceId()) {
-        hash = (37 * hash) + BUILD_RULE_SOURCE_ID_FIELD_NUMBER;
-        hash = (53 * hash) + getBuildRuleSourceId().hashCode();
+      if (hasBuildRule()) {
+        hash = (37 * hash) + BUILD_RULE_FIELD_NUMBER;
+        hash = (53 * hash) + getBuildRule().hashCode();
       }
-      hash = (37 * hash) + BUILD_RULE_CLASS_NAME_FIELD_NUMBER;
-      hash = (53 * hash) + getBuildRuleClassName().hashCode();
-      hash = (37 * hash) + BUILD_RULE_METHOD_NAME_FIELD_NUMBER;
-      hash = (53 * hash) + getBuildRuleMethodName().hashCode();
       if (hasArgsMap()) {
         hash = (37 * hash) + ARGS_MAP_FIELD_NUMBER;
         hash = (53 * hash) + getArgsMap().hashCode();
-      }
-      switch (buildRuleCase_) {
-        case 3:
-          hash = (37 * hash) + NATIVE_IMPL_FIELD_NUMBER;
-          hash = (53 * hash) + getNativeImpl().hashCode();
-          break;
-        case 4:
-          hash = (37 * hash) + BUILD_RULE_IMPL_ID_FIELD_NUMBER;
-          hash = (53 * hash) + getBuildRuleImplId().hashCode();
-          break;
-        case 5:
-          hash = (37 * hash) + BIBIX_VALUE_HASH_FIELD_NUMBER;
-          hash = (53 * hash) + getBibixValueHash().hashCode();
-          break;
-        case 0:
-        default:
       }
       hash = (29 * hash) + getUnknownFields().hashCode();
       memoizedHashCode = hash;
@@ -3054,26 +2664,16 @@ public final class BibixIdProto {
           sourceIdBuilder_.dispose();
           sourceIdBuilder_ = null;
         }
-        buildRuleSourceId_ = null;
-        if (buildRuleSourceIdBuilder_ != null) {
-          buildRuleSourceIdBuilder_.dispose();
-          buildRuleSourceIdBuilder_ = null;
+        buildRule_ = null;
+        if (buildRuleBuilder_ != null) {
+          buildRuleBuilder_.dispose();
+          buildRuleBuilder_ = null;
         }
-        if (nativeImplBuilder_ != null) {
-          nativeImplBuilder_.clear();
-        }
-        if (buildRuleImplIdBuilder_ != null) {
-          buildRuleImplIdBuilder_.clear();
-        }
-        buildRuleClassName_ = "";
-        buildRuleMethodName_ = "";
         argsMap_ = null;
         if (argsMapBuilder_ != null) {
           argsMapBuilder_.dispose();
           argsMapBuilder_ = null;
         }
-        buildRuleCase_ = 0;
-        buildRule_ = null;
         return this;
       }
 
@@ -3101,7 +2701,6 @@ public final class BibixIdProto {
       public com.giyeok.bibix.BibixIdProto.TargetIdData buildPartial() {
         com.giyeok.bibix.BibixIdProto.TargetIdData result = new com.giyeok.bibix.BibixIdProto.TargetIdData(this);
         if (bitField0_ != 0) { buildPartial0(result); }
-        buildPartialOneofs(result);
         onBuilt();
         return result;
       }
@@ -3114,33 +2713,14 @@ public final class BibixIdProto {
               : sourceIdBuilder_.build();
         }
         if (((from_bitField0_ & 0x00000002) != 0)) {
-          result.buildRuleSourceId_ = buildRuleSourceIdBuilder_ == null
-              ? buildRuleSourceId_
-              : buildRuleSourceIdBuilder_.build();
+          result.buildRule_ = buildRuleBuilder_ == null
+              ? buildRule_
+              : buildRuleBuilder_.build();
         }
-        if (((from_bitField0_ & 0x00000020) != 0)) {
-          result.buildRuleClassName_ = buildRuleClassName_;
-        }
-        if (((from_bitField0_ & 0x00000040) != 0)) {
-          result.buildRuleMethodName_ = buildRuleMethodName_;
-        }
-        if (((from_bitField0_ & 0x00000080) != 0)) {
+        if (((from_bitField0_ & 0x00000004) != 0)) {
           result.argsMap_ = argsMapBuilder_ == null
               ? argsMap_
               : argsMapBuilder_.build();
-        }
-      }
-
-      private void buildPartialOneofs(com.giyeok.bibix.BibixIdProto.TargetIdData result) {
-        result.buildRuleCase_ = buildRuleCase_;
-        result.buildRule_ = this.buildRule_;
-        if (buildRuleCase_ == 3 &&
-            nativeImplBuilder_ != null) {
-          result.buildRule_ = nativeImplBuilder_.build();
-        }
-        if (buildRuleCase_ == 4 &&
-            buildRuleImplIdBuilder_ != null) {
-          result.buildRule_ = buildRuleImplIdBuilder_.build();
         }
       }
 
@@ -3159,38 +2739,11 @@ public final class BibixIdProto {
         if (other.hasSourceId()) {
           mergeSourceId(other.getSourceId());
         }
-        if (other.hasBuildRuleSourceId()) {
-          mergeBuildRuleSourceId(other.getBuildRuleSourceId());
-        }
-        if (!other.getBuildRuleClassName().isEmpty()) {
-          buildRuleClassName_ = other.buildRuleClassName_;
-          bitField0_ |= 0x00000020;
-          onChanged();
-        }
-        if (!other.getBuildRuleMethodName().isEmpty()) {
-          buildRuleMethodName_ = other.buildRuleMethodName_;
-          bitField0_ |= 0x00000040;
-          onChanged();
+        if (other.hasBuildRule()) {
+          mergeBuildRule(other.getBuildRule());
         }
         if (other.hasArgsMap()) {
           mergeArgsMap(other.getArgsMap());
-        }
-        switch (other.getBuildRuleCase()) {
-          case NATIVE_IMPL: {
-            mergeNativeImpl(other.getNativeImpl());
-            break;
-          }
-          case BUILD_RULE_IMPL_ID: {
-            mergeBuildRuleImplId(other.getBuildRuleImplId());
-            break;
-          }
-          case BIBIX_VALUE_HASH: {
-            setBibixValueHash(other.getBibixValueHash());
-            break;
-          }
-          case BUILDRULE_NOT_SET: {
-            break;
-          }
         }
         this.mergeUnknownFields(other.getUnknownFields());
         onChanged();
@@ -3227,45 +2780,16 @@ public final class BibixIdProto {
               } // case 10
               case 18: {
                 input.readMessage(
-                    getBuildRuleSourceIdFieldBuilder().getBuilder(),
+                    getBuildRuleFieldBuilder().getBuilder(),
                     extensionRegistry);
                 bitField0_ |= 0x00000002;
                 break;
               } // case 18
-              case 26: {
-                input.readMessage(
-                    getNativeImplFieldBuilder().getBuilder(),
-                    extensionRegistry);
-                buildRuleCase_ = 3;
-                break;
-              } // case 26
-              case 34: {
-                input.readMessage(
-                    getBuildRuleImplIdFieldBuilder().getBuilder(),
-                    extensionRegistry);
-                buildRuleCase_ = 4;
-                break;
-              } // case 34
-              case 42: {
-                buildRule_ = input.readBytes();
-                buildRuleCase_ = 5;
-                break;
-              } // case 42
-              case 50: {
-                buildRuleClassName_ = input.readStringRequireUtf8();
-                bitField0_ |= 0x00000020;
-                break;
-              } // case 50
-              case 58: {
-                buildRuleMethodName_ = input.readStringRequireUtf8();
-                bitField0_ |= 0x00000040;
-                break;
-              } // case 58
               case 66: {
                 input.readMessage(
                     getArgsMapFieldBuilder().getBuilder(),
                     extensionRegistry);
-                bitField0_ |= 0x00000080;
+                bitField0_ |= 0x00000004;
                 break;
               } // case 66
               default: {
@@ -3283,21 +2807,6 @@ public final class BibixIdProto {
         } // finally
         return this;
       }
-      private int buildRuleCase_ = 0;
-      private java.lang.Object buildRule_;
-      public BuildRuleCase
-          getBuildRuleCase() {
-        return BuildRuleCase.forNumber(
-            buildRuleCase_);
-      }
-
-      public Builder clearBuildRule() {
-        buildRuleCase_ = 0;
-        buildRule_ = null;
-        onChanged();
-        return this;
-      }
-
       private int bitField0_;
 
       private com.giyeok.bibix.BibixIdProto.SourceId sourceId_;
@@ -3419,18 +2928,18 @@ public final class BibixIdProto {
         return sourceIdBuilder_;
       }
 
-      private com.giyeok.bibix.BibixIdProto.SourceId buildRuleSourceId_;
+      private com.giyeok.bibix.BibixIdProto.BuildRuleData buildRule_;
       private com.google.protobuf.SingleFieldBuilderV3<
-          com.giyeok.bibix.BibixIdProto.SourceId, com.giyeok.bibix.BibixIdProto.SourceId.Builder, com.giyeok.bibix.BibixIdProto.SourceIdOrBuilder> buildRuleSourceIdBuilder_;
+          com.giyeok.bibix.BibixIdProto.BuildRuleData, com.giyeok.bibix.BibixIdProto.BuildRuleData.Builder, com.giyeok.bibix.BibixIdProto.BuildRuleDataOrBuilder> buildRuleBuilder_;
       /**
        * <pre>
        * string target_name = 2;
        * </pre>
        *
-       * <code>.com.giyeok.bibix.SourceId build_rule_source_id = 2;</code>
-       * @return Whether the buildRuleSourceId field is set.
+       * <code>.com.giyeok.bibix.BuildRuleData build_rule = 2;</code>
+       * @return Whether the buildRule field is set.
        */
-      public boolean hasBuildRuleSourceId() {
+      public boolean hasBuildRule() {
         return ((bitField0_ & 0x00000002) != 0);
       }
       /**
@@ -3438,14 +2947,14 @@ public final class BibixIdProto {
        * string target_name = 2;
        * </pre>
        *
-       * <code>.com.giyeok.bibix.SourceId build_rule_source_id = 2;</code>
-       * @return The buildRuleSourceId.
+       * <code>.com.giyeok.bibix.BuildRuleData build_rule = 2;</code>
+       * @return The buildRule.
        */
-      public com.giyeok.bibix.BibixIdProto.SourceId getBuildRuleSourceId() {
-        if (buildRuleSourceIdBuilder_ == null) {
-          return buildRuleSourceId_ == null ? com.giyeok.bibix.BibixIdProto.SourceId.getDefaultInstance() : buildRuleSourceId_;
+      public com.giyeok.bibix.BibixIdProto.BuildRuleData getBuildRule() {
+        if (buildRuleBuilder_ == null) {
+          return buildRule_ == null ? com.giyeok.bibix.BibixIdProto.BuildRuleData.getDefaultInstance() : buildRule_;
         } else {
-          return buildRuleSourceIdBuilder_.getMessage();
+          return buildRuleBuilder_.getMessage();
         }
       }
       /**
@@ -3453,16 +2962,16 @@ public final class BibixIdProto {
        * string target_name = 2;
        * </pre>
        *
-       * <code>.com.giyeok.bibix.SourceId build_rule_source_id = 2;</code>
+       * <code>.com.giyeok.bibix.BuildRuleData build_rule = 2;</code>
        */
-      public Builder setBuildRuleSourceId(com.giyeok.bibix.BibixIdProto.SourceId value) {
-        if (buildRuleSourceIdBuilder_ == null) {
+      public Builder setBuildRule(com.giyeok.bibix.BibixIdProto.BuildRuleData value) {
+        if (buildRuleBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
           }
-          buildRuleSourceId_ = value;
+          buildRule_ = value;
         } else {
-          buildRuleSourceIdBuilder_.setMessage(value);
+          buildRuleBuilder_.setMessage(value);
         }
         bitField0_ |= 0x00000002;
         onChanged();
@@ -3473,14 +2982,14 @@ public final class BibixIdProto {
        * string target_name = 2;
        * </pre>
        *
-       * <code>.com.giyeok.bibix.SourceId build_rule_source_id = 2;</code>
+       * <code>.com.giyeok.bibix.BuildRuleData build_rule = 2;</code>
        */
-      public Builder setBuildRuleSourceId(
-          com.giyeok.bibix.BibixIdProto.SourceId.Builder builderForValue) {
-        if (buildRuleSourceIdBuilder_ == null) {
-          buildRuleSourceId_ = builderForValue.build();
+      public Builder setBuildRule(
+          com.giyeok.bibix.BibixIdProto.BuildRuleData.Builder builderForValue) {
+        if (buildRuleBuilder_ == null) {
+          buildRule_ = builderForValue.build();
         } else {
-          buildRuleSourceIdBuilder_.setMessage(builderForValue.build());
+          buildRuleBuilder_.setMessage(builderForValue.build());
         }
         bitField0_ |= 0x00000002;
         onChanged();
@@ -3491,19 +3000,19 @@ public final class BibixIdProto {
        * string target_name = 2;
        * </pre>
        *
-       * <code>.com.giyeok.bibix.SourceId build_rule_source_id = 2;</code>
+       * <code>.com.giyeok.bibix.BuildRuleData build_rule = 2;</code>
        */
-      public Builder mergeBuildRuleSourceId(com.giyeok.bibix.BibixIdProto.SourceId value) {
-        if (buildRuleSourceIdBuilder_ == null) {
+      public Builder mergeBuildRule(com.giyeok.bibix.BibixIdProto.BuildRuleData value) {
+        if (buildRuleBuilder_ == null) {
           if (((bitField0_ & 0x00000002) != 0) &&
-            buildRuleSourceId_ != null &&
-            buildRuleSourceId_ != com.giyeok.bibix.BibixIdProto.SourceId.getDefaultInstance()) {
-            getBuildRuleSourceIdBuilder().mergeFrom(value);
+            buildRule_ != null &&
+            buildRule_ != com.giyeok.bibix.BibixIdProto.BuildRuleData.getDefaultInstance()) {
+            getBuildRuleBuilder().mergeFrom(value);
           } else {
-            buildRuleSourceId_ = value;
+            buildRule_ = value;
           }
         } else {
-          buildRuleSourceIdBuilder_.mergeFrom(value);
+          buildRuleBuilder_.mergeFrom(value);
         }
         bitField0_ |= 0x00000002;
         onChanged();
@@ -3514,14 +3023,14 @@ public final class BibixIdProto {
        * string target_name = 2;
        * </pre>
        *
-       * <code>.com.giyeok.bibix.SourceId build_rule_source_id = 2;</code>
+       * <code>.com.giyeok.bibix.BuildRuleData build_rule = 2;</code>
        */
-      public Builder clearBuildRuleSourceId() {
+      public Builder clearBuildRule() {
         bitField0_ = (bitField0_ & ~0x00000002);
-        buildRuleSourceId_ = null;
-        if (buildRuleSourceIdBuilder_ != null) {
-          buildRuleSourceIdBuilder_.dispose();
-          buildRuleSourceIdBuilder_ = null;
+        buildRule_ = null;
+        if (buildRuleBuilder_ != null) {
+          buildRuleBuilder_.dispose();
+          buildRuleBuilder_ = null;
         }
         onChanged();
         return this;
@@ -3531,26 +3040,26 @@ public final class BibixIdProto {
        * string target_name = 2;
        * </pre>
        *
-       * <code>.com.giyeok.bibix.SourceId build_rule_source_id = 2;</code>
+       * <code>.com.giyeok.bibix.BuildRuleData build_rule = 2;</code>
        */
-      public com.giyeok.bibix.BibixIdProto.SourceId.Builder getBuildRuleSourceIdBuilder() {
+      public com.giyeok.bibix.BibixIdProto.BuildRuleData.Builder getBuildRuleBuilder() {
         bitField0_ |= 0x00000002;
         onChanged();
-        return getBuildRuleSourceIdFieldBuilder().getBuilder();
+        return getBuildRuleFieldBuilder().getBuilder();
       }
       /**
        * <pre>
        * string target_name = 2;
        * </pre>
        *
-       * <code>.com.giyeok.bibix.SourceId build_rule_source_id = 2;</code>
+       * <code>.com.giyeok.bibix.BuildRuleData build_rule = 2;</code>
        */
-      public com.giyeok.bibix.BibixIdProto.SourceIdOrBuilder getBuildRuleSourceIdOrBuilder() {
-        if (buildRuleSourceIdBuilder_ != null) {
-          return buildRuleSourceIdBuilder_.getMessageOrBuilder();
+      public com.giyeok.bibix.BibixIdProto.BuildRuleDataOrBuilder getBuildRuleOrBuilder() {
+        if (buildRuleBuilder_ != null) {
+          return buildRuleBuilder_.getMessageOrBuilder();
         } else {
-          return buildRuleSourceId_ == null ?
-              com.giyeok.bibix.BibixIdProto.SourceId.getDefaultInstance() : buildRuleSourceId_;
+          return buildRule_ == null ?
+              com.giyeok.bibix.BibixIdProto.BuildRuleData.getDefaultInstance() : buildRule_;
         }
       }
       /**
@@ -3558,542 +3067,20 @@ public final class BibixIdProto {
        * string target_name = 2;
        * </pre>
        *
-       * <code>.com.giyeok.bibix.SourceId build_rule_source_id = 2;</code>
+       * <code>.com.giyeok.bibix.BuildRuleData build_rule = 2;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
-          com.giyeok.bibix.BibixIdProto.SourceId, com.giyeok.bibix.BibixIdProto.SourceId.Builder, com.giyeok.bibix.BibixIdProto.SourceIdOrBuilder> 
-          getBuildRuleSourceIdFieldBuilder() {
-        if (buildRuleSourceIdBuilder_ == null) {
-          buildRuleSourceIdBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-              com.giyeok.bibix.BibixIdProto.SourceId, com.giyeok.bibix.BibixIdProto.SourceId.Builder, com.giyeok.bibix.BibixIdProto.SourceIdOrBuilder>(
-                  getBuildRuleSourceId(),
-                  getParentForChildren(),
-                  isClean());
-          buildRuleSourceId_ = null;
-        }
-        return buildRuleSourceIdBuilder_;
-      }
-
-      private com.google.protobuf.SingleFieldBuilderV3<
-          com.google.protobuf.Empty, com.google.protobuf.Empty.Builder, com.google.protobuf.EmptyOrBuilder> nativeImplBuilder_;
-      /**
-       * <code>.google.protobuf.Empty native_impl = 3;</code>
-       * @return Whether the nativeImpl field is set.
-       */
-      @java.lang.Override
-      public boolean hasNativeImpl() {
-        return buildRuleCase_ == 3;
-      }
-      /**
-       * <code>.google.protobuf.Empty native_impl = 3;</code>
-       * @return The nativeImpl.
-       */
-      @java.lang.Override
-      public com.google.protobuf.Empty getNativeImpl() {
-        if (nativeImplBuilder_ == null) {
-          if (buildRuleCase_ == 3) {
-            return (com.google.protobuf.Empty) buildRule_;
-          }
-          return com.google.protobuf.Empty.getDefaultInstance();
-        } else {
-          if (buildRuleCase_ == 3) {
-            return nativeImplBuilder_.getMessage();
-          }
-          return com.google.protobuf.Empty.getDefaultInstance();
-        }
-      }
-      /**
-       * <code>.google.protobuf.Empty native_impl = 3;</code>
-       */
-      public Builder setNativeImpl(com.google.protobuf.Empty value) {
-        if (nativeImplBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          buildRule_ = value;
-          onChanged();
-        } else {
-          nativeImplBuilder_.setMessage(value);
-        }
-        buildRuleCase_ = 3;
-        return this;
-      }
-      /**
-       * <code>.google.protobuf.Empty native_impl = 3;</code>
-       */
-      public Builder setNativeImpl(
-          com.google.protobuf.Empty.Builder builderForValue) {
-        if (nativeImplBuilder_ == null) {
-          buildRule_ = builderForValue.build();
-          onChanged();
-        } else {
-          nativeImplBuilder_.setMessage(builderForValue.build());
-        }
-        buildRuleCase_ = 3;
-        return this;
-      }
-      /**
-       * <code>.google.protobuf.Empty native_impl = 3;</code>
-       */
-      public Builder mergeNativeImpl(com.google.protobuf.Empty value) {
-        if (nativeImplBuilder_ == null) {
-          if (buildRuleCase_ == 3 &&
-              buildRule_ != com.google.protobuf.Empty.getDefaultInstance()) {
-            buildRule_ = com.google.protobuf.Empty.newBuilder((com.google.protobuf.Empty) buildRule_)
-                .mergeFrom(value).buildPartial();
-          } else {
-            buildRule_ = value;
-          }
-          onChanged();
-        } else {
-          if (buildRuleCase_ == 3) {
-            nativeImplBuilder_.mergeFrom(value);
-          } else {
-            nativeImplBuilder_.setMessage(value);
-          }
-        }
-        buildRuleCase_ = 3;
-        return this;
-      }
-      /**
-       * <code>.google.protobuf.Empty native_impl = 3;</code>
-       */
-      public Builder clearNativeImpl() {
-        if (nativeImplBuilder_ == null) {
-          if (buildRuleCase_ == 3) {
-            buildRuleCase_ = 0;
-            buildRule_ = null;
-            onChanged();
-          }
-        } else {
-          if (buildRuleCase_ == 3) {
-            buildRuleCase_ = 0;
-            buildRule_ = null;
-          }
-          nativeImplBuilder_.clear();
-        }
-        return this;
-      }
-      /**
-       * <code>.google.protobuf.Empty native_impl = 3;</code>
-       */
-      public com.google.protobuf.Empty.Builder getNativeImplBuilder() {
-        return getNativeImplFieldBuilder().getBuilder();
-      }
-      /**
-       * <code>.google.protobuf.Empty native_impl = 3;</code>
-       */
-      @java.lang.Override
-      public com.google.protobuf.EmptyOrBuilder getNativeImplOrBuilder() {
-        if ((buildRuleCase_ == 3) && (nativeImplBuilder_ != null)) {
-          return nativeImplBuilder_.getMessageOrBuilder();
-        } else {
-          if (buildRuleCase_ == 3) {
-            return (com.google.protobuf.Empty) buildRule_;
-          }
-          return com.google.protobuf.Empty.getDefaultInstance();
-        }
-      }
-      /**
-       * <code>.google.protobuf.Empty native_impl = 3;</code>
-       */
-      private com.google.protobuf.SingleFieldBuilderV3<
-          com.google.protobuf.Empty, com.google.protobuf.Empty.Builder, com.google.protobuf.EmptyOrBuilder> 
-          getNativeImplFieldBuilder() {
-        if (nativeImplBuilder_ == null) {
-          if (!(buildRuleCase_ == 3)) {
-            buildRule_ = com.google.protobuf.Empty.getDefaultInstance();
-          }
-          nativeImplBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-              com.google.protobuf.Empty, com.google.protobuf.Empty.Builder, com.google.protobuf.EmptyOrBuilder>(
-                  (com.google.protobuf.Empty) buildRule_,
+          com.giyeok.bibix.BibixIdProto.BuildRuleData, com.giyeok.bibix.BibixIdProto.BuildRuleData.Builder, com.giyeok.bibix.BibixIdProto.BuildRuleDataOrBuilder> 
+          getBuildRuleFieldBuilder() {
+        if (buildRuleBuilder_ == null) {
+          buildRuleBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              com.giyeok.bibix.BibixIdProto.BuildRuleData, com.giyeok.bibix.BibixIdProto.BuildRuleData.Builder, com.giyeok.bibix.BibixIdProto.BuildRuleDataOrBuilder>(
+                  getBuildRule(),
                   getParentForChildren(),
                   isClean());
           buildRule_ = null;
         }
-        buildRuleCase_ = 3;
-        onChanged();
-        return nativeImplBuilder_;
-      }
-
-      private com.google.protobuf.SingleFieldBuilderV3<
-          com.giyeok.bibix.BibixIdProto.BuildRuleImplId, com.giyeok.bibix.BibixIdProto.BuildRuleImplId.Builder, com.giyeok.bibix.BibixIdProto.BuildRuleImplIdOrBuilder> buildRuleImplIdBuilder_;
-      /**
-       * <pre>
-       * 다른 플러그인을 호출해서 생성된 impl인 경우 build_rule_impl_id,
-       * </pre>
-       *
-       * <code>.com.giyeok.bibix.BuildRuleImplId build_rule_impl_id = 4;</code>
-       * @return Whether the buildRuleImplId field is set.
-       */
-      @java.lang.Override
-      public boolean hasBuildRuleImplId() {
-        return buildRuleCase_ == 4;
-      }
-      /**
-       * <pre>
-       * 다른 플러그인을 호출해서 생성된 impl인 경우 build_rule_impl_id,
-       * </pre>
-       *
-       * <code>.com.giyeok.bibix.BuildRuleImplId build_rule_impl_id = 4;</code>
-       * @return The buildRuleImplId.
-       */
-      @java.lang.Override
-      public com.giyeok.bibix.BibixIdProto.BuildRuleImplId getBuildRuleImplId() {
-        if (buildRuleImplIdBuilder_ == null) {
-          if (buildRuleCase_ == 4) {
-            return (com.giyeok.bibix.BibixIdProto.BuildRuleImplId) buildRule_;
-          }
-          return com.giyeok.bibix.BibixIdProto.BuildRuleImplId.getDefaultInstance();
-        } else {
-          if (buildRuleCase_ == 4) {
-            return buildRuleImplIdBuilder_.getMessage();
-          }
-          return com.giyeok.bibix.BibixIdProto.BuildRuleImplId.getDefaultInstance();
-        }
-      }
-      /**
-       * <pre>
-       * 다른 플러그인을 호출해서 생성된 impl인 경우 build_rule_impl_id,
-       * </pre>
-       *
-       * <code>.com.giyeok.bibix.BuildRuleImplId build_rule_impl_id = 4;</code>
-       */
-      public Builder setBuildRuleImplId(com.giyeok.bibix.BibixIdProto.BuildRuleImplId value) {
-        if (buildRuleImplIdBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          buildRule_ = value;
-          onChanged();
-        } else {
-          buildRuleImplIdBuilder_.setMessage(value);
-        }
-        buildRuleCase_ = 4;
-        return this;
-      }
-      /**
-       * <pre>
-       * 다른 플러그인을 호출해서 생성된 impl인 경우 build_rule_impl_id,
-       * </pre>
-       *
-       * <code>.com.giyeok.bibix.BuildRuleImplId build_rule_impl_id = 4;</code>
-       */
-      public Builder setBuildRuleImplId(
-          com.giyeok.bibix.BibixIdProto.BuildRuleImplId.Builder builderForValue) {
-        if (buildRuleImplIdBuilder_ == null) {
-          buildRule_ = builderForValue.build();
-          onChanged();
-        } else {
-          buildRuleImplIdBuilder_.setMessage(builderForValue.build());
-        }
-        buildRuleCase_ = 4;
-        return this;
-      }
-      /**
-       * <pre>
-       * 다른 플러그인을 호출해서 생성된 impl인 경우 build_rule_impl_id,
-       * </pre>
-       *
-       * <code>.com.giyeok.bibix.BuildRuleImplId build_rule_impl_id = 4;</code>
-       */
-      public Builder mergeBuildRuleImplId(com.giyeok.bibix.BibixIdProto.BuildRuleImplId value) {
-        if (buildRuleImplIdBuilder_ == null) {
-          if (buildRuleCase_ == 4 &&
-              buildRule_ != com.giyeok.bibix.BibixIdProto.BuildRuleImplId.getDefaultInstance()) {
-            buildRule_ = com.giyeok.bibix.BibixIdProto.BuildRuleImplId.newBuilder((com.giyeok.bibix.BibixIdProto.BuildRuleImplId) buildRule_)
-                .mergeFrom(value).buildPartial();
-          } else {
-            buildRule_ = value;
-          }
-          onChanged();
-        } else {
-          if (buildRuleCase_ == 4) {
-            buildRuleImplIdBuilder_.mergeFrom(value);
-          } else {
-            buildRuleImplIdBuilder_.setMessage(value);
-          }
-        }
-        buildRuleCase_ = 4;
-        return this;
-      }
-      /**
-       * <pre>
-       * 다른 플러그인을 호출해서 생성된 impl인 경우 build_rule_impl_id,
-       * </pre>
-       *
-       * <code>.com.giyeok.bibix.BuildRuleImplId build_rule_impl_id = 4;</code>
-       */
-      public Builder clearBuildRuleImplId() {
-        if (buildRuleImplIdBuilder_ == null) {
-          if (buildRuleCase_ == 4) {
-            buildRuleCase_ = 0;
-            buildRule_ = null;
-            onChanged();
-          }
-        } else {
-          if (buildRuleCase_ == 4) {
-            buildRuleCase_ = 0;
-            buildRule_ = null;
-          }
-          buildRuleImplIdBuilder_.clear();
-        }
-        return this;
-      }
-      /**
-       * <pre>
-       * 다른 플러그인을 호출해서 생성된 impl인 경우 build_rule_impl_id,
-       * </pre>
-       *
-       * <code>.com.giyeok.bibix.BuildRuleImplId build_rule_impl_id = 4;</code>
-       */
-      public com.giyeok.bibix.BibixIdProto.BuildRuleImplId.Builder getBuildRuleImplIdBuilder() {
-        return getBuildRuleImplIdFieldBuilder().getBuilder();
-      }
-      /**
-       * <pre>
-       * 다른 플러그인을 호출해서 생성된 impl인 경우 build_rule_impl_id,
-       * </pre>
-       *
-       * <code>.com.giyeok.bibix.BuildRuleImplId build_rule_impl_id = 4;</code>
-       */
-      @java.lang.Override
-      public com.giyeok.bibix.BibixIdProto.BuildRuleImplIdOrBuilder getBuildRuleImplIdOrBuilder() {
-        if ((buildRuleCase_ == 4) && (buildRuleImplIdBuilder_ != null)) {
-          return buildRuleImplIdBuilder_.getMessageOrBuilder();
-        } else {
-          if (buildRuleCase_ == 4) {
-            return (com.giyeok.bibix.BibixIdProto.BuildRuleImplId) buildRule_;
-          }
-          return com.giyeok.bibix.BibixIdProto.BuildRuleImplId.getDefaultInstance();
-        }
-      }
-      /**
-       * <pre>
-       * 다른 플러그인을 호출해서 생성된 impl인 경우 build_rule_impl_id,
-       * </pre>
-       *
-       * <code>.com.giyeok.bibix.BuildRuleImplId build_rule_impl_id = 4;</code>
-       */
-      private com.google.protobuf.SingleFieldBuilderV3<
-          com.giyeok.bibix.BibixIdProto.BuildRuleImplId, com.giyeok.bibix.BibixIdProto.BuildRuleImplId.Builder, com.giyeok.bibix.BibixIdProto.BuildRuleImplIdOrBuilder> 
-          getBuildRuleImplIdFieldBuilder() {
-        if (buildRuleImplIdBuilder_ == null) {
-          if (!(buildRuleCase_ == 4)) {
-            buildRule_ = com.giyeok.bibix.BibixIdProto.BuildRuleImplId.getDefaultInstance();
-          }
-          buildRuleImplIdBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-              com.giyeok.bibix.BibixIdProto.BuildRuleImplId, com.giyeok.bibix.BibixIdProto.BuildRuleImplId.Builder, com.giyeok.bibix.BibixIdProto.BuildRuleImplIdOrBuilder>(
-                  (com.giyeok.bibix.BibixIdProto.BuildRuleImplId) buildRule_,
-                  getParentForChildren(),
-                  isClean());
-          buildRule_ = null;
-        }
-        buildRuleCase_ = 4;
-        onChanged();
-        return buildRuleImplIdBuilder_;
-      }
-
-      /**
-       * <pre>
-       * jvm.ClassPaths같은 data class를 사용한 경우 value의 해시값을 사용
-       * </pre>
-       *
-       * <code>bytes bibix_value_hash = 5;</code>
-       * @return Whether the bibixValueHash field is set.
-       */
-      public boolean hasBibixValueHash() {
-        return buildRuleCase_ == 5;
-      }
-      /**
-       * <pre>
-       * jvm.ClassPaths같은 data class를 사용한 경우 value의 해시값을 사용
-       * </pre>
-       *
-       * <code>bytes bibix_value_hash = 5;</code>
-       * @return The bibixValueHash.
-       */
-      public com.google.protobuf.ByteString getBibixValueHash() {
-        if (buildRuleCase_ == 5) {
-          return (com.google.protobuf.ByteString) buildRule_;
-        }
-        return com.google.protobuf.ByteString.EMPTY;
-      }
-      /**
-       * <pre>
-       * jvm.ClassPaths같은 data class를 사용한 경우 value의 해시값을 사용
-       * </pre>
-       *
-       * <code>bytes bibix_value_hash = 5;</code>
-       * @param value The bibixValueHash to set.
-       * @return This builder for chaining.
-       */
-      public Builder setBibixValueHash(com.google.protobuf.ByteString value) {
-        if (value == null) { throw new NullPointerException(); }
-        buildRuleCase_ = 5;
-        buildRule_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <pre>
-       * jvm.ClassPaths같은 data class를 사용한 경우 value의 해시값을 사용
-       * </pre>
-       *
-       * <code>bytes bibix_value_hash = 5;</code>
-       * @return This builder for chaining.
-       */
-      public Builder clearBibixValueHash() {
-        if (buildRuleCase_ == 5) {
-          buildRuleCase_ = 0;
-          buildRule_ = null;
-          onChanged();
-        }
-        return this;
-      }
-
-      private java.lang.Object buildRuleClassName_ = "";
-      /**
-       * <code>string build_rule_class_name = 6;</code>
-       * @return The buildRuleClassName.
-       */
-      public java.lang.String getBuildRuleClassName() {
-        java.lang.Object ref = buildRuleClassName_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          buildRuleClassName_ = s;
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
-      }
-      /**
-       * <code>string build_rule_class_name = 6;</code>
-       * @return The bytes for buildRuleClassName.
-       */
-      public com.google.protobuf.ByteString
-          getBuildRuleClassNameBytes() {
-        java.lang.Object ref = buildRuleClassName_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          buildRuleClassName_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <code>string build_rule_class_name = 6;</code>
-       * @param value The buildRuleClassName to set.
-       * @return This builder for chaining.
-       */
-      public Builder setBuildRuleClassName(
-          java.lang.String value) {
-        if (value == null) { throw new NullPointerException(); }
-        buildRuleClassName_ = value;
-        bitField0_ |= 0x00000020;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>string build_rule_class_name = 6;</code>
-       * @return This builder for chaining.
-       */
-      public Builder clearBuildRuleClassName() {
-        buildRuleClassName_ = getDefaultInstance().getBuildRuleClassName();
-        bitField0_ = (bitField0_ & ~0x00000020);
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>string build_rule_class_name = 6;</code>
-       * @param value The bytes for buildRuleClassName to set.
-       * @return This builder for chaining.
-       */
-      public Builder setBuildRuleClassNameBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) { throw new NullPointerException(); }
-        checkByteStringIsUtf8(value);
-        buildRuleClassName_ = value;
-        bitField0_ |= 0x00000020;
-        onChanged();
-        return this;
-      }
-
-      private java.lang.Object buildRuleMethodName_ = "";
-      /**
-       * <code>string build_rule_method_name = 7;</code>
-       * @return The buildRuleMethodName.
-       */
-      public java.lang.String getBuildRuleMethodName() {
-        java.lang.Object ref = buildRuleMethodName_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          buildRuleMethodName_ = s;
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
-      }
-      /**
-       * <code>string build_rule_method_name = 7;</code>
-       * @return The bytes for buildRuleMethodName.
-       */
-      public com.google.protobuf.ByteString
-          getBuildRuleMethodNameBytes() {
-        java.lang.Object ref = buildRuleMethodName_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          buildRuleMethodName_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <code>string build_rule_method_name = 7;</code>
-       * @param value The buildRuleMethodName to set.
-       * @return This builder for chaining.
-       */
-      public Builder setBuildRuleMethodName(
-          java.lang.String value) {
-        if (value == null) { throw new NullPointerException(); }
-        buildRuleMethodName_ = value;
-        bitField0_ |= 0x00000040;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>string build_rule_method_name = 7;</code>
-       * @return This builder for chaining.
-       */
-      public Builder clearBuildRuleMethodName() {
-        buildRuleMethodName_ = getDefaultInstance().getBuildRuleMethodName();
-        bitField0_ = (bitField0_ & ~0x00000040);
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>string build_rule_method_name = 7;</code>
-       * @param value The bytes for buildRuleMethodName to set.
-       * @return This builder for chaining.
-       */
-      public Builder setBuildRuleMethodNameBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) { throw new NullPointerException(); }
-        checkByteStringIsUtf8(value);
-        buildRuleMethodName_ = value;
-        bitField0_ |= 0x00000040;
-        onChanged();
-        return this;
+        return buildRuleBuilder_;
       }
 
       private com.giyeok.bibix.BibixIdProto.ArgsMap argsMap_;
@@ -4104,7 +3091,7 @@ public final class BibixIdProto {
        * @return Whether the argsMap field is set.
        */
       public boolean hasArgsMap() {
-        return ((bitField0_ & 0x00000080) != 0);
+        return ((bitField0_ & 0x00000004) != 0);
       }
       /**
        * <code>.com.giyeok.bibix.ArgsMap args_map = 8;</code>
@@ -4129,7 +3116,7 @@ public final class BibixIdProto {
         } else {
           argsMapBuilder_.setMessage(value);
         }
-        bitField0_ |= 0x00000080;
+        bitField0_ |= 0x00000004;
         onChanged();
         return this;
       }
@@ -4143,7 +3130,7 @@ public final class BibixIdProto {
         } else {
           argsMapBuilder_.setMessage(builderForValue.build());
         }
-        bitField0_ |= 0x00000080;
+        bitField0_ |= 0x00000004;
         onChanged();
         return this;
       }
@@ -4152,7 +3139,7 @@ public final class BibixIdProto {
        */
       public Builder mergeArgsMap(com.giyeok.bibix.BibixIdProto.ArgsMap value) {
         if (argsMapBuilder_ == null) {
-          if (((bitField0_ & 0x00000080) != 0) &&
+          if (((bitField0_ & 0x00000004) != 0) &&
             argsMap_ != null &&
             argsMap_ != com.giyeok.bibix.BibixIdProto.ArgsMap.getDefaultInstance()) {
             getArgsMapBuilder().mergeFrom(value);
@@ -4162,7 +3149,7 @@ public final class BibixIdProto {
         } else {
           argsMapBuilder_.mergeFrom(value);
         }
-        bitField0_ |= 0x00000080;
+        bitField0_ |= 0x00000004;
         onChanged();
         return this;
       }
@@ -4170,7 +3157,7 @@ public final class BibixIdProto {
        * <code>.com.giyeok.bibix.ArgsMap args_map = 8;</code>
        */
       public Builder clearArgsMap() {
-        bitField0_ = (bitField0_ & ~0x00000080);
+        bitField0_ = (bitField0_ & ~0x00000004);
         argsMap_ = null;
         if (argsMapBuilder_ != null) {
           argsMapBuilder_.dispose();
@@ -4183,7 +3170,7 @@ public final class BibixIdProto {
        * <code>.com.giyeok.bibix.ArgsMap args_map = 8;</code>
        */
       public com.giyeok.bibix.BibixIdProto.ArgsMap.Builder getArgsMapBuilder() {
-        bitField0_ |= 0x00000080;
+        bitField0_ |= 0x00000004;
         onChanged();
         return getArgsMapFieldBuilder().getBuilder();
       }
@@ -4273,6 +3260,1621 @@ public final class BibixIdProto {
 
     @java.lang.Override
     public com.giyeok.bibix.BibixIdProto.TargetIdData getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
+  public interface BuildRuleDataOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:com.giyeok.bibix.BuildRuleData)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>.com.giyeok.bibix.SourceId build_rule_source_id = 1;</code>
+     * @return Whether the buildRuleSourceId field is set.
+     */
+    boolean hasBuildRuleSourceId();
+    /**
+     * <code>.com.giyeok.bibix.SourceId build_rule_source_id = 1;</code>
+     * @return The buildRuleSourceId.
+     */
+    com.giyeok.bibix.BibixIdProto.SourceId getBuildRuleSourceId();
+    /**
+     * <code>.com.giyeok.bibix.SourceId build_rule_source_id = 1;</code>
+     */
+    com.giyeok.bibix.BibixIdProto.SourceIdOrBuilder getBuildRuleSourceIdOrBuilder();
+
+    /**
+     * <code>.google.protobuf.Empty native_impl = 2;</code>
+     * @return Whether the nativeImpl field is set.
+     */
+    boolean hasNativeImpl();
+    /**
+     * <code>.google.protobuf.Empty native_impl = 2;</code>
+     * @return The nativeImpl.
+     */
+    com.google.protobuf.Empty getNativeImpl();
+    /**
+     * <code>.google.protobuf.Empty native_impl = 2;</code>
+     */
+    com.google.protobuf.EmptyOrBuilder getNativeImplOrBuilder();
+
+    /**
+     * <pre>
+     * 다른 플러그인을 호출해서 생성된 impl인 경우 build_rule_impl_id,
+     * </pre>
+     *
+     * <code>.com.giyeok.bibix.BuildRuleImplId build_rule_impl_id = 3;</code>
+     * @return Whether the buildRuleImplId field is set.
+     */
+    boolean hasBuildRuleImplId();
+    /**
+     * <pre>
+     * 다른 플러그인을 호출해서 생성된 impl인 경우 build_rule_impl_id,
+     * </pre>
+     *
+     * <code>.com.giyeok.bibix.BuildRuleImplId build_rule_impl_id = 3;</code>
+     * @return The buildRuleImplId.
+     */
+    com.giyeok.bibix.BibixIdProto.BuildRuleImplId getBuildRuleImplId();
+    /**
+     * <pre>
+     * 다른 플러그인을 호출해서 생성된 impl인 경우 build_rule_impl_id,
+     * </pre>
+     *
+     * <code>.com.giyeok.bibix.BuildRuleImplId build_rule_impl_id = 3;</code>
+     */
+    com.giyeok.bibix.BibixIdProto.BuildRuleImplIdOrBuilder getBuildRuleImplIdOrBuilder();
+
+    /**
+     * <pre>
+     * jvm.ClassPaths같은 data class를 사용한 경우 value의 해시값을 사용
+     * </pre>
+     *
+     * <code>bytes bibix_value_hash = 4;</code>
+     * @return Whether the bibixValueHash field is set.
+     */
+    boolean hasBibixValueHash();
+    /**
+     * <pre>
+     * jvm.ClassPaths같은 data class를 사용한 경우 value의 해시값을 사용
+     * </pre>
+     *
+     * <code>bytes bibix_value_hash = 4;</code>
+     * @return The bibixValueHash.
+     */
+    com.google.protobuf.ByteString getBibixValueHash();
+
+    /**
+     * <pre>
+     * build_rule로 사용되는 클래스들의 해시값..?까지는 오반가?
+     * </pre>
+     *
+     * <code>string build_rule_class_name = 5;</code>
+     * @return The buildRuleClassName.
+     */
+    java.lang.String getBuildRuleClassName();
+    /**
+     * <pre>
+     * build_rule로 사용되는 클래스들의 해시값..?까지는 오반가?
+     * </pre>
+     *
+     * <code>string build_rule_class_name = 5;</code>
+     * @return The bytes for buildRuleClassName.
+     */
+    com.google.protobuf.ByteString
+        getBuildRuleClassNameBytes();
+
+    /**
+     * <code>string build_rule_method_name = 6;</code>
+     * @return The buildRuleMethodName.
+     */
+    java.lang.String getBuildRuleMethodName();
+    /**
+     * <code>string build_rule_method_name = 6;</code>
+     * @return The bytes for buildRuleMethodName.
+     */
+    com.google.protobuf.ByteString
+        getBuildRuleMethodNameBytes();
+
+    com.giyeok.bibix.BibixIdProto.BuildRuleData.BuildRuleCase getBuildRuleCase();
+  }
+  /**
+   * Protobuf type {@code com.giyeok.bibix.BuildRuleData}
+   */
+  public static final class BuildRuleData extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:com.giyeok.bibix.BuildRuleData)
+      BuildRuleDataOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use BuildRuleData.newBuilder() to construct.
+    private BuildRuleData(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private BuildRuleData() {
+      buildRuleClassName_ = "";
+      buildRuleMethodName_ = "";
+    }
+
+    @java.lang.Override
+    @SuppressWarnings({"unused"})
+    protected java.lang.Object newInstance(
+        UnusedPrivateParameter unused) {
+      return new BuildRuleData();
+    }
+
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return com.giyeok.bibix.BibixIdProto.internal_static_com_giyeok_bibix_BuildRuleData_descriptor;
+    }
+
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return com.giyeok.bibix.BibixIdProto.internal_static_com_giyeok_bibix_BuildRuleData_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              com.giyeok.bibix.BibixIdProto.BuildRuleData.class, com.giyeok.bibix.BibixIdProto.BuildRuleData.Builder.class);
+    }
+
+    private int buildRuleCase_ = 0;
+    @SuppressWarnings("serial")
+    private java.lang.Object buildRule_;
+    public enum BuildRuleCase
+        implements com.google.protobuf.Internal.EnumLite,
+            com.google.protobuf.AbstractMessage.InternalOneOfEnum {
+      NATIVE_IMPL(2),
+      BUILD_RULE_IMPL_ID(3),
+      BIBIX_VALUE_HASH(4),
+      BUILDRULE_NOT_SET(0);
+      private final int value;
+      private BuildRuleCase(int value) {
+        this.value = value;
+      }
+      /**
+       * @param value The number of the enum to look for.
+       * @return The enum associated with the given number.
+       * @deprecated Use {@link #forNumber(int)} instead.
+       */
+      @java.lang.Deprecated
+      public static BuildRuleCase valueOf(int value) {
+        return forNumber(value);
+      }
+
+      public static BuildRuleCase forNumber(int value) {
+        switch (value) {
+          case 2: return NATIVE_IMPL;
+          case 3: return BUILD_RULE_IMPL_ID;
+          case 4: return BIBIX_VALUE_HASH;
+          case 0: return BUILDRULE_NOT_SET;
+          default: return null;
+        }
+      }
+      public int getNumber() {
+        return this.value;
+      }
+    };
+
+    public BuildRuleCase
+    getBuildRuleCase() {
+      return BuildRuleCase.forNumber(
+          buildRuleCase_);
+    }
+
+    public static final int BUILD_RULE_SOURCE_ID_FIELD_NUMBER = 1;
+    private com.giyeok.bibix.BibixIdProto.SourceId buildRuleSourceId_;
+    /**
+     * <code>.com.giyeok.bibix.SourceId build_rule_source_id = 1;</code>
+     * @return Whether the buildRuleSourceId field is set.
+     */
+    @java.lang.Override
+    public boolean hasBuildRuleSourceId() {
+      return buildRuleSourceId_ != null;
+    }
+    /**
+     * <code>.com.giyeok.bibix.SourceId build_rule_source_id = 1;</code>
+     * @return The buildRuleSourceId.
+     */
+    @java.lang.Override
+    public com.giyeok.bibix.BibixIdProto.SourceId getBuildRuleSourceId() {
+      return buildRuleSourceId_ == null ? com.giyeok.bibix.BibixIdProto.SourceId.getDefaultInstance() : buildRuleSourceId_;
+    }
+    /**
+     * <code>.com.giyeok.bibix.SourceId build_rule_source_id = 1;</code>
+     */
+    @java.lang.Override
+    public com.giyeok.bibix.BibixIdProto.SourceIdOrBuilder getBuildRuleSourceIdOrBuilder() {
+      return buildRuleSourceId_ == null ? com.giyeok.bibix.BibixIdProto.SourceId.getDefaultInstance() : buildRuleSourceId_;
+    }
+
+    public static final int NATIVE_IMPL_FIELD_NUMBER = 2;
+    /**
+     * <code>.google.protobuf.Empty native_impl = 2;</code>
+     * @return Whether the nativeImpl field is set.
+     */
+    @java.lang.Override
+    public boolean hasNativeImpl() {
+      return buildRuleCase_ == 2;
+    }
+    /**
+     * <code>.google.protobuf.Empty native_impl = 2;</code>
+     * @return The nativeImpl.
+     */
+    @java.lang.Override
+    public com.google.protobuf.Empty getNativeImpl() {
+      if (buildRuleCase_ == 2) {
+         return (com.google.protobuf.Empty) buildRule_;
+      }
+      return com.google.protobuf.Empty.getDefaultInstance();
+    }
+    /**
+     * <code>.google.protobuf.Empty native_impl = 2;</code>
+     */
+    @java.lang.Override
+    public com.google.protobuf.EmptyOrBuilder getNativeImplOrBuilder() {
+      if (buildRuleCase_ == 2) {
+         return (com.google.protobuf.Empty) buildRule_;
+      }
+      return com.google.protobuf.Empty.getDefaultInstance();
+    }
+
+    public static final int BUILD_RULE_IMPL_ID_FIELD_NUMBER = 3;
+    /**
+     * <pre>
+     * 다른 플러그인을 호출해서 생성된 impl인 경우 build_rule_impl_id,
+     * </pre>
+     *
+     * <code>.com.giyeok.bibix.BuildRuleImplId build_rule_impl_id = 3;</code>
+     * @return Whether the buildRuleImplId field is set.
+     */
+    @java.lang.Override
+    public boolean hasBuildRuleImplId() {
+      return buildRuleCase_ == 3;
+    }
+    /**
+     * <pre>
+     * 다른 플러그인을 호출해서 생성된 impl인 경우 build_rule_impl_id,
+     * </pre>
+     *
+     * <code>.com.giyeok.bibix.BuildRuleImplId build_rule_impl_id = 3;</code>
+     * @return The buildRuleImplId.
+     */
+    @java.lang.Override
+    public com.giyeok.bibix.BibixIdProto.BuildRuleImplId getBuildRuleImplId() {
+      if (buildRuleCase_ == 3) {
+         return (com.giyeok.bibix.BibixIdProto.BuildRuleImplId) buildRule_;
+      }
+      return com.giyeok.bibix.BibixIdProto.BuildRuleImplId.getDefaultInstance();
+    }
+    /**
+     * <pre>
+     * 다른 플러그인을 호출해서 생성된 impl인 경우 build_rule_impl_id,
+     * </pre>
+     *
+     * <code>.com.giyeok.bibix.BuildRuleImplId build_rule_impl_id = 3;</code>
+     */
+    @java.lang.Override
+    public com.giyeok.bibix.BibixIdProto.BuildRuleImplIdOrBuilder getBuildRuleImplIdOrBuilder() {
+      if (buildRuleCase_ == 3) {
+         return (com.giyeok.bibix.BibixIdProto.BuildRuleImplId) buildRule_;
+      }
+      return com.giyeok.bibix.BibixIdProto.BuildRuleImplId.getDefaultInstance();
+    }
+
+    public static final int BIBIX_VALUE_HASH_FIELD_NUMBER = 4;
+    /**
+     * <pre>
+     * jvm.ClassPaths같은 data class를 사용한 경우 value의 해시값을 사용
+     * </pre>
+     *
+     * <code>bytes bibix_value_hash = 4;</code>
+     * @return Whether the bibixValueHash field is set.
+     */
+    @java.lang.Override
+    public boolean hasBibixValueHash() {
+      return buildRuleCase_ == 4;
+    }
+    /**
+     * <pre>
+     * jvm.ClassPaths같은 data class를 사용한 경우 value의 해시값을 사용
+     * </pre>
+     *
+     * <code>bytes bibix_value_hash = 4;</code>
+     * @return The bibixValueHash.
+     */
+    @java.lang.Override
+    public com.google.protobuf.ByteString getBibixValueHash() {
+      if (buildRuleCase_ == 4) {
+        return (com.google.protobuf.ByteString) buildRule_;
+      }
+      return com.google.protobuf.ByteString.EMPTY;
+    }
+
+    public static final int BUILD_RULE_CLASS_NAME_FIELD_NUMBER = 5;
+    @SuppressWarnings("serial")
+    private volatile java.lang.Object buildRuleClassName_ = "";
+    /**
+     * <pre>
+     * build_rule로 사용되는 클래스들의 해시값..?까지는 오반가?
+     * </pre>
+     *
+     * <code>string build_rule_class_name = 5;</code>
+     * @return The buildRuleClassName.
+     */
+    @java.lang.Override
+    public java.lang.String getBuildRuleClassName() {
+      java.lang.Object ref = buildRuleClassName_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        buildRuleClassName_ = s;
+        return s;
+      }
+    }
+    /**
+     * <pre>
+     * build_rule로 사용되는 클래스들의 해시값..?까지는 오반가?
+     * </pre>
+     *
+     * <code>string build_rule_class_name = 5;</code>
+     * @return The bytes for buildRuleClassName.
+     */
+    @java.lang.Override
+    public com.google.protobuf.ByteString
+        getBuildRuleClassNameBytes() {
+      java.lang.Object ref = buildRuleClassName_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        buildRuleClassName_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int BUILD_RULE_METHOD_NAME_FIELD_NUMBER = 6;
+    @SuppressWarnings("serial")
+    private volatile java.lang.Object buildRuleMethodName_ = "";
+    /**
+     * <code>string build_rule_method_name = 6;</code>
+     * @return The buildRuleMethodName.
+     */
+    @java.lang.Override
+    public java.lang.String getBuildRuleMethodName() {
+      java.lang.Object ref = buildRuleMethodName_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        buildRuleMethodName_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string build_rule_method_name = 6;</code>
+     * @return The bytes for buildRuleMethodName.
+     */
+    @java.lang.Override
+    public com.google.protobuf.ByteString
+        getBuildRuleMethodNameBytes() {
+      java.lang.Object ref = buildRuleMethodName_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        buildRuleMethodName_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    private byte memoizedIsInitialized = -1;
+    @java.lang.Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    @java.lang.Override
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      if (buildRuleSourceId_ != null) {
+        output.writeMessage(1, getBuildRuleSourceId());
+      }
+      if (buildRuleCase_ == 2) {
+        output.writeMessage(2, (com.google.protobuf.Empty) buildRule_);
+      }
+      if (buildRuleCase_ == 3) {
+        output.writeMessage(3, (com.giyeok.bibix.BibixIdProto.BuildRuleImplId) buildRule_);
+      }
+      if (buildRuleCase_ == 4) {
+        output.writeBytes(
+            4, (com.google.protobuf.ByteString) buildRule_);
+      }
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(buildRuleClassName_)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 5, buildRuleClassName_);
+      }
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(buildRuleMethodName_)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 6, buildRuleMethodName_);
+      }
+      getUnknownFields().writeTo(output);
+    }
+
+    @java.lang.Override
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (buildRuleSourceId_ != null) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(1, getBuildRuleSourceId());
+      }
+      if (buildRuleCase_ == 2) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(2, (com.google.protobuf.Empty) buildRule_);
+      }
+      if (buildRuleCase_ == 3) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(3, (com.giyeok.bibix.BibixIdProto.BuildRuleImplId) buildRule_);
+      }
+      if (buildRuleCase_ == 4) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(
+              4, (com.google.protobuf.ByteString) buildRule_);
+      }
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(buildRuleClassName_)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(5, buildRuleClassName_);
+      }
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(buildRuleMethodName_)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(6, buildRuleMethodName_);
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof com.giyeok.bibix.BibixIdProto.BuildRuleData)) {
+        return super.equals(obj);
+      }
+      com.giyeok.bibix.BibixIdProto.BuildRuleData other = (com.giyeok.bibix.BibixIdProto.BuildRuleData) obj;
+
+      if (hasBuildRuleSourceId() != other.hasBuildRuleSourceId()) return false;
+      if (hasBuildRuleSourceId()) {
+        if (!getBuildRuleSourceId()
+            .equals(other.getBuildRuleSourceId())) return false;
+      }
+      if (!getBuildRuleClassName()
+          .equals(other.getBuildRuleClassName())) return false;
+      if (!getBuildRuleMethodName()
+          .equals(other.getBuildRuleMethodName())) return false;
+      if (!getBuildRuleCase().equals(other.getBuildRuleCase())) return false;
+      switch (buildRuleCase_) {
+        case 2:
+          if (!getNativeImpl()
+              .equals(other.getNativeImpl())) return false;
+          break;
+        case 3:
+          if (!getBuildRuleImplId()
+              .equals(other.getBuildRuleImplId())) return false;
+          break;
+        case 4:
+          if (!getBibixValueHash()
+              .equals(other.getBibixValueHash())) return false;
+          break;
+        case 0:
+        default:
+      }
+      if (!getUnknownFields().equals(other.getUnknownFields())) return false;
+      return true;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      if (hasBuildRuleSourceId()) {
+        hash = (37 * hash) + BUILD_RULE_SOURCE_ID_FIELD_NUMBER;
+        hash = (53 * hash) + getBuildRuleSourceId().hashCode();
+      }
+      hash = (37 * hash) + BUILD_RULE_CLASS_NAME_FIELD_NUMBER;
+      hash = (53 * hash) + getBuildRuleClassName().hashCode();
+      hash = (37 * hash) + BUILD_RULE_METHOD_NAME_FIELD_NUMBER;
+      hash = (53 * hash) + getBuildRuleMethodName().hashCode();
+      switch (buildRuleCase_) {
+        case 2:
+          hash = (37 * hash) + NATIVE_IMPL_FIELD_NUMBER;
+          hash = (53 * hash) + getNativeImpl().hashCode();
+          break;
+        case 3:
+          hash = (37 * hash) + BUILD_RULE_IMPL_ID_FIELD_NUMBER;
+          hash = (53 * hash) + getBuildRuleImplId().hashCode();
+          break;
+        case 4:
+          hash = (37 * hash) + BIBIX_VALUE_HASH_FIELD_NUMBER;
+          hash = (53 * hash) + getBibixValueHash().hashCode();
+          break;
+        case 0:
+        default:
+      }
+      hash = (29 * hash) + getUnknownFields().hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static com.giyeok.bibix.BibixIdProto.BuildRuleData parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.giyeok.bibix.BibixIdProto.BuildRuleData parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.giyeok.bibix.BibixIdProto.BuildRuleData parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.giyeok.bibix.BibixIdProto.BuildRuleData parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.giyeok.bibix.BibixIdProto.BuildRuleData parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.giyeok.bibix.BibixIdProto.BuildRuleData parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.giyeok.bibix.BibixIdProto.BuildRuleData parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.giyeok.bibix.BibixIdProto.BuildRuleData parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.giyeok.bibix.BibixIdProto.BuildRuleData parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static com.giyeok.bibix.BibixIdProto.BuildRuleData parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.giyeok.bibix.BibixIdProto.BuildRuleData parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.giyeok.bibix.BibixIdProto.BuildRuleData parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    @java.lang.Override
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(com.giyeok.bibix.BibixIdProto.BuildRuleData prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @java.lang.Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code com.giyeok.bibix.BuildRuleData}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:com.giyeok.bibix.BuildRuleData)
+        com.giyeok.bibix.BibixIdProto.BuildRuleDataOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return com.giyeok.bibix.BibixIdProto.internal_static_com_giyeok_bibix_BuildRuleData_descriptor;
+      }
+
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return com.giyeok.bibix.BibixIdProto.internal_static_com_giyeok_bibix_BuildRuleData_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                com.giyeok.bibix.BibixIdProto.BuildRuleData.class, com.giyeok.bibix.BibixIdProto.BuildRuleData.Builder.class);
+      }
+
+      // Construct using com.giyeok.bibix.BibixIdProto.BuildRuleData.newBuilder()
+      private Builder() {
+
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+
+      }
+      @java.lang.Override
+      public Builder clear() {
+        super.clear();
+        bitField0_ = 0;
+        buildRuleSourceId_ = null;
+        if (buildRuleSourceIdBuilder_ != null) {
+          buildRuleSourceIdBuilder_.dispose();
+          buildRuleSourceIdBuilder_ = null;
+        }
+        if (nativeImplBuilder_ != null) {
+          nativeImplBuilder_.clear();
+        }
+        if (buildRuleImplIdBuilder_ != null) {
+          buildRuleImplIdBuilder_.clear();
+        }
+        buildRuleClassName_ = "";
+        buildRuleMethodName_ = "";
+        buildRuleCase_ = 0;
+        buildRule_ = null;
+        return this;
+      }
+
+      @java.lang.Override
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return com.giyeok.bibix.BibixIdProto.internal_static_com_giyeok_bibix_BuildRuleData_descriptor;
+      }
+
+      @java.lang.Override
+      public com.giyeok.bibix.BibixIdProto.BuildRuleData getDefaultInstanceForType() {
+        return com.giyeok.bibix.BibixIdProto.BuildRuleData.getDefaultInstance();
+      }
+
+      @java.lang.Override
+      public com.giyeok.bibix.BibixIdProto.BuildRuleData build() {
+        com.giyeok.bibix.BibixIdProto.BuildRuleData result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      @java.lang.Override
+      public com.giyeok.bibix.BibixIdProto.BuildRuleData buildPartial() {
+        com.giyeok.bibix.BibixIdProto.BuildRuleData result = new com.giyeok.bibix.BibixIdProto.BuildRuleData(this);
+        if (bitField0_ != 0) { buildPartial0(result); }
+        buildPartialOneofs(result);
+        onBuilt();
+        return result;
+      }
+
+      private void buildPartial0(com.giyeok.bibix.BibixIdProto.BuildRuleData result) {
+        int from_bitField0_ = bitField0_;
+        if (((from_bitField0_ & 0x00000001) != 0)) {
+          result.buildRuleSourceId_ = buildRuleSourceIdBuilder_ == null
+              ? buildRuleSourceId_
+              : buildRuleSourceIdBuilder_.build();
+        }
+        if (((from_bitField0_ & 0x00000010) != 0)) {
+          result.buildRuleClassName_ = buildRuleClassName_;
+        }
+        if (((from_bitField0_ & 0x00000020) != 0)) {
+          result.buildRuleMethodName_ = buildRuleMethodName_;
+        }
+      }
+
+      private void buildPartialOneofs(com.giyeok.bibix.BibixIdProto.BuildRuleData result) {
+        result.buildRuleCase_ = buildRuleCase_;
+        result.buildRule_ = this.buildRule_;
+        if (buildRuleCase_ == 2 &&
+            nativeImplBuilder_ != null) {
+          result.buildRule_ = nativeImplBuilder_.build();
+        }
+        if (buildRuleCase_ == 3 &&
+            buildRuleImplIdBuilder_ != null) {
+          result.buildRule_ = buildRuleImplIdBuilder_.build();
+        }
+      }
+
+      @java.lang.Override
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof com.giyeok.bibix.BibixIdProto.BuildRuleData) {
+          return mergeFrom((com.giyeok.bibix.BibixIdProto.BuildRuleData)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(com.giyeok.bibix.BibixIdProto.BuildRuleData other) {
+        if (other == com.giyeok.bibix.BibixIdProto.BuildRuleData.getDefaultInstance()) return this;
+        if (other.hasBuildRuleSourceId()) {
+          mergeBuildRuleSourceId(other.getBuildRuleSourceId());
+        }
+        if (!other.getBuildRuleClassName().isEmpty()) {
+          buildRuleClassName_ = other.buildRuleClassName_;
+          bitField0_ |= 0x00000010;
+          onChanged();
+        }
+        if (!other.getBuildRuleMethodName().isEmpty()) {
+          buildRuleMethodName_ = other.buildRuleMethodName_;
+          bitField0_ |= 0x00000020;
+          onChanged();
+        }
+        switch (other.getBuildRuleCase()) {
+          case NATIVE_IMPL: {
+            mergeNativeImpl(other.getNativeImpl());
+            break;
+          }
+          case BUILD_RULE_IMPL_ID: {
+            mergeBuildRuleImplId(other.getBuildRuleImplId());
+            break;
+          }
+          case BIBIX_VALUE_HASH: {
+            setBibixValueHash(other.getBibixValueHash());
+            break;
+          }
+          case BUILDRULE_NOT_SET: {
+            break;
+          }
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        onChanged();
+        return this;
+      }
+
+      @java.lang.Override
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      @java.lang.Override
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        if (extensionRegistry == null) {
+          throw new java.lang.NullPointerException();
+        }
+        try {
+          boolean done = false;
+          while (!done) {
+            int tag = input.readTag();
+            switch (tag) {
+              case 0:
+                done = true;
+                break;
+              case 10: {
+                input.readMessage(
+                    getBuildRuleSourceIdFieldBuilder().getBuilder(),
+                    extensionRegistry);
+                bitField0_ |= 0x00000001;
+                break;
+              } // case 10
+              case 18: {
+                input.readMessage(
+                    getNativeImplFieldBuilder().getBuilder(),
+                    extensionRegistry);
+                buildRuleCase_ = 2;
+                break;
+              } // case 18
+              case 26: {
+                input.readMessage(
+                    getBuildRuleImplIdFieldBuilder().getBuilder(),
+                    extensionRegistry);
+                buildRuleCase_ = 3;
+                break;
+              } // case 26
+              case 34: {
+                buildRule_ = input.readBytes();
+                buildRuleCase_ = 4;
+                break;
+              } // case 34
+              case 42: {
+                buildRuleClassName_ = input.readStringRequireUtf8();
+                bitField0_ |= 0x00000010;
+                break;
+              } // case 42
+              case 50: {
+                buildRuleMethodName_ = input.readStringRequireUtf8();
+                bitField0_ |= 0x00000020;
+                break;
+              } // case 50
+              default: {
+                if (!super.parseUnknownField(input, extensionRegistry, tag)) {
+                  done = true; // was an endgroup tag
+                }
+                break;
+              } // default:
+            } // switch (tag)
+          } // while (!done)
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          throw e.unwrapIOException();
+        } finally {
+          onChanged();
+        } // finally
+        return this;
+      }
+      private int buildRuleCase_ = 0;
+      private java.lang.Object buildRule_;
+      public BuildRuleCase
+          getBuildRuleCase() {
+        return BuildRuleCase.forNumber(
+            buildRuleCase_);
+      }
+
+      public Builder clearBuildRule() {
+        buildRuleCase_ = 0;
+        buildRule_ = null;
+        onChanged();
+        return this;
+      }
+
+      private int bitField0_;
+
+      private com.giyeok.bibix.BibixIdProto.SourceId buildRuleSourceId_;
+      private com.google.protobuf.SingleFieldBuilderV3<
+          com.giyeok.bibix.BibixIdProto.SourceId, com.giyeok.bibix.BibixIdProto.SourceId.Builder, com.giyeok.bibix.BibixIdProto.SourceIdOrBuilder> buildRuleSourceIdBuilder_;
+      /**
+       * <code>.com.giyeok.bibix.SourceId build_rule_source_id = 1;</code>
+       * @return Whether the buildRuleSourceId field is set.
+       */
+      public boolean hasBuildRuleSourceId() {
+        return ((bitField0_ & 0x00000001) != 0);
+      }
+      /**
+       * <code>.com.giyeok.bibix.SourceId build_rule_source_id = 1;</code>
+       * @return The buildRuleSourceId.
+       */
+      public com.giyeok.bibix.BibixIdProto.SourceId getBuildRuleSourceId() {
+        if (buildRuleSourceIdBuilder_ == null) {
+          return buildRuleSourceId_ == null ? com.giyeok.bibix.BibixIdProto.SourceId.getDefaultInstance() : buildRuleSourceId_;
+        } else {
+          return buildRuleSourceIdBuilder_.getMessage();
+        }
+      }
+      /**
+       * <code>.com.giyeok.bibix.SourceId build_rule_source_id = 1;</code>
+       */
+      public Builder setBuildRuleSourceId(com.giyeok.bibix.BibixIdProto.SourceId value) {
+        if (buildRuleSourceIdBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          buildRuleSourceId_ = value;
+        } else {
+          buildRuleSourceIdBuilder_.setMessage(value);
+        }
+        bitField0_ |= 0x00000001;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>.com.giyeok.bibix.SourceId build_rule_source_id = 1;</code>
+       */
+      public Builder setBuildRuleSourceId(
+          com.giyeok.bibix.BibixIdProto.SourceId.Builder builderForValue) {
+        if (buildRuleSourceIdBuilder_ == null) {
+          buildRuleSourceId_ = builderForValue.build();
+        } else {
+          buildRuleSourceIdBuilder_.setMessage(builderForValue.build());
+        }
+        bitField0_ |= 0x00000001;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>.com.giyeok.bibix.SourceId build_rule_source_id = 1;</code>
+       */
+      public Builder mergeBuildRuleSourceId(com.giyeok.bibix.BibixIdProto.SourceId value) {
+        if (buildRuleSourceIdBuilder_ == null) {
+          if (((bitField0_ & 0x00000001) != 0) &&
+            buildRuleSourceId_ != null &&
+            buildRuleSourceId_ != com.giyeok.bibix.BibixIdProto.SourceId.getDefaultInstance()) {
+            getBuildRuleSourceIdBuilder().mergeFrom(value);
+          } else {
+            buildRuleSourceId_ = value;
+          }
+        } else {
+          buildRuleSourceIdBuilder_.mergeFrom(value);
+        }
+        bitField0_ |= 0x00000001;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>.com.giyeok.bibix.SourceId build_rule_source_id = 1;</code>
+       */
+      public Builder clearBuildRuleSourceId() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        buildRuleSourceId_ = null;
+        if (buildRuleSourceIdBuilder_ != null) {
+          buildRuleSourceIdBuilder_.dispose();
+          buildRuleSourceIdBuilder_ = null;
+        }
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>.com.giyeok.bibix.SourceId build_rule_source_id = 1;</code>
+       */
+      public com.giyeok.bibix.BibixIdProto.SourceId.Builder getBuildRuleSourceIdBuilder() {
+        bitField0_ |= 0x00000001;
+        onChanged();
+        return getBuildRuleSourceIdFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>.com.giyeok.bibix.SourceId build_rule_source_id = 1;</code>
+       */
+      public com.giyeok.bibix.BibixIdProto.SourceIdOrBuilder getBuildRuleSourceIdOrBuilder() {
+        if (buildRuleSourceIdBuilder_ != null) {
+          return buildRuleSourceIdBuilder_.getMessageOrBuilder();
+        } else {
+          return buildRuleSourceId_ == null ?
+              com.giyeok.bibix.BibixIdProto.SourceId.getDefaultInstance() : buildRuleSourceId_;
+        }
+      }
+      /**
+       * <code>.com.giyeok.bibix.SourceId build_rule_source_id = 1;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          com.giyeok.bibix.BibixIdProto.SourceId, com.giyeok.bibix.BibixIdProto.SourceId.Builder, com.giyeok.bibix.BibixIdProto.SourceIdOrBuilder> 
+          getBuildRuleSourceIdFieldBuilder() {
+        if (buildRuleSourceIdBuilder_ == null) {
+          buildRuleSourceIdBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              com.giyeok.bibix.BibixIdProto.SourceId, com.giyeok.bibix.BibixIdProto.SourceId.Builder, com.giyeok.bibix.BibixIdProto.SourceIdOrBuilder>(
+                  getBuildRuleSourceId(),
+                  getParentForChildren(),
+                  isClean());
+          buildRuleSourceId_ = null;
+        }
+        return buildRuleSourceIdBuilder_;
+      }
+
+      private com.google.protobuf.SingleFieldBuilderV3<
+          com.google.protobuf.Empty, com.google.protobuf.Empty.Builder, com.google.protobuf.EmptyOrBuilder> nativeImplBuilder_;
+      /**
+       * <code>.google.protobuf.Empty native_impl = 2;</code>
+       * @return Whether the nativeImpl field is set.
+       */
+      @java.lang.Override
+      public boolean hasNativeImpl() {
+        return buildRuleCase_ == 2;
+      }
+      /**
+       * <code>.google.protobuf.Empty native_impl = 2;</code>
+       * @return The nativeImpl.
+       */
+      @java.lang.Override
+      public com.google.protobuf.Empty getNativeImpl() {
+        if (nativeImplBuilder_ == null) {
+          if (buildRuleCase_ == 2) {
+            return (com.google.protobuf.Empty) buildRule_;
+          }
+          return com.google.protobuf.Empty.getDefaultInstance();
+        } else {
+          if (buildRuleCase_ == 2) {
+            return nativeImplBuilder_.getMessage();
+          }
+          return com.google.protobuf.Empty.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>.google.protobuf.Empty native_impl = 2;</code>
+       */
+      public Builder setNativeImpl(com.google.protobuf.Empty value) {
+        if (nativeImplBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          buildRule_ = value;
+          onChanged();
+        } else {
+          nativeImplBuilder_.setMessage(value);
+        }
+        buildRuleCase_ = 2;
+        return this;
+      }
+      /**
+       * <code>.google.protobuf.Empty native_impl = 2;</code>
+       */
+      public Builder setNativeImpl(
+          com.google.protobuf.Empty.Builder builderForValue) {
+        if (nativeImplBuilder_ == null) {
+          buildRule_ = builderForValue.build();
+          onChanged();
+        } else {
+          nativeImplBuilder_.setMessage(builderForValue.build());
+        }
+        buildRuleCase_ = 2;
+        return this;
+      }
+      /**
+       * <code>.google.protobuf.Empty native_impl = 2;</code>
+       */
+      public Builder mergeNativeImpl(com.google.protobuf.Empty value) {
+        if (nativeImplBuilder_ == null) {
+          if (buildRuleCase_ == 2 &&
+              buildRule_ != com.google.protobuf.Empty.getDefaultInstance()) {
+            buildRule_ = com.google.protobuf.Empty.newBuilder((com.google.protobuf.Empty) buildRule_)
+                .mergeFrom(value).buildPartial();
+          } else {
+            buildRule_ = value;
+          }
+          onChanged();
+        } else {
+          if (buildRuleCase_ == 2) {
+            nativeImplBuilder_.mergeFrom(value);
+          } else {
+            nativeImplBuilder_.setMessage(value);
+          }
+        }
+        buildRuleCase_ = 2;
+        return this;
+      }
+      /**
+       * <code>.google.protobuf.Empty native_impl = 2;</code>
+       */
+      public Builder clearNativeImpl() {
+        if (nativeImplBuilder_ == null) {
+          if (buildRuleCase_ == 2) {
+            buildRuleCase_ = 0;
+            buildRule_ = null;
+            onChanged();
+          }
+        } else {
+          if (buildRuleCase_ == 2) {
+            buildRuleCase_ = 0;
+            buildRule_ = null;
+          }
+          nativeImplBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>.google.protobuf.Empty native_impl = 2;</code>
+       */
+      public com.google.protobuf.Empty.Builder getNativeImplBuilder() {
+        return getNativeImplFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>.google.protobuf.Empty native_impl = 2;</code>
+       */
+      @java.lang.Override
+      public com.google.protobuf.EmptyOrBuilder getNativeImplOrBuilder() {
+        if ((buildRuleCase_ == 2) && (nativeImplBuilder_ != null)) {
+          return nativeImplBuilder_.getMessageOrBuilder();
+        } else {
+          if (buildRuleCase_ == 2) {
+            return (com.google.protobuf.Empty) buildRule_;
+          }
+          return com.google.protobuf.Empty.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>.google.protobuf.Empty native_impl = 2;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          com.google.protobuf.Empty, com.google.protobuf.Empty.Builder, com.google.protobuf.EmptyOrBuilder> 
+          getNativeImplFieldBuilder() {
+        if (nativeImplBuilder_ == null) {
+          if (!(buildRuleCase_ == 2)) {
+            buildRule_ = com.google.protobuf.Empty.getDefaultInstance();
+          }
+          nativeImplBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              com.google.protobuf.Empty, com.google.protobuf.Empty.Builder, com.google.protobuf.EmptyOrBuilder>(
+                  (com.google.protobuf.Empty) buildRule_,
+                  getParentForChildren(),
+                  isClean());
+          buildRule_ = null;
+        }
+        buildRuleCase_ = 2;
+        onChanged();
+        return nativeImplBuilder_;
+      }
+
+      private com.google.protobuf.SingleFieldBuilderV3<
+          com.giyeok.bibix.BibixIdProto.BuildRuleImplId, com.giyeok.bibix.BibixIdProto.BuildRuleImplId.Builder, com.giyeok.bibix.BibixIdProto.BuildRuleImplIdOrBuilder> buildRuleImplIdBuilder_;
+      /**
+       * <pre>
+       * 다른 플러그인을 호출해서 생성된 impl인 경우 build_rule_impl_id,
+       * </pre>
+       *
+       * <code>.com.giyeok.bibix.BuildRuleImplId build_rule_impl_id = 3;</code>
+       * @return Whether the buildRuleImplId field is set.
+       */
+      @java.lang.Override
+      public boolean hasBuildRuleImplId() {
+        return buildRuleCase_ == 3;
+      }
+      /**
+       * <pre>
+       * 다른 플러그인을 호출해서 생성된 impl인 경우 build_rule_impl_id,
+       * </pre>
+       *
+       * <code>.com.giyeok.bibix.BuildRuleImplId build_rule_impl_id = 3;</code>
+       * @return The buildRuleImplId.
+       */
+      @java.lang.Override
+      public com.giyeok.bibix.BibixIdProto.BuildRuleImplId getBuildRuleImplId() {
+        if (buildRuleImplIdBuilder_ == null) {
+          if (buildRuleCase_ == 3) {
+            return (com.giyeok.bibix.BibixIdProto.BuildRuleImplId) buildRule_;
+          }
+          return com.giyeok.bibix.BibixIdProto.BuildRuleImplId.getDefaultInstance();
+        } else {
+          if (buildRuleCase_ == 3) {
+            return buildRuleImplIdBuilder_.getMessage();
+          }
+          return com.giyeok.bibix.BibixIdProto.BuildRuleImplId.getDefaultInstance();
+        }
+      }
+      /**
+       * <pre>
+       * 다른 플러그인을 호출해서 생성된 impl인 경우 build_rule_impl_id,
+       * </pre>
+       *
+       * <code>.com.giyeok.bibix.BuildRuleImplId build_rule_impl_id = 3;</code>
+       */
+      public Builder setBuildRuleImplId(com.giyeok.bibix.BibixIdProto.BuildRuleImplId value) {
+        if (buildRuleImplIdBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          buildRule_ = value;
+          onChanged();
+        } else {
+          buildRuleImplIdBuilder_.setMessage(value);
+        }
+        buildRuleCase_ = 3;
+        return this;
+      }
+      /**
+       * <pre>
+       * 다른 플러그인을 호출해서 생성된 impl인 경우 build_rule_impl_id,
+       * </pre>
+       *
+       * <code>.com.giyeok.bibix.BuildRuleImplId build_rule_impl_id = 3;</code>
+       */
+      public Builder setBuildRuleImplId(
+          com.giyeok.bibix.BibixIdProto.BuildRuleImplId.Builder builderForValue) {
+        if (buildRuleImplIdBuilder_ == null) {
+          buildRule_ = builderForValue.build();
+          onChanged();
+        } else {
+          buildRuleImplIdBuilder_.setMessage(builderForValue.build());
+        }
+        buildRuleCase_ = 3;
+        return this;
+      }
+      /**
+       * <pre>
+       * 다른 플러그인을 호출해서 생성된 impl인 경우 build_rule_impl_id,
+       * </pre>
+       *
+       * <code>.com.giyeok.bibix.BuildRuleImplId build_rule_impl_id = 3;</code>
+       */
+      public Builder mergeBuildRuleImplId(com.giyeok.bibix.BibixIdProto.BuildRuleImplId value) {
+        if (buildRuleImplIdBuilder_ == null) {
+          if (buildRuleCase_ == 3 &&
+              buildRule_ != com.giyeok.bibix.BibixIdProto.BuildRuleImplId.getDefaultInstance()) {
+            buildRule_ = com.giyeok.bibix.BibixIdProto.BuildRuleImplId.newBuilder((com.giyeok.bibix.BibixIdProto.BuildRuleImplId) buildRule_)
+                .mergeFrom(value).buildPartial();
+          } else {
+            buildRule_ = value;
+          }
+          onChanged();
+        } else {
+          if (buildRuleCase_ == 3) {
+            buildRuleImplIdBuilder_.mergeFrom(value);
+          } else {
+            buildRuleImplIdBuilder_.setMessage(value);
+          }
+        }
+        buildRuleCase_ = 3;
+        return this;
+      }
+      /**
+       * <pre>
+       * 다른 플러그인을 호출해서 생성된 impl인 경우 build_rule_impl_id,
+       * </pre>
+       *
+       * <code>.com.giyeok.bibix.BuildRuleImplId build_rule_impl_id = 3;</code>
+       */
+      public Builder clearBuildRuleImplId() {
+        if (buildRuleImplIdBuilder_ == null) {
+          if (buildRuleCase_ == 3) {
+            buildRuleCase_ = 0;
+            buildRule_ = null;
+            onChanged();
+          }
+        } else {
+          if (buildRuleCase_ == 3) {
+            buildRuleCase_ = 0;
+            buildRule_ = null;
+          }
+          buildRuleImplIdBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       * 다른 플러그인을 호출해서 생성된 impl인 경우 build_rule_impl_id,
+       * </pre>
+       *
+       * <code>.com.giyeok.bibix.BuildRuleImplId build_rule_impl_id = 3;</code>
+       */
+      public com.giyeok.bibix.BibixIdProto.BuildRuleImplId.Builder getBuildRuleImplIdBuilder() {
+        return getBuildRuleImplIdFieldBuilder().getBuilder();
+      }
+      /**
+       * <pre>
+       * 다른 플러그인을 호출해서 생성된 impl인 경우 build_rule_impl_id,
+       * </pre>
+       *
+       * <code>.com.giyeok.bibix.BuildRuleImplId build_rule_impl_id = 3;</code>
+       */
+      @java.lang.Override
+      public com.giyeok.bibix.BibixIdProto.BuildRuleImplIdOrBuilder getBuildRuleImplIdOrBuilder() {
+        if ((buildRuleCase_ == 3) && (buildRuleImplIdBuilder_ != null)) {
+          return buildRuleImplIdBuilder_.getMessageOrBuilder();
+        } else {
+          if (buildRuleCase_ == 3) {
+            return (com.giyeok.bibix.BibixIdProto.BuildRuleImplId) buildRule_;
+          }
+          return com.giyeok.bibix.BibixIdProto.BuildRuleImplId.getDefaultInstance();
+        }
+      }
+      /**
+       * <pre>
+       * 다른 플러그인을 호출해서 생성된 impl인 경우 build_rule_impl_id,
+       * </pre>
+       *
+       * <code>.com.giyeok.bibix.BuildRuleImplId build_rule_impl_id = 3;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          com.giyeok.bibix.BibixIdProto.BuildRuleImplId, com.giyeok.bibix.BibixIdProto.BuildRuleImplId.Builder, com.giyeok.bibix.BibixIdProto.BuildRuleImplIdOrBuilder> 
+          getBuildRuleImplIdFieldBuilder() {
+        if (buildRuleImplIdBuilder_ == null) {
+          if (!(buildRuleCase_ == 3)) {
+            buildRule_ = com.giyeok.bibix.BibixIdProto.BuildRuleImplId.getDefaultInstance();
+          }
+          buildRuleImplIdBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              com.giyeok.bibix.BibixIdProto.BuildRuleImplId, com.giyeok.bibix.BibixIdProto.BuildRuleImplId.Builder, com.giyeok.bibix.BibixIdProto.BuildRuleImplIdOrBuilder>(
+                  (com.giyeok.bibix.BibixIdProto.BuildRuleImplId) buildRule_,
+                  getParentForChildren(),
+                  isClean());
+          buildRule_ = null;
+        }
+        buildRuleCase_ = 3;
+        onChanged();
+        return buildRuleImplIdBuilder_;
+      }
+
+      /**
+       * <pre>
+       * jvm.ClassPaths같은 data class를 사용한 경우 value의 해시값을 사용
+       * </pre>
+       *
+       * <code>bytes bibix_value_hash = 4;</code>
+       * @return Whether the bibixValueHash field is set.
+       */
+      public boolean hasBibixValueHash() {
+        return buildRuleCase_ == 4;
+      }
+      /**
+       * <pre>
+       * jvm.ClassPaths같은 data class를 사용한 경우 value의 해시값을 사용
+       * </pre>
+       *
+       * <code>bytes bibix_value_hash = 4;</code>
+       * @return The bibixValueHash.
+       */
+      public com.google.protobuf.ByteString getBibixValueHash() {
+        if (buildRuleCase_ == 4) {
+          return (com.google.protobuf.ByteString) buildRule_;
+        }
+        return com.google.protobuf.ByteString.EMPTY;
+      }
+      /**
+       * <pre>
+       * jvm.ClassPaths같은 data class를 사용한 경우 value의 해시값을 사용
+       * </pre>
+       *
+       * <code>bytes bibix_value_hash = 4;</code>
+       * @param value The bibixValueHash to set.
+       * @return This builder for chaining.
+       */
+      public Builder setBibixValueHash(com.google.protobuf.ByteString value) {
+        if (value == null) { throw new NullPointerException(); }
+        buildRuleCase_ = 4;
+        buildRule_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * jvm.ClassPaths같은 data class를 사용한 경우 value의 해시값을 사용
+       * </pre>
+       *
+       * <code>bytes bibix_value_hash = 4;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearBibixValueHash() {
+        if (buildRuleCase_ == 4) {
+          buildRuleCase_ = 0;
+          buildRule_ = null;
+          onChanged();
+        }
+        return this;
+      }
+
+      private java.lang.Object buildRuleClassName_ = "";
+      /**
+       * <pre>
+       * build_rule로 사용되는 클래스들의 해시값..?까지는 오반가?
+       * </pre>
+       *
+       * <code>string build_rule_class_name = 5;</code>
+       * @return The buildRuleClassName.
+       */
+      public java.lang.String getBuildRuleClassName() {
+        java.lang.Object ref = buildRuleClassName_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          buildRuleClassName_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <pre>
+       * build_rule로 사용되는 클래스들의 해시값..?까지는 오반가?
+       * </pre>
+       *
+       * <code>string build_rule_class_name = 5;</code>
+       * @return The bytes for buildRuleClassName.
+       */
+      public com.google.protobuf.ByteString
+          getBuildRuleClassNameBytes() {
+        java.lang.Object ref = buildRuleClassName_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          buildRuleClassName_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <pre>
+       * build_rule로 사용되는 클래스들의 해시값..?까지는 오반가?
+       * </pre>
+       *
+       * <code>string build_rule_class_name = 5;</code>
+       * @param value The buildRuleClassName to set.
+       * @return This builder for chaining.
+       */
+      public Builder setBuildRuleClassName(
+          java.lang.String value) {
+        if (value == null) { throw new NullPointerException(); }
+        buildRuleClassName_ = value;
+        bitField0_ |= 0x00000010;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * build_rule로 사용되는 클래스들의 해시값..?까지는 오반가?
+       * </pre>
+       *
+       * <code>string build_rule_class_name = 5;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearBuildRuleClassName() {
+        buildRuleClassName_ = getDefaultInstance().getBuildRuleClassName();
+        bitField0_ = (bitField0_ & ~0x00000010);
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * build_rule로 사용되는 클래스들의 해시값..?까지는 오반가?
+       * </pre>
+       *
+       * <code>string build_rule_class_name = 5;</code>
+       * @param value The bytes for buildRuleClassName to set.
+       * @return This builder for chaining.
+       */
+      public Builder setBuildRuleClassNameBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) { throw new NullPointerException(); }
+        checkByteStringIsUtf8(value);
+        buildRuleClassName_ = value;
+        bitField0_ |= 0x00000010;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object buildRuleMethodName_ = "";
+      /**
+       * <code>string build_rule_method_name = 6;</code>
+       * @return The buildRuleMethodName.
+       */
+      public java.lang.String getBuildRuleMethodName() {
+        java.lang.Object ref = buildRuleMethodName_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          buildRuleMethodName_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string build_rule_method_name = 6;</code>
+       * @return The bytes for buildRuleMethodName.
+       */
+      public com.google.protobuf.ByteString
+          getBuildRuleMethodNameBytes() {
+        java.lang.Object ref = buildRuleMethodName_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          buildRuleMethodName_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string build_rule_method_name = 6;</code>
+       * @param value The buildRuleMethodName to set.
+       * @return This builder for chaining.
+       */
+      public Builder setBuildRuleMethodName(
+          java.lang.String value) {
+        if (value == null) { throw new NullPointerException(); }
+        buildRuleMethodName_ = value;
+        bitField0_ |= 0x00000020;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string build_rule_method_name = 6;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearBuildRuleMethodName() {
+        buildRuleMethodName_ = getDefaultInstance().getBuildRuleMethodName();
+        bitField0_ = (bitField0_ & ~0x00000020);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string build_rule_method_name = 6;</code>
+       * @param value The bytes for buildRuleMethodName to set.
+       * @return This builder for chaining.
+       */
+      public Builder setBuildRuleMethodNameBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) { throw new NullPointerException(); }
+        checkByteStringIsUtf8(value);
+        buildRuleMethodName_ = value;
+        bitField0_ |= 0x00000020;
+        onChanged();
+        return this;
+      }
+      @java.lang.Override
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFields(unknownFields);
+      }
+
+      @java.lang.Override
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:com.giyeok.bibix.BuildRuleData)
+    }
+
+    // @@protoc_insertion_point(class_scope:com.giyeok.bibix.BuildRuleData)
+    private static final com.giyeok.bibix.BibixIdProto.BuildRuleData DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new com.giyeok.bibix.BibixIdProto.BuildRuleData();
+    }
+
+    public static com.giyeok.bibix.BibixIdProto.BuildRuleData getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<BuildRuleData>
+        PARSER = new com.google.protobuf.AbstractParser<BuildRuleData>() {
+      @java.lang.Override
+      public BuildRuleData parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        Builder builder = newBuilder();
+        try {
+          builder.mergeFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          throw e.setUnfinishedMessage(builder.buildPartial());
+        } catch (com.google.protobuf.UninitializedMessageException e) {
+          throw e.asInvalidProtocolBufferException().setUnfinishedMessage(builder.buildPartial());
+        } catch (java.io.IOException e) {
+          throw new com.google.protobuf.InvalidProtocolBufferException(e)
+              .setUnfinishedMessage(builder.buildPartial());
+        }
+        return builder.buildPartial();
+      }
+    };
+
+    public static com.google.protobuf.Parser<BuildRuleData> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<BuildRuleData> getParserForType() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.giyeok.bibix.BibixIdProto.BuildRuleData getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -10466,6 +11068,11 @@ public final class BibixIdProto {
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_com_giyeok_bibix_TargetIdData_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_com_giyeok_bibix_BuildRuleData_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_com_giyeok_bibix_BuildRuleData_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_com_giyeok_bibix_BuildRuleImplId_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
@@ -10520,33 +11127,35 @@ public final class BibixIdProto {
       "bix.ExternalBibixProjectH\000B\010\n\006sourceB\020\n\016" +
       "_bibix_version\"C\n\024ExternalBibixProject\022\026" +
       "\n\016root_directory\030\001 \001(\t\022\023\n\013script_name\030\002 " +
-      "\001(\t\"\375\002\n\014TargetIdData\022-\n\tsource_id\030\001 \001(\0132" +
-      "\032.com.giyeok.bibix.SourceId\0228\n\024build_rul" +
-      "e_source_id\030\002 \001(\0132\032.com.giyeok.bibix.Sou" +
-      "rceId\022-\n\013native_impl\030\003 \001(\0132\026.google.prot" +
-      "obuf.EmptyH\000\022?\n\022build_rule_impl_id\030\004 \001(\013" +
-      "2!.com.giyeok.bibix.BuildRuleImplIdH\000\022\032\n" +
-      "\020bibix_value_hash\030\005 \001(\014H\000\022\035\n\025build_rule_" +
-      "class_name\030\006 \001(\t\022\036\n\026build_rule_method_na" +
-      "me\030\007 \001(\t\022+\n\010args_map\030\010 \001(\0132\031.com.giyeok." +
-      "bibix.ArgsMapB\014\n\nbuild_rule\"f\n\017BuildRule" +
-      "ImplId\022-\n\tsource_id\030\001 \001(\0132\032.com.giyeok.b" +
-      "ibix.SourceId\022\021\n\ttarget_id\030\002 \001(\014\022\021\n\tobje" +
-      "ct_id\030\003 \001(\014\"6\n\014ObjectIdData\022\021\n\ttarget_id" +
-      "\030\001 \001(\014\022\023\n\013inputs_hash\030\002 \001(\014\"3\n\007ArgsMap\022(" +
-      "\n\005pairs\030\001 \003(\0132\031.com.giyeok.bibix.ArgPair" +
-      "\"D\n\007ArgPair\022\014\n\004name\030\001 \001(\t\022+\n\005value\030\002 \001(\013" +
-      "2\034.com.giyeok.bibix.BibixValue\"\204\001\n\013Input" +
-      "Hashes\0224\n\013directories\030\001 \003(\0132\037.com.giyeok" +
-      ".bibix.DirectoryHash\022)\n\005files\030\002 \003(\0132\032.co" +
-      "m.giyeok.bibix.FileHash\022\024\n\014non_existent\030" +
-      "\003 \003(\t\"~\n\rDirectoryHash\022\014\n\004path\030\001 \001(\t\0224\n\013" +
-      "directories\030\002 \003(\0132\037.com.giyeok.bibix.Dir" +
-      "ectoryHash\022)\n\005files\030\003 \003(\0132\032.com.giyeok.b" +
-      "ibix.FileHash\"q\n\010FileHash\022\014\n\004path\030\001 \001(\t\022" +
-      "6\n\022last_modified_time\030\002 \001(\0132\032.google.pro" +
-      "tobuf.Timestamp\022\014\n\004size\030\003 \001(\003\022\021\n\tsha1_ha" +
-      "sh\030\004 \001(\014B\016B\014BibixIdProtob\006proto3"
+      "\001(\t\"\237\001\n\014TargetIdData\022-\n\tsource_id\030\001 \001(\0132" +
+      "\032.com.giyeok.bibix.SourceId\0223\n\nbuild_rul" +
+      "e\030\002 \001(\0132\037.com.giyeok.bibix.BuildRuleData" +
+      "\022+\n\010args_map\030\010 \001(\0132\031.com.giyeok.bibix.Ar" +
+      "gsMap\"\242\002\n\rBuildRuleData\0228\n\024build_rule_so" +
+      "urce_id\030\001 \001(\0132\032.com.giyeok.bibix.SourceI" +
+      "d\022-\n\013native_impl\030\002 \001(\0132\026.google.protobuf" +
+      ".EmptyH\000\022?\n\022build_rule_impl_id\030\003 \001(\0132!.c" +
+      "om.giyeok.bibix.BuildRuleImplIdH\000\022\032\n\020bib" +
+      "ix_value_hash\030\004 \001(\014H\000\022\035\n\025build_rule_clas" +
+      "s_name\030\005 \001(\t\022\036\n\026build_rule_method_name\030\006" +
+      " \001(\tB\014\n\nbuild_rule\"f\n\017BuildRuleImplId\022-\n" +
+      "\tsource_id\030\001 \001(\0132\032.com.giyeok.bibix.Sour" +
+      "ceId\022\021\n\ttarget_id\030\002 \001(\014\022\021\n\tobject_id\030\003 \001" +
+      "(\014\"6\n\014ObjectIdData\022\021\n\ttarget_id\030\001 \001(\014\022\023\n" +
+      "\013inputs_hash\030\002 \001(\014\"3\n\007ArgsMap\022(\n\005pairs\030\001" +
+      " \003(\0132\031.com.giyeok.bibix.ArgPair\"D\n\007ArgPa" +
+      "ir\022\014\n\004name\030\001 \001(\t\022+\n\005value\030\002 \001(\0132\034.com.gi" +
+      "yeok.bibix.BibixValue\"\204\001\n\013InputHashes\0224\n" +
+      "\013directories\030\001 \003(\0132\037.com.giyeok.bibix.Di" +
+      "rectoryHash\022)\n\005files\030\002 \003(\0132\032.com.giyeok." +
+      "bibix.FileHash\022\024\n\014non_existent\030\003 \003(\t\"~\n\r" +
+      "DirectoryHash\022\014\n\004path\030\001 \001(\t\0224\n\013directori" +
+      "es\030\002 \003(\0132\037.com.giyeok.bibix.DirectoryHas" +
+      "h\022)\n\005files\030\003 \003(\0132\032.com.giyeok.bibix.File" +
+      "Hash\"q\n\010FileHash\022\014\n\004path\030\001 \001(\t\0226\n\022last_m" +
+      "odified_time\030\002 \001(\0132\032.google.protobuf.Tim" +
+      "estamp\022\014\n\004size\030\003 \001(\003\022\021\n\tsha1_hash\030\004 \001(\014B" +
+      "\016B\014BibixIdProtob\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -10572,45 +11181,51 @@ public final class BibixIdProto {
     internal_static_com_giyeok_bibix_TargetIdData_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_giyeok_bibix_TargetIdData_descriptor,
-        new java.lang.String[] { "SourceId", "BuildRuleSourceId", "NativeImpl", "BuildRuleImplId", "BibixValueHash", "BuildRuleClassName", "BuildRuleMethodName", "ArgsMap", "BuildRule", });
-    internal_static_com_giyeok_bibix_BuildRuleImplId_descriptor =
+        new java.lang.String[] { "SourceId", "BuildRule", "ArgsMap", });
+    internal_static_com_giyeok_bibix_BuildRuleData_descriptor =
       getDescriptor().getMessageTypes().get(3);
+    internal_static_com_giyeok_bibix_BuildRuleData_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_com_giyeok_bibix_BuildRuleData_descriptor,
+        new java.lang.String[] { "BuildRuleSourceId", "NativeImpl", "BuildRuleImplId", "BibixValueHash", "BuildRuleClassName", "BuildRuleMethodName", "BuildRule", });
+    internal_static_com_giyeok_bibix_BuildRuleImplId_descriptor =
+      getDescriptor().getMessageTypes().get(4);
     internal_static_com_giyeok_bibix_BuildRuleImplId_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_giyeok_bibix_BuildRuleImplId_descriptor,
         new java.lang.String[] { "SourceId", "TargetId", "ObjectId", });
     internal_static_com_giyeok_bibix_ObjectIdData_descriptor =
-      getDescriptor().getMessageTypes().get(4);
+      getDescriptor().getMessageTypes().get(5);
     internal_static_com_giyeok_bibix_ObjectIdData_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_giyeok_bibix_ObjectIdData_descriptor,
         new java.lang.String[] { "TargetId", "InputsHash", });
     internal_static_com_giyeok_bibix_ArgsMap_descriptor =
-      getDescriptor().getMessageTypes().get(5);
+      getDescriptor().getMessageTypes().get(6);
     internal_static_com_giyeok_bibix_ArgsMap_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_giyeok_bibix_ArgsMap_descriptor,
         new java.lang.String[] { "Pairs", });
     internal_static_com_giyeok_bibix_ArgPair_descriptor =
-      getDescriptor().getMessageTypes().get(6);
+      getDescriptor().getMessageTypes().get(7);
     internal_static_com_giyeok_bibix_ArgPair_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_giyeok_bibix_ArgPair_descriptor,
         new java.lang.String[] { "Name", "Value", });
     internal_static_com_giyeok_bibix_InputHashes_descriptor =
-      getDescriptor().getMessageTypes().get(7);
+      getDescriptor().getMessageTypes().get(8);
     internal_static_com_giyeok_bibix_InputHashes_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_giyeok_bibix_InputHashes_descriptor,
         new java.lang.String[] { "Directories", "Files", "NonExistent", });
     internal_static_com_giyeok_bibix_DirectoryHash_descriptor =
-      getDescriptor().getMessageTypes().get(8);
+      getDescriptor().getMessageTypes().get(9);
     internal_static_com_giyeok_bibix_DirectoryHash_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_giyeok_bibix_DirectoryHash_descriptor,
         new java.lang.String[] { "Path", "Directories", "Files", });
     internal_static_com_giyeok_bibix_FileHash_descriptor =
-      getDescriptor().getMessageTypes().get(9);
+      getDescriptor().getMessageTypes().get(10);
     internal_static_com_giyeok_bibix_FileHash_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_giyeok_bibix_FileHash_descriptor,

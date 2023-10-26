@@ -1,6 +1,5 @@
 package com.giyeok.bibix.repo
 
-import com.giyeok.bibix.BibixIdProto.InputHashes
 import com.giyeok.bibix.base.BaseRepo
 import com.giyeok.bibix.base.BibixValue
 import com.giyeok.bibix.repo.BibixRepoProto.BibixRepo
@@ -22,7 +21,7 @@ import java.time.Instant
 import kotlin.io.path.*
 
 // bibix 빌드 폴더의 내용을 관리
-class Repo(
+class BibixRepo(
   val fileSystem: FileSystem,
   val projectRoot: Path,
   val bbxbuildDirectory: Path,
@@ -233,7 +232,7 @@ class Repo(
     }
 
   companion object {
-    fun load(mainDirectory: Path, debuggingMode: Boolean = false): Repo {
+    fun load(mainDirectory: Path, debuggingMode: Boolean = false): com.giyeok.bibix.repo.BibixRepo {
       val bbxbuildDirectory = mainDirectory.resolve("bbxbuild")
       if (!Files.exists(bbxbuildDirectory)) {
         Files.createDirectory(bbxbuildDirectory)
@@ -289,7 +288,7 @@ class Repo(
       if (sharedRootDirectory.notExists()) {
         sharedRootDirectory.createDirectory()
       }
-      return Repo(
+      return BibixRepo(
         fileSystem = mainDirectory.fileSystem,
         projectRoot = mainDirectory,
         bbxbuildDirectory = bbxbuildDirectory,

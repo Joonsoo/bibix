@@ -501,18 +501,20 @@ class CallExprEvaluator(
 
     val targetIdDataBuilder = TargetIdData.newBuilder().also {
       it.sourceId = protoOf(context.sourceId)
-      it.buildRuleSourceId = protoOf(buildRule.context.sourceId)
-      // it.targetName = "??"
-      // it.buildRule will be set afterward
-      it.buildRuleClassName = buildRule.className
-      it.buildRuleMethodName = buildRule.methodName
+      it.buildRule = buildRuleData {
+        this.buildRuleSourceId = protoOf(buildRule.context.sourceId)
+        // it.targetName = "??"
+        // it.buildRule will be set afterward
+        this.buildRuleClassName = buildRule.className
+        this.buildRuleMethodName = buildRule.methodName
+      }
       it.argsMap = argsMap
     }
 
     when (buildRule) {
       is BuildRuleDef.NativeBuildRuleDef -> {
         pluginInstance = buildRule.implInstance
-        targetIdDataBuilder.nativeImpl = empty {}
+        targetIdDataBuilder.buildRuleBuilder.nativeImpl = empty {}
       }
 
       is BuildRuleDef.UserBuildRuleDef -> {
@@ -526,14 +528,14 @@ class CallExprEvaluator(
 
         when (impl) {
           is EvaluationResult.ValueWithTargetId ->
-            targetIdDataBuilder.buildRuleImplId = buildRuleImplId {
+            targetIdDataBuilder.buildRuleBuilder.buildRuleImplId = buildRuleImplId {
               this.sourceId = protoOf(buildRule.name.sourceId)
               this.targetId = impl.objectHash.targetId.targetIdBytes
               this.objectId = impl.objectHash.objectId.objectIdBytes
             }
 
           is EvaluationResult.Value ->
-            targetIdDataBuilder.bibixValueHash = impl.ensureValue().hashString()
+            targetIdDataBuilder.buildRuleBuilder.bibixValueHash = impl.ensureValue().hashString()
 
           else -> throw IllegalStateException("??")
         }

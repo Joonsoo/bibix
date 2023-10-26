@@ -27,7 +27,7 @@ fun GlobalTaskId.toNodeId(): String {
 }
 
 fun ProjectInstanceId.toNodeId(): String = when (this) {
-  is ImportedProjectId -> TODO()
   is MainProjectId -> "main"
   is PreludeProjectId -> "prelude"
+  is ImportedProjectId -> "imported_${this.projectId}_${this.importer.toNodeId()}"
 }

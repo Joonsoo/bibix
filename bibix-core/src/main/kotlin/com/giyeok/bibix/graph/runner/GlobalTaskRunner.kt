@@ -1,32 +1,45 @@
 package com.giyeok.bibix.graph.runner
 
+import com.giyeok.bibix.*
 import com.giyeok.bibix.BibixIdProto.ObjectIdData
+import com.giyeok.bibix.BibixValueProto.DataClassInstanceValue
 import com.giyeok.bibix.ast.BibixAst
 import com.giyeok.bibix.ast.BibixParser
 import com.giyeok.bibix.base.*
 import com.giyeok.bibix.graph.*
 import com.giyeok.bibix.plugins.PluginInstanceProvider
 import com.giyeok.bibix.plugins.PreloadedPlugin
-import com.giyeok.bibix.targetIdData
+import com.giyeok.bibix.repo.*
+import com.giyeok.bibix.utils.toBibix
+import com.giyeok.bibix.utils.toInstant
+import com.giyeok.bibix.utils.toProto
+import com.google.common.collect.BiMap
+import com.google.common.collect.HashBiMap
 import com.google.protobuf.ByteString
+import com.google.protobuf.empty
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import java.nio.file.FileSystems
 import java.nio.file.Path
+import kotlin.io.path.absolutePathString
 
 class GlobalTaskRunner private constructor(
   val globalGraph: GlobalTaskGraph,
-  val preloadedPluginIds: Map<String, Int>,
+  val preloadedPluginIds: BiMap<String, Int>,
   val preloadedPluginInstanceProviders: Map<Int, PluginInstanceProvider>,
   val callExprStates: MutableMap<GlobalTaskId, CallExprRunState>,
   val exprResults: MutableMap<GlobalTaskId, BibixValue>,
   val importInstances: MutableMap<Int, MutableList<GlobalTaskId>>,
+  val buildEnv: BuildEnv,
+  val repo: BibixRepo,
 ) {
   companion object {
     suspend fun create(
       mainProjectLocation: BibixProjectLocation,
       preludePlugin: PreloadedPlugin,
-      preloadedPlugins: Map<String, PreloadedPlugin>
+      preloadedPlugins: Map<String, PreloadedPlugin>,
+      buildEnv: BuildEnv,
+      repo: BibixRepo,
     ): GlobalTaskRunner {
       val preludeNames = NameLookupTable.fromDefs(preludePlugin.defs).names.keys
 
@@ -77,12 +90,14 @@ class GlobalTaskRunner private constructor(
       // TODO prelude와 preloaded plugin간의 연결
 
       return GlobalTaskRunner(
-        globalGraph,
-        preloadedPluginIds,
-        preloadedPluginInstanceProviders,
-        mutableMapOf(),
-        mutableMapOf(),
-        mutableMapOf()
+        globalGraph = globalGraph,
+        preloadedPluginIds = HashBiMap.create(preloadedPluginIds),
+        preloadedPluginInstanceProviders = preloadedPluginInstanceProviders,
+        callExprStates = mutableMapOf(),
+        exprResults = mutableMapOf(),
+        importInstances = mutableMapOf(),
+        buildEnv = buildEnv,
+        repo = repo
       )
     }
   }
@@ -248,13 +263,33 @@ class GlobalTaskRunner private constructor(
 
       is BuildRuleNode -> {
         val impl = getResult(prjInstanceId, node.implTarget)
-        if (impl == null) {
+        val unfulfilledTypes = node.paramTypes.mapNotNull { (_, paramTypeNode) ->
+          val paramTypeResult = getResult(prjInstanceId, paramTypeNode)
+          if (paramTypeResult == null) paramTypeNode else null
+        }.toSet()
+        // TODO param types 중에 unfulfill 된게 있으면 그것도 UnfulfilledPrerequisites로 반환
+        if (impl == null || unfulfilledTypes.isNotEmpty()) {
+          val typeDeps = unfulfilledTypes.map {
+            GlobalTaskId(prjInstanceId, it) to TaskEdgeType.TypeDependency
+          }
           TaskRunResult.UnfulfilledPrerequisites(
-            listOf(GlobalTaskId(prjInstanceId, node.implTarget) to TaskEdgeType.ValueDependency)
+            listOf(GlobalTaskId(prjInstanceId, node.implTarget) to TaskEdgeType.ValueDependency) +
+              typeDeps
           )
         } else {
           check(impl is NodeResult.RunnableResult)
-          TaskRunResult.ImmediateResult(NodeResult.BuildRuleResult(prjInstanceId, node, impl))
+          val params = node.paramTypes.map { (paramName, paramTypeNode) ->
+            val paramTypeResult = getResult(prjInstanceId, paramTypeNode)!!
+            check(paramTypeResult is NodeResult.TypeResult)
+            paramName to paramTypeResult.type
+          }
+          val buildRuleData = buildRuleData {
+            this.buildRuleSourceId = sourceIdOf(prjInstanceId)
+            // TODO RunnableResult에 build_rule, buildRuleClassName,buildRuleMethodName 정보가 들어가야 될 듯
+          }
+          TaskRunResult.ImmediateResult(
+            NodeResult.BuildRuleResult(prjInstanceId, node, params, impl, buildRuleData)
+          )
         }
       }
 
@@ -265,7 +300,34 @@ class GlobalTaskRunner private constructor(
       is DataClassTypeNode -> {
         val pkg = globalGraph.projectGraphs.getValue(prjInstanceId.projectId).packageName
         checkNotNull(pkg) { "Package name is not set" }
-        TaskRunResult.ImmediateResult(NodeResult.TypeResult(DataClassType(pkg, node.defNode.name)))
+        // TODO TypeResult 대신 DataClassTypeResult 같은걸 넣어서 data class 자체에 대한 정보를 추가
+        // TODO fieldTypes는 모두 확실히 하고 넘어가기
+
+        val unresolvedTypes = node.fieldTypes.mapNotNull { (_, fieldTypeNode) ->
+          val typeResult = getResult(prjInstanceId, fieldTypeNode)
+          if (typeResult == null) fieldTypeNode else null
+        }
+        if (unresolvedTypes.isNotEmpty()) {
+          TaskRunResult.UnfulfilledPrerequisites(unresolvedTypes.map {
+            GlobalTaskId(prjInstanceId, it) to TaskEdgeType.TypeDependency
+          })
+        } else {
+          val fieldTypes = node.fieldTypes.map { (fieldName, fieldTypeNode) ->
+            val typeResult = getResult(prjInstanceId, fieldTypeNode)!!
+            check(typeResult is NodeResult.TypeResult)
+            fieldName to typeResult.type
+          }
+          // TODO node.elems 추가. elems는 안 쓸 수도 있으니 그냥 task id 상태로 넘기기
+          TaskRunResult.ImmediateResult(
+            NodeResult.DataClassTypeResult(
+              prjInstanceId = prjInstanceId,
+              packageName = pkg,
+              className = node.defNode.name,
+              fields = fieldTypes,
+              defaultValues = node.defaultValues
+            )
+          )
+        }
       }
 
       is EnumTypeNode -> {
@@ -415,34 +477,90 @@ class GlobalTaskRunner private constructor(
   private fun v(value: BibixValue): TaskRunResult =
     TaskRunResult.ImmediateResult(NodeResult.ValueResult(value))
 
-  // TODO
-  private fun getBuildContext(args: Map<String, BibixValue>): BuildContext = BuildContext(
-    BuildEnv(OS.Linux("", ""), Architecture.X86_64),
-    FileSystems.getDefault(),
-    Path.of(""),
-    Path.of(""),
-    null,
-    args,
-    targetIdData { },
-    "",
-    false,
-    null,
-    null,
-    Path.of(""),
-    object: ProgressLogger {
-      override fun logInfo(message: String) {
-        println(message)
+  private fun sourceIdOf(prjInstanceId: ProjectInstanceId): BibixIdProto.SourceId {
+    if (prjInstanceId.projectId == MainProjectId.projectId) {
+      return sourceId {
+        this.bibixVersion = Constants.BIBIX_VERSION
+        this.mainSource = empty { }
       }
-
-      override fun logError(message: String) {
-        println(message)
-      }
-    },
-    object: BaseRepo {
-      override fun prepareSharedDirectory(sharedRepoName: String): Path =
-        Path.of("")
     }
-  )
+    if (prjInstanceId.projectId == PreludeProjectId.projectId) {
+      return sourceId {
+        this.bibixVersion = Constants.BIBIX_VERSION
+        this.preludeSource = empty { }
+      }
+    }
+    if (prjInstanceId.projectId in preloadedPluginIds.values) {
+      return sourceId {
+        this.bibixVersion = Constants.BIBIX_VERSION
+        this.preloadedPlugin = preloadedPluginIds.inverse()[prjInstanceId.projectId]!!
+      }
+    }
+    val projectLocation = globalGraph.projectLocations[prjInstanceId.projectId]!!
+    return sourceId {
+      // TODO 이름이 왜 obj hash지?
+      this.externalPluginObjhash = externalBibixProject {
+        this.rootDirectory = projectLocation.projectRoot.absolutePathString()
+        this.scriptName = projectLocation.scriptName
+      }
+    }
+  }
+
+  // TODO
+  private suspend fun getBuildContext(
+    buildRuleData: BibixIdProto.BuildRuleData,
+    callerProjectInstanceId: ProjectInstanceId,
+    calleeProjectInstanceId: ProjectInstanceId,
+    args: Map<String, BibixValue>
+  ): BuildContext {
+    val argsMapProto = argsMap {
+      args.toList().sortedBy { it.first }.forEach { (argName, argValue) ->
+        this.pairs.add(argPair {
+          this.name = argName
+          this.value = argValue.toProto()
+        })
+      }
+    }
+    val targetIdDataProto = targetIdData {
+      this.sourceId = sourceIdOf(calleeProjectInstanceId)
+      this.buildRule = buildRuleData
+      this.argsMap = argsMapProto
+    }
+    val targetId = TargetId(targetIdDataProto)
+
+    val inputHashes = argsMapProto.extractInputHashes()
+    // repo의 targetId의 inputHashes 값과 새로 계산한 inputHashes 값을 비교
+    val prevInputHashes = repo.getPrevInputsHashOf(targetId.targetIdBytes)
+    val hashChanged =
+      if (prevInputHashes == null) true else prevInputHashes != inputHashes.hashString()
+
+    val prevState = repo.getPrevTargetState(targetId.targetIdBytes)
+
+    return BuildContext(
+      buildEnv = buildEnv,
+      fileSystem = FileSystems.getDefault(),
+      mainBaseDirectory = globalGraph.projectLocations.getValue(MainProjectId.projectId).projectRoot,
+      callerBaseDirectory = globalGraph.projectLocations[callerProjectInstanceId.projectId]?.projectRoot,
+      ruleDefinedDirectory = globalGraph.projectLocations[calleeProjectInstanceId.projectId]?.projectRoot,
+      arguments = args,
+      targetIdData = targetId.targetIdData,
+      targetId = targetId.targetIdHex,
+      hashChanged = hashChanged,
+      prevBuildTime = prevState?.buildStartTime?.toInstant(),
+      prevResult = prevState?.buildSucceeded?.resultValue?.toBibix(),
+      destDirectoryPath = repo.objectsDirectory.resolve(targetId.targetIdHex),
+      progressLogger = object: ProgressLogger {
+        override fun logInfo(message: String) {
+          println(message)
+        }
+
+        override fun logError(message: String) {
+          println(message)
+        }
+      },
+      repo = repo
+    )
+  }
 
   fun evaluateExprNode(prjInstanceId: ProjectInstanceId, node: ExprNode<*>): TaskRunResult =
     when (node) {
@@ -496,46 +614,71 @@ class GlobalTaskRunner private constructor(
         }
         val callee = getResult(prjInstanceId, node.callee)!!
         println("$callee($posParams, $namedArgs)")
+
+        fun organizeParams(
+          paramTypes: List<Pair<String, BibixType>>,
+          requiredParamNames: Set<String>,
+          paramDefaultValueTasks: Map<String, TaskId>,
+          calleeProjectInstanceId: ProjectInstanceId,
+          whenReady: (args: Map<String, BibixValue>) -> TaskRunResult
+        ): TaskRunResult {
+          val paramNames = paramTypes.map { it.first }
+          // callee의 parameter 목록을 보고 posParams와 namedParams와 맞춰본다
+          val posArgs = posParams.zip(paramNames) { arg, name -> name to arg }.toMap()
+
+          val remainingParamNames = paramNames.drop(posParams.size).toSet()
+          check(remainingParamNames.containsAll(namedArgs.keys)) { "Unknown parameters" }
+
+          val unspecifiedParamNames = remainingParamNames - namedArgs.keys
+          check(unspecifiedParamNames.all { it !in requiredParamNames }) { "Required parameters are not specified" }
+
+          // 만약 callee의 default param이 필요한데 그 값이 없으면 prerequisite으로 반환하고
+          // 모든 값이 충족되었으면 TaskRunResult.LongRunningResult 로 build rule을 실행하는 코드를 반환한다
+          val defaultParamTasks = unspecifiedParamNames.associateWith {
+            paramDefaultValueTasks.getValue(it)
+          }
+          val defaults = defaultParamTasks.mapValues { (_, value) ->
+            getResult(prjInstanceId, value)
+          }
+          val missingDefaults = defaults.filter { it.value == null }
+          return if (missingDefaults.isNotEmpty()) {
+            TaskRunResult.UnfulfilledPrerequisites(missingDefaults.keys.map { missingParamName ->
+              val defaultParamTask = defaultParamTasks.getValue(missingParamName)
+              GlobalTaskId(
+                calleeProjectInstanceId,
+                defaultParamTask
+              ) to TaskEdgeType.ValueDependency
+            })
+          } else {
+            val defaultValues = defaults.mapValues { (_, value) -> value!! }
+
+            val argResults: Map<String, NodeResult> = posArgs + namedArgs + defaultValues
+            check(argResults.all { it.value is NodeResult.ValueResult })
+            val args = argResults.mapValues { (_, result) ->
+              (result as NodeResult.ValueResult).value
+            }
+
+            val paramTypesMap = paramTypes.toMap()
+            // TODO args의 타입을 paramTypes로 coercion - 이건 어떻게 처리하지..?
+
+            whenReady(args)
+          }
+        }
+
         when (callee) {
           is NodeResult.BuildRuleResult -> {
-            // callee의 parameter 목록을 보고 posParams와 namedParams와 맞춰본다
-            val paramNames = callee.buildRuleNode.def.params.map { it.name }
-            val posArgs = posParams.zip(paramNames) { arg, name -> name to arg }.toMap()
-
-            val remainingParamNames = paramNames.drop(posParams.size).toSet()
-            check(remainingParamNames.containsAll(namedArgs.keys)) { "Unknown parameters" }
-
-            val ruleParams = callee.buildRuleNode.def.params.associateBy { it.name }
-            val unspecifiedParamNames = remainingParamNames - namedArgs.keys
-            check(unspecifiedParamNames.all { unspecified ->
-              val param = ruleParams.getValue(unspecified)
-              param.optional || param.defaultValue != null
-            }) { "Required parameters are not specified" }
-
-            // 만약 callee의 default param이 필요한데 그 값이 없으면 prerequisite으로 반환하고
-            // 모든 값이 충족되었으면 TaskRunResult.LongRunningResult 로 build rule을 실행하는 코드를 반환한다
-            val defaultParamTasks = unspecifiedParamNames.associateWith {
-              callee.buildRuleNode.paramDefaultValues.getValue(it)
-            }
-            val defaults = defaultParamTasks.mapValues { (_, value) ->
-              getResult(prjInstanceId, value)
-            }
-            val missingDefaults = defaults.filter { it.value == null }
-            if (missingDefaults.isNotEmpty()) {
-              TaskRunResult.UnfulfilledPrerequisites(missingDefaults.keys.map { missingParamName ->
-                val defaultParamTask = defaultParamTasks.getValue(missingParamName)
-                GlobalTaskId(callee.prjInstanceId, defaultParamTask) to TaskEdgeType.ValueDependency
-              })
-            } else {
-              val defaultValues = defaults.mapValues { (_, value) -> value!! }
-
-              val argResults: Map<String, NodeResult> = posArgs + namedArgs + defaultValues
-              check(argResults.all { it.value is NodeResult.ValueResult })
-              val args = argResults.mapValues { (_, result) ->
-                (result as NodeResult.ValueResult).value
-              }
+            val params = callee.buildRuleNode.def.params
+            val requiredParamNames =
+              params.filter { !it.optional && it.defaultValue == null }.map { it.name }.toSet()
+            organizeParams(
+              callee.params,
+              requiredParamNames,
+              callee.buildRuleNode.paramDefaultValues,
+              callee.prjInstanceId
+            ) { args ->
               TaskRunResult.LongRunningResult {
-                val buildContext = getBuildContext(args)
+                val buildContext =
+                  getBuildContext(callee.buildRuleData, prjInstanceId, callee.prjInstanceId, args)
                 val result =
                   callee.impl.method.invoke(callee.impl.instance, buildContext) as BibixValue
                 NodeResult.ValueResult(result)
@@ -543,11 +686,23 @@ class GlobalTaskRunner private constructor(
             }
           }
 
-          is NodeResult.RunnableResult -> {
-            TODO()
+          is NodeResult.DataClassTypeResult -> {
+            val fieldNames = callee.fields.map { it.first }
+            organizeParams(
+              callee.fields,
+              fieldNames.toSet() - callee.defaultValues.keys,
+              callee.defaultValues,
+              callee.prjInstanceId,
+            ) { args ->
+              val value = ClassInstanceValue(callee.packageName, callee.className, args)
+              TaskRunResult.ImmediateResult(NodeResult.ValueResult(value))
+            }
           }
 
-          else -> TODO()
+          else -> {
+            println(callee)
+            TODO()
+          }
         }
       }
 

@@ -147,7 +147,7 @@ sealed class TypeNode<T: BibixAst.TypeExpr>(val typeExpr: T): TaskNode() {
 
 data class DataClassTypeNode(
   val defNode: BibixAst.DataClassDef,
-  val fieldTypes: Map<String, TaskId>,
+  val fieldTypes: List<Pair<String, TaskId>>,
   val defaultValues: Map<String, TaskId>,
   val elems: List<TaskId>
 ): TaskNode() {
@@ -210,14 +210,20 @@ data class UnionTypeNode(
 
 data class TaskEdge(val start: TaskId, val end: TaskId, val edgeType: TaskEdgeType)
 
-enum class TaskEdgeType {
-  Definition, ValueDependency, CalleeDependency, Reference, ImportDependency, TypeDependency, ImportInstance,
-  ClassInherit,
-  ClassMember,
+enum class TaskEdgeType(val isOptional: Boolean) {
+  Definition(false),
+  ValueDependency(false),
+  CalleeDependency(false),
+  Reference(false),
+  ImportDependency(false),
+  TypeDependency(false),
+  ImportInstance(false),
+  ClassInherit(false),
+  ClassMember(false),
 
   // default value는 evaluation할 때 빠질 수도 있다는 의미
-  DefaultValueDependency,
+  DefaultValueDependency(true),
 
   // OverridingValueDependency는 global edge에만 올 수 있음
-  OverridingValueDependency
+  OverridingValueDependency(false),
 }
