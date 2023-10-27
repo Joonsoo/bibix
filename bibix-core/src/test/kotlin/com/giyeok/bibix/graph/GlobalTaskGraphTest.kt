@@ -66,6 +66,12 @@ class GlobalTaskGraphTest {
               depsGraph.addEdges(prerequisiteEdges)
             }
 
+            is GlobalTaskRunner.TaskRunResult.BibixProjectImportRequired -> {
+              val projectId = runner.addProject(taskRunResult.projectLocation)
+              taskRunResult.afterImport(projectId)
+              depsGraph.finishNode(nextNode)
+            }
+
             is GlobalTaskRunner.TaskRunResult.ImmediateResult -> {
               taskRunResult.result
               depsGraph.finishNode(nextNode)

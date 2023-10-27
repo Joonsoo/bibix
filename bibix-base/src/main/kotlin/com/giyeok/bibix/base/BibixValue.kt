@@ -7,23 +7,23 @@ sealed class BibixValue {
     if (this == NoneValue) null else this as T
 }
 
-data class BooleanValue(val value: Boolean) : BibixValue() {
+data class BooleanValue(val value: Boolean): BibixValue() {
   override fun toString(): String = "$value"
 }
 
-data class StringValue(val value: String) : BibixValue() {
+data class StringValue(val value: String): BibixValue() {
   override fun toString(): String = "\"$value\""
 }
 
-data class PathValue(val path: Path) : BibixValue() {
+data class PathValue(val path: Path): BibixValue() {
   override fun toString(): String = "path($path)"
 }
 
-data class FileValue(val file: Path) : BibixValue() {
+data class FileValue(val file: Path): BibixValue() {
   override fun toString(): String = "file($file)"
 }
 
-data class DirectoryValue(val directory: Path) : BibixValue() {
+data class DirectoryValue(val directory: Path): BibixValue() {
   override fun toString(): String = "dir($directory)"
 }
 
@@ -32,20 +32,20 @@ data class EnumValue(
   // className은 class가 namespace 안에 정의되어 있는 경우 "abc.def.Class"같은 형태가 될 수 있음
   val enumName: String,
   val value: String
-) : BibixValue() {
+): BibixValue() {
   override fun toString(): String = "enum $packageName:$enumName($value)"
 }
 
-data class ListValue(val values: List<BibixValue>) : BibixValue() {
-  constructor(vararg values: BibixValue) : this(values.toList())
+data class ListValue(val values: List<BibixValue>): BibixValue() {
+  constructor(vararg values: BibixValue): this(values.toList())
 
   override fun toString(): String = "[${values.joinToString()}]"
 }
 
-class SetValue(elems: List<BibixValue>) : BibixValue() {
+class SetValue(elems: List<BibixValue>): BibixValue() {
   val values = elems.distinct()
 
-  constructor(vararg values: BibixValue) : this(values.toList())
+  constructor(vararg values: BibixValue): this(values.toList())
 
   override fun toString(): String = "{${values.joinToString()}}"
 
@@ -65,14 +65,14 @@ class SetValue(elems: List<BibixValue>) : BibixValue() {
   }
 }
 
-data class TupleValue(val values: List<BibixValue>) : BibixValue() {
-  constructor(vararg values: BibixValue) : this(values.toList())
+data class TupleValue(val values: List<BibixValue>): BibixValue() {
+  constructor(vararg values: BibixValue): this(values.toList())
 
   override fun toString(): String = "(${values.joinToString()})"
 }
 
-data class NamedTupleValue(val pairs: List<Pair<String, BibixValue>>) : BibixValue() {
-  constructor(vararg values: Pair<String, BibixValue>) : this(values.toList())
+data class NamedTupleValue(val pairs: List<Pair<String, BibixValue>>): BibixValue() {
+  constructor(vararg values: Pair<String, BibixValue>): this(values.toList())
 
   val valuesMap = pairs.toMap()
 
@@ -90,7 +90,7 @@ data class ClassInstanceValue(
   // className은 class가 namespace 안에 정의되어 있는 경우 "abc.def.Class"같은 형태가 될 수 있음
   val className: String,
   val fieldValues: Map<String, BibixValue>
-) : BibixValue() {
+): BibixValue() {
   operator fun get(fieldName: String): BibixValue? = fieldValues[fieldName]
 
   override fun toString(): String {
@@ -101,6 +101,23 @@ data class ClassInstanceValue(
       }
     return "$packageName::$className($fieldValuesText)"
   }
+
+  fun getNullableField(fieldName: String): BibixValue? {
+    val value = this.fieldValues[fieldName]
+    return if (value == null || value == NoneValue) null else value
+  }
+
+  inline fun <reified T: BibixValue> getNullableFieldOf(fieldName: String): T? =
+    getNullableField(fieldName) as? T
+
+  fun getNullableStringField(fieldName: String) =
+    getNullableFieldOf<StringValue>(fieldName)?.value
+
+  fun getNullableFileField(fieldName: String) =
+    getNullableFieldOf<FileValue>(fieldName)?.file
+
+  fun getNullableDirectoryField(fieldName: String) =
+    getNullableFieldOf<DirectoryValue>(fieldName)?.directory
 }
 
 // Non-canonical named class
@@ -108,14 +125,14 @@ data class ClassInstanceValue(
 data class NClassInstanceValue(
   val nameTokens: List<String>,
   val fieldValues: Map<String, BibixValue>
-) : BibixValue() {
-  constructor(name: String, fieldValues: Map<String, BibixValue>) :
+): BibixValue() {
+  constructor(name: String, fieldValues: Map<String, BibixValue>):
     this(name.split('.').map { it.trim() }, fieldValues)
 
   override fun toString(): String = "${nameTokens.joinToString(".")}($fieldValues)"
 }
 
-object NoneValue : BibixValue() {
+object NoneValue: BibixValue() {
   override fun toString(): String = "none"
 }
 
@@ -124,7 +141,7 @@ data class BuildRuleDefValue(
   val params: List<RuleParam>,
   val implClassName: String,
   val implMethodName: String,
-) : BibixValue() {
+): BibixValue() {
   override fun toString(): String = "def $name"
 }
 
@@ -133,7 +150,7 @@ data class ActionRuleDefValue(
   val params: List<RuleParam>,
   val implClassName: String,
   val implMethodName: String,
-) : BibixValue() {
+): BibixValue() {
   override fun toString(): String = "action def $name"
 }
 
@@ -143,86 +160,86 @@ data class RuleParam(
   val optional: Boolean,
 )
 
-sealed class TypeValue : BibixValue() {
-  object AnyTypeValue : TypeValue() {
+sealed class TypeValue: BibixValue() {
+  object AnyTypeValue: TypeValue() {
     override fun toString(): String = "any"
   }
 
-  object BooleanTypeValue : TypeValue() {
+  object BooleanTypeValue: TypeValue() {
     override fun toString(): String = "boolean"
   }
 
-  object StringTypeValue : TypeValue() {
+  object StringTypeValue: TypeValue() {
     override fun toString(): String = "string"
   }
 
-  object PathTypeValue : TypeValue() {
+  object PathTypeValue: TypeValue() {
     override fun toString(): String = "path"
   }
 
-  object FileTypeValue : TypeValue() {
+  object FileTypeValue: TypeValue() {
     override fun toString(): String = "file"
   }
 
-  object DirectoryTypeValue : TypeValue() {
+  object DirectoryTypeValue: TypeValue() {
     override fun toString(): String = "directory"
   }
 
-  sealed class PackageNamed : TypeValue() {
+  sealed class PackageNamed: TypeValue() {
     abstract val typeName: TypeName
   }
 
-  data class DataClassTypeValue(val packageName: String, val className: String) : PackageNamed() {
+  data class DataClassTypeValue(val packageName: String, val className: String): PackageNamed() {
     override val typeName: TypeName get() = TypeName(packageName, className)
 
     override fun toString(): String = "class $packageName:$className"
   }
 
-  data class SuperClassTypeValue(val packageName: String, val className: String) : PackageNamed() {
+  data class SuperClassTypeValue(val packageName: String, val className: String): PackageNamed() {
     override val typeName: TypeName get() = TypeName(packageName, className)
 
     override fun toString(): String = "super class $packageName:$className"
   }
 
-  data class EnumTypeValue(val packageName: String, val enumName: String) : PackageNamed() {
+  data class EnumTypeValue(val packageName: String, val enumName: String): PackageNamed() {
     override val typeName: TypeName get() = TypeName(packageName, enumName)
 
     override fun toString(): String = "enum $packageName:$enumName"
   }
 
-  data class ListTypeValue(val elemType: TypeValue) : TypeValue() {
+  data class ListTypeValue(val elemType: TypeValue): TypeValue() {
     override fun toString(): String = "list<${elemType}>"
   }
 
-  data class SetTypeValue(val elemType: TypeValue) : TypeValue() {
+  data class SetTypeValue(val elemType: TypeValue): TypeValue() {
     override fun toString(): String = "set<${elemType}>"
   }
 
-  data class TupleTypeValue(val elemTypes: List<TypeValue>) : TypeValue() {
+  data class TupleTypeValue(val elemTypes: List<TypeValue>): TypeValue() {
     override fun toString(): String = "(${elemTypes.joinToString()})"
   }
 
-  data class NamedTupleTypeValue(val elemTypes: List<Pair<String, TypeValue>>) : TypeValue() {
+  data class NamedTupleTypeValue(val elemTypes: List<Pair<String, TypeValue>>): TypeValue() {
     override fun toString(): String = "(${elemTypes.joinToString { "${it.first}: ${it.second}" }})"
   }
 
-  data class UnionTypeValue(val types: List<TypeValue>) : TypeValue() {
+  data class UnionTypeValue(val types: List<TypeValue>): TypeValue() {
     override fun toString(): String = "{${types.joinToString()}}"
   }
 
-  object NoneTypeValue : TypeValue() {
+  object NoneTypeValue: TypeValue() {
     override fun toString(): String = "none"
   }
 
-  object BuildRuleDefTypeValue : TypeValue() {
+  object BuildRuleDefTypeValue: TypeValue() {
     override fun toString(): String = "buildrule"
   }
 
-  object ActionRuleDefTypeValue : TypeValue() {
+  object ActionRuleDefTypeValue: TypeValue() {
     override fun toString(): String = "actionrule"
   }
 
-  object TypeTypeValue : TypeValue() {
+  object TypeTypeValue: TypeValue() {
     override fun toString(): String = "type"
   }
 }

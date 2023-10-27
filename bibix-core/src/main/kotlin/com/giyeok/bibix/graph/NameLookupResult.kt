@@ -16,7 +16,10 @@ data class NameOfPreloadedPlugin(
 
 data class NameFromPrelude(val name: String, val remaining: List<String>): NameLookupResult()
 
-data class NameInImport(val importEntry: NameEntry, val remaining: List<String>): NameLookupResult()
+data class NameInImport(
+  val importEntry: ImportNameEntry,
+  val remaining: List<String>
+): NameLookupResult()
 
 data class NamespaceFound(val name: String, val context: BibixAst.AstNode?): NameLookupResult()
 

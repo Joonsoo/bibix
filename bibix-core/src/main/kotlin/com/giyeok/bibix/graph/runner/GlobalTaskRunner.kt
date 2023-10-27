@@ -1,37 +1,37 @@
 package com.giyeok.bibix.graph.runner
 
 import com.giyeok.bibix.*
-import com.giyeok.bibix.BibixIdProto.ObjectIdData
-import com.giyeok.bibix.BibixValueProto.DataClassInstanceValue
 import com.giyeok.bibix.ast.BibixAst
 import com.giyeok.bibix.ast.BibixParser
 import com.giyeok.bibix.base.*
 import com.giyeok.bibix.graph.*
 import com.giyeok.bibix.plugins.PluginInstanceProvider
 import com.giyeok.bibix.plugins.PreloadedPlugin
+import com.giyeok.bibix.plugins.jvm.ClassPkg
 import com.giyeok.bibix.repo.*
 import com.giyeok.bibix.utils.toBibix
 import com.giyeok.bibix.utils.toInstant
 import com.giyeok.bibix.utils.toProto
 import com.google.common.collect.BiMap
 import com.google.common.collect.HashBiMap
-import com.google.protobuf.ByteString
 import com.google.protobuf.empty
 import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
+import org.codehaus.plexus.classworlds.ClassWorld
+import java.lang.reflect.Method
 import java.nio.file.FileSystems
 import java.nio.file.Path
+import kotlin.io.path.absolute
 import kotlin.io.path.absolutePathString
 
 class GlobalTaskRunner private constructor(
   val globalGraph: GlobalTaskGraph,
   val preloadedPluginIds: BiMap<String, Int>,
   val preloadedPluginInstanceProviders: Map<Int, PluginInstanceProvider>,
-  val callExprStates: MutableMap<GlobalTaskId, CallExprRunState>,
-  val exprResults: MutableMap<GlobalTaskId, BibixValue>,
+  val preludeNames: Set<String>,
   val importInstances: MutableMap<Int, MutableList<GlobalTaskId>>,
   val buildEnv: BuildEnv,
   val repo: BibixRepo,
+  val classPkgRunner: ClassPkgRunner,
 ) {
   companion object {
     suspend fun create(
@@ -58,11 +58,11 @@ class GlobalTaskRunner private constructor(
       globalGraph.addProject(
         2,
         TaskGraph.fromDefs(
-          preludePlugin.packageName,
-          preludePlugin.defs,
-          preloadedPlugins.keys,
-          preludeNames,
-          true
+          packageName = preludePlugin.packageName,
+          defs = preludePlugin.defs,
+          preloadedPluginNames = preloadedPlugins.keys,
+          preludeNames = preludeNames,
+          nativeAllowed = true
         ),
         preludePlugin.script
       )
@@ -75,11 +75,11 @@ class GlobalTaskRunner private constructor(
         globalGraph.addProject(
           preloadedPluginIdCounter,
           TaskGraph.fromDefs(
-            plugin.packageName,
-            plugin.defs,
-            preloadedPlugins.keys,
-            preludeNames,
-            true
+            packageName = plugin.packageName,
+            defs = plugin.defs,
+            preloadedPluginNames = preloadedPlugins.keys,
+            preludeNames = preludeNames,
+            nativeAllowed = true
           ),
           plugin.script
         )
@@ -93,23 +93,25 @@ class GlobalTaskRunner private constructor(
         globalGraph = globalGraph,
         preloadedPluginIds = HashBiMap.create(preloadedPluginIds),
         preloadedPluginInstanceProviders = preloadedPluginInstanceProviders,
-        callExprStates = mutableMapOf(),
-        exprResults = mutableMapOf(),
+        preludeNames = preludeNames,
         importInstances = mutableMapOf(),
         buildEnv = buildEnv,
-        repo = repo
+        repo = repo,
+        classPkgRunner = ClassPkgRunner(ClassWorld())
       )
     }
   }
 
-  private var lastProjectId = 1
-
-  private fun nextProjectId(): Int {
-    lastProjectId += 1
-    return lastProjectId
-  }
-
   val mainProjectGraph get() = globalGraph.getProjectGraph(MainProjectId.projectId)
+
+  suspend fun addProject(projectLocation: BibixProjectLocation): Int {
+    val newProjectId = (globalGraph.projectGraphs.keys.maxOrNull() ?: 0) + 1
+    val scriptSource = projectLocation.readScript()
+    val graph =
+      TaskGraph.fromScript(BibixParser.parse(scriptSource), preloadedPluginIds.keys, preludeNames)
+    globalGraph.addProject(newProjectId, projectLocation, graph, scriptSource)
+    return newProjectId
+  }
 
   fun getMainProjectTaskId(taskNameTokens: List<String>): GlobalTaskId {
     when (val lookupResult = mainProjectGraph.nameLookupTable.lookupName(taskNameTokens)) {
@@ -146,6 +148,12 @@ class GlobalTaskRunner private constructor(
     data class UnfulfilledPrerequisites(val prerequisites: List<Pair<GlobalTaskId, TaskEdgeType>>):
       TaskRunResult()
 
+    data class BibixProjectImportRequired(
+      val projectLocation: BibixProjectLocation,
+      // param: import된 project id
+      val afterImport: (Int) -> Unit
+    ): TaskRunResult()
+
     data class ImmediateResult(val result: NodeResult): TaskRunResult()
 
     data class LongRunningResult(val runner: suspend () -> TaskRunResult): TaskRunResult()
@@ -153,6 +161,21 @@ class GlobalTaskRunner private constructor(
 
   private val resultsMutex = Mutex()
   private val results = mutableMapOf<GlobalTaskId, NodeResult>()
+
+  private fun saveResult(
+    globalTaskId: GlobalTaskId,
+    result: NodeResult
+  ): TaskRunResult.ImmediateResult {
+    results[globalTaskId] = result
+    return TaskRunResult.ImmediateResult(result)
+  }
+
+  private fun saveResult(
+    prjInstanceId: ProjectInstanceId,
+    taskId: TaskId,
+    result: NodeResult
+  ): TaskRunResult.ImmediateResult =
+    saveResult(GlobalTaskId(prjInstanceId, taskId), result)
 
   fun getResult(prjInstanceId: ProjectInstanceId, taskId: TaskId): NodeResult? =
     results[GlobalTaskId(prjInstanceId, taskId)]
@@ -217,31 +240,72 @@ class GlobalTaskRunner private constructor(
       localTaskId: TaskId,
       edgeType: TaskEdgeType,
       withResult: (NodeResult) -> TaskRunResult
-    ): TaskRunResult =
-      globalWithResult(prjInstanceId, localTaskId, edgeType, withResult)
+    ): TaskRunResult = globalWithResult(prjInstanceId, localTaskId, edgeType, withResult)
 
     val result: TaskRunResult = when (val node = globalGraph.getNode(taskId)) {
       is ExprNode<*> -> evaluateExprNode(prjInstanceId, node)
 
       is ImportNode -> {
-        val importSourceNode = globalGraph.getNode(prjInstanceId, node.importSource)
-        val importedProjectId: Int = when (importSourceNode) {
+        when (val importSourceNode = globalGraph.getNode(prjInstanceId, node.importSource)) {
           is PreloadedPluginNode -> {
             println(importSourceNode)
-            preloadedPluginIds.getValue(importSourceNode.name)
+            val importedProjectId = preloadedPluginIds.getValue(importSourceNode.name)
+            TaskRunResult.ImmediateResult(
+              NodeResult.ImportResult(importedProjectId, node.importName)
+            )
           }
 
           is ExprNode<*> -> {
-            println(importSourceNode)
-            val importSource = evaluateExprNode(prjInstanceId, importSourceNode)
-            // TODO importSource는 BibixProject 값일 것 - script 읽어서 globalGraph에 추가
-            println(importSource)
-            123
+            // from bibix.plugins import ktjvm  -> 지금은 import bibix.plugins as ktjvm 처럼 되고 있는듯
+            withResult(node.importSource, TaskEdgeType.ValueDependency) { importSourceResult ->
+              check(importSourceResult is NodeResult.ValueResult)
+              val importSource = importSourceResult.value
+
+              val projectRoot: Path
+              val scriptName: StringValue?
+
+              when (importSource) {
+                is ClassInstanceValue -> {
+                  check(importSource.packageName == "com.giyeok.bibix.prelude")
+                  check(importSource.className == "BibixProject")
+
+                  projectRoot =
+                    (importSource.fieldValues.getValue("projectRoot") as DirectoryValue).directory
+                  scriptName = importSource.fieldValues["scriptName"] as? StringValue
+                }
+
+                is StringValue -> {
+                  val location = globalGraph.projectLocations.getValue(prjInstanceId.projectId)
+                  projectRoot = location.projectRoot.resolve(importSource.value)
+                  scriptName = null
+                }
+
+                else -> TODO()
+              }
+
+              val projectLocation = if (scriptName == null) {
+                BibixProjectLocation(projectRoot.absolute())
+              } else {
+                BibixProjectLocation(projectRoot.absolute(), scriptName.value)
+              }
+
+              val projectId = globalGraph.getProjectIdByLocation(projectLocation)
+              if (projectId == null) {
+                TaskRunResult.BibixProjectImportRequired(projectLocation) { importedProjectId ->
+                  saveResult(
+                    prjInstanceId,
+                    taskId.taskId,
+                    NodeResult.ImportResult(importedProjectId, node.importName)
+                  )
+                }
+              } else {
+                TaskRunResult.ImmediateResult(NodeResult.ImportResult(projectId, node.importName))
+              }
+            }
           }
 
           else -> throw IllegalStateException()
         }
-        TaskRunResult.ImmediateResult(NodeResult.ImportResult(importedProjectId))
       }
 
       is PreloadedPluginNode -> {
@@ -250,7 +314,8 @@ class GlobalTaskRunner private constructor(
         println("$node $preloadedPluginProjectId")
         // importInstances.getOrPut(preloadedPluginProjectId) { mutableListOf() }.add(taskId)
         // 여기서는 특별히 할 일이 없는 것 같은데? projectId나 넣고 끝인듯?
-        TaskRunResult.ImmediateResult(NodeResult.ImportResult(preloadedPluginProjectId))
+        // TODO importName에 null을 주면 되나..?
+        TaskRunResult.ImmediateResult(NodeResult.ImportResult(preloadedPluginProjectId, null))
       }
 
       is ImportInstanceNode -> {
@@ -262,7 +327,9 @@ class GlobalTaskRunner private constructor(
             ImportedProjectId(importResult.projectId, taskId),
             node.varRedefs.mapValues { (_, varValueTaskId) ->
               GlobalTaskId(prjInstanceId, varValueTaskId)
-            })
+            },
+            importResult.importName
+          )
         )
       }
 
@@ -273,14 +340,43 @@ class GlobalTaskRunner private constructor(
         when (val target = getResult(prjInstanceId, node.target)) {
           is NodeResult.ImportInstanceResult -> {
             val importedGraph = globalGraph.getProjectGraph(target.projectId)
-            when (val nameLookupResult =
-              importedGraph.nameLookupTable.lookupName(node.remainingNames)) {
+            val importingName = (target.importName ?: listOf()) + node.remainingNames
+            when (val nameLookupResult = importedGraph.nameLookupTable.lookupName(importingName)) {
               is NameEntryFound -> {
                 globalResultOrPrerequisite(
                   target.prjInstanceId,
                   nameLookupResult.entry.id,
                   TaskEdgeType.ValueDependency
                 )
+              }
+
+              is NameInImport -> {
+                globalWithResult(
+                  target.prjInstanceId,
+                  nameLookupResult.importEntry.id,
+                  TaskEdgeType.ValueDependency
+                ) { importing ->
+                  println(nameLookupResult)
+                  println(importing)
+                  check(importing is NodeResult.ImportResult)
+                  val graph = globalGraph.getProjectGraph(importing.projectId)
+                  val lookupResult = graph.nameLookupTable.lookupName(
+                    (importing.importName ?: listOf()) + node.remainingNames
+                  )
+                  // TODO 이 아래 코드 확인
+                  //   - lookupResult가 NameEntryFound가 아닐 수 있음
+                  //   - globalResultOrPrerequisite에 주는 prjInstnaceId가 맞는지
+                  check(lookupResult is NameEntryFound)
+                  println("$taskId $node")
+                  globalResultOrPrerequisite(
+                    ImportedProjectId(
+                      importing.projectId,
+                      GlobalTaskId(prjInstanceId, node.target)
+                    ),
+                    lookupResult.entry.id,
+                    TaskEdgeType.ValueDependency
+                  )
+                }
               }
 
               else -> {
@@ -302,10 +398,13 @@ class GlobalTaskRunner private constructor(
 
       is BuildRuleNode -> {
         val impl = getResult(prjInstanceId, node.implTarget)
-        val unfulfilledTypes = node.paramTypes.mapNotNull { (_, paramTypeNode) ->
+        val unfulfilledParamTypes = node.paramTypes.mapNotNull { (_, paramTypeNode) ->
           val paramTypeResult = getResult(prjInstanceId, paramTypeNode)
           if (paramTypeResult == null) paramTypeNode else null
         }.toSet()
+        val returnTypeResult = getResult(prjInstanceId, node.returnType)
+        val unfulfilledTypes =
+          if (returnTypeResult == null) unfulfilledParamTypes + node.returnType else unfulfilledParamTypes
         // TODO param types 중에 unfulfill 된게 있으면 그것도 UnfulfilledPrerequisites로 반환
         if (impl == null || unfulfilledTypes.isNotEmpty()) {
           val typeDeps = unfulfilledTypes.map {
@@ -316,19 +415,69 @@ class GlobalTaskRunner private constructor(
               typeDeps
           )
         } else {
-          check(impl is NodeResult.RunnableResult)
           val params = node.paramTypes.map { (paramName, paramTypeNode) ->
             val paramTypeResult = getResult(prjInstanceId, paramTypeNode)!!
             check(paramTypeResult is NodeResult.TypeResult)
             paramName to paramTypeResult.type
           }
+          check(returnTypeResult is NodeResult.TypeResult)
+          val returnType = returnTypeResult.type
           val buildRuleData = buildRuleData {
             this.buildRuleSourceId = sourceIdOf(prjInstanceId)
             // TODO RunnableResult에 build_rule, buildRuleClassName,buildRuleMethodName 정보가 들어가야 될 듯
           }
-          TaskRunResult.ImmediateResult(
-            NodeResult.BuildRuleResult(prjInstanceId, node, params, impl, buildRuleData)
-          )
+
+          fun buildRuleResult(implInstance: Any): NodeResult.BuildRuleResult {
+            val implMethod = try {
+              implInstance::class.java.getMethod(
+                node.implMethodName ?: "build",
+                BuildContext::class.java
+              )
+            } catch (e: NoSuchMethodException) {
+              throw IllegalStateException("No such method", e)
+            }
+            check(implMethod.trySetAccessible()) { "Method is not accessible" }
+
+            return NodeResult.BuildRuleResult(
+              prjInstanceId = prjInstanceId,
+              buildRuleNode = node,
+              params = params,
+              returnType = returnType,
+              implInstance = implInstance,
+              implMethod = implMethod,
+              buildRuleData = buildRuleData
+            )
+          }
+
+          when (impl) {
+            is NodeResult.PluginInstanceProviderResult -> {
+              val implInstance = impl.provider.getInstance(node.implClassName)
+              TaskRunResult.ImmediateResult(buildRuleResult(implInstance))
+            }
+
+            is NodeResult.ValueResult -> {
+              check(impl.value is ClassInstanceValue)
+              // TODO impl.value를 ClassPaths
+              withCoercedValue(
+                impl.value,
+                DataClassType("com.giyeok.bibix.plugins.jvm", "ClassPkg"),
+                prjInstanceId,
+              ) { classPkg ->
+                check(classPkg is ClassInstanceValue)
+                check(classPkg.packageName == "com.giyeok.bibix.plugins.jvm")
+                check(classPkg.className == "ClassPkg")
+                TaskRunResult.LongRunningResult {
+                  val implInstance = classPkgRunner.getPluginImplInstance(
+                    ClassPkg.fromBibix(classPkg),
+                    node.implClassName
+                  )
+                  saveResult(taskId, buildRuleResult(implInstance))
+                }
+              }
+            }
+
+            else -> throw IllegalStateException("Cannot call $impl")
+          }
         }
       }
 
@@ -381,7 +530,16 @@ class GlobalTaskRunner private constructor(
           check(typeNodeResult is NodeResult.TypeResult)
           val enumType = typeNodeResult.type
           check(enumType is EnumType)
-          // TODO check node.memberName is valid name for the enum type
+
+          // check node.memberName is valid name for the enum type
+          val enumDefinedProjectId = globalGraph.getProjectIdByPackageName(enumType.packageName)
+          checkNotNull(enumDefinedProjectId) { "Cannot find the package name" }
+          val nameLookupResult = globalGraph.getProjectGraph(enumDefinedProjectId).nameLookupTable
+            .lookupName(listOf(enumType.enumName))
+          check(nameLookupResult is NameEntryFound)
+          check(nameLookupResult.entry is EnumNameEntry)
+          check(node.memberName in nameLookupResult.entry.def.values)
+
           TaskRunResult.ImmediateResult(
             NodeResult.ValueResult(
               EnumValue(enumType.packageName, enumType.enumName, node.memberName)
@@ -392,14 +550,14 @@ class GlobalTaskRunner private constructor(
 
       is NativeImplNode -> {
         val instanceProvider = preloadedPluginInstanceProviders.getValue(prjInstanceId.projectId)
-        val impl = instanceProvider.getInstance(node.className)
-        val method = try {
-          impl::class.java.getMethod(node.methodName ?: "build", BuildContext::class.java)
-        } catch (e: NoSuchMethodException) {
-          throw IllegalStateException("No such method", e)
-        }
-        check(method.trySetAccessible()) { "Method is not accessible" }
-        TaskRunResult.ImmediateResult(NodeResult.RunnableResult(impl, method))
+//        val impl = instanceProvider.getInstance(node.className)
+//        val method = try {
+//          impl::class.java.getMethod(node.methodName ?: "build", BuildContext::class.java)
+//        } catch (e: NoSuchMethodException) {
+//          throw IllegalStateException("No such method", e)
+//        }
+//        check(method.trySetAccessible()) { "Method is not accessible" }
+        TaskRunResult.ImmediateResult(NodeResult.PluginInstanceProviderResult(instanceProvider))
       }
 
       is PreludeMemberNode -> {
@@ -510,7 +668,7 @@ class GlobalTaskRunner private constructor(
             TaskEdgeType.ValueDependency
           ) { result ->
             check(result is NodeResult.ValueResult)
-            withCoercedValue(result.value, type) {
+            withCoercedValue(result.value, type, prjInstanceId) {
               TaskRunResult.ImmediateResult(NodeResult.ValueResult(it))
             }
           }
@@ -519,7 +677,7 @@ class GlobalTaskRunner private constructor(
     }
 
     if (result is TaskRunResult.ImmediateResult) {
-      results[taskId] = result.result
+      saveResult(prjInstanceId, taskId.taskId, result.result)
     }
     return result
   }
@@ -566,19 +724,27 @@ class GlobalTaskRunner private constructor(
 
   private fun withCoercedValue(
     value: BibixValue,
-    expectedType: BibixType,
+    type: BibixType,
+    prjInstanceId: ProjectInstanceId,
     func: (BibixValue) -> TaskRunResult
   ): TaskRunResult {
-    return func(value)
+    check(value !is NClassInstanceValue)
+    val coercedValue = coerceValue(value, type, prjInstanceId)
+    return func(coercedValue)
   }
 
   private fun withCoercedValues(
     values: Map<String, BibixValue>,
-    expectedTypes: Map<String, BibixType>,
+    types: Map<String, BibixType>,
+    prjInstanceId: ProjectInstanceId,
     func: (Map<String, BibixValue>) -> TaskRunResult
   ): TaskRunResult {
-    check(expectedTypes.keys.containsAll(values.keys))
-    return func(values)
+    check(types.keys.containsAll(values.keys))
+    check(values.all { it.value !is NClassInstanceValue })
+    val coercedValues = values.mapValues { (name, value) ->
+      coerceValue(value, types.getValue(name), prjInstanceId)
+    }
+    return func(coercedValues)
   }
 
   // TODO
@@ -659,12 +825,7 @@ class GlobalTaskRunner private constructor(
               )
             }
 
-            is NodeResult.BuildRuleResult -> TODO()
-            is NodeResult.ImportInstanceResult -> TODO()
-            is NodeResult.ImportResult -> TODO()
-            is NodeResult.PreloadedPluginResult -> TODO()
-            is NodeResult.RunnableResult -> TODO()
-            is NodeResult.TypeResult -> TODO()
+            else -> TODO()
           }
         }
       }
@@ -744,7 +905,7 @@ class GlobalTaskRunner private constructor(
             }
 
             val paramTypesMap = paramTypes.toMap()
-            withCoercedValues(args, paramTypesMap) { coercedArgs ->
+            withCoercedValues(args, paramTypesMap, prjInstanceId) { coercedArgs ->
               whenReady(coercedArgs)
             }
           }
@@ -764,12 +925,15 @@ class GlobalTaskRunner private constructor(
               TaskRunResult.LongRunningResult {
                 val buildContext =
                   getBuildContext(callee.buildRuleData, prjInstanceId, callee.prjInstanceId, args)
-                val result = callee.impl.method.invoke(callee.impl.instance, buildContext)
+                val result = callee.implMethod.invoke(callee.implInstance, buildContext)
+
+                fun finishJob(result: BibixValue): TaskRunResult =
+                  withCoercedValue(result, callee.returnType, prjInstanceId) { coercedResult ->
+                    saveResult(prjInstanceId, node.id, NodeResult.ValueResult(coercedResult))
+                  }
 
                 fun handleBuildRuleReturn(result: BuildRuleReturn): TaskRunResult = when (result) {
-                  is BuildRuleReturn.ValueReturn ->
-                    // TODO coercion to callee's return type
-                    TaskRunResult.ImmediateResult(NodeResult.ValueResult(result.value))
+                  is BuildRuleReturn.ValueReturn -> finishJob(result.value)
 
                   is BuildRuleReturn.FailedReturn ->
                     throw IllegalStateException(
@@ -790,9 +954,7 @@ class GlobalTaskRunner private constructor(
                 }
 
                 when (result) {
-                  is BibixValue ->
-                    // TODO coercion to callee's return type
-                    TaskRunResult.ImmediateResult(NodeResult.ValueResult(result))
+                  is BibixValue -> finishJob(result)
 
                   is BuildRuleReturn -> handleBuildRuleReturn(result)
 
@@ -864,8 +1026,3 @@ class GlobalTaskRunner private constructor(
       is ThisRefNode -> TODO()
     }
 }
-
-data class CallExprRunState(
-  val objectIdData: ObjectIdData,
-  val objectId: ByteString,
-)

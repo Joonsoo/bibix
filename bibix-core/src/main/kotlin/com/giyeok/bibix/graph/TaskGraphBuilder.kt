@@ -42,12 +42,22 @@ class TaskGraphBuilder(
       when (def) {
         is BibixAst.ImportDef -> {
           check(isRoot) { "import must be in the root" }
-          val source = when (def) {
-            is BibixAst.ImportAll -> addImportSource(def.source, ctx)
-            is BibixAst.ImportFrom -> addImportSource(def.source, ctx)
+          // TODO ImportAll과 ImportFrom 처리가 달라야 함
+          val sourceNode: TaskId
+          val importNode: TaskId
+          when (def) {
+            is BibixAst.ImportAll -> {
+              sourceNode = addImportSource(def.source, ctx)
+              importNode = addNode(ImportNode(def, sourceNode, null))
+            }
+
+            is BibixAst.ImportFrom -> {
+              sourceNode = addImportSource(def.source, ctx)
+              importNode = addNode(ImportNode(def, sourceNode, def.importing.tokens))
+            }
           }
-          val importNode = addNode(ImportNode(def, source))
-          addEdge(importNode, source, TaskEdgeType.ValueDependency)
+
+          addEdge(importNode, sourceNode, TaskEdgeType.ValueDependency)
           val defaultImportInstanceNode = addNode(ImportInstanceNode(importNode, null, mapOf()))
           addEdge(defaultImportInstanceNode, importNode, TaskEdgeType.ImportInstance)
         }
@@ -154,16 +164,26 @@ class TaskGraphBuilder(
           val returnType = addType(def.returnType, ctx)
           val implTarget =
             if (ctx.nativeAllowed && def.impl.targetName.tokens == listOf("native")) {
-              val className = def.impl.className.tokens.joinToString(".")
-              addNode(NativeImplNode(def.impl.targetName, className, def.impl.methodName))
+              addNode(NativeImplNode(def.impl.targetName))
             } else {
               lookupResultToId(
                 ctx.nameLookupCtx.lookupName(def.impl.targetName.tokens, def.impl.targetName),
                 ctx.importInstances
               )
             }
+          val className = def.impl.className.tokens.joinToString(".")
           val buildRule =
-            addNode(BuildRuleNode(def, paramTypes, paramDefaultValues, returnType, implTarget))
+            addNode(
+              BuildRuleNode(
+                def = def,
+                paramTypes = paramTypes,
+                paramDefaultValues = paramDefaultValues,
+                returnType = returnType,
+                implTarget = implTarget,
+                implClassName = className,
+                implMethodName = def.impl.methodName
+              )
+            )
           paramTypes.values.forEach { addEdge(buildRule, it, TaskEdgeType.TypeDependency) }
           paramDefaultValues.values.forEach {
             addEdge(buildRule, it, TaskEdgeType.DefaultValueDependency)

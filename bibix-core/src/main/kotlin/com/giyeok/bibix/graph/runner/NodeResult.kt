@@ -6,6 +6,7 @@ import com.giyeok.bibix.base.BibixValue
 import com.giyeok.bibix.base.DataClassType
 import com.giyeok.bibix.graph.BuildRuleNode
 import com.giyeok.bibix.graph.TaskId
+import com.giyeok.bibix.plugins.PluginInstanceProvider
 import java.lang.reflect.Method
 
 sealed class NodeRunState
@@ -19,15 +20,18 @@ sealed class NodeResult {
     val prjInstanceId: ProjectInstanceId,
     val buildRuleNode: BuildRuleNode,
     val params: List<Pair<String, BibixType>>,
-    val impl: RunnableResult,
+    val returnType: BibixType,
+    val implInstance: Any,
+    val implMethod: Method,
     val buildRuleData: BuildRuleData,
   ): NodeResult()
 
-  data class ImportResult(val projectId: Int): NodeResult()
+  data class ImportResult(val projectId: Int, val importName: List<String>?): NodeResult()
 
   data class ImportInstanceResult(
     val prjInstanceId: ProjectInstanceId,
-    val varRedefs: Map<String, GlobalTaskId>
+    val varRedefs: Map<String, GlobalTaskId>,
+    val importName: List<String>?,
   ): NodeResult() {
     val projectId get() = prjInstanceId.projectId
   }
@@ -36,7 +40,7 @@ sealed class NodeResult {
 
   class ValueResult(val value: BibixValue): NodeResult()
 
-  data class RunnableResult(val instance: Any, val method: Method): NodeResult()
+  data class PluginInstanceProviderResult(val provider: PluginInstanceProvider): NodeResult()
 
   open class TypeResult(val type: BibixType): NodeResult()
 

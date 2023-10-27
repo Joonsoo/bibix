@@ -56,7 +56,7 @@ class GlobalTaskGraph private constructor(
     projectGraphs[projectId] ?: throw IllegalStateException()
 
   fun getProjectIdByLocation(location: BibixProjectLocation): Int? =
-    projectLocations.inverse().get(location)
+    projectLocations.inverse()[location]
 
   fun addGlobalEdge(edge: GlobalTaskEdge) {
     check(edge.start.projectInstanceId != edge.end.projectInstanceId)
@@ -141,6 +141,9 @@ class GlobalTaskGraph private constructor(
     }
     return depsGraph
   }
+
+  fun getProjectIdByPackageName(packageName: String) =
+    projectGraphs.entries.find { it.value.packageName == packageName }?.key
 }
 
 data class BibixProjectLocation(val projectRoot: Path, val scriptName: String) {

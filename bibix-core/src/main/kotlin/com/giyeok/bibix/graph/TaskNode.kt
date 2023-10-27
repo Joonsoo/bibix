@@ -17,15 +17,17 @@ data class BuildRuleNode(
   val paramTypes: Map<String, TaskId>,
   val paramDefaultValues: Map<String, TaskId>,
   val returnType: TaskId,
-  val implTarget: TaskId
+  val implTarget: TaskId,
+  val implClassName: String,
+  val implMethodName: String?
 ): TaskNode() {
   override val id: TaskId = TaskId(def.nodeId)
 }
 
 data class NativeImplNode(
   val implTargetName: BibixAst.Name,
-  val className: String,
-  val methodName: String?
+//  val className: String,
+//  val methodName: String?
 ): TaskNode() {
   override val id: TaskId = TaskId(implTargetName.nodeId)
 }
@@ -39,7 +41,11 @@ data class ImportInstanceNode(
     TaskId(importNode.nodeId, Pair(importNode.additionalId, withDef?.nodeId ?: 0))
 }
 
-data class ImportNode(val import: BibixAst.ImportDef, val importSource: TaskId): TaskNode() {
+data class ImportNode(
+  val import: BibixAst.ImportDef,
+  val importSource: TaskId,
+  val importName: List<String>?
+): TaskNode() {
   override val id: TaskId = TaskId(import.nodeId)
 }
 
