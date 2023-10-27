@@ -42,7 +42,7 @@ sealed class BuildRuleReturn {
   data class FailedReturn(val exception: Exception) : BuildRuleReturn()
 
   // DoneReturn은 액션에서만 반환해야 함
-  object DoneReturn : BuildRuleReturn()
+  data object DoneReturn : BuildRuleReturn()
 
   data class EvalAndThen(
     val ruleName: String,

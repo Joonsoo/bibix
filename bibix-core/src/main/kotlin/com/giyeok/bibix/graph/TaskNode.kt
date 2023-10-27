@@ -65,8 +65,14 @@ data class TargetNode(val def: BibixAst.TargetDef, val valueNode: TaskId): TaskN
   override val id: TaskId = TaskId(def.nodeId)
 }
 
-data class VarNode(val def: BibixAst.VarDef): TaskNode() {
+data class VarNode(
+  val def: BibixAst.VarDef,
+  val typeNode: TaskId,
+  val defaultValueNode: TaskId?
+): TaskNode() {
   override val id: TaskId = TaskId(def.nodeId)
+
+  val name get() = def.name
 }
 
 sealed class ExprNode<T: BibixAst.Expr>(val expr: T): TaskNode() {
@@ -210,20 +216,20 @@ data class UnionTypeNode(
 
 data class TaskEdge(val start: TaskId, val end: TaskId, val edgeType: TaskEdgeType)
 
-enum class TaskEdgeType(val isOptional: Boolean) {
-  Definition(false),
-  ValueDependency(false),
-  CalleeDependency(false),
-  Reference(false),
-  ImportDependency(false),
-  TypeDependency(false),
-  ImportInstance(false),
-  ClassInherit(false),
-  ClassMember(false),
+enum class TaskEdgeType(val isRequired: Boolean) {
+  Definition(true),
+  ValueDependency(true),
+  CalleeDependency(true),
+  Reference(true),
+  ImportDependency(true),
+  TypeDependency(true),
+  ImportInstance(true),
+  ClassInherit(true),
 
   // default value는 evaluation할 때 빠질 수도 있다는 의미
-  DefaultValueDependency(true),
+  DefaultValueDependency(false),
+  ClassMember(false),
 
   // OverridingValueDependency는 global edge에만 올 수 있음
-  OverridingValueDependency(false),
+  OverridingValueDependency(true),
 }

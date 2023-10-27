@@ -59,13 +59,18 @@ class TaskGraph(
 //    ): TaskGraph = fromDefs(packageName, defs, preloadedPluginNames, preludeNames, nativeAllowed)
   }
 
-  fun reachableNodesFrom(tasks: List<TaskId>): Set<TaskId> {
+  fun reachableNodesFrom(tasks: List<TaskId>, requiredEdgesOnly: Boolean): Set<TaskId> {
     val reachables = mutableSetOf<TaskId>()
 
     fun traverse(nodeId: TaskId) {
       if (!reachables.contains(nodeId)) {
         reachables.add(nodeId)
-        edgesByStart[nodeId]?.forEach { outgoing ->
+        val edges = if (requiredEdgesOnly) {
+          edgesByStart[nodeId]?.filter { it.edgeType.isRequired }
+        } else {
+          edgesByStart[nodeId]
+        }
+        edges?.forEach { outgoing ->
           traverse(outgoing.end)
         }
       }

@@ -148,7 +148,7 @@ class GlobalTaskRunner private constructor(
 
     data class ImmediateResult(val result: NodeResult): TaskRunResult()
 
-    data class LongRunningResult(val runner: suspend () -> NodeResult): TaskRunResult()
+    data class LongRunningResult(val runner: suspend () -> TaskRunResult): TaskRunResult()
   }
 
   private val resultsMutex = Mutex()
@@ -172,6 +172,39 @@ class GlobalTaskRunner private constructor(
     }
   }
 
+  fun globalWithResult(
+    prjInstanceId: ProjectInstanceId,
+    localTaskId: TaskId,
+    edgeType: TaskEdgeType,
+    withResult: (NodeResult) -> TaskRunResult
+  ): TaskRunResult {
+    val nodeResult = getResult(prjInstanceId, localTaskId)
+    return if (nodeResult != null) {
+      withResult(nodeResult)
+    } else {
+      TaskRunResult.UnfulfilledPrerequisites(
+        listOf(GlobalTaskId(prjInstanceId, localTaskId) to edgeType)
+      )
+    }
+  }
+
+  fun globalWithResults(
+    prjInstanceId: ProjectInstanceId,
+    localTaskIds: Set<TaskId>,
+    edgeType: TaskEdgeType,
+    withResult: (Map<TaskId, NodeResult>) -> TaskRunResult
+  ): TaskRunResult {
+    val nodeResults = localTaskIds.associate { it to getResult(prjInstanceId, it) }
+    return if (nodeResults.all { it.value != null }) {
+      withResult(nodeResults.mapValues { (_, value) -> value!! })
+    } else {
+      val missingTasks = nodeResults.filter { it.value == null }.keys
+      TaskRunResult.UnfulfilledPrerequisites(
+        missingTasks.map { GlobalTaskId(prjInstanceId, it) to edgeType }
+      )
+    }
+  }
+
   fun runTask(taskId: GlobalTaskId): TaskRunResult {
     check(taskId !in results)
 
@@ -179,6 +212,13 @@ class GlobalTaskRunner private constructor(
 
     fun resultOrPrerequisite(localTaskId: TaskId, edgeType: TaskEdgeType): TaskRunResult =
       globalResultOrPrerequisite(prjInstanceId, localTaskId, edgeType)
+
+    fun withResult(
+      localTaskId: TaskId,
+      edgeType: TaskEdgeType,
+      withResult: (NodeResult) -> TaskRunResult
+    ): TaskRunResult =
+      globalWithResult(prjInstanceId, localTaskId, edgeType, withResult)
 
     val result: TaskRunResult = when (val node = globalGraph.getNode(taskId)) {
       is ExprNode<*> -> evaluateExprNode(prjInstanceId, node)
@@ -251,7 +291,6 @@ class GlobalTaskRunner private constructor(
           }
 
           is NodeResult.ValueResult -> TODO()
-          is NodeResult.TargetResult -> TODO()
 
           else -> TODO()
         }
@@ -324,7 +363,8 @@ class GlobalTaskRunner private constructor(
               packageName = pkg,
               className = node.defNode.name,
               fields = fieldTypes,
-              defaultValues = node.defaultValues
+              defaultValues = node.defaultValues,
+              classBodyElems = node.elems
             )
           )
         }
@@ -337,16 +377,17 @@ class GlobalTaskRunner private constructor(
       }
 
       is EnumValueNode -> {
-        val typeNodeResult = getResult(prjInstanceId, node.enumTypeNode)!!
-        check(typeNodeResult is NodeResult.TypeResult)
-        val enumType = typeNodeResult.type
-        check(enumType is EnumType)
-        // TODO check node.memberName is valid name for the enum type
-        TaskRunResult.ImmediateResult(
-          NodeResult.ValueResult(
-            EnumValue(enumType.packageName, enumType.enumName, node.memberName)
+        withResult(node.enumTypeNode, TaskEdgeType.TypeDependency) { typeNodeResult ->
+          check(typeNodeResult is NodeResult.TypeResult)
+          val enumType = typeNodeResult.type
+          check(enumType is EnumType)
+          // TODO check node.memberName is valid name for the enum type
+          TaskRunResult.ImmediateResult(
+            NodeResult.ValueResult(
+              EnumValue(enumType.packageName, enumType.enumName, node.memberName)
+            )
           )
-        )
+        }
       }
 
       is NativeImplNode -> {
@@ -386,10 +427,7 @@ class GlobalTaskRunner private constructor(
         TODO()
       }
 
-      is TargetNode -> {
-        println("$taskId $node")
-        resultOrPrerequisite(node.valueNode, TaskEdgeType.Definition)
-      }
+      is TargetNode -> resultOrPrerequisite(node.valueNode, TaskEdgeType.Definition)
 
       is CollectionTypeNode -> {
         when (val collectionName = node.collectionType.name) {
@@ -441,27 +479,47 @@ class GlobalTaskRunner private constructor(
       }
 
       is VarNode -> {
-        TODO()
-      }
-    }
-    when (result) {
-      is TaskRunResult.ImmediateResult -> {
-        results[taskId] = result.result
-      }
+        withResult(node.typeNode, TaskEdgeType.TypeDependency) { typeResult ->
+          check(typeResult is NodeResult.TypeResult)
+          val type = typeResult.type
 
-      is TaskRunResult.LongRunningResult -> {
-        TaskRunResult.LongRunningResult {
-          val nodeResult = result.runner()
-          resultsMutex.withLock {
-            results[taskId] = nodeResult
+          val varRedefs: Map<String, GlobalTaskId> = when (prjInstanceId) {
+            is ImportedProjectId -> {
+              val importerProject =
+                globalGraph.getProjectGraph(prjInstanceId.importer.projectInstanceId.projectId)
+              println(importerProject)
+              prjInstanceId.importer
+              val redefs = importerProject.varRedefs[prjInstanceId.importer.taskId] ?: mapOf()
+              redefs.mapValues { (_, taskId) ->
+                GlobalTaskId(prjInstanceId.importer.projectInstanceId, taskId)
+              }
+            }
+
+            MainProjectId -> TODO()
+            PreludeProjectId -> TODO()
           }
-          nodeResult
+          val varValue = varRedefs[node.name]
+            ?: (node.defaultValueNode?.let { GlobalTaskId(prjInstanceId, it) })
+          checkNotNull(varValue) { "var value is not set" }
+
+          // TODO coercion to `type`
+
+          globalWithResult(
+            varValue.projectInstanceId,
+            varValue.taskId,
+            TaskEdgeType.ValueDependency
+          ) { result ->
+            check(result is NodeResult.ValueResult)
+            withCoercedValue(result.value, type) {
+              TaskRunResult.ImmediateResult(NodeResult.ValueResult(it))
+            }
+          }
         }
       }
+    }
 
-      is TaskRunResult.UnfulfilledPrerequisites -> {
-        // do nothing
-      }
+    if (result is TaskRunResult.ImmediateResult) {
+      results[taskId] = result.result
     }
     return result
   }
@@ -504,6 +562,23 @@ class GlobalTaskRunner private constructor(
         this.scriptName = projectLocation.scriptName
       }
     }
+  }
+
+  private fun withCoercedValue(
+    value: BibixValue,
+    expectedType: BibixType,
+    func: (BibixValue) -> TaskRunResult
+  ): TaskRunResult {
+    return func(value)
+  }
+
+  private fun withCoercedValues(
+    values: Map<String, BibixValue>,
+    expectedTypes: Map<String, BibixType>,
+    func: (Map<String, BibixValue>) -> TaskRunResult
+  ): TaskRunResult {
+    check(expectedTypes.keys.containsAll(values.keys))
+    return func(values)
   }
 
   // TODO
@@ -568,15 +643,30 @@ class GlobalTaskRunner private constructor(
       is BooleanLiteralNode -> v(BooleanValue(node.literal.value))
 
       is MemberAccessExprNode -> {
-        val targetResult = getResult(prjInstanceId, node.target)!!
-        println(targetResult)
-        val targetNode = globalGraph.getNode(prjInstanceId, node.target)
-        if (node.memberNames.isEmpty()) {
-          // targetNode의 실행 결과
-        } else {
-          // targetNode의 실행 결과에서 memberAccess
+        globalWithResult(prjInstanceId, node.target, TaskEdgeType.ValueDependency) { target ->
+          when (target) {
+            is NodeResult.ValueResult -> {
+              fun memberValueOf(value: BibixValue, memberNames: List<String>): BibixValue =
+                if (memberNames.isEmpty()) value else {
+                  check(value is ClassInstanceValue)
+                  val memberValue = value.fieldValues[memberNames.first()]
+                    ?: throw IllegalStateException()
+                  memberValueOf(memberValue, memberNames.drop(1))
+                }
+
+              TaskRunResult.ImmediateResult(
+                NodeResult.ValueResult(memberValueOf(target.value, node.memberNames))
+              )
+            }
+
+            is NodeResult.BuildRuleResult -> TODO()
+            is NodeResult.ImportInstanceResult -> TODO()
+            is NodeResult.ImportResult -> TODO()
+            is NodeResult.PreloadedPluginResult -> TODO()
+            is NodeResult.RunnableResult -> TODO()
+            is NodeResult.TypeResult -> TODO()
+          }
         }
-        v(StringValue("$node $targetNode ${node.memberNames}"))
       }
 
       is StringNode -> {
@@ -634,24 +724,19 @@ class GlobalTaskRunner private constructor(
 
           // 만약 callee의 default param이 필요한데 그 값이 없으면 prerequisite으로 반환하고
           // 모든 값이 충족되었으면 TaskRunResult.LongRunningResult 로 build rule을 실행하는 코드를 반환한다
-          val defaultParamTasks = unspecifiedParamNames.associateWith {
-            paramDefaultValueTasks.getValue(it)
+          val defaultParamTasks = unspecifiedParamNames.mapNotNull { paramName ->
+            paramDefaultValueTasks[paramName]?.let { paramName to it }
           }
-          val defaults = defaultParamTasks.mapValues { (_, value) ->
-            getResult(prjInstanceId, value)
-          }
-          val missingDefaults = defaults.filter { it.value == null }
-          return if (missingDefaults.isNotEmpty()) {
-            TaskRunResult.UnfulfilledPrerequisites(missingDefaults.keys.map { missingParamName ->
-              val defaultParamTask = defaultParamTasks.getValue(missingParamName)
-              GlobalTaskId(
-                calleeProjectInstanceId,
-                defaultParamTask
-              ) to TaskEdgeType.ValueDependency
-            })
-          } else {
-            val defaultValues = defaults.mapValues { (_, value) -> value!! }
-
+          return globalWithResults(
+            // default param task는 callee쪽에서 정의한 것이기 때문
+            calleeProjectInstanceId,
+            defaultParamTasks.map { it.second }.toSet(),
+            TaskEdgeType.ValueDependency
+          ) { defaultResults ->
+            val defaultParamTasksMap = defaultParamTasks.toMap()
+            val defaultValues = defaultParamTasksMap.mapValues { (_, taskId) ->
+              defaultResults.getValue(taskId)
+            }
             val argResults: Map<String, NodeResult> = posArgs + namedArgs + defaultValues
             check(argResults.all { it.value is NodeResult.ValueResult })
             val args = argResults.mapValues { (_, result) ->
@@ -659,9 +744,9 @@ class GlobalTaskRunner private constructor(
             }
 
             val paramTypesMap = paramTypes.toMap()
-            // TODO args의 타입을 paramTypes로 coercion - 이건 어떻게 처리하지..?
-
-            whenReady(args)
+            withCoercedValues(args, paramTypesMap) { coercedArgs ->
+              whenReady(coercedArgs)
+            }
           }
         }
 
@@ -679,9 +764,41 @@ class GlobalTaskRunner private constructor(
               TaskRunResult.LongRunningResult {
                 val buildContext =
                   getBuildContext(callee.buildRuleData, prjInstanceId, callee.prjInstanceId, args)
-                val result =
-                  callee.impl.method.invoke(callee.impl.instance, buildContext) as BibixValue
-                NodeResult.ValueResult(result)
+                val result = callee.impl.method.invoke(callee.impl.instance, buildContext)
+
+                fun handleBuildRuleReturn(result: BuildRuleReturn): TaskRunResult = when (result) {
+                  is BuildRuleReturn.ValueReturn ->
+                    // TODO coercion to callee's return type
+                    TaskRunResult.ImmediateResult(NodeResult.ValueResult(result.value))
+
+                  is BuildRuleReturn.FailedReturn ->
+                    throw IllegalStateException(
+                      "Failed in build rule: ${result.exception.message}",
+                      result.exception
+                    )
+
+                  is BuildRuleReturn.WithDirectoryLock -> {
+                    TaskRunResult.LongRunningResult {
+                      handleBuildRuleReturn(result.withLock())
+                    }
+                  }
+
+                  is BuildRuleReturn.GetTypeDetails -> TODO()
+                  is BuildRuleReturn.EvalAndThen -> TODO()
+
+                  BuildRuleReturn.DoneReturn -> throw IllegalStateException()
+                }
+
+                when (result) {
+                  is BibixValue ->
+                    // TODO coercion to callee's return type
+                    TaskRunResult.ImmediateResult(NodeResult.ValueResult(result))
+
+                  is BuildRuleReturn -> handleBuildRuleReturn(result)
+
+                  else ->
+                    throw IllegalStateException("Invalid return from build rule")
+                }
               }
             }
           }

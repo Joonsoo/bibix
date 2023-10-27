@@ -107,16 +107,19 @@ class TaskGraphBuilder(
 
         is BibixAst.VarDef -> {
           check(isRoot) { "variable only can be defined in the root" }
-          val varNode = addNode(VarNode(def))
-          def.typ?.let { typ ->
-            val typeNode = addType(typ, ctx)
-            addEdge(varNode, typeNode, TaskEdgeType.TypeDependency)
-          }
-          def.defaultValue?.let { defaultValue ->
+          val varType = def.typ!!
+          val typeNode = addType(varType, ctx)
+          val defaultValueNode = def.defaultValue?.let { defaultValue ->
             val valueNode = addExpr(defaultValue, ctx)
-            addEdge(varNode, valueNode, TaskEdgeType.DefaultValueDependency)
+            valueNode
           }
           check(def.name !in scriptVars)
+
+          val varNode = addNode(VarNode(def, typeNode, defaultValueNode))
+          addEdge(varNode, typeNode, TaskEdgeType.TypeDependency)
+          defaultValueNode?.let {
+            addEdge(varNode, it, TaskEdgeType.DefaultValueDependency)
+          }
           scriptVars[def.name] = varNode
         }
 
@@ -233,15 +236,36 @@ class TaskGraphBuilder(
           else -> null
         }
 
-        val referred = if (bibixType != null) {
+        if (bibixType != null) {
           addNode(BibixTypeNode(bibixType))
         } else {
           val lookupResult = ctx.nameLookupCtx.lookupName(type.tokens, type)
-          lookupResultToId(lookupResult, ctx.importInstances)
+          if (lookupResult is NameEntryFound) {
+            when (val entry = lookupResult.entry) {
+              is ClassNameEntry -> {
+                checkNotNull(packageName)
+                val classType = when (val classDef = entry.def) {
+                  is BibixAst.DataClassDef -> DataClassType(packageName, classDef.name)
+                  is BibixAst.SuperClassDef -> SuperClassType(packageName, classDef.name)
+                }
+                addNode(BibixTypeNode(classType))
+              }
+
+              is EnumNameEntry -> {
+                checkNotNull(packageName)
+                val enumType = EnumType(packageName, entry.def.name)
+                addNode(BibixTypeNode(enumType))
+              }
+
+              else -> throw IllegalStateException("Not a type")
+            }
+          } else {
+            val referred = lookupResultToId(lookupResult, ctx.importInstances)
+            val nameNode = addNode(TypeNameNode(type, referred))
+            addEdge(nameNode, referred, TaskEdgeType.TypeDependency)
+            nameNode
+          }
         }
-        val nameNode = addNode(TypeNameNode(type, referred))
-        addEdge(nameNode, referred, TaskEdgeType.TypeDependency)
-        nameNode
       }
 
       is BibixAst.TupleType -> {

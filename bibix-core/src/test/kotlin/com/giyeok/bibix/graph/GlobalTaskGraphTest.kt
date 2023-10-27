@@ -37,14 +37,14 @@ class GlobalTaskGraphTest {
         repo
       )
 
-      println(dotGraphFrom(runner))
-      println()
-
       val targetTask = runner.getMainProjectTaskId("abc")
 
       val dispatcher = Executors.newFixedThreadPool(4).asCoroutineDispatcher()
 
       val depsGraph = runner.globalGraph.depsGraphFrom(setOf(targetTask))
+      println(dotGraphFrom(depsGraph))
+      println()
+
       val runnerMutex = Mutex()
       for (nextNode in depsGraph.nextNodeIds) {
         println("runTask: ${nextNode.toNodeId()}")
@@ -56,32 +56,38 @@ class GlobalTaskGraphTest {
           e.printStackTrace()
           throw e
         }
-        when (taskRunResult) {
-          is GlobalTaskRunner.TaskRunResult.UnfulfilledPrerequisites -> {
-            val prerequisiteEdges = taskRunResult.prerequisites.map { (end, type) ->
-              GlobalTaskEdge(nextNode, end, type)
+
+        suspend fun handleResult(taskRunResult: GlobalTaskRunner.TaskRunResult) {
+          when (taskRunResult) {
+            is GlobalTaskRunner.TaskRunResult.UnfulfilledPrerequisites -> {
+              val prerequisiteEdges = taskRunResult.prerequisites.map { (end, type) ->
+                GlobalTaskEdge(nextNode, end, type)
+              }
+              depsGraph.addEdges(prerequisiteEdges)
             }
-            depsGraph.addEdges(prerequisiteEdges)
-          }
 
-          is GlobalTaskRunner.TaskRunResult.ImmediateResult -> {
-            taskRunResult.result
-            depsGraph.finishNode(nextNode)
-          }
+            is GlobalTaskRunner.TaskRunResult.ImmediateResult -> {
+              taskRunResult.result
+              depsGraph.finishNode(nextNode)
+            }
 
-          is GlobalTaskRunner.TaskRunResult.LongRunningResult -> {
-            CoroutineScope(dispatcher).launch {
-              try {
+            is GlobalTaskRunner.TaskRunResult.LongRunningResult -> {
+//            CoroutineScope(dispatcher).launch {
+              val longRunningResult = try {
                 taskRunResult.runner()
               } catch (e: Exception) {
                 e.printStackTrace()
                 // 실행을 종료해야 하는데..?
                 throw e
               }
-              depsGraph.finishNode(nextNode)
+              handleResult(longRunningResult)
+              // depsGraph.finishNode(nextNode)
+//            }
             }
           }
         }
+
+        handleResult(taskRunResult)
 
         depsGraph.printStatus()
         println(dotGraphFrom(depsGraph))

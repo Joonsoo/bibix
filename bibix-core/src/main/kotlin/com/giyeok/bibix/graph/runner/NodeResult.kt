@@ -34,11 +34,7 @@ sealed class NodeResult {
 
   class PreloadedPluginResult: NodeResult()
 
-  class TargetResult: NodeResult()
-
   class ValueResult(val value: BibixValue): NodeResult()
-
-  class VarResult: NodeResult()
 
   data class RunnableResult(val instance: Any, val method: Method): NodeResult()
 
@@ -50,5 +46,6 @@ sealed class NodeResult {
     val className: String,
     val fields: List<Pair<String, BibixType>>,
     val defaultValues: Map<String, TaskId>,
+    val classBodyElems: List<TaskId>,
   ): TypeResult(DataClassType(packageName, className))
 }

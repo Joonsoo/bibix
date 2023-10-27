@@ -93,21 +93,29 @@ class GlobalTaskDepsGraph(
       // TODO
       rootNodes.groupBy { it.projectInstanceId.projectId }.map { (projectId, newNodesIn) ->
         val graph = globalGraph.getProjectGraph(projectId)
-        val reachables = graph.reachableNodesFrom(newNodesIn.map { it.taskId })
+        val reachables = graph.reachableNodesFrom(newNodesIn.map { it.taskId }, true)
         val prjInstanceIds = newNodesIn.map { it.projectInstanceId }.toSet()
 
         fun traverse(taskId: TaskId) {
           prjInstanceIds.forEach { prjInstanceId ->
             val globalTaskId = GlobalTaskId(prjInstanceId, taskId)
             if (nodes.add(globalTaskId)) {
+              check(globalTaskId !in depsCounts)
               depsCounts[globalTaskId] = 0
-              graph.edgesByStart[taskId]?.forEach { outgoing ->
-                check(outgoing.start == taskId)
-                val endNode = GlobalTaskId(prjInstanceId, outgoing.end)
-                addEdge(GlobalTaskEdge(globalTaskId, endNode, outgoing.edgeType))
-                depsCounts[globalTaskId] = (depsCounts[globalTaskId] ?: 0) + 1
-                traverse(outgoing.end)
-              }
+              graph.edgesByStart[taskId]
+                ?.filter { it.edgeType.isRequired }
+                ?.forEach { outgoing ->
+                  check(outgoing.start == taskId)
+                  val endNode = GlobalTaskId(prjInstanceId, outgoing.end)
+                  val newEdge = GlobalTaskEdge(globalTaskId, endNode, outgoing.edgeType)
+                  addEdge(newEdge)
+                  if (endNode in finishedNodes) {
+                    finishedEdges.add(newEdge)
+                  } else {
+                    depsCounts[globalTaskId] = (depsCounts[globalTaskId] ?: 0) + 1
+                    traverse(outgoing.end)
+                  }
+                }
             }
           }
         }
