@@ -280,6 +280,7 @@ class TaskGraphBuilder(
               else -> throw IllegalStateException("Not a type")
             }
           } else {
+            // TODO 여기는 TypeNameNode -> BibixTypeNode의 형태로 가고 위는 바로 BibixTypeNode로 가는데.. 무슨 차이지?
             val referred = lookupResultToId(lookupResult, ctx.importInstances)
             val nameNode = addNode(TypeNameNode(type, referred))
             addEdge(nameNode, referred, TaskEdgeType.TypeDependency)
@@ -403,7 +404,8 @@ class TaskGraphBuilder(
         val namedParams = expr.params.namedParams.associate { (name, param) ->
           name to addExpr(param, ctx)
         }
-        val exprNode = addNode(CallExprNode(expr, callee, posParams, namedParams))
+        val exprNode =
+          addNode(CallExprNode(expr, callee, posParams, namedParams))
         addEdge(exprNode, callee, TaskEdgeType.CalleeDependency)
         posParams.forEach { addEdge(exprNode, it, TaskEdgeType.ValueDependency) }
         namedParams.forEach { addEdge(exprNode, it.value, TaskEdgeType.ValueDependency) }

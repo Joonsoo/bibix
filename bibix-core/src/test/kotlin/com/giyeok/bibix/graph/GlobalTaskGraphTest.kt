@@ -4,18 +4,14 @@ import com.giyeok.bibix.base.Architecture
 import com.giyeok.bibix.base.BuildEnv
 import com.giyeok.bibix.base.OS
 import com.giyeok.bibix.frontend.BuildFrontend
-import com.giyeok.bibix.graph.runner.BibixProjectLocation
-import com.giyeok.bibix.graph.runner.GlobalTaskEdge
-import com.giyeok.bibix.graph.runner.GlobalTaskRunner
-import com.giyeok.bibix.graph.runner.toNodeId
+import com.giyeok.bibix.graph.runner.*
 import com.giyeok.bibix.plugins.prelude.preludePlugin
 import com.giyeok.bibix.repo.BibixRepo
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.asCoroutineDispatcher
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import org.codehaus.plexus.classworlds.ClassWorld
 import org.junit.jupiter.api.Test
 import java.nio.file.Path
 import java.util.concurrent.Executors
@@ -34,7 +30,8 @@ class GlobalTaskGraphTest {
         preludePlugin,
         BuildFrontend.defaultPreloadedPlugins,
         buildEnv,
-        repo
+        repo,
+        ClassWorld()
       )
 
       val targetTask = runner.getMainProjectTaskId("abc")
@@ -57,27 +54,30 @@ class GlobalTaskGraphTest {
           throw e
         }
 
-        suspend fun handleResult(taskRunResult: GlobalTaskRunner.TaskRunResult) {
+        suspend fun handleResult(taskRunResult: TaskRunResult) {
           when (taskRunResult) {
-            is GlobalTaskRunner.TaskRunResult.UnfulfilledPrerequisites -> {
+            is TaskRunResult.UnfulfilledPrerequisites -> {
+              taskRunResult.prerequisites.forEach { (prerequisite, _) ->
+                runner.globalGraph.getNode(prerequisite)
+              }
               val prerequisiteEdges = taskRunResult.prerequisites.map { (end, type) ->
                 GlobalTaskEdge(nextNode, end, type)
               }
               depsGraph.addEdges(prerequisiteEdges)
             }
 
-            is GlobalTaskRunner.TaskRunResult.BibixProjectImportRequired -> {
+            is TaskRunResult.BibixProjectImportRequired -> {
               val projectId = runner.addProject(taskRunResult.projectLocation)
               taskRunResult.afterImport(projectId)
               depsGraph.finishNode(nextNode)
             }
 
-            is GlobalTaskRunner.TaskRunResult.ImmediateResult -> {
+            is TaskRunResult.ImmediateResult -> {
               taskRunResult.result
               depsGraph.finishNode(nextNode)
             }
 
-            is GlobalTaskRunner.TaskRunResult.LongRunningResult -> {
+            is TaskRunResult.LongRunningResult -> {
 //            CoroutineScope(dispatcher).launch {
               val longRunningResult = try {
                 taskRunResult.runner()

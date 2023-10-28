@@ -102,9 +102,15 @@ data class ClassInstanceValue(
     return "$packageName::$className($fieldValuesText)"
   }
 
+  fun getField(fieldName: String): BibixValue =
+    fieldValues[fieldName] ?: throw IllegalStateException("No such field: $fieldName")
+
+  fun getStringField(fieldName: String): String =
+    (getField(fieldName) as StringValue).value
+
   fun getNullableField(fieldName: String): BibixValue? {
-    val value = this.fieldValues[fieldName]
-    return if (value == null || value == NoneValue) null else value
+    val value = getField(fieldName)
+    return if (value == NoneValue) null else value
   }
 
   inline fun <reified T: BibixValue> getNullableFieldOf(fieldName: String): T? =

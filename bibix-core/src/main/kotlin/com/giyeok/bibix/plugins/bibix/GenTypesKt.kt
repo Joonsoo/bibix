@@ -40,7 +40,7 @@ class GenTypesKt {
           bibixValueToKt("value[\"${field.name}\"]!!", field.type)
         } else {
           val bibixToKt = bibixValueToKt("v", field.type)
-          "value[\"${field.name}\"]!!.let { v -> if (v == NoneValue) null else $bibixToKt }"
+          "value.getNullableField(\"${field.name}\")?.let { v -> $bibixToKt }"
         }
         p.println("$indent        ${field.name}=$fieldExpr,")
       }

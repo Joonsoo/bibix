@@ -101,7 +101,7 @@ data class CallExprNode(
   val callExpr: BibixAst.CallExpr,
   val callee: TaskId,
   val posParams: List<TaskId>,
-  val namedParams: Map<String, TaskId>
+  val namedParams: Map<String, TaskId>,
 ): ExprNode<BibixAst.CallExpr>(callExpr)
 
 data class ListExprNode(

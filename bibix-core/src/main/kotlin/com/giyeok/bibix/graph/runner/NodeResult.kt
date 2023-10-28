@@ -9,11 +9,6 @@ import com.giyeok.bibix.graph.TaskId
 import com.giyeok.bibix.plugins.PluginInstanceProvider
 import java.lang.reflect.Method
 
-sealed class NodeRunState
-
-class ImportRunState: NodeRunState()
-
-
 sealed class NodeResult {
   data class BuildRuleResult(
     // 이 build rule이 정의된 project instance id
@@ -49,6 +44,7 @@ sealed class NodeResult {
     val packageName: String,
     val className: String,
     val fields: List<Pair<String, BibixType>>,
+    val optionalFields: Set<String>,
     val defaultValues: Map<String, TaskId>,
     val classBodyElems: List<TaskId>,
   ): TypeResult(DataClassType(packageName, className))

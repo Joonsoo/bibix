@@ -80,9 +80,9 @@ class Artifact {
       val excludes = (context.arguments.getValue("excludes") as SetValue).values.map { value ->
         value as ClassInstanceValue
         MavenArtifactName(
-          (value.fieldValues.getValue("group") as StringValue).value,
-          (value.fieldValues.getValue("artifact") as StringValue).value,
-          (value.fieldValues.getValue("version").nullOr<StringValue>())?.value,
+          group = value.getStringField("group"),
+          artifact = value.getStringField("artifact"),
+          version = value.getNullableStringField("version"),
         )
       }.toSet()
 
