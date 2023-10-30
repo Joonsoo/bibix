@@ -1,7 +1,6 @@
 package com.giyeok.bibix.graph.runner
 
 import com.giyeok.bibix.*
-import com.giyeok.bibix.ast.BibixAst
 import com.giyeok.bibix.base.*
 import com.giyeok.bibix.graph.*
 import com.giyeok.bibix.repo.TargetId
@@ -14,9 +13,9 @@ import com.google.protobuf.empty
 import java.nio.file.FileSystems
 import kotlin.io.path.absolutePathString
 
-fun GlobalTaskRunner.evaluateCallExprNode(
+fun GlobalTaskRunner.evaluateCallExprCallNode(
   prjInstanceId: ProjectInstanceId,
-  node: CallExprNode
+  node: CallExprCallNode
 ): TaskRunResult {
   val posArgs = node.posParams.map { getResult(prjInstanceId, it)!! }
   val namedArgs = node.namedParams.mapValues { (_, arg) ->
@@ -36,9 +35,7 @@ fun GlobalTaskRunner.evaluateCallExprNode(
         namedArgs = namedArgs,
         calleeProjectInstanceId = callee.prjInstanceId
       ) { args ->
-        TaskRunResult.LongRunningResult {
-          callBuildRule(prjInstanceId, node.id, callee, args)
-        }
+        callBuildRule(prjInstanceId, node.id, callee, args)
       }
     }
 
@@ -106,142 +103,20 @@ private fun GlobalTaskRunner.organizeParams(
       (result as NodeResult.ValueResult).value
     }
 
-    val paramTypesMap = paramTypes.toMap()
-    withCoercedValues(args, paramTypesMap, prjInstanceId) { coercedArgs ->
-      val noneArgs = unspecifiedParamNames - coercedArgs.keys
-      val finalArgs = coercedArgs + noneArgs.associateWith { NoneValue }
-      check(paramNames.toSet() == finalArgs.keys)
-      whenReady(finalArgs)
-    }
+    whenReady(args)
   }
 }
 
-private suspend fun GlobalTaskRunner.callBuildRule(
+private fun GlobalTaskRunner.callBuildRule(
   prjInstanceId: ProjectInstanceId,
   taskId: TaskId,
   buildRule: NodeResult.BuildRuleResult,
   args: Map<String, BibixValue>,
 ): TaskRunResult {
-  fun finishBuildRuleReturnValue(returned: BibixValue): TaskRunResult = when (returned) {
-    is NClassInstanceValue -> {
-      // TODO 테스트 필요
-      val graph = globalGraph.getProjectGraph(prjInstanceId.projectId)
-      when (val lookupResult =
-        graph.nameLookupTable.lookupName(returned.nameTokens)) {
-        is NameEntryFound -> {
-          val nameEntry = lookupResult.entry
-          check(nameEntry is ClassNameEntry)
-          check(nameEntry.def is BibixAst.DataClassDef)
-          checkNotNull(graph.packageName)
-
-          val classInstanceValue = ClassInstanceValue(
-            graph.packageName,
-            nameEntry.def.name,
-            returned.fieldValues
-          )
-
-          TaskRunResult.ImmediateResult(NodeResult.ValueResult(classInstanceValue))
-
-          globalWithResult(prjInstanceId, nameEntry.id, TaskEdgeType.TypeDependency) { cls ->
-            check(cls is NodeResult.DataClassTypeResult)
-            finalizeClassInstanceValue(prjInstanceId, taskId, classInstanceValue, cls)
-          }
-        }
-
-        is NameInImport -> {
-          TODO()
-        }
-
-        else -> throw IllegalStateException()
-      }
-    }
-
-    is ClassInstanceValue -> {
-      // 현재는 반환된 클래스의 패키지 이름은 이 시점에 이미 알려져 있다
-
-      val classDefineProjectId =
-        globalGraph.getProjectIdByPackageName(returned.packageName)
-          ?: throw IllegalStateException()
-      val classDefineGraph = globalGraph.getProjectGraph(classDefineProjectId)
-      val classDefineTask = when (val lookupResult =
-        classDefineGraph.nameLookupTable.lookupName(listOf(returned.className))) {
-        is NameEntryFound -> {
-          check(lookupResult.entry is ClassNameEntry)
-          lookupResult.entry.id
-        }
-
-        else -> {
-          TODO()
-        }
-      }
-
-      when (classDefineProjectId) {
-        MainProjectId.projectId -> {
-          globalWithResult(
-            // 여기서 prjInstanceId로 뭐를 줘야되지?
-            prjInstanceId = MainProjectId,
-            localTaskId = classDefineTask,
-            edgeType = TaskEdgeType.TypeDependency
-          ) { dataClassResult ->
-            check(dataClassResult is NodeResult.DataClassTypeResult)
-            finalizeClassInstanceValue(prjInstanceId, taskId, returned, dataClassResult)
-          }
-        }
-
-        PreludeProjectId.projectId -> {
-          globalWithResult(
-            // 여기서 prjInstanceId로 뭐를 줘야되지?
-            prjInstanceId = PreludeProjectId,
-            localTaskId = classDefineTask,
-            edgeType = TaskEdgeType.TypeDependency
-          ) { dataClassResult ->
-            check(dataClassResult is NodeResult.DataClassTypeResult)
-            finalizeClassInstanceValue(prjInstanceId, taskId, returned, dataClassResult)
-          }
-        }
-
-        else -> {
-          // TODO 이렇게 하는게 맞나..?
-          globalWithResult(
-            prjInstanceId = buildRule.prjInstanceId,
-            localTaskId = buildRule.buildRuleNode.returnType,
-            edgeType = TaskEdgeType.TypeDependency
-          ) { returnTypeResult ->
-            when (returnTypeResult) {
-              is NodeResult.DataClassTypeResult ->
-                finalizeClassInstanceValue(prjInstanceId, taskId, returned, returnTypeResult)
-
-              is NodeResult.TypeResult -> {
-                // TODO 같은 프로젝트 안에서 정의된 타입인 경우에 이렇게 되는건가..? 아 어려워
-                globalWithResult(
-                  prjInstanceId = buildRule.prjInstanceId,
-                  localTaskId = classDefineTask,
-                  edgeType = TaskEdgeType.TypeDependency
-                ) { dataClassResult ->
-                  check(dataClassResult is NodeResult.DataClassTypeResult)
-                  finalizeClassInstanceValue(prjInstanceId, taskId, returned, dataClassResult)
-                }
-              }
-
-              else -> {
-                TODO()
-              }
-            }
-          }
-        }
-      }
-    }
-
-    else -> {
-      withCoercedValue(returned, buildRule.returnType, prjInstanceId) { coerced ->
-        saveResult(prjInstanceId, taskId, NodeResult.ValueResult(coerced))
-      }
-    }
-  }
-
   fun handleBuildRuleReturn(result: BuildRuleReturn): TaskRunResult =
     when (result) {
-      is BuildRuleReturn.ValueReturn -> finishBuildRuleReturnValue(result.value)
+      is BuildRuleReturn.ValueReturn ->
+        saveResult(prjInstanceId, taskId, NodeResult.ValueResult(result.value))
 
       is BuildRuleReturn.FailedReturn ->
         throw IllegalStateException(
@@ -259,58 +134,19 @@ private suspend fun GlobalTaskRunner.callBuildRule(
       BuildRuleReturn.DoneReturn -> throw IllegalStateException()
     }
 
-  val buildContext =
-    getBuildContext(buildRule.buildRuleData, prjInstanceId, buildRule.prjInstanceId, args)
-  return when (val result = buildRule.implMethod.invoke(buildRule.implInstance, buildContext)) {
-    is BibixValue -> finishBuildRuleReturnValue(result)
-    is BuildRuleReturn -> handleBuildRuleReturn(result)
+  return TaskRunResult.LongRunningResult {
+    val buildContext = getBuildContext(
+      buildRuleData = buildRule.buildRuleData,
+      callerProjectInstanceId = prjInstanceId,
+      calleeProjectInstanceId = buildRule.prjInstanceId,
+      args = args
+    )
+    when (val result = buildRule.implMethod.invoke(buildRule.implInstance, buildContext)) {
+      is BibixValue -> saveResult(prjInstanceId, taskId, NodeResult.ValueResult(result))
+      is BuildRuleReturn -> handleBuildRuleReturn(result)
 
-    else ->
-      throw IllegalStateException("Invalid return from build rule")
-  }
-}
-
-private fun GlobalTaskRunner.finalizeClassInstanceValue(
-  prjInstanceId: ProjectInstanceId,
-  taskId: TaskId,
-  value: ClassInstanceValue,
-  dataClass: NodeResult.DataClassTypeResult,
-): TaskRunResult {
-  // TODO 이 내용은 coerce value 쪽으로 옮겨야 함
-  //  -> 지금같은 상태로는 클래스 field로 들어가 있는 class instance에 대해선 이와 같은 보정이 이루어지지 않음
-  // dataClassResult.fields와 defaultValues를 보고 value를 수정해서 반환
-  //  - 빠져있는 optional 필드에 NoneValue 넣기
-  //  - 빠져있는 default value 필드 채우기
-  //  - 필드별 type coercion
-  val fieldMaps = dataClass.fields.toMap()
-  check(fieldMaps.keys.containsAll(value.fieldValues.keys)) { "Unknown fields" }
-
-  val requiredFields = fieldMaps.keys - (dataClass.defaultValues.keys + dataClass.optionalFields)
-  check(value.fieldValues.keys.containsAll(requiredFields)) { "Missing required fields" }
-
-  val defaultFieldTasks = dataClass.defaultValues - value.fieldValues.keys
-
-  return globalWithResults(
-    prjInstanceId = dataClass.prjInstanceId,
-    localTaskIds = defaultFieldTasks.values.toSet(),
-    edgeType = TaskEdgeType.ValueDependency
-  ) { defaultFieldValues ->
-    withCoercedValues(value.fieldValues, fieldMaps, dataClass.prjInstanceId) { coercedFields ->
-      val defaults = defaultFieldTasks.mapValues { (_, taskId) ->
-        (defaultFieldValues.getValue(taskId) as NodeResult.ValueResult).value
-      }
-      val nones = (dataClass.optionalFields - value.fieldValues.keys).associateWith { NoneValue }
-      check(value.fieldValues.keys.intersect(defaults.keys).isEmpty())
-      check(value.fieldValues.keys.intersect(nones.keys).isEmpty())
-      check(defaults.keys.intersect(nones.keys).isEmpty())
-      val fieldValues = coercedFields + defaults + nones
-      check(fieldValues.keys == fieldMaps.keys)
-
-      saveResult(
-        prjInstanceId,
-        taskId,
-        NodeResult.ValueResult(ClassInstanceValue(value.packageName, value.className, fieldValues))
-      )
+      else ->
+        throw IllegalStateException("Invalid return from build rule")
     }
   }
 }

@@ -16,6 +16,7 @@ sealed class NodeResult {
     val buildRuleNode: BuildRuleNode,
     val params: List<Pair<String, BibixType>>,
     val returnType: BibixType,
+    val returnTypePrjInstanceId: ProjectInstanceId,
     val implInstance: Any,
     val implMethod: Method,
     val buildRuleData: BuildRuleData,
@@ -37,15 +38,15 @@ sealed class NodeResult {
 
   data class PluginInstanceProviderResult(val provider: PluginInstanceProvider): NodeResult()
 
-  open class TypeResult(val type: BibixType): NodeResult()
+  open class TypeResult(val prjInstanceId: ProjectInstanceId, val type: BibixType): NodeResult()
 
   class DataClassTypeResult(
-    val prjInstanceId: ProjectInstanceId,
+    prjInstanceId: ProjectInstanceId,
     val packageName: String,
     val className: String,
     val fields: List<Pair<String, BibixType>>,
     val optionalFields: Set<String>,
     val defaultValues: Map<String, TaskId>,
     val classBodyElems: List<TaskId>,
-  ): TypeResult(DataClassType(packageName, className))
+  ): TypeResult(prjInstanceId, DataClassType(packageName, className))
 }

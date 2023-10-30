@@ -2,11 +2,15 @@ package com.giyeok.bibix.graph
 
 import com.giyeok.bibix.ast.BibixAst
 import com.giyeok.bibix.base.BibixType
+import kotlin.reflect.KClass
 
 // TasksGraph에서 TaskId는 스크립트 내에서 해당 task가 정의된 위치로 정의된다.
 // TasksGraph는 스크립트 내의 def들의 관계를 나타낼 뿐이고
 // 실제 해당 task가 어떻게 쓰이고 어떤 값으로 evaluate되는지는 다음 문제.
-data class TaskId(val nodeId: Int, val additionalId: Any? = null)
+data class TaskId(
+  val nodeId: Int,
+  val additionalId: Any? = null
+)
 
 sealed class TaskNode {
   abstract val id: TaskId
@@ -19,7 +23,7 @@ data class BuildRuleNode(
   val returnType: TaskId,
   val implTarget: TaskId,
   val implClassName: String,
-  val implMethodName: String?
+  val implMethodName: String?,
 ): TaskNode() {
   override val id: TaskId = TaskId(def.nodeId)
 }
@@ -97,12 +101,37 @@ data class MergeExprNode(
   val rhs: TaskId
 ): ExprNode<BibixAst.MergeOp>(mergeExpr)
 
+// callExpr에 대한 call + 결과를 최종 타입으로 coercion
+// 어떤 타입으로 coercion 하는지는 현재는 알 수 없음
 data class CallExprNode(
+  val callExpr: BibixAst.CallExpr,
+  val callNode: TaskId,
+  // callee는 callNode(CallExprCallNode)의 callee와 같아야 함
+  val callee: TaskId,
+): ExprNode<BibixAst.CallExpr>(callExpr) {
+  override val id: TaskId = TaskId(callExpr.nodeId, "coercion")
+}
+
+data class CallExprCallNode(
   val callExpr: BibixAst.CallExpr,
   val callee: TaskId,
   val posParams: List<TaskId>,
   val namedParams: Map<String, TaskId>,
 ): ExprNode<BibixAst.CallExpr>(callExpr)
+
+data class CallExprParamCoercionNode(
+  val expr: BibixAst.AstNode,
+  val value: TaskId,
+  val callee: TaskId,
+  val paramPos: Int?,
+  val paramName: String?,
+): TaskNode() {
+  override val id = TaskId(expr.nodeId, Pair(paramPos, paramName))
+
+  init {
+    check((paramPos == null && paramName != null) || (paramPos != null && paramName == null))
+  }
+}
 
 data class ListExprNode(
   val listExpr: BibixAst.ListExpr,
@@ -164,6 +193,14 @@ data class DataClassTypeNode(
   val elems: List<TaskId>
 ): TaskNode() {
   override val id: TaskId = TaskId(defNode.nodeId)
+}
+
+data class ValueCoercionNode(
+  val ast: BibixAst.AstNode,
+  val value: TaskId,
+  val type: TaskId,
+): TaskNode() {
+  override val id: TaskId = TaskId(ast.nodeId, Pair(value, type))
 }
 
 data class ClassElemCastNode(

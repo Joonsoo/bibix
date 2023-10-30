@@ -40,6 +40,8 @@ fun nodeDescription(taskId: TaskId, node: TaskNode, graph: TaskGraph, source: St
     is EnumValueNode -> "enum val\n${node.enumDef.name}.${node.memberName}"
     is ClassElemCastNode -> "class cast\n$nodeSource"
     is NativeImplNode -> "native"
+    is CallExprParamCoercionNode -> "call coercion ${node.paramPos} ${node.paramName}"
+    is ValueCoercionNode -> "val coercion ${node.value} ${node.type}"
   }
   val lines = "${node.id.nodeId} $description".lines()
   val linesTrimmed = if (lines.size <= 1) {

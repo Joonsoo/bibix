@@ -77,12 +77,18 @@ class TaskGraphBuilder(
         }
 
         is BibixAst.DataClassDef -> {
-          val fieldTypes = def.fields.map { field ->
-            field.name to addType(field.typ!!, ctx)
+          val fieldTypes = mutableListOf<Pair<String, TaskId>>()
+          val defaultValues = mutableMapOf<String, TaskId>()
+          def.fields.forEach { field ->
+            val fieldTypeNode = addType(field.typ!!, ctx)
+            fieldTypes.add(field.name to fieldTypeNode)
+            field.defaultValue?.let { defaultValue ->
+              val exprNode = addExpr(defaultValue, ctx)
+              val coercionNode = addNode(ValueCoercionNode(def, exprNode, fieldTypeNode))
+              addEdge(coercionNode, exprNode, TaskEdgeType.ValueDependency)
+              defaultValues[field.name] = coercionNode
+            }
           }
-          val defaultValues = def.fields.mapNotNull { field ->
-            field.defaultValue?.let { field.name to addExpr(it, ctx) }
-          }.toMap()
           val bodyElems = def.body.map { classElem ->
             when (classElem) {
               is BibixAst.ActionRuleDef -> TODO()
@@ -157,10 +163,19 @@ class TaskGraphBuilder(
         }
 
         is BibixAst.BuildRuleDef -> {
-          val paramTypes = def.params.associate { it.name to addType(checkNotNull(it.typ), ctx) }
-          val paramDefaultValues = def.params.mapNotNull { param ->
-            param.defaultValue?.let { param.name to addExpr(it, ctx) }
-          }.toMap()
+          val paramTypes = mutableMapOf<String, TaskId>()
+          val paramDefaultValues = mutableMapOf<String, TaskId>()
+          def.params.forEach { param ->
+            val paramTypeNode = addType(param.typ!!, ctx)
+            paramTypes[param.name] = paramTypeNode
+            param.defaultValue?.let { defaultValue ->
+              val defaultValueNode = addExpr(defaultValue, ctx)
+              val coercionNode = addNode(ValueCoercionNode(def, defaultValueNode, paramTypeNode))
+              addEdge(coercionNode, defaultValueNode, TaskEdgeType.ValueDependency)
+              paramDefaultValues[param.name] = coercionNode
+            }
+          }
+
           val returnType = addType(def.returnType, ctx)
           val implTarget =
             if (ctx.nativeAllowed && def.impl.targetName.tokens == listOf("native")) {
@@ -397,18 +412,27 @@ class TaskGraphBuilder(
         // callee는 rule 혹은 dependency
         val callee =
           lookupResultToId(ctx.nameLookupCtx.lookupName(expr.name), ctx.importInstances)
-        val posParams = expr.params.posParams.map { param ->
-          addExpr(param, ctx)
+        val posParams = expr.params.posParams.mapIndexed { idx, param ->
+          val value = addExpr(param, ctx)
+          val coercion = addNode(CallExprParamCoercionNode(expr.params, value, callee, idx, null))
+          addEdge(coercion, value, TaskEdgeType.ValueDependency)
+          addEdge(coercion, callee, TaskEdgeType.CalleeDependency)
+          coercion
         }
         check(expr.params.namedParams.map { it.name }.hasNoDuplicate())
         val namedParams = expr.params.namedParams.associate { (name, param) ->
-          name to addExpr(param, ctx)
+          val value = addExpr(param, ctx)
+          val coercion = addNode(CallExprParamCoercionNode(expr.params, value, callee, null, name))
+          addEdge(coercion, value, TaskEdgeType.ValueDependency)
+          addEdge(coercion, callee, TaskEdgeType.CalleeDependency)
+          name to coercion
         }
-        val exprNode =
-          addNode(CallExprNode(expr, callee, posParams, namedParams))
-        addEdge(exprNode, callee, TaskEdgeType.CalleeDependency)
-        posParams.forEach { addEdge(exprNode, it, TaskEdgeType.ValueDependency) }
-        namedParams.forEach { addEdge(exprNode, it.value, TaskEdgeType.ValueDependency) }
+        val callNode = addNode(CallExprCallNode(expr, callee, posParams, namedParams))
+        addEdge(callNode, callee, TaskEdgeType.CalleeDependency)
+        posParams.forEach { addEdge(callNode, it, TaskEdgeType.ValueDependency) }
+        namedParams.forEach { addEdge(callNode, it.value, TaskEdgeType.ValueDependency) }
+        val exprNode = addNode(CallExprNode(expr, callNode, callee))
+        addEdge(exprNode, callNode, TaskEdgeType.ValueDependency)
         exprNode
       }
 

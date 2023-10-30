@@ -370,7 +370,7 @@ class GlobalTaskRunner private constructor(
       }
 
       is BibixTypeNode -> {
-        TaskRunResult.ImmediateResult(NodeResult.TypeResult(node.bibixType))
+        TaskRunResult.ImmediateResult(NodeResult.TypeResult(prjInstanceId, node.bibixType))
       }
 
       is BuildRuleNode -> {
@@ -398,7 +398,6 @@ class GlobalTaskRunner private constructor(
             paramName to paramTypeResult.type
           }
           check(returnTypeResult is NodeResult.TypeResult)
-          val returnType = returnTypeResult.type
           val buildRuleData = buildRuleData {
             this.buildRuleSourceId = sourceIdOf(prjInstanceId)
             // TODO RunnableResult에 build_rule, buildRuleClassName,buildRuleMethodName 정보가 들어가야 될 듯
@@ -419,7 +418,8 @@ class GlobalTaskRunner private constructor(
               prjInstanceId = prjInstanceId,
               buildRuleNode = node,
               params = params,
-              returnType = returnType,
+              returnType = returnTypeResult.type,
+              returnTypePrjInstanceId = returnTypeResult.prjInstanceId,
               implInstance = implInstance,
               implMethod = implMethod,
               buildRuleData = buildRuleData,
@@ -434,11 +434,10 @@ class GlobalTaskRunner private constructor(
 
             is NodeResult.ValueResult -> {
               check(impl.value is ClassInstanceValue)
-              // TODO impl.value를 ClassPaths
               withCoercedValue(
-                impl.value,
-                DataClassType("com.giyeok.bibix.plugins.jvm", "ClassPkg"),
-                prjInstanceId,
+                value = impl.value,
+                type = DataClassType("com.giyeok.bibix.plugins.jvm", "ClassPkg"),
+                currentPrjInstanceId = prjInstanceId,
               ) { classPkg ->
                 check(classPkg is ClassInstanceValue)
                 check(classPkg.packageName == "com.giyeok.bibix.plugins.jvm")
@@ -482,6 +481,7 @@ class GlobalTaskRunner private constructor(
             check(typeResult is NodeResult.TypeResult)
             fieldName to typeResult.type
           }
+          // TODO defaultValues에 CallExprParamCoercionNode 추가
           // TODO node.elems 추가. elems는 안 쓸 수도 있으니 그냥 task id 상태로 넘기기
           TaskRunResult.ImmediateResult(
             NodeResult.DataClassTypeResult(
@@ -500,7 +500,9 @@ class GlobalTaskRunner private constructor(
       is EnumTypeNode -> {
         val pkg = globalGraph.projectGraphs.getValue(prjInstanceId.projectId).packageName
         checkNotNull(pkg) { "Package name is not set" }
-        TaskRunResult.ImmediateResult(NodeResult.TypeResult(EnumType(pkg, node.defNode.name)))
+        TaskRunResult.ImmediateResult(
+          NodeResult.TypeResult(prjInstanceId, EnumType(pkg, node.defNode.name))
+        )
       }
 
       is EnumValueNode -> {
@@ -571,7 +573,7 @@ class GlobalTaskRunner private constructor(
                 "list" -> ListType(elemType)
                 else -> throw AssertionError()
               }
-              TaskRunResult.ImmediateResult(NodeResult.TypeResult(type))
+              TaskRunResult.ImmediateResult(NodeResult.TypeResult(prjInstanceId, type))
             }
           }
 
@@ -599,7 +601,7 @@ class GlobalTaskRunner private constructor(
           })
         } else {
           val types = elemTypes.map { (it as NodeResult.TypeResult).type }
-          TaskRunResult.ImmediateResult(NodeResult.TypeResult(UnionType(types)))
+          TaskRunResult.ImmediateResult(NodeResult.TypeResult(prjInstanceId, UnionType(types)))
         }
       }
 
@@ -612,8 +614,6 @@ class GlobalTaskRunner private constructor(
             is ImportedProjectId -> {
               val importerProject =
                 globalGraph.getProjectGraph(prjInstanceId.importer.projectInstanceId.projectId)
-              println(importerProject)
-              prjInstanceId.importer
               val redefs = importerProject.varRedefs[prjInstanceId.importer.taskId] ?: mapOf()
               redefs.mapValues { (_, taskId) ->
                 GlobalTaskId(prjInstanceId.importer.projectInstanceId, taskId)
@@ -636,15 +636,51 @@ class GlobalTaskRunner private constructor(
           ) { result ->
             check(result is NodeResult.ValueResult)
             withCoercedValue(result.value, type, prjInstanceId) {
-              TaskRunResult.ImmediateResult(NodeResult.ValueResult(it))
+              saveResult(taskId, NodeResult.ValueResult(it))
             }
           }
+        }
+      }
+
+      is ValueCoercionNode -> {
+        val value = getValResult(prjInstanceId, node.value)!!
+        val type = getResult(prjInstanceId, node.type)!!
+        check(type is NodeResult.TypeResult)
+
+        withCoercedValue(value, type.type, prjInstanceId) { coerced ->
+          saveResult(taskId, NodeResult.ValueResult(coerced))
+        }
+      }
+
+      is CallExprParamCoercionNode -> {
+        val value = getValResult(prjInstanceId, node.value)!!
+        val callee = getResult(prjInstanceId, node.callee)!!
+
+        val params: List<Pair<String, BibixType>> = when (callee) {
+          is NodeResult.BuildRuleResult -> {
+            // TODO prjInstanceId를 이렇게 주는게 맞을지..
+            callee.params
+          }
+
+          is NodeResult.DataClassTypeResult -> {
+            callee.fields
+          }
+
+          else -> TODO()
+        }
+        val expectedType = if (node.paramPos != null) {
+          params[node.paramPos].second
+        } else {
+          params.find { it.first == node.paramName }!!.second
+        }
+        withCoercedValue(value, expectedType, prjInstanceId) { coerced ->
+          saveResult(taskId, NodeResult.ValueResult(coerced))
         }
       }
     }
 
     if (result is TaskRunResult.ImmediateResult) {
-      saveResult(prjInstanceId, taskId.taskId, result.result)
+      saveResult(taskId, result.result)
     }
     return result
   }
@@ -657,33 +693,8 @@ class GlobalTaskRunner private constructor(
     }
   }
 
-  private fun v(value: BibixValue): TaskRunResult =
+  fun v(value: BibixValue): TaskRunResult =
     TaskRunResult.ImmediateResult(NodeResult.ValueResult(value))
-
-  fun withCoercedValue(
-    value: BibixValue,
-    type: BibixType,
-    prjInstanceId: ProjectInstanceId,
-    func: (BibixValue) -> TaskRunResult
-  ): TaskRunResult {
-    check(value !is NClassInstanceValue)
-    val coercedValue = coerceValue(value, type, prjInstanceId)
-    return func(coercedValue)
-  }
-
-  fun withCoercedValues(
-    values: Map<String, BibixValue>,
-    types: Map<String, BibixType>,
-    prjInstanceId: ProjectInstanceId,
-    func: (Map<String, BibixValue>) -> TaskRunResult
-  ): TaskRunResult {
-    check(types.keys.containsAll(values.keys))
-    check(values.all { it.value !is NClassInstanceValue })
-    val coercedValues = values.mapValues { (name, value) ->
-      coerceValue(value, types.getValue(name), prjInstanceId)
-    }
-    return func(coercedValues)
-  }
 
   fun evaluateExprNode(prjInstanceId: ProjectInstanceId, node: ExprNode<*>): TaskRunResult =
     when (node) {
@@ -740,8 +751,29 @@ class GlobalTaskRunner private constructor(
         v(StringValue(builder.toString()))
       }
 
-      is CallExprNode ->
-        evaluateCallExprNode(prjInstanceId, node)
+      is CallExprCallNode -> evaluateCallExprCallNode(prjInstanceId, node)
+      is CallExprNode -> {
+        val callResult = getResult(prjInstanceId, node.callNode)!!
+        check(callResult is NodeResult.ValueResult)
+        val returned = callResult.value
+
+        // TODO returned가 NClassInstanceValue인 경우 처리
+        //  - returned의 field 안에 있는 NClassInstnaceValue도 처리
+
+        when (val calleeResult = getResult(prjInstanceId, node.callee)!!) {
+          is NodeResult.BuildRuleResult ->
+            withCoercedValue(returned, calleeResult.returnType, prjInstanceId, ::v)
+
+          is NodeResult.DataClassTypeResult ->
+            withCoercedValue(returned, calleeResult.type, prjInstanceId, ::v)
+
+          is NodeResult.TypeResult -> {
+            withCoercedValue(returned, calleeResult.type, prjInstanceId, ::v)
+          }
+
+          else -> TODO()
+        }
+      }
 
       is CastExprNode -> TODO()
 
