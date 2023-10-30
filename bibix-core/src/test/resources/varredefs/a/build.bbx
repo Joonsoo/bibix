@@ -1,5 +1,12 @@
 package com.giyeok.bibix.devtest.varredefs
 
-var zz: string = "789"
+import "../c" as c
 
-class A(x: string = "123", y: string = "456", z: string = zz)
+var zz: string = "789"
+var c.foobar = "123123"
+
+class A(x: string = "123", y: string = "456", z: string = zz, xx: string = c.foobar)
+
+with c.foobar = "234234" {
+  class B(x: string = c.foobar)
+}
