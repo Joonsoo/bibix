@@ -22,7 +22,7 @@ class GlobalTaskGraphTest {
   fun test() {
     runBlocking {
       val mainProjectLocation =
-        BibixProjectLocation(Path.of("bibix-core/src/test/resources").absolute(), "test1.bbx")
+        BibixProjectLocation(Path.of("bibix-core/src/test/resources/varredefs/b").absolute())
       val buildEnv = BuildEnv(OS.Linux("", ""), Architecture.X86_64)
       val repo = BibixRepo.load(mainProjectLocation.projectRoot)
       val runner = GlobalTaskRunner.create(
@@ -34,11 +34,12 @@ class GlobalTaskGraphTest {
         ClassWorld()
       )
 
-      val targetTask = runner.getMainProjectTaskId("abc")
+      val targetTaskNames = setOf("y2")
+      val targetTasks = targetTaskNames.associateWith { runner.getMainProjectTaskId(it) }
 
       val dispatcher = Executors.newFixedThreadPool(4).asCoroutineDispatcher()
 
-      val depsGraph = runner.globalGraph.depsGraphFrom(setOf(targetTask))
+      val depsGraph = runner.globalGraph.depsGraphFrom(targetTasks.values.toSet())
       println(dotGraphFrom(depsGraph))
       println()
 
@@ -100,6 +101,10 @@ class GlobalTaskGraphTest {
         println(depsGraph)
       }
       check(depsGraph.isDone())
+      targetTasks.forEach { name, taskId ->
+        val result = runner.getValResult(taskId.projectInstanceId, taskId.taskId)
+        println("$name = $result")
+      }
     }
   }
 }

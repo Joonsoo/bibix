@@ -2,7 +2,6 @@ package com.giyeok.bibix.graph.runner
 
 import com.giyeok.bibix.base.*
 import com.giyeok.bibix.graph.DataClassNameEntry
-import com.giyeok.bibix.graph.SuperClassNameEntry
 import com.giyeok.bibix.graph.NameEntryFound
 import com.giyeok.bibix.graph.TaskEdgeType
 import java.nio.file.Path
@@ -292,21 +291,60 @@ fun GlobalTaskRunner.correctClassValue(
       TODO()
     }
   }
-  // prjInstanceId가 가리키는 프로젝트에서 classDefineProjectId
-  return globalWithResult(
-    // TODO prjInstanceId
-    prjInstanceId = ImportedProjectId(classDefineProjectId, TODO()),
-    localTaskId = classDefineTask,
-    edgeType = TaskEdgeType.TypeDependency
-  ) { typeResult ->
-    when (typeResult) {
-      is NodeResult.DataClassTypeResult -> {
-        finalizeClassInstanceValue(value, typeResult, prjInstanceId)
-      }
 
-      else -> TODO()
+  // TODO 일단은 임시 땜빵..
+
+  when (classDefineProjectId) {
+    MainProjectId.projectId -> {
+      return globalWithResult(
+        prjInstanceId = MainProjectId,
+        localTaskId = classDefineTask,
+        edgeType = TaskEdgeType.TypeDependency
+      ) { typeResult ->
+        when (typeResult) {
+          is NodeResult.DataClassTypeResult -> {
+            finalizeClassInstanceValue(value, typeResult, prjInstanceId)
+          }
+
+          else -> TODO()
+        }
+      }
+    }
+
+    PreludeProjectId.projectId -> {
+      return globalWithResult(
+        prjInstanceId = PreludeProjectId,
+        localTaskId = classDefineTask,
+        edgeType = TaskEdgeType.TypeDependency
+      ) { typeResult ->
+        when (typeResult) {
+          is NodeResult.DataClassTypeResult -> {
+            finalizeClassInstanceValue(value, typeResult, prjInstanceId)
+          }
+
+          else -> TODO()
+        }
+      }
     }
   }
+
+  val classDefineResults = this.results.filter {
+//    when (val prj = it.key.projectInstanceId) {
+//      MainProjectId -> TODO()
+//      PreludeProjectId -> TODO()
+//      is ImportedProjectId -> {
+//        if (prj.importer.projectInstanceId == prjInstanceId) {
+//          TODO()
+//        }
+//      }
+//    }
+    it.key.projectInstanceId.projectId == classDefineProjectId && it.key.taskId == classDefineTask
+  }
+
+  val classTypeResult = classDefineResults.entries.first().value
+  check(classTypeResult is NodeResult.DataClassTypeResult)
+
+  return finalizeClassInstanceValue(value, classTypeResult, prjInstanceId)
 }
 
 private fun GlobalTaskRunner.finalizeClassInstanceValue(

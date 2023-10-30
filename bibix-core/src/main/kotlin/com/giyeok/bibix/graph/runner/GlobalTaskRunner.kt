@@ -138,7 +138,7 @@ class GlobalTaskRunner private constructor(
   }
 
   private val resultsMutex = Mutex()
-  private val results = mutableMapOf<GlobalTaskId, NodeResult>()
+  val results = mutableMapOf<GlobalTaskId, NodeResult>()
 
   private fun saveResult(
     globalTaskId: GlobalTaskId,
@@ -607,38 +607,37 @@ class GlobalTaskRunner private constructor(
       }
 
       is VarNode -> {
-        withResult(node.typeNode, TaskEdgeType.TypeDependency) { typeResult ->
-          check(typeResult is NodeResult.TypeResult)
-          val type = typeResult.type
+        val typeResult = getResult(prjInstanceId, node.typeNode)!!
+        check(typeResult is NodeResult.TypeResult)
+        val type = typeResult.type
 
-          val varRedefs: Map<String, GlobalTaskId> = when (prjInstanceId) {
-            is ImportedProjectId -> {
-              val importerProject =
-                globalGraph.getProjectGraph(prjInstanceId.importer.projectInstanceId.projectId)
-              val redefs = importerProject.varRedefs[prjInstanceId.importer.taskId] ?: mapOf()
-              redefs.mapValues { (_, taskId) ->
-                GlobalTaskId(prjInstanceId.importer.projectInstanceId, taskId)
-              }
+        val varRedefs: Map<String, GlobalTaskId> = when (prjInstanceId) {
+          is ImportedProjectId -> {
+            val importerProject =
+              globalGraph.getProjectGraph(prjInstanceId.importer.projectInstanceId.projectId)
+            val redefs = importerProject.varRedefs[prjInstanceId.importer.taskId] ?: mapOf()
+            redefs.mapValues { (_, taskId) ->
+              GlobalTaskId(prjInstanceId.importer.projectInstanceId, taskId)
             }
-
-            MainProjectId -> TODO()
-            PreludeProjectId -> TODO()
           }
-          val varValue = varRedefs[node.name]
-            ?: (node.defaultValueNode?.let { GlobalTaskId(prjInstanceId, it) })
-          checkNotNull(varValue) { "var value is not set" }
 
-          // TODO coercion to `type`
+          MainProjectId -> TODO()
+          PreludeProjectId -> TODO()
+        }
+        val varValue = varRedefs[node.name]
+          ?: (node.defaultValueNode?.let { GlobalTaskId(prjInstanceId, it) })
+        checkNotNull(varValue) { "var value is not set" }
 
-          globalWithResult(
-            varValue.projectInstanceId,
-            varValue.taskId,
-            TaskEdgeType.ValueDependency
-          ) { result ->
-            check(result is NodeResult.ValueResult)
-            withCoercedValue(result.value, type, prjInstanceId) {
-              saveResult(taskId, NodeResult.ValueResult(it))
-            }
+        // TODO coercion to `type`
+
+        globalWithResult(
+          varValue.projectInstanceId,
+          varValue.taskId,
+          TaskEdgeType.ValueDependency
+        ) { result ->
+          check(result is NodeResult.ValueResult)
+          withCoercedValue(result.value, type, prjInstanceId) {
+            saveResult(taskId, NodeResult.ValueResult(it))
           }
         }
       }

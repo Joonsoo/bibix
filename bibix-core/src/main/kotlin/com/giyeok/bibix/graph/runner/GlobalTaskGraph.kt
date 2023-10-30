@@ -8,6 +8,7 @@ import com.google.common.collect.BiMap
 import com.google.common.collect.HashBiMap
 import kotlinx.coroutines.runBlocking
 import java.nio.file.Path
+import kotlin.io.path.absolute
 import kotlin.io.path.readText
 
 // import된 프로젝트들을 포함해서 여러 프로젝트들의 TaskGraph를 통합
@@ -147,10 +148,10 @@ class GlobalTaskGraph private constructor(
 }
 
 data class BibixProjectLocation(val projectRoot: Path, val scriptName: String) {
-  constructor(projectRoot: Path): this(projectRoot, "build.bbx")
+  constructor(projectRoot: Path): this(projectRoot.normalize().absolute(), "build.bbx")
 
   init {
-    check(projectRoot.isAbsolute)
+    check(projectRoot.normalize() == projectRoot && projectRoot.isAbsolute)
   }
 
   suspend fun readScript(): String =

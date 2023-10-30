@@ -1,0 +1,11 @@
+import "../a" as a
+
+var a.zz = "xyz"
+
+x = a.A() // A("123", "456", "xyz")
+x2 = a.zz // "xyz"
+
+with a.zz = "abc" {
+  y = a.A() // A("123", "456", "abc")
+  y2 = a.zz // "abc"
+}

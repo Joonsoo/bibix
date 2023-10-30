@@ -11,7 +11,11 @@ fun TaskId.toNodeId(projectInstanceId: ProjectInstanceId?): String =
   }
 
 fun TaskId.toNodeId(): String =
-  if (this.additionalId == null) "n${this.nodeId}" else "n${this.nodeId}_${this.additionalId.hashCode().absoluteValue}"
+  if (this.additionalId == null) {
+    "n${this.nodeId}_${this.nodeType.simpleName}"
+  } else {
+    "n${this.nodeId}_${this.nodeType.simpleName}_${this.additionalId.hashCode().absoluteValue}"
+  }
 
 fun GlobalTaskId.toNodeId(): String {
   val projectInstanceId = when (val instanceId = this.projectInstanceId) {

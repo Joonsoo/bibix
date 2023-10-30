@@ -2,6 +2,7 @@ package com.giyeok.bibix.graph
 
 import com.giyeok.bibix.ast.BibixAst
 import com.giyeok.bibix.base.BibixType
+import com.giyeok.bibix.graph.runner.ProjectInstanceId
 import kotlin.reflect.KClass
 
 // TasksGraph에서 TaskId는 스크립트 내에서 해당 task가 정의된 위치로 정의된다.
@@ -30,9 +31,7 @@ data class BuildRuleNode(
 }
 
 data class NativeImplNode(
-  val implTargetName: BibixAst.Name,
-//  val className: String,
-//  val methodName: String?
+  val implTargetName: BibixAst.Name
 ): TaskNode() {
   override val id: TaskId = TaskId(implTargetName.nodeId, this::class)
 }
@@ -204,7 +203,7 @@ data class DataClassTypeNode(
   val defNode: BibixAst.DataClassDef,
   val fieldTypes: List<Pair<String, TaskId>>,
   val defaultValues: Map<String, TaskId>,
-  val elems: List<TaskId>
+  val elems: List<TaskId>,
 ): TaskNode() {
   override val id: TaskId = TaskId(defNode.nodeId, this::class)
 }

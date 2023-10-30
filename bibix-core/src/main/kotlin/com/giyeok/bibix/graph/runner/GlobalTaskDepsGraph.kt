@@ -52,6 +52,9 @@ class GlobalTaskDepsGraph(
       edgesByEnd[node]?.forEach { edge ->
         finishEdge(edge)
       }
+      if (isDone) {
+        ready.close()
+      }
     }
   }
 
@@ -72,8 +75,6 @@ class GlobalTaskDepsGraph(
 
     if (endIsReady) {
       notifyNewReady(edge.start)
-    } else if (isDone) {
-      ready.close()
     }
   }
 
