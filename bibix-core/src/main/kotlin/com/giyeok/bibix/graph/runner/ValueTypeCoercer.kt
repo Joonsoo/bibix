@@ -1,7 +1,8 @@
 package com.giyeok.bibix.graph.runner
 
 import com.giyeok.bibix.base.*
-import com.giyeok.bibix.graph.ClassNameEntry
+import com.giyeok.bibix.graph.DataClassNameEntry
+import com.giyeok.bibix.graph.SuperClassNameEntry
 import com.giyeok.bibix.graph.NameEntryFound
 import com.giyeok.bibix.graph.TaskEdgeType
 import java.nio.file.Path
@@ -283,7 +284,7 @@ fun GlobalTaskRunner.correctClassValue(
   val classDefineTask = when (val lookupResult =
     classDefineGraph.nameLookupTable.lookupName(listOf(value.className))) {
     is NameEntryFound -> {
-      check(lookupResult.entry is ClassNameEntry)
+      check(lookupResult.entry is DataClassNameEntry)
       lookupResult.entry.id
     }
 

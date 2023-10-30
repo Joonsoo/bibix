@@ -48,8 +48,8 @@ class NameLookupTable(
 
           is BibixAst.TargetDef -> addName(def.name, TargetNameEntry(def))
           is BibixAst.ActionDef -> addName(def.name, ActionNameEntry(def))
-          is BibixAst.DataClassDef -> addName(def.name, ClassNameEntry(def))
-          is BibixAst.SuperClassDef -> addName(def.name, ClassNameEntry(def))
+          is BibixAst.DataClassDef -> addName(def.name, DataClassNameEntry(def))
+          is BibixAst.SuperClassDef -> addName(def.name, SuperClassNameEntry(def))
           is BibixAst.EnumDef -> addName(def.name, EnumNameEntry(def))
           is BibixAst.VarDef -> addName(def.name, VarNameEntry(def))
           is BibixAst.VarRedefs -> Unit // do nothing

@@ -9,6 +9,7 @@ import kotlin.reflect.KClass
 // 실제 해당 task가 어떻게 쓰이고 어떤 값으로 evaluate되는지는 다음 문제.
 data class TaskId(
   val nodeId: Int,
+  val nodeType: KClass<out TaskNode>,
   val additionalId: Any? = null
 )
 
@@ -25,7 +26,7 @@ data class BuildRuleNode(
   val implClassName: String,
   val implMethodName: String?,
 ): TaskNode() {
-  override val id: TaskId = TaskId(def.nodeId)
+  override val id: TaskId = TaskId(def.nodeId, this::class)
 }
 
 data class NativeImplNode(
@@ -33,7 +34,19 @@ data class NativeImplNode(
 //  val className: String,
 //  val methodName: String?
 ): TaskNode() {
-  override val id: TaskId = TaskId(implTargetName.nodeId)
+  override val id: TaskId = TaskId(implTargetName.nodeId, this::class)
+}
+
+data class ActionDefNode(
+  val def: BibixAst.ActionDef
+): TaskNode() {
+  override val id: TaskId = TaskId(def.nodeId, this::class)
+}
+
+data class ActionRuleDefNode(
+  val def: BibixAst.ActionRuleDef
+): TaskNode() {
+  override val id: TaskId = TaskId(def.nodeId, this::class)
 }
 
 data class ImportInstanceNode(
@@ -42,7 +55,7 @@ data class ImportInstanceNode(
   val varRedefs: Map<String, TaskId>
 ): TaskNode() {
   override val id: TaskId =
-    TaskId(importNode.nodeId, Pair(importNode.additionalId, withDef?.nodeId ?: 0))
+    TaskId(importNode.nodeId, this::class, Pair(importNode.additionalId, withDef?.nodeId ?: 0))
 }
 
 data class ImportNode(
@@ -50,29 +63,30 @@ data class ImportNode(
   val importSource: TaskId,
   val importName: List<String>?
 ): TaskNode() {
-  override val id: TaskId = TaskId(import.nodeId)
+  override val id: TaskId = TaskId(import.nodeId, this::class)
 }
 
 data class PreloadedPluginNode(val name: String): TaskNode() {
-  override val id: TaskId = TaskId(0, this)
+  override val id: TaskId = TaskId(0, this::class, this.name)
 }
 
 data class MemberAccessNode(val target: TaskId, val remainingNames: List<String>):
   TaskNode() {
-  override val id: TaskId = TaskId(target.nodeId, Pair(target.additionalId, remainingNames))
+  override val id: TaskId =
+    TaskId(target.nodeId, this::class, Pair(target.additionalId, remainingNames))
 }
 
 data class PreludeTaskNode(val name: String): TaskNode() {
-  override val id: TaskId = TaskId(0, this)
+  override val id: TaskId = TaskId(0, this::class, this.name)
 }
 
 data class PreludeMemberNode(val preludeName: String, val remainingNames: List<String>):
   TaskNode() {
-  override val id: TaskId = TaskId(0, this)
+  override val id: TaskId = TaskId(0, this::class, this)
 }
 
 data class TargetNode(val def: BibixAst.TargetDef, val valueNode: TaskId): TaskNode() {
-  override val id: TaskId = TaskId(def.nodeId)
+  override val id: TaskId = TaskId(def.nodeId, this::class)
 }
 
 data class VarNode(
@@ -80,13 +94,13 @@ data class VarNode(
   val typeNode: TaskId,
   val defaultValueNode: TaskId?
 ): TaskNode() {
-  override val id: TaskId = TaskId(def.nodeId)
+  override val id: TaskId = TaskId(def.nodeId, this::class)
 
   val name get() = def.name
 }
 
 sealed class ExprNode<T: BibixAst.Expr>(val expr: T): TaskNode() {
-  override val id: TaskId = TaskId(expr.nodeId)
+  override val id: TaskId = TaskId(expr.nodeId, this::class)
 }
 
 data class CastExprNode(
@@ -109,7 +123,7 @@ data class CallExprNode(
   // callee는 callNode(CallExprCallNode)의 callee와 같아야 함
   val callee: TaskId,
 ): ExprNode<BibixAst.CallExpr>(callExpr) {
-  override val id: TaskId = TaskId(callExpr.nodeId, "coercion")
+  override val id: TaskId = TaskId(callExpr.nodeId, this::class)
 }
 
 data class CallExprCallNode(
@@ -126,7 +140,7 @@ data class CallExprParamCoercionNode(
   val paramPos: Int?,
   val paramName: String?,
 ): TaskNode() {
-  override val id = TaskId(expr.nodeId, Pair(paramPos, paramName))
+  override val id = TaskId(expr.nodeId, this::class, Pair(paramPos, paramName))
 
   init {
     check((paramPos == null && paramName != null) || (paramPos != null && paramName == null))
@@ -182,8 +196,8 @@ data class NamedTupleNode(
 ): ExprNode<BibixAst.NamedTupleExpr>(namedTupleExpr)
 
 
-sealed class TypeNode<T: BibixAst.TypeExpr>(val typeExpr: T): TaskNode() {
-  override val id: TaskId = TaskId(typeExpr.nodeId)
+sealed class TypeNode<T: BibixAst.TypeExpr>(typeExpr: T): TaskNode() {
+  override val id: TaskId = TaskId(typeExpr.nodeId, this::class)
 }
 
 data class DataClassTypeNode(
@@ -192,7 +206,7 @@ data class DataClassTypeNode(
   val defaultValues: Map<String, TaskId>,
   val elems: List<TaskId>
 ): TaskNode() {
-  override val id: TaskId = TaskId(defNode.nodeId)
+  override val id: TaskId = TaskId(defNode.nodeId, this::class)
 }
 
 data class ValueCoercionNode(
@@ -200,7 +214,7 @@ data class ValueCoercionNode(
   val value: TaskId,
   val type: TaskId,
 ): TaskNode() {
-  override val id: TaskId = TaskId(ast.nodeId, Pair(value, type))
+  override val id: TaskId = TaskId(ast.nodeId, this::class, Pair(value, type))
 }
 
 data class ClassElemCastNode(
@@ -208,18 +222,18 @@ data class ClassElemCastNode(
   val castType: TaskId,
   val castExpr: TaskId
 ): TaskNode() {
-  override val id: TaskId = TaskId(castDef.nodeId)
+  override val id: TaskId = TaskId(castDef.nodeId, this::class)
 }
 
 data class SuperClassTypeNode(
   val defNode: BibixAst.SuperClassDef,
   val subClasses: Map<String, TaskId>
 ): TaskNode() {
-  override val id: TaskId = TaskId(defNode.nodeId)
+  override val id: TaskId = TaskId(defNode.nodeId, this::class)
 }
 
 data class EnumTypeNode(val defNode: BibixAst.EnumDef): TaskNode() {
-  override val id: TaskId = TaskId(defNode.nodeId)
+  override val id: TaskId = TaskId(defNode.nodeId, this::class)
 }
 
 data class EnumValueNode(
@@ -227,7 +241,7 @@ data class EnumValueNode(
   val memberName: String,
   val enumTypeNode: TaskId
 ): TaskNode() {
-  override val id: TaskId = TaskId(enumDef.nodeId, memberName)
+  override val id: TaskId = TaskId(enumDef.nodeId, this::class, memberName)
 }
 
 data class CollectionTypeNode(
@@ -239,7 +253,7 @@ data class TypeNameNode(val name: BibixAst.Name, val typeNode: TaskId):
   TypeNode<BibixAst.Name>(name)
 
 data class BibixTypeNode(val bibixType: BibixType): TaskNode() {
-  override val id: TaskId = TaskId(0, bibixType)
+  override val id: TaskId = TaskId(0, this::class, bibixType)
 }
 
 data class TupleTypeNode(

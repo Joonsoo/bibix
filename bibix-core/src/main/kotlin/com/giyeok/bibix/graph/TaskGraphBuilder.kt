@@ -109,9 +109,12 @@ class TaskGraphBuilder(
 
         is BibixAst.SuperClassDef -> {
           val subClasses = def.subs.associate { subClassName ->
-            val entry = ctx.nameLookupCtx.table.names[subClassName]
-            check(entry is ClassNameEntry) { "Invalid subclass name" }
-            subClassName to TaskId(entry.def.nodeId)
+            val entryId = when (val entry = ctx.nameLookupCtx.table.names[subClassName]) {
+              is SuperClassNameEntry -> entry.id
+              is DataClassNameEntry -> entry.id
+              else -> throw IllegalStateException("Invalid subclass name")
+            }
+            subClassName to entryId
           }
           val classNode = addNode(SuperClassTypeNode(def, subClasses))
           subClasses.forEach { addEdge(classNode, it.value, TaskEdgeType.ClassInherit) }
@@ -277,13 +280,14 @@ class TaskGraphBuilder(
           val lookupResult = ctx.nameLookupCtx.lookupName(type.tokens, type)
           if (lookupResult is NameEntryFound) {
             when (val entry = lookupResult.entry) {
-              is ClassNameEntry -> {
+              is DataClassNameEntry -> {
                 checkNotNull(packageName)
-                val classType = when (val classDef = entry.def) {
-                  is BibixAst.DataClassDef -> DataClassType(packageName, classDef.name)
-                  is BibixAst.SuperClassDef -> SuperClassType(packageName, classDef.name)
-                }
-                addNode(BibixTypeNode(classType))
+                addNode(BibixTypeNode(DataClassType(packageName, entry.def.name)))
+              }
+
+              is SuperClassNameEntry -> {
+                checkNotNull(packageName)
+                addNode(BibixTypeNode(SuperClassType(packageName, entry.def.name)))
               }
 
               is EnumNameEntry -> {
@@ -553,7 +557,8 @@ class TaskGraphBuilder(
     return exprNode
   }
 
-  fun addNode(node: TaskNode): TaskId {
+  private fun addNode(node: TaskNode): TaskId {
+    check(node::class == node.id.nodeType)
     val existing = nodes[node.id]
     // ktjvm.library 같은 것들 때문에 두번 이상 등록될 수는 있지만 내용은 같아야 함
     check(existing == null || existing == node)

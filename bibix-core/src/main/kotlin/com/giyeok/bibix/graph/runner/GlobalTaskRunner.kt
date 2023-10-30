@@ -115,7 +115,8 @@ class GlobalTaskRunner private constructor(
           is ActionNameEntry -> TODO()
           is ActionRuleNameEntry -> TODO()
           is BuildRuleNameEntry -> TODO()
-          is ClassNameEntry -> TODO()
+          is DataClassNameEntry -> TODO()
+          is SuperClassNameEntry -> TODO()
           is EnumNameEntry -> TODO()
           is ImportNameEntry -> TODO()
           is VarNameEntry -> TODO()
@@ -677,6 +678,9 @@ class GlobalTaskRunner private constructor(
           saveResult(taskId, NodeResult.ValueResult(coerced))
         }
       }
+
+      is ActionDefNode -> TODO()
+      is ActionRuleDefNode -> TODO()
     }
 
     if (result is TaskRunResult.ImmediateResult) {
