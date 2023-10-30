@@ -2,6 +2,11 @@ package com.giyeok.bibix.graph
 
 import com.giyeok.bibix.ast.BibixAst
 
+fun nodeIdsMap(ast: BibixAst.AstNode): Map<Int, BibixAst.AstNode> {
+  val nodeIdsMap = mutableMapOf<Int, BibixAst.AstNode>()
+  traverseAst(ast) { nodeIdsMap[it.nodeId] = it }
+  return nodeIdsMap
+}
 
 fun traverseAst(ast: BibixAst.AstNode, visitor: (BibixAst.AstNode) -> Unit) {
   visitor(ast)

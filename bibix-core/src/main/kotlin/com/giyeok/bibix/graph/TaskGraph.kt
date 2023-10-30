@@ -1,6 +1,7 @@
 package com.giyeok.bibix.graph
 
 import com.giyeok.bibix.ast.BibixAst
+import com.giyeok.bibix.graph2.BuildGraph
 
 
 // TaskGraph는 프로젝트 하나(즉 스크립트 하나)의 내용만 포함한다.

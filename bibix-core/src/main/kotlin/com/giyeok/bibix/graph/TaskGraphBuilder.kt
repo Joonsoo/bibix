@@ -11,6 +11,11 @@ class TaskGraphBuilder(
   val edges: MutableList<TaskEdge> = mutableListOf(),
   val scriptVars: MutableMap<String, TaskId> = mutableMapOf(),
   val varRedefs: MutableMap<TaskId, Map<String, TaskId>> = mutableMapOf(),
+
+  val buildRules: MutableMap<List<String>, BuildRuleNode> = mutableMapOf(),
+  val dataClassDefs: MutableMap<List<String>, DataClassTypeNode> = mutableMapOf(),
+  val superClassDefs: MutableMap<List<String>, SuperClassTypeNode> = mutableMapOf(),
+  val targets: MutableMap<List<String>, TaskId> = mutableMapOf(),
 ) {
   private val edgePairs: MutableMap<Pair<TaskId, TaskId>, TaskEdge> =
     edges.associateBy { Pair(it.start, it.end) }.toMutableMap()
@@ -484,11 +489,10 @@ class TaskGraphBuilder(
       is BibixAst.MemberAccess -> {
         fun firstTarget(
           expr: BibixAst.MemberAccess,
-          names: List<String>
         ): Pair<BibixAst.Expr?, List<String>> =
           when (val target = expr.target) {
             is BibixAst.MemberAccess -> {
-              val (firstTarget, memberNames) = firstTarget(target, names)
+              val (firstTarget, memberNames) = firstTarget(target)
               Pair(firstTarget, memberNames + expr.name)
             }
 
@@ -499,7 +503,7 @@ class TaskGraphBuilder(
             else -> Pair(target, listOf(expr.name))
           }
 
-        val (firstTarget, memberNames) = firstTarget(expr, listOf())
+        val (firstTarget, memberNames) = firstTarget(expr)
         if (firstTarget == null) {
           val lookupResult = ctx.nameLookupCtx.lookupName(memberNames, expr)
           val firstTargetNode = lookupResultToId(lookupResult, ctx.importInstances)
