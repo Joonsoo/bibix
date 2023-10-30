@@ -5,7 +5,6 @@ import com.giyeok.bibix.base.*
 
 class BuildGraphBuilder(
   val packageName: String?,
-  val astNodes: Map<Int, BibixAst.AstNode>,
 
   val targets: MutableMap<BibixName, ExprNodeId> = mutableMapOf(),
   val buildRules: MutableMap<BibixName, BuildRuleDef> = mutableMapOf(),
@@ -129,14 +128,22 @@ class BuildGraphBuilder(
           def.varRedefs.forEach { redef ->
             when (val lookupResult = ctx.nameLookupCtx.lookupName(redef.nameTokens)) {
               is NameInImport -> {
+                val importName = lookupResult.importEntry.name
                 val redefsMap =
-                  importInstances.getOrPut(lookupResult.importEntry.name) { mutableMapOf() }
-                    .getOrPut(contextId) { mutableMapOf() }
+                  importInstances.getOrPut(importName) { mutableMapOf() }
+                    .getOrPut(contextId) {
+                      // ctx.importInstances의 내용을 반영하도록
+                      // toMutableMap()을 실행하면 기존 것의 copy가 만들어짐
+                      val currentRedefs =
+                        importInstances[importName]?.get(ctx.importInstances[importName] ?: 0)
+                          ?.toMutableMap()
+                      currentRedefs ?: mutableMapOf()
+                    }
+
                 val varName = BibixName(lookupResult.remaining)
                 check(varName !in redefsMap) { "Duplicate var redef: $varName" }
                 redefsMap[varName] = addExpr(redef.redefValue, ctx)
-
-                redefed[lookupResult.importEntry.name] = contextId
+                redefed[importName] = contextId
               }
 
               else -> throw IllegalStateException()
@@ -177,17 +184,15 @@ class BuildGraphBuilder(
           is DataClassNameEntry -> LocalDataClassRef(entry.name, entry.def)
           is TargetNameEntry -> LocalTargetRef(entry.name, entry.def)
           is VarNameEntry -> LocalVarRef(entry.name, entry.def)
-          else -> TODO()
+          else -> throw IllegalStateException()
         }
       }
 
-      is NameFromPrelude -> {
+      is NameFromPrelude ->
         ImportedExprFromPrelude(lookupResult.name, lookupResult.remaining)
-      }
 
-      is NameOfPreloadedPlugin -> {
+      is NameOfPreloadedPlugin ->
         ImportedExprFromPreloaded(lookupResult.name, BibixName(lookupResult.remaining))
-      }
 
       is NameInImport -> {
         ImportedExpr(
@@ -430,7 +435,6 @@ class BuildGraphBuilder(
 
   fun build(): BuildGraph = BuildGraph(
     packageName = packageName,
-    astNodes = astNodes,
     targets = targets,
     buildRules = buildRules,
     vars = vars,

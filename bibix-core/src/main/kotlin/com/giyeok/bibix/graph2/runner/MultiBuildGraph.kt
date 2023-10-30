@@ -1,0 +1,59 @@
+package com.giyeok.bibix.graph2.runner
+
+import com.giyeok.bibix.graph2.BibixProjectLocation
+import com.giyeok.bibix.graph2.BuildGraph
+import com.google.common.collect.BiMap
+import com.google.common.collect.HashBiMap
+
+class MultiBuildGraph private constructor(
+  val projectGraphs: MutableMap<Int, BuildGraph>,
+  val projectPackages: MutableMap<String, Int>,
+  val projectLocations: BiMap<Int, BibixProjectLocation>,
+  val projectSources: MutableMap<Int, String>,
+) {
+  constructor(projects: Map<Int, ProjectInfo>): this(
+    projects.mapValues { it.value.graph }.toMutableMap(),
+    projects.mapNotNull { (projectId, projectInfo) ->
+      projectInfo.graph.packageName?.let { it to projectId }
+    }.toMap().toMutableMap(),
+    HashBiMap.create(projects.filter { it.value.location != null }
+      .mapValues { it.value.location!! }),
+    projects.mapValues { it.value.scriptSource }.toMutableMap()
+  )
+
+  data class ProjectInfo(
+    val location: BibixProjectLocation?,
+    val scriptSource: String,
+    val graph: BuildGraph,
+  )
+
+  private fun nextProjectId(): Int = projectGraphs.keys.max() + 1
+
+  fun addProject(
+    location: BibixProjectLocation,
+    graph: BuildGraph,
+    source: String
+  ): Int {
+    val projectId = nextProjectId()
+
+    check(projectId !in projectGraphs)
+    check(!projectLocations.containsValue(location))
+    projectGraphs[projectId] = graph
+    if (graph.packageName != null) {
+      check(graph.packageName !in projectPackages)
+      projectPackages[graph.packageName] = projectId
+    }
+    projectLocations[projectId] = location
+    projectSources[projectId] = source
+    return projectId
+  }
+
+  fun getProjectGraph(projectId: Int): BuildGraph =
+    projectGraphs[projectId] ?: throw IllegalStateException()
+
+  fun getProjectIdByLocation(location: BibixProjectLocation): Int? =
+    projectLocations.inverse()[location]
+
+  fun getProjectIdByPackageName(packageName: String): Int? =
+    projectPackages[packageName]
+}

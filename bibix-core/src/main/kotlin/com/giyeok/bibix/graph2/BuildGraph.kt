@@ -5,7 +5,6 @@ import com.giyeok.bibix.graph.nodeIdsMap
 
 class BuildGraph(
   val packageName: String?,
-  val astNodes: Map<Int, BibixAst.AstNode>,
 
   val targets: Map<BibixName, ExprNodeId>,
   val buildRules: Map<BibixName, BuildRuleDef>,
@@ -29,12 +28,23 @@ class BuildGraph(
       script: BibixAst.BuildScript,
       preloadedPluginNames: Set<String>,
       preludeNames: Set<String>
+    ): BuildGraph = fromDefs(
+      packageName = script.packageName?.tokens?.joinToString(".") { it.trim() },
+      defs = script.defs,
+      preloadedPluginNames = preloadedPluginNames,
+      preludeNames = preludeNames,
+      nativeAllowed = false
+    )
+
+    fun fromDefs(
+      packageName: String?,
+      defs: List<BibixAst.Def>,
+      preloadedPluginNames: Set<String>,
+      preludeNames: Set<String>,
+      nativeAllowed: Boolean,
     ): BuildGraph {
-      val builder = BuildGraphBuilder(
-        script.packageName?.tokens?.joinToString(".") { it.trim() },
-        nodeIdsMap(script),
-      )
-      val nameLookupTable = NameLookupTable.fromScript(script)
+      val builder = BuildGraphBuilder(packageName)
+      val nameLookupTable = NameLookupTable.fromDefs(defs)
       val ctx = GraphBuildContext(
         NameLookupContext(
           table = nameLookupTable,
@@ -44,9 +54,9 @@ class BuildGraph(
         ),
         mapOf(),
         thisRefAllowed = false,
-        nativeAllowed = false,
+        nativeAllowed = nativeAllowed,
       )
-      builder.addDefs(script.defs, ctx, true)
+      builder.addDefs(defs, ctx, true)
 
       return builder.build()
     }
