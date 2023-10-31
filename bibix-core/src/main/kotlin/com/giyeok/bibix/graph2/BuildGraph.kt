@@ -1,7 +1,6 @@
 package com.giyeok.bibix.graph2
 
 import com.giyeok.bibix.ast.BibixAst
-import com.giyeok.bibix.graph.nodeIdsMap
 
 class BuildGraph(
   val packageName: String?,
@@ -17,12 +16,13 @@ class BuildGraph(
   val importAlls: Map<BibixName, ImportAllDef>,
   val importFroms: Map<BibixName, ImportFromDef>,
   // import name -> import instace id (0 혹은 DefsWithVarRedefs의 nodeId) -> var name -> redef expr node id
-  val importInstances: Map<BibixName, Map<Int, Map<BibixName, ExprNodeId>>>,
+  val varRedefs: Map<BibixName, Map<Int, VarCtx>>,
 
   val exprGraph: ExprGraph,
   val typeGraph: TypeGraph,
   val exprTypeEdges: Set<ExprTypeEdge>,
 ) {
+  data class VarCtx(val parentCtxId: Int, val redefs: Map<BibixName, ExprNodeId>)
   companion object {
     fun fromScript(
       script: BibixAst.BuildScript,
@@ -64,6 +64,8 @@ class BuildGraph(
 }
 
 data class BibixName(val tokens: List<String>) {
+  constructor(name: String): this(name.split('.').map { it.trim() })
+
   override fun toString(): String = tokens.joinToString(".")
 }
 

@@ -36,14 +36,18 @@ data class EnumValue(
   override fun toString(): String = "enum $packageName:$enumName($value)"
 }
 
-data class ListValue(val values: List<BibixValue>): BibixValue() {
+sealed class CollectionValue: BibixValue() {
+  abstract val values: List<BibixValue>
+}
+
+data class ListValue(override val values: List<BibixValue>): CollectionValue() {
   constructor(vararg values: BibixValue): this(values.toList())
 
   override fun toString(): String = "[${values.joinToString()}]"
 }
 
-class SetValue(elems: List<BibixValue>): BibixValue() {
-  val values = elems.distinct()
+class SetValue(elems: List<BibixValue>): CollectionValue() {
+  override val values = elems.distinct()
 
   constructor(vararg values: BibixValue): this(values.toList())
 

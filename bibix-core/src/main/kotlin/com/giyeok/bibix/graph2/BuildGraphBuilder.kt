@@ -15,8 +15,8 @@ class BuildGraphBuilder(
 
   val importAlls: MutableMap<BibixName, ImportAllDef> = mutableMapOf(),
   val importFroms: MutableMap<BibixName, ImportFromDef> = mutableMapOf(),
-  // import name -> import instace id (0 혹은 DefsWithVarRedefs의 nodeId) -> var name -> redef expr node id
-  val importInstances: MutableMap<BibixName, MutableMap<Int, MutableMap<BibixName, ExprNodeId>>> = mutableMapOf(),
+  // import name -> import instace id (0 혹은 DefsWithVarRedefs의 nodeId) -> VarCtxBuilder(var name -> redef expr node id)
+  val importInstances: MutableMap<BibixName, MutableMap<Int, VarCtxBuilder>> = mutableMapOf(),
 
   val exprNodes: MutableMap<ExprNodeId, ExprGraphNode> = mutableMapOf(),
   val exprEdges: MutableSet<ExprGraphEdge> = mutableSetOf(),
@@ -24,11 +24,18 @@ class BuildGraphBuilder(
   val typeNodes: MutableMap<TypeNodeId, TypeGraphNode> = mutableMapOf(),
   val typeEdges: MutableSet<TypeGraphEdge> = mutableSetOf(),
 ) {
+  class VarCtxBuilder(val parentCtxId: Int, val redefs: MutableMap<BibixName, ExprNodeId>)
+
   fun addDefs(defs: List<BibixAst.Def>, ctx: GraphBuildContext, isRoot: Boolean) {
     defs.forEach { def ->
       when (def) {
-        is BibixAst.ActionDef -> TODO()
-        is BibixAst.ActionRuleDef -> TODO()
+        is BibixAst.ActionDef -> {
+          // TODO
+        }
+
+        is BibixAst.ActionRuleDef -> {
+          // TODO
+        }
 
         is BibixAst.BuildRuleDef -> {
           val implTarget =
@@ -109,9 +116,10 @@ class BuildGraphBuilder(
             when (val lookupResult = ctx.nameLookupCtx.lookupName(redef.nameTokens)) {
               is NameInImport -> {
                 check(isRoot) { "var redef only can be placed in the root. Consider using with statement instead" }
-                val redefsMap =
+                val redefsCtx =
                   importInstances.getOrPut(lookupResult.importEntry.name) { mutableMapOf() }
-                    .getOrPut(0) { mutableMapOf() }
+                    .getOrPut(0) { VarCtxBuilder(0, mutableMapOf()) }
+                val redefsMap = redefsCtx.redefs
                 val varName = BibixName(lookupResult.remaining)
                 check(varName !in redefsMap) { "Duplicate var redef: $varName" }
                 redefsMap[varName] = addExpr(redef.redefValue, ctx)
@@ -129,20 +137,19 @@ class BuildGraphBuilder(
             when (val lookupResult = ctx.nameLookupCtx.lookupName(redef.nameTokens)) {
               is NameInImport -> {
                 val importName = lookupResult.importEntry.name
-                val redefsMap =
+                val currentVarCtxId = ctx.importInstances[importName] ?: 0
+
+                val redefsCtx =
                   importInstances.getOrPut(importName) { mutableMapOf() }
-                    .getOrPut(contextId) {
-                      // ctx.importInstances의 내용을 반영하도록
-                      // toMutableMap()을 실행하면 기존 것의 copy가 만들어짐
-                      val currentRedefs =
-                        importInstances[importName]?.get(ctx.importInstances[importName] ?: 0)
-                          ?.toMutableMap()
-                      currentRedefs ?: mutableMapOf()
-                    }
+                    .getOrPut(contextId) { VarCtxBuilder(currentVarCtxId, mutableMapOf()) }
+                val redefsMap = redefsCtx.redefs
 
                 val varName = BibixName(lookupResult.remaining)
                 check(varName !in redefsMap) { "Duplicate var redef: $varName" }
                 redefsMap[varName] = addExpr(redef.redefValue, ctx)
+
+                // ctx.importInstances의 내용을 반영하도록
+
                 redefed[importName] = contextId
               }
 
@@ -443,7 +450,11 @@ class BuildGraphBuilder(
     enums = enums,
     importAlls = importAlls,
     importFroms = importFroms,
-    importInstances = importInstances,
+    varRedefs = importInstances.mapValues { (_, ctxMap) ->
+      ctxMap.mapValues { (_, ctx) ->
+        BuildGraph.VarCtx(ctx.parentCtxId, ctx.redefs)
+      }
+    },
     exprGraph = ExprGraph(exprNodes, exprEdges),
     typeGraph = TypeGraph(typeNodes, typeEdges),
     exprTypeEdges = exprTypeEdges

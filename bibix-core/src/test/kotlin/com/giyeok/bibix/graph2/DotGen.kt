@@ -33,7 +33,7 @@ fun nodeDescription(id: ExprNodeId, node: ExprGraphNode, graph: ExprGraph, sourc
     is LocalTargetRef -> "local target ${node.name}"
     is LocalVarRef -> "local var ${node.name}"
     is LocalEnumValue -> "local enum ${node.enumType} ${node.enumValue}"
-    is ImportedExpr -> "imported ${node.import} ${node.importInstanceId} ${node.name}"
+    is ImportedExpr -> "imported ${node.import} ${node.varCtxId} ${node.name}"
     is ImportedExprFromPreloaded -> "imported preloaded ${node.pluginName} ${node.name}"
     is ImportedExprFromPrelude -> "imported prelude ${node.name} ${node.remaining}"
     is ValueCastNode -> "cast"

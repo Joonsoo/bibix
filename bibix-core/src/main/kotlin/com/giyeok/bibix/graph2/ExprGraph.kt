@@ -50,7 +50,7 @@ data class ImportedExprFromPrelude(val name: String, val remaining: List<String>
 
 data class ImportedExpr(
   val import: BibixName,
-  val importInstanceId: Int,
+  val varCtxId: Int,
   val name: BibixName
 ): ExprGraphNode() {
   override val id: ExprNodeId get() = ExprNodeId.AnyNodeId(this)
