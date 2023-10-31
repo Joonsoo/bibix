@@ -116,7 +116,7 @@ class Coercer(
 
           is NamedTupleValue -> {
             check(type.elemTypes.size == value.pairs.size)
-            val elems = value.values().zip(type.elemTypes).map {
+            val elems = value.values.zip(type.elemTypes).map {
               tryCoerce(task, context, it.first, it.second)
             }
             if (!elems.contains(null)) {
@@ -132,22 +132,22 @@ class Coercer(
         when (value) {
           is NamedTupleValue -> {
             check(type.pairs.size == value.pairs.size)
-            check(type.names() == value.names())
-            val elems = value.values().zip(type.valueTypes()).map {
+            check(type.names == value.names)
+            val elems = value.values.zip(type.valueTypes).map {
               tryCoerce(task, context, it.first, it.second)
             }
             if (!elems.contains(null)) {
-              return NamedTupleValue(type.names().zip(elems.requireNoNulls()))
+              return NamedTupleValue(type.names.zip(elems.requireNoNulls()))
             }
           }
 
           is TupleValue -> {
             check(type.pairs.size == value.values.size)
-            val elems = value.values.zip(type.valueTypes()).map {
+            val elems = value.values.zip(type.valueTypes).map {
               tryCoerce(task, context, it.first, it.second)
             }
             if (!elems.contains(null)) {
-              return NamedTupleValue(type.names().zip(elems.requireNoNulls()))
+              return NamedTupleValue(type.names.zip(elems.requireNoNulls()))
             }
           }
 
@@ -167,7 +167,7 @@ class Coercer(
 
           is NamedTupleValue -> {
             val classDef = findDataClassDef(task, type.packageName, type.className)
-            if (classDef.params.map { it.name }.containsAll(value.names())) {
+            if (classDef.params.map { it.name }.containsAll(value.names)) {
               TODO()
             }
           }

@@ -82,8 +82,8 @@ data class NamedTupleValue(val pairs: List<Pair<String, BibixValue>>): BibixValu
 
   fun getValue(name: String) = valuesMap.getValue(name)
 
-  fun names() = pairs.map { it.first }
-  fun values() = pairs.map { it.second }
+  val names get() = pairs.map { it.first }
+  val values get() = pairs.map { it.second }
 
   override fun toString(): String =
     "(${pairs.joinToString() { p -> "${p.first}: ${p.second}" }})"

@@ -185,7 +185,7 @@ private fun GlobalTaskRunner.castValue(
 
       is NamedTupleValue -> {
         check(type.elemTypes.size == value.pairs.size)
-        withCastedValuePairs(value.values().zip(type.elemTypes), ctxId) { coerced ->
+        withCastedValuePairs(value.values.zip(type.elemTypes), ctxId) { coerced ->
           v(TupleValue(coerced))
         }
       }
@@ -196,16 +196,16 @@ private fun GlobalTaskRunner.castValue(
     is NamedTupleType -> when (value) {
       is NamedTupleValue -> {
         check(type.pairs.size == value.pairs.size)
-        check(type.names() == value.names())
-        withCastedValuePairs(value.values().zip(type.valueTypes()), ctxId) { coerced ->
-          v(NamedTupleValue(type.names().zip(coerced)))
+        check(type.names == value.names)
+        withCastedValuePairs(value.values.zip(type.valueTypes), ctxId) { coerced ->
+          v(NamedTupleValue(type.names.zip(coerced)))
         }
       }
 
       is TupleValue -> {
         check(type.pairs.size == value.values.size)
-        withCastedValuePairs(value.values.zip(type.valueTypes()), ctxId) { coerced ->
-          v(NamedTupleValue(type.names().zip(coerced)))
+        withCastedValuePairs(value.values.zip(type.valueTypes), ctxId) { coerced ->
+          v(NamedTupleValue(type.names.zip(coerced)))
         }
       }
 

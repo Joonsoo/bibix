@@ -105,9 +105,8 @@ class BuildGraphRunner(
         EvalExpr(buildTask.projectId, exprNodeId, buildTask.importInstanceId, null)
       ) { result ->
         when (result) {
-          is BuildTaskResult.ValueResult ->
-            BuildTaskResult.ValueResult(result.value)
-
+          is BuildTaskResult.ValueResult -> result
+          is BuildTaskResult.TypeCastFailResult -> throw IllegalStateException()
           else -> throw AssertionError()
         }
       }
@@ -138,6 +137,7 @@ class BuildGraphRunner(
       val evaluator = ExprEvaluator(
         projectId = buildTask.projectId,
         projectPackageName = multiGraph.projectPackages[buildTask.projectId],
+        projectLocation = multiGraph.projectLocations[buildTask.projectId],
         varRedefs = buildGraph.varRedefs,
         exprGraph = buildGraph.exprGraph,
         importInstanceId = buildTask.importInstanceId,
@@ -145,6 +145,27 @@ class BuildGraphRunner(
         thisValue = buildTask.thisValue
       )
       evaluator.evaluateExpr(buildTask.exprNodeId)
+    }
+
+    is TypeCastValue -> {
+      ValueCaster(
+        buildTask.projectId,
+        multiGraph.projectLocations[buildTask.projectId],
+        buildTask.importInstanceId
+      ) { thisValue ->
+        val buildGraph = multiGraph.getProjectGraph(buildTask.projectId)
+
+        ExprEvaluator(
+          projectId = buildTask.projectId,
+          projectPackageName = multiGraph.projectPackages[buildTask.projectId],
+          projectLocation = multiGraph.projectLocations[buildTask.projectId],
+          varRedefs = buildGraph.varRedefs,
+          exprGraph = buildGraph.exprGraph,
+          importInstanceId = buildTask.importInstanceId,
+          buildContextGen = BuildContextGen(multiGraph, buildEnv, fileSystem, repo),
+          thisValue = thisValue
+        )
+      }.castValue(buildTask.value, buildTask.type)
     }
 
     is EvalBuildRule -> {

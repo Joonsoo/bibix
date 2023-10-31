@@ -8,7 +8,7 @@ import java.nio.file.Path
 import kotlin.io.path.absolutePathString
 
 
-private fun cannotCoerce(value: BibixValue, type: BibixType): Nothing =
+private fun cannotCast(value: BibixValue, type: BibixType): Nothing =
   throw IllegalStateException("Cannot coerce $value to $type")
 
 fun GlobalTaskRunner.withCoercedValue(
@@ -103,7 +103,7 @@ private fun GlobalTaskRunner.coerceValue(
     AnyType -> v(value)
     BooleanType -> when (value) {
       is BooleanValue -> v(value)
-      else -> cannotCoerce(value, type)
+      else -> cannotCast(value, type)
     }
 
     StringType -> when (value) {
@@ -111,7 +111,7 @@ private fun GlobalTaskRunner.coerceValue(
       is PathValue -> v(StringValue(value.path.absolutePathString()))
       is FileValue -> v(StringValue(value.file.absolutePathString()))
       is DirectoryValue -> v(StringValue(value.directory.absolutePathString()))
-      else -> cannotCoerce(value, type)
+      else -> cannotCast(value, type)
     }
 
     PathType -> when (value) {
@@ -119,7 +119,7 @@ private fun GlobalTaskRunner.coerceValue(
       is FileValue -> v(PathValue(value.file))
       is DirectoryValue -> v(PathValue(value.directory))
       is StringValue -> v(PathValue(fileFromString(value.value)))
-      else -> cannotCoerce(value, type)
+      else -> cannotCast(value, type)
     }
 
     FileType -> when (value) {
@@ -127,14 +127,14 @@ private fun GlobalTaskRunner.coerceValue(
       // TODO file value, directory value는 build rule에 주기 직전에 존재하는지/타입 확인하기
       is PathValue -> v(FileValue(value.path))
       is StringValue -> v(FileValue(fileFromString(value.value)))
-      else -> cannotCoerce(value, type)
+      else -> cannotCast(value, type)
     }
 
     DirectoryType -> when (value) {
       is DirectoryValue -> v(value)
       is PathValue -> v(DirectoryValue(value.path))
       is StringValue -> v(DirectoryValue(fileFromString(value.value)))
-      else -> cannotCoerce(value, type)
+      else -> cannotCast(value, type)
     }
 
     is ListType -> {
@@ -151,7 +151,7 @@ private fun GlobalTaskRunner.coerceValue(
             v(ListValue(coerced))
           }
 
-        else -> cannotCoerce(value, type)
+        else -> cannotCast(value, type)
       }
     }
 
@@ -169,7 +169,7 @@ private fun GlobalTaskRunner.coerceValue(
             v(SetValue(coerced))
           }
 
-        else -> cannotCoerce(value, type)
+        else -> cannotCast(value, type)
       }
     }
 
@@ -183,31 +183,31 @@ private fun GlobalTaskRunner.coerceValue(
 
       is NamedTupleValue -> {
         check(type.elemTypes.size == value.pairs.size)
-        withCoercedValuePairs(value.values().zip(type.elemTypes), prjInstanceId) { coerced ->
+        withCoercedValuePairs(value.values.zip(type.elemTypes), prjInstanceId) { coerced ->
           v(TupleValue(coerced))
         }
       }
 
-      else -> cannotCoerce(value, type)
+      else -> cannotCast(value, type)
     }
 
     is NamedTupleType -> when (value) {
       is NamedTupleValue -> {
         check(type.pairs.size == value.pairs.size)
-        check(type.names() == value.names())
-        withCoercedValuePairs(value.values().zip(type.valueTypes()), prjInstanceId) { coerced ->
-          v(NamedTupleValue(type.names().zip(coerced)))
+        check(type.names == value.names)
+        withCoercedValuePairs(value.values.zip(type.valueTypes), prjInstanceId) { coerced ->
+          v(NamedTupleValue(type.names.zip(coerced)))
         }
       }
 
       is TupleValue -> {
         check(type.pairs.size == value.values.size)
-        withCoercedValuePairs(value.values.zip(type.valueTypes()), prjInstanceId) { coerced ->
-          v(NamedTupleValue(type.names().zip(coerced)))
+        withCoercedValuePairs(value.values.zip(type.valueTypes), prjInstanceId) { coerced ->
+          v(NamedTupleValue(type.names.zip(coerced)))
         }
       }
 
-      else -> cannotCoerce(value, type)
+      else -> cannotCast(value, type)
     }
 
     is DataClassType -> {
@@ -219,7 +219,7 @@ private fun GlobalTaskRunner.coerceValue(
             correctClassValue(value, prjInstanceId)
           } else {
             // TODO
-            cannotCoerce(value, type)
+            cannotCast(value, type)
           }
         }
 
@@ -231,7 +231,7 @@ private fun GlobalTaskRunner.coerceValue(
       when (value) {
         is ClassInstanceValue -> {
           if (type.packageName != value.packageName) {
-            cannotCoerce(value, type)
+            cannotCast(value, type)
           }
           // TODO value의 타입이 super type의 sub type이 맞는지 확인
           // TODO field들에 대한 처리
@@ -250,26 +250,26 @@ private fun GlobalTaskRunner.coerceValue(
           null
         }
       }
-      firstMatch ?: cannotCoerce(value, type)
+      firstMatch ?: cannotCast(value, type)
     }
 
     NoneType ->
-      if (value is NoneValue) v(value) else cannotCoerce(value, type)
+      if (value is NoneValue) v(value) else cannotCast(value, type)
 
     ActionRuleDefType ->
-      if (value is ActionRuleDefValue) v(value) else cannotCoerce(value, type)
+      if (value is ActionRuleDefValue) v(value) else cannotCast(value, type)
 
     BuildRuleDefType ->
-      if (value is BuildRuleDefValue) v(value) else cannotCoerce(value, type)
+      if (value is BuildRuleDefValue) v(value) else cannotCast(value, type)
 
     TypeType ->
-      if (value is TypeValue) v(value) else cannotCoerce(value, type)
+      if (value is TypeValue) v(value) else cannotCast(value, type)
 
     is EnumType ->
       if (value is EnumValue && value.packageName == type.packageName && value.enumName == type.enumName) {
         v(value)
       } else {
-        cannotCoerce(value, type)
+        cannotCast(value, type)
       }
   }
 }

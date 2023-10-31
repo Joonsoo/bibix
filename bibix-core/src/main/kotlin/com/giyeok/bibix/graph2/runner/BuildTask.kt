@@ -21,6 +21,13 @@ data class EvalExpr(
   val thisValue: ClassInstanceValue?
 ): BuildTask()
 
+data class TypeCastValue(
+  val value: BibixValue,
+  val type: BibixType,
+  val projectId: Int,
+  val importInstanceId: Int
+): BuildTask()
+
 data class EvalBuildRule(
   val projectId: Int,
   val importInstanceId: Int,
@@ -86,6 +93,8 @@ sealed class BuildTaskResult {
     val dataClassDef: DataClassDef,
     val fieldTypes: List<Pair<String, BibixType>>,
   ): FinalResult()
+
+  class TypeCastFailResult(val value: BibixValue, val type: BibixType): FinalResult()
 
   data class WithResult(
     val task: BuildTask,

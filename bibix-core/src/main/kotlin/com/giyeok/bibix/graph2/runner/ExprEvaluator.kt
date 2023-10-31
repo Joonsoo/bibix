@@ -8,6 +8,7 @@ import java.lang.StringBuilder
 class ExprEvaluator(
   val projectId: Int,
   val projectPackageName: String?,
+  val projectLocation: BibixProjectLocation?,
   val varRedefs: Map<BibixName, Map<Int, BuildGraph.VarCtx>>,
   val exprGraph: ExprGraph,
   val importInstanceId: Int,
@@ -16,6 +17,18 @@ class ExprEvaluator(
 ) {
   private fun evalTask(exprNodeId: ExprNodeId) =
     EvalExpr(projectId, exprNodeId, importInstanceId, thisValue)
+
+  private fun copy(thisValue: ClassInstanceValue?) =
+    ExprEvaluator(
+      projectId,
+      projectPackageName,
+      projectLocation,
+      varRedefs,
+      exprGraph,
+      importInstanceId,
+      buildContextGen,
+      thisValue
+    )
 
   fun evaluateExpr(exprNodeId: ExprNodeId): BuildTaskResult =
     when (val exprNode = exprGraph.nodes.getValue(exprNodeId)) {
@@ -208,21 +221,21 @@ class ExprEvaluator(
           check(valueResult is BuildTaskResult.ValueResult)
           val value = valueResult.value
 
+          // value를 callee의 returnType으로 cast
           when (val callee = results[0]) {
             is BuildTaskResult.BuildRuleResult -> {
-              // TODO value를 callee의 returnType으로 cast
               BuildTaskResult.WithResult(
                 EvalType(callee.projectId, callee.buildRuleDef.returnType)
               ) { typeResult ->
                 check(typeResult is BuildTaskResult.TypeResult)
 
-                ValueCaster(projectId, projectPackageName, varRedefs, exprGraph, importInstanceId)
+                ValueCaster(projectId, projectLocation, importInstanceId) { this.copy(it) }
                   .castValue(value, typeResult.type)
               }
             }
 
             is BuildTaskResult.DataClassResult -> {
-              ValueCaster(projectId, projectPackageName, varRedefs, exprGraph, importInstanceId)
+              ValueCaster(projectId, projectLocation, importInstanceId) { this.copy(it) }
                 .castValue(value, DataClassType(callee.packageName, callee.name.toString()))
             }
 
@@ -270,7 +283,7 @@ class ExprEvaluator(
           BuildTaskResult.WithResult(EvalType(calleeProjectId, paramTypeNodeId)) { result ->
             check(result is BuildTaskResult.TypeResult)
 
-            ValueCaster(projectId, projectPackageName, varRedefs, exprGraph, importInstanceId)
+            ValueCaster(projectId, projectLocation, importInstanceId) { this.copy(it) }
               .castValue(value, result.type)
           }
         }
@@ -320,7 +333,18 @@ class ExprEvaluator(
         BuildTaskResult.WithResult(ImportFromPrelude(exprNode.name, exprNode.remaining)) { it }
       }
 
-      is ValueCastNode -> TODO()
+      is ValueCastNode ->
+        BuildTaskResult.WithResultList(
+          listOf(evalTask(exprNode.value), EvalType(projectId, exprNode.type))
+        ) { results ->
+          val valueResult = results[0]
+          check(valueResult is BuildTaskResult.ValueResult)
+          val typeResult = results[1]
+          check(typeResult is BuildTaskResult.TypeResult)
+
+          ValueCaster(projectId, projectLocation, importInstanceId) { this.copy(it) }
+            .castValue(valueResult.value, typeResult.type)
+        }
     }
 
   private fun handleImportResult(
