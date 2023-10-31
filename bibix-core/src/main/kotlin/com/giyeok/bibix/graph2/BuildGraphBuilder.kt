@@ -135,6 +135,7 @@ class BuildGraphBuilder(
           val redefed = mutableMapOf<BibixName, Int>()
           def.varRedefs.forEach { redef ->
             when (val lookupResult = ctx.nameLookupCtx.lookupName(redef.nameTokens)) {
+              // TODO NameOfPreloadedPlugin 처리
               is NameInImport -> {
                 val importName = lookupResult.importEntry.name
                 val currentVarCtxId = ctx.importInstances[importName] ?: 0
@@ -199,7 +200,11 @@ class BuildGraphBuilder(
         ImportedExprFromPrelude(lookupResult.name, lookupResult.remaining)
 
       is NameOfPreloadedPlugin ->
-        ImportedExprFromPreloaded(lookupResult.name, BibixName(lookupResult.remaining))
+        ImportedExprFromPreloaded(
+          lookupResult.name,
+          ctx.importInstances[BibixName(lookupResult.name)] ?: 0,
+          BibixName(lookupResult.remaining)
+        )
 
       is NameInImport -> {
         ImportedExpr(

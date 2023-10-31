@@ -78,9 +78,7 @@ data class BuildRuleDef(
   val implTarget: ExprNodeId?,
   val implClassName: String,
   val implMethodName: String?
-) {
-  val paramsMap = params.toMap()
-}
+)
 
 data class VarDef(
   val def: BibixAst.VarDef,

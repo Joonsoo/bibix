@@ -21,7 +21,19 @@ data class EvalExpr(
   val thisValue: ClassInstanceValue?
 ): BuildTask()
 
+data class EvalBuildRule(
+  val projectId: Int,
+  val importInstanceId: Int,
+  val name: BibixName
+): BuildTask()
+
 data class EvalVar(
+  val projectId: Int,
+  val importInstanceId: Int,
+  val name: BibixName
+): BuildTask()
+
+data class EvalDataClass(
   val projectId: Int,
   val importInstanceId: Int,
   val name: BibixName
@@ -29,11 +41,11 @@ data class EvalVar(
 
 data class EvalType(val projectId: Int, val typeNodeId: TypeNodeId): BuildTask()
 
-data class EvalDataClass(val projectId: Int, val varCtxId: Int, val name: BibixName): BuildTask()
-
-data class RunBuildRule(val args: Map<String, BibixValue>): BuildTask()
-
 data class Import(val projectId: Int, val varCtxId: Int, val importName: BibixName): BuildTask()
+
+data class ImportFromPrelude(val name: String, val remainingNames: List<String>): BuildTask()
+
+data class ImportPreloaded(val pluginName: String): BuildTask()
 
 data class NewImportInstance(
   val projectId: Int,
@@ -57,8 +69,10 @@ sealed class BuildTaskResult {
   data class BuildRuleResult(
     val projectId: Int,
     val name: BibixName,
-    // default field들을 evaluate할 때 사용할 var ctx id
-    val varCtxId: Int,
+    // default field들을 evaluate할 때 사용할 import instance id
+    val importInstanceId: Int,
+    val buildRuleDef: BuildRuleDef,
+    val paramTypes: List<Pair<String, BibixType>>,
     val implInstance: Any,
     val implMethod: Method
   ): FinalResult()
@@ -68,8 +82,8 @@ sealed class BuildTaskResult {
     val packageName: String,
     val name: BibixName,
     // default field들을 evaluate할 때 사용할 var ctx id
-    val varCtxId: Int,
-    val def: DataClassDef,
+    val importInstanceId: Int,
+    val dataClassDef: DataClassDef,
     val fieldTypes: List<Pair<String, BibixType>>,
   ): FinalResult()
 

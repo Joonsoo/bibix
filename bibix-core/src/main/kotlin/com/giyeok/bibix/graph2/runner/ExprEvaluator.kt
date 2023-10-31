@@ -11,6 +11,7 @@ class ExprEvaluator(
   val varRedefs: Map<BibixName, Map<Int, BuildGraph.VarCtx>>,
   val exprGraph: ExprGraph,
   val importInstanceId: Int,
+  val buildContextGen: BuildContextGen,
   val thisValue: ClassInstanceValue?,
 ) {
   private fun evalTask(exprNodeId: ExprNodeId) =
@@ -147,17 +148,43 @@ class ExprEvaluator(
 
           when (callee) {
             is BuildTaskResult.BuildRuleResult -> {
-              TODO()
+              val requiredParams = callee.buildRuleDef.def.params
+                .filter { param -> !param.optional && param.defaultValue == null }
+                .map { it.name }.toSet()
+              organizeParams(
+                callee.paramTypes,
+                requiredParams,
+                callee.projectId,
+                callee.importInstanceId,
+                callee.buildRuleDef.paramDefaultValues,
+                posArgs,
+                namedArgs,
+              ) { args ->
+                val buildContext = buildContextGen.generate(projectId, callee.projectId, args)
+                BuildTaskResult.LongRunning {
+                  val result = callee.implMethod.invoke(callee.implInstance, buildContext)
+
+                  when (result) {
+                    is BibixValue -> BuildTaskResult.ValueResult(result)
+                    is BuildRuleReturn.ValueReturn ->
+                      BuildTaskResult.ValueResult(result.value)
+
+                    else -> TODO()
+                  }
+                }
+              }
             }
 
             is BuildTaskResult.DataClassResult -> {
-              val fields = callee.def.def.fields.associateBy { it.name }
+              val requiredFields = callee.dataClassDef.def.fields
+                .filter { field -> !field.optional && field.defaultValue == null }
+                .map { it.name }.toSet()
               organizeParams(
                 callee.fieldTypes,
-                fields.filter { !it.value.optional && it.value.defaultValue == null }.keys,
+                requiredFields,
                 callee.projectId,
-                callee.varCtxId,
-                callee.def.fieldDefaultValues,
+                callee.importInstanceId,
+                callee.dataClassDef.fieldDefaultValues,
                 posArgs,
                 namedArgs
               ) { args ->
@@ -177,20 +204,26 @@ class ExprEvaluator(
           listOf(evalTask(exprNode.callee), evalTask(exprNode.callNode))
         ) { results ->
           check(results.size == 2)
-          val callee = results[0]
           val valueResult = results[1]
           check(valueResult is BuildTaskResult.ValueResult)
           val value = valueResult.value
 
-          when (callee) {
+          when (val callee = results[0]) {
             is BuildTaskResult.BuildRuleResult -> {
               // TODO value를 callee의 returnType으로 cast
-              TODO()
+              BuildTaskResult.WithResult(
+                EvalType(callee.projectId, callee.buildRuleDef.returnType)
+              ) { typeResult ->
+                check(typeResult is BuildTaskResult.TypeResult)
+
+                ValueCaster(projectId, projectPackageName, varRedefs, exprGraph, importInstanceId)
+                  .castValue(value, typeResult.type)
+              }
             }
 
             is BuildTaskResult.DataClassResult -> {
-              // TODO value를 callee의 data class type으로 cast
-              BuildTaskResult.ValueResult(value)
+              ValueCaster(projectId, projectPackageName, varRedefs, exprGraph, importInstanceId)
+                .castValue(value, DataClassType(callee.packageName, callee.name.toString()))
             }
 
             else -> throw IllegalStateException()
@@ -198,7 +231,50 @@ class ExprEvaluator(
         }
       }
 
-      is CallExprParamCoercionNode -> TODO()
+      is CallExprParamCoercionNode -> {
+        BuildTaskResult.WithResultList(
+          listOf(evalTask(exprNode.value), evalTask(exprNode.callee))
+        ) { results ->
+          val valueResult = results[0]
+          check(valueResult is BuildTaskResult.ValueResult)
+          val value = valueResult.value
+
+          val calleeProjectId: Int
+          val paramTypeNodeId: TypeNodeId
+          when (val callee = results[1]) {
+            is BuildTaskResult.BuildRuleResult -> {
+              calleeProjectId = callee.projectId
+              paramTypeNodeId = when (val loc = exprNode.paramLocation) {
+                is ParamLocation.NamedParam ->
+                  callee.buildRuleDef.params.getValue(loc.name)
+
+                is ParamLocation.PosParam ->
+                  callee.buildRuleDef.params.getValue(callee.buildRuleDef.def.params[loc.idx].name)
+              }
+            }
+
+            is BuildTaskResult.DataClassResult -> {
+              calleeProjectId = callee.projectId
+              paramTypeNodeId = when (val loc = exprNode.paramLocation) {
+                is ParamLocation.NamedParam ->
+                  callee.dataClassDef.fields.getValue(loc.name)
+
+                is ParamLocation.PosParam ->
+                  callee.dataClassDef.fields.getValue(callee.dataClassDef.def.fields[loc.idx].name)
+              }
+            }
+
+            else -> throw IllegalStateException()
+          }
+
+          BuildTaskResult.WithResult(EvalType(calleeProjectId, paramTypeNodeId)) { result ->
+            check(result is BuildTaskResult.TypeResult)
+
+            ValueCaster(projectId, projectPackageName, varRedefs, exprGraph, importInstanceId)
+              .castValue(value, result.type)
+          }
+        }
+      }
 
       is LocalBuildRuleRef -> TODO()
       is LocalDataClassRef -> TODO()
@@ -221,71 +297,72 @@ class ExprEvaluator(
           result
         }
 
-      is ImportedExpr -> importedExpr(exprNode)
+      is ImportedExpr ->
+        BuildTaskResult.WithResult(Import(projectId, importInstanceId, exprNode.import)) { result ->
+          check(result is BuildTaskResult.ImportResult)
 
-      is ImportedExprFromPreloaded -> TODO()
-      is ImportedExprFromPrelude -> TODO()
+          handleImportResult(result, exprNode.import, exprNode.varCtxId, exprNode.name)
+        }
+
+      is ImportedExprFromPreloaded ->
+        BuildTaskResult.WithResult(ImportPreloaded(exprNode.pluginName)) { result ->
+          check(result is BuildTaskResult.ImportResult)
+
+          handleImportResult(
+            result,
+            BibixName(exprNode.pluginName),
+            exprNode.varCtxId,
+            exprNode.name
+          )
+        }
+
+      is ImportedExprFromPrelude -> {
+        BuildTaskResult.WithResult(ImportFromPrelude(exprNode.name, exprNode.remaining)) { it }
+      }
+
       is ValueCastNode -> TODO()
     }
 
-  private fun importedExpr(exprNode: ImportedExpr) =
-    BuildTaskResult.WithResult(Import(projectId, importInstanceId, exprNode.import)) { result ->
-      check(result is BuildTaskResult.ImportResult)
-
-      fun Map<Int, BuildGraph.VarCtx>.mergeForCtxId(varCtxId: Int): Map<BibixName, ExprNodeId> {
-        val varCtx = this[varCtxId]
-        if (varCtx == null) {
-          check(varCtxId == 0)
-          return mapOf()
-        }
-        val parent = if (varCtxId == 0 && varCtx.parentCtxId == 0) {
-          mapOf()
-        } else {
-          mergeForCtxId(varCtx.parentCtxId)
-        }
-        return parent + varCtx.redefs
+  private fun handleImportResult(
+    result: BuildTaskResult.ImportResult,
+    import: BibixName,
+    varCtxId: Int,
+    importedMemberName: BibixName
+  ): BuildTaskResult {
+    fun Map<Int, BuildGraph.VarCtx>.mergeForCtxId(varCtxId: Int): Map<BibixName, ExprNodeId> {
+      val varCtx = this[varCtxId]
+      if (varCtx == null) {
+        check(varCtxId == 0)
+        return mapOf()
       }
-
-      val newRedefs = varRedefs[exprNode.import]?.mergeForCtxId(exprNode.varCtxId) ?: mapOf()
-      val newGlobalRedefs = newRedefs.mapValues { (_, exprNodeId) ->
-        GlobalExprNodeId(projectId, importInstanceId, exprNodeId)
+      val parent = if (varCtxId == 0 && varCtx.parentCtxId == 0) {
+        mapOf()
+      } else {
+        mergeForCtxId(varCtx.parentCtxId)
       }
-
-      BuildTaskResult.WithResult(NewImportInstance(result.projectId, newGlobalRedefs)) { instance ->
-        check(instance is BuildTaskResult.ImportInstanceResult)
-
-        val target = result.graph.targets[exprNode.name]
-        val varDef = result.graph.vars[exprNode.name]
-        val dataClass = result.graph.dataClasses[exprNode.name]
-
-        // TODO import는 어떻게 하지? import까지 밖에서 쓸 수 있게 할 필요는 없지 않을까?
-
-        val followingTask = when {
-          target != null -> {
-            check(varDef == null && dataClass == null)
-            EvalTarget(result.projectId, instance.importInstanceId, exprNode.name)
-          }
-
-          varDef != null -> {
-            check(dataClass == null)
-            EvalVar(result.projectId, instance.importInstanceId, exprNode.name)
-          }
-
-          dataClass != null -> {
-            EvalDataClass(result.projectId, instance.importInstanceId, exprNode.name)
-          }
-
-          else -> throw IllegalStateException()
-        }
-        BuildTaskResult.WithResult(followingTask) { it }
-      }
+      return parent + varCtx.redefs
     }
+
+    val newRedefs = varRedefs[import]?.mergeForCtxId(varCtxId) ?: mapOf()
+    val newGlobalRedefs = newRedefs.mapValues { (_, exprNodeId) ->
+      GlobalExprNodeId(projectId, importInstanceId, exprNodeId)
+    }
+
+    return BuildTaskResult.WithResult(
+      NewImportInstance(result.projectId, newGlobalRedefs)
+    ) { instance ->
+      check(instance is BuildTaskResult.ImportInstanceResult)
+      check(result.projectId == instance.projectId)
+
+      lookupExprValue(result.graph, importedMemberName, result.projectId, instance.importInstanceId)
+    }
+  }
 
   private fun organizeParams(
     paramTypes: List<Pair<String, BibixType>>,
     requiredParamNames: Set<String>,
     defaultValueProjectId: Int,
-    defaultValueVarCtxId: Int,
+    defaultValueImportInstanceId: Int,
     defaultValues: Map<String, ExprNodeId>,
     posArgs: List<BibixValue>,
     namedArgs: Map<String, BibixValue>,
@@ -304,7 +381,7 @@ class ExprEvaluator(
 
     val defaultArgTasks = unspecifiedParamNames.mapNotNull { paramName ->
       defaultValues[paramName]?.let {
-        paramName to EvalExpr(defaultValueProjectId, it, defaultValueVarCtxId, null)
+        paramName to EvalExpr(defaultValueProjectId, it, defaultValueImportInstanceId, null)
       }
     }
     val noneArgs = (unspecifiedParamNames - (defaultArgTasks.map { it.first }.toSet()))
@@ -341,4 +418,42 @@ fun BibixValue.followMemberNames(memberNames: List<String>): BibixValue {
 
     else -> throw IllegalStateException()
   }
+}
+
+fun lookupExprValue(
+  graph: BuildGraph,
+  name: BibixName,
+  projectId: Int,
+  importInstanceId: Int
+): BuildTaskResult.WithResult {
+  val target = graph.targets[name]
+  val buildRule = graph.buildRules[name]
+  val varDef = graph.vars[name]
+  val dataClass = graph.dataClasses[name]
+
+  // TODO import는 어떻게 하지? import까지 밖에서 쓸 수 있게 할 필요는 없지 않을까?
+
+  val followingTask = when {
+    target != null -> {
+      check(buildRule == null && varDef == null && dataClass == null)
+      EvalTarget(projectId, importInstanceId, name)
+    }
+
+    buildRule != null -> {
+      check(varDef == null && dataClass == null)
+      EvalBuildRule(projectId, importInstanceId, name)
+    }
+
+    varDef != null -> {
+      check(dataClass == null)
+      EvalVar(projectId, importInstanceId, name)
+    }
+
+    dataClass != null -> {
+      EvalDataClass(projectId, importInstanceId, name)
+    }
+
+    else -> throw IllegalStateException()
+  }
+  return BuildTaskResult.WithResult(followingTask) { it }
 }

@@ -1,6 +1,7 @@
 package com.giyeok.bibix.graph2.runner
 
 import com.giyeok.bibix.ast.BibixParser
+import com.giyeok.bibix.base.BuildContext
 import com.giyeok.bibix.base.BuildEnv
 import com.giyeok.bibix.base.StringValue
 import com.giyeok.bibix.graph.NameLookupTable
@@ -14,6 +15,7 @@ import com.google.common.collect.BiMap
 import com.google.common.collect.HashBiMap
 import com.google.common.collect.ImmutableBiMap
 import org.codehaus.plexus.classworlds.ClassWorld
+import java.nio.file.FileSystem
 import kotlin.io.path.absolute
 
 class BuildGraphRunner(
@@ -24,6 +26,7 @@ class BuildGraphRunner(
   val preloadedPluginInstanceProviders: Map<Int, PluginInstanceProvider>,
   val preludeNames: Set<String>,
   val buildEnv: BuildEnv,
+  val fileSystem: FileSystem,
   val repo: BibixRepo,
   val classPkgRunner: ClassPkgRunner,
 ) {
@@ -33,6 +36,7 @@ class BuildGraphRunner(
       preludePlugin: PreloadedPlugin,
       preloadedPlugins: Map<String, PreloadedPlugin>,
       buildEnv: BuildEnv,
+      fileSystem: FileSystem,
       repo: BibixRepo,
       classWorld: ClassWorld,
     ): BuildGraphRunner {
@@ -54,6 +58,8 @@ class BuildGraphRunner(
       var preloadedPluginIdCounter = 3
       val preloadedPluginInfos = mutableMapOf<Int, MultiBuildGraph.ProjectInfo>()
       val preloadedPluginInstanceProviders = mutableMapOf<Int, PluginInstanceProvider>()
+
+      preloadedPluginInstanceProviders[2] = preludePlugin.pluginInstanceProvider
       preloadedPlugins.forEach { (name, plugin) ->
         preloadedPluginIds[name] = preloadedPluginIdCounter
         preloadedPluginInfos[preloadedPluginIdCounter] = MultiBuildGraph.ProjectInfo(
@@ -84,6 +90,7 @@ class BuildGraphRunner(
         preloadedPluginInstanceProviders = preloadedPluginInstanceProviders,
         preludeNames = preludeNames,
         buildEnv = buildEnv,
+        fileSystem = fileSystem,
         repo = repo,
         classPkgRunner = ClassPkgRunner(classWorld)
       )
@@ -134,9 +141,69 @@ class BuildGraphRunner(
         varRedefs = buildGraph.varRedefs,
         exprGraph = buildGraph.exprGraph,
         importInstanceId = buildTask.importInstanceId,
+        buildContextGen = BuildContextGen(multiGraph, buildEnv, fileSystem, repo),
         thisValue = buildTask.thisValue
       )
       evaluator.evaluateExpr(buildTask.exprNodeId)
+    }
+
+    is EvalBuildRule -> {
+      val buildGraph = multiGraph.getProjectGraph(buildTask.projectId)
+
+      val buildRule = buildGraph.buildRules.getValue(buildTask.name)
+
+      val params = buildRule.params.entries.sortedBy { it.key }
+      BuildTaskResult.WithResultList(params.map {
+        EvalType(buildTask.projectId, it.value)
+      }) { results ->
+        check(results.all { it is BuildTaskResult.TypeResult })
+        check(params.size == results.size)
+        val types = results.map { (it as BuildTaskResult.TypeResult).type }
+        val paramTypes = params.map { it.key }.zip(types)
+
+        if (buildRule.implTarget == null) {
+          val pluginInstanceProvider =
+            preloadedPluginInstanceProviders.getValue(buildTask.projectId)
+          val implTarget = pluginInstanceProvider.getInstance(buildRule.implClassName)
+          val method = implTarget::class.java.getDeclaredMethod(
+            buildRule.implMethodName ?: "build",
+            BuildContext::class.java
+          )
+          check(method.trySetAccessible())
+          BuildTaskResult.BuildRuleResult(
+            buildTask.projectId,
+            buildTask.name,
+            buildTask.importInstanceId,
+            buildRule,
+            paramTypes,
+            implTarget,
+            method
+          )
+        } else {
+          BuildTaskResult.WithResult(
+            EvalExpr(
+              buildTask.projectId,
+              buildRule.implTarget,
+              buildTask.importInstanceId,
+              null
+            )
+          ) { implTargetResult ->
+            check(implTargetResult is BuildTaskResult.ValueResult)
+            val implTarget = implTargetResult.value
+            // TODO implTarget을 ClassPkg 로 보고 ClassWorld에 인스턴스 만들어서 넣기
+
+            BuildTaskResult.BuildRuleResult(
+              buildTask.projectId,
+              buildTask.name,
+              buildTask.importInstanceId,
+              buildRule,
+              paramTypes,
+              TODO(),
+              TODO()
+            )
+          }
+        }
+      }
     }
 
     is Import -> {
@@ -188,6 +255,17 @@ class BuildGraphRunner(
       }
     }
 
+    is ImportFromPrelude -> {
+      val buildGraph = multiGraph.getProjectGraph(2)
+      lookupExprValue(buildGraph, BibixName(buildTask.name), 2, 0)
+    }
+
+    is ImportPreloaded -> {
+      val projectId = preloadedPluginIds.getValue(buildTask.pluginName)
+      val graph = multiGraph.getProjectGraph(projectId)
+      BuildTaskResult.ImportResult(projectId, graph)
+    }
+
     is NewImportInstance -> {
       val instances = importInstances.getOrPut(buildTask.projectId) { HashBiMap.create() }
       val existing = instances.inverse()[buildTask.redefs]
@@ -216,8 +294,8 @@ class BuildGraphRunner(
           projectId = buildTask.projectId,
           packageName = checkNotNull(buildGraph.packageName),
           name = buildTask.name,
-          varCtxId = buildTask.varCtxId,
-          def = dataClassDef,
+          importInstanceId = buildTask.importInstanceId,
+          dataClassDef = dataClassDef,
           fieldTypes = dataClassDef.def.fields.map { field ->
             Pair(field.name, fieldTypeMap.getValue(field.name))
           }
@@ -227,16 +305,7 @@ class BuildGraphRunner(
 
     is EvalType -> {
       val buildGraph = multiGraph.getProjectGraph(buildTask.projectId)
-      TypeEvaluator(buildGraph.typeGraph).evaluateType(buildTask.typeNodeId)
+      TypeEvaluator(buildTask.projectId, buildGraph.typeGraph).evaluateType(buildTask.typeNodeId)
     }
-
-    is RunBuildRule -> TODO()
-  }
-
-  private fun getVarCtx(projectId: Int, varCtxId: Int): Map<BibixName, GlobalExprNodeId> {
-//    val varCtxOpt = varRedefs[projectId]?.get(varCtxId)
-//    check(varCtxId == 0 || varCtxOpt != null)
-//    return varCtxOpt ?: mapOf()
-    return mapOf()
   }
 }

@@ -13,6 +13,7 @@ import com.giyeok.bibix.repo.BibixRepo
 import kotlinx.coroutines.runBlocking
 import org.codehaus.plexus.classworlds.ClassWorld
 import org.junit.jupiter.api.Test
+import java.nio.file.FileSystems
 import java.nio.file.Path
 import kotlin.io.path.absolute
 
@@ -25,22 +26,24 @@ class BuildGraphRunnerTest {
     val repo = BibixRepo.load(mainProjectLocation.projectRoot)
     val runner = runBlocking {
       BuildGraphRunner.create(
-        mainProjectLocation,
-        preludePlugin,
-        BuildFrontend.defaultPreloadedPlugins,
-        buildEnv,
-        repo,
-        ClassWorld()
+        mainProjectLocation = mainProjectLocation,
+        preludePlugin = preludePlugin,
+        preloadedPlugins = BuildFrontend.defaultPreloadedPlugins,
+        buildEnv = buildEnv,
+        fileSystem = FileSystems.getDefault(),
+        repo = repo,
+        classWorld = ClassWorld()
       )
     }
 
-    println(runner.runToFinal(EvalTarget(1, 0, BibixName("x"))))
-    println(runner.runToFinal(EvalTarget(1, 0, BibixName("x2"))))
-    println(runner.runToFinal(EvalTarget(1, 0, BibixName("y"))))
-    println(runner.runToFinal(EvalTarget(1, 0, BibixName("y2"))))
-    println(runner.runToFinal(EvalTarget(1, 0, BibixName("q"))))
-    println(runner.runToFinal(EvalTarget(1, 0, BibixName("q"))))
-    println(runner.runToFinal(EvalTarget(1, 0, BibixName("v"))))
+//    println(runner.runToFinal(EvalTarget(1, 0, BibixName("x"))))
+//    println(runner.runToFinal(EvalTarget(1, 0, BibixName("x2"))))
+//    println(runner.runToFinal(EvalTarget(1, 0, BibixName("y"))))
+//    println(runner.runToFinal(EvalTarget(1, 0, BibixName("y2"))))
+//    println(runner.runToFinal(EvalTarget(1, 0, BibixName("q"))))
+//    println(runner.runToFinal(EvalTarget(1, 0, BibixName("q"))))
+//    println(runner.runToFinal(EvalTarget(1, 0, BibixName("v"))))
+    println(runner.runToFinal(EvalTarget(1, 0, BibixName("aa"))))
   }
 
   fun BuildGraphRunner.runToFinal(buildTask: BuildTask): BuildTaskResult.FinalResult =
@@ -50,13 +53,13 @@ class BuildGraphRunnerTest {
     when (result) {
       is BuildTaskResult.FinalResult -> result
       is BuildTaskResult.WithResult -> {
-        val derivedTask = runToFinal(result.task)
-        handleResult(result.func(derivedTask))
+        val derivedTaskResult = runToFinal(result.task)
+        handleResult(result.func(derivedTaskResult))
       }
 
       is BuildTaskResult.WithResultList -> {
-        val derivedTasks = result.tasks.map { runToFinal(it) }
-        handleResult(result.func(derivedTasks))
+        val derivedTaskResults = result.tasks.map { runToFinal(it) }
+        handleResult(result.func(derivedTaskResults))
       }
 
       is BuildTaskResult.LongRunning -> {
