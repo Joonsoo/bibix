@@ -1,4 +1,4 @@
-package com.giyeok.bibix.graph2.runner
+package com.giyeok.bibix.graph.runner
 
 import com.giyeok.bibix.plugins.jvm.ClassPkg
 import com.giyeok.bibix.plugins.jvm.LocalLib

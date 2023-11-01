@@ -1,7 +1,7 @@
-package com.giyeok.bibix.graph2.runner
+package com.giyeok.bibix.graph.runner
 
-import com.giyeok.bibix.graph2.BibixProjectLocation
-import com.giyeok.bibix.graph2.BuildGraph
+import com.giyeok.bibix.graph.BibixProjectLocation
+import com.giyeok.bibix.graph.BuildGraph
 import com.google.common.collect.BiMap
 import com.google.common.collect.HashBiMap
 

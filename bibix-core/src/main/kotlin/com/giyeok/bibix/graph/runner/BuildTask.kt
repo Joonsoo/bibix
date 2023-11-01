@@ -1,9 +1,9 @@
-package com.giyeok.bibix.graph2.runner
+package com.giyeok.bibix.graph.runner
 
 import com.giyeok.bibix.base.BibixType
 import com.giyeok.bibix.base.BibixValue
 import com.giyeok.bibix.base.ClassInstanceValue
-import com.giyeok.bibix.graph2.*
+import com.giyeok.bibix.graph.*
 import java.lang.reflect.Method
 
 sealed class BuildTask

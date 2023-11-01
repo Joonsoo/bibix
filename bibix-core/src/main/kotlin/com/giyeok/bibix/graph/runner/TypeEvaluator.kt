@@ -1,8 +1,7 @@
-package com.giyeok.bibix.graph2.runner
+package com.giyeok.bibix.graph.runner
 
 import com.giyeok.bibix.base.*
-import com.giyeok.bibix.graph2.*
-import com.google.common.collect.ImmutableBiMap
+import com.giyeok.bibix.graph.*
 
 class TypeEvaluator(
   val projectId: Int,

@@ -1,4 +1,4 @@
-package com.giyeok.bibix.graph2
+package com.giyeok.bibix.graph
 
 class CodeWriter {
   private var indentLevel = 0

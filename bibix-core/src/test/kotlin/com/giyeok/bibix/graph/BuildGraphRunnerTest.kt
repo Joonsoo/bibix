@@ -1,13 +1,13 @@
-package com.giyeok.bibix.graph2
+package com.giyeok.bibix.graph
 
 import com.giyeok.bibix.base.Architecture
 import com.giyeok.bibix.base.BuildEnv
 import com.giyeok.bibix.base.OS
 import com.giyeok.bibix.frontend.BuildFrontend
-import com.giyeok.bibix.graph2.runner.BuildGraphRunner
-import com.giyeok.bibix.graph2.runner.BuildTask
-import com.giyeok.bibix.graph2.runner.BuildTaskResult
-import com.giyeok.bibix.graph2.runner.EvalTarget
+import com.giyeok.bibix.graph.runner.BuildGraphRunner
+import com.giyeok.bibix.graph.runner.BuildTask
+import com.giyeok.bibix.graph.runner.BuildTaskResult
+import com.giyeok.bibix.graph.runner.EvalTarget
 import com.giyeok.bibix.plugins.prelude.preludePlugin
 import com.giyeok.bibix.repo.BibixRepo
 import kotlinx.coroutines.runBlocking

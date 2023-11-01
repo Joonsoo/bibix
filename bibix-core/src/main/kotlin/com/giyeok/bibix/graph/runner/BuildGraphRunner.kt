@@ -1,11 +1,11 @@
-package com.giyeok.bibix.graph2.runner
+package com.giyeok.bibix.graph.runner
 
 import com.giyeok.bibix.ast.BibixParser
 import com.giyeok.bibix.base.*
-import com.giyeok.bibix.graph2.BibixName
-import com.giyeok.bibix.graph2.BibixProjectLocation
-import com.giyeok.bibix.graph2.BuildGraph
-import com.giyeok.bibix.graph2.NameLookupTable
+import com.giyeok.bibix.graph.BibixName
+import com.giyeok.bibix.graph.BibixProjectLocation
+import com.giyeok.bibix.graph.BuildGraph
+import com.giyeok.bibix.graph.NameLookupTable
 import com.giyeok.bibix.plugins.PluginInstanceProvider
 import com.giyeok.bibix.plugins.PreloadedPlugin
 import com.giyeok.bibix.plugins.jvm.ClassPkg

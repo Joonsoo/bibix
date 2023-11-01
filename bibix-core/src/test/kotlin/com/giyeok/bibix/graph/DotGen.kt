@@ -1,4 +1,4 @@
-package com.giyeok.bibix.graph2
+package com.giyeok.bibix.graph
 
 import kotlin.math.absoluteValue
 

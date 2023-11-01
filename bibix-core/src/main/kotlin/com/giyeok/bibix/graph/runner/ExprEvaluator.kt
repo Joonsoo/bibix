@@ -1,10 +1,10 @@
-package com.giyeok.bibix.graph2.runner
+package com.giyeok.bibix.graph.runner
 
 import com.giyeok.bibix.*
 import com.giyeok.bibix.BibixIdProto.ArgsMap
 import com.giyeok.bibix.ast.BibixAst
 import com.giyeok.bibix.base.*
-import com.giyeok.bibix.graph2.*
+import com.giyeok.bibix.graph.*
 import com.giyeok.bibix.repo.BibixRepoProto
 import com.giyeok.bibix.repo.hashString
 import com.giyeok.bibix.utils.toBibix

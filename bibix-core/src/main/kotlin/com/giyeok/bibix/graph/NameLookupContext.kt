@@ -1,4 +1,4 @@
-package com.giyeok.bibix.graph2
+package com.giyeok.bibix.graph
 
 import com.giyeok.bibix.ast.BibixAst
 

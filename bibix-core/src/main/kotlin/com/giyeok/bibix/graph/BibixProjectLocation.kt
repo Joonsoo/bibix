@@ -1,4 +1,4 @@
-package com.giyeok.bibix.graph2
+package com.giyeok.bibix.graph
 
 import java.nio.file.Path
 import kotlin.io.path.absolute
