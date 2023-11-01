@@ -1,4 +1,5 @@
 import "../a" as a
+import bibix.plugins as plgs
 
 var a.zz = "xyz"
 
@@ -16,7 +17,9 @@ with a.zz = "abc" {
 aa = glob("test/**")
 bb = bibix.version
 cc = bibix.plugins
+ss = glob("test/**/*.kt")
 
 from bibix.plugins import ktjvm
 
-dd = ktjvm.library(srcs=glob("test/**/*.kt"))
+dd = plgs.ktjvm.library(srcs=ss)
+ee = ktjvm.library(srcs=ss)

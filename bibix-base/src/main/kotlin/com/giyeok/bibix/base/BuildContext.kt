@@ -53,4 +53,33 @@ data class BuildContext(
 
   fun getSharedDirectory(sharedRepoName: String): Path =
     repo.prepareSharedDirectory(sharedRepoName)
+
+  fun getArg(argName: String): BibixValue =
+    arguments[argName] ?: throw IllegalStateException("No such argument: $argName")
+
+  fun getStringArg(argName: String): String =
+    (getArg(argName) as StringValue).value
+
+  fun getFileField(argName: String): Path =
+    (getArg(argName) as FileValue).file
+
+  fun getDirectoryField(argName: String): Path =
+    (getArg(argName) as DirectoryValue).directory
+
+  fun getNullableField(argName: String): BibixValue? {
+    val value = getArg(argName)
+    return if (value == NoneValue) null else value
+  }
+
+  inline fun <reified T: BibixValue> getNullableArgOf(argName: String): T? =
+    getNullableField(argName) as? T
+
+  fun getNullableStringArg(argName: String) =
+    getNullableArgOf<StringValue>(argName)?.value
+
+  fun getNullableFileArg(argName: String) =
+    getNullableArgOf<FileValue>(argName)?.file
+
+  fun getNullableDirectoryArg(argName: String) =
+    getNullableArgOf<DirectoryValue>(argName)?.directory
 }

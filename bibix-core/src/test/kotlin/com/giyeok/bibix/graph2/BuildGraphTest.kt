@@ -2,9 +2,6 @@ package com.giyeok.bibix.graph2
 
 import com.giyeok.bibix.ast.BibixParser
 import com.giyeok.bibix.frontend.BuildFrontend
-import com.giyeok.bibix.graph.NameLookupTable
-import com.giyeok.bibix.graph.TaskGraph
-import com.giyeok.bibix.graph.dotGraphFrom
 import com.giyeok.bibix.plugins.prelude.preludePlugin
 import org.junit.jupiter.api.Test
 

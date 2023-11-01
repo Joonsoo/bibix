@@ -1,14 +1,11 @@
 package com.giyeok.bibix.graph2.runner
 
 import com.giyeok.bibix.ast.BibixParser
-import com.giyeok.bibix.base.BuildContext
-import com.giyeok.bibix.base.BuildEnv
-import com.giyeok.bibix.base.DataClassType
-import com.giyeok.bibix.base.StringValue
-import com.giyeok.bibix.graph.NameLookupTable
+import com.giyeok.bibix.base.*
 import com.giyeok.bibix.graph2.BibixName
 import com.giyeok.bibix.graph2.BibixProjectLocation
 import com.giyeok.bibix.graph2.BuildGraph
+import com.giyeok.bibix.graph2.NameLookupTable
 import com.giyeok.bibix.plugins.PluginInstanceProvider
 import com.giyeok.bibix.plugins.PreloadedPlugin
 import com.giyeok.bibix.plugins.jvm.ClassPkg
@@ -140,23 +137,13 @@ class BuildGraphRunner(
     }
 
     is TypeCastValue -> {
-      ValueCaster(
-        buildTask.projectId,
-        multiGraph.projectLocations[buildTask.projectId],
-        buildTask.importInstanceId
-      ) { thisValue ->
-        ExprEvaluator(this, buildTask.projectId, buildTask.importInstanceId, thisValue)
-      }.castValue(buildTask.value, buildTask.type)
+      ValueCaster(this, buildTask.projectId, buildTask.importInstanceId)
+        .castValue(buildTask.value, buildTask.type)
     }
 
     is FinalizeBuildRuleReturnValue -> {
-      ValueCaster(
-        buildTask.projectId,
-        multiGraph.projectLocations[buildTask.projectId],
-        buildTask.importInstanceId
-      ) { thisValue ->
-        ExprEvaluator(this, buildTask.projectId, buildTask.importInstanceId, thisValue)
-      }.finalizeBuildRuleReturnValue(buildTask.buildRule, buildTask.value)
+      ValueCaster(this, buildTask.projectId, buildTask.importInstanceId)
+        .finalizeBuildRuleReturnValue(buildTask.buildRule, buildTask.value)
     }
 
     is EvalBuildRule -> {
@@ -234,64 +221,16 @@ class BuildGraphRunner(
       }
     }
 
-    is Import -> {
-      val buildGraph = multiGraph.getProjectGraph(buildTask.projectId)
-      val importAll = buildGraph.importAlls[buildTask.importName]
-      val importFrom = buildGraph.importFroms[buildTask.importName]
-      check(importAll != null || importFrom != null)
-      if (importAll != null) {
-        check(importFrom == null)
-        BuildTaskResult.WithResult(
-          EvalExpr(buildTask.projectId, importAll.source, buildTask.varCtxId, null)
-        ) { source ->
-          check(source is BuildTaskResult.ValueResult)
-          when (val sourceValue = source.value) {
-            is StringValue -> BuildTaskResult.SuspendLongRunning {
-              val projectLocation = multiGraph.projectLocations.getValue(buildTask.projectId)
-
-              val importRoot =
-                projectLocation.projectRoot.resolve(sourceValue.value).normalize().absolute()
-              val importLocation = BibixProjectLocation(importRoot)
-
-              val existingProjectId = multiGraph.getProjectIdByLocation(importLocation)
-              if (existingProjectId != null) {
-                val graph = multiGraph.getProjectGraph(existingProjectId)
-                BuildTaskResult.ImportResult(existingProjectId, graph)
-              } else {
-
-                val importSource = importLocation.readScript()
-                val importScript = BibixParser.parse(importSource)
-                val importGraph =
-                  BuildGraph.fromScript(importScript, preloadedPluginIds.keys, preludeNames)
-
-                val importProjectId =
-                  multiGraph.addProject(importLocation, importGraph, importSource)
-                BuildTaskResult.ImportResult(importProjectId, importGraph)
-              }
-            }
-
-            else -> TODO()
-          }
-        }
-      } else {
-        check(importFrom != null)
-        BuildTaskResult.WithResult(
-          EvalExpr(buildTask.projectId, importFrom.source, buildTask.varCtxId, null)
-        ) { source ->
-          TODO()
-        }
-      }
-    }
+    is Import -> handleImportTask(buildTask)
 
     is ImportFromPrelude -> {
-      val buildGraph = multiGraph.getProjectGraph(2)
-      lookupExprValue(buildGraph, BibixName(buildTask.name), 2, 0)
+      lookupExprValue(2, BibixName(buildTask.name), 0, 0) { it }
     }
 
     is ImportPreloaded -> {
       val projectId = preloadedPluginIds.getValue(buildTask.pluginName)
       val graph = multiGraph.getProjectGraph(projectId)
-      BuildTaskResult.ImportResult(projectId, graph)
+      BuildTaskResult.ImportResult(projectId, graph, listOf())
     }
 
     is NewImportInstance -> {
@@ -308,7 +247,7 @@ class BuildGraphRunner(
 
     is EvalDataClass -> {
       val buildGraph = multiGraph.getProjectGraph(buildTask.projectId)
-      val dataClassDef = checkNotNull(buildGraph.dataClasses[buildTask.name])
+      val dataClassDef = checkNotNull(buildGraph.dataClasses[buildTask.className])
       val fields = dataClassDef.fields.entries.sortedBy { it.key }
       val fieldTasks = fields.map { EvalType(buildTask.projectId, it.value) }
       BuildTaskResult.WithResultList(fieldTasks) { fieldTypeResults ->
@@ -321,7 +260,7 @@ class BuildGraphRunner(
         BuildTaskResult.DataClassResult(
           projectId = buildTask.projectId,
           packageName = checkNotNull(buildGraph.packageName),
-          name = buildTask.name,
+          name = buildTask.className,
           importInstanceId = buildTask.importInstanceId,
           dataClassDef = dataClassDef,
           fieldTypes = dataClassDef.def.fields.map { field ->
@@ -337,11 +276,138 @@ class BuildGraphRunner(
       BuildTaskResult.WithResult(EvalDataClass(projectId, 0, BibixName(buildTask.className))) { it }
     }
 
+    is EvalSuperClassHierarchyByName -> {
+      val projectId = multiGraph.getProjectIdByPackageName(buildTask.packageName)
+        ?: throw IllegalStateException()
+
+      val className = BibixName(buildTask.className)
+      val buildGraph = multiGraph.getProjectGraph(projectId)
+      val cls = buildGraph.superClasses[className] ?: throw IllegalStateException()
+
+      fun collectSubTypes(name: BibixName): BuildTaskResult.SuperClassHierarchyResult.SubType {
+        val dataClass = buildGraph.dataClasses[name]
+        val superClass = buildGraph.superClasses[name]
+
+        return when {
+          dataClass != null -> {
+            check(superClass == null)
+            BuildTaskResult.SuperClassHierarchyResult.SubType(name, listOf())
+          }
+
+          superClass != null -> {
+            val subs = superClass.subTypes.map { collectSubTypes(BibixName(it)) }
+            BuildTaskResult.SuperClassHierarchyResult.SubType(name, subs)
+          }
+
+          else -> throw IllegalStateException()
+        }
+      }
+
+      val subs = cls.subTypes.map { collectSubTypes(BibixName(it)) }
+
+      BuildTaskResult.SuperClassHierarchyResult(projectId, buildTask.packageName, className, subs)
+    }
+
     is EvalType -> {
       val buildGraph = multiGraph.getProjectGraph(buildTask.projectId)
       val packageName = multiGraph.projectPackages[buildTask.projectId]
       TypeEvaluator(buildTask.projectId, packageName, buildGraph.typeGraph)
         .evaluateType(buildTask.typeNodeId)
+    }
+  }
+
+  private fun handleImportTask(importTask: Import): BuildTaskResult {
+    val buildGraph = multiGraph.getProjectGraph(importTask.projectId)
+    val importAll = buildGraph.importAlls[importTask.importName]
+    val importFrom = buildGraph.importFroms[importTask.importName]
+    check(importAll != null || importFrom != null)
+
+    return if (importAll != null) {
+      check(importFrom == null)
+      BuildTaskResult.WithResult(
+        EvalExpr(importTask.projectId, importAll.source, importTask.varCtxId, null)
+      ) { source ->
+        handleImportSource(importTask.projectId, source) { importProjectId, importGraph ->
+          BuildTaskResult.ImportResult(importProjectId, importGraph, listOf())
+        }
+      }
+    } else {
+      // from bibix.plugins import ktjvm
+      // from "../a" import xyz
+      // import bibix.plugins as plgs
+      check(importFrom != null)
+      BuildTaskResult.WithResult(
+        EvalExpr(importTask.projectId, importFrom.source, importTask.varCtxId, null)
+      ) { source ->
+        handleImportSource(importTask.projectId, source) { importProjectId, importGraph ->
+          BuildTaskResult.ImportResult(importProjectId, importGraph, importFrom.importing)
+        }
+      }
+    }
+  }
+
+  private fun handleImportSource(
+    projectId: Int,
+    source: BuildTaskResult,
+    block: (importProjectId: Int, importGraph: BuildGraph) -> BuildTaskResult
+  ): BuildTaskResult {
+    if (source is BuildTaskResult.ImportResult) {
+      return source
+    }
+    check(source is BuildTaskResult.ValueResult)
+
+    suspend fun handleImportLocation(importLocation: BibixProjectLocation): BuildTaskResult {
+      val existingProjectId = multiGraph.getProjectIdByLocation(importLocation)
+      return if (existingProjectId != null) {
+        // 이미 로드된 프로젝트인 경우
+        val graph = multiGraph.getProjectGraph(existingProjectId)
+        block(existingProjectId, graph)
+      } else {
+        // 새로 로드해야 하는 프로젝트인 경우
+        val importSource = importLocation.readScript()
+        val importScript = BibixParser.parse(importSource)
+        val importGraph =
+          BuildGraph.fromScript(importScript, preloadedPluginIds.keys, preludeNames)
+
+        val importProjectId =
+          multiGraph.addProject(importLocation, importGraph, importSource)
+        block(importProjectId, importGraph)
+      }
+    }
+
+    return when (val sourceValue = source.value) {
+      is StringValue -> {
+        // 상대 경로로 다른 프로젝트 import
+        val projectLocation = multiGraph.projectLocations.getValue(projectId)
+
+        val importRoot =
+          projectLocation.projectRoot.resolve(sourceValue.value).normalize().absolute()
+        val importLocation = BibixProjectLocation(importRoot)
+
+        BuildTaskResult.SuspendLongRunning {
+          handleImportLocation(importLocation)
+        }
+      }
+
+      is ClassInstanceValue -> {
+        check(sourceValue.packageName == "com.giyeok.bibix.prelude" && sourceValue.className == "BibixProject")
+
+        // class BibixProject(projectRoot: directory, scriptName?: string)
+        val projectRoot = sourceValue.getDirectoryField("projectRoot")
+        val scriptName = sourceValue.getNullableStringField("scriptName")
+
+        val importLocation = if (scriptName == null) {
+          BibixProjectLocation(projectRoot)
+        } else {
+          BibixProjectLocation(projectRoot, scriptName)
+        }
+
+        BuildTaskResult.SuspendLongRunning {
+          handleImportLocation(importLocation)
+        }
+      }
+
+      else -> TODO()
     }
   }
 }

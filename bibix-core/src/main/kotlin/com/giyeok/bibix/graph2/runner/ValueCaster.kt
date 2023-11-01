@@ -8,19 +8,19 @@ import kotlin.io.path.absolute
 import kotlin.io.path.absolutePathString
 
 class ValueCaster(
+  val buildGraphRunner: BuildGraphRunner,
   val projectId: Int,
-  val projectLocation: BibixProjectLocation?,
   val importInstanceId: Int,
-  val exprEvaluatorGen: (ClassInstanceValue) -> ExprEvaluator,
 ) {
+  val projectLocation: BibixProjectLocation? get() = buildGraphRunner.multiGraph.projectLocations[projectId]
+
   private fun cannotCast(value: BibixValue, type: BibixType) =
     BuildTaskResult.TypeCastFailResult(value, type)
 
   // castValue로 오는 ClassInstanceValue는 모두 각 필드가 적당한 타입으로 cast되고, default field와 optional field가 처리된 것으로 본다.
   fun castValue(value: BibixValue, type: BibixType): BuildTaskResult {
     fun fileFromString(path: String): Path {
-      checkNotNull(projectLocation)
-      return projectLocation.projectRoot.resolve(path).normalize().absolute()
+      return checkNotNull(projectLocation).projectRoot.resolve(path).normalize().absolute()
     }
 
     if (value == NoneValue) {
@@ -38,8 +38,16 @@ class ValueCaster(
 
         is SuperClassType -> {
           if (type.packageName == value.packageName) {
-            // TODO value가 type의 sub type의 클래스이면 그대로 반환 - 그 외의 경우엔 계속 진행
-            TODO()
+            // value가 type의 sub type의 클래스이면 그대로 반환 - 그 외의 경우엔 계속 진행
+            // TODO 지금은 sub type인지 체크해보고 맞으면 성공, 아니면 exception을 내버려서.. 의도한 동작과는 조금 다름.
+            return BuildTaskResult.WithResult(
+              EvalSuperClassHierarchyByName(type.packageName, type.className)
+            ) { superClassResult ->
+              check(superClassResult is BuildTaskResult.SuperClassHierarchyResult)
+
+              check(BibixName(value.className) in superClassResult.allSubDataClasses) { "Not a subtype" }
+              BuildTaskResult.ValueResult(value)
+            }
           }
         }
 
@@ -241,6 +249,15 @@ class ValueCaster(
     }
   }
 
+  private fun tryCustomCast(
+    value: ClassInstanceValue,
+    type: BibixType,
+    func: (BuildTaskResult) -> BuildTaskResult
+  ): BuildTaskResult {
+    // TODO ExprEvaluator(buildGraphRunner, projectId, importInstanceId, value).evaluateExpr()
+    return func(BuildTaskResult.TypeCastFailResult(value, type))
+  }
+
   private fun castValueList(
     values: List<BibixValue>,
     type: BibixType,
@@ -283,24 +300,25 @@ class ValueCaster(
     }
 
   private fun finalizeValues(
+    buildRule: BuildTaskResult.BuildRuleResult,
     values: Map<String, BibixValue>,
     types: Map<String, BibixType>,
-    func: (Map<String, BibixValue>) -> BibixValue
+    block: (List<String>, List<BibixValue>) -> BuildTaskResult
   ): BuildTaskResult {
-    check(values.keys == types.keys)
-    val keys = values.keys.sorted()
-    return castValuePairs(keys.map { Pair(values.getValue(it), types.getValue(it)) }) { results ->
-      func(keys.zip(results).toMap())
-    }
-  }
+    check(types.keys.containsAll(values.keys)) { "Missing args" }
 
-  private fun tryCustomCast(
-    value: ClassInstanceValue,
-    type: BibixType,
-    func: (BuildTaskResult) -> BuildTaskResult
-  ): BuildTaskResult {
-    // TODO exprEvaluatorGen(value).evaluateExpr()
-    return func(BuildTaskResult.TypeCastFailResult(value, type))
+    val fieldValues = values.entries.sortedBy { it.key }
+    val finalizeTasks = fieldValues.map {
+      FinalizeBuildRuleReturnValue(buildRule, it.value, projectId, importInstanceId)
+    }
+    return BuildTaskResult.WithResultList(finalizeTasks) { finalized ->
+      check(finalized.size == fieldValues.size)
+      val finalizedValues = finalized.map {
+        check(it is BuildTaskResult.ValueResult)
+        it.value
+      }
+      block(fieldValues.map { it.key }, finalizedValues)
+    }
   }
 
   fun finalizeBuildRuleReturnValue(
@@ -309,38 +327,64 @@ class ValueCaster(
   ): BuildTaskResult =
     when (value) {
       is NClassInstanceValue -> {
-        // TODO buildRule 위치를 기준으로 ClassInstanceValue로 변경해서 다시 finalizeBuildRuleReturnValue로 보내기
-        TODO()
+        // buildRule 위치를 기준으로 ClassInstanceValue로 변경해서 반환
+        val namespace = buildRule.name.tokens.dropLast(1)
+        // TODO namespace에서 마지막에서 하나씩 빼면서 이름 찾기 시도
+        buildGraphRunner.lookupExprValue(
+          buildRule.projectId,
+          BibixName(namespace + value.nameTokens),
+          0,
+          buildRule.importInstanceId
+        ) { lookupResult ->
+          check(lookupResult is BuildTaskResult.DataClassResult)
+
+          val fieldTypeMaps = lookupResult.fieldTypes.toMap()
+          finalizeValues(buildRule, value.fieldValues, fieldTypeMaps) { fieldNames, finVals ->
+            organizeParamsForDataClass(
+              lookupResult,
+              listOf(),
+              fieldNames.zip(finVals).toMap()
+            )
+          }
+        }
       }
 
       is ClassInstanceValue -> {
-        // TODO value가 ClassInstanceValue이면 default value, optional value들 채우고 기존 필드들도 목표 타입으로 캐스팅해서 반환
+        // value가 ClassInstanceValue이면 default value, optional value들 채우고 기존 필드들도 목표 타입으로 캐스팅해서 반환
         BuildTaskResult.WithResult(
           EvalDataClassByName(value.packageName, value.className)
         ) { dataClassResult ->
           check(dataClassResult is BuildTaskResult.DataClassResult)
 
-          organizeParamsForDataClass(dataClassResult, listOf(), value.fieldValues)
+          val fieldTypeMaps = dataClassResult.fieldTypes.toMap()
+          finalizeValues(buildRule, value.fieldValues, fieldTypeMaps) { fieldNames, finVals ->
+            val castTasks = fieldNames.zip(finVals).map { (name, value) ->
+              val expectedType = fieldTypeMaps.getValue(name)
+              TypeCastValue(value, expectedType, projectId, importInstanceId)
+            }
+            BuildTaskResult.WithResultList(castTasks) { cast ->
+              check(cast.size == finVals.size)
+              val castValues = cast.map {
+                check(it is BuildTaskResult.ValueResult)
+                it.value
+              }
+
+              organizeParamsForDataClass(
+                dataClassResult,
+                listOf(),
+                fieldNames.zip(castValues).toMap()
+              )
+            }
+          }
         }
       }
 
-      is CollectionValue -> {
-        finalizeValueList(buildRule, value.values) { elems ->
-          value.newCollectionWith(elems)
-        }
-      }
-
-      is TupleValue -> {
-        finalizeValueList(buildRule, value.values) { elems ->
-          TupleValue(elems)
-        }
-      }
-
-      is NamedTupleValue -> {
+      is CollectionValue -> finalizeValueList(buildRule, value.values, value::newCollectionWith)
+      is TupleValue -> finalizeValueList(buildRule, value.values, ::TupleValue)
+      is NamedTupleValue ->
         finalizeValueList(buildRule, value.values) { elems ->
           NamedTupleValue(value.names.zip(elems))
         }
-      }
 
       else -> BuildTaskResult.ValueResult(value)
     }

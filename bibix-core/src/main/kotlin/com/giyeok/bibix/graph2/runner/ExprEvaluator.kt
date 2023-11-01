@@ -6,7 +6,6 @@ import com.giyeok.bibix.ast.BibixAst
 import com.giyeok.bibix.base.*
 import com.giyeok.bibix.graph2.*
 import com.giyeok.bibix.repo.BibixRepoProto
-import com.giyeok.bibix.repo.TargetId
 import com.giyeok.bibix.repo.hashString
 import com.giyeok.bibix.utils.toBibix
 import com.giyeok.bibix.utils.toHexString
@@ -14,8 +13,6 @@ import com.giyeok.bibix.utils.toInstant
 import com.giyeok.bibix.utils.toProto
 import com.google.protobuf.empty
 import kotlinx.coroutines.runBlocking
-import java.lang.StringBuilder
-import java.nio.file.Path
 
 class ExprEvaluator(
   private val buildGraphRunner: BuildGraphRunner,
@@ -25,20 +22,16 @@ class ExprEvaluator(
 ) {
   private val multiGraph get() = buildGraphRunner.multiGraph
   private val projectPackageName: String? get() = multiGraph.projectPackages[projectId]
-  private val projectLocation: BibixProjectLocation? get() = multiGraph.projectLocations[projectId]
 
   private val buildGraph get() = multiGraph.getProjectGraph(projectId)
   private val varRedefs: Map<BibixName, Map<Int, BuildGraph.VarCtx>> get() = buildGraph.varRedefs
   private val exprGraph: ExprGraph get() = buildGraph.exprGraph
 
   private val valueCaster: ValueCaster
-    get() = ValueCaster(projectId, projectLocation, importInstanceId) { this.copy(it) }
+    get() = ValueCaster(buildGraphRunner, projectId, importInstanceId)
 
   private fun evalTask(exprNodeId: ExprNodeId) =
     EvalExpr(projectId, exprNodeId, importInstanceId, thisValue)
-
-  private fun copy(thisValue: ClassInstanceValue?) =
-    ExprEvaluator(buildGraphRunner, projectId, importInstanceId, thisValue)
 
   fun evaluateExpr(exprNodeId: ExprNodeId): BuildTaskResult =
     when (val exprNode = exprGraph.nodes.getValue(exprNodeId)) {
@@ -171,21 +164,7 @@ class ExprEvaluator(
 
           when (callee) {
             is BuildTaskResult.BuildRuleResult -> {
-              val requiredParams = callee.buildRuleDef.def.params
-                .filter { param -> !param.optional && param.defaultValue == null }
-                .map { it.name }.toSet()
-              organizeParams(
-                callee.paramTypes,
-                requiredParams,
-                callee.projectId,
-                callee.importInstanceId,
-                callee.buildRuleDef.paramDefaultValues,
-                posArgs,
-                namedArgs,
-              ) { args ->
-                val buildContext = createBuildContext(projectId, callee, args)
-                runBuildRule(callee, buildContext)
-              }
+              organizeParamsAndRunBuildRule(callee, posArgs, namedArgs) { it }
             }
 
             is BuildTaskResult.DataClassResult -> {
@@ -279,7 +258,8 @@ class ExprEvaluator(
       }
 
       is LocalBuildRuleRef -> TODO()
-      is LocalDataClassRef -> TODO()
+      is LocalDataClassRef ->
+        BuildTaskResult.WithResult(EvalDataClass(projectId, importInstanceId, exprNode.name)) { it }
 
       is LocalTargetRef ->
         BuildTaskResult.WithResult(
@@ -301,6 +281,9 @@ class ExprEvaluator(
 
           handleImportResult(result, exprNode.import, exprNode.varCtxId, exprNode.name)
         }
+
+      is PreloadedPluginRef ->
+        BuildTaskResult.WithResult(ImportPreloaded(exprNode.pluginName)) { it }
 
       is ImportedExprFromPreloaded ->
         BuildTaskResult.WithResult(ImportPreloaded(exprNode.pluginName)) { result ->
@@ -335,36 +318,16 @@ class ExprEvaluator(
     result: BuildTaskResult.ImportResult,
     import: BibixName,
     varCtxId: Int,
-    importedMemberName: BibixName
-  ): BuildTaskResult {
-    fun Map<Int, BuildGraph.VarCtx>.mergeForCtxId(varCtxId: Int): Map<BibixName, ExprNodeId> {
-      val varCtx = this[varCtxId]
-      if (varCtx == null) {
-        check(varCtxId == 0)
-        return mapOf()
-      }
-      val parent = if (varCtxId == 0 && varCtx.parentCtxId == 0) {
-        mapOf()
-      } else {
-        mergeForCtxId(varCtx.parentCtxId)
-      }
-      return parent + varCtx.redefs
-    }
-
-    val newRedefs = varRedefs[import]?.mergeForCtxId(varCtxId) ?: mapOf()
-    val newGlobalRedefs = newRedefs.mapValues { (_, exprNodeId) ->
-      GlobalExprNodeId(projectId, importInstanceId, exprNodeId)
-    }
-
-    return BuildTaskResult.WithResult(
-      NewImportInstance(result.projectId, newGlobalRedefs)
-    ) { instance ->
-      check(instance is BuildTaskResult.ImportInstanceResult)
-      check(result.projectId == instance.projectId)
-
-      lookupExprValue(result.graph, importedMemberName, result.projectId, instance.importInstanceId)
-    }
-  }
+    importedMemberName: BibixName,
+  ): BuildTaskResult = buildGraphRunner.handleImportResult(
+    result,
+    import,
+    varCtxId,
+    importedMemberName,
+    varRedefs,
+    projectId,
+    importInstanceId
+  ) { it }
 
   private fun sourceIdFrom(projectId: Int): BibixIdProto.SourceId {
     return sourceId {
@@ -439,19 +402,73 @@ class ExprEvaluator(
     )
   }
 
+  private fun organizeParamsAndRunBuildRule(
+    buildRule: BuildTaskResult.BuildRuleResult,
+    posArgs: List<BibixValue>,
+    namedArgs: Map<String, BibixValue>,
+    block: (BuildTaskResult) -> BuildTaskResult
+  ): BuildTaskResult {
+    val requiredParams = buildRule.buildRuleDef.def.params
+      .filter { param -> !param.optional && param.defaultValue == null }
+      .map { it.name }.toSet()
+    return organizeParams(
+      buildRule.paramTypes,
+      requiredParams,
+      buildRule.projectId,
+      buildRule.importInstanceId,
+      buildRule.buildRuleDef.paramDefaultValues,
+      posArgs,
+      namedArgs,
+    ) { args ->
+      val buildContext = createBuildContext(projectId, buildRule, args)
+      runBuildRule(buildRule, buildContext, block)
+    }
+  }
+
   private fun runBuildRule(
     buildRule: BuildTaskResult.BuildRuleResult,
-    buildContext: BuildContext
+    buildContext: BuildContext,
+    block: (BuildTaskResult) -> BuildTaskResult
   ): BuildTaskResult = BuildTaskResult.LongRunning {
     val result = buildRule.implMethod.invoke(buildRule.implInstance, buildContext)
 
     fun handleBuildRuleReturn(result: BuildRuleReturn): BuildTaskResult = when (result) {
-      is BuildRuleReturn.ValueReturn -> BuildTaskResult.ValueResult(result.value)
+      is BuildRuleReturn.ValueReturn ->
+        block(BuildTaskResult.ValueResult(result.value))
+
       is BuildRuleReturn.FailedReturn -> throw result.exception
       BuildRuleReturn.DoneReturn -> throw IllegalStateException()
 
       is BuildRuleReturn.EvalAndThen -> {
-        TODO()
+        buildGraphRunner.lookupExprValue(
+          buildRule.projectId,
+          BibixName(result.ruleName),
+          0,
+          buildRule.importInstanceId,
+        ) { lookupResult ->
+          check(lookupResult is BuildTaskResult.BuildRuleResult)
+
+          val params = result.params.entries
+          BuildTaskResult.WithResultList(params.map {
+            FinalizeBuildRuleReturnValue(
+              buildRule,
+              it.value,
+              buildRule.projectId,
+              buildRule.importInstanceId
+            )
+          }) { finalized ->
+            val finValues = finalized.map {
+              check(it is BuildTaskResult.ValueResult)
+              it.value
+            }
+            val finalizedParams = params.map { it.key }.zip(finValues).toMap()
+            organizeParamsAndRunBuildRule(lookupResult, listOf(), finalizedParams) { evalResult ->
+              // TODO evalResult를 buildRuleResult의 return type으로 cast
+              check(evalResult is BuildTaskResult.ValueResult)
+              handleBuildRuleReturn(result.whenDone(evalResult.value))
+            }
+          }
+        }
       }
 
       is BuildRuleReturn.GetTypeDetails -> {
@@ -465,7 +482,7 @@ class ExprEvaluator(
     }
 
     when (result) {
-      is BibixValue -> BuildTaskResult.ValueResult(result)
+      is BibixValue -> block(BuildTaskResult.ValueResult(result))
       is BuildRuleReturn -> handleBuildRuleReturn(result)
       else -> throw IllegalStateException("Unsupported return value from build rule: $result")
     }
@@ -490,18 +507,22 @@ fun BibixValue.followMemberNames(memberNames: List<String>): BibixValue {
   }
 }
 
-fun lookupExprValue(
-  graph: BuildGraph,
-  name: BibixName,
+fun BuildGraphRunner.lookupExprValue(
   projectId: Int,
-  importInstanceId: Int
-): BuildTaskResult.WithResult {
-  val target = graph.targets[name]
-  val buildRule = graph.buildRules[name]
-  val varDef = graph.vars[name]
-  val dataClass = graph.dataClasses[name]
+  name: BibixName,
+  varCtxId: Int,
+  importInstanceId: Int,
+  // varRedefs: Map<BibixName, Map<Int, BuildGraph.VarCtx>>,
+  block: (BuildTaskResult) -> BuildTaskResult,
+): BuildTaskResult {
+  val buildGraph = multiGraph.getProjectGraph(projectId)
 
-  // TODO import는 어떻게 하지? import까지 밖에서 쓸 수 있게 할 필요는 없지 않을까?
+  val target = buildGraph.targets[name]
+  val buildRule = buildGraph.buildRules[name]
+  val varDef = buildGraph.vars[name]
+  val dataClass = buildGraph.dataClasses[name]
+
+  // TODO import도 처리해줘야 할듯..
 
   val followingTask = when {
     target != null -> {
@@ -523,9 +544,37 @@ fun lookupExprValue(
       EvalDataClass(projectId, importInstanceId, name)
     }
 
-    else -> throw IllegalStateException()
+    else -> {
+      // graph.imports에서 보고 ImportedExpr task
+      buildGraph.importAlls.forEach { (importName, importAll) ->
+        if (name.tokens.take(importName.tokens.size) == importName.tokens) {
+          return BuildTaskResult.WithResult(
+            Import(projectId, importInstanceId, importName)
+          ) { result ->
+            check(result is BuildTaskResult.ImportResult)
+
+            handleImportResult(
+              result,
+              importName,
+              varCtxId,
+              BibixName(name.tokens.drop(importName.tokens.size)),
+              buildGraph.varRedefs,
+              projectId,
+              importInstanceId,
+              block
+            )
+          }
+        }
+      }
+      buildGraph.importFroms.forEach { (importName, importFrom) ->
+        if (name.tokens.take(importName.tokens.size) == importName.tokens) {
+          TODO()
+        }
+      }
+      throw IllegalStateException()
+    }
   }
-  return BuildTaskResult.WithResult(followingTask) { it }
+  return BuildTaskResult.WithResult(followingTask, block)
 }
 
 fun organizeParamsForDataClass(
@@ -605,3 +654,48 @@ fun argsMapFrom(args: Map<String, BibixValue>): ArgsMap =
         })
       }
   }
+
+fun BuildGraphRunner.handleImportResult(
+  result: BuildTaskResult.ImportResult,
+  import: BibixName,
+  varCtxId: Int,
+  importedMemberName: BibixName,
+  varRedefs: Map<BibixName, Map<Int, BuildGraph.VarCtx>>,
+  projectId: Int,
+  importInstanceId: Int,
+  block: (BuildTaskResult) -> BuildTaskResult,
+): BuildTaskResult {
+  fun Map<Int, BuildGraph.VarCtx>.mergeForCtxId(varCtxId: Int): Map<BibixName, ExprNodeId> {
+    val varCtx = this[varCtxId]
+    if (varCtx == null) {
+      check(varCtxId == 0)
+      return mapOf()
+    }
+    val parent = if (varCtxId == 0 && varCtx.parentCtxId == 0) {
+      mapOf()
+    } else {
+      mergeForCtxId(varCtx.parentCtxId)
+    }
+    return parent + varCtx.redefs
+  }
+
+  val newRedefs = varRedefs[import]?.mergeForCtxId(varCtxId) ?: mapOf()
+  val newGlobalRedefs = newRedefs.mapValues { (_, exprNodeId) ->
+    GlobalExprNodeId(projectId, importInstanceId, exprNodeId)
+  }
+
+  return BuildTaskResult.WithResult(
+    NewImportInstance(result.projectId, newGlobalRedefs)
+  ) { instance ->
+    check(instance is BuildTaskResult.ImportInstanceResult)
+    check(result.projectId == instance.projectId)
+
+    lookupExprValue(
+      result.projectId,
+      BibixName(result.namePrefix + importedMemberName.tokens),
+      varCtxId,
+      instance.importInstanceId,
+      block
+    )
+  }
+}

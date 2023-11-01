@@ -45,32 +45,41 @@ class BuildGraphRunnerTest {
     println(runner.runToFinal(EvalTarget(1, 0, BibixName("v"))))
     println(runner.runToFinal(EvalTarget(1, 0, BibixName("aa"))))
     println(runner.runToFinal(EvalTarget(1, 0, BibixName("bb"))))
+    println(runner.runToFinal(EvalTarget(1, 0, BibixName("ss"))))
     println(runner.runToFinal(EvalTarget(1, 0, BibixName("cc"))))
     println(runner.runToFinal(EvalTarget(1, 0, BibixName("dd"))))
   }
 
   fun BuildGraphRunner.runToFinal(buildTask: BuildTask): BuildTaskResult.FinalResult =
-    handleResult(this.runBuildTask(buildTask))
+    handleResult(buildTask, this.runBuildTask(buildTask))
 
-  fun BuildGraphRunner.handleResult(result: BuildTaskResult): BuildTaskResult.FinalResult =
+  fun BuildGraphRunner.handleResult(
+    buildTask: BuildTask,
+    result: BuildTaskResult
+  ): BuildTaskResult.FinalResult =
     when (result) {
       is BuildTaskResult.FinalResult -> result
       is BuildTaskResult.WithResult -> {
+//        println("$buildTask -> ${result.task}")
         val derivedTaskResult = runToFinal(result.task)
-        handleResult(result.func(derivedTaskResult))
+        handleResult(buildTask, result.func(derivedTaskResult))
       }
 
       is BuildTaskResult.WithResultList -> {
+//        println("$buildTask ->")
+//        result.tasks.forEach {
+//          println("  $it")
+//        }
         val derivedTaskResults = result.tasks.map { runToFinal(it) }
-        handleResult(result.func(derivedTaskResults))
+        handleResult(buildTask, result.func(derivedTaskResults))
       }
 
       is BuildTaskResult.LongRunning -> {
-        handleResult(result.func())
+        handleResult(buildTask, result.func())
       }
 
       is BuildTaskResult.SuspendLongRunning -> {
-        handleResult(runBlocking { result.func() })
+        handleResult(buildTask, runBlocking { result.func() })
       }
 
       else -> throw AssertionError()

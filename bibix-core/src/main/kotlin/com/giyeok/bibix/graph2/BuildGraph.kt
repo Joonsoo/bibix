@@ -43,7 +43,7 @@ class BuildGraph(
       preludeNames: Set<String>,
       nativeAllowed: Boolean,
     ): BuildGraph {
-      val builder = BuildGraphBuilder(packageName)
+      val builder = BuildGraphBuilder(packageName, preloadedPluginNames)
       val nameLookupTable = NameLookupTable.fromDefs(defs)
       val ctx = GraphBuildContext(
         NameLookupContext(

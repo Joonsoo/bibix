@@ -5,6 +5,7 @@ import com.giyeok.bibix.base.*
 
 class BuildGraphBuilder(
   val packageName: String?,
+  val preloadedPluginNames: Set<String>,
 
   val targets: MutableMap<BibixName, ExprNodeId> = mutableMapOf(),
   val buildRules: MutableMap<BibixName, BuildRuleDef> = mutableMapOf(),
@@ -45,11 +46,12 @@ class BuildGraphBuilder(
               val implNode = lookupExprName(def.impl.targetName.tokens, ctx)
               implNode
             }
+          val paramTypes = def.params.associate { it.name to addType(it.typ!!, ctx) }
+
           buildRules[ctx.bibixName(def.name)] = BuildRuleDef(
             def = def,
-            params = def.params.associate { it.name to addType(it.typ!!, ctx) },
-            paramDefaultValues = def.params.filter { it.defaultValue != null }
-              .associate { it.name to addExpr(it.defaultValue!!, ctx) },
+            params = paramTypes,
+            paramDefaultValues = defaultValuesMap(def.params, paramTypes, ctx),
             returnType = addType(def.returnType, ctx),
             implTarget = implTarget,
             implClassName = def.impl.className.tokens.joinToString("."),
@@ -59,13 +61,13 @@ class BuildGraphBuilder(
 
         is BibixAst.ImportAll -> {
           val importName = def.rename ?: def.source.getDefaultImportName()
-          val source = addExpr(def.source, ctx)
+          val source = preloadedImportSource(def.source) { addExpr(def.source, ctx) }
           importAlls[ctx.bibixName(importName)] = ImportAllDef(source)
         }
 
         is BibixAst.ImportFrom -> {
           val importName = def.rename ?: def.importing.tokens.last()
-          val source = addExpr(def.source, ctx)
+          val source = preloadedImportSource(def.source) { addExpr(def.source, ctx) }
           importFroms[ctx.bibixName(importName)] = ImportFromDef(source, def.importing.tokens)
         }
 
@@ -78,13 +80,9 @@ class BuildGraphBuilder(
         }
 
         is BibixAst.DataClassDef -> {
+          val fieldTypes = def.fields.associate { it.name to addType(it.typ!!, ctx) }
           dataClasses[ctx.bibixName(def.name)] =
-            DataClassDef(
-              def = def,
-              fields = def.fields.associate { it.name to addType(it.typ!!, ctx) },
-              fieldDefaultValues = def.fields.filter { it.defaultValue != null }
-                .associate { it.name to addExpr(it.defaultValue!!, ctx) }
-            )
+            DataClassDef(def, fieldTypes, defaultValuesMap(def.fields, fieldTypes, ctx))
         }
 
         is BibixAst.SuperClassDef -> {
@@ -162,6 +160,35 @@ class BuildGraphBuilder(
         }
       }
     }
+  }
+
+
+  private fun defaultValuesMap(
+    params: List<BibixAst.ParamDef>,
+    paramTypes: Map<String, TypeNodeId>,
+    ctx: GraphBuildContext
+  ) = params.filter { it.defaultValue != null }.associate {
+    val defaultValue = it.defaultValue!!
+    val value = addExpr(defaultValue, ctx)
+    it.name to addNode(ValueCastNode(defaultValue, value, paramTypes.getValue(it.name)))
+  }
+
+  private fun preloadedImportSource(
+    source: BibixAst.Expr,
+    ifElse: () -> ExprNodeId
+  ): ExprNodeId {
+    when (source) {
+      is BibixAst.NameRef -> {
+        if (source.name in preloadedPluginNames) {
+          return addNode(PreloadedPluginRef(source.name))
+        }
+      }
+
+      else -> {
+        // do nothing
+      }
+    }
+    return ifElse()
   }
 
   fun addNode(node: ExprGraphNode): ExprNodeId {
@@ -351,15 +378,15 @@ class BuildGraphBuilder(
   fun addType(type: BibixAst.TypeExpr, ctx: GraphBuildContext): TypeNodeId = when (type) {
     is BibixAst.CollectionType -> {
       when (type.name) {
-        "set" -> {
+        "list" -> {
           check(type.typeParams.params.size == 1)
           val elemType = addType(type.typeParams.params.first(), ctx)
-          val set = addNode(SetTypeNode(type, elemType))
+          val set = addNode(ListTypeNode(type, elemType))
           addEdge(set, elemType)
           set
         }
 
-        "list" -> {
+        "set" -> {
           check(type.typeParams.params.size == 1)
           val elemType = addType(type.typeParams.params.first(), ctx)
           val set = addNode(SetTypeNode(type, elemType))

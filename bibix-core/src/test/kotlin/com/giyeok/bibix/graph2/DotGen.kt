@@ -1,7 +1,5 @@
 package com.giyeok.bibix.graph2
 
-import com.giyeok.bibix.graph.CodeWriter
-import com.giyeok.bibix.graph.indentWidth
 import kotlin.math.absoluteValue
 
 fun dotGraphFrom(graph: ExprGraph, source: String): String {
@@ -37,26 +35,27 @@ fun nodeDescription(id: ExprNodeId, node: ExprGraphNode, graph: ExprGraph, sourc
     is ImportedExprFromPreloaded -> "imported preloaded ${node.pluginName} ${node.name}"
     is ImportedExprFromPrelude -> "imported prelude ${node.name} ${node.remaining}"
     is ValueCastNode -> "cast"
+    is PreloadedPluginRef -> "preloaded ${node.pluginName}"
   }
 
 fun ExprNodeId.toNodeId(): String = "n${this.hashCode().absoluteValue}"
 
 fun dotEscape(text: String): String {
   val lines = text.lines()
-  val linesTrimmed = if (lines.size <= 1) {
-    lines
-  } else {
-    val firstIndent = lines.first().indentWidth()
-    val minCommonIndent = lines.drop(1).minOf(String::indentWidth)
-    if (firstIndent >= minCommonIndent) {
-      lines.map { it.substring(minCommonIndent) }
-    } else if (firstIndent == 0) {
-      listOf(lines.first()) + lines.drop(1).map { it.substring(minCommonIndent) }
-    } else {
-      lines
-    }
-  }
-  return linesTrimmed.joinToString("") {
+//  val linesTrimmed = if (lines.size <= 1) {
+//    lines
+//  } else {
+//    val firstIndent = lines.first().indentWidth()
+//    val minCommonIndent = lines.drop(1).minOf(String::indentWidth)
+//    if (firstIndent >= minCommonIndent) {
+//      lines.map { it.substring(minCommonIndent) }
+//    } else if (firstIndent == 0) {
+//      listOf(lines.first()) + lines.drop(1).map { it.substring(minCommonIndent) }
+//    } else {
+//      lines
+//    }
+//  }
+  return lines.joinToString("") {
     it.replace("\"", "\\\"") + "\\l"
   }
 }

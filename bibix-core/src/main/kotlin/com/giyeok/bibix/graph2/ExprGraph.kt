@@ -40,6 +40,10 @@ data class LocalEnumValue(val enumType: BibixName, val enumValue: String): ExprG
   override val id: ExprNodeId get() = ExprNodeId.AnyNodeId(this)
 }
 
+data class PreloadedPluginRef(val pluginName: String): ExprGraphNode() {
+  override val id: ExprNodeId get() = ExprNodeId.AnyNodeId(this)
+}
+
 data class ImportedExprFromPreloaded(
   val pluginName: String,
   val varCtxId: Int,

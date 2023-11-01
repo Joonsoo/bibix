@@ -39,7 +39,7 @@ data class EnumValue(
 sealed class CollectionValue: BibixValue() {
   abstract val values: List<BibixValue>
 
-  abstract fun newCollectionWith(elems:List<BibixValue>): CollectionValue
+  abstract fun newCollectionWith(elems: List<BibixValue>): CollectionValue
 }
 
 data class ListValue(override val values: List<BibixValue>): CollectionValue() {
@@ -119,6 +119,12 @@ data class ClassInstanceValue(
 
   fun getStringField(fieldName: String): String =
     (getField(fieldName) as StringValue).value
+
+  fun getFileField(fieldName: String): Path =
+    (getField(fieldName) as FileValue).file
+
+  fun getDirectoryField(fieldName: String): Path =
+    (getField(fieldName) as DirectoryValue).directory
 
   fun getNullableField(fieldName: String): BibixValue? {
     val value = getField(fieldName)

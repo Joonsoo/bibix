@@ -50,12 +50,17 @@ data class EvalVar(
 data class EvalDataClass(
   val projectId: Int,
   val importInstanceId: Int,
-  val name: BibixName
+  val className: BibixName
 ): BuildTask()
 
 data class EvalDataClassByName(
   val packageName: String,
   val className: String,
+): BuildTask()
+
+data class EvalSuperClassHierarchyByName(
+  val packageName: String,
+  val className: String
 ): BuildTask()
 
 data class EvalType(val projectId: Int, val typeNodeId: TypeNodeId): BuildTask()
@@ -79,7 +84,11 @@ sealed class BuildTaskResult {
 
   data class ValueResult(val value: BibixValue): FinalResult()
 
-  data class ImportResult(val projectId: Int, val graph: BuildGraph): FinalResult()
+  data class ImportResult(
+    val projectId: Int,
+    val graph: BuildGraph,
+    val namePrefix: List<String>
+  ): FinalResult()
 
   data class ImportInstanceResult(val projectId: Int, val importInstanceId: Int): FinalResult()
 
@@ -105,6 +114,24 @@ sealed class BuildTaskResult {
     val dataClassDef: DataClassDef,
     val fieldTypes: List<Pair<String, BibixType>>,
   ): FinalResult()
+
+  data class SuperClassHierarchyResult(
+    val projectId: Int,
+    val packageName: String,
+    val name: BibixName,
+    val subTypes: List<SubType>,
+  ): FinalResult() {
+    data class SubType(val name: BibixName, val subs: List<SubType>) {
+      val isDataClass = subs.isEmpty()
+      val isSuperClass = subs.isNotEmpty()
+
+      fun allSubDataClasses(): Set<BibixName> =
+        if (isDataClass) setOf(name) else subs.flatMap { it.allSubDataClasses() }.toSet()
+    }
+
+    val allSubDataClasses: Set<BibixName>
+      get() = subTypes.flatMap { it.allSubDataClasses() }.toSet()
+  }
 
   class TypeCastFailResult(val value: BibixValue, val type: BibixType): FinalResult()
   class ValueFinalizeFailResult(): FinalResult()
