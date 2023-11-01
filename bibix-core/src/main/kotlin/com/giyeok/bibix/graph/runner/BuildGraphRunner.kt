@@ -103,12 +103,21 @@ class BuildGraphRunner(
       BuildTaskResult.WithResult(
         EvalExpr(buildTask.projectId, exprNodeId, buildTask.importInstanceId, null)
       ) { result ->
+        // TODO if buildTask.projectId == 1이면 outputs 폴더에 링크 만들기
         when (result) {
           is BuildTaskResult.ValueResult -> result
           is BuildTaskResult.TypeCastFailResult -> throw IllegalStateException()
           else -> throw AssertionError()
         }
       }
+    }
+
+    is ExecAction -> {
+      TODO()
+    }
+
+    is EvalActionRule -> {
+      TODO()
     }
 
     is EvalVar -> {
@@ -123,7 +132,7 @@ class BuildGraphRunner(
       }
       checkNotNull(varExpr)
       BuildTaskResult.WithResult(
-        EvalExpr(varExpr.projectId, varExpr.exprNodeId, varExpr.varCtxId, null)
+        EvalExpr(varExpr.projectId, varExpr.exprNodeId, varExpr.importInstanceId, null)
       ) { result ->
         check(result is BuildTaskResult.ValueResult)
         result
@@ -224,7 +233,7 @@ class BuildGraphRunner(
     is Import -> handleImportTask(buildTask)
 
     is ImportFromPrelude -> {
-      lookupExprValue(2, BibixName(buildTask.name), 0, 0) { it }
+      lookupExprValue(2, BibixName(buildTask.name), 0) { it }
     }
 
     is ImportPreloaded -> {
@@ -325,7 +334,7 @@ class BuildGraphRunner(
     return if (importAll != null) {
       check(importFrom == null)
       BuildTaskResult.WithResult(
-        EvalExpr(importTask.projectId, importAll.source, importTask.varCtxId, null)
+        EvalExpr(importTask.projectId, importAll.source, importTask.importInstanceId, null)
       ) { source ->
         handleImportSource(importTask.projectId, source) { importProjectId, importGraph ->
           BuildTaskResult.ImportResult(importProjectId, importGraph, listOf())
@@ -337,7 +346,7 @@ class BuildGraphRunner(
       // import bibix.plugins as plgs
       check(importFrom != null)
       BuildTaskResult.WithResult(
-        EvalExpr(importTask.projectId, importFrom.source, importTask.varCtxId, null)
+        EvalExpr(importTask.projectId, importFrom.source, importTask.importInstanceId, null)
       ) { source ->
         handleImportSource(importTask.projectId, source) { importProjectId, importGraph ->
           BuildTaskResult.ImportResult(importProjectId, importGraph, importFrom.importing)

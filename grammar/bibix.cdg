@@ -14,7 +14,6 @@ Def: Def = ImportDef
   | VarRedefs
   | BuildRuleDef
   | ActionRuleDef
-  | DefsWithVarRedefs
 
 NamespaceDef = SimpleName WS '{' (WS Defs)? WS '}' {NamespaceDef(name=$0, body=$3 ?: [])}
 
@@ -39,12 +38,14 @@ VarRedefs = "var"&Tk WS VarRedef (WS ',' WS VarRedef)* {VarRedefs(redefs=[$2] + 
 VarRedef = SimpleName (WS '.' WS SimpleName)+ WS '=' WS Expr
            {VarRedef(nameTokens=[$0] + $1, redefValue=$5)}
 
-BuildRuleDef = "def"&Tk WS SimpleName WS ParamsDef WS ':' WS TypeExpr WS '=' WS MethodRef
-               {BuildRuleDef(name=$2, params=$4, returnType=$8, impl=$12)}
+BuildRuleDef = (BuildRuleMod WS $0)* "def"&Tk WS SimpleName WS ParamsDef WS ':' WS TypeExpr WS '=' WS MethodRef
+               {BuildRuleDef(mods=$0, name=$3, params=$5, returnType=$9, impl=$13)}
+BuildRuleMod: %BuildRuleMod = ("singleton" {%Singleton} | "sync" {%Synchronized})&Tk
 ActionDef = "action"&Tk WS SimpleName (WS ActionParams)? WS ActionBody {ActionDef(name=$2, argsName=$3, body=$5)}
-ActionBody: ActionBody = '=' WS ActionExpr {SingleCallAction(expr=$2)}
-  | '{' (WS ActionExpr)+ WS '}' {MultiCallActions(exprs=$1)}
+ActionBody: ActionBody = '=' WS ActionStmt {SingleCallAction(expr=$2)}
+  | '{' (WS ActionStmt)+ WS '}' {MultiCallActions(exprs=$1)}
 ActionParams = '(' WS SimpleName WS ')' $2
+// TODO ActionParams에서 (opt: OptLevel, message: string, args) 같은 구조화된 인자도 받게 할 수 있을까?
 ActionRuleDef = "action"&Tk WS "def"&Tk WS SimpleName WS ParamsDef WS '=' WS MethodRef
                 {ActionRuleDef(name=$4, params=$6, impl=$10)}
 
@@ -61,12 +62,15 @@ Expr: Expr = Expr WS "as"&Tk WS NoUnionType {CastExpr(expr=$0, castTo=$4)}
 MergeOpOrPrimary: MergeOpOrPrimary = Expr WS '+' WS Primary {MergeOp(lhs=$0, rhs=$4)}
   | Primary
 
-// TODO ActionExpr to run other actions
-ActionExpr: ActionExpr = CallExpr
-  | Name
-
-DefsWithVarRedefs = "with"&Tk WS VarRedef (WS ',' WS VarRedef)* WS '{' WS Defs WS '}'
-                    {DefsWithVarRedefs(varRedefs=[$2] + $3, defs=$7)}
+// 액션은 항상 위에서 아래로 실행된다.
+// CallExpr: action def, 다른 action, build rule을 실행함
+//  - 다른 액션을 호출할 때는 인자 없이 호출하면 된다.
+//  - 이런 경우를 위해 Name을 추가하는게 나을까?
+// LetStmt: 해당 시점 이후에 사용할 변수 정의
+//  - let을 쓰면 action의 실행 순서를 제어할 수 있다.
+ActionStmt: ActionStmt = CallExpr
+  | LetStmt
+LetStmt = "let"&Tk WS SimpleName WS '=' WS <Expr> {LetStmt(name=$2, expr=$6)}
 
 Primary: Primary = CallExpr
   | Primary WS '.' WS SimpleName {MemberAccess(target=$0, name=$4)}

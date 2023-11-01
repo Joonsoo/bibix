@@ -333,7 +333,6 @@ class ValueCaster(
         buildGraphRunner.lookupExprValue(
           buildRule.projectId,
           BibixName(namespace + value.nameTokens),
-          0,
           buildRule.importInstanceId
         ) { lookupResult ->
           check(lookupResult is BuildTaskResult.DataClassResult)

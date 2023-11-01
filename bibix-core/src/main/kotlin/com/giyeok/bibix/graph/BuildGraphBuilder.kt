@@ -13,11 +13,13 @@ class BuildGraphBuilder(
   val dataClasses: MutableMap<BibixName, DataClassDef> = mutableMapOf(),
   val superClasses: MutableMap<BibixName, SuperClassDef> = mutableMapOf(),
   val enums: MutableMap<BibixName, EnumDef> = mutableMapOf(),
+  val actions: MutableMap<BibixName, ActionDef> = mutableMapOf(),
+  val actionRules: MutableMap<BibixName, ActionRuleDef> = mutableMapOf(),
 
   val importAlls: MutableMap<BibixName, ImportAllDef> = mutableMapOf(),
   val importFroms: MutableMap<BibixName, ImportFromDef> = mutableMapOf(),
-  // import name -> import instace id (0 혹은 DefsWithVarRedefs의 nodeId) -> VarCtxBuilder(var name -> redef expr node id)
-  val importInstances: MutableMap<BibixName, MutableMap<Int, VarCtxBuilder>> = mutableMapOf(),
+  // import name -> (var name -> redef expr node id)
+  val varRedefs: MutableMap<BibixName, MutableMap<BibixName, ExprNodeId>> = mutableMapOf(),
 
   val exprNodes: MutableMap<ExprNodeId, ExprGraphNode> = mutableMapOf(),
   val exprEdges: MutableSet<ExprGraphEdge> = mutableSetOf(),
@@ -25,17 +27,17 @@ class BuildGraphBuilder(
   val typeNodes: MutableMap<TypeNodeId, TypeGraphNode> = mutableMapOf(),
   val typeEdges: MutableSet<TypeGraphEdge> = mutableSetOf(),
 ) {
-  class VarCtxBuilder(val parentCtxId: Int, val redefs: MutableMap<BibixName, ExprNodeId>)
-
   fun addDefs(defs: List<BibixAst.Def>, ctx: GraphBuildContext, isRoot: Boolean) {
     defs.forEach { def ->
       when (def) {
         is BibixAst.ActionDef -> {
           // TODO
+          actions[ctx.bibixName(def.name)] = ActionDef(def)
         }
 
         is BibixAst.ActionRuleDef -> {
           // TODO
+          actionRules[ctx.bibixName(def.name)] = ActionRuleDef(def)
         }
 
         is BibixAst.BuildRuleDef -> {
@@ -114,54 +116,19 @@ class BuildGraphBuilder(
             when (val lookupResult = ctx.nameLookupCtx.lookupName(redef.nameTokens)) {
               is NameInImport -> {
                 check(isRoot) { "var redef only can be placed in the root. Consider using with statement instead" }
-                val redefsCtx =
-                  importInstances.getOrPut(lookupResult.importEntry.name) { mutableMapOf() }
-                    .getOrPut(0) { VarCtxBuilder(0, mutableMapOf()) }
-                val redefsMap = redefsCtx.redefs
+                val redefs = varRedefs.getOrPut(lookupResult.importEntry.name) { mutableMapOf() }
                 val varName = BibixName(lookupResult.remaining)
-                check(varName !in redefsMap) { "Duplicate var redef: $varName" }
-                redefsMap[varName] = addExpr(redef.redefValue, ctx)
+                check(varName !in redefs) { "Duplicate var redef: $varName" }
+                redefs[varName] = addExpr(redef.redefValue, ctx)
               }
 
               else -> throw IllegalStateException()
             }
           }
-        }
-
-        is BibixAst.DefsWithVarRedefs -> {
-          val contextId = def.nodeId
-          val redefed = mutableMapOf<BibixName, Int>()
-          def.varRedefs.forEach { redef ->
-            when (val lookupResult = ctx.nameLookupCtx.lookupName(redef.nameTokens)) {
-              // TODO NameOfPreloadedPlugin 처리
-              is NameInImport -> {
-                val importName = lookupResult.importEntry.name
-                val currentVarCtxId = ctx.importInstances[importName] ?: 0
-
-                val redefsCtx =
-                  importInstances.getOrPut(importName) { mutableMapOf() }
-                    .getOrPut(contextId) { VarCtxBuilder(currentVarCtxId, mutableMapOf()) }
-                val redefsMap = redefsCtx.redefs
-
-                val varName = BibixName(lookupResult.remaining)
-                check(varName !in redefsMap) { "Duplicate var redef: $varName" }
-                redefsMap[varName] = addExpr(redef.redefValue, ctx)
-
-                // ctx.importInstances의 내용을 반영하도록
-
-                redefed[importName] = contextId
-              }
-
-              else -> throw IllegalStateException()
-            }
-          }
-
-          addDefs(def.defs, ctx.withImportInstances(redefed), false)
         }
       }
     }
   }
-
 
   private fun defaultValuesMap(
     params: List<BibixAst.ParamDef>,
@@ -227,18 +194,10 @@ class BuildGraphBuilder(
         ImportedExprFromPrelude(lookupResult.name, lookupResult.remaining)
 
       is NameOfPreloadedPlugin ->
-        ImportedExprFromPreloaded(
-          lookupResult.name,
-          ctx.importInstances[BibixName(lookupResult.name)] ?: 0,
-          BibixName(lookupResult.remaining)
-        )
+        ImportedExprFromPreloaded(lookupResult.name, BibixName(lookupResult.remaining))
 
       is NameInImport -> {
-        ImportedExpr(
-          lookupResult.importEntry.name,
-          ctx.importInstances[lookupResult.importEntry.name] ?: 0,
-          BibixName(lookupResult.remaining)
-        )
+        ImportedExpr(lookupResult.importEntry.name, BibixName(lookupResult.remaining))
       }
 
       is NameNotFound, is NamespaceFound -> throw NameNotFoundException(nameTokens, null)
@@ -437,11 +396,7 @@ class BuildGraphBuilder(
             }
 
             is NameInImport -> {
-              ImportedType(
-                lookupResult.importEntry.name,
-                ctx.importInstances[lookupResult.importEntry.name] ?: 0,
-                BibixName(lookupResult.remaining)
-              )
+              ImportedType(lookupResult.importEntry.name, BibixName(lookupResult.remaining))
             }
 
             else -> throw NameNotFoundException(type.tokens, type)
@@ -480,13 +435,11 @@ class BuildGraphBuilder(
     dataClasses = dataClasses,
     superClasses = superClasses,
     enums = enums,
+    actions = actions,
+    actionRules = actionRules,
     importAlls = importAlls,
     importFroms = importFroms,
-    varRedefs = importInstances.mapValues { (_, ctxMap) ->
-      ctxMap.mapValues { (_, ctx) ->
-        BuildGraph.VarCtx(ctx.parentCtxId, ctx.redefs)
-      }
-    },
+    varRedefs = varRedefs,
     exprGraph = ExprGraph(exprNodes, exprEdges),
     typeGraph = TypeGraph(typeNodes, typeEdges),
     exprTypeEdges = exprTypeEdges
@@ -495,7 +448,6 @@ class BuildGraphBuilder(
 
 data class GraphBuildContext(
   val nameLookupCtx: NameLookupContext,
-  val importInstances: Map<BibixName, Int>,
   val thisRefAllowed: Boolean,
   val nativeAllowed: Boolean,
 ) {
@@ -506,9 +458,6 @@ data class GraphBuildContext(
     copy(thisRefAllowed = true)
 
   fun bibixName(name: String) = BibixName(nameLookupCtx.currentScope.namePath + name)
-
-  fun withImportInstances(importInstances: Map<BibixName, Int>): GraphBuildContext =
-    copy(importInstances = this.importInstances + importInstances)
 }
 
 fun BibixAst.Primary.getDefaultImportName(): String = when (this) {

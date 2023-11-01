@@ -24,7 +24,6 @@ class ExprEvaluator(
   private val projectPackageName: String? get() = multiGraph.projectPackages[projectId]
 
   private val buildGraph get() = multiGraph.getProjectGraph(projectId)
-  private val varRedefs: Map<BibixName, Map<Int, BuildGraph.VarCtx>> get() = buildGraph.varRedefs
   private val exprGraph: ExprGraph get() = buildGraph.exprGraph
 
   private val valueCaster: ValueCaster
@@ -279,7 +278,7 @@ class ExprEvaluator(
         BuildTaskResult.WithResult(Import(projectId, importInstanceId, exprNode.import)) { result ->
           check(result is BuildTaskResult.ImportResult)
 
-          handleImportResult(result, exprNode.import, exprNode.varCtxId, exprNode.name)
+          handleImportResult(result, exprNode.import, exprNode.name)
         }
 
       is PreloadedPluginRef ->
@@ -289,12 +288,7 @@ class ExprEvaluator(
         BuildTaskResult.WithResult(ImportPreloaded(exprNode.pluginName)) { result ->
           check(result is BuildTaskResult.ImportResult)
 
-          handleImportResult(
-            result,
-            BibixName(exprNode.pluginName),
-            exprNode.varCtxId,
-            exprNode.name
-          )
+          handleImportResult(result, BibixName(exprNode.pluginName), exprNode.name)
         }
 
       is ImportedExprFromPrelude -> {
@@ -317,19 +311,17 @@ class ExprEvaluator(
   private fun handleImportResult(
     result: BuildTaskResult.ImportResult,
     import: BibixName,
-    varCtxId: Int,
     importedMemberName: BibixName,
   ): BuildTaskResult = buildGraphRunner.handleImportResult(
     result,
     import,
-    varCtxId,
     importedMemberName,
-    varRedefs,
     projectId,
     importInstanceId
   ) { it }
 
   private fun sourceIdFrom(projectId: Int): BibixIdProto.SourceId {
+    // TODO 구현하기
     return sourceId {
       this.bibixVersion = Constants.BIBIX_VERSION
     }
@@ -346,6 +338,7 @@ class ExprEvaluator(
 
     val argsMap = argsMapFrom(args)
     val targetIdData = targetIdData {
+      // TODO
       this.sourceId = sourceIdFrom(callerProjectId)
       this.buildRule = buildRuleData {
         this.buildRuleSourceId = sourceIdFrom(buildRule.projectId)
@@ -363,9 +356,13 @@ class ExprEvaluator(
     val targetId = targetIdData.hashString()
     val targetIdHex = targetId.toHexString()
 
+    // TODO: BibixRepo 기능 정리
+    //  - target들의 실행 상태 잘 기록하기
     val repo = buildGraphRunner.repo
     val prevInputHashes = runBlocking { repo.getPrevInputsHashOf(targetId) }
     val hashChanged = if (prevInputHashes == null) true else prevInputHashes != argsMap.hashString()
+
+    // TODO: 같은 run에선 같은 target id는 값을 재활용하자
 
     val targetState = runBlocking { repo.getPrevTargetState(targetId) }
     val prevResult = targetState?.let {
@@ -443,7 +440,6 @@ class ExprEvaluator(
         buildGraphRunner.lookupExprValue(
           buildRule.projectId,
           BibixName(result.ruleName),
-          0,
           buildRule.importInstanceId,
         ) { lookupResult ->
           check(lookupResult is BuildTaskResult.BuildRuleResult)
@@ -510,9 +506,7 @@ fun BibixValue.followMemberNames(memberNames: List<String>): BibixValue {
 fun BuildGraphRunner.lookupExprValue(
   projectId: Int,
   name: BibixName,
-  varCtxId: Int,
   importInstanceId: Int,
-  // varRedefs: Map<BibixName, Map<Int, BuildGraph.VarCtx>>,
   block: (BuildTaskResult) -> BuildTaskResult,
 ): BuildTaskResult {
   val buildGraph = multiGraph.getProjectGraph(projectId)
@@ -556,9 +550,7 @@ fun BuildGraphRunner.lookupExprValue(
             handleImportResult(
               result,
               importName,
-              varCtxId,
               BibixName(name.tokens.drop(importName.tokens.size)),
-              buildGraph.varRedefs,
               projectId,
               importInstanceId,
               block
@@ -658,28 +650,13 @@ fun argsMapFrom(args: Map<String, BibixValue>): ArgsMap =
 fun BuildGraphRunner.handleImportResult(
   result: BuildTaskResult.ImportResult,
   import: BibixName,
-  varCtxId: Int,
   importedMemberName: BibixName,
-  varRedefs: Map<BibixName, Map<Int, BuildGraph.VarCtx>>,
   projectId: Int,
   importInstanceId: Int,
   block: (BuildTaskResult) -> BuildTaskResult,
 ): BuildTaskResult {
-  fun Map<Int, BuildGraph.VarCtx>.mergeForCtxId(varCtxId: Int): Map<BibixName, ExprNodeId> {
-    val varCtx = this[varCtxId]
-    if (varCtx == null) {
-      check(varCtxId == 0)
-      return mapOf()
-    }
-    val parent = if (varCtxId == 0 && varCtx.parentCtxId == 0) {
-      mapOf()
-    } else {
-      mergeForCtxId(varCtx.parentCtxId)
-    }
-    return parent + varCtx.redefs
-  }
-
-  val newRedefs = varRedefs[import]?.mergeForCtxId(varCtxId) ?: mapOf()
+  val importerGraph = multiGraph.getProjectGraph(projectId)
+  val newRedefs = importerGraph.varRedefs[import] ?: mapOf()
   val newGlobalRedefs = newRedefs.mapValues { (_, exprNodeId) ->
     GlobalExprNodeId(projectId, importInstanceId, exprNodeId)
   }
@@ -693,7 +670,6 @@ fun BuildGraphRunner.handleImportResult(
     lookupExprValue(
       result.projectId,
       BibixName(result.namePrefix + importedMemberName.tokens),
-      varCtxId,
       instance.importInstanceId,
       block
     )

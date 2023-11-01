@@ -3,16 +3,15 @@ import bibix.plugins as plgs
 
 var a.zz = "xyz"
 
+
+// x=com.giyeok.bibix.devtest.varredefs::A(x="123", xx="123123", y="456", z="xyz"))
+// x2="xyz"
+// aa={file(/home/joonsoo/Documents/workspace/bibix/bibix-core/src/test/resources/varredefs/b/test/com), file(/home/joonsoo/Documents/workspace/bibix/bibix-core/src/test/resources/varredefs/b/test/com/giyeok), file(/home/joonsoo/Documents/workspace/bibix/bibix-core/src/test/resources/varredefs/b/test/com/giyeok/a.kt), file(/home/joonsoo/Documents/workspace/bibix/bibix-core/src/test/resources/varredefs/b/test/a.txt)}
+// bb=ValueResult(value="0.5.4")
+// cc=ValueResult(value={file(/home/joonsoo/Documents/workspace/bibix/bibix-core/src/test/resources/varredefs/b/test/com/giyeok/a.kt)})
+
 x = a.A() // A("123", "456", "xyz")
 x2 = a.zz // "xyz"
-
-with a.zz = "abc" {
-  y = a.A() // A("123", "456", "abc")
-  y2 = a.zz // "abc"
-
-  q = a.zz
-  v = a.B()
-}
 
 aa = glob("test/**")
 bb = bibix.version

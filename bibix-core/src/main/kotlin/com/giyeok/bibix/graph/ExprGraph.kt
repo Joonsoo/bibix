@@ -46,7 +46,6 @@ data class PreloadedPluginRef(val pluginName: String): ExprGraphNode() {
 
 data class ImportedExprFromPreloaded(
   val pluginName: String,
-  val varCtxId: Int,
   val name: BibixName
 ): ExprGraphNode() {
   override val id: ExprNodeId get() = ExprNodeId.AnyNodeId(this)
@@ -56,11 +55,7 @@ data class ImportedExprFromPrelude(val name: String, val remaining: List<String>
   override val id: ExprNodeId get() = ExprNodeId.AnyNodeId(this)
 }
 
-data class ImportedExpr(
-  val import: BibixName,
-  val varCtxId: Int,
-  val name: BibixName
-): ExprGraphNode() {
+data class ImportedExpr(val import: BibixName, val name: BibixName): ExprGraphNode() {
   override val id: ExprNodeId get() = ExprNodeId.AnyNodeId(this)
 }
 

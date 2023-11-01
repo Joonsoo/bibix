@@ -113,6 +113,7 @@ data class Paren(
 ): Primary, AstNode
 
 data class BuildRuleDef(
+  val mods: List<BuildRuleMod>,
   val name: String,
   val params: List<ParamDef>,
   val returnType: TypeExpr,
@@ -127,7 +128,7 @@ data class Name(
   override val nodeId: Int,
   override val start: Int,
   override val end: Int,
-): ActionExpr, NoUnionType, AstNode
+): NoUnionType, AstNode
 
 data class DataClassDef(
   val name: String,
@@ -158,21 +159,11 @@ data class MethodRef(
 ): AstNode
 
 data class SingleCallAction(
-  val expr: ActionExpr,
+  val expr: ActionStmt,
   override val nodeId: Int,
   override val start: Int,
   override val end: Int,
 ): ActionBody, AstNode
-
-sealed interface ActionExpr: AstNode
-
-data class DefsWithVarRedefs(
-  val varRedefs: List<VarRedef>,
-  val defs: List<Def>,
-  override val nodeId: Int,
-  override val start: Int,
-  override val end: Int,
-): Def, AstNode
 
 sealed interface Expr: ListElem, AstNode
 
@@ -217,7 +208,7 @@ data class CallExpr(
   override val nodeId: Int,
   override val start: Int,
   override val end: Int,
-): ActionExpr, Primary, AstNode
+): ActionStmt, Primary, AstNode
 
 data class NamedType(
   val name: String,
@@ -340,7 +331,7 @@ data class ActionDef(
 ): Def, AstNode
 
 data class MultiCallActions(
-  val exprs: List<ActionExpr>,
+  val exprs: List<ActionStmt>,
   override val nodeId: Int,
   override val start: Int,
   override val end: Int,
@@ -365,6 +356,14 @@ data class ImportAll(
   override val start: Int,
   override val end: Int,
 ): ImportDef, AstNode
+
+data class LetStmt(
+  val name: String,
+  val expr: Expr,
+  override val nodeId: Int,
+  override val start: Int,
+  override val end: Int,
+): ActionStmt, AstNode
 
 data class BuildScript(
   val packageName: Name?,
@@ -395,6 +394,8 @@ data class NoneLiteral(
   override val end: Int,
 ): Literal, AstNode
 
+sealed interface ActionStmt: AstNode
+
 data class CallParams(
   val posParams: List<Expr>,
   val namedParams: List<NamedParam>,
@@ -416,7 +417,7 @@ data class BooleanLiteral(
   override val start: Int,
   override val end: Int,
 ): Literal, AstNode
-
+enum class BuildRuleMod { Singleton, Synchronized }
 
 fun matchStart(): BuildScript {
   val lastGen = source.length
@@ -449,10 +450,10 @@ return var10
 }
 
 fun matchDefs(beginGen: Int, endGen: Int): List<Def> {
-val var11 = getSequenceElems(history, 102, listOf(103,371), beginGen, endGen)
+val var11 = getSequenceElems(history, 102, listOf(103,384), beginGen, endGen)
 val var12 = matchDef(var11[0].first, var11[0].second)
-val var13 = unrollRepeat0(history, 371, 373, 9, 372, var11[1].first, var11[1].second).map { k ->
-val var14 = getSequenceElems(history, 374, listOf(7,103), k.first, k.second)
+val var13 = unrollRepeat0(history, 384, 386, 9, 385, var11[1].first, var11[1].second).map { k ->
+val var14 = getSequenceElems(history, 387, listOf(7,103), k.first, k.second)
 val var15 = matchDef(var14[1].first, var14[1].second)
 var15
 }
@@ -484,937 +485,943 @@ val var24 = history[endGen].findByBeginGenOpt(104, 1, beginGen)
 val var25 = history[endGen].findByBeginGenOpt(252, 1, beginGen)
 val var26 = history[endGen].findByBeginGenOpt(257, 1, beginGen)
 val var27 = history[endGen].findByBeginGenOpt(258, 1, beginGen)
-val var28 = history[endGen].findByBeginGenOpt(277, 1, beginGen)
-val var29 = history[endGen].findByBeginGenOpt(312, 1, beginGen)
-val var30 = history[endGen].findByBeginGenOpt(336, 1, beginGen)
-val var31 = history[endGen].findByBeginGenOpt(342, 1, beginGen)
-val var32 = history[endGen].findByBeginGenOpt(352, 1, beginGen)
-val var33 = history[endGen].findByBeginGenOpt(362, 1, beginGen)
-val var34 = history[endGen].findByBeginGenOpt(364, 1, beginGen)
-check(hasSingleTrue(var24 != null, var25 != null, var26 != null, var27 != null, var28 != null, var29 != null, var30 != null, var31 != null, var32 != null, var33 != null, var34 != null))
-val var35 = when {
+val var28 = history[endGen].findByBeginGenOpt(285, 1, beginGen)
+val var29 = history[endGen].findByBeginGenOpt(320, 1, beginGen)
+val var30 = history[endGen].findByBeginGenOpt(344, 1, beginGen)
+val var31 = history[endGen].findByBeginGenOpt(350, 1, beginGen)
+val var32 = history[endGen].findByBeginGenOpt(360, 1, beginGen)
+val var33 = history[endGen].findByBeginGenOpt(370, 1, beginGen)
+check(hasSingleTrue(var24 != null, var25 != null, var26 != null, var27 != null, var28 != null, var29 != null, var30 != null, var31 != null, var32 != null, var33 != null))
+val var34 = when {
 var24 != null -> {
-val var36 = matchImportDef(beginGen, endGen)
-var36
+val var35 = matchImportDef(beginGen, endGen)
+var35
 }
 var25 != null -> {
-val var37 = matchNamespaceDef(beginGen, endGen)
-var37
+val var36 = matchNamespaceDef(beginGen, endGen)
+var36
 }
 var26 != null -> {
-val var38 = matchTargetDef(beginGen, endGen)
-var38
+val var37 = matchTargetDef(beginGen, endGen)
+var37
 }
 var27 != null -> {
-val var39 = matchActionDef(beginGen, endGen)
-var39
+val var38 = matchActionDef(beginGen, endGen)
+var38
 }
 var28 != null -> {
-val var40 = matchClassDef(beginGen, endGen)
-var40
+val var39 = matchClassDef(beginGen, endGen)
+var39
 }
 var29 != null -> {
-val var41 = matchActionRuleDef(beginGen, endGen)
-var41
+val var40 = matchActionRuleDef(beginGen, endGen)
+var40
 }
 var30 != null -> {
-val var42 = matchEnumDef(beginGen, endGen)
-var42
+val var41 = matchEnumDef(beginGen, endGen)
+var41
 }
 var31 != null -> {
-val var43 = matchVarDef(beginGen, endGen)
-var43
+val var42 = matchVarDef(beginGen, endGen)
+var42
 }
 var32 != null -> {
-val var44 = matchVarRedefs(beginGen, endGen)
-var44
-}
-var33 != null -> {
-val var45 = matchBuildRuleDef(beginGen, endGen)
-var45
+val var43 = matchVarRedefs(beginGen, endGen)
+var43
 }
 else -> {
-val var46 = matchDefsWithVarRedefs(beginGen, endGen)
-var46
+val var44 = matchBuildRuleDef(beginGen, endGen)
+var44
 }
 }
-return var35
+return var34
 }
 
 fun matchActionRuleDef(beginGen: Int, endGen: Int): ActionRuleDef {
-val var47 = getSequenceElems(history, 313, listOf(260,7,314,7,65,7,284,7,181,7,319), beginGen, endGen)
-val var48 = matchSimpleName(var47[4].first, var47[4].second)
-val var49 = matchParamsDef(var47[6].first, var47[6].second)
-val var50 = matchMethodRef(var47[10].first, var47[10].second)
-val var51 = ActionRuleDef(var48, var49, var50, nextId(), beginGen, endGen)
-return var51
+val var45 = getSequenceElems(history, 321, listOf(260,7,322,7,65,7,292,7,181,7,327), beginGen, endGen)
+val var46 = matchSimpleName(var45[4].first, var45[4].second)
+val var47 = matchParamsDef(var45[6].first, var45[6].second)
+val var48 = matchMethodRef(var45[10].first, var45[10].second)
+val var49 = ActionRuleDef(var46, var47, var48, nextId(), beginGen, endGen)
+return var49
 }
 
 fun matchBuildRuleDef(beginGen: Int, endGen: Int): BuildRuleDef {
-val var52 = getSequenceElems(history, 363, listOf(314,7,65,7,284,7,161,7,140,7,181,7,319), beginGen, endGen)
-val var53 = matchSimpleName(var52[2].first, var52[2].second)
-val var54 = matchParamsDef(var52[4].first, var52[4].second)
-val var55 = matchTypeExpr(var52[8].first, var52[8].second)
-val var56 = matchMethodRef(var52[12].first, var52[12].second)
-val var57 = BuildRuleDef(var53, var54, var55, var56, nextId(), beginGen, endGen)
-return var57
+val var50 = getSequenceElems(history, 371, listOf(372,322,7,65,7,292,7,161,7,140,7,181,7,327), beginGen, endGen)
+val var51 = unrollRepeat0(history, 372, 374, 9, 373, var50[0].first, var50[0].second).map { k ->
+val var52 = getSequenceElems(history, 375, listOf(376,7), k.first, k.second)
+val var53 = matchBuildRuleMod(var52[0].first, var52[0].second)
+var53
+}
+val var54 = matchSimpleName(var50[3].first, var50[3].second)
+val var55 = matchParamsDef(var50[5].first, var50[5].second)
+val var56 = matchTypeExpr(var50[9].first, var50[9].second)
+val var57 = matchMethodRef(var50[13].first, var50[13].second)
+val var58 = BuildRuleDef(var51, var54, var55, var56, var57, nextId(), beginGen, endGen)
+return var58
 }
 
-fun matchParamsDef(beginGen: Int, endGen: Int): List<ParamDef> {
-val var59 = getSequenceElems(history, 285, listOf(116,286,173,7,117), beginGen, endGen)
-val var60 = history[var59[1].second].findByBeginGenOpt(100, 1, var59[1].first)
-val var61 = history[var59[1].second].findByBeginGenOpt(287, 1, var59[1].first)
-check(hasSingleTrue(var60 != null, var61 != null))
-val var62 = when {
-var60 != null -> null
+fun matchImportDef(beginGen: Int, endGen: Int): ImportDef {
+val var59 = history[endGen].findByBeginGenOpt(105, 4, beginGen)
+val var60 = history[endGen].findByBeginGenOpt(247, 8, beginGen)
+check(hasSingleTrue(var59 != null, var60 != null))
+val var61 = when {
+var59 != null -> {
+val var62 = getSequenceElems(history, 105, listOf(106,7,111,244), beginGen, endGen)
+val var63 = matchPrimary(var62[2].first, var62[2].second)
+val var64 = history[var62[3].second].findByBeginGenOpt(100, 1, var62[3].first)
+val var65 = history[var62[3].second].findByBeginGenOpt(245, 1, var62[3].first)
+check(hasSingleTrue(var64 != null, var65 != null))
+val var66 = when {
+var64 != null -> null
 else -> {
-val var63 = getSequenceElems(history, 288, listOf(7,289,298), var59[1].first, var59[1].second)
-val var64 = matchParamDef(var63[1].first, var63[1].second)
-val var65 = unrollRepeat0(history, 298, 300, 9, 299, var63[2].first, var63[2].second).map { k ->
-val var66 = getSequenceElems(history, 301, listOf(7,148,7,289), k.first, k.second)
-val var67 = matchParamDef(var66[3].first, var66[3].second)
-var67
-}
-listOf(var64) + var65
+val var67 = getSequenceElems(history, 246, listOf(7,123,7,65), var62[3].first, var62[3].second)
+val var68 = matchSimpleName(var67[3].first, var67[3].second)
+var68
 }
 }
-val var58 = var62
-return (var58 ?: listOf())
+val var69 = ImportAll(var63, var66, nextId(), beginGen, endGen)
+var69
 }
-
-fun matchActionDef(beginGen: Int, endGen: Int): ActionDef {
-val var68 = getSequenceElems(history, 259, listOf(260,7,65,264,7,269), beginGen, endGen)
-val var69 = matchSimpleName(var68[2].first, var68[2].second)
-val var70 = history[var68[3].second].findByBeginGenOpt(100, 1, var68[3].first)
-val var71 = history[var68[3].second].findByBeginGenOpt(265, 1, var68[3].first)
-check(hasSingleTrue(var70 != null, var71 != null))
-val var72 = when {
-var70 != null -> null
 else -> {
-val var73 = getSequenceElems(history, 266, listOf(7,267), var68[3].first, var68[3].second)
-val var74 = matchActionParams(var73[1].first, var73[1].second)
-var74
+val var70 = getSequenceElems(history, 247, listOf(248,7,121,7,106,7,63,244), beginGen, endGen)
+val var71 = matchExpr(var70[2].first, var70[2].second)
+val var72 = matchName(var70[6].first, var70[6].second)
+val var73 = history[var70[7].second].findByBeginGenOpt(100, 1, var70[7].first)
+val var74 = history[var70[7].second].findByBeginGenOpt(245, 1, var70[7].first)
+check(hasSingleTrue(var73 != null, var74 != null))
+val var75 = when {
+var73 != null -> null
+else -> {
+val var76 = getSequenceElems(history, 246, listOf(7,123,7,65), var70[7].first, var70[7].second)
+val var77 = matchSimpleName(var76[3].first, var76[3].second)
+var77
 }
 }
-val var75 = matchActionBody(var68[5].first, var68[5].second)
-val var76 = ActionDef(var69, var72, var75, nextId(), beginGen, endGen)
-return var76
+val var78 = ImportFrom(var71, var72, var75, nextId(), beginGen, endGen)
+var78
+}
+}
+return var61
 }
 
-fun matchActionParams(beginGen: Int, endGen: Int): String {
-val var77 = getSequenceElems(history, 268, listOf(116,7,65,7,117), beginGen, endGen)
-val var78 = matchSimpleName(var77[2].first, var77[2].second)
-return var78
-}
-
-fun matchActionBody(beginGen: Int, endGen: Int): ActionBody {
-val var79 = history[endGen].findByBeginGenOpt(270, 3, beginGen)
-val var80 = history[endGen].findByBeginGenOpt(272, 4, beginGen)
+fun matchExpr(beginGen: Int, endGen: Int): Expr {
+val var79 = history[endGen].findByBeginGenOpt(122, 5, beginGen)
+val var80 = history[endGen].findByBeginGenOpt(166, 1, beginGen)
 check(hasSingleTrue(var79 != null, var80 != null))
 val var81 = when {
 var79 != null -> {
-val var82 = getSequenceElems(history, 270, listOf(181,7,271), beginGen, endGen)
-val var83 = matchActionExpr(var82[2].first, var82[2].second)
-val var84 = SingleCallAction(var83, nextId(), beginGen, endGen)
-var84
+val var82 = getSequenceElems(history, 122, listOf(121,7,123,7,127), beginGen, endGen)
+val var83 = matchExpr(var82[0].first, var82[0].second)
+val var84 = matchNoUnionType(var82[4].first, var82[4].second)
+val var85 = CastExpr(var83, var84, nextId(), beginGen, endGen)
+var85
 }
 else -> {
-val var85 = getSequenceElems(history, 272, listOf(143,273,7,149), beginGen, endGen)
-val var86 = unrollRepeat1(history, 273, 274, 274, 276, var85[1].first, var85[1].second).map { k ->
-val var87 = getSequenceElems(history, 275, listOf(7,271), k.first, k.second)
-val var88 = matchActionExpr(var87[1].first, var87[1].second)
-var88
-}
-val var89 = MultiCallActions(var86, nextId(), beginGen, endGen)
-var89
+val var86 = matchMergeOpOrPrimary(beginGen, endGen)
+var86
 }
 }
 return var81
 }
 
-fun matchClassDef(beginGen: Int, endGen: Int): ClassDef {
-val var90 = history[endGen].findByBeginGenOpt(278, 1, beginGen)
-val var91 = history[endGen].findByBeginGenOpt(326, 1, beginGen)
-check(hasSingleTrue(var90 != null, var91 != null))
-val var92 = when {
-var90 != null -> {
-val var93 = matchDataClassDef(beginGen, endGen)
+fun matchNoUnionType(beginGen: Int, endGen: Int): NoUnionType {
+val var87 = history[endGen].findByBeginGenOpt(63, 1, beginGen)
+val var88 = history[endGen].findByBeginGenOpt(128, 1, beginGen)
+val var89 = history[endGen].findByBeginGenOpt(155, 1, beginGen)
+val var90 = history[endGen].findByBeginGenOpt(157, 1, beginGen)
+check(hasSingleTrue(var87 != null, var88 != null, var89 != null, var90 != null))
+val var91 = when {
+var87 != null -> {
+val var92 = matchName(beginGen, endGen)
+var92
+}
+var88 != null -> {
+val var93 = matchCollectionType(beginGen, endGen)
 var93
 }
-else -> {
-val var94 = matchSuperClassDef(beginGen, endGen)
+var89 != null -> {
+val var94 = matchTupleType(beginGen, endGen)
 var94
 }
-}
-return var92
-}
-
-fun matchDataClassDef(beginGen: Int, endGen: Int): DataClassDef {
-val var95 = getSequenceElems(history, 279, listOf(280,7,65,7,284,302), beginGen, endGen)
-val var96 = matchSimpleName(var95[2].first, var95[2].second)
-val var97 = matchParamsDef(var95[4].first, var95[4].second)
-val var99 = history[var95[5].second].findByBeginGenOpt(100, 1, var95[5].first)
-val var100 = history[var95[5].second].findByBeginGenOpt(303, 1, var95[5].first)
-check(hasSingleTrue(var99 != null, var100 != null))
-val var101 = when {
-var99 != null -> null
 else -> {
-val var102 = getSequenceElems(history, 304, listOf(7,305), var95[5].first, var95[5].second)
-val var103 = matchClassBody(var102[1].first, var102[1].second)
-var103
+val var95 = matchNamedTupleType(beginGen, endGen)
+var95
 }
 }
-val var98 = var101
-val var104 = DataClassDef(var96, var97, (var98 ?: listOf()), nextId(), beginGen, endGen)
-return var104
-}
-
-fun matchMethodRef(beginGen: Int, endGen: Int): MethodRef {
-val var105 = getSequenceElems(history, 320, listOf(63,7,161,7,63,321), beginGen, endGen)
-val var106 = matchName(var105[0].first, var105[0].second)
-val var107 = matchName(var105[4].first, var105[4].second)
-val var108 = history[var105[5].second].findByBeginGenOpt(100, 1, var105[5].first)
-val var109 = history[var105[5].second].findByBeginGenOpt(322, 1, var105[5].first)
-check(hasSingleTrue(var108 != null, var109 != null))
-val var110 = when {
-var108 != null -> null
-else -> {
-val var111 = getSequenceElems(history, 323, listOf(7,161,7,65), var105[5].first, var105[5].second)
-val var112 = matchSimpleName(var111[3].first, var111[3].second)
-var112
-}
-}
-val var113 = MethodRef(var106, var107, var110, nextId(), beginGen, endGen)
-return var113
-}
-
-fun matchClassBody(beginGen: Int, endGen: Int): List<ClassBodyElem> {
-val var114 = getSequenceElems(history, 306, listOf(143,307,7,149), beginGen, endGen)
-val var115 = unrollRepeat0(history, 307, 309, 9, 308, var114[1].first, var114[1].second).map { k ->
-val var116 = getSequenceElems(history, 310, listOf(7,311), k.first, k.second)
-val var117 = matchClassBodyElem(var116[1].first, var116[1].second)
-var117
-}
-return var115
-}
-
-fun matchClassBodyElem(beginGen: Int, endGen: Int): ClassBodyElem {
-val var118 = history[endGen].findByBeginGenOpt(312, 1, beginGen)
-val var119 = history[endGen].findByBeginGenOpt(324, 1, beginGen)
-check(hasSingleTrue(var118 != null, var119 != null))
-val var120 = when {
-var118 != null -> {
-val var121 = matchActionRuleDef(beginGen, endGen)
-var121
-}
-else -> {
-val var122 = matchClassCastDef(beginGen, endGen)
-var122
-}
-}
-return var120
-}
-
-fun matchClassCastDef(beginGen: Int, endGen: Int): ClassCastDef {
-val var123 = getSequenceElems(history, 325, listOf(123,7,140,7,181,7,121), beginGen, endGen)
-val var124 = matchTypeExpr(var123[2].first, var123[2].second)
-val var125 = matchExpr(var123[6].first, var123[6].second)
-val var126 = ClassCastDef(var124, var125, nextId(), beginGen, endGen)
-return var126
-}
-
-fun matchImportDef(beginGen: Int, endGen: Int): ImportDef {
-val var127 = history[endGen].findByBeginGenOpt(105, 4, beginGen)
-val var128 = history[endGen].findByBeginGenOpt(247, 8, beginGen)
-check(hasSingleTrue(var127 != null, var128 != null))
-val var129 = when {
-var127 != null -> {
-val var130 = getSequenceElems(history, 105, listOf(106,7,111,244), beginGen, endGen)
-val var131 = matchPrimary(var130[2].first, var130[2].second)
-val var132 = history[var130[3].second].findByBeginGenOpt(100, 1, var130[3].first)
-val var133 = history[var130[3].second].findByBeginGenOpt(245, 1, var130[3].first)
-check(hasSingleTrue(var132 != null, var133 != null))
-val var134 = when {
-var132 != null -> null
-else -> {
-val var135 = getSequenceElems(history, 246, listOf(7,123,7,65), var130[3].first, var130[3].second)
-val var136 = matchSimpleName(var135[3].first, var135[3].second)
-var136
-}
-}
-val var137 = ImportAll(var131, var134, nextId(), beginGen, endGen)
-var137
-}
-else -> {
-val var138 = getSequenceElems(history, 247, listOf(248,7,121,7,106,7,63,244), beginGen, endGen)
-val var139 = matchExpr(var138[2].first, var138[2].second)
-val var140 = matchName(var138[6].first, var138[6].second)
-val var141 = history[var138[7].second].findByBeginGenOpt(100, 1, var138[7].first)
-val var142 = history[var138[7].second].findByBeginGenOpt(245, 1, var138[7].first)
-check(hasSingleTrue(var141 != null, var142 != null))
-val var143 = when {
-var141 != null -> null
-else -> {
-val var144 = getSequenceElems(history, 246, listOf(7,123,7,65), var138[7].first, var138[7].second)
-val var145 = matchSimpleName(var144[3].first, var144[3].second)
-var145
-}
-}
-val var146 = ImportFrom(var139, var140, var143, nextId(), beginGen, endGen)
-var146
-}
-}
-return var129
-}
-
-fun matchActionExpr(beginGen: Int, endGen: Int): ActionExpr {
-val var147 = history[endGen].findByBeginGenOpt(63, 1, beginGen)
-val var148 = history[endGen].findByBeginGenOpt(112, 1, beginGen)
-check(hasSingleTrue(var147 != null, var148 != null))
-val var149 = when {
-var147 != null -> {
-val var150 = matchName(beginGen, endGen)
-var150
-}
-else -> {
-val var151 = matchCallExpr(beginGen, endGen)
-var151
-}
-}
-return var149
-}
-
-fun matchCallExpr(beginGen: Int, endGen: Int): CallExpr {
-val var152 = getSequenceElems(history, 113, listOf(63,7,114), beginGen, endGen)
-val var153 = matchName(var152[0].first, var152[0].second)
-val var154 = matchCallParams(var152[2].first, var152[2].second)
-val var155 = CallExpr(var153, var154, nextId(), beginGen, endGen)
-return var155
-}
-
-fun matchCallParams(beginGen: Int, endGen: Int): CallParams {
-val var156 = history[endGen].findByBeginGenOpt(115, 3, beginGen)
-val var157 = history[endGen].findByBeginGenOpt(118, 6, beginGen)
-val var158 = history[endGen].findByBeginGenOpt(176, 6, beginGen)
-val var159 = history[endGen].findByBeginGenOpt(186, 10, beginGen)
-check(hasSingleTrue(var156 != null, var157 != null, var158 != null, var159 != null))
-val var160 = when {
-var156 != null -> {
-val var161 = CallParams(listOf(), listOf(), nextId(), beginGen, endGen)
-var161
-}
-var157 != null -> {
-val var162 = getSequenceElems(history, 118, listOf(116,7,119,173,7,117), beginGen, endGen)
-val var163 = matchPositionalParams(var162[2].first, var162[2].second)
-val var164 = CallParams(var163, listOf(), nextId(), beginGen, endGen)
-var164
-}
-var158 != null -> {
-val var165 = getSequenceElems(history, 176, listOf(116,7,177,173,7,117), beginGen, endGen)
-val var166 = matchNamedParams(var165[2].first, var165[2].second)
-val var167 = CallParams(listOf(), var166, nextId(), beginGen, endGen)
-var167
-}
-else -> {
-val var168 = getSequenceElems(history, 186, listOf(116,7,119,7,148,7,177,173,7,117), beginGen, endGen)
-val var169 = matchPositionalParams(var168[2].first, var168[2].second)
-val var170 = matchNamedParams(var168[6].first, var168[6].second)
-val var171 = CallParams(var169, var170, nextId(), beginGen, endGen)
-var171
-}
-}
-return var160
-}
-
-fun matchPositionalParams(beginGen: Int, endGen: Int): List<Expr> {
-val var172 = getSequenceElems(history, 120, listOf(121,169), beginGen, endGen)
-val var173 = matchExpr(var172[0].first, var172[0].second)
-val var174 = unrollRepeat0(history, 169, 171, 9, 170, var172[1].first, var172[1].second).map { k ->
-val var175 = getSequenceElems(history, 172, listOf(7,148,7,121), k.first, k.second)
-val var176 = matchExpr(var175[3].first, var175[3].second)
-var176
-}
-return listOf(var173) + var174
-}
-
-fun matchNamedParams(beginGen: Int, endGen: Int): List<NamedParam> {
-val var177 = getSequenceElems(history, 178, listOf(179,182), beginGen, endGen)
-val var178 = matchNamedParam(var177[0].first, var177[0].second)
-val var179 = unrollRepeat0(history, 182, 184, 9, 183, var177[1].first, var177[1].second).map { k ->
-val var180 = getSequenceElems(history, 185, listOf(7,148,7,179), k.first, k.second)
-val var181 = matchNamedParam(var180[3].first, var180[3].second)
-var181
-}
-return listOf(var178) + var179
-}
-
-fun matchNamedParam(beginGen: Int, endGen: Int): NamedParam {
-val var182 = getSequenceElems(history, 180, listOf(65,7,181,7,121), beginGen, endGen)
-val var183 = matchSimpleName(var182[0].first, var182[0].second)
-val var184 = matchExpr(var182[4].first, var182[4].second)
-val var185 = NamedParam(var183, var184, nextId(), beginGen, endGen)
-return var185
-}
-
-fun matchDefsWithVarRedefs(beginGen: Int, endGen: Int): DefsWithVarRedefs {
-val var186 = getSequenceElems(history, 365, listOf(366,7,354,358,7,143,7,101,7,149), beginGen, endGen)
-val var187 = matchVarRedef(var186[2].first, var186[2].second)
-val var188 = unrollRepeat0(history, 358, 360, 9, 359, var186[3].first, var186[3].second).map { k ->
-val var189 = getSequenceElems(history, 361, listOf(7,148,7,354), k.first, k.second)
-val var190 = matchVarRedef(var189[3].first, var189[3].second)
-var190
-}
-val var191 = matchDefs(var186[7].first, var186[7].second)
-val var192 = DefsWithVarRedefs(listOf(var187) + var188, var191, nextId(), beginGen, endGen)
-return var192
-}
-
-fun matchVarRedef(beginGen: Int, endGen: Int): VarRedef {
-val var193 = getSequenceElems(history, 355, listOf(65,356,7,181,7,121), beginGen, endGen)
-val var194 = matchSimpleName(var193[0].first, var193[0].second)
-val var195 = unrollRepeat1(history, 356, 97, 97, 357, var193[1].first, var193[1].second).map { k ->
-val var196 = getSequenceElems(history, 98, listOf(7,99,7,65), k.first, k.second)
-val var197 = matchSimpleName(var196[3].first, var196[3].second)
-var197
-}
-val var198 = matchExpr(var193[5].first, var193[5].second)
-val var199 = VarRedef(listOf(var194) + var195, var198, nextId(), beginGen, endGen)
-return var199
-}
-
-fun matchExpr(beginGen: Int, endGen: Int): Expr {
-val var200 = history[endGen].findByBeginGenOpt(122, 5, beginGen)
-val var201 = history[endGen].findByBeginGenOpt(166, 1, beginGen)
-check(hasSingleTrue(var200 != null, var201 != null))
-val var202 = when {
-var200 != null -> {
-val var203 = getSequenceElems(history, 122, listOf(121,7,123,7,127), beginGen, endGen)
-val var204 = matchExpr(var203[0].first, var203[0].second)
-val var205 = matchNoUnionType(var203[4].first, var203[4].second)
-val var206 = CastExpr(var204, var205, nextId(), beginGen, endGen)
-var206
-}
-else -> {
-val var207 = matchMergeOpOrPrimary(beginGen, endGen)
-var207
-}
-}
-return var202
-}
-
-fun matchNoUnionType(beginGen: Int, endGen: Int): NoUnionType {
-val var208 = history[endGen].findByBeginGenOpt(63, 1, beginGen)
-val var209 = history[endGen].findByBeginGenOpt(128, 1, beginGen)
-val var210 = history[endGen].findByBeginGenOpt(155, 1, beginGen)
-val var211 = history[endGen].findByBeginGenOpt(157, 1, beginGen)
-check(hasSingleTrue(var208 != null, var209 != null, var210 != null, var211 != null))
-val var212 = when {
-var208 != null -> {
-val var213 = matchName(beginGen, endGen)
-var213
-}
-var209 != null -> {
-val var214 = matchCollectionType(beginGen, endGen)
-var214
-}
-var210 != null -> {
-val var215 = matchTupleType(beginGen, endGen)
-var215
-}
-else -> {
-val var216 = matchNamedTupleType(beginGen, endGen)
-var216
-}
-}
-return var212
+return var91
 }
 
 fun matchMergeOpOrPrimary(beginGen: Int, endGen: Int): MergeOpOrPrimary {
-val var217 = history[endGen].findByBeginGenOpt(111, 1, beginGen)
-val var218 = history[endGen].findByBeginGenOpt(167, 5, beginGen)
-check(hasSingleTrue(var217 != null, var218 != null))
-val var219 = when {
-var217 != null -> {
-val var220 = matchPrimary(beginGen, endGen)
-var220
+val var96 = history[endGen].findByBeginGenOpt(111, 1, beginGen)
+val var97 = history[endGen].findByBeginGenOpt(167, 5, beginGen)
+check(hasSingleTrue(var96 != null, var97 != null))
+val var98 = when {
+var96 != null -> {
+val var99 = matchPrimary(beginGen, endGen)
+var99
 }
 else -> {
-val var221 = getSequenceElems(history, 167, listOf(121,7,168,7,111), beginGen, endGen)
-val var222 = matchExpr(var221[0].first, var221[0].second)
-val var223 = matchPrimary(var221[4].first, var221[4].second)
-val var224 = MergeOp(var222, var223, nextId(), beginGen, endGen)
-var224
+val var100 = getSequenceElems(history, 167, listOf(121,7,168,7,111), beginGen, endGen)
+val var101 = matchExpr(var100[0].first, var100[0].second)
+val var102 = matchPrimary(var100[4].first, var100[4].second)
+val var103 = MergeOp(var101, var102, nextId(), beginGen, endGen)
+var103
 }
 }
-return var219
+return var98
 }
 
 fun matchCollectionType(beginGen: Int, endGen: Int): CollectionType {
-val var225 = getSequenceElems(history, 129, listOf(130,7,137), beginGen, endGen)
-val var226 = history[var225[0].second].findByBeginGenOpt(133, 1, var225[0].first)
-val var227 = history[var225[0].second].findByBeginGenOpt(135, 1, var225[0].first)
-check(hasSingleTrue(var226 != null, var227 != null))
-val var228 = when {
-var226 != null -> "set"
+val var104 = getSequenceElems(history, 129, listOf(130,7,137), beginGen, endGen)
+val var105 = history[var104[0].second].findByBeginGenOpt(133, 1, var104[0].first)
+val var106 = history[var104[0].second].findByBeginGenOpt(135, 1, var104[0].first)
+check(hasSingleTrue(var105 != null, var106 != null))
+val var107 = when {
+var105 != null -> "set"
 else -> "list"
 }
-val var229 = matchTypeParams(var225[2].first, var225[2].second)
-val var230 = CollectionType(var228, var229, nextId(), beginGen, endGen)
-return var230
+val var108 = matchTypeParams(var104[2].first, var104[2].second)
+val var109 = CollectionType(var107, var108, nextId(), beginGen, endGen)
+return var109
+}
+
+fun matchParamsDef(beginGen: Int, endGen: Int): List<ParamDef> {
+val var111 = getSequenceElems(history, 293, listOf(116,294,173,7,117), beginGen, endGen)
+val var112 = history[var111[1].second].findByBeginGenOpt(100, 1, var111[1].first)
+val var113 = history[var111[1].second].findByBeginGenOpt(295, 1, var111[1].first)
+check(hasSingleTrue(var112 != null, var113 != null))
+val var114 = when {
+var112 != null -> null
+else -> {
+val var115 = getSequenceElems(history, 296, listOf(7,297,306), var111[1].first, var111[1].second)
+val var116 = matchParamDef(var115[1].first, var115[1].second)
+val var117 = unrollRepeat0(history, 306, 308, 9, 307, var115[2].first, var115[2].second).map { k ->
+val var118 = getSequenceElems(history, 309, listOf(7,148,7,297), k.first, k.second)
+val var119 = matchParamDef(var118[3].first, var118[3].second)
+var119
+}
+listOf(var116) + var117
+}
+}
+val var110 = var114
+return (var110 ?: listOf())
+}
+
+fun matchBuildRuleMod(beginGen: Int, endGen: Int): BuildRuleMod {
+val var120 = history[endGen].findByBeginGenOpt(379, 1, beginGen)
+val var121 = history[endGen].findByBeginGenOpt(381, 1, beginGen)
+check(hasSingleTrue(var120 != null, var121 != null))
+val var122 = when {
+var120 != null -> BuildRuleMod.Singleton
+else -> BuildRuleMod.Synchronized
+}
+return var122
 }
 
 fun matchTypeParams(beginGen: Int, endGen: Int): TypeParams {
-val var231 = getSequenceElems(history, 138, listOf(139,7,140,150,7,154), beginGen, endGen)
-val var232 = matchTypeExpr(var231[2].first, var231[2].second)
-val var233 = unrollRepeat0(history, 150, 152, 9, 151, var231[3].first, var231[3].second).map { k ->
-val var234 = getSequenceElems(history, 153, listOf(7,148,7,140), k.first, k.second)
-val var235 = matchTypeExpr(var234[3].first, var234[3].second)
-var235
+val var123 = getSequenceElems(history, 138, listOf(139,7,140,150,7,154), beginGen, endGen)
+val var124 = matchTypeExpr(var123[2].first, var123[2].second)
+val var125 = unrollRepeat0(history, 150, 152, 9, 151, var123[3].first, var123[3].second).map { k ->
+val var126 = getSequenceElems(history, 153, listOf(7,148,7,140), k.first, k.second)
+val var127 = matchTypeExpr(var126[3].first, var126[3].second)
+var127
 }
-val var236 = TypeParams(listOf(var232) + var233, nextId(), beginGen, endGen)
-return var236
+val var128 = TypeParams(listOf(var124) + var125, nextId(), beginGen, endGen)
+return var128
+}
+
+fun matchActionDef(beginGen: Int, endGen: Int): ActionDef {
+val var129 = getSequenceElems(history, 259, listOf(260,7,65,264,7,269), beginGen, endGen)
+val var130 = matchSimpleName(var129[2].first, var129[2].second)
+val var131 = history[var129[3].second].findByBeginGenOpt(100, 1, var129[3].first)
+val var132 = history[var129[3].second].findByBeginGenOpt(265, 1, var129[3].first)
+check(hasSingleTrue(var131 != null, var132 != null))
+val var133 = when {
+var131 != null -> null
+else -> {
+val var134 = getSequenceElems(history, 266, listOf(7,267), var129[3].first, var129[3].second)
+val var135 = matchActionParams(var134[1].first, var134[1].second)
+var135
+}
+}
+val var136 = matchActionBody(var129[5].first, var129[5].second)
+val var137 = ActionDef(var130, var133, var136, nextId(), beginGen, endGen)
+return var137
+}
+
+fun matchActionParams(beginGen: Int, endGen: Int): String {
+val var138 = getSequenceElems(history, 268, listOf(116,7,65,7,117), beginGen, endGen)
+val var139 = matchSimpleName(var138[2].first, var138[2].second)
+return var139
+}
+
+fun matchActionBody(beginGen: Int, endGen: Int): ActionBody {
+val var140 = history[endGen].findByBeginGenOpt(270, 3, beginGen)
+val var141 = history[endGen].findByBeginGenOpt(280, 4, beginGen)
+check(hasSingleTrue(var140 != null, var141 != null))
+val var142 = when {
+var140 != null -> {
+val var143 = getSequenceElems(history, 270, listOf(181,7,271), beginGen, endGen)
+val var144 = matchActionStmt(var143[2].first, var143[2].second)
+val var145 = SingleCallAction(var144, nextId(), beginGen, endGen)
+var145
+}
+else -> {
+val var146 = getSequenceElems(history, 280, listOf(143,281,7,149), beginGen, endGen)
+val var147 = unrollRepeat1(history, 281, 282, 282, 284, var146[1].first, var146[1].second).map { k ->
+val var148 = getSequenceElems(history, 283, listOf(7,271), k.first, k.second)
+val var149 = matchActionStmt(var148[1].first, var148[1].second)
+var149
+}
+val var150 = MultiCallActions(var147, nextId(), beginGen, endGen)
+var150
+}
+}
+return var142
 }
 
 fun matchTupleType(beginGen: Int, endGen: Int): TupleType {
-val var237 = getSequenceElems(history, 156, listOf(116,7,140,150,7,117), beginGen, endGen)
-val var238 = matchTypeExpr(var237[2].first, var237[2].second)
-val var239 = unrollRepeat0(history, 150, 152, 9, 151, var237[3].first, var237[3].second).map { k ->
-val var240 = getSequenceElems(history, 153, listOf(7,148,7,140), k.first, k.second)
-val var241 = matchTypeExpr(var240[3].first, var240[3].second)
-var241
+val var151 = getSequenceElems(history, 156, listOf(116,7,140,150,7,117), beginGen, endGen)
+val var152 = matchTypeExpr(var151[2].first, var151[2].second)
+val var153 = unrollRepeat0(history, 150, 152, 9, 151, var151[3].first, var151[3].second).map { k ->
+val var154 = getSequenceElems(history, 153, listOf(7,148,7,140), k.first, k.second)
+val var155 = matchTypeExpr(var154[3].first, var154[3].second)
+var155
 }
-val var242 = TupleType(listOf(var238) + var239, nextId(), beginGen, endGen)
-return var242
-}
-
-fun matchNamedTupleType(beginGen: Int, endGen: Int): NamedTupleType {
-val var243 = getSequenceElems(history, 158, listOf(116,7,159,162,7,117), beginGen, endGen)
-val var244 = matchNamedType(var243[2].first, var243[2].second)
-val var245 = unrollRepeat0(history, 162, 164, 9, 163, var243[3].first, var243[3].second).map { k ->
-val var246 = getSequenceElems(history, 165, listOf(7,148,7,159), k.first, k.second)
-val var247 = matchNamedType(var246[3].first, var246[3].second)
-var247
-}
-val var248 = NamedTupleType(listOf(var244) + var245, nextId(), beginGen, endGen)
-return var248
+val var156 = TupleType(listOf(var152) + var153, nextId(), beginGen, endGen)
+return var156
 }
 
-fun matchNamedType(beginGen: Int, endGen: Int): NamedType {
-val var249 = getSequenceElems(history, 160, listOf(65,7,161,7,140), beginGen, endGen)
-val var250 = matchSimpleName(var249[0].first, var249[0].second)
-val var251 = matchTypeExpr(var249[4].first, var249[4].second)
-val var252 = NamedType(var250, var251, nextId(), beginGen, endGen)
-return var252
+fun matchClassDef(beginGen: Int, endGen: Int): ClassDef {
+val var157 = history[endGen].findByBeginGenOpt(286, 1, beginGen)
+val var158 = history[endGen].findByBeginGenOpt(334, 1, beginGen)
+check(hasSingleTrue(var157 != null, var158 != null))
+val var159 = when {
+var157 != null -> {
+val var160 = matchDataClassDef(beginGen, endGen)
+var160
+}
+else -> {
+val var161 = matchSuperClassDef(beginGen, endGen)
+var161
+}
+}
+return var159
+}
+
+fun matchDataClassDef(beginGen: Int, endGen: Int): DataClassDef {
+val var162 = getSequenceElems(history, 287, listOf(288,7,65,7,292,310), beginGen, endGen)
+val var163 = matchSimpleName(var162[2].first, var162[2].second)
+val var164 = matchParamsDef(var162[4].first, var162[4].second)
+val var166 = history[var162[5].second].findByBeginGenOpt(100, 1, var162[5].first)
+val var167 = history[var162[5].second].findByBeginGenOpt(311, 1, var162[5].first)
+check(hasSingleTrue(var166 != null, var167 != null))
+val var168 = when {
+var166 != null -> null
+else -> {
+val var169 = getSequenceElems(history, 312, listOf(7,313), var162[5].first, var162[5].second)
+val var170 = matchClassBody(var169[1].first, var169[1].second)
+var170
+}
+}
+val var165 = var168
+val var171 = DataClassDef(var163, var164, (var165 ?: listOf()), nextId(), beginGen, endGen)
+return var171
+}
+
+fun matchMethodRef(beginGen: Int, endGen: Int): MethodRef {
+val var172 = getSequenceElems(history, 328, listOf(63,7,161,7,63,329), beginGen, endGen)
+val var173 = matchName(var172[0].first, var172[0].second)
+val var174 = matchName(var172[4].first, var172[4].second)
+val var175 = history[var172[5].second].findByBeginGenOpt(100, 1, var172[5].first)
+val var176 = history[var172[5].second].findByBeginGenOpt(330, 1, var172[5].first)
+check(hasSingleTrue(var175 != null, var176 != null))
+val var177 = when {
+var175 != null -> null
+else -> {
+val var178 = getSequenceElems(history, 331, listOf(7,161,7,65), var172[5].first, var172[5].second)
+val var179 = matchSimpleName(var178[3].first, var178[3].second)
+var179
+}
+}
+val var180 = MethodRef(var173, var174, var177, nextId(), beginGen, endGen)
+return var180
+}
+
+fun matchClassBody(beginGen: Int, endGen: Int): List<ClassBodyElem> {
+val var181 = getSequenceElems(history, 314, listOf(143,315,7,149), beginGen, endGen)
+val var182 = unrollRepeat0(history, 315, 317, 9, 316, var181[1].first, var181[1].second).map { k ->
+val var183 = getSequenceElems(history, 318, listOf(7,319), k.first, k.second)
+val var184 = matchClassBodyElem(var183[1].first, var183[1].second)
+var184
+}
+return var182
+}
+
+fun matchClassBodyElem(beginGen: Int, endGen: Int): ClassBodyElem {
+val var185 = history[endGen].findByBeginGenOpt(320, 1, beginGen)
+val var186 = history[endGen].findByBeginGenOpt(332, 1, beginGen)
+check(hasSingleTrue(var185 != null, var186 != null))
+val var187 = when {
+var185 != null -> {
+val var188 = matchActionRuleDef(beginGen, endGen)
+var188
+}
+else -> {
+val var189 = matchClassCastDef(beginGen, endGen)
+var189
+}
+}
+return var187
+}
+
+fun matchClassCastDef(beginGen: Int, endGen: Int): ClassCastDef {
+val var190 = getSequenceElems(history, 333, listOf(123,7,140,7,181,7,121), beginGen, endGen)
+val var191 = matchTypeExpr(var190[2].first, var190[2].second)
+val var192 = matchExpr(var190[6].first, var190[6].second)
+val var193 = ClassCastDef(var191, var192, nextId(), beginGen, endGen)
+return var193
 }
 
 fun matchVarDef(beginGen: Int, endGen: Int): VarDef {
-val var253 = getSequenceElems(history, 343, listOf(344,7,65,349,295), beginGen, endGen)
-val var254 = matchSimpleName(var253[2].first, var253[2].second)
-val var255 = history[var253[3].second].findByBeginGenOpt(100, 1, var253[3].first)
-val var256 = history[var253[3].second].findByBeginGenOpt(350, 1, var253[3].first)
-check(hasSingleTrue(var255 != null, var256 != null))
-val var257 = when {
-var255 != null -> null
+val var194 = getSequenceElems(history, 351, listOf(352,7,65,357,303), beginGen, endGen)
+val var195 = matchSimpleName(var194[2].first, var194[2].second)
+val var196 = history[var194[3].second].findByBeginGenOpt(100, 1, var194[3].first)
+val var197 = history[var194[3].second].findByBeginGenOpt(358, 1, var194[3].first)
+check(hasSingleTrue(var196 != null, var197 != null))
+val var198 = when {
+var196 != null -> null
 else -> {
-val var258 = getSequenceElems(history, 351, listOf(7,161,7,140), var253[3].first, var253[3].second)
-val var259 = matchTypeExpr(var258[3].first, var258[3].second)
-var259
+val var199 = getSequenceElems(history, 359, listOf(7,161,7,140), var194[3].first, var194[3].second)
+val var200 = matchTypeExpr(var199[3].first, var199[3].second)
+var200
 }
 }
-val var260 = history[var253[4].second].findByBeginGenOpt(100, 1, var253[4].first)
-val var261 = history[var253[4].second].findByBeginGenOpt(296, 1, var253[4].first)
-check(hasSingleTrue(var260 != null, var261 != null))
-val var262 = when {
-var260 != null -> null
+val var201 = history[var194[4].second].findByBeginGenOpt(100, 1, var194[4].first)
+val var202 = history[var194[4].second].findByBeginGenOpt(304, 1, var194[4].first)
+check(hasSingleTrue(var201 != null, var202 != null))
+val var203 = when {
+var201 != null -> null
 else -> {
-val var263 = getSequenceElems(history, 297, listOf(7,181,7,121), var253[4].first, var253[4].second)
-val var264 = matchExpr(var263[3].first, var263[3].second)
-var264
+val var204 = getSequenceElems(history, 305, listOf(7,181,7,121), var194[4].first, var194[4].second)
+val var205 = matchExpr(var204[3].first, var204[3].second)
+var205
 }
 }
-val var265 = VarDef(var254, var257, var262, nextId(), beginGen, endGen)
-return var265
+val var206 = VarDef(var195, var198, var203, nextId(), beginGen, endGen)
+return var206
 }
 
 fun matchNamespaceDef(beginGen: Int, endGen: Int): NamespaceDef {
-val var266 = getSequenceElems(history, 253, listOf(65,7,143,254,7,149), beginGen, endGen)
-val var267 = matchSimpleName(var266[0].first, var266[0].second)
-val var269 = history[var266[3].second].findByBeginGenOpt(100, 1, var266[3].first)
-val var270 = history[var266[3].second].findByBeginGenOpt(255, 1, var266[3].first)
-check(hasSingleTrue(var269 != null, var270 != null))
-val var271 = when {
-var269 != null -> null
+val var207 = getSequenceElems(history, 253, listOf(65,7,143,254,7,149), beginGen, endGen)
+val var208 = matchSimpleName(var207[0].first, var207[0].second)
+val var210 = history[var207[3].second].findByBeginGenOpt(100, 1, var207[3].first)
+val var211 = history[var207[3].second].findByBeginGenOpt(255, 1, var207[3].first)
+check(hasSingleTrue(var210 != null, var211 != null))
+val var212 = when {
+var210 != null -> null
 else -> {
-val var272 = getSequenceElems(history, 256, listOf(7,101), var266[3].first, var266[3].second)
-val var273 = matchDefs(var272[1].first, var272[1].second)
-var273
+val var213 = getSequenceElems(history, 256, listOf(7,101), var207[3].first, var207[3].second)
+val var214 = matchDefs(var213[1].first, var213[1].second)
+var214
 }
 }
-val var268 = var271
-val var274 = NamespaceDef(var267, (var268 ?: listOf()), nextId(), beginGen, endGen)
-return var274
+val var209 = var212
+val var215 = NamespaceDef(var208, (var209 ?: listOf()), nextId(), beginGen, endGen)
+return var215
 }
 
 fun matchEnumDef(beginGen: Int, endGen: Int): EnumDef {
-val var275 = getSequenceElems(history, 337, listOf(338,7,65,7,143,7,65,332,173,7,149), beginGen, endGen)
-val var276 = matchSimpleName(var275[2].first, var275[2].second)
-val var277 = matchSimpleName(var275[6].first, var275[6].second)
-val var278 = unrollRepeat0(history, 332, 334, 9, 333, var275[7].first, var275[7].second).map { k ->
-val var279 = getSequenceElems(history, 335, listOf(7,148,7,65), k.first, k.second)
-val var280 = matchSimpleName(var279[3].first, var279[3].second)
-var280
+val var216 = getSequenceElems(history, 345, listOf(346,7,65,7,143,7,65,340,173,7,149), beginGen, endGen)
+val var217 = matchSimpleName(var216[2].first, var216[2].second)
+val var218 = matchSimpleName(var216[6].first, var216[6].second)
+val var219 = unrollRepeat0(history, 340, 342, 9, 341, var216[7].first, var216[7].second).map { k ->
+val var220 = getSequenceElems(history, 343, listOf(7,148,7,65), k.first, k.second)
+val var221 = matchSimpleName(var220[3].first, var220[3].second)
+var221
 }
-val var281 = EnumDef(var276, listOf(var277) + var278, nextId(), beginGen, endGen)
-return var281
+val var222 = EnumDef(var217, listOf(var218) + var219, nextId(), beginGen, endGen)
+return var222
 }
 
 fun matchPrimary(beginGen: Int, endGen: Int): Primary {
-val var282 = history[endGen].findByBeginGenOpt(65, 1, beginGen)
-val var283 = history[endGen].findByBeginGenOpt(112, 1, beginGen)
-val var284 = history[endGen].findByBeginGenOpt(187, 5, beginGen)
-val var285 = history[endGen].findByBeginGenOpt(188, 4, beginGen)
-val var286 = history[endGen].findByBeginGenOpt(202, 8, beginGen)
-val var287 = history[endGen].findByBeginGenOpt(206, 4, beginGen)
-val var288 = history[endGen].findByBeginGenOpt(216, 1, beginGen)
-val var289 = history[endGen].findByBeginGenOpt(242, 1, beginGen)
-val var290 = history[endGen].findByBeginGenOpt(243, 5, beginGen)
-check(hasSingleTrue(var282 != null, var283 != null, var284 != null, var285 != null, var286 != null, var287 != null, var288 != null, var289 != null, var290 != null))
-val var291 = when {
-var282 != null -> {
-val var292 = matchSimpleName(beginGen, endGen)
-val var293 = NameRef(var292, nextId(), beginGen, endGen)
-var293
+val var223 = history[endGen].findByBeginGenOpt(65, 1, beginGen)
+val var224 = history[endGen].findByBeginGenOpt(112, 1, beginGen)
+val var225 = history[endGen].findByBeginGenOpt(187, 5, beginGen)
+val var226 = history[endGen].findByBeginGenOpt(188, 4, beginGen)
+val var227 = history[endGen].findByBeginGenOpt(202, 8, beginGen)
+val var228 = history[endGen].findByBeginGenOpt(206, 4, beginGen)
+val var229 = history[endGen].findByBeginGenOpt(216, 1, beginGen)
+val var230 = history[endGen].findByBeginGenOpt(242, 1, beginGen)
+val var231 = history[endGen].findByBeginGenOpt(243, 5, beginGen)
+check(hasSingleTrue(var223 != null, var224 != null, var225 != null, var226 != null, var227 != null, var228 != null, var229 != null, var230 != null, var231 != null))
+val var232 = when {
+var223 != null -> {
+val var233 = matchSimpleName(beginGen, endGen)
+val var234 = NameRef(var233, nextId(), beginGen, endGen)
+var234
 }
-var283 != null -> {
-val var294 = matchCallExpr(beginGen, endGen)
-var294
+var224 != null -> {
+val var235 = matchCallExpr(beginGen, endGen)
+var235
 }
-var284 != null -> {
-val var295 = getSequenceElems(history, 187, listOf(111,7,99,7,65), beginGen, endGen)
-val var296 = matchPrimary(var295[0].first, var295[0].second)
-val var297 = matchSimpleName(var295[4].first, var295[4].second)
-val var298 = MemberAccess(var296, var297, nextId(), beginGen, endGen)
-var298
+var225 != null -> {
+val var236 = getSequenceElems(history, 187, listOf(111,7,99,7,65), beginGen, endGen)
+val var237 = matchPrimary(var236[0].first, var236[0].second)
+val var238 = matchSimpleName(var236[4].first, var236[4].second)
+val var239 = MemberAccess(var237, var238, nextId(), beginGen, endGen)
+var239
 }
-var285 != null -> {
-val var300 = getSequenceElems(history, 188, listOf(189,190,7,201), beginGen, endGen)
-val var301 = history[var300[1].second].findByBeginGenOpt(100, 1, var300[1].first)
-val var302 = history[var300[1].second].findByBeginGenOpt(191, 1, var300[1].first)
-check(hasSingleTrue(var301 != null, var302 != null))
-val var303 = when {
-var301 != null -> null
+var226 != null -> {
+val var241 = getSequenceElems(history, 188, listOf(189,190,7,201), beginGen, endGen)
+val var242 = history[var241[1].second].findByBeginGenOpt(100, 1, var241[1].first)
+val var243 = history[var241[1].second].findByBeginGenOpt(191, 1, var241[1].first)
+check(hasSingleTrue(var242 != null, var243 != null))
+val var244 = when {
+var242 != null -> null
 else -> {
-val var304 = getSequenceElems(history, 192, listOf(7,193,197,173), var300[1].first, var300[1].second)
-val var305 = matchListElem(var304[1].first, var304[1].second)
-val var306 = unrollRepeat0(history, 197, 199, 9, 198, var304[2].first, var304[2].second).map { k ->
-val var307 = getSequenceElems(history, 200, listOf(7,148,7,193), k.first, k.second)
-val var308 = matchListElem(var307[3].first, var307[3].second)
-var308
+val var245 = getSequenceElems(history, 192, listOf(7,193,197,173), var241[1].first, var241[1].second)
+val var246 = matchListElem(var245[1].first, var245[1].second)
+val var247 = unrollRepeat0(history, 197, 199, 9, 198, var245[2].first, var245[2].second).map { k ->
+val var248 = getSequenceElems(history, 200, listOf(7,148,7,193), k.first, k.second)
+val var249 = matchListElem(var248[3].first, var248[3].second)
+var249
 }
-listOf(var305) + var306
+listOf(var246) + var247
 }
 }
-val var299 = var303
-val var309 = ListExpr((var299 ?: listOf()), nextId(), beginGen, endGen)
-var309
+val var240 = var244
+val var250 = ListExpr((var240 ?: listOf()), nextId(), beginGen, endGen)
+var250
 }
-var286 != null -> {
-val var310 = getSequenceElems(history, 202, listOf(116,7,121,7,148,203,7,117), beginGen, endGen)
-val var311 = matchExpr(var310[2].first, var310[2].second)
-val var313 = history[var310[5].second].findByBeginGenOpt(100, 1, var310[5].first)
-val var314 = history[var310[5].second].findByBeginGenOpt(204, 1, var310[5].first)
-check(hasSingleTrue(var313 != null, var314 != null))
-val var315 = when {
-var313 != null -> null
+var227 != null -> {
+val var251 = getSequenceElems(history, 202, listOf(116,7,121,7,148,203,7,117), beginGen, endGen)
+val var252 = matchExpr(var251[2].first, var251[2].second)
+val var254 = history[var251[5].second].findByBeginGenOpt(100, 1, var251[5].first)
+val var255 = history[var251[5].second].findByBeginGenOpt(204, 1, var251[5].first)
+check(hasSingleTrue(var254 != null, var255 != null))
+val var256 = when {
+var254 != null -> null
 else -> {
-val var316 = getSequenceElems(history, 205, listOf(7,121,169,173), var310[5].first, var310[5].second)
-val var317 = matchExpr(var316[1].first, var316[1].second)
-val var318 = unrollRepeat0(history, 169, 171, 9, 170, var316[2].first, var316[2].second).map { k ->
-val var319 = getSequenceElems(history, 172, listOf(7,148,7,121), k.first, k.second)
-val var320 = matchExpr(var319[3].first, var319[3].second)
-var320
+val var257 = getSequenceElems(history, 205, listOf(7,121,169,173), var251[5].first, var251[5].second)
+val var258 = matchExpr(var257[1].first, var257[1].second)
+val var259 = unrollRepeat0(history, 169, 171, 9, 170, var257[2].first, var257[2].second).map { k ->
+val var260 = getSequenceElems(history, 172, listOf(7,148,7,121), k.first, k.second)
+val var261 = matchExpr(var260[3].first, var260[3].second)
+var261
 }
-listOf(var317) + var318
+listOf(var258) + var259
 }
 }
-val var312 = var315
-val var321 = TupleExpr(listOf(var311) + (var312 ?: listOf()), nextId(), beginGen, endGen)
-var321
+val var253 = var256
+val var262 = TupleExpr(listOf(var252) + (var253 ?: listOf()), nextId(), beginGen, endGen)
+var262
 }
-var287 != null -> {
-val var323 = getSequenceElems(history, 206, listOf(116,207,7,117), beginGen, endGen)
-val var324 = history[var323[1].second].findByBeginGenOpt(100, 1, var323[1].first)
-val var325 = history[var323[1].second].findByBeginGenOpt(208, 1, var323[1].first)
-check(hasSingleTrue(var324 != null, var325 != null))
-val var326 = when {
-var324 != null -> null
+var228 != null -> {
+val var264 = getSequenceElems(history, 206, listOf(116,207,7,117), beginGen, endGen)
+val var265 = history[var264[1].second].findByBeginGenOpt(100, 1, var264[1].first)
+val var266 = history[var264[1].second].findByBeginGenOpt(208, 1, var264[1].first)
+check(hasSingleTrue(var265 != null, var266 != null))
+val var267 = when {
+var265 != null -> null
 else -> {
-val var327 = getSequenceElems(history, 209, listOf(7,210,212,173), var323[1].first, var323[1].second)
-val var328 = matchNamedExpr(var327[1].first, var327[1].second)
-val var329 = unrollRepeat0(history, 212, 214, 9, 213, var327[2].first, var327[2].second).map { k ->
-val var330 = getSequenceElems(history, 215, listOf(7,148,7,210), k.first, k.second)
-val var331 = matchNamedExpr(var330[3].first, var330[3].second)
-var331
+val var268 = getSequenceElems(history, 209, listOf(7,210,212,173), var264[1].first, var264[1].second)
+val var269 = matchNamedExpr(var268[1].first, var268[1].second)
+val var270 = unrollRepeat0(history, 212, 214, 9, 213, var268[2].first, var268[2].second).map { k ->
+val var271 = getSequenceElems(history, 215, listOf(7,148,7,210), k.first, k.second)
+val var272 = matchNamedExpr(var271[3].first, var271[3].second)
+var272
 }
-listOf(var328) + var329
+listOf(var269) + var270
 }
 }
-val var322 = var326
-val var332 = NamedTupleExpr((var322 ?: listOf()), nextId(), beginGen, endGen)
-var332
+val var263 = var267
+val var273 = NamedTupleExpr((var263 ?: listOf()), nextId(), beginGen, endGen)
+var273
 }
-var288 != null -> {
-val var333 = matchLiteral(beginGen, endGen)
-var333
+var229 != null -> {
+val var274 = matchLiteral(beginGen, endGen)
+var274
 }
-var289 != null -> {
-val var334 = This(nextId(), beginGen, endGen)
-var334
+var230 != null -> {
+val var275 = This(nextId(), beginGen, endGen)
+var275
 }
 else -> {
-val var335 = getSequenceElems(history, 243, listOf(116,7,121,7,117), beginGen, endGen)
-val var336 = matchExpr(var335[2].first, var335[2].second)
-val var337 = Paren(var336, nextId(), beginGen, endGen)
-var337
+val var276 = getSequenceElems(history, 243, listOf(116,7,121,7,117), beginGen, endGen)
+val var277 = matchExpr(var276[2].first, var276[2].second)
+val var278 = Paren(var277, nextId(), beginGen, endGen)
+var278
 }
 }
-return var291
+return var232
 }
 
 fun matchLiteral(beginGen: Int, endGen: Int): Literal {
-val var338 = history[endGen].findByBeginGenOpt(217, 1, beginGen)
-val var339 = history[endGen].findByBeginGenOpt(237, 1, beginGen)
-val var340 = history[endGen].findByBeginGenOpt(240, 1, beginGen)
-check(hasSingleTrue(var338 != null, var339 != null, var340 != null))
-val var341 = when {
-var338 != null -> {
-val var342 = matchStringLiteral(beginGen, endGen)
-var342
+val var279 = history[endGen].findByBeginGenOpt(217, 1, beginGen)
+val var280 = history[endGen].findByBeginGenOpt(237, 1, beginGen)
+val var281 = history[endGen].findByBeginGenOpt(240, 1, beginGen)
+check(hasSingleTrue(var279 != null, var280 != null, var281 != null))
+val var282 = when {
+var279 != null -> {
+val var283 = matchStringLiteral(beginGen, endGen)
+var283
 }
-var339 != null -> {
-val var343 = matchBooleanLiteral(beginGen, endGen)
-var343
+var280 != null -> {
+val var284 = matchBooleanLiteral(beginGen, endGen)
+var284
 }
 else -> {
-val var344 = matchNoneLiteral(beginGen, endGen)
-var344
+val var285 = matchNoneLiteral(beginGen, endGen)
+var285
 }
 }
-return var341
+return var282
 }
 
 fun matchStringLiteral(beginGen: Int, endGen: Int): StringLiteral {
-val var345 = getSequenceElems(history, 218, listOf(219,220,219), beginGen, endGen)
-val var346 = unrollRepeat0(history, 220, 222, 9, 221, var345[1].first, var345[1].second).map { k ->
-val var347 = matchStringElem(k.first, k.second)
-var347
+val var286 = getSequenceElems(history, 218, listOf(219,220,219), beginGen, endGen)
+val var287 = unrollRepeat0(history, 220, 222, 9, 221, var286[1].first, var286[1].second).map { k ->
+val var288 = matchStringElem(k.first, k.second)
+var288
 }
-val var348 = StringLiteral(var346, nextId(), beginGen, endGen)
-return var348
+val var289 = StringLiteral(var287, nextId(), beginGen, endGen)
+return var289
+}
+
+fun matchCallExpr(beginGen: Int, endGen: Int): CallExpr {
+val var290 = getSequenceElems(history, 113, listOf(63,7,114), beginGen, endGen)
+val var291 = matchName(var290[0].first, var290[0].second)
+val var292 = matchCallParams(var290[2].first, var290[2].second)
+val var293 = CallExpr(var291, var292, nextId(), beginGen, endGen)
+return var293
 }
 
 fun matchNoneLiteral(beginGen: Int, endGen: Int): NoneLiteral {
-val var349 = NoneLiteral(nextId(), beginGen, endGen)
-return var349
-}
-
-fun matchBooleanLiteral(beginGen: Int, endGen: Int): BooleanLiteral {
-val var350 = history[endGen].findByBeginGenOpt(77, 1, beginGen)
-val var351 = history[endGen].findByBeginGenOpt(82, 1, beginGen)
-check(hasSingleTrue(var350 != null, var351 != null))
-val var352 = when {
-var350 != null -> {
-val var353 = BooleanLiteral(true, nextId(), beginGen, endGen)
-var353
-}
-else -> {
-val var354 = BooleanLiteral(false, nextId(), beginGen, endGen)
-var354
-}
-}
-return var352
+val var294 = NoneLiteral(nextId(), beginGen, endGen)
+return var294
 }
 
 fun matchStringElem(beginGen: Int, endGen: Int): StringElem {
-val var355 = history[endGen].findByBeginGenOpt(225, 1, beginGen)
-val var356 = history[endGen].findByBeginGenOpt(227, 1, beginGen)
-val var357 = history[endGen].findByBeginGenOpt(231, 1, beginGen)
-check(hasSingleTrue(var355 != null, var356 != null, var357 != null))
-val var358 = when {
-var355 != null -> {
-val var359 = JustChar(source[beginGen], nextId(), beginGen, endGen)
-var359
+val var295 = history[endGen].findByBeginGenOpt(225, 1, beginGen)
+val var296 = history[endGen].findByBeginGenOpt(227, 1, beginGen)
+val var297 = history[endGen].findByBeginGenOpt(231, 1, beginGen)
+check(hasSingleTrue(var295 != null, var296 != null, var297 != null))
+val var298 = when {
+var295 != null -> {
+val var299 = JustChar(source[beginGen], nextId(), beginGen, endGen)
+var299
 }
-var356 != null -> {
-val var360 = matchEscapeChar(beginGen, endGen)
-var360
+var296 != null -> {
+val var300 = matchEscapeChar(beginGen, endGen)
+var300
 }
 else -> {
-val var361 = matchStringExpr(beginGen, endGen)
-var361
+val var301 = matchStringExpr(beginGen, endGen)
+var301
 }
 }
-return var358
+return var298
 }
 
 fun matchEscapeChar(beginGen: Int, endGen: Int): EscapeChar {
-val var362 = getSequenceElems(history, 228, listOf(229,230), beginGen, endGen)
-val var363 = EscapeChar(source[var362[1].first], nextId(), beginGen, endGen)
-return var363
+val var302 = getSequenceElems(history, 228, listOf(229,230), beginGen, endGen)
+val var303 = EscapeChar(source[var302[1].first], nextId(), beginGen, endGen)
+return var303
 }
 
 fun matchStringExpr(beginGen: Int, endGen: Int): StringExpr {
-val var364 = history[endGen].findByBeginGenOpt(232, 1, beginGen)
-val var365 = history[endGen].findByBeginGenOpt(236, 6, beginGen)
-check(hasSingleTrue(var364 != null, var365 != null))
-val var366 = when {
-var364 != null -> {
-val var367 = getSequenceElems(history, 234, listOf(235,65), beginGen, endGen)
-val var368 = matchSimpleName(var367[1].first, var367[1].second)
-val var369 = SimpleExpr(var368, nextId(), beginGen, endGen)
-var369
+val var304 = history[endGen].findByBeginGenOpt(232, 1, beginGen)
+val var305 = history[endGen].findByBeginGenOpt(236, 6, beginGen)
+check(hasSingleTrue(var304 != null, var305 != null))
+val var306 = when {
+var304 != null -> {
+val var307 = getSequenceElems(history, 234, listOf(235,65), beginGen, endGen)
+val var308 = matchSimpleName(var307[1].first, var307[1].second)
+val var309 = SimpleExpr(var308, nextId(), beginGen, endGen)
+var309
 }
 else -> {
-val var370 = getSequenceElems(history, 236, listOf(235,143,7,121,7,149), beginGen, endGen)
-val var371 = matchExpr(var370[3].first, var370[3].second)
-val var372 = ComplexExpr(var371, nextId(), beginGen, endGen)
-var372
+val var310 = getSequenceElems(history, 236, listOf(235,143,7,121,7,149), beginGen, endGen)
+val var311 = matchExpr(var310[3].first, var310[3].second)
+val var312 = ComplexExpr(var311, nextId(), beginGen, endGen)
+var312
 }
 }
-return var366
+return var306
 }
 
 fun matchNamedExpr(beginGen: Int, endGen: Int): NamedExpr {
-val var373 = getSequenceElems(history, 211, listOf(65,7,161,7,121), beginGen, endGen)
-val var374 = matchSimpleName(var373[0].first, var373[0].second)
-val var375 = matchExpr(var373[4].first, var373[4].second)
-val var376 = NamedExpr(var374, var375, nextId(), beginGen, endGen)
-return var376
+val var313 = getSequenceElems(history, 211, listOf(65,7,161,7,121), beginGen, endGen)
+val var314 = matchSimpleName(var313[0].first, var313[0].second)
+val var315 = matchExpr(var313[4].first, var313[4].second)
+val var316 = NamedExpr(var314, var315, nextId(), beginGen, endGen)
+return var316
 }
 
 fun matchVarRedefs(beginGen: Int, endGen: Int): VarRedefs {
-val var377 = getSequenceElems(history, 353, listOf(344,7,354,358), beginGen, endGen)
-val var378 = matchVarRedef(var377[2].first, var377[2].second)
-val var379 = unrollRepeat0(history, 358, 360, 9, 359, var377[3].first, var377[3].second).map { k ->
-val var380 = getSequenceElems(history, 361, listOf(7,148,7,354), k.first, k.second)
-val var381 = matchVarRedef(var380[3].first, var380[3].second)
-var381
+val var317 = getSequenceElems(history, 361, listOf(352,7,362,366), beginGen, endGen)
+val var318 = matchVarRedef(var317[2].first, var317[2].second)
+val var319 = unrollRepeat0(history, 366, 368, 9, 367, var317[3].first, var317[3].second).map { k ->
+val var320 = getSequenceElems(history, 369, listOf(7,148,7,362), k.first, k.second)
+val var321 = matchVarRedef(var320[3].first, var320[3].second)
+var321
 }
-val var382 = VarRedefs(listOf(var378) + var379, nextId(), beginGen, endGen)
-return var382
+val var322 = VarRedefs(listOf(var318) + var319, nextId(), beginGen, endGen)
+return var322
+}
+
+fun matchVarRedef(beginGen: Int, endGen: Int): VarRedef {
+val var323 = getSequenceElems(history, 363, listOf(65,364,7,181,7,121), beginGen, endGen)
+val var324 = matchSimpleName(var323[0].first, var323[0].second)
+val var325 = unrollRepeat1(history, 364, 97, 97, 365, var323[1].first, var323[1].second).map { k ->
+val var326 = getSequenceElems(history, 98, listOf(7,99,7,65), k.first, k.second)
+val var327 = matchSimpleName(var326[3].first, var326[3].second)
+var327
+}
+val var328 = matchExpr(var323[5].first, var323[5].second)
+val var329 = VarRedef(listOf(var324) + var325, var328, nextId(), beginGen, endGen)
+return var329
 }
 
 fun matchTypeExpr(beginGen: Int, endGen: Int): TypeExpr {
-val var383 = history[endGen].findByBeginGenOpt(127, 1, beginGen)
-val var384 = history[endGen].findByBeginGenOpt(141, 1, beginGen)
-check(hasSingleTrue(var383 != null, var384 != null))
-val var385 = when {
-var383 != null -> {
-val var386 = matchNoUnionType(beginGen, endGen)
-var386
+val var330 = history[endGen].findByBeginGenOpt(127, 1, beginGen)
+val var331 = history[endGen].findByBeginGenOpt(141, 1, beginGen)
+check(hasSingleTrue(var330 != null, var331 != null))
+val var332 = when {
+var330 != null -> {
+val var333 = matchNoUnionType(beginGen, endGen)
+var333
 }
 else -> {
-val var387 = matchUnionType(beginGen, endGen)
-var387
+val var334 = matchUnionType(beginGen, endGen)
+var334
 }
 }
-return var385
+return var332
 }
 
 fun matchListElem(beginGen: Int, endGen: Int): ListElem {
-val var388 = history[endGen].findByBeginGenOpt(121, 1, beginGen)
-val var389 = history[endGen].findByBeginGenOpt(194, 3, beginGen)
-check(hasSingleTrue(var388 != null, var389 != null))
-val var390 = when {
-var388 != null -> {
-val var391 = matchExpr(beginGen, endGen)
-var391
+val var335 = history[endGen].findByBeginGenOpt(121, 1, beginGen)
+val var336 = history[endGen].findByBeginGenOpt(194, 3, beginGen)
+check(hasSingleTrue(var335 != null, var336 != null))
+val var337 = when {
+var335 != null -> {
+val var338 = matchExpr(beginGen, endGen)
+var338
 }
 else -> {
-val var392 = getSequenceElems(history, 194, listOf(195,7,121), beginGen, endGen)
-val var393 = matchExpr(var392[2].first, var392[2].second)
-val var394 = EllipsisElem(var393, nextId(), beginGen, endGen)
-var394
+val var339 = getSequenceElems(history, 194, listOf(195,7,121), beginGen, endGen)
+val var340 = matchExpr(var339[2].first, var339[2].second)
+val var341 = EllipsisElem(var340, nextId(), beginGen, endGen)
+var341
 }
 }
-return var390
+return var337
 }
 
 fun matchParamDef(beginGen: Int, endGen: Int): ParamDef {
-val var395 = history[endGen].findByBeginGenOpt(180, 5, beginGen)
-val var396 = history[endGen].findByBeginGenOpt(290, 7, beginGen)
-check(hasSingleTrue(var395 != null, var396 != null))
-val var397 = when {
-var395 != null -> {
-val var398 = getSequenceElems(history, 180, listOf(65,7,181,7,121), beginGen, endGen)
-val var399 = matchSimpleName(var398[0].first, var398[0].second)
-val var400 = matchExpr(var398[4].first, var398[4].second)
-val var401 = ParamDef(var399, false, null, var400, nextId(), beginGen, endGen)
-var401
+val var342 = history[endGen].findByBeginGenOpt(180, 5, beginGen)
+val var343 = history[endGen].findByBeginGenOpt(298, 7, beginGen)
+check(hasSingleTrue(var342 != null, var343 != null))
+val var344 = when {
+var342 != null -> {
+val var345 = getSequenceElems(history, 180, listOf(65,7,181,7,121), beginGen, endGen)
+val var346 = matchSimpleName(var345[0].first, var345[0].second)
+val var347 = matchExpr(var345[4].first, var345[4].second)
+val var348 = ParamDef(var346, false, null, var347, nextId(), beginGen, endGen)
+var348
 }
 else -> {
-val var402 = getSequenceElems(history, 290, listOf(65,291,7,161,7,140,295), beginGen, endGen)
-val var403 = matchSimpleName(var402[0].first, var402[0].second)
-val var404 = history[var402[1].second].findByBeginGenOpt(100, 1, var402[1].first)
-val var405 = history[var402[1].second].findByBeginGenOpt(292, 1, var402[1].first)
-check(hasSingleTrue(var404 != null, var405 != null))
-val var406 = when {
-var404 != null -> null
+val var349 = getSequenceElems(history, 298, listOf(65,299,7,161,7,140,303), beginGen, endGen)
+val var350 = matchSimpleName(var349[0].first, var349[0].second)
+val var351 = history[var349[1].second].findByBeginGenOpt(100, 1, var349[1].first)
+val var352 = history[var349[1].second].findByBeginGenOpt(300, 1, var349[1].first)
+check(hasSingleTrue(var351 != null, var352 != null))
+val var353 = when {
+var351 != null -> null
 else -> {
-val var407 = getSequenceElems(history, 293, listOf(7,294), var402[1].first, var402[1].second)
-source[var407[1].first]
+val var354 = getSequenceElems(history, 301, listOf(7,302), var349[1].first, var349[1].second)
+source[var354[1].first]
 }
 }
-val var408 = matchTypeExpr(var402[5].first, var402[5].second)
-val var409 = history[var402[6].second].findByBeginGenOpt(100, 1, var402[6].first)
-val var410 = history[var402[6].second].findByBeginGenOpt(296, 1, var402[6].first)
-check(hasSingleTrue(var409 != null, var410 != null))
-val var411 = when {
-var409 != null -> null
+val var355 = matchTypeExpr(var349[5].first, var349[5].second)
+val var356 = history[var349[6].second].findByBeginGenOpt(100, 1, var349[6].first)
+val var357 = history[var349[6].second].findByBeginGenOpt(304, 1, var349[6].first)
+check(hasSingleTrue(var356 != null, var357 != null))
+val var358 = when {
+var356 != null -> null
 else -> {
-val var412 = getSequenceElems(history, 297, listOf(7,181,7,121), var402[6].first, var402[6].second)
-val var413 = matchExpr(var412[3].first, var412[3].second)
-var413
+val var359 = getSequenceElems(history, 305, listOf(7,181,7,121), var349[6].first, var349[6].second)
+val var360 = matchExpr(var359[3].first, var359[3].second)
+var360
 }
 }
-val var414 = ParamDef(var403, var406 != null, var408, var411, nextId(), beginGen, endGen)
-var414
+val var361 = ParamDef(var350, var353 != null, var355, var358, nextId(), beginGen, endGen)
+var361
 }
 }
-return var397
+return var344
 }
 
 fun matchUnionType(beginGen: Int, endGen: Int): UnionType {
-val var415 = getSequenceElems(history, 142, listOf(143,7,127,144,7,149), beginGen, endGen)
-val var416 = matchNoUnionType(var415[2].first, var415[2].second)
-val var417 = unrollRepeat0(history, 144, 146, 9, 145, var415[3].first, var415[3].second).map { k ->
-val var418 = getSequenceElems(history, 147, listOf(7,148,7,127), k.first, k.second)
-val var419 = matchNoUnionType(var418[3].first, var418[3].second)
-var419
+val var362 = getSequenceElems(history, 142, listOf(143,7,127,144,7,149), beginGen, endGen)
+val var363 = matchNoUnionType(var362[2].first, var362[2].second)
+val var364 = unrollRepeat0(history, 144, 146, 9, 145, var362[3].first, var362[3].second).map { k ->
+val var365 = getSequenceElems(history, 147, listOf(7,148,7,127), k.first, k.second)
+val var366 = matchNoUnionType(var365[3].first, var365[3].second)
+var366
 }
-val var420 = UnionType(listOf(var416) + var417, nextId(), beginGen, endGen)
-return var420
+val var367 = UnionType(listOf(var363) + var364, nextId(), beginGen, endGen)
+return var367
 }
 
 fun matchTargetDef(beginGen: Int, endGen: Int): TargetDef {
-val var421 = getSequenceElems(history, 180, listOf(65,7,181,7,121), beginGen, endGen)
-val var422 = matchSimpleName(var421[0].first, var421[0].second)
-val var423 = matchExpr(var421[4].first, var421[4].second)
-val var424 = TargetDef(var422, var423, nextId(), beginGen, endGen)
-return var424
+val var368 = getSequenceElems(history, 180, listOf(65,7,181,7,121), beginGen, endGen)
+val var369 = matchSimpleName(var368[0].first, var368[0].second)
+val var370 = matchExpr(var368[4].first, var368[4].second)
+val var371 = TargetDef(var369, var370, nextId(), beginGen, endGen)
+return var371
 }
 
 fun matchSuperClassDef(beginGen: Int, endGen: Int): SuperClassDef {
-val var425 = getSequenceElems(history, 327, listOf(328,7,280,7,65,7,143,7,65,332,7,149), beginGen, endGen)
-val var426 = matchSimpleName(var425[4].first, var425[4].second)
-val var427 = matchSimpleName(var425[8].first, var425[8].second)
-val var428 = unrollRepeat0(history, 332, 334, 9, 333, var425[9].first, var425[9].second).map { k ->
-val var429 = getSequenceElems(history, 335, listOf(7,148,7,65), k.first, k.second)
-val var430 = matchSimpleName(var429[3].first, var429[3].second)
-var430
+val var372 = getSequenceElems(history, 335, listOf(336,7,288,7,65,7,143,7,65,340,7,149), beginGen, endGen)
+val var373 = matchSimpleName(var372[4].first, var372[4].second)
+val var374 = matchSimpleName(var372[8].first, var372[8].second)
+val var375 = unrollRepeat0(history, 340, 342, 9, 341, var372[9].first, var372[9].second).map { k ->
+val var376 = getSequenceElems(history, 343, listOf(7,148,7,65), k.first, k.second)
+val var377 = matchSimpleName(var376[3].first, var376[3].second)
+var377
 }
-val var431 = SuperClassDef(var426, listOf(var427) + var428, nextId(), beginGen, endGen)
-return var431
+val var378 = SuperClassDef(var373, listOf(var374) + var375, nextId(), beginGen, endGen)
+return var378
+}
+
+fun matchActionStmt(beginGen: Int, endGen: Int): ActionStmt {
+val var379 = history[endGen].findByBeginGenOpt(112, 1, beginGen)
+val var380 = history[endGen].findByBeginGenOpt(272, 1, beginGen)
+check(hasSingleTrue(var379 != null, var380 != null))
+val var381 = when {
+var379 != null -> {
+val var382 = matchCallExpr(beginGen, endGen)
+var382
+}
+else -> {
+val var383 = matchLetStmt(beginGen, endGen)
+var383
+}
+}
+return var381
+}
+
+fun matchLetStmt(beginGen: Int, endGen: Int): LetStmt {
+val var384 = getSequenceElems(history, 273, listOf(274,7,65,7,181,7,278), beginGen, endGen)
+val var385 = matchSimpleName(var384[2].first, var384[2].second)
+val var386 = matchExpr(var384[6].first, var384[6].second)
+val var387 = LetStmt(var385, var386, nextId(), beginGen, endGen)
+return var387
+}
+
+fun matchCallParams(beginGen: Int, endGen: Int): CallParams {
+val var388 = history[endGen].findByBeginGenOpt(115, 3, beginGen)
+val var389 = history[endGen].findByBeginGenOpt(118, 6, beginGen)
+val var390 = history[endGen].findByBeginGenOpt(176, 6, beginGen)
+val var391 = history[endGen].findByBeginGenOpt(186, 10, beginGen)
+check(hasSingleTrue(var388 != null, var389 != null, var390 != null, var391 != null))
+val var392 = when {
+var388 != null -> {
+val var393 = CallParams(listOf(), listOf(), nextId(), beginGen, endGen)
+var393
+}
+var389 != null -> {
+val var394 = getSequenceElems(history, 118, listOf(116,7,119,173,7,117), beginGen, endGen)
+val var395 = matchPositionalParams(var394[2].first, var394[2].second)
+val var396 = CallParams(var395, listOf(), nextId(), beginGen, endGen)
+var396
+}
+var390 != null -> {
+val var397 = getSequenceElems(history, 176, listOf(116,7,177,173,7,117), beginGen, endGen)
+val var398 = matchNamedParams(var397[2].first, var397[2].second)
+val var399 = CallParams(listOf(), var398, nextId(), beginGen, endGen)
+var399
+}
+else -> {
+val var400 = getSequenceElems(history, 186, listOf(116,7,119,7,148,7,177,173,7,117), beginGen, endGen)
+val var401 = matchPositionalParams(var400[2].first, var400[2].second)
+val var402 = matchNamedParams(var400[6].first, var400[6].second)
+val var403 = CallParams(var401, var402, nextId(), beginGen, endGen)
+var403
+}
+}
+return var392
+}
+
+fun matchPositionalParams(beginGen: Int, endGen: Int): List<Expr> {
+val var404 = getSequenceElems(history, 120, listOf(121,169), beginGen, endGen)
+val var405 = matchExpr(var404[0].first, var404[0].second)
+val var406 = unrollRepeat0(history, 169, 171, 9, 170, var404[1].first, var404[1].second).map { k ->
+val var407 = getSequenceElems(history, 172, listOf(7,148,7,121), k.first, k.second)
+val var408 = matchExpr(var407[3].first, var407[3].second)
+var408
+}
+return listOf(var405) + var406
+}
+
+fun matchNamedParams(beginGen: Int, endGen: Int): List<NamedParam> {
+val var409 = getSequenceElems(history, 178, listOf(179,182), beginGen, endGen)
+val var410 = matchNamedParam(var409[0].first, var409[0].second)
+val var411 = unrollRepeat0(history, 182, 184, 9, 183, var409[1].first, var409[1].second).map { k ->
+val var412 = getSequenceElems(history, 185, listOf(7,148,7,179), k.first, k.second)
+val var413 = matchNamedParam(var412[3].first, var412[3].second)
+var413
+}
+return listOf(var410) + var411
+}
+
+fun matchNamedParam(beginGen: Int, endGen: Int): NamedParam {
+val var414 = getSequenceElems(history, 180, listOf(65,7,181,7,121), beginGen, endGen)
+val var415 = matchSimpleName(var414[0].first, var414[0].second)
+val var416 = matchExpr(var414[4].first, var414[4].second)
+val var417 = NamedParam(var415, var416, nextId(), beginGen, endGen)
+return var417
+}
+
+fun matchNamedTupleType(beginGen: Int, endGen: Int): NamedTupleType {
+val var418 = getSequenceElems(history, 158, listOf(116,7,159,162,7,117), beginGen, endGen)
+val var419 = matchNamedType(var418[2].first, var418[2].second)
+val var420 = unrollRepeat0(history, 162, 164, 9, 163, var418[3].first, var418[3].second).map { k ->
+val var421 = getSequenceElems(history, 165, listOf(7,148,7,159), k.first, k.second)
+val var422 = matchNamedType(var421[3].first, var421[3].second)
+var422
+}
+val var423 = NamedTupleType(listOf(var419) + var420, nextId(), beginGen, endGen)
+return var423
+}
+
+fun matchNamedType(beginGen: Int, endGen: Int): NamedType {
+val var424 = getSequenceElems(history, 160, listOf(65,7,161,7,140), beginGen, endGen)
+val var425 = matchSimpleName(var424[0].first, var424[0].second)
+val var426 = matchTypeExpr(var424[4].first, var424[4].second)
+val var427 = NamedType(var425, var426, nextId(), beginGen, endGen)
+return var427
+}
+
+fun matchBooleanLiteral(beginGen: Int, endGen: Int): BooleanLiteral {
+val var428 = history[endGen].findByBeginGenOpt(77, 1, beginGen)
+val var429 = history[endGen].findByBeginGenOpt(82, 1, beginGen)
+check(hasSingleTrue(var428 != null, var429 != null))
+val var430 = when {
+var428 != null -> {
+val var431 = BooleanLiteral(true, nextId(), beginGen, endGen)
+var431
+}
+else -> {
+val var432 = BooleanLiteral(false, nextId(), beginGen, endGen)
+var432
+}
+}
+return var430
 }
 
 }

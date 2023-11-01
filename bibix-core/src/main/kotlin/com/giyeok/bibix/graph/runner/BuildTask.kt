@@ -14,6 +14,12 @@ data class EvalTarget(
   val name: BibixName
 ): BuildTask()
 
+data class ExecAction(
+  val projectId: Int,
+  val importInstanceId: Int,
+  val name: BibixName
+): BuildTask()
+
 data class EvalExpr(
   val projectId: Int,
   val exprNodeId: ExprNodeId,
@@ -36,6 +42,12 @@ data class FinalizeBuildRuleReturnValue(
 ): BuildTask()
 
 data class EvalBuildRule(
+  val projectId: Int,
+  val importInstanceId: Int,
+  val name: BibixName
+): BuildTask()
+
+data class EvalActionRule(
   val projectId: Int,
   val importInstanceId: Int,
   val name: BibixName
@@ -65,7 +77,11 @@ data class EvalSuperClassHierarchyByName(
 
 data class EvalType(val projectId: Int, val typeNodeId: TypeNodeId): BuildTask()
 
-data class Import(val projectId: Int, val varCtxId: Int, val importName: BibixName): BuildTask()
+data class Import(
+  val projectId: Int,
+  val importInstanceId: Int,
+  val importName: BibixName
+): BuildTask()
 
 data class ImportFromPrelude(val name: String, val remainingNames: List<String>): BuildTask()
 
@@ -76,7 +92,11 @@ data class NewImportInstance(
   val redefs: Map<BibixName, GlobalExprNodeId>
 ): BuildTask()
 
-data class GlobalExprNodeId(val projectId: Int, val varCtxId: Int, val exprNodeId: ExprNodeId)
+data class GlobalExprNodeId(
+  val projectId: Int,
+  val importInstanceId: Int,
+  val exprNodeId: ExprNodeId
+)
 
 
 sealed class BuildTaskResult {
@@ -103,6 +123,10 @@ sealed class BuildTaskResult {
     val paramTypes: List<Pair<String, BibixType>>,
     val implInstance: Any,
     val implMethod: Method
+  ): FinalResult()
+
+  data class ActionRuleResult(
+    val projectId: Int
   ): FinalResult()
 
   data class DataClassResult(

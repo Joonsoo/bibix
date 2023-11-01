@@ -39,11 +39,7 @@ data class ImportedTypeFromPrelude(val name: String, val remaining: List<String>
   override val id: TypeNodeId get() = TypeNodeId.AnyNodeId(this)
 }
 
-data class ImportedType(
-  val import: BibixName,
-  val importInstanceId: Int,
-  val name: BibixName
-): TypeGraphNode() {
+data class ImportedType(val import: BibixName, val name: BibixName): TypeGraphNode() {
   override val id: TypeNodeId get() = TypeNodeId.AnyNodeId(this)
 }
 

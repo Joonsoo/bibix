@@ -7,22 +7,22 @@ class BuildGraph(
 
   val targets: Map<BibixName, ExprNodeId>,
   val buildRules: Map<BibixName, BuildRuleDef>,
-  // TODO action/action rules
   val vars: Map<BibixName, VarDef>,
   val dataClasses: Map<BibixName, DataClassDef>,
   val superClasses: Map<BibixName, SuperClassDef>,
   val enums: Map<BibixName, EnumDef>,
+  val actions: Map<BibixName, ActionDef>,
+  val actionRules: Map<BibixName, ActionRuleDef>,
 
   val importAlls: Map<BibixName, ImportAllDef>,
   val importFroms: Map<BibixName, ImportFromDef>,
-  // import name -> import instace id (0 혹은 DefsWithVarRedefs의 nodeId) -> var name -> redef expr node id
-  val varRedefs: Map<BibixName, Map<Int, VarCtx>>,
+  // import name -> (var name -> redef expr node id)
+  val varRedefs: Map<BibixName, Map<BibixName, ExprNodeId>>,
 
   val exprGraph: ExprGraph,
   val typeGraph: TypeGraph,
   val exprTypeEdges: Set<ExprTypeEdge>,
 ) {
-  data class VarCtx(val parentCtxId: Int, val redefs: Map<BibixName, ExprNodeId>)
   companion object {
     fun fromScript(
       script: BibixAst.BuildScript,
@@ -52,7 +52,6 @@ class BuildGraph(
           preludeNames = preludeNames,
           currentScope = ScopedNameLookupTable(listOf(), nameLookupTable, null)
         ),
-        mapOf(),
         thisRefAllowed = false,
         nativeAllowed = nativeAllowed,
       )
@@ -111,4 +110,12 @@ data class ImportAllDef(
 data class ImportFromDef(
   val source: ExprNodeId,
   val importing: List<String>,
+)
+
+data class ActionDef(
+  val def: BibixAst.ActionDef
+)
+
+data class ActionRuleDef(
+  val def: BibixAst.ActionRuleDef
 )

@@ -70,8 +70,6 @@ class NameLookupTable(
             def.name,
             ActionRuleNameEntry(bibixName(def.name), def)
           )
-
-          is BibixAst.DefsWithVarRedefs -> addDefs(def.defs)
         }
       }
       return this
@@ -117,7 +115,7 @@ data class NameNotFoundException(
   val nameNode: BibixAst.AstNode?
 ): Exception(
   if (nameNode == null) {
-    "Name not found: ${nameTokens.joinToString(".")} at ${nameNode}"
+    "Name not found: ${nameTokens.joinToString(".")} at $nameNode"
   } else {
     "Name not found: ${nameTokens.joinToString(".")} at ${nameNode.start}..${nameNode.end}"
   }
