@@ -148,3 +148,7 @@ data class NamedTupleNode(
   val expr: BibixAst.NamedTupleExpr,
   val elems: List<Pair<String, ExprNodeId>>
 ): ExprAstNode<BibixAst.NamedTupleExpr>(expr)
+
+data class ActionLocalLetNode(val expr: BibixAst.NameRef): ExprAstNode<BibixAst.NameRef>(expr) {
+  val name get() = expr.name
+}

@@ -295,7 +295,7 @@ class ValueCaster(
         val finalValue = func(results.map { (it as BuildTaskResult.ValueResult).value })
         BuildTaskResult.ValueResult(finalValue)
       } else {
-        BuildTaskResult.ValueFinalizeFailResult()
+        BuildTaskResult.ValueFinalizeFailResult(values)
       }
     }
 

@@ -18,7 +18,8 @@ class ExprEvaluator(
   private val buildGraphRunner: BuildGraphRunner,
   private val projectId: Int,
   private val importInstanceId: Int,
-  private val thisValue: ClassInstanceValue?
+  private val localLets: Map<String, BibixValue>,
+  private val thisValue: ClassInstanceValue?,
 ) {
   private val multiGraph get() = buildGraphRunner.multiGraph
   private val projectPackageName: String? get() = multiGraph.projectPackages[projectId]
@@ -30,7 +31,8 @@ class ExprEvaluator(
     get() = ValueCaster(buildGraphRunner, projectId, importInstanceId)
 
   private fun evalTask(exprNodeId: ExprNodeId) =
-    EvalExpr(projectId, exprNodeId, importInstanceId, thisValue)
+    // isRunningActionStmt는 action stmt에서도 가장 바깥의 call expr에만 적용되면 됨
+    EvalExpr(projectId, exprNodeId, importInstanceId, localLets, thisValue)
 
   fun evaluateExpr(exprNodeId: ExprNodeId): BuildTaskResult =
     when (val exprNode = exprGraph.nodes.getValue(exprNodeId)) {
@@ -306,6 +308,9 @@ class ExprEvaluator(
 
           valueCaster.castValue(valueResult.value, typeResult.type)
         }
+
+      is ActionLocalLetNode ->
+        BuildTaskResult.ValueResult(localLets.getValue(exprNode.name))
     }
 
   private fun handleImportResult(
@@ -430,9 +435,7 @@ class ExprEvaluator(
     val result = buildRule.implMethod.invoke(buildRule.implInstance, buildContext)
 
     fun handleBuildRuleReturn(result: BuildRuleReturn): BuildTaskResult = when (result) {
-      is BuildRuleReturn.ValueReturn ->
-        block(BuildTaskResult.ValueResult(result.value))
-
+      is BuildRuleReturn.ValueReturn -> block(BuildTaskResult.ValueResult(result.value))
       is BuildRuleReturn.FailedReturn -> throw result.exception
       BuildRuleReturn.DoneReturn -> throw IllegalStateException()
 
@@ -480,6 +483,7 @@ class ExprEvaluator(
     when (result) {
       is BibixValue -> block(BuildTaskResult.ValueResult(result))
       is BuildRuleReturn -> handleBuildRuleReturn(result)
+
       else -> throw IllegalStateException("Unsupported return value from build rule: $result")
     }
   }

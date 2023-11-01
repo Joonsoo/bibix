@@ -42,8 +42,7 @@ BuildRuleDef = (BuildRuleMod WS $0)* "def"&Tk WS SimpleName WS ParamsDef WS ':' 
                {BuildRuleDef(mods=$0, name=$3, params=$5, returnType=$9, impl=$13)}
 BuildRuleMod: %BuildRuleMod = ("singleton" {%Singleton} | "sync" {%Synchronized})&Tk
 ActionDef = "action"&Tk WS SimpleName (WS ActionParams)? WS ActionBody {ActionDef(name=$2, argsName=$3, body=$5)}
-ActionBody: ActionBody = '=' WS ActionStmt {SingleCallAction(expr=$2)}
-  | '{' (WS ActionStmt)+ WS '}' {MultiCallActions(exprs=$1)}
+ActionBody = '{' (WS ActionStmt)+ WS '}' {MultiCallActions(stmts=$1)}
 ActionParams = '(' WS SimpleName WS ')' $2
 // TODO ActionParams에서 (opt: OptLevel, message: string, args) 같은 구조화된 인자도 받게 할 수 있을까?
 ActionRuleDef = "action"&Tk WS "def"&Tk WS SimpleName WS ParamsDef WS '=' WS MethodRef

@@ -14,18 +14,26 @@ data class EvalTarget(
   val name: BibixName
 ): BuildTask()
 
-data class ExecAction(
+data class ExecActionCallExpr(
   val projectId: Int,
   val importInstanceId: Int,
-  val name: BibixName
+  val exprNodeId: ExprNodeId,
 ): BuildTask()
 
 data class EvalExpr(
   val projectId: Int,
   val exprNodeId: ExprNodeId,
   val importInstanceId: Int,
-  val thisValue: ClassInstanceValue?
-): BuildTask()
+  val localVars: Map<String, BibixValue>,
+  val thisValue: ClassInstanceValue?,
+): BuildTask() {
+  constructor(
+    projectId: Int,
+    exprNodeId: ExprNodeId,
+    importInstanceId: Int,
+    thisValue: ClassInstanceValue?,
+  ): this(projectId, exprNodeId, importInstanceId, mapOf(), thisValue)
+}
 
 data class TypeCastValue(
   val value: BibixValue,
@@ -158,7 +166,7 @@ sealed class BuildTaskResult {
   }
 
   class TypeCastFailResult(val value: BibixValue, val type: BibixType): FinalResult()
-  class ValueFinalizeFailResult(): FinalResult()
+  class ValueFinalizeFailResult(val values: List<BibixValue>): FinalResult()
 
   data class WithResult(
     val task: BuildTask,

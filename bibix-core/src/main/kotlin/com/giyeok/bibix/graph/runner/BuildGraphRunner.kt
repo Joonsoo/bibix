@@ -112,7 +112,7 @@ class BuildGraphRunner(
       }
     }
 
-    is ExecAction -> {
+    is ExecActionCallExpr -> {
       TODO()
     }
 
@@ -140,8 +140,13 @@ class BuildGraphRunner(
     }
 
     is EvalExpr -> {
-      val evaluator =
-        ExprEvaluator(this, buildTask.projectId, buildTask.importInstanceId, buildTask.thisValue)
+      val evaluator = ExprEvaluator(
+        buildGraphRunner = this,
+        projectId = buildTask.projectId,
+        importInstanceId = buildTask.importInstanceId,
+        localLets = buildTask.localVars,
+        thisValue = buildTask.thisValue,
+      )
       evaluator.evaluateExpr(buildTask.exprNodeId)
     }
 

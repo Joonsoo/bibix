@@ -54,6 +54,7 @@ class BuildGraph(
         ),
         thisRefAllowed = false,
         nativeAllowed = nativeAllowed,
+        localLetNames = setOf(),
       )
       builder.addDefs(defs, ctx, true)
 
@@ -113,8 +114,17 @@ data class ImportFromDef(
 )
 
 data class ActionDef(
-  val def: BibixAst.ActionDef
-)
+  val def: BibixAst.ActionDef,
+  val stmts: List<ActionStmt>,
+) {
+  sealed class ActionStmt
+  data class LetStmt(val name: String, val exprNodeId: ExprNodeId): ActionStmt()
+  data class CallStmt(
+    val calleeNodeId: ExprNodeId,
+    val posArgs: List<ExprNodeId>,
+    val namedArgs: Map<String, ExprNodeId>
+  ): ActionStmt()
+}
 
 data class ActionRuleDef(
   val def: BibixAst.ActionRuleDef

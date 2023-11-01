@@ -31,8 +31,27 @@ class BuildGraphBuilder(
     defs.forEach { def ->
       when (def) {
         is BibixAst.ActionDef -> {
-          // TODO
-          actions[ctx.bibixName(def.name)] = ActionDef(def)
+          val localLets = mutableSetOf<String>()
+          val actionStmts = def.body.stmts.map { stmt ->
+            when (stmt) {
+              is BibixAst.LetStmt -> {
+                val letExpr = addExpr(stmt.expr, ctx)
+                localLets.add(stmt.name)
+                ActionDef.LetStmt(stmt.name, letExpr)
+              }
+
+              is BibixAst.CallExpr -> {
+                val (callee, posParams, namedParams) = addCallExpr(
+                  stmt,
+                  ctx.withLocalLetNames(localLets)
+                )
+                ActionDef.CallStmt(callee, posParams, namedParams)
+              }
+            }
+          }
+
+          // TODO argsName
+          actions[ctx.bibixName(def.name)] = ActionDef(def, actionStmts)
         }
 
         is BibixAst.ActionRuleDef -> {
@@ -205,6 +224,33 @@ class BuildGraphBuilder(
     return addNode(node)
   }
 
+  data class CallExprAddResult(
+    val callee: ExprNodeId,
+    val posParams: List<ExprNodeId>,
+    val namedParams: Map<String, ExprNodeId>
+  )
+
+  fun addCallExpr(expr: BibixAst.CallExpr, ctx: GraphBuildContext): CallExprAddResult {
+    val callee = lookupExprName(expr.name.tokens, ctx)
+    val posParams = expr.params.posParams.mapIndexed { index, argExpr ->
+      val arg = addExpr(argExpr, ctx)
+      val coercion =
+        addNode(CallExprParamCoercionNode(arg, callee, ParamLocation.PosParam(index)))
+      addEdge(coercion, callee)
+      addEdge(coercion, arg)
+      coercion
+    }
+    val namedParams = expr.params.namedParams.associate { (name, argExpr) ->
+      val arg = addExpr(argExpr, ctx)
+      val coercion =
+        addNode(CallExprParamCoercionNode(arg, callee, ParamLocation.NamedParam(name)))
+      addEdge(coercion, callee)
+      addEdge(coercion, arg)
+      name to coercion
+    }
+    return CallExprAddResult(callee, posParams, namedParams)
+  }
+
   fun addExpr(expr: BibixAst.Expr, ctx: GraphBuildContext): ExprNodeId = when (expr) {
     is BibixAst.CastExpr -> {
       val valueNode = addExpr(expr.expr, ctx)
@@ -225,23 +271,7 @@ class BuildGraphBuilder(
     }
 
     is BibixAst.CallExpr -> {
-      val callee = lookupExprName(expr.name.tokens, ctx)
-      val posParams = expr.params.posParams.mapIndexed { index, argExpr ->
-        val arg = addExpr(argExpr, ctx)
-        val coercion =
-          addNode(CallExprParamCoercionNode(arg, callee, ParamLocation.PosParam(index)))
-        addEdge(coercion, callee)
-        addEdge(coercion, arg)
-        coercion
-      }
-      val namedParams = expr.params.namedParams.associate { (name, argExpr) ->
-        val arg = addExpr(argExpr, ctx)
-        val coercion =
-          addNode(CallExprParamCoercionNode(arg, callee, ParamLocation.NamedParam(name)))
-        addEdge(coercion, callee)
-        addEdge(coercion, arg)
-        name to coercion
-      }
+      val (callee, posParams, namedParams) = addCallExpr(expr, ctx)
       val call = addNode(CallExprCallNode(expr, callee, posParams, namedParams))
       addEdge(call, callee)
       posParams.forEach { addEdge(call, it) }
@@ -297,7 +327,14 @@ class BuildGraphBuilder(
       }
     }
 
-    is BibixAst.NameRef -> lookupExprName(listOf(expr.name), ctx)
+    is BibixAst.NameRef -> {
+      if (expr.name in ctx.localLetNames) {
+        addNode(ActionLocalLetNode(expr))
+      } else {
+        lookupExprName(listOf(expr.name), ctx)
+      }
+    }
+
     is BibixAst.Paren -> addExpr(expr.expr, ctx)
     is BibixAst.This -> {
       check(ctx.thisRefAllowed)
@@ -450,6 +487,7 @@ data class GraphBuildContext(
   val nameLookupCtx: NameLookupContext,
   val thisRefAllowed: Boolean,
   val nativeAllowed: Boolean,
+  val localLetNames: Set<String>
 ) {
   fun innerNamespace(namespaceName: String) =
     copy(nameLookupCtx = nameLookupCtx.innerNamespace(namespaceName))
@@ -458,6 +496,8 @@ data class GraphBuildContext(
     copy(thisRefAllowed = true)
 
   fun bibixName(name: String) = BibixName(nameLookupCtx.currentScope.namePath + name)
+
+  fun withLocalLetNames(newNames: Set<String>) = copy(localLetNames = localLetNames + newNames)
 }
 
 fun BibixAst.Primary.getDefaultImportName(): String = when (this) {
