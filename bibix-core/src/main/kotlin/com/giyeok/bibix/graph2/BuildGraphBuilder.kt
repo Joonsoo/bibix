@@ -53,7 +53,7 @@ class BuildGraphBuilder(
             returnType = addType(def.returnType, ctx),
             implTarget = implTarget,
             implClassName = def.impl.className.tokens.joinToString("."),
-            implMethodName = def.impl.methodName
+            implMethodNameOpt = def.impl.methodName
           )
         }
 

@@ -15,3 +15,8 @@ with a.zz = "abc" {
 
 aa = glob("test/**")
 bb = bibix.version
+cc = bibix.plugins
+
+from bibix.plugins import ktjvm
+
+dd = ktjvm.library(srcs=glob("test/**/*.kt"))

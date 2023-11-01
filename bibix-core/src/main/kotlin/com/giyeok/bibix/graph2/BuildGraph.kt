@@ -77,8 +77,10 @@ data class BuildRuleDef(
   // implTarget이 null이면 native
   val implTarget: ExprNodeId?,
   val implClassName: String,
-  val implMethodName: String?
-)
+  val implMethodNameOpt: String?
+) {
+  val implMethodName: String = implMethodNameOpt ?: "build"
+}
 
 data class VarDef(
   val def: BibixAst.VarDef,

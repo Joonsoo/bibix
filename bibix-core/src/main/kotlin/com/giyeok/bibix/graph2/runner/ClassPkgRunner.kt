@@ -38,7 +38,7 @@ class ClassPkgRunner(private val classWorld: ClassWorld) {
     return cls.getDeclaredConstructor().newInstance()
   }
 
-  fun prepareClassPathsForPlugin(classPkg: ClassPkg): List<Path> {
+  private fun prepareClassPathsForPlugin(classPkg: ClassPkg): List<Path> {
     // bibix.base 와 및 kotlin sdk 관련 classpath 들은 cpInstance의 것을 사용하지 *않고* bibix runtime의 것을 사용해야 한다
     // 그래서 classPkg에서 그 부분은 빼고 classpath 목록 반환
     // 그래서 ClassPaths가 아니고 ClassPkg를 받아야 함

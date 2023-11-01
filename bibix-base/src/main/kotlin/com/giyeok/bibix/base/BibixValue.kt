@@ -38,12 +38,17 @@ data class EnumValue(
 
 sealed class CollectionValue: BibixValue() {
   abstract val values: List<BibixValue>
+
+  abstract fun newCollectionWith(elems:List<BibixValue>): CollectionValue
 }
 
 data class ListValue(override val values: List<BibixValue>): CollectionValue() {
   constructor(vararg values: BibixValue): this(values.toList())
 
   override fun toString(): String = "[${values.joinToString()}]"
+
+  override fun newCollectionWith(elems: List<BibixValue>): CollectionValue =
+    ListValue(elems)
 }
 
 class SetValue(elems: List<BibixValue>): CollectionValue() {
@@ -52,6 +57,9 @@ class SetValue(elems: List<BibixValue>): CollectionValue() {
   constructor(vararg values: BibixValue): this(values.toList())
 
   override fun toString(): String = "{${values.joinToString()}}"
+
+  override fun newCollectionWith(elems: List<BibixValue>): CollectionValue =
+    SetValue(elems)
 
   override fun equals(other: Any?): Boolean {
     if (this === other) return true

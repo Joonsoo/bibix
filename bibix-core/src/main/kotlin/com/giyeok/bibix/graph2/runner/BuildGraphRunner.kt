@@ -3,6 +3,7 @@ package com.giyeok.bibix.graph2.runner
 import com.giyeok.bibix.ast.BibixParser
 import com.giyeok.bibix.base.BuildContext
 import com.giyeok.bibix.base.BuildEnv
+import com.giyeok.bibix.base.DataClassType
 import com.giyeok.bibix.base.StringValue
 import com.giyeok.bibix.graph.NameLookupTable
 import com.giyeok.bibix.graph2.BibixName
@@ -10,6 +11,7 @@ import com.giyeok.bibix.graph2.BibixProjectLocation
 import com.giyeok.bibix.graph2.BuildGraph
 import com.giyeok.bibix.plugins.PluginInstanceProvider
 import com.giyeok.bibix.plugins.PreloadedPlugin
+import com.giyeok.bibix.plugins.jvm.ClassPkg
 import com.giyeok.bibix.repo.BibixRepo
 import com.google.common.collect.BiMap
 import com.google.common.collect.HashBiMap
@@ -132,18 +134,8 @@ class BuildGraphRunner(
     }
 
     is EvalExpr -> {
-      val buildGraph = multiGraph.getProjectGraph(buildTask.projectId)
-
-      val evaluator = ExprEvaluator(
-        projectId = buildTask.projectId,
-        projectPackageName = multiGraph.projectPackages[buildTask.projectId],
-        projectLocation = multiGraph.projectLocations[buildTask.projectId],
-        varRedefs = buildGraph.varRedefs,
-        exprGraph = buildGraph.exprGraph,
-        importInstanceId = buildTask.importInstanceId,
-        buildContextGen = BuildContextGen(multiGraph, buildEnv, fileSystem, repo),
-        thisValue = buildTask.thisValue
-      )
+      val evaluator =
+        ExprEvaluator(this, buildTask.projectId, buildTask.importInstanceId, buildTask.thisValue)
       evaluator.evaluateExpr(buildTask.exprNodeId)
     }
 
@@ -153,19 +145,18 @@ class BuildGraphRunner(
         multiGraph.projectLocations[buildTask.projectId],
         buildTask.importInstanceId
       ) { thisValue ->
-        val buildGraph = multiGraph.getProjectGraph(buildTask.projectId)
-
-        ExprEvaluator(
-          projectId = buildTask.projectId,
-          projectPackageName = multiGraph.projectPackages[buildTask.projectId],
-          projectLocation = multiGraph.projectLocations[buildTask.projectId],
-          varRedefs = buildGraph.varRedefs,
-          exprGraph = buildGraph.exprGraph,
-          importInstanceId = buildTask.importInstanceId,
-          buildContextGen = BuildContextGen(multiGraph, buildEnv, fileSystem, repo),
-          thisValue = thisValue
-        )
+        ExprEvaluator(this, buildTask.projectId, buildTask.importInstanceId, thisValue)
       }.castValue(buildTask.value, buildTask.type)
+    }
+
+    is FinalizeBuildRuleReturnValue -> {
+      ValueCaster(
+        buildTask.projectId,
+        multiGraph.projectLocations[buildTask.projectId],
+        buildTask.importInstanceId
+      ) { thisValue ->
+        ExprEvaluator(this, buildTask.projectId, buildTask.importInstanceId, thisValue)
+      }.finalizeBuildRuleReturnValue(buildTask.buildRule, buildTask.value)
     }
 
     is EvalBuildRule -> {
@@ -173,21 +164,23 @@ class BuildGraphRunner(
 
       val buildRule = buildGraph.buildRules.getValue(buildTask.name)
 
-      val params = buildRule.params.entries.sortedBy { it.key }
+      val params = buildRule.def.params.map { param ->
+        param.name to buildRule.params.getValue(param.name)
+      }
       BuildTaskResult.WithResultList(params.map {
-        EvalType(buildTask.projectId, it.value)
+        EvalType(buildTask.projectId, it.second)
       }) { results ->
         check(results.all { it is BuildTaskResult.TypeResult })
         check(params.size == results.size)
         val types = results.map { (it as BuildTaskResult.TypeResult).type }
-        val paramTypes = params.map { it.key }.zip(types)
+        val paramTypes = params.map { it.first }.zip(types)
 
         if (buildRule.implTarget == null) {
           val pluginInstanceProvider =
             preloadedPluginInstanceProviders.getValue(buildTask.projectId)
           val implTarget = pluginInstanceProvider.getInstance(buildRule.implClassName)
           val method = implTarget::class.java.getDeclaredMethod(
-            buildRule.implMethodName ?: "build",
+            buildRule.implMethodName,
             BuildContext::class.java
           )
           check(method.trySetAccessible())
@@ -202,26 +195,40 @@ class BuildGraphRunner(
           )
         } else {
           BuildTaskResult.WithResult(
-            EvalExpr(
-              buildTask.projectId,
-              buildRule.implTarget,
-              buildTask.importInstanceId,
-              null
-            )
+            EvalExpr(buildTask.projectId, buildRule.implTarget, buildTask.importInstanceId, null)
           ) { implTargetResult ->
             check(implTargetResult is BuildTaskResult.ValueResult)
-            val implTarget = implTargetResult.value
-            // TODO implTarget을 ClassPkg 로 보고 ClassWorld에 인스턴스 만들어서 넣기
 
-            BuildTaskResult.BuildRuleResult(
-              buildTask.projectId,
-              buildTask.name,
-              buildTask.importInstanceId,
-              buildRule,
-              paramTypes,
-              TODO(),
-              TODO()
-            )
+            // implTarget을 ClassPkg로 변환
+            BuildTaskResult.WithResult(
+              TypeCastValue(
+                implTargetResult.value,
+                DataClassType("com.giyeok.bibix.plugins.jvm", "ClassPkg"),
+                buildTask.projectId,
+                buildTask.importInstanceId,
+              )
+            ) { implTarget ->
+              check(implTarget is BuildTaskResult.ValueResult)
+
+              val classPkg = ClassPkg.fromBibix(implTarget.value)
+
+              // classPkg로부터 인스턴스 만들어서 넣기
+              val implInstance =
+                classPkgRunner.getPluginImplInstance(classPkg, buildRule.implClassName)
+              val method = implInstance::class.java.getDeclaredMethod(
+                buildRule.implMethodName,
+                BuildContext::class.java
+              )
+              BuildTaskResult.BuildRuleResult(
+                buildTask.projectId,
+                buildTask.name,
+                buildTask.importInstanceId,
+                buildRule,
+                paramTypes,
+                implInstance,
+                method
+              )
+            }
           }
         }
       }
@@ -324,9 +331,17 @@ class BuildGraphRunner(
       }
     }
 
+    is EvalDataClassByName -> {
+      val projectId = multiGraph.getProjectIdByPackageName(buildTask.packageName)
+        ?: throw IllegalStateException()
+      BuildTaskResult.WithResult(EvalDataClass(projectId, 0, BibixName(buildTask.className))) { it }
+    }
+
     is EvalType -> {
       val buildGraph = multiGraph.getProjectGraph(buildTask.projectId)
-      TypeEvaluator(buildTask.projectId, buildGraph.typeGraph).evaluateType(buildTask.typeNodeId)
+      val packageName = multiGraph.projectPackages[buildTask.projectId]
+      TypeEvaluator(buildTask.projectId, packageName, buildGraph.typeGraph)
+        .evaluateType(buildTask.typeNodeId)
     }
   }
 }

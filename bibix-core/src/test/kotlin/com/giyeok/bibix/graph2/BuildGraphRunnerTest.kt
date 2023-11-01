@@ -45,6 +45,8 @@ class BuildGraphRunnerTest {
     println(runner.runToFinal(EvalTarget(1, 0, BibixName("v"))))
     println(runner.runToFinal(EvalTarget(1, 0, BibixName("aa"))))
     println(runner.runToFinal(EvalTarget(1, 0, BibixName("bb"))))
+    println(runner.runToFinal(EvalTarget(1, 0, BibixName("cc"))))
+    println(runner.runToFinal(EvalTarget(1, 0, BibixName("dd"))))
   }
 
   fun BuildGraphRunner.runToFinal(buildTask: BuildTask): BuildTaskResult.FinalResult =

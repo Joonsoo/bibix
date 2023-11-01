@@ -25,7 +25,14 @@ data class TypeCastValue(
   val value: BibixValue,
   val type: BibixType,
   val projectId: Int,
-  val importInstanceId: Int
+  val importInstanceId: Int,
+): BuildTask()
+
+data class FinalizeBuildRuleReturnValue(
+  val buildRule: BuildTaskResult.BuildRuleResult,
+  val value: BibixValue,
+  val projectId: Int,
+  val importInstanceId: Int,
 ): BuildTask()
 
 data class EvalBuildRule(
@@ -44,6 +51,11 @@ data class EvalDataClass(
   val projectId: Int,
   val importInstanceId: Int,
   val name: BibixName
+): BuildTask()
+
+data class EvalDataClassByName(
+  val packageName: String,
+  val className: String,
 ): BuildTask()
 
 data class EvalType(val projectId: Int, val typeNodeId: TypeNodeId): BuildTask()
@@ -95,6 +107,7 @@ sealed class BuildTaskResult {
   ): FinalResult()
 
   class TypeCastFailResult(val value: BibixValue, val type: BibixType): FinalResult()
+  class ValueFinalizeFailResult(): FinalResult()
 
   data class WithResult(
     val task: BuildTask,

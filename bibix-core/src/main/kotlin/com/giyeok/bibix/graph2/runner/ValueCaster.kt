@@ -1,6 +1,7 @@
 package com.giyeok.bibix.graph2.runner
 
 import com.giyeok.bibix.base.*
+import com.giyeok.bibix.graph2.BibixName
 import com.giyeok.bibix.graph2.BibixProjectLocation
 import java.nio.file.Path
 import kotlin.io.path.absolute
@@ -15,6 +16,7 @@ class ValueCaster(
   private fun cannotCast(value: BibixValue, type: BibixType) =
     BuildTaskResult.TypeCastFailResult(value, type)
 
+  // castValue로 오는 ClassInstanceValue는 모두 각 필드가 적당한 타입으로 cast되고, default field와 optional field가 처리된 것으로 본다.
   fun castValue(value: BibixValue, type: BibixType): BuildTaskResult {
     fun fileFromString(path: String): Path {
       checkNotNull(projectLocation)
@@ -25,19 +27,26 @@ class ValueCaster(
       return BuildTaskResult.ValueResult(value)
     }
     if (value is ClassInstanceValue) {
-      // class instance value는 기본 coercion으로는 동일한 클래스,
+      // 사용자가 정의한 custom cast가 있으면 그것부터 시도해보고, 그게 실패하면 기본 캐스팅 시도
+      when (type) {
+        is DataClassType -> {
+          if (type.packageName == value.packageName && type.className == value.className) {
+            // type과 일치하고, value가 이미 온전한 것이 확인되었으므로 값을 그대로 반환
+            return BuildTaskResult.ValueResult(value)
+          }
+        }
 
-      // TODO value의 as element 중에 적용 가능한게 있는지 확인해서 적용해서 반환
-      // (projectId, importInstanceId)의 import instance
-      // value의 class가 항상 projectId 안에서 정의된 것이라고 볼 수 있을까?
-      // -> 그렇다면 importInstanceId를 사용하는게 말이 되는데..
-      // -> 항상이라고 볼수는 없지만, 대부분 그럴 것이긴 함
-      //   -> 예를 들어서, 어떤 build rule이 A 타입을 반환할 거라고 해놓고 B 타입을 반환하면 bibix는 B 값을 A 타입으로 캐스트하려고 시도한다
+        is SuperClassType -> {
+          if (type.packageName == value.packageName) {
+            // TODO value가 type의 sub type의 클래스이면 그대로 반환 - 그 외의 경우엔 계속 진행
+            TODO()
+          }
+        }
 
-      // TODO 여기서 사용할 ExprEvaluator를 만들기 위한 정보를 함수 프로퍼티로 갖고 있어야 함
-
-      // 사용자가 정의한 custom cast가 있으면 그것부터 시도해보고,
-      // 그게 실패하면
+        else -> {
+          // do nothing - fallthrough
+        }
+      }
       return tryCustomCast(value, type) { result ->
         when (result) {
           is BuildTaskResult.ValueResult -> result
@@ -57,6 +66,7 @@ class ValueCaster(
                 if (type.packageName != value.packageName) {
                   cannotCast(value, type)
                 } else {
+                  // TODO
                   BuildTaskResult.ValueResult(value)
                 }
               }
@@ -111,24 +121,16 @@ class ValueCaster(
 
       is ListType -> {
         when (value) {
-          is ListValue ->
-            castValueList(value.values, type.elemType, ::ListValue)
-
-          is SetValue ->
-            castValueList(value.values, type.elemType, ::SetValue)
-
+          is ListValue -> castValueList(value.values, type.elemType, ::ListValue)
+          is SetValue -> castValueList(value.values, type.elemType, ::SetValue)
           else -> cannotCast(value, type)
         }
       }
 
       is SetType -> {
         when (value) {
-          is ListValue ->
-            castValueList(value.values, type.elemType, ::SetValue)
-
-          is SetValue ->
-            castValueList(value.values, type.elemType, ::SetValue)
-
+          is ListValue -> castValueList(value.values, type.elemType, ::SetValue)
+          is SetValue -> castValueList(value.values, type.elemType, ::SetValue)
           else -> cannotCast(value, type)
         }
       }
@@ -220,10 +222,21 @@ class ValueCaster(
         else cannotCast(value, type)
 
       is EnumType ->
-        if (value is EnumValue && value.packageName == type.packageName && value.enumName == type.enumName) {
-          BuildTaskResult.ValueResult(value)
-        } else {
-          cannotCast(value, type)
+        when (value) {
+          is EnumValue -> {
+            if (value.packageName == type.packageName && value.enumName == type.enumName) {
+              BuildTaskResult.ValueResult(value)
+            } else {
+              cannotCast(value, type)
+            }
+          }
+
+          is StringValue -> {
+            // enum type의 member name 중에 같은 값이 있으면 그 enum 값으로 변경
+            TODO()
+          }
+
+          else -> cannotCast(value, type)
         }
     }
   }
@@ -253,7 +266,23 @@ class ValueCaster(
       BuildTaskResult.ValueResult(finalValue)
     }
 
-  private fun castValues(
+  private fun finalizeValueList(
+    buildRule: BuildTaskResult.BuildRuleResult,
+    values: List<BibixValue>,
+    func: (List<BibixValue>) -> BibixValue
+  ): BuildTaskResult =
+    BuildTaskResult.WithResultList(values.map {
+      FinalizeBuildRuleReturnValue(buildRule, it, projectId, importInstanceId)
+    }) { results ->
+      if (results.all { it is BuildTaskResult.ValueResult }) {
+        val finalValue = func(results.map { (it as BuildTaskResult.ValueResult).value })
+        BuildTaskResult.ValueResult(finalValue)
+      } else {
+        BuildTaskResult.ValueFinalizeFailResult()
+      }
+    }
+
+  private fun finalizeValues(
     values: Map<String, BibixValue>,
     types: Map<String, BibixType>,
     func: (Map<String, BibixValue>) -> BibixValue
@@ -274,10 +303,45 @@ class ValueCaster(
     return func(BuildTaskResult.TypeCastFailResult(value, type))
   }
 
-  fun finalizeClassInstanceValue(
-    value: ClassInstanceValue,
-    dataClass: BuildTaskResult.DataClassResult
-  ): BuildTaskResult {
-    TODO()
-  }
+  fun finalizeBuildRuleReturnValue(
+    buildRule: BuildTaskResult.BuildRuleResult,
+    value: BibixValue,
+  ): BuildTaskResult =
+    when (value) {
+      is NClassInstanceValue -> {
+        // TODO buildRule 위치를 기준으로 ClassInstanceValue로 변경해서 다시 finalizeBuildRuleReturnValue로 보내기
+        TODO()
+      }
+
+      is ClassInstanceValue -> {
+        // TODO value가 ClassInstanceValue이면 default value, optional value들 채우고 기존 필드들도 목표 타입으로 캐스팅해서 반환
+        BuildTaskResult.WithResult(
+          EvalDataClassByName(value.packageName, value.className)
+        ) { dataClassResult ->
+          check(dataClassResult is BuildTaskResult.DataClassResult)
+
+          organizeParamsForDataClass(dataClassResult, listOf(), value.fieldValues)
+        }
+      }
+
+      is CollectionValue -> {
+        finalizeValueList(buildRule, value.values) { elems ->
+          value.newCollectionWith(elems)
+        }
+      }
+
+      is TupleValue -> {
+        finalizeValueList(buildRule, value.values) { elems ->
+          TupleValue(elems)
+        }
+      }
+
+      is NamedTupleValue -> {
+        finalizeValueList(buildRule, value.values) { elems ->
+          NamedTupleValue(value.names.zip(elems))
+        }
+      }
+
+      else -> BuildTaskResult.ValueResult(value)
+    }
 }

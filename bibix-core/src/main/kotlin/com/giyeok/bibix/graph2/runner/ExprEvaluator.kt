@@ -1,34 +1,44 @@
 package com.giyeok.bibix.graph2.runner
 
+import com.giyeok.bibix.*
+import com.giyeok.bibix.BibixIdProto.ArgsMap
 import com.giyeok.bibix.ast.BibixAst
 import com.giyeok.bibix.base.*
 import com.giyeok.bibix.graph2.*
+import com.giyeok.bibix.repo.BibixRepoProto
+import com.giyeok.bibix.repo.TargetId
+import com.giyeok.bibix.repo.hashString
+import com.giyeok.bibix.utils.toBibix
+import com.giyeok.bibix.utils.toHexString
+import com.giyeok.bibix.utils.toInstant
+import com.giyeok.bibix.utils.toProto
+import com.google.protobuf.empty
+import kotlinx.coroutines.runBlocking
 import java.lang.StringBuilder
+import java.nio.file.Path
 
 class ExprEvaluator(
-  val projectId: Int,
-  val projectPackageName: String?,
-  val projectLocation: BibixProjectLocation?,
-  val varRedefs: Map<BibixName, Map<Int, BuildGraph.VarCtx>>,
-  val exprGraph: ExprGraph,
-  val importInstanceId: Int,
-  val buildContextGen: BuildContextGen,
-  val thisValue: ClassInstanceValue?,
+  private val buildGraphRunner: BuildGraphRunner,
+  private val projectId: Int,
+  private val importInstanceId: Int,
+  private val thisValue: ClassInstanceValue?
 ) {
+  private val multiGraph get() = buildGraphRunner.multiGraph
+  private val projectPackageName: String? get() = multiGraph.projectPackages[projectId]
+  private val projectLocation: BibixProjectLocation? get() = multiGraph.projectLocations[projectId]
+
+  private val buildGraph get() = multiGraph.getProjectGraph(projectId)
+  private val varRedefs: Map<BibixName, Map<Int, BuildGraph.VarCtx>> get() = buildGraph.varRedefs
+  private val exprGraph: ExprGraph get() = buildGraph.exprGraph
+
+  private val valueCaster: ValueCaster
+    get() = ValueCaster(projectId, projectLocation, importInstanceId) { this.copy(it) }
+
   private fun evalTask(exprNodeId: ExprNodeId) =
     EvalExpr(projectId, exprNodeId, importInstanceId, thisValue)
 
   private fun copy(thisValue: ClassInstanceValue?) =
-    ExprEvaluator(
-      projectId,
-      projectPackageName,
-      projectLocation,
-      varRedefs,
-      exprGraph,
-      importInstanceId,
-      buildContextGen,
-      thisValue
-    )
+    ExprEvaluator(buildGraphRunner, projectId, importInstanceId, thisValue)
 
   fun evaluateExpr(exprNodeId: ExprNodeId): BuildTaskResult =
     when (val exprNode = exprGraph.nodes.getValue(exprNodeId)) {
@@ -173,38 +183,13 @@ class ExprEvaluator(
                 posArgs,
                 namedArgs,
               ) { args ->
-                val buildContext = buildContextGen.generate(projectId, callee.projectId, args)
-                BuildTaskResult.LongRunning {
-                  val result = callee.implMethod.invoke(callee.implInstance, buildContext)
-
-                  when (result) {
-                    is BibixValue -> BuildTaskResult.ValueResult(result)
-                    is BuildRuleReturn.ValueReturn ->
-                      BuildTaskResult.ValueResult(result.value)
-
-                    else -> TODO()
-                  }
-                }
+                val buildContext = createBuildContext(projectId, callee, args)
+                runBuildRule(callee, buildContext)
               }
             }
 
             is BuildTaskResult.DataClassResult -> {
-              val requiredFields = callee.dataClassDef.def.fields
-                .filter { field -> !field.optional && field.defaultValue == null }
-                .map { it.name }.toSet()
-              organizeParams(
-                callee.fieldTypes,
-                requiredFields,
-                callee.projectId,
-                callee.importInstanceId,
-                callee.dataClassDef.fieldDefaultValues,
-                posArgs,
-                namedArgs
-              ) { args ->
-                BuildTaskResult.ValueResult(
-                  ClassInstanceValue(callee.packageName, callee.name.toString(), args)
-                )
-              }
+              organizeParamsForDataClass(callee, posArgs, namedArgs)
             }
 
             else -> throw IllegalStateException()
@@ -229,14 +214,19 @@ class ExprEvaluator(
               ) { typeResult ->
                 check(typeResult is BuildTaskResult.TypeResult)
 
-                ValueCaster(projectId, projectLocation, importInstanceId) { this.copy(it) }
-                  .castValue(value, typeResult.type)
+                BuildTaskResult.WithResult(
+                  FinalizeBuildRuleReturnValue(callee, value, projectId, importInstanceId)
+                ) { finalized ->
+                  // finalized가 ValueFinalizeFailResult 이면 안됨
+                  check(finalized is BuildTaskResult.ValueResult)
+                  valueCaster.castValue(finalized.value, typeResult.type)
+                }
               }
             }
 
             is BuildTaskResult.DataClassResult -> {
-              ValueCaster(projectId, projectLocation, importInstanceId) { this.copy(it) }
-                .castValue(value, DataClassType(callee.packageName, callee.name.toString()))
+              val classType = DataClassType(callee.packageName, callee.name.toString())
+              valueCaster.castValue(value, classType)
             }
 
             else -> throw IllegalStateException()
@@ -283,8 +273,7 @@ class ExprEvaluator(
           BuildTaskResult.WithResult(EvalType(calleeProjectId, paramTypeNodeId)) { result ->
             check(result is BuildTaskResult.TypeResult)
 
-            ValueCaster(projectId, projectLocation, importInstanceId) { this.copy(it) }
-              .castValue(value, result.type)
+            valueCaster.castValue(value, result.type)
           }
         }
       }
@@ -294,11 +283,7 @@ class ExprEvaluator(
 
       is LocalTargetRef ->
         BuildTaskResult.WithResult(
-          EvalTarget(
-            projectId,
-            importInstanceId,
-            exprNode.name
-          )
+          EvalTarget(projectId, importInstanceId, exprNode.name)
         ) { result ->
           check(result is BuildTaskResult.ValueResult)
           result
@@ -342,8 +327,7 @@ class ExprEvaluator(
           val typeResult = results[1]
           check(typeResult is BuildTaskResult.TypeResult)
 
-          ValueCaster(projectId, projectLocation, importInstanceId) { this.copy(it) }
-            .castValue(valueResult.value, typeResult.type)
+          valueCaster.castValue(valueResult.value, typeResult.type)
         }
     }
 
@@ -382,46 +366,108 @@ class ExprEvaluator(
     }
   }
 
-  private fun organizeParams(
-    paramTypes: List<Pair<String, BibixType>>,
-    requiredParamNames: Set<String>,
-    defaultValueProjectId: Int,
-    defaultValueImportInstanceId: Int,
-    defaultValues: Map<String, ExprNodeId>,
-    posArgs: List<BibixValue>,
-    namedArgs: Map<String, BibixValue>,
-    whenReady: (args: Map<String, BibixValue>) -> BuildTaskResult
-  ): BuildTaskResult {
-    val paramNames = paramTypes.map { it.first }
+  private fun sourceIdFrom(projectId: Int): BibixIdProto.SourceId {
+    return sourceId {
+      this.bibixVersion = Constants.BIBIX_VERSION
+    }
+  }
 
-    // callee의 parameter 목록을 보고 posParams와 namedParams와 맞춰본다
-    val posArgsMap = posArgs.zip(paramNames) { arg, name -> name to arg }.toMap()
+  private fun createBuildContext(
+    callerProjectId: Int,
+    buildRule: BuildTaskResult.BuildRuleResult,
+    args: Map<String, BibixValue>
+  ): BuildContext {
+    val mainLocation = multiGraph.projectLocations.getValue(1)
+    val callerLocation = multiGraph.projectLocations[callerProjectId]
+    val ruleDefinedLocation = multiGraph.projectLocations[buildRule.projectId]
 
-    val remainingParamNames = paramNames.drop(posArgs.size).toSet()
-    check(remainingParamNames.containsAll(namedArgs.keys)) { "Unknown parameters" }
+    val argsMap = argsMapFrom(args)
+    val targetIdData = targetIdData {
+      this.sourceId = sourceIdFrom(callerProjectId)
+      this.buildRule = buildRuleData {
+        this.buildRuleSourceId = sourceIdFrom(buildRule.projectId)
+        if (buildRule.buildRuleDef.implTarget == null) {
+          this.nativeImpl = empty { }
+        } else {
+          // TODO
+          this.bibixValueHash
+        }
+        this.buildRuleClassName = buildRule.buildRuleDef.implClassName
+        this.buildRuleMethodName = buildRule.buildRuleDef.implMethodName
+      }
+      this.argsMap = argsMap
+    }
+    val targetId = targetIdData.hashString()
+    val targetIdHex = targetId.toHexString()
 
-    val unspecifiedParamNames = remainingParamNames - namedArgs.keys
-    check(unspecifiedParamNames.all { it !in requiredParamNames }) { "Required parameters are not specified" }
+    val repo = buildGraphRunner.repo
+    val prevInputHashes = runBlocking { repo.getPrevInputsHashOf(targetId) }
+    val hashChanged = if (prevInputHashes == null) true else prevInputHashes != argsMap.hashString()
 
-    val defaultArgTasks = unspecifiedParamNames.mapNotNull { paramName ->
-      defaultValues[paramName]?.let {
-        paramName to EvalExpr(defaultValueProjectId, it, defaultValueImportInstanceId, null)
+    val targetState = runBlocking { repo.getPrevTargetState(targetId) }
+    val prevResult = targetState?.let {
+      if (targetState.stateCase == BibixRepoProto.TargetState.StateCase.BUILD_SUCCEEDED) {
+        targetState.buildSucceeded.resultValue.toBibix()
+      } else {
+        null
       }
     }
-    val noneArgs = (unspecifiedParamNames - (defaultArgTasks.map { it.first }.toSet()))
-      .associateWith { NoneValue }
 
-    return if (defaultArgTasks.isEmpty()) {
-      whenReady(posArgsMap + namedArgs + noneArgs)
-    } else {
-      BuildTaskResult.WithResultList(defaultArgTasks.map { it.second }) { results ->
-        check(results.size == defaultArgTasks.size)
-        val defaultArgs = defaultArgTasks.zip(results).associate { (pair, result) ->
-          check(result is BuildTaskResult.ValueResult)
-          pair.first to result.value
+    return BuildContext(
+      buildEnv = buildGraphRunner.buildEnv,
+      fileSystem = buildGraphRunner.fileSystem,
+      mainBaseDirectory = mainLocation.projectRoot,
+      callerBaseDirectory = callerLocation?.projectRoot,
+      ruleDefinedDirectory = ruleDefinedLocation?.projectRoot,
+      arguments = args,
+      targetIdData = targetIdData,
+      targetId = targetIdHex,
+      hashChanged = hashChanged,
+      prevBuildTime = targetState?.buildStartTime?.toInstant(),
+      prevResult = prevResult,
+      destDirectoryPath = repo.objectsDirectory.resolve(targetIdHex),
+      progressLogger = object: ProgressLogger {
+        override fun logInfo(message: String) {
+          println(message)
         }
-        whenReady(posArgsMap + namedArgs + defaultArgs + noneArgs)
+
+        override fun logError(message: String) {
+          println(message)
+        }
+      },
+      repo = repo
+    )
+  }
+
+  private fun runBuildRule(
+    buildRule: BuildTaskResult.BuildRuleResult,
+    buildContext: BuildContext
+  ): BuildTaskResult = BuildTaskResult.LongRunning {
+    val result = buildRule.implMethod.invoke(buildRule.implInstance, buildContext)
+
+    fun handleBuildRuleReturn(result: BuildRuleReturn): BuildTaskResult = when (result) {
+      is BuildRuleReturn.ValueReturn -> BuildTaskResult.ValueResult(result.value)
+      is BuildRuleReturn.FailedReturn -> throw result.exception
+      BuildRuleReturn.DoneReturn -> throw IllegalStateException()
+
+      is BuildRuleReturn.EvalAndThen -> {
+        TODO()
       }
+
+      is BuildRuleReturn.GetTypeDetails -> {
+        TODO()
+      }
+
+      is BuildRuleReturn.WithDirectoryLock -> {
+        // TODO directory lock for result.directory
+        handleBuildRuleReturn(result.withLock())
+      }
+    }
+
+    when (result) {
+      is BibixValue -> BuildTaskResult.ValueResult(result)
+      is BuildRuleReturn -> handleBuildRuleReturn(result)
+      else -> throw IllegalStateException("Unsupported return value from build rule: $result")
     }
   }
 }
@@ -481,3 +527,81 @@ fun lookupExprValue(
   }
   return BuildTaskResult.WithResult(followingTask) { it }
 }
+
+fun organizeParamsForDataClass(
+  dataClass: BuildTaskResult.DataClassResult,
+  posArgs: List<BibixValue>,
+  namedArgs: Map<String, BibixValue>,
+): BuildTaskResult {
+  val requiredFields = dataClass.dataClassDef.def.fields
+    .filter { field -> !field.optional && field.defaultValue == null }
+    .map { it.name }.toSet()
+  return organizeParams(
+    dataClass.fieldTypes,
+    requiredFields,
+    dataClass.projectId,
+    dataClass.importInstanceId,
+    dataClass.dataClassDef.fieldDefaultValues,
+    posArgs,
+    namedArgs
+  ) { args ->
+    BuildTaskResult.ValueResult(
+      ClassInstanceValue(dataClass.packageName, dataClass.name.toString(), args)
+    )
+  }
+}
+
+fun organizeParams(
+  paramTypes: List<Pair<String, BibixType>>,
+  requiredParamNames: Set<String>,
+  defaultValueProjectId: Int,
+  defaultValueImportInstanceId: Int,
+  defaultValues: Map<String, ExprNodeId>,
+  posArgs: List<BibixValue>,
+  namedArgs: Map<String, BibixValue>,
+  whenReady: (args: Map<String, BibixValue>) -> BuildTaskResult
+): BuildTaskResult {
+  val paramNames = paramTypes.map { it.first }
+
+  // callee의 parameter 목록을 보고 posParams와 namedParams와 맞춰본다
+  val posArgsMap = posArgs.zip(paramNames) { arg, name -> name to arg }.toMap()
+
+  val remainingParamNames = paramNames.drop(posArgs.size).toSet()
+  check(remainingParamNames.containsAll(namedArgs.keys)) { "Unknown parameters" }
+
+  val unspecifiedParamNames = remainingParamNames - namedArgs.keys
+  check(unspecifiedParamNames.all { it !in requiredParamNames }) { "Required parameters are not specified" }
+
+  val defaultArgTasks = unspecifiedParamNames.mapNotNull { paramName ->
+    defaultValues[paramName]?.let {
+      paramName to EvalExpr(defaultValueProjectId, it, defaultValueImportInstanceId, null)
+    }
+  }
+  val noneArgs = (unspecifiedParamNames - (defaultArgTasks.map { it.first }.toSet()))
+    .associateWith { NoneValue }
+
+  return if (defaultArgTasks.isEmpty()) {
+    whenReady(posArgsMap + namedArgs + noneArgs)
+  } else {
+    BuildTaskResult.WithResultList(defaultArgTasks.map { it.second }) { results ->
+      check(results.size == defaultArgTasks.size)
+      val defaultArgs = defaultArgTasks.zip(results).associate { (pair, result) ->
+        check(result is BuildTaskResult.ValueResult)
+        pair.first to result.value
+      }
+      whenReady(posArgsMap + namedArgs + defaultArgs + noneArgs)
+    }
+  }
+}
+
+fun argsMapFrom(args: Map<String, BibixValue>): ArgsMap =
+  argsMap {
+    args.entries.toList()
+      .sortedBy { it.key }
+      .forEach { (name, value) ->
+        this.pairs.add(argPair {
+          this.name = name
+          this.value = value.toProto()
+        })
+      }
+  }
