@@ -411,7 +411,12 @@ class CallExprEvaluator(
       }
 
       is BuildRuleReturn.WithDirectoryLock -> {
-        val nextValue = directoryLocker.withLock(returnValue.directory, returnValue.withLock)
+        directoryLocker.acquireLock(returnValue.directory)
+        val nextValue = try {
+          returnValue.withLock()
+        } finally {
+          directoryLocker.releaseLock(returnValue.directory)
+        }
         return handleBuildRuleReturnValue(task, context, nextValue)
       }
 
@@ -494,128 +499,129 @@ class CallExprEvaluator(
     params: Map<String, BibixValue>,
     outputNames: Set<CName>,
   ): BibixValueWithObjectHash {
-    val argsMap = params.toArgsMapProto()
-    val inputHashes = argsMap.extractInputHashes()
-
-    val pluginInstance: Any
-
-    val targetIdDataBuilder = TargetIdData.newBuilder().also {
-      it.sourceId = protoOf(context.sourceId)
-      it.buildRule = buildRuleData {
-        this.buildRuleSourceId = protoOf(buildRule.context.sourceId)
-        // it.targetName = "??"
-        // it.buildRule will be set afterward
-        this.buildRuleClassName = buildRule.className
-        this.buildRuleMethodName = buildRule.methodName
-      }
-      it.argsMap = argsMap
-    }
-
-    when (buildRule) {
-      is BuildRuleDef.NativeBuildRuleDef -> {
-        pluginInstance = buildRule.implInstance
-        targetIdDataBuilder.buildRuleBuilder.nativeImpl = empty {}
-      }
-
-      is BuildRuleDef.UserBuildRuleDef -> {
-        val impl = exprEvaluator.evaluateName(
-          task,
-          buildRule.context,
-          buildRule.implTarget,
-          buildRule.thisValue,
-          setOf()
-        )
-
-        when (impl) {
-          is EvaluationResult.ValueWithTargetId ->
-            targetIdDataBuilder.buildRuleBuilder.buildRuleImplId = buildRuleImplId {
-              this.sourceId = protoOf(buildRule.name.sourceId)
-              this.targetId = impl.objectHash.targetId.targetIdBytes
-              this.objectId = impl.objectHash.objectId.objectIdBytes
-            }
-
-          is EvaluationResult.Value ->
-            targetIdDataBuilder.buildRuleBuilder.bibixValueHash = impl.ensureValue().hashString()
-
-          else -> throw IllegalStateException("??")
-        }
-
-        pluginInstance = pluginImplProvider.getPluginImplInstance(
-          context.sourceId,
-          prepareClassPathsForPlugin(task, buildRule.context, impl.ensureValue()),
-          buildRule.className
-        )
-      }
-    }
-
-    val targetId = TargetId(targetIdDataBuilder.build())
-    val objHash = ObjectHash(targetId, inputHashes)
-
-    val targetIdBytes = objHash.targetId.targetIdBytes
-    val prevInputHashes = interpreter.repo.getPrevInputsHashOf(targetIdBytes)
-    val prevState = interpreter.repo.getPrevTargetState(targetIdBytes)
-    val prevSucceeded = prevState?.let {
-      if (it.stateCase != BibixRepoProto.TargetState.StateCase.BUILD_SUCCEEDED) null else {
-        it.buildSucceeded
-      }
-    }
-
-    interpreter.repo.putObjectHash(objHash)
-
-    val callResult = g.withMemo(objHash) {
-      interpreter.repo.startBuildingTarget(targetIdBytes, objHash)
-
-      val method =
-        pluginInstance::class.java.getMethod(buildRule.methodName, BuildContext::class.java)
-
-      val hashChanged =
-        prevInputHashes == null || prevInputHashes != objHash.inputsHash
-      val progressIndicator = interpreter.progressIndicatorContainer.ofCurrentThread()
-      val buildContext = BuildContext(
-        buildEnv = interpreter.buildEnv,
-        fileSystem = interpreter.repo.fileSystem,
-        mainBaseDirectory = sourceManager.getProjectRoot(MainSourceId)!!,
-        callerBaseDirectory = baseDirectoryOf(context.sourceId),
-        ruleDefinedDirectory = baseDirectoryOf(buildRule.context.sourceId),
-        arguments = params,
-        targetIdData = objHash.targetId.targetIdData,
-        targetId = objHash.targetId.targetIdHex,
-        hashChanged = hashChanged,
-        prevBuildTime = prevSucceeded?.buildEndTime?.toInstant(),
-        prevResult = prevSucceeded?.resultValue?.toBibix(),
-        destDirectoryPath = interpreter.repo.objectsDirectory.resolve(objHash.targetId.targetIdHex),
-        progressLogger = progressIndicator,
-        repo = interpreter.repo,
-      )
-
-      check(method.trySetAccessible())
-
-      progressIndicator.logInfo("Calling ${buildRule.context}...")
-      val result = try {
-        val returnValue = method.invoke(pluginInstance, buildContext)
-        progressIndicator.logInfo("Continuing from ${buildRule.context}...")
-        handleBuildRuleReturnValue(task, buildRule.context, returnValue)
-      } catch (e: Exception) {
-        interpreter.repo.targetBuildingFailed(targetIdBytes, e.message ?: "")
-        val trace = g.upstreamPathTo(task)
-        throw BibixExecutionException("Error from plugin", trace, e)
-      }
-      progressIndicator.logInfo("Finished ${buildRule.context}...")
-      result
-    }
-
-    val result =
-      exprEvaluator.coerce(task, buildRule.context, callResult.value, buildRule.returnType)
-
-    interpreter.repo.targetBuildingSucceeded(targetIdBytes, result)
-
-    outputNames.filter { it.sourceId == MainSourceId }.forEach { outputName ->
-      if (g.addOutputMemo(outputName, objHash)) {
-        interpreter.repo.linkNameToObject(outputName.tokens, objHash)
-      }
-    }
-
-    return BibixValueWithObjectHash(result, callResult.objectHash)
+//    val argsMap = params.toArgsMapProto()
+//    val inputHashes = argsMap.extractInputHashes()
+//
+//    val pluginInstance: Any
+//
+//    val targetIdDataBuilder = TargetIdData.newBuilder().also {
+//      it.sourceId = protoOf(context.sourceId)
+//      it.buildRule = buildRuleData {
+//        this.buildRuleSourceId = protoOf(buildRule.context.sourceId)
+//        // it.targetName = "??"
+//        // it.buildRule will be set afterward
+//        this.buildRuleClassName = buildRule.className
+//        this.buildRuleMethodName = buildRule.methodName
+//      }
+//      it.argsMap = argsMap
+//    }
+//
+//    when (buildRule) {
+//      is BuildRuleDef.NativeBuildRuleDef -> {
+//        pluginInstance = buildRule.implInstance
+//        targetIdDataBuilder.buildRuleBuilder.nativeImpl = empty {}
+//      }
+//
+//      is BuildRuleDef.UserBuildRuleDef -> {
+//        val impl = exprEvaluator.evaluateName(
+//          task,
+//          buildRule.context,
+//          buildRule.implTarget,
+//          buildRule.thisValue,
+//          setOf()
+//        )
+//
+//        when (impl) {
+//          is EvaluationResult.ValueWithTargetId ->
+//            targetIdDataBuilder.buildRuleBuilder.buildRuleImplId = buildRuleImplId {
+//              this.sourceId = protoOf(buildRule.name.sourceId)
+//              this.targetId = impl.objectHash.targetId.targetIdBytes
+//              this.objectId = impl.objectHash.objectId.objectIdBytes
+//            }
+//
+//          is EvaluationResult.Value ->
+//            targetIdDataBuilder.buildRuleBuilder.bibixValueHash = impl.ensureValue().hashString()
+//
+//          else -> throw IllegalStateException("??")
+//        }
+//
+//        pluginInstance = pluginImplProvider.getPluginImplInstance(
+//          context.sourceId,
+//          prepareClassPathsForPlugin(task, buildRule.context, impl.ensureValue()),
+//          buildRule.className
+//        )
+//      }
+//    }
+//
+//    val targetId = TargetId(targetIdDataBuilder.build())
+//    val objHash = ObjectHash(targetId, inputHashes)
+//
+//    val targetIdBytes = objHash.targetId.targetIdBytes
+//    val prevInputHashes = interpreter.repo.getPrevInputsHashOf(targetIdBytes)
+//    val prevState = interpreter.repo.getPrevTargetState(targetIdBytes)
+//    val prevSucceeded = prevState?.let {
+//      if (it.stateCase != BibixRepoProto.TargetState.StateCase.BUILD_SUCCEEDED) null else {
+//        it.buildSucceeded
+//      }
+//    }
+//
+//    interpreter.repo.putObjectHash(objHash)
+//
+//    val callResult = g.withMemo(objHash) {
+//      interpreter.repo.startBuildingTarget(targetIdBytes, objHash)
+//
+//      val method =
+//        pluginInstance::class.java.getMethod(buildRule.methodName, BuildContext::class.java)
+//
+//      val hashChanged =
+//        prevInputHashes == null || prevInputHashes != objHash.inputsHash
+//      val progressIndicator = interpreter.progressIndicatorContainer.ofCurrentThread()
+//      val buildContext = BuildContext(
+//        buildEnv = interpreter.buildEnv,
+//        fileSystem = interpreter.repo.fileSystem,
+//        mainBaseDirectory = sourceManager.getProjectRoot(MainSourceId)!!,
+//        callerBaseDirectory = baseDirectoryOf(context.sourceId),
+//        ruleDefinedDirectory = baseDirectoryOf(buildRule.context.sourceId),
+//        arguments = params,
+//        targetIdData = objHash.targetId.targetIdData,
+//        targetId = objHash.targetId.targetIdHex,
+//        hashChanged = hashChanged,
+//        prevBuildTime = prevSucceeded?.buildEndTime?.toInstant(),
+//        prevResult = prevSucceeded?.resultValue?.toBibix(),
+//        destDirectoryPath = interpreter.repo.objectsDirectory.resolve(objHash.targetId.targetIdHex),
+//        progressLogger = progressIndicator,
+//        repo = interpreter.repo,
+//      )
+//
+//      check(method.trySetAccessible())
+//
+//      progressIndicator.logInfo("Calling ${buildRule.context}...")
+//      val result = try {
+//        val returnValue = method.invoke(pluginInstance, buildContext)
+//        progressIndicator.logInfo("Continuing from ${buildRule.context}...")
+//        handleBuildRuleReturnValue(task, buildRule.context, returnValue)
+//      } catch (e: Exception) {
+//        interpreter.repo.targetBuildingFailed(targetIdBytes, e.message ?: "")
+//        val trace = g.upstreamPathTo(task)
+//        throw BibixExecutionException("Error from plugin", trace, e)
+//      }
+//      progressIndicator.logInfo("Finished ${buildRule.context}...")
+//      result
+//    }
+//
+//    val result =
+//      exprEvaluator.coerce(task, buildRule.context, callResult.value, buildRule.returnType)
+//
+//    interpreter.repo.targetBuildingSucceeded(targetIdBytes, result)
+//
+//    outputNames.filter { it.sourceId == MainSourceId }.forEach { outputName ->
+//      if (g.addOutputMemo(outputName, objHash)) {
+//        interpreter.repo.linkNameToObject(outputName.tokens, objHash)
+//      }
+//    }
+//
+//    return BibixValueWithObjectHash(result, callResult.objectHash)
+    TODO()
   }
 
   suspend fun evaluateCallExpr(
@@ -699,7 +705,12 @@ class CallExprEvaluator(
       }
 
       is BuildRuleReturn.WithDirectoryLock -> {
-        val nextValue = directoryLocker.withLock(returnValue.directory, returnValue.withLock)
+        directoryLocker.acquireLock(returnValue.directory)
+        val nextValue = try {
+          returnValue.withLock()
+        } finally {
+          directoryLocker.releaseLock(returnValue.directory)
+        }
         handleActionReturnValue(task, context, nextValue)
       }
 

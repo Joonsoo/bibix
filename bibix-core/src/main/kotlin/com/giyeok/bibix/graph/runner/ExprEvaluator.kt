@@ -1,18 +1,12 @@
 package com.giyeok.bibix.graph.runner
 
-import com.giyeok.bibix.*
 import com.giyeok.bibix.BibixIdProto.ArgsMap
+import com.giyeok.bibix.argPair
+import com.giyeok.bibix.argsMap
 import com.giyeok.bibix.ast.BibixAst
 import com.giyeok.bibix.base.*
 import com.giyeok.bibix.graph.*
-import com.giyeok.bibix.repo.BibixRepoProto
-import com.giyeok.bibix.repo.hashString
-import com.giyeok.bibix.utils.toBibix
-import com.giyeok.bibix.utils.toHexString
-import com.giyeok.bibix.utils.toInstant
 import com.giyeok.bibix.utils.toProto
-import com.google.protobuf.empty
-import kotlinx.coroutines.runBlocking
 
 class ExprEvaluator(
   private val buildGraphRunner: BuildGraphRunner,
@@ -43,7 +37,7 @@ class ExprEvaluator(
       is MemberAccessNode ->
         BuildTaskResult.WithResult(evalTask(exprNode.target)) { target ->
           when (target) {
-            is BuildTaskResult.ValueResult -> {
+            is BuildTaskResult.ResultWithValue -> {
               val memberValue = target.value.followMemberNames(exprNode.memberNames)
               BuildTaskResult.ValueResult(memberValue)
             }
@@ -61,7 +55,7 @@ class ExprEvaluator(
         BuildTaskResult.WithResultList(exprNode.elems.map { evalTask(it.value) }) { elems ->
           check(elems.size == exprNode.elems.size)
           val elemValues = elems.map { elem ->
-            check(elem is BuildTaskResult.ValueResult)
+            check(elem is BuildTaskResult.ResultWithValue)
             elem.value
           }
           val list = mutableListOf<BibixValue>()
@@ -80,7 +74,7 @@ class ExprEvaluator(
         BuildTaskResult.WithResultList(exprNode.elems.map { evalTask(it) }) { elems ->
           check(elems.size == exprNode.elems.size)
           val elemValues = elems.map { elem ->
-            check(elem is BuildTaskResult.ValueResult)
+            check(elem is BuildTaskResult.ResultWithValue)
             elem.value
           }
           BuildTaskResult.ValueResult(TupleValue(elemValues))
@@ -90,7 +84,7 @@ class ExprEvaluator(
         BuildTaskResult.WithResultList(exprNode.elems.map { evalTask(it.second) }) { elems ->
           check(elems.size == exprNode.elems.size)
           val elemValues = exprNode.elems.zip(elems).map { (pair, elem) ->
-            check(elem is BuildTaskResult.ValueResult)
+            check(elem is BuildTaskResult.ResultWithValue)
             pair.first to elem.value
           }
           BuildTaskResult.ValueResult(NamedTupleValue(elemValues))
@@ -103,7 +97,7 @@ class ExprEvaluator(
           check(operands.size == 2)
           val lhsResult = operands[0]
           val rhsResult = operands[1]
-          check(lhsResult is BuildTaskResult.ValueResult && rhsResult is BuildTaskResult.ValueResult)
+          check(lhsResult is BuildTaskResult.ResultWithValue && rhsResult is BuildTaskResult.ResultWithValue)
           val lhs = lhsResult.value
           val rhs = rhsResult.value
           val merged = when {
@@ -133,7 +127,7 @@ class ExprEvaluator(
 
               is BibixAst.SimpleExpr, is BibixAst.ComplexExpr -> {
                 val value = elems[elemIdx++]
-                check(value is BuildTaskResult.ValueResult && value.value is StringValue)
+                check(value is BuildTaskResult.ResultWithValue && value.value is StringValue)
                 builder.append(value.value)
               }
             }
@@ -154,23 +148,17 @@ class ExprEvaluator(
           val callee = results.first()
 
           val posArgs = results.drop(1).take(exprNode.posParams.size).map { argResult ->
-            check(argResult is BuildTaskResult.ValueResult)
+            check(argResult is BuildTaskResult.ResultWithValue)
             argResult.value
           }
           val namedArgs = namedParams.zip(results.drop(1 + exprNode.posParams.size))
             .associate { (param, argResult) ->
-              check(argResult is BuildTaskResult.ValueResult)
+              check(argResult is BuildTaskResult.ResultWithValue)
               param.key to argResult.value
             }
 
           when (callee) {
             is BuildTaskResult.BuildRuleResult -> {
-//              BuildRuleRunner(
-//                buildGraphRunner,
-//                projectId,
-//                importInstanceId,
-//                FinalizeBuildRuleReturnValue.FinalizeContext.from(callee)
-//              ) { it }
               organizeParamsAndRunBuildRule(
                 buildGraphRunner,
                 projectId,
@@ -196,7 +184,7 @@ class ExprEvaluator(
         ) { results ->
           check(results.size == 2)
           val valueResult = results[1]
-          check(valueResult is BuildTaskResult.ValueResult)
+          check(valueResult is BuildTaskResult.ResultWithValue)
           val value = valueResult.value
 
           // value를 callee의 returnType으로 cast
@@ -212,14 +200,28 @@ class ExprEvaluator(
                 ) { finalized ->
                   // finalized가 ValueFinalizeFailResult 이면 안됨
                   check(finalized is BuildTaskResult.ValueResult)
-                  valueCaster.castValue(finalized.value, typeResult.type)
+
+                  BuildTaskResult.WithResult(
+                    TypeCastValue(finalized.value, typeResult.type, projectId, importInstanceId)
+                  ) { casted ->
+                    check(casted is BuildTaskResult.ValueResult)
+                    if (valueResult is BuildTaskResult.ValueOfTargetResult) {
+                      buildGraphRunner.repo.targetSucceeded(valueResult.targetId, casted.value)
+                    }
+                    valueResult.withNewValue(casted.value)
+                  }
                 }
               }
             }
 
             is BuildTaskResult.DataClassResult -> {
               val classType = DataClassType(callee.packageName, callee.name.toString())
-              valueCaster.castValue(value, classType)
+              BuildTaskResult.WithResult(
+                TypeCastValue(value, classType, projectId, importInstanceId)
+              ) { casted ->
+                check(casted is BuildTaskResult.ValueResult)
+                valueResult.withNewValue(casted.value)
+              }
             }
 
             else -> throw IllegalStateException()
@@ -232,7 +234,7 @@ class ExprEvaluator(
           listOf(evalTask(exprNode.value), evalTask(exprNode.callee))
         ) { results ->
           val valueResult = results[0]
-          check(valueResult is BuildTaskResult.ValueResult)
+          check(valueResult is BuildTaskResult.ResultWithValue)
           val value = valueResult.value
 
           val calleeProjectId: Int
@@ -290,13 +292,13 @@ class ExprEvaluator(
         BuildTaskResult.WithResult(
           EvalTarget(projectId, importInstanceId, exprNode.name)
         ) { result ->
-          check(result is BuildTaskResult.ValueResult)
+          check(result is BuildTaskResult.ResultWithValue)
           result
         }
 
       is LocalVarRef ->
         BuildTaskResult.WithResult(EvalVar(projectId, importInstanceId, exprNode.name)) { result ->
-          check(result is BuildTaskResult.ValueResult)
+          check(result is BuildTaskResult.ResultWithValue)
           result
         }
 
@@ -342,7 +344,7 @@ class ExprEvaluator(
           listOf(evalTask(exprNode.value), EvalType(projectId, exprNode.type))
         ) { results ->
           val valueResult = results[0]
-          check(valueResult is BuildTaskResult.ValueResult)
+          check(valueResult is BuildTaskResult.ResultWithValue)
           val typeResult = results[1]
           check(typeResult is BuildTaskResult.TypeResult)
 
@@ -515,7 +517,7 @@ fun organizeParams(
     BuildTaskResult.WithResultList(defaultArgTasks.map { it.second }) { results ->
       check(results.size == defaultArgTasks.size)
       val defaultArgs = defaultArgTasks.zip(results).associate { (pair, result) ->
-        check(result is BuildTaskResult.ValueResult)
+        check(result is BuildTaskResult.ResultWithValue)
         pair.first to result.value
       }
       whenReady(posArgsMap + namedArgs + defaultArgs + noneArgs)

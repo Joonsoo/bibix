@@ -28,7 +28,32 @@ public object TargetStateKt {
     internal fun _build(): com.giyeok.bibix.repo.BibixRepoProto.TargetState = _builder.build()
 
     /**
-     * `.google.protobuf.Timestamp build_start_time = 1;`
+     * ```
+     * unique_run_id는 빌드가 실행될 때마다 랜덤하게 발급되는 고유 ID
+     * ```
+     *
+     * `string unique_run_id = 1;`
+     */
+    public var uniqueRunId: kotlin.String
+      @JvmName("getUniqueRunId")
+      get() = _builder.getUniqueRunId()
+      @JvmName("setUniqueRunId")
+      set(value) {
+        _builder.setUniqueRunId(value)
+      }
+    /**
+     * ```
+     * unique_run_id는 빌드가 실행될 때마다 랜덤하게 발급되는 고유 ID
+     * ```
+     *
+     * `string unique_run_id = 1;`
+     */
+    public fun clearUniqueRunId() {
+      _builder.clearUniqueRunId()
+    }
+
+    /**
+     * `.google.protobuf.Timestamp build_start_time = 2;`
      */
     public var buildStartTime: com.google.protobuf.Timestamp
       @JvmName("getBuildStartTime")
@@ -38,13 +63,13 @@ public object TargetStateKt {
         _builder.setBuildStartTime(value)
       }
     /**
-     * `.google.protobuf.Timestamp build_start_time = 1;`
+     * `.google.protobuf.Timestamp build_start_time = 2;`
      */
     public fun clearBuildStartTime() {
       _builder.clearBuildStartTime()
     }
     /**
-     * `.google.protobuf.Timestamp build_start_time = 1;`
+     * `.google.protobuf.Timestamp build_start_time = 2;`
      * @return Whether the buildStartTime field is set.
      */
     public fun hasBuildStartTime(): kotlin.Boolean {
@@ -52,55 +77,48 @@ public object TargetStateKt {
     }
 
     /**
-     * `optional bytes inputs_hash = 2;`
+     * `.com.giyeok.bibix.InputHashes input_hashes = 3;`
      */
-    public var inputsHash: com.google.protobuf.ByteString
-      @JvmName("getInputsHash")
-      get() = _builder.getInputsHash()
-      @JvmName("setInputsHash")
+    public var inputHashes: com.giyeok.bibix.BibixIdProto.InputHashes
+      @JvmName("getInputHashes")
+      get() = _builder.getInputHashes()
+      @JvmName("setInputHashes")
       set(value) {
-        _builder.setInputsHash(value)
+        _builder.setInputHashes(value)
       }
     /**
-     * `optional bytes inputs_hash = 2;`
+     * `.com.giyeok.bibix.InputHashes input_hashes = 3;`
      */
-    public fun clearInputsHash() {
-      _builder.clearInputsHash()
+    public fun clearInputHashes() {
+      _builder.clearInputHashes()
     }
     /**
-     * `optional bytes inputs_hash = 2;`
-     * @return Whether the inputsHash field is set.
+     * `.com.giyeok.bibix.InputHashes input_hashes = 3;`
+     * @return Whether the inputHashes field is set.
      */
-    public fun hasInputsHash(): kotlin.Boolean {
-      return _builder.hasInputsHash()
+    public fun hasInputHashes(): kotlin.Boolean {
+      return _builder.hasInputHashes()
     }
 
     /**
-     * `optional bytes object_id = 3;`
+     * `bytes input_hash_string = 4;`
      */
-    public var objectId: com.google.protobuf.ByteString
-      @JvmName("getObjectId")
-      get() = _builder.getObjectId()
-      @JvmName("setObjectId")
+    public var inputHashString: com.google.protobuf.ByteString
+      @JvmName("getInputHashString")
+      get() = _builder.getInputHashString()
+      @JvmName("setInputHashString")
       set(value) {
-        _builder.setObjectId(value)
+        _builder.setInputHashString(value)
       }
     /**
-     * `optional bytes object_id = 3;`
+     * `bytes input_hash_string = 4;`
      */
-    public fun clearObjectId() {
-      _builder.clearObjectId()
-    }
-    /**
-     * `optional bytes object_id = 3;`
-     * @return Whether the objectId field is set.
-     */
-    public fun hasObjectId(): kotlin.Boolean {
-      return _builder.hasObjectId()
+    public fun clearInputHashString() {
+      _builder.clearInputHashString()
     }
 
     /**
-     * `.google.protobuf.Empty build_started = 4;`
+     * `.google.protobuf.Empty build_started = 5;`
      */
     public var buildStarted: com.google.protobuf.Empty
       @JvmName("getBuildStarted")
@@ -110,13 +128,13 @@ public object TargetStateKt {
         _builder.setBuildStarted(value)
       }
     /**
-     * `.google.protobuf.Empty build_started = 4;`
+     * `.google.protobuf.Empty build_started = 5;`
      */
     public fun clearBuildStarted() {
       _builder.clearBuildStarted()
     }
     /**
-     * `.google.protobuf.Empty build_started = 4;`
+     * `.google.protobuf.Empty build_started = 5;`
      * @return Whether the buildStarted field is set.
      */
     public fun hasBuildStarted(): kotlin.Boolean {
@@ -124,7 +142,7 @@ public object TargetStateKt {
     }
 
     /**
-     * `.com.giyeok.bibix.repo.TargetState.BuildSucceeded build_succeeded = 5;`
+     * `.com.giyeok.bibix.repo.TargetState.BuildSucceeded build_succeeded = 6;`
      */
     public var buildSucceeded: com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildSucceeded
       @JvmName("getBuildSucceeded")
@@ -134,13 +152,13 @@ public object TargetStateKt {
         _builder.setBuildSucceeded(value)
       }
     /**
-     * `.com.giyeok.bibix.repo.TargetState.BuildSucceeded build_succeeded = 5;`
+     * `.com.giyeok.bibix.repo.TargetState.BuildSucceeded build_succeeded = 6;`
      */
     public fun clearBuildSucceeded() {
       _builder.clearBuildSucceeded()
     }
     /**
-     * `.com.giyeok.bibix.repo.TargetState.BuildSucceeded build_succeeded = 5;`
+     * `.com.giyeok.bibix.repo.TargetState.BuildSucceeded build_succeeded = 6;`
      * @return Whether the buildSucceeded field is set.
      */
     public fun hasBuildSucceeded(): kotlin.Boolean {
@@ -148,7 +166,7 @@ public object TargetStateKt {
     }
 
     /**
-     * `.com.giyeok.bibix.repo.TargetState.BuildFailed build_failed = 6;`
+     * `.com.giyeok.bibix.repo.TargetState.BuildFailed build_failed = 7;`
      */
     public var buildFailed: com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailed
       @JvmName("getBuildFailed")
@@ -158,13 +176,13 @@ public object TargetStateKt {
         _builder.setBuildFailed(value)
       }
     /**
-     * `.com.giyeok.bibix.repo.TargetState.BuildFailed build_failed = 6;`
+     * `.com.giyeok.bibix.repo.TargetState.BuildFailed build_failed = 7;`
      */
     public fun clearBuildFailed() {
       _builder.clearBuildFailed()
     }
     /**
-     * `.com.giyeok.bibix.repo.TargetState.BuildFailed build_failed = 6;`
+     * `.com.giyeok.bibix.repo.TargetState.BuildFailed build_failed = 7;`
      * @return Whether the buildFailed field is set.
      */
     public fun hasBuildFailed(): kotlin.Boolean {
@@ -246,6 +264,42 @@ public object TargetStateKt {
        */
       public fun hasResultValue(): kotlin.Boolean {
         return _builder.hasResultValue()
+      }
+
+      /**
+       * ```
+       * object id는 뭐지 근데..?
+       * ```
+       *
+       * `optional bytes object_id = 3;`
+       */
+      public var objectId: com.google.protobuf.ByteString
+        @JvmName("getObjectId")
+        get() = _builder.getObjectId()
+        @JvmName("setObjectId")
+        set(value) {
+          _builder.setObjectId(value)
+        }
+      /**
+       * ```
+       * object id는 뭐지 근데..?
+       * ```
+       *
+       * `optional bytes object_id = 3;`
+       */
+      public fun clearObjectId() {
+        _builder.clearObjectId()
+      }
+      /**
+       * ```
+       * object id는 뭐지 근데..?
+       * ```
+       *
+       * `optional bytes object_id = 3;`
+       * @return Whether the objectId field is set.
+       */
+      public fun hasObjectId(): kotlin.Boolean {
+        return _builder.hasObjectId()
       }
     }
   }
@@ -340,6 +394,9 @@ public val com.giyeok.bibix.repo.BibixRepoProto.TargetState.BuildFailedOrBuilder
 
 public val com.giyeok.bibix.repo.BibixRepoProto.TargetStateOrBuilder.buildStartTimeOrNull: com.google.protobuf.Timestamp?
   get() = if (hasBuildStartTime()) getBuildStartTime() else null
+
+public val com.giyeok.bibix.repo.BibixRepoProto.TargetStateOrBuilder.inputHashesOrNull: com.giyeok.bibix.BibixIdProto.InputHashes?
+  get() = if (hasInputHashes()) getInputHashes() else null
 
 public val com.giyeok.bibix.repo.BibixRepoProto.TargetStateOrBuilder.buildStartedOrNull: com.google.protobuf.Empty?
   get() = if (hasBuildStarted()) getBuildStarted() else null

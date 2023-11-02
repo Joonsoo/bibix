@@ -238,7 +238,7 @@ object ProjectStructureExtractor {
 
     val modules =
       javaModulesCollector.modules + ktjvmModulesCollector.modules + scalaModulesCollector.modules
-    val namesMap = buildFrontend.repo.outputNames.mapValues { it.value.toHexString() }
+    val namesMap = buildFrontend.repo.repoData.outputNamesMap.mapValues { it.value }
 
     val objectNamesMap = mutableMapOf<String, String>()
     namesMap.forEach { (targetId, outputName) ->

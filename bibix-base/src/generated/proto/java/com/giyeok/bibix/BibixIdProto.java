@@ -48,34 +48,34 @@ public final class BibixIdProto {
         getBibixVersionBytes();
 
     /**
-     * <code>.google.protobuf.Empty prelude_source = 2;</code>
-     * @return Whether the preludeSource field is set.
-     */
-    boolean hasPreludeSource();
-    /**
-     * <code>.google.protobuf.Empty prelude_source = 2;</code>
-     * @return The preludeSource.
-     */
-    com.google.protobuf.Empty getPreludeSource();
-    /**
-     * <code>.google.protobuf.Empty prelude_source = 2;</code>
-     */
-    com.google.protobuf.EmptyOrBuilder getPreludeSourceOrBuilder();
-
-    /**
-     * <code>.google.protobuf.Empty main_source = 3;</code>
+     * <code>.google.protobuf.Empty main_source = 2;</code>
      * @return Whether the mainSource field is set.
      */
     boolean hasMainSource();
     /**
-     * <code>.google.protobuf.Empty main_source = 3;</code>
+     * <code>.google.protobuf.Empty main_source = 2;</code>
      * @return The mainSource.
      */
     com.google.protobuf.Empty getMainSource();
     /**
-     * <code>.google.protobuf.Empty main_source = 3;</code>
+     * <code>.google.protobuf.Empty main_source = 2;</code>
      */
     com.google.protobuf.EmptyOrBuilder getMainSourceOrBuilder();
+
+    /**
+     * <code>.google.protobuf.Empty prelude_source = 3;</code>
+     * @return Whether the preludeSource field is set.
+     */
+    boolean hasPreludeSource();
+    /**
+     * <code>.google.protobuf.Empty prelude_source = 3;</code>
+     * @return The preludeSource.
+     */
+    com.google.protobuf.Empty getPreludeSource();
+    /**
+     * <code>.google.protobuf.Empty prelude_source = 3;</code>
+     */
+    com.google.protobuf.EmptyOrBuilder getPreludeSourceOrBuilder();
 
     /**
      * <code>string preloaded_plugin = 4;</code>
@@ -154,8 +154,8 @@ public final class BibixIdProto {
     public enum SourceCase
         implements com.google.protobuf.Internal.EnumLite,
             com.google.protobuf.AbstractMessage.InternalOneOfEnum {
-      PRELUDE_SOURCE(2),
-      MAIN_SOURCE(3),
+      MAIN_SOURCE(2),
+      PRELUDE_SOURCE(3),
       PRELOADED_PLUGIN(4),
       EXTERNAL_PLUGIN_OBJHASH(5),
       SOURCE_NOT_SET(0);
@@ -175,8 +175,8 @@ public final class BibixIdProto {
 
       public static SourceCase forNumber(int value) {
         switch (value) {
-          case 2: return PRELUDE_SOURCE;
-          case 3: return MAIN_SOURCE;
+          case 2: return MAIN_SOURCE;
+          case 3: return PRELUDE_SOURCE;
           case 4: return PRELOADED_PLUGIN;
           case 5: return EXTERNAL_PLUGIN_OBJHASH;
           case 0: return SOURCE_NOT_SET;
@@ -253,62 +253,62 @@ public final class BibixIdProto {
       }
     }
 
-    public static final int PRELUDE_SOURCE_FIELD_NUMBER = 2;
+    public static final int MAIN_SOURCE_FIELD_NUMBER = 2;
     /**
-     * <code>.google.protobuf.Empty prelude_source = 2;</code>
-     * @return Whether the preludeSource field is set.
+     * <code>.google.protobuf.Empty main_source = 2;</code>
+     * @return Whether the mainSource field is set.
      */
     @java.lang.Override
-    public boolean hasPreludeSource() {
+    public boolean hasMainSource() {
       return sourceCase_ == 2;
     }
     /**
-     * <code>.google.protobuf.Empty prelude_source = 2;</code>
-     * @return The preludeSource.
+     * <code>.google.protobuf.Empty main_source = 2;</code>
+     * @return The mainSource.
      */
     @java.lang.Override
-    public com.google.protobuf.Empty getPreludeSource() {
+    public com.google.protobuf.Empty getMainSource() {
       if (sourceCase_ == 2) {
          return (com.google.protobuf.Empty) source_;
       }
       return com.google.protobuf.Empty.getDefaultInstance();
     }
     /**
-     * <code>.google.protobuf.Empty prelude_source = 2;</code>
+     * <code>.google.protobuf.Empty main_source = 2;</code>
      */
     @java.lang.Override
-    public com.google.protobuf.EmptyOrBuilder getPreludeSourceOrBuilder() {
+    public com.google.protobuf.EmptyOrBuilder getMainSourceOrBuilder() {
       if (sourceCase_ == 2) {
          return (com.google.protobuf.Empty) source_;
       }
       return com.google.protobuf.Empty.getDefaultInstance();
     }
 
-    public static final int MAIN_SOURCE_FIELD_NUMBER = 3;
+    public static final int PRELUDE_SOURCE_FIELD_NUMBER = 3;
     /**
-     * <code>.google.protobuf.Empty main_source = 3;</code>
-     * @return Whether the mainSource field is set.
+     * <code>.google.protobuf.Empty prelude_source = 3;</code>
+     * @return Whether the preludeSource field is set.
      */
     @java.lang.Override
-    public boolean hasMainSource() {
+    public boolean hasPreludeSource() {
       return sourceCase_ == 3;
     }
     /**
-     * <code>.google.protobuf.Empty main_source = 3;</code>
-     * @return The mainSource.
+     * <code>.google.protobuf.Empty prelude_source = 3;</code>
+     * @return The preludeSource.
      */
     @java.lang.Override
-    public com.google.protobuf.Empty getMainSource() {
+    public com.google.protobuf.Empty getPreludeSource() {
       if (sourceCase_ == 3) {
          return (com.google.protobuf.Empty) source_;
       }
       return com.google.protobuf.Empty.getDefaultInstance();
     }
     /**
-     * <code>.google.protobuf.Empty main_source = 3;</code>
+     * <code>.google.protobuf.Empty prelude_source = 3;</code>
      */
     @java.lang.Override
-    public com.google.protobuf.EmptyOrBuilder getMainSourceOrBuilder() {
+    public com.google.protobuf.EmptyOrBuilder getPreludeSourceOrBuilder() {
       if (sourceCase_ == 3) {
          return (com.google.protobuf.Empty) source_;
       }
@@ -477,12 +477,12 @@ public final class BibixIdProto {
       if (!getSourceCase().equals(other.getSourceCase())) return false;
       switch (sourceCase_) {
         case 2:
-          if (!getPreludeSource()
-              .equals(other.getPreludeSource())) return false;
-          break;
-        case 3:
           if (!getMainSource()
               .equals(other.getMainSource())) return false;
+          break;
+        case 3:
+          if (!getPreludeSource()
+              .equals(other.getPreludeSource())) return false;
           break;
         case 4:
           if (!getPreloadedPlugin()
@@ -512,12 +512,12 @@ public final class BibixIdProto {
       }
       switch (sourceCase_) {
         case 2:
-          hash = (37 * hash) + PRELUDE_SOURCE_FIELD_NUMBER;
-          hash = (53 * hash) + getPreludeSource().hashCode();
-          break;
-        case 3:
           hash = (37 * hash) + MAIN_SOURCE_FIELD_NUMBER;
           hash = (53 * hash) + getMainSource().hashCode();
+          break;
+        case 3:
+          hash = (37 * hash) + PRELUDE_SOURCE_FIELD_NUMBER;
+          hash = (53 * hash) + getPreludeSource().hashCode();
           break;
         case 4:
           hash = (37 * hash) + PRELOADED_PLUGIN_FIELD_NUMBER;
@@ -660,11 +660,11 @@ public final class BibixIdProto {
         super.clear();
         bitField0_ = 0;
         bibixVersion_ = "";
-        if (preludeSourceBuilder_ != null) {
-          preludeSourceBuilder_.clear();
-        }
         if (mainSourceBuilder_ != null) {
           mainSourceBuilder_.clear();
+        }
+        if (preludeSourceBuilder_ != null) {
+          preludeSourceBuilder_.clear();
         }
         if (externalPluginObjhashBuilder_ != null) {
           externalPluginObjhashBuilder_.clear();
@@ -717,12 +717,12 @@ public final class BibixIdProto {
         result.sourceCase_ = sourceCase_;
         result.source_ = this.source_;
         if (sourceCase_ == 2 &&
-            preludeSourceBuilder_ != null) {
-          result.source_ = preludeSourceBuilder_.build();
-        }
-        if (sourceCase_ == 3 &&
             mainSourceBuilder_ != null) {
           result.source_ = mainSourceBuilder_.build();
+        }
+        if (sourceCase_ == 3 &&
+            preludeSourceBuilder_ != null) {
+          result.source_ = preludeSourceBuilder_.build();
         }
         if (sourceCase_ == 5 &&
             externalPluginObjhashBuilder_ != null) {
@@ -748,12 +748,12 @@ public final class BibixIdProto {
           onChanged();
         }
         switch (other.getSourceCase()) {
-          case PRELUDE_SOURCE: {
-            mergePreludeSource(other.getPreludeSource());
-            break;
-          }
           case MAIN_SOURCE: {
             mergeMainSource(other.getMainSource());
+            break;
+          }
+          case PRELUDE_SOURCE: {
+            mergePreludeSource(other.getPreludeSource());
             break;
           }
           case PRELOADED_PLUGIN: {
@@ -803,14 +803,14 @@ public final class BibixIdProto {
               } // case 10
               case 18: {
                 input.readMessage(
-                    getPreludeSourceFieldBuilder().getBuilder(),
+                    getMainSourceFieldBuilder().getBuilder(),
                     extensionRegistry);
                 sourceCase_ = 2;
                 break;
               } // case 18
               case 26: {
                 input.readMessage(
-                    getMainSourceFieldBuilder().getBuilder(),
+                    getPreludeSourceFieldBuilder().getBuilder(),
                     extensionRegistry);
                 sourceCase_ = 3;
                 break;
@@ -964,177 +964,35 @@ public final class BibixIdProto {
       }
 
       private com.google.protobuf.SingleFieldBuilderV3<
-          com.google.protobuf.Empty, com.google.protobuf.Empty.Builder, com.google.protobuf.EmptyOrBuilder> preludeSourceBuilder_;
-      /**
-       * <code>.google.protobuf.Empty prelude_source = 2;</code>
-       * @return Whether the preludeSource field is set.
-       */
-      @java.lang.Override
-      public boolean hasPreludeSource() {
-        return sourceCase_ == 2;
-      }
-      /**
-       * <code>.google.protobuf.Empty prelude_source = 2;</code>
-       * @return The preludeSource.
-       */
-      @java.lang.Override
-      public com.google.protobuf.Empty getPreludeSource() {
-        if (preludeSourceBuilder_ == null) {
-          if (sourceCase_ == 2) {
-            return (com.google.protobuf.Empty) source_;
-          }
-          return com.google.protobuf.Empty.getDefaultInstance();
-        } else {
-          if (sourceCase_ == 2) {
-            return preludeSourceBuilder_.getMessage();
-          }
-          return com.google.protobuf.Empty.getDefaultInstance();
-        }
-      }
-      /**
-       * <code>.google.protobuf.Empty prelude_source = 2;</code>
-       */
-      public Builder setPreludeSource(com.google.protobuf.Empty value) {
-        if (preludeSourceBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          source_ = value;
-          onChanged();
-        } else {
-          preludeSourceBuilder_.setMessage(value);
-        }
-        sourceCase_ = 2;
-        return this;
-      }
-      /**
-       * <code>.google.protobuf.Empty prelude_source = 2;</code>
-       */
-      public Builder setPreludeSource(
-          com.google.protobuf.Empty.Builder builderForValue) {
-        if (preludeSourceBuilder_ == null) {
-          source_ = builderForValue.build();
-          onChanged();
-        } else {
-          preludeSourceBuilder_.setMessage(builderForValue.build());
-        }
-        sourceCase_ = 2;
-        return this;
-      }
-      /**
-       * <code>.google.protobuf.Empty prelude_source = 2;</code>
-       */
-      public Builder mergePreludeSource(com.google.protobuf.Empty value) {
-        if (preludeSourceBuilder_ == null) {
-          if (sourceCase_ == 2 &&
-              source_ != com.google.protobuf.Empty.getDefaultInstance()) {
-            source_ = com.google.protobuf.Empty.newBuilder((com.google.protobuf.Empty) source_)
-                .mergeFrom(value).buildPartial();
-          } else {
-            source_ = value;
-          }
-          onChanged();
-        } else {
-          if (sourceCase_ == 2) {
-            preludeSourceBuilder_.mergeFrom(value);
-          } else {
-            preludeSourceBuilder_.setMessage(value);
-          }
-        }
-        sourceCase_ = 2;
-        return this;
-      }
-      /**
-       * <code>.google.protobuf.Empty prelude_source = 2;</code>
-       */
-      public Builder clearPreludeSource() {
-        if (preludeSourceBuilder_ == null) {
-          if (sourceCase_ == 2) {
-            sourceCase_ = 0;
-            source_ = null;
-            onChanged();
-          }
-        } else {
-          if (sourceCase_ == 2) {
-            sourceCase_ = 0;
-            source_ = null;
-          }
-          preludeSourceBuilder_.clear();
-        }
-        return this;
-      }
-      /**
-       * <code>.google.protobuf.Empty prelude_source = 2;</code>
-       */
-      public com.google.protobuf.Empty.Builder getPreludeSourceBuilder() {
-        return getPreludeSourceFieldBuilder().getBuilder();
-      }
-      /**
-       * <code>.google.protobuf.Empty prelude_source = 2;</code>
-       */
-      @java.lang.Override
-      public com.google.protobuf.EmptyOrBuilder getPreludeSourceOrBuilder() {
-        if ((sourceCase_ == 2) && (preludeSourceBuilder_ != null)) {
-          return preludeSourceBuilder_.getMessageOrBuilder();
-        } else {
-          if (sourceCase_ == 2) {
-            return (com.google.protobuf.Empty) source_;
-          }
-          return com.google.protobuf.Empty.getDefaultInstance();
-        }
-      }
-      /**
-       * <code>.google.protobuf.Empty prelude_source = 2;</code>
-       */
-      private com.google.protobuf.SingleFieldBuilderV3<
-          com.google.protobuf.Empty, com.google.protobuf.Empty.Builder, com.google.protobuf.EmptyOrBuilder> 
-          getPreludeSourceFieldBuilder() {
-        if (preludeSourceBuilder_ == null) {
-          if (!(sourceCase_ == 2)) {
-            source_ = com.google.protobuf.Empty.getDefaultInstance();
-          }
-          preludeSourceBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-              com.google.protobuf.Empty, com.google.protobuf.Empty.Builder, com.google.protobuf.EmptyOrBuilder>(
-                  (com.google.protobuf.Empty) source_,
-                  getParentForChildren(),
-                  isClean());
-          source_ = null;
-        }
-        sourceCase_ = 2;
-        onChanged();
-        return preludeSourceBuilder_;
-      }
-
-      private com.google.protobuf.SingleFieldBuilderV3<
           com.google.protobuf.Empty, com.google.protobuf.Empty.Builder, com.google.protobuf.EmptyOrBuilder> mainSourceBuilder_;
       /**
-       * <code>.google.protobuf.Empty main_source = 3;</code>
+       * <code>.google.protobuf.Empty main_source = 2;</code>
        * @return Whether the mainSource field is set.
        */
       @java.lang.Override
       public boolean hasMainSource() {
-        return sourceCase_ == 3;
+        return sourceCase_ == 2;
       }
       /**
-       * <code>.google.protobuf.Empty main_source = 3;</code>
+       * <code>.google.protobuf.Empty main_source = 2;</code>
        * @return The mainSource.
        */
       @java.lang.Override
       public com.google.protobuf.Empty getMainSource() {
         if (mainSourceBuilder_ == null) {
-          if (sourceCase_ == 3) {
+          if (sourceCase_ == 2) {
             return (com.google.protobuf.Empty) source_;
           }
           return com.google.protobuf.Empty.getDefaultInstance();
         } else {
-          if (sourceCase_ == 3) {
+          if (sourceCase_ == 2) {
             return mainSourceBuilder_.getMessage();
           }
           return com.google.protobuf.Empty.getDefaultInstance();
         }
       }
       /**
-       * <code>.google.protobuf.Empty main_source = 3;</code>
+       * <code>.google.protobuf.Empty main_source = 2;</code>
        */
       public Builder setMainSource(com.google.protobuf.Empty value) {
         if (mainSourceBuilder_ == null) {
@@ -1146,11 +1004,11 @@ public final class BibixIdProto {
         } else {
           mainSourceBuilder_.setMessage(value);
         }
-        sourceCase_ = 3;
+        sourceCase_ = 2;
         return this;
       }
       /**
-       * <code>.google.protobuf.Empty main_source = 3;</code>
+       * <code>.google.protobuf.Empty main_source = 2;</code>
        */
       public Builder setMainSource(
           com.google.protobuf.Empty.Builder builderForValue) {
@@ -1160,14 +1018,156 @@ public final class BibixIdProto {
         } else {
           mainSourceBuilder_.setMessage(builderForValue.build());
         }
+        sourceCase_ = 2;
+        return this;
+      }
+      /**
+       * <code>.google.protobuf.Empty main_source = 2;</code>
+       */
+      public Builder mergeMainSource(com.google.protobuf.Empty value) {
+        if (mainSourceBuilder_ == null) {
+          if (sourceCase_ == 2 &&
+              source_ != com.google.protobuf.Empty.getDefaultInstance()) {
+            source_ = com.google.protobuf.Empty.newBuilder((com.google.protobuf.Empty) source_)
+                .mergeFrom(value).buildPartial();
+          } else {
+            source_ = value;
+          }
+          onChanged();
+        } else {
+          if (sourceCase_ == 2) {
+            mainSourceBuilder_.mergeFrom(value);
+          } else {
+            mainSourceBuilder_.setMessage(value);
+          }
+        }
+        sourceCase_ = 2;
+        return this;
+      }
+      /**
+       * <code>.google.protobuf.Empty main_source = 2;</code>
+       */
+      public Builder clearMainSource() {
+        if (mainSourceBuilder_ == null) {
+          if (sourceCase_ == 2) {
+            sourceCase_ = 0;
+            source_ = null;
+            onChanged();
+          }
+        } else {
+          if (sourceCase_ == 2) {
+            sourceCase_ = 0;
+            source_ = null;
+          }
+          mainSourceBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>.google.protobuf.Empty main_source = 2;</code>
+       */
+      public com.google.protobuf.Empty.Builder getMainSourceBuilder() {
+        return getMainSourceFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>.google.protobuf.Empty main_source = 2;</code>
+       */
+      @java.lang.Override
+      public com.google.protobuf.EmptyOrBuilder getMainSourceOrBuilder() {
+        if ((sourceCase_ == 2) && (mainSourceBuilder_ != null)) {
+          return mainSourceBuilder_.getMessageOrBuilder();
+        } else {
+          if (sourceCase_ == 2) {
+            return (com.google.protobuf.Empty) source_;
+          }
+          return com.google.protobuf.Empty.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>.google.protobuf.Empty main_source = 2;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          com.google.protobuf.Empty, com.google.protobuf.Empty.Builder, com.google.protobuf.EmptyOrBuilder> 
+          getMainSourceFieldBuilder() {
+        if (mainSourceBuilder_ == null) {
+          if (!(sourceCase_ == 2)) {
+            source_ = com.google.protobuf.Empty.getDefaultInstance();
+          }
+          mainSourceBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              com.google.protobuf.Empty, com.google.protobuf.Empty.Builder, com.google.protobuf.EmptyOrBuilder>(
+                  (com.google.protobuf.Empty) source_,
+                  getParentForChildren(),
+                  isClean());
+          source_ = null;
+        }
+        sourceCase_ = 2;
+        onChanged();
+        return mainSourceBuilder_;
+      }
+
+      private com.google.protobuf.SingleFieldBuilderV3<
+          com.google.protobuf.Empty, com.google.protobuf.Empty.Builder, com.google.protobuf.EmptyOrBuilder> preludeSourceBuilder_;
+      /**
+       * <code>.google.protobuf.Empty prelude_source = 3;</code>
+       * @return Whether the preludeSource field is set.
+       */
+      @java.lang.Override
+      public boolean hasPreludeSource() {
+        return sourceCase_ == 3;
+      }
+      /**
+       * <code>.google.protobuf.Empty prelude_source = 3;</code>
+       * @return The preludeSource.
+       */
+      @java.lang.Override
+      public com.google.protobuf.Empty getPreludeSource() {
+        if (preludeSourceBuilder_ == null) {
+          if (sourceCase_ == 3) {
+            return (com.google.protobuf.Empty) source_;
+          }
+          return com.google.protobuf.Empty.getDefaultInstance();
+        } else {
+          if (sourceCase_ == 3) {
+            return preludeSourceBuilder_.getMessage();
+          }
+          return com.google.protobuf.Empty.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>.google.protobuf.Empty prelude_source = 3;</code>
+       */
+      public Builder setPreludeSource(com.google.protobuf.Empty value) {
+        if (preludeSourceBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          source_ = value;
+          onChanged();
+        } else {
+          preludeSourceBuilder_.setMessage(value);
+        }
         sourceCase_ = 3;
         return this;
       }
       /**
-       * <code>.google.protobuf.Empty main_source = 3;</code>
+       * <code>.google.protobuf.Empty prelude_source = 3;</code>
        */
-      public Builder mergeMainSource(com.google.protobuf.Empty value) {
-        if (mainSourceBuilder_ == null) {
+      public Builder setPreludeSource(
+          com.google.protobuf.Empty.Builder builderForValue) {
+        if (preludeSourceBuilder_ == null) {
+          source_ = builderForValue.build();
+          onChanged();
+        } else {
+          preludeSourceBuilder_.setMessage(builderForValue.build());
+        }
+        sourceCase_ = 3;
+        return this;
+      }
+      /**
+       * <code>.google.protobuf.Empty prelude_source = 3;</code>
+       */
+      public Builder mergePreludeSource(com.google.protobuf.Empty value) {
+        if (preludeSourceBuilder_ == null) {
           if (sourceCase_ == 3 &&
               source_ != com.google.protobuf.Empty.getDefaultInstance()) {
             source_ = com.google.protobuf.Empty.newBuilder((com.google.protobuf.Empty) source_)
@@ -1178,19 +1178,19 @@ public final class BibixIdProto {
           onChanged();
         } else {
           if (sourceCase_ == 3) {
-            mainSourceBuilder_.mergeFrom(value);
+            preludeSourceBuilder_.mergeFrom(value);
           } else {
-            mainSourceBuilder_.setMessage(value);
+            preludeSourceBuilder_.setMessage(value);
           }
         }
         sourceCase_ = 3;
         return this;
       }
       /**
-       * <code>.google.protobuf.Empty main_source = 3;</code>
+       * <code>.google.protobuf.Empty prelude_source = 3;</code>
        */
-      public Builder clearMainSource() {
-        if (mainSourceBuilder_ == null) {
+      public Builder clearPreludeSource() {
+        if (preludeSourceBuilder_ == null) {
           if (sourceCase_ == 3) {
             sourceCase_ = 0;
             source_ = null;
@@ -1201,23 +1201,23 @@ public final class BibixIdProto {
             sourceCase_ = 0;
             source_ = null;
           }
-          mainSourceBuilder_.clear();
+          preludeSourceBuilder_.clear();
         }
         return this;
       }
       /**
-       * <code>.google.protobuf.Empty main_source = 3;</code>
+       * <code>.google.protobuf.Empty prelude_source = 3;</code>
        */
-      public com.google.protobuf.Empty.Builder getMainSourceBuilder() {
-        return getMainSourceFieldBuilder().getBuilder();
+      public com.google.protobuf.Empty.Builder getPreludeSourceBuilder() {
+        return getPreludeSourceFieldBuilder().getBuilder();
       }
       /**
-       * <code>.google.protobuf.Empty main_source = 3;</code>
+       * <code>.google.protobuf.Empty prelude_source = 3;</code>
        */
       @java.lang.Override
-      public com.google.protobuf.EmptyOrBuilder getMainSourceOrBuilder() {
-        if ((sourceCase_ == 3) && (mainSourceBuilder_ != null)) {
-          return mainSourceBuilder_.getMessageOrBuilder();
+      public com.google.protobuf.EmptyOrBuilder getPreludeSourceOrBuilder() {
+        if ((sourceCase_ == 3) && (preludeSourceBuilder_ != null)) {
+          return preludeSourceBuilder_.getMessageOrBuilder();
         } else {
           if (sourceCase_ == 3) {
             return (com.google.protobuf.Empty) source_;
@@ -1226,16 +1226,16 @@ public final class BibixIdProto {
         }
       }
       /**
-       * <code>.google.protobuf.Empty main_source = 3;</code>
+       * <code>.google.protobuf.Empty prelude_source = 3;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
           com.google.protobuf.Empty, com.google.protobuf.Empty.Builder, com.google.protobuf.EmptyOrBuilder> 
-          getMainSourceFieldBuilder() {
-        if (mainSourceBuilder_ == null) {
+          getPreludeSourceFieldBuilder() {
+        if (preludeSourceBuilder_ == null) {
           if (!(sourceCase_ == 3)) {
             source_ = com.google.protobuf.Empty.getDefaultInstance();
           }
-          mainSourceBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+          preludeSourceBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
               com.google.protobuf.Empty, com.google.protobuf.Empty.Builder, com.google.protobuf.EmptyOrBuilder>(
                   (com.google.protobuf.Empty) source_,
                   getParentForChildren(),
@@ -1244,7 +1244,7 @@ public final class BibixIdProto {
         }
         sourceCase_ = 3;
         onChanged();
-        return mainSourceBuilder_;
+        return preludeSourceBuilder_;
       }
 
       /**
@@ -11119,9 +11119,9 @@ public final class BibixIdProto {
       "\n\tids.proto\022\020com.giyeok.bibix\032\014values.pr" +
       "oto\032\033google/protobuf/empty.proto\032\037google" +
       "/protobuf/timestamp.proto\"\212\002\n\010SourceId\022\032" +
-      "\n\rbibix_version\030\001 \001(\tH\001\210\001\001\0220\n\016prelude_so" +
-      "urce\030\002 \001(\0132\026.google.protobuf.EmptyH\000\022-\n\013" +
-      "main_source\030\003 \001(\0132\026.google.protobuf.Empt" +
+      "\n\rbibix_version\030\001 \001(\tH\001\210\001\001\022-\n\013main_sourc" +
+      "e\030\002 \001(\0132\026.google.protobuf.EmptyH\000\0220\n\016pre" +
+      "lude_source\030\003 \001(\0132\026.google.protobuf.Empt" +
       "yH\000\022\032\n\020preloaded_plugin\030\004 \001(\tH\000\022I\n\027exter" +
       "nal_plugin_objhash\030\005 \001(\0132&.com.giyeok.bi" +
       "bix.ExternalBibixProjectH\000B\010\n\006sourceB\020\n\016" +
@@ -11169,7 +11169,7 @@ public final class BibixIdProto {
     internal_static_com_giyeok_bibix_SourceId_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_giyeok_bibix_SourceId_descriptor,
-        new java.lang.String[] { "BibixVersion", "PreludeSource", "MainSource", "PreloadedPlugin", "ExternalPluginObjhash", "Source", "BibixVersion", });
+        new java.lang.String[] { "BibixVersion", "MainSource", "PreludeSource", "PreloadedPlugin", "ExternalPluginObjhash", "Source", "BibixVersion", });
     internal_static_com_giyeok_bibix_ExternalBibixProject_descriptor =
       getDescriptor().getMessageTypes().get(1);
     internal_static_com_giyeok_bibix_ExternalBibixProject_fieldAccessorTable = new

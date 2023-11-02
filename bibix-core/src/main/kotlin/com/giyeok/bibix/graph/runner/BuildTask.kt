@@ -4,6 +4,7 @@ import com.giyeok.bibix.base.BibixType
 import com.giyeok.bibix.base.BibixValue
 import com.giyeok.bibix.base.ClassInstanceValue
 import com.giyeok.bibix.graph.*
+import com.giyeok.bibix.plugins.jvm.ClassPkg
 import java.lang.reflect.Method
 
 sealed class BuildTask
@@ -148,7 +149,22 @@ data class GlobalExprNodeId(
 sealed class BuildTaskResult {
   sealed class FinalResult: BuildTaskResult()
 
-  data class ValueResult(val value: BibixValue): FinalResult()
+  sealed class ResultWithValue: FinalResult() {
+    abstract val value: BibixValue
+    abstract fun withNewValue(newValue: BibixValue): ResultWithValue
+  }
+
+  data class ValueResult(override val value: BibixValue): ResultWithValue() {
+    override fun withNewValue(newValue: BibixValue): ResultWithValue = ValueResult(newValue)
+  }
+
+  data class ValueOfTargetResult(
+    override val value: BibixValue,
+    val targetId: String
+  ): ResultWithValue() {
+    override fun withNewValue(newValue: BibixValue): ResultWithValue =
+      ValueOfTargetResult(newValue, targetId)
+  }
 
   data class ImportResult(
     val projectId: Int,
@@ -167,6 +183,7 @@ sealed class BuildTaskResult {
     val importInstanceId: Int,
     val buildRuleDef: BuildRuleDef,
     val paramTypes: List<Pair<String, BibixType>>,
+    val classPkg: ClassPkg?,
     val implInstance: Any,
     val implMethod: Method
   ): FinalResult()

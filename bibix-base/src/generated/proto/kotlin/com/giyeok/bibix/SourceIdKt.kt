@@ -64,31 +64,7 @@ public object SourceIdKt {
     }
 
     /**
-     * `.google.protobuf.Empty prelude_source = 2;`
-     */
-    public var preludeSource: com.google.protobuf.Empty
-      @JvmName("getPreludeSource")
-      get() = _builder.getPreludeSource()
-      @JvmName("setPreludeSource")
-      set(value) {
-        _builder.setPreludeSource(value)
-      }
-    /**
-     * `.google.protobuf.Empty prelude_source = 2;`
-     */
-    public fun clearPreludeSource() {
-      _builder.clearPreludeSource()
-    }
-    /**
-     * `.google.protobuf.Empty prelude_source = 2;`
-     * @return Whether the preludeSource field is set.
-     */
-    public fun hasPreludeSource(): kotlin.Boolean {
-      return _builder.hasPreludeSource()
-    }
-
-    /**
-     * `.google.protobuf.Empty main_source = 3;`
+     * `.google.protobuf.Empty main_source = 2;`
      */
     public var mainSource: com.google.protobuf.Empty
       @JvmName("getMainSource")
@@ -98,17 +74,41 @@ public object SourceIdKt {
         _builder.setMainSource(value)
       }
     /**
-     * `.google.protobuf.Empty main_source = 3;`
+     * `.google.protobuf.Empty main_source = 2;`
      */
     public fun clearMainSource() {
       _builder.clearMainSource()
     }
     /**
-     * `.google.protobuf.Empty main_source = 3;`
+     * `.google.protobuf.Empty main_source = 2;`
      * @return Whether the mainSource field is set.
      */
     public fun hasMainSource(): kotlin.Boolean {
       return _builder.hasMainSource()
+    }
+
+    /**
+     * `.google.protobuf.Empty prelude_source = 3;`
+     */
+    public var preludeSource: com.google.protobuf.Empty
+      @JvmName("getPreludeSource")
+      get() = _builder.getPreludeSource()
+      @JvmName("setPreludeSource")
+      set(value) {
+        _builder.setPreludeSource(value)
+      }
+    /**
+     * `.google.protobuf.Empty prelude_source = 3;`
+     */
+    public fun clearPreludeSource() {
+      _builder.clearPreludeSource()
+    }
+    /**
+     * `.google.protobuf.Empty prelude_source = 3;`
+     * @return Whether the preludeSource field is set.
+     */
+    public fun hasPreludeSource(): kotlin.Boolean {
+      return _builder.hasPreludeSource()
     }
 
     /**
@@ -172,11 +172,11 @@ public object SourceIdKt {
 public inline fun com.giyeok.bibix.BibixIdProto.SourceId.copy(block: com.giyeok.bibix.SourceIdKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.BibixIdProto.SourceId =
   com.giyeok.bibix.SourceIdKt.Dsl._create(this.toBuilder()).apply { block() }._build()
 
-public val com.giyeok.bibix.BibixIdProto.SourceIdOrBuilder.preludeSourceOrNull: com.google.protobuf.Empty?
-  get() = if (hasPreludeSource()) getPreludeSource() else null
-
 public val com.giyeok.bibix.BibixIdProto.SourceIdOrBuilder.mainSourceOrNull: com.google.protobuf.Empty?
   get() = if (hasMainSource()) getMainSource() else null
+
+public val com.giyeok.bibix.BibixIdProto.SourceIdOrBuilder.preludeSourceOrNull: com.google.protobuf.Empty?
+  get() = if (hasPreludeSource()) getPreludeSource() else null
 
 public val com.giyeok.bibix.BibixIdProto.SourceIdOrBuilder.externalPluginObjhashOrNull: com.giyeok.bibix.BibixIdProto.ExternalBibixProject?
   get() = if (hasExternalPluginObjhash()) getExternalPluginObjhash() else null

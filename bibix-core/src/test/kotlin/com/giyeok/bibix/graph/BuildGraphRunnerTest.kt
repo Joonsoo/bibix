@@ -21,7 +21,7 @@ class BuildGraphRunnerTest {
     val mainProjectLocation =
       BibixProjectLocation(Path.of("bibix-core/src/test/resources/varredefs/b").absolute())
     val buildEnv = BuildEnv(OS.Linux("", ""), Architecture.X86_64)
-    val repo = BibixRepo.load(mainProjectLocation.projectRoot)
+    val repo = BibixRepo.load(mainProjectLocation.projectRoot, "UNIQUE-ID")
     val runner = runBlocking {
       BuildGraphRunner.create(
         mainProjectLocation = mainProjectLocation,

@@ -1,18 +1,18 @@
 package com.giyeok.bibix.graph.runner
 
-import com.giyeok.bibix.BibixIdProto
+import com.giyeok.bibix.*
 import com.giyeok.bibix.base.*
-import com.giyeok.bibix.buildRuleData
 import com.giyeok.bibix.graph.BibixName
 import com.giyeok.bibix.repo.BibixRepoProto
+import com.giyeok.bibix.repo.extractInputHashes
 import com.giyeok.bibix.repo.hashString
-import com.giyeok.bibix.sourceId
-import com.giyeok.bibix.targetIdData
 import com.giyeok.bibix.utils.toBibix
 import com.giyeok.bibix.utils.toHexString
 import com.giyeok.bibix.utils.toInstant
+import com.giyeok.bibix.utils.toProto
 import com.google.protobuf.empty
 import kotlinx.coroutines.runBlocking
+import kotlin.io.path.absolutePathString
 
 fun organizeParamsAndRunBuildRule(
   buildGraphRunner: BuildGraphRunner,
@@ -33,13 +33,20 @@ fun organizeParamsAndRunBuildRule(
     namedArgs,
   ) { args ->
     val buildContext = createBuildContext(buildGraphRunner, callerProjectId, buildRule, args)
+    buildGraphRunner.repo.targetStarted(buildContext)
+    // TODO target이 실패한 경우가 다 처리가 안됨..
     val runner = BuildRuleRunner(
       buildGraphRunner,
       callerProjectId,
       callerImportInstanceId,
-      FinalizeBuildRuleReturnValue.FinalizeContext.from(buildRule),
-      block
-    )
+      FinalizeBuildRuleReturnValue.FinalizeContext.from(buildRule)
+    ) { result ->
+      if (result is BuildTaskResult.ResultWithValue) {
+        block(BuildTaskResult.ValueOfTargetResult(result.value, buildContext.targetId))
+      } else {
+        block(result)
+      }
+    }
     BuildTaskResult.LongRunning {
       val result = buildRule.implMethod.invoke(buildRule.implInstance, buildContext)
       runner.handleBuildReturn(result)
@@ -59,15 +66,14 @@ private fun createBuildContext(
 
   val argsMap = argsMapFrom(args)
   val targetIdData = targetIdData {
-    // TODO
     this.sourceId = sourceIdFrom(buildGraphRunner, callerProjectId)
     this.buildRule = buildRuleData {
       this.buildRuleSourceId = sourceIdFrom(buildGraphRunner, buildRule.projectId)
       if (buildRule.buildRuleDef.implTarget == null) {
+        check(buildRule.classPkg == null)
         this.nativeImpl = empty { }
       } else {
-        // TODO
-        this.bibixValueHash
+        this.bibixValueHash = checkNotNull(buildRule.classPkg).toBibix().toProto().hashString()
       }
       this.buildRuleClassName = buildRule.buildRuleDef.implClassName
       this.buildRuleMethodName = buildRule.buildRuleDef.implMethodName
@@ -80,15 +86,18 @@ private fun createBuildContext(
   // TODO: BibixRepo 기능 정리
   //  - target들의 실행 상태 잘 기록하기
   val repo = buildGraphRunner.repo
-  val prevInputHashes = runBlocking { repo.getPrevInputsHashOf(targetId) }
-  val hashChanged = if (prevInputHashes == null) true else prevInputHashes != argsMap.hashString()
 
-  // TODO: 같은 run에선 같은 target id는 값을 재활용하자
+  val prevState = repo.getTargetState(targetIdHex)
+  val prevInputsHash = prevState?.inputHashString
+  val inputHashes = argsMap.extractInputHashes()
+  val inputHashString = inputHashes.hashString()
+  val hashChanged = if (prevInputsHash == null) true else prevInputsHash != inputHashString
 
-  val targetState = runBlocking { repo.getPrevTargetState(targetId) }
-  val prevResult = targetState?.let {
-    if (targetState.stateCase == BibixRepoProto.TargetState.StateCase.BUILD_SUCCEEDED) {
-      targetState.buildSucceeded.resultValue.toBibix()
+  // TODO: 같은 run에선 같은 target id는 값을 재활용하도록
+
+  val prevResult = prevState?.let {
+    if (prevState.stateCase == BibixRepoProto.TargetState.StateCase.BUILD_SUCCEEDED) {
+      prevState.buildSucceeded.resultValue.toBibix()
     } else {
       null
     }
@@ -102,9 +111,14 @@ private fun createBuildContext(
     ruleDefinedDirectory = ruleDefinedLocation?.projectRoot,
     arguments = args,
     targetIdData = targetIdData,
+    targetIdBytes = targetId,
     targetId = targetIdHex,
+    inputHashes = inputHashes,
+    inputHashString = inputHashString,
+    prevInputHashes = prevState?.inputHashes,
+    prevInputHashString = prevState?.inputHashString,
     hashChanged = hashChanged,
-    prevBuildTime = targetState?.buildStartTime?.toInstant(),
+    prevBuildTime = prevState?.buildStartTime?.toInstant(),
     prevResult = prevResult,
     destDirectoryPath = repo.objectsDirectory.resolve(targetIdHex),
     progressLogger = object: ProgressLogger {
@@ -124,9 +138,31 @@ private fun sourceIdFrom(
   buildGraphRunner: BuildGraphRunner,
   projectId: Int
 ): BibixIdProto.SourceId {
-  // TODO 구현하기
   return sourceId {
-    this.bibixVersion = Constants.BIBIX_VERSION
+    when (projectId) {
+      1 -> {
+        this.bibixVersion = Constants.BIBIX_VERSION
+        this.mainSource = empty {}
+      }
+
+      2 -> {
+        this.bibixVersion = Constants.BIBIX_VERSION
+        this.preludeSource = empty {}
+      }
+
+      in buildGraphRunner.preloadedPluginIds.inverse() -> {
+        this.bibixVersion = Constants.BIBIX_VERSION
+        this.preloadedPlugin = buildGraphRunner.preloadedPluginIds.inverse().getValue(projectId)
+      }
+
+      else -> {
+        val projectLocation = buildGraphRunner.multiGraph.projectLocations.getValue(projectId)
+        this.externalPluginObjhash = externalBibixProject {
+          this.rootDirectory = projectLocation.projectRoot.absolutePathString()
+          this.scriptName = projectLocation.scriptName
+        }
+      }
+    }
   }
 }
 
@@ -191,7 +227,7 @@ class BuildRuleRunner(
       )
     }) { finalized ->
       val finValues = finalized.map {
-        check(it is BuildTaskResult.ValueResult)
+        check(it is BuildTaskResult.ResultWithValue)
         it.value
       }
       val finalizedParams = params.map { it.key }.zip(finValues).toMap()
@@ -205,7 +241,7 @@ class BuildRuleRunner(
         finalizedParams
       ) { evalResult ->
         // TODO evalResult를 buildRuleResult의 return type으로 cast
-        check(evalResult is BuildTaskResult.ValueResult)
+        check(evalResult is BuildTaskResult.ResultWithValue)
         BuildTaskResult.LongRunning {
           afterThen(result.whenDone(evalResult.value))
         }
@@ -219,13 +255,15 @@ class BuildRuleRunner(
   ): BuildTaskResult {
     // TODO lock result.directory
     // TODO 그런데 이런식으로 락을 잡으면 중간에 풀리는게 아닌가..?
-    return BuildTaskResult.LongRunning {
-      val withLock = try {
+    val directoryLocker = buildGraphRunner.repo.directoryLocker
+    return BuildTaskResult.SuspendLongRunning {
+      directoryLocker.acquireLock(result.directory)
+      val withLockResult = try {
         result.withLock()
       } finally {
-        // TODO unlock
+        directoryLocker.releaseLock(result.directory)
       }
-      afterThen(withLock)
+      afterThen(withLockResult)
     }
   }
 }

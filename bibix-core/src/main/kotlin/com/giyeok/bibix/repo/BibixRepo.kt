@@ -2,34 +2,38 @@ package com.giyeok.bibix.repo
 
 import com.giyeok.bibix.base.BaseRepo
 import com.giyeok.bibix.base.BibixValue
-import com.giyeok.bibix.repo.BibixRepoProto.BibixRepo
-import com.giyeok.bibix.repo.BibixRepoProto.TargetData
+import com.giyeok.bibix.base.BuildContext
+import com.giyeok.bibix.graph.BibixName
+import com.giyeok.bibix.repo.BibixRepoProto.BibixRepoData
 import com.giyeok.bibix.repo.BibixRepoProto.TargetState
+import com.giyeok.bibix.repo.TargetStateKt.buildFailed
+import com.giyeok.bibix.repo.TargetStateKt.buildSucceeded
 import com.giyeok.bibix.runner.RunConfigProto
 import com.giyeok.bibix.utils.toProto
-import com.google.protobuf.ByteString
+import com.google.protobuf.Timestamp
+import com.google.protobuf.empty
 import com.google.protobuf.util.JsonFormat
 import com.google.protobuf.util.Timestamps
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
 import java.io.IOException
 import java.nio.file.FileSystem
 import java.nio.file.Files
 import java.nio.file.Path
 import java.time.Duration
 import java.time.Instant
+import java.util.*
 import kotlin.io.path.*
 
 // bibix 빌드 폴더의 내용을 관리
 class BibixRepo(
   val fileSystem: FileSystem,
+  val timeProvider: () -> Instant,
+  val uniqueRunId: String,
   val projectRoot: Path,
   val bbxbuildDirectory: Path,
   val runConfig: RunConfigProto.RunConfig,
   // repo data
   val repoDataFile: Path,
-  val targets: MutableMap<ByteString, TargetData.Builder>,
-  val outputNames: MutableMap<String, ByteString>,
+  val repoData: BibixRepoData.Builder,
   // targets
   val objectsDirectory: Path,
   val outputsDirectory: Path,
@@ -41,51 +45,7 @@ class BibixRepo(
 ): BaseRepo {
   private fun now() = Timestamps.fromMillis(System.currentTimeMillis())
 
-  private val mutex = Mutex()
-
-  data class ObjectDirectory(
-    val objectIdHash: ByteString,
-    val objectIdHashHex: String,
-    val directory: Path,
-    val inputHashChanged: Boolean,
-  )
-
-//  fun prepareObjectDirectory(
-//    objectId: BibixIdProto.ObjectId,
-//    inputHashes: BibixIdProto.InputHashes
-//  ): ObjectDirectory {
-//    val objectIdHash = objectId.hashString()
-//    val objectIdHashHex = objectIdHash.toHexString()
-//    val inputsHash = inputHashes.hashString()
-//    // objectIdHash -> objectId, inputsHash 정보 저장
-//    val hashChanged = synchronized(this) {
-//      if (repoMeta.buildingTargetsMap.containsKey(objectIdHashHex)) true else {
-//        val hashChanged = repoMeta.objectsMap[objectIdHashHex]?.inputsHash != inputsHash
-//        repoMeta.putObjects(objectIdHashHex, objectInfo {
-//          this.inputsHash = inputsHash
-//          this.startTime = now()
-//        })
-//        repoMeta.putBuildingTargets(objectIdHashHex, true)
-//        if (debuggingMode) {
-//          // object id detail은 디버깅모드에서만 저장
-//          repoMeta.putObjectIds(objectIdHashHex, objectId)
-//        }
-//        hashChanged
-//      }
-//    }
-//    commitRepoMeta()
-//    // object 디렉토리는 destDirectory를 가져갈때 생성하자. 아예 파일 output이 나오지 않는 빌드 룰도 꽤 많아서
-//    return ObjectDirectory(
-//      objectIdHash,
-//      objectIdHashHex,
-//      objectsDirectory.resolve(objectIdHashHex),
-//      hashChanged
-//    )
-//  }
-
-  override fun prepareSharedDirectory(
-    sharedRepoName: String
-  ): Path = synchronized(this) {
+  override fun prepareSharedDirectory(sharedRepoName: String): Path = synchronized(this) {
     val directory = sharedDirectoriesMap[sharedRepoName]
     if (directory == null) {
       val newDirectory = sharedRootDirectory.resolve(sharedRepoName)
@@ -99,41 +59,9 @@ class BibixRepo(
     }
   }
 
-//  fun markFinished(objectId: BibixIdProto.ObjectId) {
-//    synchronized(this) {
-//      val targetIdHash = objectId.hashString().toHexString()
-//      repoMeta.removeBuildingTargets(targetIdHash)
-//      repoMeta.putObjects(targetIdHash, repoMeta.objectsMap[targetIdHash]?.copy {
-//        this.endTime = now()
-//        this.duration = Timestamps.between(this.startTime, this.endTime)
-//      })
-//    }
-//    commitRepoMeta()
-//  }
-
-  private suspend fun commitRepoData() {
-    repoDataFile.writeText(JsonFormat.printer().print(createRepoData()))
-  }
-
-  private suspend fun createRepoData(): BibixRepo = mutex.withLock {
-    BibixRepo.newBuilder().also { builder ->
-      targets.forEach { (_, targetData) ->
-        builder.addTargets(targetData)
-      }
-      outputNames.forEach { (outputName, targetId) ->
-        builder.addOutputNames(outputName {
-          this.outputName = outputName
-          this.targetId = targetId
-        })
-      }
-    }.build()
-  }
-
-  private var lastUpdated: Instant? = null
-
-  private suspend fun repoDataUpdated() {
+  private fun saveRepoData() {
     // TODO 임의로 5초에 한번만 저장하게 했는데 더 잘 할 수 없을까..
-    val updateNeeded = mutex.withLock {
+    val updateNeeded = synchronized(this) {
       if (lastUpdated == null ||
         Duration.between(lastUpdated, Instant.now()) >= Duration.ofSeconds(5)
       ) {
@@ -148,91 +76,99 @@ class BibixRepo(
     }
   }
 
-  private suspend fun getTargetData(targetId: ByteString): TargetData.Builder? =
-    mutex.withLock { targets[targetId] }
-
-  private suspend fun updateTargetData(
-    targetId: ByteString,
-    updater: (TargetData.Builder) -> Unit
-  ) {
-    mutex.withLock {
-      val builder = targets.getOrPut(targetId) {
-        TargetData.newBuilder()
-          .setTargetId(targetId)
-      }
-
-      updater(builder)
-    }
-    repoDataUpdated()
+  private fun commitRepoData() {
+    repoDataFile.writeText(JsonFormat.printer().print(repoData))
   }
 
-  suspend fun putObjectHash(objectHash: ObjectHash) {
-    val targetId = objectHash.targetId.targetIdBytes
-
-    updateTargetData(targetId) { builder ->
-      builder.targetIdData = objectHash.targetId.targetIdData
-    }
+  fun targetStarted(context: BuildContext) = synchronized(this) {
+    val uniqueRunId = this.uniqueRunId
+    repoData.putTargetIdData(context.targetId, context.targetIdData)
+    repoData.putTargetStates(context.targetId, targetState {
+      this.uniqueRunId = uniqueRunId
+      this.buildStartTime = timeProvider().toProto()
+      this.inputHashes = context.inputHashes
+      this.inputHashString = context.inputHashString
+      this.buildStarted = empty {}
+    })
+    saveRepoData()
   }
 
-  suspend fun startBuildingTarget(targetIdBytes: ByteString, objectHash: ObjectHash) {
-    updateTargetData(targetIdBytes) { builder ->
-      val state = builder.stateBuilder
-      state.buildStartTime = now()
-      state.inputsHash = objectHash.inputsHash
-      state.objectId = objectHash.objectId.objectIdBytes
+  fun targetSucceeded(targetId: String, resultValue: BibixValue) = synchronized(this) {
+    val uniqueRunId = this.uniqueRunId
+    val prevState = repoData.targetStatesMap[targetId]
+    if (prevState == null) {
+      // 오류상황인데.. 그냥 대충 넣고 지나가자
+      repoData.putTargetStates(targetId, targetState {
+        this.uniqueRunId = uniqueRunId
+        this.buildSucceeded = buildSucceeded {
+          this.buildEndTime = timeProvider().toProto()
+          this.resultValue = resultValue.toProto()
+        }
+      })
+    } else {
+      repoData.putTargetStates(targetId, prevState.toBuilder().apply {
+        this.buildSucceeded = buildSucceeded {
+          this.buildEndTime = timeProvider().toProto()
+          this.resultValue = resultValue.toProto()
+        }
+      }.build())
     }
+    saveRepoData()
   }
 
-  suspend fun targetBuildingFailed(targetIdBytes: ByteString, message: String) {
-    updateTargetData(targetIdBytes) { builder ->
-      val state = builder.stateBuilder
-      state.buildFailedBuilder.buildFailTime = now()
-      state.buildFailedBuilder.errorMessage = message
+  fun targetFailed(targetId: String, message: String) = synchronized(this) {
+    val uniqueRunId = this.uniqueRunId
+    val prevState = repoData.targetStatesMap[targetId]
+    if (prevState == null) {
+      // 오류상황인데.. 그냥 대충 넣고 지나가자
+      repoData.putTargetStates(targetId, targetState {
+        this.uniqueRunId = uniqueRunId
+        this.buildFailed = buildFailed {
+          this.buildFailTime = timeProvider().toProto()
+          this.errorMessage = message
+        }
+      })
+    } else {
+      repoData.putTargetStates(targetId, prevState.toBuilder().apply {
+        this.buildFailed = buildFailed {
+          this.buildFailTime = timeProvider().toProto()
+          this.errorMessage = message
+        }
+      }.build())
     }
+    saveRepoData()
   }
 
-  suspend fun targetBuildingSucceeded(targetIdBytes: ByteString, resultValue: BibixValue) {
-    updateTargetData(targetIdBytes) { builder ->
-      val state = builder.stateBuilder
-      state.buildSucceededBuilder.buildEndTime = now()
-      state.buildSucceededBuilder.resultValue = resultValue.toProto()
-    }
-  }
+  private var lastUpdated: Instant? = null
 
-  suspend fun linkNameToObject(nameTokens: List<String>, objectHash: ObjectHash) {
-    val name = nameTokens.joinToString(".")
-    val linkFile = outputsDirectory.resolve(name)
+  // objects 폴더 밑에 targetId의 이름을 가진 폴더가 있으면 outputs 폴더에 링크를 만든다
+  fun linkNameToObjectIfExists(name: BibixName, targetId: String) {
+    val linkFile = outputsDirectory.resolve(name.toString())
     linkFile.deleteIfExists()
-    val targetDirectory = objectsDirectory.resolve(objectHash.targetId.targetIdHex).absolute()
+    val targetDirectory = objectsDirectory.resolve(targetId).normalize().absolute()
     if (targetDirectory.exists()) {
       linkFile.createSymbolicLinkPointingTo(targetDirectory)
+      synchronized(this) {
+        repoData.putOutputNames(name.toString(), targetId)
+      }
     }
-    mutex.withLock {
-      outputNames[name] = objectHash.targetId.targetIdBytes
-    }
-    repoDataUpdated()
+    saveRepoData()
   }
 
-  suspend fun shutdown() {
+  fun shutdown() {
     commitRepoData()
   }
 
-  suspend fun getPrevInputsHashOf(targetId: ByteString): ByteString? =
-    getTargetData(targetId)?.let { targetData ->
-      if (targetData.state.stateCase == BibixRepoProto.TargetState.StateCase.BUILD_SUCCEEDED) {
-        targetData.state.inputsHash
-      } else {
-        null
-      }
-    }
-
-  suspend fun getPrevTargetState(targetId: ByteString): TargetState? =
-    getTargetData(targetId)?.let { targetData ->
-      targetData.state
-    }
+  fun getTargetState(targetId: String): TargetState? = synchronized(this) {
+    repoData.getTargetStatesOrDefault(targetId, null)
+  }
 
   companion object {
-    fun load(mainDirectory: Path, debuggingMode: Boolean = false): com.giyeok.bibix.repo.BibixRepo {
+    fun load(
+      mainDirectory: Path,
+      uniqueRunId: String,
+      debuggingMode: Boolean = false
+    ): BibixRepo {
       val bbxbuildDirectory = mainDirectory.resolve("bbxbuild")
       if (!Files.exists(bbxbuildDirectory)) {
         Files.createDirectory(bbxbuildDirectory)
@@ -248,7 +184,7 @@ class BibixRepo(
         runConfigFile.writeText(JsonFormat.printer().print(runConfig))
       }
       val repoDataFile = bbxbuildDirectory.resolve("repo.json")
-      val repoData = BibixRepo.newBuilder()
+      val repoData = BibixRepoData.newBuilder()
       if (repoDataFile.exists()) {
         try {
           repoDataFile.bufferedReader().use { reader ->
@@ -256,24 +192,13 @@ class BibixRepo(
           }
         } catch (e: IOException) {
           repoDataFile.writeText("{}")
-          repoData.clearTargets()
+          repoData.clearTargetIdData()
+          repoData.clearTargetStates()
           repoData.clearOutputNames()
         }
         // TODO 파싱하다 오류 생기면 클리어하고 다시 시도
       } else {
         repoDataFile.writeText("{}")
-      }
-//      if (!debuggingMode) {
-//        repoData.clearTargets()
-//      }
-
-      val targets = mutableMapOf<ByteString, TargetData.Builder>()
-      repoData.targetsList.forEach { targetData ->
-        targets[targetData.targetId] = targetData.toBuilder()
-      }
-      val outputNames = mutableMapOf<String, ByteString>()
-      repoData.outputNamesList.forEach { outputName ->
-        outputNames[outputName.outputName] = outputName.targetId
       }
 
       val objectsDirectory = bbxbuildDirectory.resolve("objects")
@@ -289,13 +214,14 @@ class BibixRepo(
         sharedRootDirectory.createDirectory()
       }
       return BibixRepo(
+        uniqueRunId = uniqueRunId,
         fileSystem = mainDirectory.fileSystem,
+        timeProvider = Instant::now,
         projectRoot = mainDirectory,
         bbxbuildDirectory = bbxbuildDirectory,
         runConfig = runConfig.build(),
         repoDataFile = repoDataFile,
-        targets = targets,
-        outputNames = outputNames,
+        repoData = repoData,
         objectsDirectory = objectsDirectory,
         outputsDirectory = outputsDirectory,
         sharedRootDirectory = sharedRootDirectory,
@@ -306,3 +232,5 @@ class BibixRepo(
     }
   }
 }
+
+fun Instant.toProto(): Timestamp = Timestamps.fromDate(Date.from(this))

@@ -38,7 +38,8 @@ class BuildFrontend(
     )
   }
 
-  val repo = BibixRepo.load(mainProject.projectRoot, debuggingMode = debuggingMode)
+  // TODO unique id
+  val repo = BibixRepo.load(mainProject.projectRoot, "UNIQUE-ID", debuggingMode = debuggingMode)
 
   val buildEnv = BuildEnv(getOsValue(), getArchValue())
 

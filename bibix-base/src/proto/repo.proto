@@ -9,36 +9,30 @@ import "values.proto";
 import "google/protobuf/empty.proto";
 import "google/protobuf/timestamp.proto";
 
-message BibixRepo {
+message BibixRepoData {
   // source id hash -> source id
   // target id hash -> target id(including args map & input hashes)
 
   // target id hex -> target data
-  repeated TargetData targets = 1;
+  map<string, TargetIdData> target_id_data = 1;
+  map<string, TargetState> target_states = 2;
 
-  // user defined output name -> target id
-  repeated OutputName output_names = 2;
-}
-
-message TargetData {
-  bytes target_id = 1;
-  TargetIdData target_id_data = 2;
-  optional TargetState state = 3;
-}
-
-message OutputName {
-  string output_name = 1;
-  bytes target_id = 2;
+  // user defined output name -> target id hex
+  map<string, string> output_names = 3;
 }
 
 message TargetState {
-  google.protobuf.Timestamp build_start_time = 1;
-  optional bytes inputs_hash = 2;
-  optional bytes object_id = 3;
+  // unique_run_id는 빌드가 실행될 때마다 랜덤하게 발급되는 고유 ID
+  string unique_run_id = 1;
+  google.protobuf.Timestamp build_start_time = 2;
+  InputHashes input_hashes = 3;
+  bytes input_hash_string = 4;
 
   message BuildSucceeded {
     google.protobuf.Timestamp build_end_time = 1;
     BibixValue result_value = 2;
+    // object id는 뭐지 근데..?
+    optional bytes object_id = 3;
   }
 
   message BuildFailed {
@@ -47,8 +41,8 @@ message TargetState {
   }
 
   oneof state {
-    google.protobuf.Empty build_started = 4;
-    BuildSucceeded build_succeeded = 5;
-    BuildFailed build_failed = 6;
+    google.protobuf.Empty build_started = 5;
+    BuildSucceeded build_succeeded = 6;
+    BuildFailed build_failed = 7;
   }
 }

@@ -102,8 +102,13 @@ class BuildGraphRunner(
         EvalExpr(buildTask.projectId, exprNodeId, buildTask.importInstanceId, null)
       ) { result ->
         // TODO if buildTask.projectId == 1이면 outputs 폴더에 링크 만들기
+        if (buildTask.projectId == 1) {
+          if (result is BuildTaskResult.ValueOfTargetResult) {
+            repo.linkNameToObjectIfExists(buildTask.name, result.targetId)
+          }
+        }
         when (result) {
-          is BuildTaskResult.ValueResult -> result
+          is BuildTaskResult.ResultWithValue -> result
           is BuildTaskResult.TypeCastFailResult -> throw IllegalStateException()
           else -> throw AssertionError()
         }
@@ -137,7 +142,7 @@ class BuildGraphRunner(
       BuildTaskResult.WithResult(
         EvalExpr(varExpr.projectId, varExpr.exprNodeId, varExpr.importInstanceId, null)
       ) { result ->
-        check(result is BuildTaskResult.ValueResult)
+        check(result is BuildTaskResult.ResultWithValue)
         result
       }
     }
@@ -174,7 +179,7 @@ class BuildGraphRunner(
           buildTask.importInstanceId,
           buildRule.implTarget,
           buildRule.implClassName,
-        ) { implInstance ->
+        ) { classPkg, implInstance ->
           val method = implInstance::class.java.getDeclaredMethod(
             buildRule.implMethodName,
             BuildContext::class.java
@@ -186,6 +191,7 @@ class BuildGraphRunner(
             buildTask.importInstanceId,
             buildRule,
             paramTypes,
+            classPkg,
             implInstance,
             method
           )
@@ -204,7 +210,7 @@ class BuildGraphRunner(
           buildTask.importInstanceId,
           actionRule.implTarget,
           actionRule.implClassName
-        ) { implInstance ->
+        ) { classPkg, implInstance ->
           val method = implInstance::class.java.getDeclaredMethod(
             actionRule.implMethodName,
             ActionContext::class.java
@@ -332,7 +338,7 @@ class BuildGraphRunner(
             BuildTaskResult.WithResult(
               EvalExpr(projectId, nextStmt.exprNodeId, importInstanceId, letLocals, null)
             ) { evalResult ->
-              check(evalResult is BuildTaskResult.ValueResult)
+              check(evalResult is BuildTaskResult.ResultWithValue)
               if (stmtIdx + 1 == stmts.size) {
                 evalResult
               } else {
@@ -388,12 +394,12 @@ class BuildGraphRunner(
 
         is BuildTaskResult.ActionRuleResult -> {
           val posArgs = results.drop(1).take(callStmt.posArgs.size).map {
-            check(it is BuildTaskResult.ValueResult)
+            check(it is BuildTaskResult.ResultWithValue)
             it.value
           }
           val namedArgs = namedParams.zip(results.drop(1 + callStmt.posArgs.size))
             .associate { (param, result) ->
-              check(result is BuildTaskResult.ValueResult)
+              check(result is BuildTaskResult.ResultWithValue)
               param.key to result.value
             }
 
@@ -466,17 +472,17 @@ class BuildGraphRunner(
     importInstanceId: Int,
     implTarget: ExprNodeId?,
     implClassName: String,
-    block: (Any) -> BuildTaskResult
+    block: (classPkg: ClassPkg?, Any) -> BuildTaskResult
   ): BuildTaskResult = if (implTarget == null) {
     val pluginInstanceProvider =
       preloadedPluginInstanceProviders.getValue(projectId)
     val implInstance = pluginInstanceProvider.getInstance(implClassName)
-    block(implInstance)
+    block(null, implInstance)
   } else {
     BuildTaskResult.WithResult(
       EvalExpr(projectId, implTarget, importInstanceId, null)
     ) { implTargetResult ->
-      check(implTargetResult is BuildTaskResult.ValueResult)
+      check(implTargetResult is BuildTaskResult.ResultWithValue)
 
       // implTarget을 ClassPkg로 변환
       BuildTaskResult.WithResult(
@@ -487,12 +493,12 @@ class BuildGraphRunner(
           importInstanceId,
         )
       ) { implTarget ->
-        check(implTarget is BuildTaskResult.ValueResult)
+        check(implTarget is BuildTaskResult.ResultWithValue)
 
         val classPkg = ClassPkg.fromBibix(implTarget.value)
 
         val implInstance = classPkgRunner.getPluginImplInstance(classPkg, implClassName)
-        block(implInstance)
+        block(classPkg, implInstance)
       }
     }
   }
@@ -535,7 +541,7 @@ class BuildGraphRunner(
     if (source is BuildTaskResult.ImportResult) {
       return source
     }
-    check(source is BuildTaskResult.ValueResult)
+    check(source is BuildTaskResult.ResultWithValue)
 
     suspend fun handleImportLocation(importLocation: BibixProjectLocation): BuildTaskResult {
       val existingProjectId = multiGraph.getProjectIdByLocation(importLocation)

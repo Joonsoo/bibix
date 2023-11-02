@@ -57,7 +57,7 @@ class ValueCaster(
       }
       return tryCustomCast(value, type) { result ->
         when (result) {
-          is BuildTaskResult.ValueResult -> result
+          is BuildTaskResult.ResultWithValue -> result
           is BuildTaskResult.TypeCastFailResult -> {
             when (type) {
               is DataClassType -> {
@@ -205,7 +205,7 @@ class ValueCaster(
               TypeCastValue(value, type.types[candidateIdx], projectId, importInstanceId)
             ) { result ->
               when (result) {
-                is BuildTaskResult.ValueResult -> result
+                is BuildTaskResult.ResultWithValue -> result
                 else -> tryCandidateAt(candidateIdx + 1)
               }
             }
@@ -266,8 +266,8 @@ class ValueCaster(
     BuildTaskResult.WithResultList(values.map {
       TypeCastValue(it, type, projectId, importInstanceId)
     }) { results ->
-      check(results.all { it is BuildTaskResult.ValueResult })
-      val finalValue = func(results.map { (it as BuildTaskResult.ValueResult).value })
+      check(results.all { it is BuildTaskResult.ResultWithValue })
+      val finalValue = func(results.map { (it as BuildTaskResult.ResultWithValue).value })
       BuildTaskResult.ValueResult(finalValue)
     }
 
@@ -278,8 +278,8 @@ class ValueCaster(
     BuildTaskResult.WithResultList(valueAndTypes.map { (value, type) ->
       TypeCastValue(value, type, projectId, importInstanceId)
     }) { results ->
-      check(results.all { it is BuildTaskResult.ValueResult })
-      val finalValue = func(results.map { (it as BuildTaskResult.ValueResult).value })
+      check(results.all { it is BuildTaskResult.ResultWithValue })
+      val finalValue = func(results.map { (it as BuildTaskResult.ResultWithValue).value })
       BuildTaskResult.ValueResult(finalValue)
     }
 
@@ -291,8 +291,8 @@ class ValueCaster(
     BuildTaskResult.WithResultList(values.map {
       FinalizeBuildRuleReturnValue(finalizeCtx, it, projectId, importInstanceId)
     }) { results ->
-      if (results.all { it is BuildTaskResult.ValueResult }) {
-        val finalValue = func(results.map { (it as BuildTaskResult.ValueResult).value })
+      if (results.all { it is BuildTaskResult.ResultWithValue }) {
+        val finalValue = func(results.map { (it as BuildTaskResult.ResultWithValue).value })
         BuildTaskResult.ValueResult(finalValue)
       } else {
         BuildTaskResult.ValueFinalizeFailResult(values)
@@ -314,7 +314,7 @@ class ValueCaster(
     return BuildTaskResult.WithResultList(finalizeTasks) { finalized ->
       check(finalized.size == fieldValues.size)
       val finalizedValues = finalized.map {
-        check(it is BuildTaskResult.ValueResult)
+        check(it is BuildTaskResult.ResultWithValue)
         it.value
       }
       block(fieldValues.map { it.key }, finalizedValues)
@@ -364,7 +364,7 @@ class ValueCaster(
             BuildTaskResult.WithResultList(castTasks) { cast ->
               check(cast.size == finVals.size)
               val castValues = cast.map {
-                check(it is BuildTaskResult.ValueResult)
+                check(it is BuildTaskResult.ResultWithValue)
                 it.value
               }
 

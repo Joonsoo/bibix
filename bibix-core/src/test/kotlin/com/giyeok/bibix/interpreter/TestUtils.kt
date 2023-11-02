@@ -11,7 +11,7 @@ import com.giyeok.bibix.plugins.PreloadedPlugin
 import com.giyeok.bibix.repo.BibixRepo
 import java.nio.file.FileSystem
 
-fun testRepo(fs: FileSystem): BibixRepo = BibixRepo.load(fs.getPath("/"))
+fun testRepo(fs: FileSystem): BibixRepo = BibixRepo.load(fs.getPath("/"), "")
 
 fun testInterpreter(
   fs: FileSystem,

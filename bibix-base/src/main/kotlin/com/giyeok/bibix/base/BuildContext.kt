@@ -1,6 +1,8 @@
 package com.giyeok.bibix.base
 
 import com.giyeok.bibix.BibixIdProto
+import com.giyeok.bibix.BibixIdProto.InputHashes
+import com.google.protobuf.ByteString
 import java.nio.file.FileSystem
 import java.nio.file.Path
 import java.time.Instant
@@ -21,11 +23,15 @@ data class BuildContext(
   val arguments: Map<String, BibixValue>,
   // target id data
   val targetIdData: BibixIdProto.TargetIdData,
-  // target id
+  val targetIdBytes: ByteString,
   val targetId: String,
   // input file들이 지난 빌드때와 같으면 true.
   // 첫 빌드이거나 지난번 빌드때와 다르면 false.
   // 일반적으로는 hashPreserved==true이면 실제 빌드는 하지 않고 값만 반환해도 됨.
+  val inputHashes: InputHashes,
+  val inputHashString: ByteString,
+  val prevInputHashes: InputHashes?,
+  val prevInputHashString: ByteString?,
   val hashChanged: Boolean,
   val prevBuildTime: Instant?,
   val prevResult: BibixValue?,
