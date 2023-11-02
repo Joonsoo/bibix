@@ -21,18 +21,16 @@ class BuildGraphRunnerTest {
     val mainProjectLocation =
       BibixProjectLocation(Path.of("bibix-core/src/test/resources/varredefs/b").absolute())
     val buildEnv = BuildEnv(OS.Linux("", ""), Architecture.X86_64)
-    val repo = BibixRepo.load(mainProjectLocation.projectRoot, "UNIQUE-ID")
-    val runner = runBlocking {
-      BuildGraphRunner.create(
-        mainProjectLocation = mainProjectLocation,
-        preludePlugin = preludePlugin,
-        preloadedPlugins = BuildFrontend.defaultPreloadedPlugins,
-        buildEnv = buildEnv,
-        fileSystem = FileSystems.getDefault(),
-        repo = repo,
-        classWorld = ClassWorld()
-      )
-    }
+    val repo = BibixRepo.load(mainProjectLocation.projectRoot)
+    val runner = BuildGraphRunner.create(
+      mainProjectLocation = mainProjectLocation,
+      preludePlugin = preludePlugin,
+      preloadedPlugins = BuildFrontend.defaultPreloadedPlugins,
+      buildEnv = buildEnv,
+      fileSystem = FileSystems.getDefault(),
+      repo = repo,
+      classWorld = ClassWorld()
+    )
 
     runner.runToFinal(ExecAction(1, 0, BibixName("myaction"), mapOf()))
 

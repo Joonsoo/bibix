@@ -11,7 +11,6 @@ import com.giyeok.bibix.utils.toHexString
 import com.giyeok.bibix.utils.toInstant
 import com.giyeok.bibix.utils.toProto
 import com.google.protobuf.empty
-import kotlinx.coroutines.runBlocking
 import kotlin.io.path.absolutePathString
 
 fun organizeParamsAndRunBuildRule(
@@ -32,38 +31,35 @@ fun organizeParamsAndRunBuildRule(
     posArgs,
     namedArgs,
   ) { args ->
-    val buildContext = createBuildContext(buildGraphRunner, callerProjectId, buildRule, args)
-    buildGraphRunner.repo.targetStarted(buildContext)
-    // TODO target이 실패한 경우가 다 처리가 안됨..
-    val runner = BuildRuleRunner(
-      buildGraphRunner,
-      callerProjectId,
-      callerImportInstanceId,
-      FinalizeBuildRuleReturnValue.FinalizeContext.from(buildRule)
-    ) { result ->
-      if (result is BuildTaskResult.ResultWithValue) {
-        block(BuildTaskResult.ValueOfTargetResult(result.value, buildContext.targetId))
-      } else {
-        block(result)
+    withBuildContext(buildGraphRunner, callerProjectId, buildRule, args) { buildContext ->
+      // TODO target이 실패한 경우가 다 처리가 안됨..
+      val runner = BuildRuleRunner(
+        buildGraphRunner,
+        callerProjectId,
+        callerImportInstanceId,
+        FinalizeBuildRuleReturnValue.FinalizeContext.from(buildRule)
+      ) { result ->
+        if (result is BuildTaskResult.ResultWithValue) {
+          block(BuildTaskResult.ValueOfTargetResult(result.value, buildContext.targetId))
+        } else {
+          block(result)
+        }
       }
-    }
-    BuildTaskResult.LongRunning {
-      val result = buildRule.implMethod.invoke(buildRule.implInstance, buildContext)
-      runner.handleBuildReturn(result)
+      BuildTaskResult.LongRunning {
+        val result = buildRule.implMethod.invoke(buildRule.implInstance, buildContext)
+        runner.handleBuildReturn(result)
+      }
     }
   }
 }
 
-private fun createBuildContext(
+private fun withBuildContext(
   buildGraphRunner: BuildGraphRunner,
   callerProjectId: Int,
   buildRule: BuildTaskResult.BuildRuleResult,
-  args: Map<String, BibixValue>
-): BuildContext {
-  val mainLocation = buildGraphRunner.multiGraph.projectLocations.getValue(1)
-  val callerLocation = buildGraphRunner.multiGraph.projectLocations[callerProjectId]
-  val ruleDefinedLocation = buildGraphRunner.multiGraph.projectLocations[buildRule.projectId]
-
+  args: Map<String, BibixValue>,
+  block: (BuildContext) -> BuildTaskResult
+): BuildTaskResult {
   val argsMap = argsMapFrom(args)
   val targetIdData = targetIdData {
     this.sourceId = sourceIdFrom(buildGraphRunner, callerProjectId)
@@ -83,17 +79,52 @@ private fun createBuildContext(
   val targetId = targetIdData.hashString()
   val targetIdHex = targetId.toHexString()
 
-  // TODO: BibixRepo 기능 정리
-  //  - target들의 실행 상태 잘 기록하기
-  val repo = buildGraphRunner.repo
-
-  val prevState = repo.getTargetState(targetIdHex)
-  val prevInputsHash = prevState?.inputHashString
   val inputHashes = argsMap.extractInputHashes()
   val inputHashString = inputHashes.hashString()
-  val hashChanged = if (prevInputsHash == null) true else prevInputsHash != inputHashString
 
-  // TODO: 같은 run에선 같은 target id는 값을 재활용하도록
+  val repo = buildGraphRunner.repo
+
+  // TODO 동시에 같은 target이 두 번 이상 호출되려고 하면?
+  //   즉, 이미 target started인데 같은 target을 또 실행하려고 하면 다른쪽 타겟의 결과를 기다렸다가 그걸 사용하면 되는데..
+  val (reuse, prevState) =
+    repo.targetStarted(targetIdHex, targetIdData, inputHashes, inputHashString) { prevState ->
+      // 같은 run에선 같은 target id는 값을 재활용하도록
+      if (prevState.uniqueRunId == repo.uniqueRunId) {
+        val prevTargetIdData = repo.getTargetIdData(targetIdHex)
+        // 혹시나 불일치하는 경우가 생기지 않는지 확인
+        check(prevTargetIdData == targetIdData)
+
+        when (prevState.stateCase) {
+          BibixRepoProto.TargetState.StateCase.BUILD_STARTED -> {
+            BuildTaskResult.DuplicateTargetResult(targetIdHex)
+          }
+
+          BibixRepoProto.TargetState.StateCase.BUILD_SUCCEEDED -> {
+            // 실패한 경우도 재사용할 수 있겠지만.. 일단 성공한 경우만
+            BuildTaskResult.ValueOfTargetResult(
+              prevState.buildSucceeded.resultValue.toBibix(),
+              targetIdHex
+            )
+          }
+
+          BibixRepoProto.TargetState.StateCase.BUILD_FAILED -> TODO()
+          else -> throw AssertionError()
+        }
+      } else {
+        null
+      }
+    }
+
+  if (reuse != null) {
+    return reuse
+  }
+
+  val mainLocation = buildGraphRunner.multiGraph.projectLocations.getValue(1)
+  val callerLocation = buildGraphRunner.multiGraph.projectLocations[callerProjectId]
+  val ruleDefinedLocation = buildGraphRunner.multiGraph.projectLocations[buildRule.projectId]
+
+  val prevInputsHash = prevState?.inputHashString
+  val hashChanged = if (prevInputsHash == null) true else prevInputsHash != inputHashString
 
   val prevResult = prevState?.let {
     if (prevState.stateCase == BibixRepoProto.TargetState.StateCase.BUILD_SUCCEEDED) {
@@ -103,7 +134,7 @@ private fun createBuildContext(
     }
   }
 
-  return BuildContext(
+  val buildContext = BuildContext(
     buildEnv = buildGraphRunner.buildEnv,
     fileSystem = buildGraphRunner.fileSystem,
     mainBaseDirectory = mainLocation.projectRoot,
@@ -132,6 +163,7 @@ private fun createBuildContext(
     },
     repo = repo
   )
+  return block(buildContext)
 }
 
 private fun sourceIdFrom(

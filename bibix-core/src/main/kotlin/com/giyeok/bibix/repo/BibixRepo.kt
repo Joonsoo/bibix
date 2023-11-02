@@ -1,8 +1,9 @@
 package com.giyeok.bibix.repo
 
+import com.giyeok.bibix.BibixIdProto.InputHashes
+import com.giyeok.bibix.BibixIdProto.TargetIdData
 import com.giyeok.bibix.base.BaseRepo
 import com.giyeok.bibix.base.BibixValue
-import com.giyeok.bibix.base.BuildContext
 import com.giyeok.bibix.graph.BibixName
 import com.giyeok.bibix.repo.BibixRepoProto.BibixRepoData
 import com.giyeok.bibix.repo.BibixRepoProto.TargetState
@@ -10,6 +11,7 @@ import com.giyeok.bibix.repo.TargetStateKt.buildFailed
 import com.giyeok.bibix.repo.TargetStateKt.buildSucceeded
 import com.giyeok.bibix.runner.RunConfigProto
 import com.giyeok.bibix.utils.toProto
+import com.google.protobuf.ByteString
 import com.google.protobuf.Timestamp
 import com.google.protobuf.empty
 import com.google.protobuf.util.JsonFormat
@@ -80,17 +82,39 @@ class BibixRepo(
     repoDataFile.writeText(JsonFormat.printer().print(repoData))
   }
 
-  fun targetStarted(context: BuildContext) = synchronized(this) {
-    val uniqueRunId = this.uniqueRunId
-    repoData.putTargetIdData(context.targetId, context.targetIdData)
-    repoData.putTargetStates(context.targetId, targetState {
-      this.uniqueRunId = uniqueRunId
-      this.buildStartTime = timeProvider().toProto()
-      this.inputHashes = context.inputHashes
-      this.inputHashString = context.inputHashString
-      this.buildStarted = empty {}
-    })
-    saveRepoData()
+  fun <T> targetStarted(
+    targetId: String,
+    targetIdData: TargetIdData,
+    inputHashes: InputHashes,
+    inputHashString: ByteString,
+    withPrevState: (TargetState) -> T?
+  ): Pair<T?, TargetState?> = synchronized(this) {
+    fun putData() {
+      val uniqueRunId = this.uniqueRunId
+      repoData.putTargetIdData(targetId, targetIdData)
+      repoData.putTargetStates(targetId, targetState {
+        this.uniqueRunId = uniqueRunId
+        this.buildStartTime = timeProvider().toProto()
+        this.inputHashes = inputHashes
+        this.inputHashString = inputHashString
+        this.buildStarted = empty {}
+      })
+      saveRepoData()
+    }
+
+    val prevState = repoData.getTargetStatesOrDefault(targetId, null)
+    if (prevState == null) {
+      // 처음 실행하는 것이면 putData하고 null(reuse할 것 없음), null(prevState 없음) 반환
+      putData()
+      Pair(null, null)
+    } else {
+      val reuse = withPrevState(prevState)
+      if (reuse == null) {
+        // reuse할 것이 없으면 putData하고 null(reuse할 것 없음), prevState 반환
+        putData()
+      }
+      Pair(reuse, prevState)
+    }
   }
 
   fun targetSucceeded(targetId: String, resultValue: BibixValue) = synchronized(this) {
@@ -116,6 +140,7 @@ class BibixRepo(
     saveRepoData()
   }
 
+  // TODO 필요한 곳에서 targetFailed 호출하도록 수정
   fun targetFailed(targetId: String, message: String) = synchronized(this) {
     val uniqueRunId = this.uniqueRunId
     val prevState = repoData.targetStatesMap[targetId]
@@ -163,10 +188,14 @@ class BibixRepo(
     repoData.getTargetStatesOrDefault(targetId, null)
   }
 
+  fun getTargetIdData(targetId: String): TargetIdData? = synchronized(this) {
+    repoData.getTargetIdDataOrDefault(targetId, null)
+  }
+
   companion object {
     fun load(
       mainDirectory: Path,
-      uniqueRunId: String,
+      uniqueRunId: String = UniqueIdGen.generate(),
       debuggingMode: Boolean = false
     ): BibixRepo {
       val bbxbuildDirectory = mainDirectory.resolve("bbxbuild")

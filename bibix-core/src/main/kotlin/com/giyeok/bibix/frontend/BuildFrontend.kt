@@ -13,6 +13,7 @@ import com.giyeok.bibix.plugins.jvm.jvmPlugin
 import com.giyeok.bibix.plugins.maven.mavenPlugin
 import com.giyeok.bibix.plugins.prelude.preludePlugin
 import com.giyeok.bibix.repo.BibixRepo
+import com.giyeok.bibix.repo.UniqueIdGen
 import kotlinx.coroutines.*
 import java.io.PrintWriter
 import java.io.StringWriter
@@ -39,7 +40,8 @@ class BuildFrontend(
   }
 
   // TODO unique id
-  val repo = BibixRepo.load(mainProject.projectRoot, "UNIQUE-ID", debuggingMode = debuggingMode)
+  val repo =
+    BibixRepo.load(mainProject.projectRoot, UniqueIdGen.generate(), debuggingMode = debuggingMode)
 
   val buildEnv = BuildEnv(getOsValue(), getArchValue())
 

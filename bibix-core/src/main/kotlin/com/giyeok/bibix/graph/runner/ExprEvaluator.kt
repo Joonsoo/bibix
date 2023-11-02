@@ -190,6 +190,7 @@ class ExprEvaluator(
           // value를 callee의 returnType으로 cast
           when (val callee = results[0]) {
             is BuildTaskResult.BuildRuleResult -> {
+              check(valueResult is BuildTaskResult.ValueOfTargetResult)
               BuildTaskResult.WithResult(
                 EvalType(callee.projectId, callee.buildRuleDef.returnType)
               ) { typeResult ->
@@ -205,9 +206,7 @@ class ExprEvaluator(
                     TypeCastValue(finalized.value, typeResult.type, projectId, importInstanceId)
                   ) { casted ->
                     check(casted is BuildTaskResult.ValueResult)
-                    if (valueResult is BuildTaskResult.ValueOfTargetResult) {
-                      buildGraphRunner.repo.targetSucceeded(valueResult.targetId, casted.value)
-                    }
+                    buildGraphRunner.repo.targetSucceeded(valueResult.targetId, casted.value)
                     valueResult.withNewValue(casted.value)
                   }
                 }

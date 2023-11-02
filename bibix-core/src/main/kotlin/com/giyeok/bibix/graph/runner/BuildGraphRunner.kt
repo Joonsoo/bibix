@@ -28,7 +28,7 @@ class BuildGraphRunner(
   val classPkgRunner: ClassPkgRunner,
 ) {
   companion object {
-    suspend fun create(
+    fun create(
       mainProjectLocation: BibixProjectLocation,
       preludePlugin: PreloadedPlugin,
       preloadedPlugins: Map<String, PreloadedPlugin>,
@@ -533,6 +533,32 @@ class BuildGraphRunner(
     }
   }
 
+  // NOTE handleImportLocation도 LongRunning 안에서 돌리면 좋겠지만 multiGraph가 thread-safe하지 않기 때문에 그냥 메인 스레드에서 돌도록 한다
+  // - 스크립트 읽고 파싱하는 부분만 LongRunning으로 뺄 수는 있을 것 같음
+  // - 그런데 그러면 읽어놓고 addProject 하려고 할 때 이미 같은 location의 프로젝트가 있으면 추가하지 않고 기존 것을 이미 사용하도록하면 되긴 할텐데
+  //   복잡도에 비해 benefit이 그다지 크지 않을 것 같음
+  private fun handleImportLocation(
+    importLocation: BibixProjectLocation,
+    block: (importProjectId: Int, importGraph: BuildGraph) -> BuildTaskResult
+  ): BuildTaskResult {
+    val existingProjectId = multiGraph.getProjectIdByLocation(importLocation)
+    return if (existingProjectId != null) {
+      // 이미 로드된 프로젝트인 경우
+      val graph = multiGraph.getProjectGraph(existingProjectId)
+      block(existingProjectId, graph)
+    } else {
+      // 새로 로드해야 하는 프로젝트인 경우
+      val importSource = importLocation.readScript()
+      val importScript = BibixParser.parse(importSource)
+      val importGraph =
+        BuildGraph.fromScript(importScript, preloadedPluginIds.keys, preludeNames)
+
+      val importProjectId =
+        multiGraph.addProject(importLocation, importGraph, importSource)
+      block(importProjectId, importGraph)
+    }
+  }
+
   private fun handleImportSource(
     projectId: Int,
     source: BuildTaskResult,
@@ -543,25 +569,6 @@ class BuildGraphRunner(
     }
     check(source is BuildTaskResult.ResultWithValue)
 
-    suspend fun handleImportLocation(importLocation: BibixProjectLocation): BuildTaskResult {
-      val existingProjectId = multiGraph.getProjectIdByLocation(importLocation)
-      return if (existingProjectId != null) {
-        // 이미 로드된 프로젝트인 경우
-        val graph = multiGraph.getProjectGraph(existingProjectId)
-        block(existingProjectId, graph)
-      } else {
-        // 새로 로드해야 하는 프로젝트인 경우
-        val importSource = importLocation.readScript()
-        val importScript = BibixParser.parse(importSource)
-        val importGraph =
-          BuildGraph.fromScript(importScript, preloadedPluginIds.keys, preludeNames)
-
-        val importProjectId =
-          multiGraph.addProject(importLocation, importGraph, importSource)
-        block(importProjectId, importGraph)
-      }
-    }
-
     return when (val sourceValue = source.value) {
       is StringValue -> {
         // 상대 경로로 다른 프로젝트 import
@@ -571,9 +578,7 @@ class BuildGraphRunner(
           projectLocation.projectRoot.resolve(sourceValue.value).normalize().absolute()
         val importLocation = BibixProjectLocation(importRoot)
 
-        BuildTaskResult.SuspendLongRunning {
-          handleImportLocation(importLocation)
-        }
+        handleImportLocation(importLocation, block)
       }
 
       is ClassInstanceValue -> {
@@ -589,9 +594,7 @@ class BuildGraphRunner(
           BibixProjectLocation(projectRoot, scriptName)
         }
 
-        BuildTaskResult.SuspendLongRunning {
-          handleImportLocation(importLocation)
-        }
+        handleImportLocation(importLocation, block)
       }
 
       else -> TODO()

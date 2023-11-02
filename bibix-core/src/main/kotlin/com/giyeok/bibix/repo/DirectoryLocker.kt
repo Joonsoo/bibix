@@ -32,10 +32,10 @@ class DirectoryLockerImpl: DirectoryLocker {
   }
 
   override suspend fun acquireLock(directory: Path) {
-    return getDirectoryMutex(directory).lock()
+    getDirectoryMutex(directory).lock()
   }
 
   override suspend fun releaseLock(directory: Path) {
-    return getDirectoryMutex(directory).unlock()
+    getDirectoryMutex(directory).unlock()
   }
 }

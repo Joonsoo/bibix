@@ -9,6 +9,8 @@ import java.lang.reflect.Method
 
 sealed class BuildTask
 
+// TODO BuildTask들은 ParallelGraphRunner에서 해시/동일성 비교가 계속 이루어지므로 가볍게 만들기
+
 data class EvalTarget(
   val projectId: Int,
   val importInstanceId: Int,
@@ -252,4 +254,6 @@ sealed class BuildTaskResult {
   data class LongRunning(val func: () -> BuildTaskResult): BuildTaskResult()
 
   data class SuspendLongRunning(val func: suspend () -> BuildTaskResult): BuildTaskResult()
+
+  data class DuplicateTargetResult(val targetId: String): BuildTaskResult()
 }

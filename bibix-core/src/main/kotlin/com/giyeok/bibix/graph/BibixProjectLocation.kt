@@ -11,6 +11,5 @@ data class BibixProjectLocation(val projectRoot: Path, val scriptName: String) {
     check(projectRoot.normalize() == projectRoot && projectRoot.isAbsolute)
   }
 
-  suspend fun readScript(): String =
-    projectRoot.resolve(scriptName).readText()
+  fun readScript(): String = projectRoot.resolve(scriptName).readText()
 }

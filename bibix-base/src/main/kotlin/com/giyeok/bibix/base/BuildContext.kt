@@ -39,11 +39,7 @@ data class BuildContext(
   private val destDirectoryPath: Path,
   // 로깅/진행 상황 표시
   val progressLogger: ProgressLogger,
-  // TODO 전체 그래프 정보
-  // TODO 현재까지의 실행 결과
   private val repo: BaseRepo,
-  // TODO bibix 플러그인 실행하기
-  // e.g. context.call("mvn.resolveClassSets", mapOf("classSets", deps))
 ) {
   val destDirectory: Path by lazy {
     if (destDirectoryPath.notExists()) {
