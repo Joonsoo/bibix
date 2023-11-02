@@ -30,13 +30,18 @@ class ProgressIndicator(val container: ProgressIndicatorContainer, val threadIdx
     this.isActive = false
   }
 
+  override fun logVerbose(message: String) = synchronized(this) {
+    this.lastMessage = ProgressMessage(Instant.now(), "V", message)
+    container.notifyUpdated(this)
+  }
+
   override fun logInfo(message: String) = synchronized(this) {
     this.lastMessage = ProgressMessage(Instant.now(), "I", message)
     container.notifyUpdated(this)
   }
 
   override fun logError(message: String) = synchronized(this) {
-    this.lastMessage = ProgressMessage(Instant.now(), "I", message)
+    this.lastMessage = ProgressMessage(Instant.now(), "E", message)
     container.notifyUpdated(this)
   }
 

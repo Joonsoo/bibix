@@ -412,19 +412,10 @@ class BuildGraphRunner(
             posArgs,
             namedArgs,
           ) { args ->
-            val actionContext = ActionContext(
-              buildEnv,
-              args,
-              object: ProgressLogger {
-                override fun logInfo(message: String) {
-                  println(message)
-                }
+            val progressLogger =
+              repo.progressLoggerForAction(callee.projectId, callee.importInstanceId, callee.name)
 
-                override fun logError(message: String) {
-                  println(message)
-                }
-              }
-            )
+            val actionContext = ActionContext(buildEnv, args, progressLogger)
 
             val runner = BuildRuleRunner(
               this,

@@ -43,6 +43,30 @@ public object RunConfigKt {
     public fun clearMaxThreads() {
       _builder.clearMaxThreads()
     }
+
+    /**
+     * `.com.giyeok.bibix.repo.LogLevel min_log_level = 2;`
+     */
+    public var minLogLevel: com.giyeok.bibix.repo.BibixRepoProto.LogLevel
+      @JvmName("getMinLogLevel")
+      get() = _builder.getMinLogLevel()
+      @JvmName("setMinLogLevel")
+      set(value) {
+        _builder.setMinLogLevel(value)
+      }
+    public var minLogLevelValue: kotlin.Int
+      @JvmName("getMinLogLevelValue")
+      get() = _builder.getMinLogLevelValue()
+      @JvmName("setMinLogLevelValue")
+      set(value) {
+        _builder.setMinLogLevelValue(value)
+      }
+    /**
+     * `.com.giyeok.bibix.repo.LogLevel min_log_level = 2;`
+     */
+    public fun clearMinLogLevel() {
+      _builder.clearMinLogLevel()
+    }
   }
 }
 @kotlin.jvm.JvmSynthetic

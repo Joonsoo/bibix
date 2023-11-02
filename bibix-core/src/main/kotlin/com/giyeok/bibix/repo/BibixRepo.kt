@@ -4,17 +4,17 @@ import com.giyeok.bibix.BibixIdProto.InputHashes
 import com.giyeok.bibix.BibixIdProto.TargetIdData
 import com.giyeok.bibix.base.BaseRepo
 import com.giyeok.bibix.base.BibixValue
+import com.giyeok.bibix.base.ProgressLogger
 import com.giyeok.bibix.graph.BibixName
-import com.giyeok.bibix.repo.BibixRepoProto.BibixRepoData
-import com.giyeok.bibix.repo.BibixRepoProto.TargetState
+import com.giyeok.bibix.repo.BibixRepoProto.*
 import com.giyeok.bibix.repo.TargetStateKt.buildFailed
 import com.giyeok.bibix.repo.TargetStateKt.buildSucceeded
 import com.giyeok.bibix.runner.RunConfigProto
 import com.giyeok.bibix.utils.toProto
 import com.google.protobuf.ByteString
+import com.google.protobuf.TextFormat
 import com.google.protobuf.Timestamp
 import com.google.protobuf.empty
-import com.google.protobuf.util.JsonFormat
 import com.google.protobuf.util.Timestamps
 import java.io.IOException
 import java.nio.file.FileSystem
@@ -36,6 +36,9 @@ class BibixRepo(
   // repo data
   val repoDataFile: Path,
   val repoData: BibixRepoData.Builder,
+  // target logs data
+  val targetLogsFile: Path,
+  val targetLogs: BibixTargetLogs.Builder,
   // targets
   val objectsDirectory: Path,
   val outputsDirectory: Path,
@@ -79,7 +82,10 @@ class BibixRepo(
   }
 
   private fun commitRepoData() {
-    repoDataFile.writeText(JsonFormat.printer().print(repoData))
+    synchronized(this) {
+      repoDataFile.writeText(TextFormat.printer().printToString(repoData))
+      targetLogsFile.writeText(TextFormat.printer().printToString(targetLogs))
+    }
   }
 
   fun <T> targetStarted(
@@ -192,6 +198,75 @@ class BibixRepo(
     repoData.getTargetIdDataOrDefault(targetId, null)
   }
 
+  private inner class ProgressLoggerRepoImpl(
+    private var logsBuilderOpt: LogBlocks.Builder? = null,
+    private val initLogsBuilder: () -> LogBlocks.Builder
+  ): ProgressLogger {
+    private fun initializeLogsBuilder(): LogBlocks.Builder {
+      check(logsBuilderOpt == null)
+      val newBuilder = synchronized(this@BibixRepo) {
+        initLogsBuilder()
+      }
+      logsBuilderOpt = newBuilder
+      return newBuilder
+    }
+
+    private fun addLog(level: LogLevel, message: String) {
+      if (level.number >= runConfig.minLogLevel.number) {
+        val logsBuilder = synchronized(this) {
+          logsBuilderOpt ?: initializeLogsBuilder()
+        }
+        val now = timeProvider().toProto()
+        synchronized(this@BibixRepo) {
+          logsBuilder.addBlocks(logBlock {
+            this.level = level
+            this.time = now
+            this.message = message
+          })
+        }
+        // TODO repo data와 targets log 저장 루틴을 다르게 해야..
+        saveRepoData()
+      }
+    }
+
+    override fun logVerbose(message: String) {
+      addLog(LogLevel.VERBOSE, message)
+    }
+
+    override fun logInfo(message: String) {
+      addLog(LogLevel.INFO, message)
+    }
+
+    override fun logError(message: String) {
+      addLog(LogLevel.ERROR, message)
+    }
+  }
+
+  fun progressLoggerFor(targetIdHex: String): ProgressLogger {
+    // 어차피 같은 target은 두번 이상 실행되지 않기 때문에(그래야 하기 때문에) 기존의 targetLogs를 검색할 필요는 없다
+    return ProgressLoggerRepoImpl {
+      targetLogs.addTargetLogsBuilder()
+        .setUniqueRunId(uniqueRunId)
+        .setTargetId(targetIdHex)
+        .blocksBuilder
+    }
+  }
+
+  fun progressLoggerForAction(
+    projectId: Int,
+    importInstanceId: Int,
+    name: BibixName
+  ): ProgressLogger {
+    return ProgressLoggerRepoImpl {
+      targetLogs.addActionLogsBuilder()
+        .setUniqueRunId(uniqueRunId)
+        .setProjectId(projectId)
+        .setImportInstanceId(importInstanceId)
+        .setActionName(name.toString())
+        .blocksBuilder
+    }
+  }
+
   companion object {
     fun load(
       mainDirectory: Path,
@@ -202,22 +277,24 @@ class BibixRepo(
       if (!Files.exists(bbxbuildDirectory)) {
         Files.createDirectory(bbxbuildDirectory)
       }
-      val runConfigFile = bbxbuildDirectory.resolve("config.json")
+      val runConfigFile = bbxbuildDirectory.resolve("config.pbtxt")
       val runConfig = RunConfigProto.RunConfig.newBuilder()
       if (runConfigFile.exists()) {
         runConfigFile.bufferedReader().use { reader ->
-          JsonFormat.parser().merge(reader, runConfig)
+          TextFormat.merge(reader, runConfig)
         }
       } else {
         runConfig.maxThreads = 3
-        runConfigFile.writeText(JsonFormat.printer().print(runConfig))
+        runConfig.minLogLevel = BibixRepoProto.LogLevel.INFO
+        runConfigFile.writeText(TextFormat.printer().printToString(runConfig))
       }
-      val repoDataFile = bbxbuildDirectory.resolve("repo.json")
+
+      val repoDataFile = bbxbuildDirectory.resolve("repo.pbtxt")
       val repoData = BibixRepoData.newBuilder()
       if (repoDataFile.exists()) {
         try {
           repoDataFile.bufferedReader().use { reader ->
-            JsonFormat.parser().merge(reader, repoData)
+            TextFormat.merge(reader, repoData)
           }
         } catch (e: IOException) {
           repoDataFile.writeText("{}")
@@ -229,6 +306,10 @@ class BibixRepo(
       } else {
         repoDataFile.writeText("{}")
       }
+
+      val targetLogsFile = bbxbuildDirectory.resolve("log.pbtxt")
+      val targetLogs = BibixTargetLogs.newBuilder()
+      // 기존 로그는 파싱하지 않고 날림
 
       val objectsDirectory = bbxbuildDirectory.resolve("objects")
       if (objectsDirectory.notExists()) {
@@ -251,6 +332,8 @@ class BibixRepo(
         runConfig = runConfig.build(),
         repoDataFile = repoDataFile,
         repoData = repoData,
+        targetLogsFile = targetLogsFile,
+        targetLogs = targetLogs,
         objectsDirectory = objectsDirectory,
         outputsDirectory = outputsDirectory,
         sharedRootDirectory = sharedRootDirectory,

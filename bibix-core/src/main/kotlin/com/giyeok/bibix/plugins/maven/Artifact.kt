@@ -30,7 +30,6 @@ import org.eclipse.aether.transport.file.FileTransporterFactory
 import org.eclipse.aether.transport.http.HttpTransporterFactory
 import org.eclipse.aether.util.artifact.JavaScopes
 import org.eclipse.aether.util.filter.DependencyFilterUtils
-import java.io.PrintStream
 import java.nio.file.Path
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
@@ -92,6 +91,7 @@ class Artifact {
 
       val dep = resolveArtifact(
         context.buildEnv,
+        context.progressLogger,
         mavenReposDir,
         groupId,
         artifactId,
@@ -110,6 +110,7 @@ class Artifact {
     const val sharedRepoName = "com.giyeok.bibix.plugins.maven"
     fun resolveArtifact(
       buildEnv: BuildEnv,
+      logger: ProgressLogger,
       mavenReposDir: Path,
       groupId: String,
       artifactId: String,
@@ -122,7 +123,7 @@ class Artifact {
     ): ClassPkg {
       val system: RepositorySystem = newRepositorySystem()
       val session: RepositorySystemSession =
-        newRepositorySystemSession(mavenReposDir, system, buildEnv)
+        newRepositorySystemSession(mavenReposDir, system, buildEnv, logger)
 
       val artifact = DefaultArtifact(groupId, artifactId, "", extension, version)
       val repositories = newRepositories(system, session)
@@ -132,7 +133,7 @@ class Artifact {
       artifactRequest.repositories = repositories
 
       val resolved = system.resolveArtifact(session, artifactRequest)
-      println(resolved)
+      logger.logInfo("$resolved")
 
       val collectRequest = CollectRequest()
       collectRequest.root = Dependency(artifact, javaScope)
@@ -192,13 +193,14 @@ class Artifact {
       localRepoBaseDirectory: Path,
       system: RepositorySystem,
       buildEnv: BuildEnv,
+      logger: ProgressLogger
     ): DefaultRepositorySystemSession {
       val session = MavenRepositorySystemUtils.newSession()
 
       val localRepo = LocalRepository(localRepoBaseDirectory.toFile())
       session.localRepositoryManager = system.newLocalRepositoryManager(session, localRepo)
-      session.transferListener = ConsoleTransferListener()
-      session.repositoryListener = ConsoleRepositoryListener()
+      session.transferListener = ConsoleTransferListener(logger)
+      session.repositoryListener = ConsoleRepositoryListener(logger)
       session.updatePolicy = RepositoryPolicy.UPDATE_POLICY_DAILY
 
       // -Dos.detected.name=linux -Dos.detected.arch=x86_64 -Dos.detected.classifier=linux-x86_64
@@ -246,23 +248,15 @@ class Artifact {
       )
     }
 
-    class ConsoleTransferListener @JvmOverloads constructor(out: PrintStream? = null):
-      AbstractTransferListener() {
-      private val out: PrintStream
+    class ConsoleTransferListener(private val logger: ProgressLogger): AbstractTransferListener() {
       private val downloads: MutableMap<TransferResource, Long> =
         ConcurrentHashMap<TransferResource, Long>()
       private var lastLength = 0
 
-      init {
-        this.out = out ?: System.out
-      }
-
       override fun transferInitiated(event: TransferEvent) {
         val message =
           if (event.requestType === TransferEvent.RequestType.PUT) "Uploading" else "Downloading"
-        out.println(
-          message + ": " + event.resource.repositoryUrl + event.resource.resourceName
-        )
+        logger.logInfo("$message: ${event.resource.repositoryUrl}${event.resource.resourceName}")
       }
 
       override fun transferProgressed(event: TransferEvent) {
@@ -277,7 +271,7 @@ class Artifact {
         lastLength = buffer.length
         pad(buffer, pad)
         buffer.append('\r')
-        out.print(buffer)
+        logger.logVerbose(buffer.toString())
       }
 
       private fun getStatus(complete: Long, total: Long): String {
@@ -319,17 +313,14 @@ class Artifact {
             val kbPerSec = bytes / 1024.0 / (duration / 1000.0)
             throughput = " at " + format.format(kbPerSec) + " KB/sec"
           }
-          out.println(
-            type + ": " + resource.repositoryUrl + resource.resourceName + " (" + len
-              + throughput + ")"
-          )
+          logger.logInfo("$type: ${resource.repositoryUrl}${resource.resourceName} ($len$throughput)")
         }
       }
 
       override fun transferFailed(event: TransferEvent) {
         transferCompleted(event)
         if (event.exception !is MetadataNotFoundException) {
-          event.exception.printStackTrace(out)
+          logger.logException(event.exception)
         }
       }
 
@@ -338,11 +329,11 @@ class Artifact {
         val buffer = StringBuilder(64)
         pad(buffer, lastLength)
         buffer.append('\r')
-        out.print(buffer)
+        logger.logVerbose(buffer.toString())
       }
 
       override fun transferCorrupted(event: TransferEvent) {
-        event.exception.printStackTrace(out)
+        logger.logException(event.exception)
       }
 
       private fun toKB(bytes: Long): Long {
@@ -350,93 +341,75 @@ class Artifact {
       }
     }
 
-    class ConsoleRepositoryListener @JvmOverloads constructor(out: PrintStream? = null):
-      AbstractRepositoryListener() {
-      private val out: PrintStream
-
-      init {
-        this.out = out ?: System.out
-      }
-
+    class ConsoleRepositoryListener(
+      private val logger: ProgressLogger
+    ): AbstractRepositoryListener() {
       override fun artifactDeployed(event: RepositoryEvent) {
-        out.println("Deployed " + event.artifact.toString() + " to " + event.repository)
+        logger.logInfo("Deployed ${event.artifact} to ${event.repository}")
       }
 
       override fun artifactDeploying(event: RepositoryEvent) {
-        out.println("Deploying " + event.artifact.toString() + " to " + event.repository)
+        logger.logInfo("Deploying ${event.artifact} to ${event.repository}")
       }
 
       override fun artifactDescriptorInvalid(event: RepositoryEvent) {
-        out.println(
-          "Invalid artifact descriptor for " + event.artifact.toString() + ": "
-            + event.exception.message
-        )
+        logger.logInfo("Invalid artifact descriptor for ${event.artifact}: ${event.exception.message}")
       }
 
       override fun artifactDescriptorMissing(event: RepositoryEvent) {
-        out.println("Missing artifact descriptor for " + event.artifact)
+        logger.logInfo("Missing artifact descriptor for ${event.artifact}")
       }
 
       override fun artifactInstalled(event: RepositoryEvent) {
-        out.println("Installed " + event.artifact.toString() + " to " + event.file)
+        logger.logInfo("Installed ${event.artifact} to ${event.file}")
       }
 
       override fun artifactInstalling(event: RepositoryEvent) {
-        out.println("Installing " + event.artifact.toString() + " to " + event.file)
+        logger.logInfo("Installing ${event.artifact} to ${event.file}")
       }
 
       override fun artifactResolved(event: RepositoryEvent) {
-        out.println(
-          "Resolved artifact " + event.artifact.toString() + " from " + event.repository
-        )
+        logger.logInfo("Resolved artifact ${event.artifact} from ${event.repository}")
       }
 
       override fun artifactDownloading(event: RepositoryEvent) {
-        out.println(
-          "Downloading artifact " + event.artifact.toString() + " from " + event.repository
-        )
+        logger.logInfo("Downloading artifact ${event.artifact} from ${event.repository}")
       }
 
       override fun artifactDownloaded(event: RepositoryEvent) {
-        out.println(
-          "Downloaded artifact " + event.artifact.toString() + " from " + event.repository
-        )
+        logger.logInfo("Downloaded artifact ${event.artifact} from ${event.repository}")
       }
 
       override fun artifactResolving(event: RepositoryEvent) {
-        out.println("Resolving artifact " + event.artifact)
+        logger.logInfo("Resolving artifact ${event.artifact}")
       }
 
       override fun metadataDeployed(event: RepositoryEvent) {
-        out.println("Deployed " + event.metadata.toString() + " to " + event.repository)
+        logger.logInfo("Deployed ${event.metadata} to ${event.repository}")
       }
 
       override fun metadataDeploying(event: RepositoryEvent) {
-        out.println("Deploying " + event.metadata.toString() + " to " + event.repository)
+        logger.logInfo("Deploying ${event.metadata} to ${event.repository}")
       }
 
       override fun metadataInstalled(event: RepositoryEvent) {
-        out.println("Installed " + event.metadata.toString() + " to " + event.file)
+        logger.logInfo("Installed ${event.metadata} to ${event.file}")
       }
 
       override fun metadataInstalling(event: RepositoryEvent) {
-        out.println("Installing " + event.metadata.toString() + " to " + event.file)
+        logger.logInfo("Installing ${event.metadata} to ${event.file}")
       }
 
       override fun metadataInvalid(event: RepositoryEvent) {
-        out.println("Invalid metadata " + event.metadata)
+        logger.logInfo("Invalid metadata ${event.metadata}")
       }
 
       override fun metadataResolved(event: RepositoryEvent) {
-        out.println(
-          "Resolved metadata ${event.metadata} from ${event.repository}"
-        )
+        logger.logInfo("Resolved metadata ${event.metadata} from ${event.repository}")
       }
 
       override fun metadataResolving(event: RepositoryEvent) {
-        out.println(
-          "Resolving metadata ${event.metadata} from ${event.repository}"
-        )
+        logger.logInfo("Resolving metadata ${event.metadata} from ${event.repository}")
       }
     }
   }

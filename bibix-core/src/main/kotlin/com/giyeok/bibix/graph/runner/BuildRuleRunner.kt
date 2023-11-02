@@ -123,16 +123,16 @@ private fun withBuildContext(
   val callerLocation = buildGraphRunner.multiGraph.projectLocations[callerProjectId]
   val ruleDefinedLocation = buildGraphRunner.multiGraph.projectLocations[buildRule.projectId]
 
-  val prevInputsHash = prevState?.inputHashString
-  val hashChanged = if (prevInputsHash == null) true else prevInputsHash != inputHashString
+  val hashChanged = if (prevState == null) true else {
+    prevState.inputHashString != inputHashString
+  }
 
-  val prevResult = prevState?.let {
-    if (prevState.stateCase == BibixRepoProto.TargetState.StateCase.BUILD_SUCCEEDED) {
+  val prevResult =
+    if (prevState != null && prevState.stateCase == BibixRepoProto.TargetState.StateCase.BUILD_SUCCEEDED) {
       prevState.buildSucceeded.resultValue.toBibix()
     } else {
       null
     }
-  }
 
   val buildContext = BuildContext(
     buildEnv = buildGraphRunner.buildEnv,
@@ -152,15 +152,7 @@ private fun withBuildContext(
     prevBuildTime = prevState?.buildStartTime?.toInstant(),
     prevResult = prevResult,
     destDirectoryPath = repo.objectsDirectory.resolve(targetIdHex),
-    progressLogger = object: ProgressLogger {
-      override fun logInfo(message: String) {
-        println(message)
-      }
-
-      override fun logError(message: String) {
-        println(message)
-      }
-    },
+    progressLogger = repo.progressLoggerFor(targetIdHex),
     repo = repo
   )
   return block(buildContext)

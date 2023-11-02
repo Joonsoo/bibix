@@ -46,3 +46,42 @@ message TargetState {
     BuildFailed build_failed = 7;
   }
 }
+
+// log는 양이 많아질 수도 있고, BibixRepoData는 바이너리로 저장해도 별 문제가 없을것 같지만 log는 human-readable하게 저장하는 것이 좋을 것 같아서 별도 파일로 저장한다
+message BibixTargetLogs {
+  // target_logs도 map으로 하고 싶은데 그러면 TargetLogs builder를 얻어올 수가 없어서 repeated로 사용
+  repeated TargetLogs target_logs = 1;
+  // action은 target과 별도로 관리 - target id가 없기 때문
+  repeated ActionLogs action_logs = 2;
+}
+
+message TargetLogs {
+  string unique_run_id = 1;
+  string target_id = 2;
+  LogBlocks blocks = 3;
+}
+
+message ActionLogs {
+  string unique_run_id = 1;
+  int32 project_id = 2;
+  int32 import_instance_id = 3;
+  string action_name = 4;
+  LogBlocks blocks = 5;
+}
+
+message LogBlocks {
+  repeated LogBlock blocks = 1;
+}
+
+message LogBlock {
+  LogLevel level = 1;
+  google.protobuf.Timestamp time = 2;
+  string message = 3;
+}
+
+enum LogLevel {
+  UNSPECIFIED = 0;
+  VERBOSE = 1;
+  INFO = 8;
+  ERROR = 15;
+}

@@ -2,6 +2,7 @@ package com.giyeok.bibix.plugins.maven
 
 import com.giyeok.bibix.base.Architecture
 import com.giyeok.bibix.base.BuildEnv
+import com.giyeok.bibix.base.DummyProgressLogger
 import com.giyeok.bibix.base.OS
 import com.giyeok.bibix.plugins.jvm.MavenDep
 import kotlinx.coroutines.runBlocking
@@ -13,6 +14,7 @@ class ArtifactTests {
   fun test(): Unit = runBlocking {
     val artifact = Artifact.resolveArtifact(
       BuildEnv(OS.Linux("debian", "???"), Architecture.X86_64),
+      DummyProgressLogger,
       Path("bbxbuild/shared/com.giyeok.bibix.plugins.maven"),
       "org.apache.maven.resolver",
       "maven-resolver-transport-http",
@@ -31,6 +33,7 @@ class ArtifactTests {
     // maven.artifact("com.google.firebase", "firebase-admin", "9.1.1")
     val artifact = Artifact.resolveArtifact(
       BuildEnv(OS.Linux("debian", "???"), Architecture.X86_64),
+      DummyProgressLogger,
       Path("bbxbuild/shared/com.giyeok.bibix.plugins.maven"),
       "com.google.firebase",
       "firebase-admin",
@@ -49,6 +52,7 @@ class ArtifactTests {
     // maven.artifact("io.grpc", "grpc-netty-shaded", grpcVersion)
     val artifact = Artifact.resolveArtifact(
       BuildEnv(OS.Linux("debian", "???"), Architecture.X86_64),
+      DummyProgressLogger,
       Path("bbxbuild/shared/com.giyeok.bibix.plugins.maven"),
       "io.grpc",
       "grpc-netty-shaded",

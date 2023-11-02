@@ -23,6 +23,17 @@ public final class RunConfigProto {
      * @return The maxThreads.
      */
     int getMaxThreads();
+
+    /**
+     * <code>.com.giyeok.bibix.repo.LogLevel min_log_level = 2;</code>
+     * @return The enum numeric value on the wire for minLogLevel.
+     */
+    int getMinLogLevelValue();
+    /**
+     * <code>.com.giyeok.bibix.repo.LogLevel min_log_level = 2;</code>
+     * @return The minLogLevel.
+     */
+    com.giyeok.bibix.repo.BibixRepoProto.LogLevel getMinLogLevel();
   }
   /**
    * Protobuf type {@code com.giyeok.bibix.runner.RunConfig}
@@ -37,6 +48,7 @@ public final class RunConfigProto {
       super(builder);
     }
     private RunConfig() {
+      minLogLevel_ = 0;
     }
 
     @java.lang.Override
@@ -70,6 +82,24 @@ public final class RunConfigProto {
       return maxThreads_;
     }
 
+    public static final int MIN_LOG_LEVEL_FIELD_NUMBER = 2;
+    private int minLogLevel_ = 0;
+    /**
+     * <code>.com.giyeok.bibix.repo.LogLevel min_log_level = 2;</code>
+     * @return The enum numeric value on the wire for minLogLevel.
+     */
+    @java.lang.Override public int getMinLogLevelValue() {
+      return minLogLevel_;
+    }
+    /**
+     * <code>.com.giyeok.bibix.repo.LogLevel min_log_level = 2;</code>
+     * @return The minLogLevel.
+     */
+    @java.lang.Override public com.giyeok.bibix.repo.BibixRepoProto.LogLevel getMinLogLevel() {
+      com.giyeok.bibix.repo.BibixRepoProto.LogLevel result = com.giyeok.bibix.repo.BibixRepoProto.LogLevel.forNumber(minLogLevel_);
+      return result == null ? com.giyeok.bibix.repo.BibixRepoProto.LogLevel.UNRECOGNIZED : result;
+    }
+
     private byte memoizedIsInitialized = -1;
     @java.lang.Override
     public final boolean isInitialized() {
@@ -87,6 +117,9 @@ public final class RunConfigProto {
       if (maxThreads_ != 0) {
         output.writeInt32(1, maxThreads_);
       }
+      if (minLogLevel_ != com.giyeok.bibix.repo.BibixRepoProto.LogLevel.UNSPECIFIED.getNumber()) {
+        output.writeEnum(2, minLogLevel_);
+      }
       getUnknownFields().writeTo(output);
     }
 
@@ -99,6 +132,10 @@ public final class RunConfigProto {
       if (maxThreads_ != 0) {
         size += com.google.protobuf.CodedOutputStream
           .computeInt32Size(1, maxThreads_);
+      }
+      if (minLogLevel_ != com.giyeok.bibix.repo.BibixRepoProto.LogLevel.UNSPECIFIED.getNumber()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeEnumSize(2, minLogLevel_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSize = size;
@@ -117,6 +154,7 @@ public final class RunConfigProto {
 
       if (getMaxThreads()
           != other.getMaxThreads()) return false;
+      if (minLogLevel_ != other.minLogLevel_) return false;
       if (!getUnknownFields().equals(other.getUnknownFields())) return false;
       return true;
     }
@@ -130,6 +168,8 @@ public final class RunConfigProto {
       hash = (19 * hash) + getDescriptor().hashCode();
       hash = (37 * hash) + MAX_THREADS_FIELD_NUMBER;
       hash = (53 * hash) + getMaxThreads();
+      hash = (37 * hash) + MIN_LOG_LEVEL_FIELD_NUMBER;
+      hash = (53 * hash) + minLogLevel_;
       hash = (29 * hash) + getUnknownFields().hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -260,6 +300,7 @@ public final class RunConfigProto {
         super.clear();
         bitField0_ = 0;
         maxThreads_ = 0;
+        minLogLevel_ = 0;
         return this;
       }
 
@@ -296,6 +337,9 @@ public final class RunConfigProto {
         if (((from_bitField0_ & 0x00000001) != 0)) {
           result.maxThreads_ = maxThreads_;
         }
+        if (((from_bitField0_ & 0x00000002) != 0)) {
+          result.minLogLevel_ = minLogLevel_;
+        }
       }
 
       @java.lang.Override
@@ -312,6 +356,9 @@ public final class RunConfigProto {
         if (other == com.giyeok.bibix.runner.RunConfigProto.RunConfig.getDefaultInstance()) return this;
         if (other.getMaxThreads() != 0) {
           setMaxThreads(other.getMaxThreads());
+        }
+        if (other.minLogLevel_ != 0) {
+          setMinLogLevelValue(other.getMinLogLevelValue());
         }
         this.mergeUnknownFields(other.getUnknownFields());
         onChanged();
@@ -344,6 +391,11 @@ public final class RunConfigProto {
                 bitField0_ |= 0x00000001;
                 break;
               } // case 8
+              case 16: {
+                minLogLevel_ = input.readEnum();
+                bitField0_ |= 0x00000002;
+                break;
+              } // case 16
               default: {
                 if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                   done = true; // was an endgroup tag
@@ -389,6 +441,59 @@ public final class RunConfigProto {
       public Builder clearMaxThreads() {
         bitField0_ = (bitField0_ & ~0x00000001);
         maxThreads_ = 0;
+        onChanged();
+        return this;
+      }
+
+      private int minLogLevel_ = 0;
+      /**
+       * <code>.com.giyeok.bibix.repo.LogLevel min_log_level = 2;</code>
+       * @return The enum numeric value on the wire for minLogLevel.
+       */
+      @java.lang.Override public int getMinLogLevelValue() {
+        return minLogLevel_;
+      }
+      /**
+       * <code>.com.giyeok.bibix.repo.LogLevel min_log_level = 2;</code>
+       * @param value The enum numeric value on the wire for minLogLevel to set.
+       * @return This builder for chaining.
+       */
+      public Builder setMinLogLevelValue(int value) {
+        minLogLevel_ = value;
+        bitField0_ |= 0x00000002;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>.com.giyeok.bibix.repo.LogLevel min_log_level = 2;</code>
+       * @return The minLogLevel.
+       */
+      @java.lang.Override
+      public com.giyeok.bibix.repo.BibixRepoProto.LogLevel getMinLogLevel() {
+        com.giyeok.bibix.repo.BibixRepoProto.LogLevel result = com.giyeok.bibix.repo.BibixRepoProto.LogLevel.forNumber(minLogLevel_);
+        return result == null ? com.giyeok.bibix.repo.BibixRepoProto.LogLevel.UNRECOGNIZED : result;
+      }
+      /**
+       * <code>.com.giyeok.bibix.repo.LogLevel min_log_level = 2;</code>
+       * @param value The minLogLevel to set.
+       * @return This builder for chaining.
+       */
+      public Builder setMinLogLevel(com.giyeok.bibix.repo.BibixRepoProto.LogLevel value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        bitField0_ |= 0x00000002;
+        minLogLevel_ = value.getNumber();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>.com.giyeok.bibix.repo.LogLevel min_log_level = 2;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearMinLogLevel() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        minLogLevel_ = 0;
         onChanged();
         return this;
       }
@@ -471,19 +576,23 @@ public final class RunConfigProto {
   static {
     java.lang.String[] descriptorData = {
       "\n\020run_config.proto\022\027com.giyeok.bibix.run" +
-      "ner\" \n\tRunConfig\022\023\n\013max_threads\030\001 \001(\005B\020B" +
-      "\016RunConfigProtob\006proto3"
+      "ner\032\nrepo.proto\"X\n\tRunConfig\022\023\n\013max_thre" +
+      "ads\030\001 \001(\005\0226\n\rmin_log_level\030\002 \001(\0162\037.com.g" +
+      "iyeok.bibix.repo.LogLevelB\020B\016RunConfigPr" +
+      "otob\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
+          com.giyeok.bibix.repo.BibixRepoProto.getDescriptor(),
         });
     internal_static_com_giyeok_bibix_runner_RunConfig_descriptor =
       getDescriptor().getMessageTypes().get(0);
     internal_static_com_giyeok_bibix_runner_RunConfig_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_giyeok_bibix_runner_RunConfig_descriptor,
-        new java.lang.String[] { "MaxThreads", });
+        new java.lang.String[] { "MaxThreads", "MinLogLevel", });
+    com.giyeok.bibix.repo.BibixRepoProto.getDescriptor();
   }
 
   // @@protoc_insertion_point(outer_class_scope)
