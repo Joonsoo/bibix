@@ -284,12 +284,12 @@ class ValueCaster(
     }
 
   private fun finalizeValueList(
-    buildRule: BuildTaskResult.BuildRuleResult,
+    finalizeCtx: FinalizeBuildRuleReturnValue.FinalizeContext,
     values: List<BibixValue>,
     func: (List<BibixValue>) -> BibixValue
   ): BuildTaskResult =
     BuildTaskResult.WithResultList(values.map {
-      FinalizeBuildRuleReturnValue(buildRule, it, projectId, importInstanceId)
+      FinalizeBuildRuleReturnValue(finalizeCtx, it, projectId, importInstanceId)
     }) { results ->
       if (results.all { it is BuildTaskResult.ValueResult }) {
         val finalValue = func(results.map { (it as BuildTaskResult.ValueResult).value })
@@ -300,7 +300,7 @@ class ValueCaster(
     }
 
   private fun finalizeValues(
-    buildRule: BuildTaskResult.BuildRuleResult,
+    finalizeCtx: FinalizeBuildRuleReturnValue.FinalizeContext,
     values: Map<String, BibixValue>,
     types: Map<String, BibixType>,
     block: (List<String>, List<BibixValue>) -> BuildTaskResult
@@ -309,7 +309,7 @@ class ValueCaster(
 
     val fieldValues = values.entries.sortedBy { it.key }
     val finalizeTasks = fieldValues.map {
-      FinalizeBuildRuleReturnValue(buildRule, it.value, projectId, importInstanceId)
+      FinalizeBuildRuleReturnValue(finalizeCtx, it.value, projectId, importInstanceId)
     }
     return BuildTaskResult.WithResultList(finalizeTasks) { finalized ->
       check(finalized.size == fieldValues.size)
@@ -322,23 +322,23 @@ class ValueCaster(
   }
 
   fun finalizeBuildRuleReturnValue(
-    buildRule: BuildTaskResult.BuildRuleResult,
+    finalizeCtx: FinalizeBuildRuleReturnValue.FinalizeContext,
     value: BibixValue,
   ): BuildTaskResult =
     when (value) {
       is NClassInstanceValue -> {
         // buildRule 위치를 기준으로 ClassInstanceValue로 변경해서 반환
-        val namespace = buildRule.name.tokens.dropLast(1)
+        val namespace = finalizeCtx.name.tokens.dropLast(1)
         // TODO namespace에서 마지막에서 하나씩 빼면서 이름 찾기 시도
         buildGraphRunner.lookupExprValue(
-          buildRule.projectId,
+          finalizeCtx.projectId,
           BibixName(namespace + value.nameTokens),
-          buildRule.importInstanceId
+          finalizeCtx.importInstanceId
         ) { lookupResult ->
           check(lookupResult is BuildTaskResult.DataClassResult)
 
           val fieldTypeMaps = lookupResult.fieldTypes.toMap()
-          finalizeValues(buildRule, value.fieldValues, fieldTypeMaps) { fieldNames, finVals ->
+          finalizeValues(finalizeCtx, value.fieldValues, fieldTypeMaps) { fieldNames, finVals ->
             organizeParamsForDataClass(
               lookupResult,
               listOf(),
@@ -356,7 +356,7 @@ class ValueCaster(
           check(dataClassResult is BuildTaskResult.DataClassResult)
 
           val fieldTypeMaps = dataClassResult.fieldTypes.toMap()
-          finalizeValues(buildRule, value.fieldValues, fieldTypeMaps) { fieldNames, finVals ->
+          finalizeValues(finalizeCtx, value.fieldValues, fieldTypeMaps) { fieldNames, finVals ->
             val castTasks = fieldNames.zip(finVals).map { (name, value) ->
               val expectedType = fieldTypeMaps.getValue(name)
               TypeCastValue(value, expectedType, projectId, importInstanceId)
@@ -378,10 +378,10 @@ class ValueCaster(
         }
       }
 
-      is CollectionValue -> finalizeValueList(buildRule, value.values, value::newCollectionWith)
-      is TupleValue -> finalizeValueList(buildRule, value.values, ::TupleValue)
+      is CollectionValue -> finalizeValueList(finalizeCtx, value.values, value::newCollectionWith)
+      is TupleValue -> finalizeValueList(finalizeCtx, value.values, ::TupleValue)
       is NamedTupleValue ->
-        finalizeValueList(buildRule, value.values) { elems ->
+        finalizeValueList(finalizeCtx, value.values) { elems ->
           NamedTupleValue(value.names.zip(elems))
         }
 

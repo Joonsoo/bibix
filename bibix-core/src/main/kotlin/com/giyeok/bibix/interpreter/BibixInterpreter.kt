@@ -87,13 +87,8 @@ class BibixInterpreter(
             }
           }
 
-          when (val body = definition.action.body) {
-            is BibixAst.SingleCallAction -> executeActionStmt(body.expr)
-            is BibixAst.MultiCallActions -> body.exprs.forEach { expr ->
-              executeActionStmt(expr)
-            }
-
-            else -> throw AssertionError()
+          definition.action.body.stmts.forEach { stmt ->
+            executeActionStmt(stmt)
           }
           NoneValue
         }

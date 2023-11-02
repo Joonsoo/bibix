@@ -2,6 +2,7 @@ package com.giyeok.bibix.graph.runner
 
 import com.giyeok.bibix.base.BibixType
 import com.giyeok.bibix.base.BibixValue
+import com.giyeok.bibix.base.BuildRuleReturn
 import com.giyeok.bibix.base.ClassInstanceValue
 import com.giyeok.bibix.graph.*
 import java.lang.reflect.Method
@@ -17,7 +18,8 @@ data class EvalTarget(
 data class ExecActionCallExpr(
   val projectId: Int,
   val importInstanceId: Int,
-  val exprNodeId: ExprNodeId,
+  val callStmt: ActionDef.CallStmt,
+  val letLocals: MutableMap<String, BibixValue>,
 ): BuildTask()
 
 data class EvalExpr(
@@ -43,11 +45,35 @@ data class TypeCastValue(
 ): BuildTask()
 
 data class FinalizeBuildRuleReturnValue(
-  val buildRule: BuildTaskResult.BuildRuleResult,
+  // val buildRule: BuildTaskResult.BuildRuleResult,
+  val finalizeCtx: FinalizeContext,
   val value: BibixValue,
   val projectId: Int,
   val importInstanceId: Int,
-): BuildTask()
+): BuildTask() {
+  constructor(
+    buildRule: BuildTaskResult.BuildRuleResult,
+    value: BibixValue,
+    projectId: Int,
+    importInstanceId: Int,
+  ): this(
+    FinalizeContext(
+      buildRule.projectId,
+      buildRule.importInstanceId,
+      buildRule.name
+    ),
+    value,
+    projectId,
+    importInstanceId
+  )
+
+  data class FinalizeContext(val projectId: Int, val importInstanceId: Int, val name: BibixName) {
+    companion object {
+      fun from(buildRule: BuildTaskResult.BuildRuleResult): FinalizeContext =
+        FinalizeContext(buildRule.projectId, buildRule.importInstanceId, buildRule.name)
+    }
+  }
+}
 
 data class EvalBuildRule(
   val projectId: Int,
@@ -134,7 +160,13 @@ sealed class BuildTaskResult {
   ): FinalResult()
 
   data class ActionRuleResult(
-    val projectId: Int
+    val projectId: Int,
+    val name: BibixName,
+    val importInstanceId: Int,
+    val actionRuleDef: ActionRuleDef,
+    val paramTypes: List<Pair<String, BibixType>>,
+    val implInstance: Any,
+    val implMethod: Method
   ): FinalResult()
 
   data class DataClassResult(

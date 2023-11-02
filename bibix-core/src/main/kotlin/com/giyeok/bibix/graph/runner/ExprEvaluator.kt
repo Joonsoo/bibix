@@ -144,7 +144,7 @@ class ExprEvaluator(
       }
 
       is CallExprCallNode -> {
-        val namedParams = exprNode.namedParams.entries.sortedBy { it.key }
+        val namedParams = exprNode.namedParams.entries.toList()
         BuildTaskResult.WithResultList(
           listOf(evalTask(exprNode.callee)) +
             exprNode.posParams.map { evalTask(it) } +
@@ -464,7 +464,9 @@ class ExprEvaluator(
             organizeParamsAndRunBuildRule(lookupResult, listOf(), finalizedParams) { evalResult ->
               // TODO evalResult를 buildRuleResult의 return type으로 cast
               check(evalResult is BuildTaskResult.ValueResult)
-              handleBuildRuleReturn(result.whenDone(evalResult.value))
+              BuildTaskResult.LongRunning {
+                handleBuildRuleReturn(result.whenDone(evalResult.value))
+              }
             }
           }
         }
@@ -475,8 +477,10 @@ class ExprEvaluator(
       }
 
       is BuildRuleReturn.WithDirectoryLock -> {
-        // TODO directory lock for result.directory
-        handleBuildRuleReturn(result.withLock())
+        BuildTaskResult.LongRunning {
+          // TODO directory lock for result.directory
+          handleBuildRuleReturn(result.withLock())
+        }
       }
     }
 

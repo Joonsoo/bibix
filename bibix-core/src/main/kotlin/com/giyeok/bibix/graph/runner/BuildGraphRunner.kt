@@ -1,11 +1,9 @@
 package com.giyeok.bibix.graph.runner
 
+import com.giyeok.bibix.ast.BibixAst
 import com.giyeok.bibix.ast.BibixParser
 import com.giyeok.bibix.base.*
-import com.giyeok.bibix.graph.BibixName
-import com.giyeok.bibix.graph.BibixProjectLocation
-import com.giyeok.bibix.graph.BuildGraph
-import com.giyeok.bibix.graph.NameLookupTable
+import com.giyeok.bibix.graph.*
 import com.giyeok.bibix.plugins.PluginInstanceProvider
 import com.giyeok.bibix.plugins.PreloadedPlugin
 import com.giyeok.bibix.plugins.jvm.ClassPkg
@@ -113,11 +111,50 @@ class BuildGraphRunner(
     }
 
     is ExecActionCallExpr -> {
-      TODO()
-    }
+      fun evalTask(exprNodeId: ExprNodeId) = EvalExpr(
+        buildTask.projectId,
+        exprNodeId,
+        buildTask.importInstanceId,
+        buildTask.letLocals,
+        null
+      )
 
-    is EvalActionRule -> {
-      TODO()
+      val callStmt = buildTask.callStmt
+
+      val namedParams = callStmt.namedArgs.entries.toList()
+
+      BuildTaskResult.WithResultList(
+        listOf(evalTask(callStmt.calleeNodeId)) +
+          callStmt.posArgs.map(::evalTask) +
+          namedParams.map { evalTask(it.value) }) { results ->
+        check(results.size == 1 + callStmt.posArgs.size + namedParams.size)
+        val actionRule = results.first()
+        check(actionRule is BuildTaskResult.ActionRuleResult)
+        val posArgs = results.drop(1).take(callStmt.posArgs.size).map {
+          check(it is BuildTaskResult.ValueResult)
+          it.value
+        }
+        val namedArgs =
+          namedParams.zip(results.drop(1 + callStmt.posArgs.size)).associate { (param, result) ->
+            check(result is BuildTaskResult.ValueResult)
+            param.key to result.value
+          }
+
+        val requiredParams = actionRule.actionRuleDef.def.params
+          .filter { param -> !param.optional && param.defaultValue == null }
+          .map { it.name }.toSet()
+        organizeParams(
+          actionRule.paramTypes,
+          requiredParams,
+          actionRule.projectId,
+          actionRule.importInstanceId,
+          actionRule.actionRuleDef.paramDefaultValues,
+          posArgs,
+          namedArgs,
+        ) { args ->
+          TODO()
+        }
+      }
     }
 
     is EvalVar -> {
@@ -157,7 +194,7 @@ class BuildGraphRunner(
 
     is FinalizeBuildRuleReturnValue -> {
       ValueCaster(this, buildTask.projectId, buildTask.importInstanceId)
-        .finalizeBuildRuleReturnValue(buildTask.buildRule, buildTask.value)
+        .finalizeBuildRuleReturnValue(buildTask.finalizeCtx, buildTask.value)
     }
 
     is EvalBuildRule -> {
@@ -165,22 +202,14 @@ class BuildGraphRunner(
 
       val buildRule = buildGraph.buildRules.getValue(buildTask.name)
 
-      val params = buildRule.def.params.map { param ->
-        param.name to buildRule.params.getValue(param.name)
-      }
-      BuildTaskResult.WithResultList(params.map {
-        EvalType(buildTask.projectId, it.second)
-      }) { results ->
-        check(results.all { it is BuildTaskResult.TypeResult })
-        check(params.size == results.size)
-        val types = results.map { (it as BuildTaskResult.TypeResult).type }
-        val paramTypes = params.map { it.first }.zip(types)
-
-        if (buildRule.implTarget == null) {
-          val pluginInstanceProvider =
-            preloadedPluginInstanceProviders.getValue(buildTask.projectId)
-          val implTarget = pluginInstanceProvider.getInstance(buildRule.implClassName)
-          val method = implTarget::class.java.getDeclaredMethod(
+      withParamTypes(buildTask.projectId, buildRule.def.params, buildRule.params) { paramTypes ->
+        withImplTarget(
+          buildTask.projectId,
+          buildTask.importInstanceId,
+          buildRule.implTarget,
+          buildRule.implClassName,
+        ) { implInstance ->
+          val method = implInstance::class.java.getDeclaredMethod(
             buildRule.implMethodName,
             BuildContext::class.java
           )
@@ -191,46 +220,38 @@ class BuildGraphRunner(
             buildTask.importInstanceId,
             buildRule,
             paramTypes,
-            implTarget,
+            implInstance,
             method
           )
-        } else {
-          BuildTaskResult.WithResult(
-            EvalExpr(buildTask.projectId, buildRule.implTarget, buildTask.importInstanceId, null)
-          ) { implTargetResult ->
-            check(implTargetResult is BuildTaskResult.ValueResult)
+        }
+      }
+    }
 
-            // implTarget을 ClassPkg로 변환
-            BuildTaskResult.WithResult(
-              TypeCastValue(
-                implTargetResult.value,
-                DataClassType("com.giyeok.bibix.plugins.jvm", "ClassPkg"),
-                buildTask.projectId,
-                buildTask.importInstanceId,
-              )
-            ) { implTarget ->
-              check(implTarget is BuildTaskResult.ValueResult)
+    is EvalActionRule -> {
+      val buildGraph = multiGraph.getProjectGraph(buildTask.projectId)
 
-              val classPkg = ClassPkg.fromBibix(implTarget.value)
+      val actionRule = buildGraph.actionRules.getValue(buildTask.name)
 
-              // classPkg로부터 인스턴스 만들어서 넣기
-              val implInstance =
-                classPkgRunner.getPluginImplInstance(classPkg, buildRule.implClassName)
-              val method = implInstance::class.java.getDeclaredMethod(
-                buildRule.implMethodName,
-                BuildContext::class.java
-              )
-              BuildTaskResult.BuildRuleResult(
-                buildTask.projectId,
-                buildTask.name,
-                buildTask.importInstanceId,
-                buildRule,
-                paramTypes,
-                implInstance,
-                method
-              )
-            }
-          }
+      withParamTypes(buildTask.projectId, actionRule.def.params, actionRule.params) { paramTypes ->
+        withImplTarget(
+          buildTask.projectId,
+          buildTask.importInstanceId,
+          actionRule.implTarget,
+          actionRule.implClassName
+        ) { implInstance ->
+          val method = implInstance::class.java.getDeclaredMethod(
+            actionRule.implMethodName,
+            ActionContext::class.java
+          )
+          BuildTaskResult.ActionRuleResult(
+            buildTask.projectId,
+            buildTask.name,
+            buildTask.importInstanceId,
+            actionRule,
+            paramTypes,
+            implInstance,
+            method
+          )
         }
       }
     }
@@ -327,6 +348,63 @@ class BuildGraphRunner(
       val packageName = multiGraph.projectPackages[buildTask.projectId]
       TypeEvaluator(buildTask.projectId, packageName, buildGraph.typeGraph)
         .evaluateType(buildTask.typeNodeId)
+    }
+  }
+
+  private fun withParamTypes(
+    projectId: Int,
+    paramDefs: List<BibixAst.ParamDef>,
+    paramTypeNodeIds: Map<String, TypeNodeId>,
+    block: (List<Pair<String, BibixType>>) -> BuildTaskResult
+  ): BuildTaskResult {
+    val params = paramDefs.map { param ->
+      param.name to paramTypeNodeIds.getValue(param.name)
+    }
+    return BuildTaskResult.WithResultList(params.map {
+      EvalType(projectId, it.second)
+    }) { results ->
+      check(results.all { it is BuildTaskResult.TypeResult })
+      check(params.size == results.size)
+      val types = results.map { (it as BuildTaskResult.TypeResult).type }
+      val paramTypes = params.map { it.first }.zip(types)
+
+      block(paramTypes)
+    }
+  }
+
+  private fun withImplTarget(
+    projectId: Int,
+    importInstanceId: Int,
+    implTarget: ExprNodeId?,
+    implClassName: String,
+    block: (Any) -> BuildTaskResult
+  ): BuildTaskResult = if (implTarget == null) {
+    val pluginInstanceProvider =
+      preloadedPluginInstanceProviders.getValue(projectId)
+    val implInstance = pluginInstanceProvider.getInstance(implClassName)
+    block(implInstance)
+  } else {
+    BuildTaskResult.WithResult(
+      EvalExpr(projectId, implTarget, importInstanceId, null)
+    ) { implTargetResult ->
+      check(implTargetResult is BuildTaskResult.ValueResult)
+
+      // implTarget을 ClassPkg로 변환
+      BuildTaskResult.WithResult(
+        TypeCastValue(
+          implTargetResult.value,
+          DataClassType("com.giyeok.bibix.plugins.jvm", "ClassPkg"),
+          projectId,
+          importInstanceId,
+        )
+      ) { implTarget ->
+        check(implTarget is BuildTaskResult.ValueResult)
+
+        val classPkg = ClassPkg.fromBibix(implTarget.value)
+
+        val implInstance = classPkgRunner.getPluginImplInstance(classPkg, implClassName)
+        block(implInstance)
+      }
     }
   }
 

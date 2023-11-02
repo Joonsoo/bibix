@@ -31,32 +31,40 @@ class BuildGraphBuilder(
     defs.forEach { def ->
       when (def) {
         is BibixAst.ActionDef -> {
-          val localLets = mutableSetOf<String>()
+          var localCtx = def.argsName?.let { ctx.withLocalLetName(it) } ?: ctx
           val actionStmts = def.body.stmts.map { stmt ->
             when (stmt) {
               is BibixAst.LetStmt -> {
-                val letExpr = addExpr(stmt.expr, ctx)
-                localLets.add(stmt.name)
+                val letExpr = addExpr(stmt.expr, localCtx)
+                localCtx = localCtx.withLocalLetName(stmt.name)
                 ActionDef.LetStmt(stmt.name, letExpr)
               }
 
               is BibixAst.CallExpr -> {
-                val (callee, posParams, namedParams) = addCallExpr(
-                  stmt,
-                  ctx.withLocalLetNames(localLets)
-                )
+                val (callee, posParams, namedParams) = addCallExpr(stmt, localCtx)
                 ActionDef.CallStmt(callee, posParams, namedParams)
               }
             }
           }
-
-          // TODO argsName
-          actions[ctx.bibixName(def.name)] = ActionDef(def, actionStmts)
+          actions[localCtx.bibixName(def.name)] = ActionDef(def, actionStmts)
         }
 
         is BibixAst.ActionRuleDef -> {
-          // TODO
-          actionRules[ctx.bibixName(def.name)] = ActionRuleDef(def)
+          val implTarget =
+            if (ctx.nativeAllowed && def.impl.targetName.tokens == listOf("native")) {
+              null
+            } else {
+              lookupExprName(def.impl.targetName.tokens, ctx)
+            }
+          val paramTypes = def.params.associate { it.name to addType(it.typ!!, ctx) }
+          actionRules[ctx.bibixName(def.name)] = ActionRuleDef(
+            def = def,
+            params = paramTypes,
+            paramDefaultValues = defaultValuesMap(def.params, paramTypes, ctx),
+            implTarget = implTarget,
+            implClassName = def.impl.className.tokens.joinToString("."),
+            implMethodNameOpt = def.impl.methodName
+          )
         }
 
         is BibixAst.BuildRuleDef -> {
@@ -64,8 +72,7 @@ class BuildGraphBuilder(
             if (ctx.nativeAllowed && def.impl.targetName.tokens == listOf("native")) {
               null
             } else {
-              val implNode = lookupExprName(def.impl.targetName.tokens, ctx)
-              implNode
+              lookupExprName(def.impl.targetName.tokens, ctx)
             }
           val paramTypes = def.params.associate { it.name to addType(it.typ!!, ctx) }
 
@@ -177,7 +184,7 @@ class BuildGraphBuilder(
     return ifElse()
   }
 
-  fun addNode(node: ExprGraphNode): ExprNodeId {
+  private fun addNode(node: ExprGraphNode): ExprNodeId {
     val existing = exprNodes[node.id]
     if (existing != null) {
       check(existing == node)
@@ -186,15 +193,15 @@ class BuildGraphBuilder(
     return node.id
   }
 
-  fun addEdge(start: ExprNodeId, end: ExprNodeId) {
+  private fun addEdge(start: ExprNodeId, end: ExprNodeId) {
     exprEdges.add(ExprGraphEdge(start, end))
   }
 
-  fun addEdge(start: ExprNodeId, end: TypeNodeId) {
+  private fun addEdge(start: ExprNodeId, end: TypeNodeId) {
     exprTypeEdges.add(ExprTypeEdge(start, end))
   }
 
-  fun lookupExprName(nameTokens: List<String>, ctx: GraphBuildContext): ExprNodeId {
+  private fun lookupExprName(nameTokens: List<String>, ctx: GraphBuildContext): ExprNodeId {
     val node = when (val lookupResult = ctx.nameLookupCtx.lookupName(nameTokens)) {
       is EnumValueFound ->
         LocalEnumValue(lookupResult.enum.name, lookupResult.enumValueName)
@@ -230,7 +237,7 @@ class BuildGraphBuilder(
     val namedParams: Map<String, ExprNodeId>
   )
 
-  fun addCallExpr(expr: BibixAst.CallExpr, ctx: GraphBuildContext): CallExprAddResult {
+  private fun addCallExpr(expr: BibixAst.CallExpr, ctx: GraphBuildContext): CallExprAddResult {
     val callee = lookupExprName(expr.name.tokens, ctx)
     val posParams = expr.params.posParams.mapIndexed { index, argExpr ->
       val arg = addExpr(argExpr, ctx)
@@ -251,7 +258,7 @@ class BuildGraphBuilder(
     return CallExprAddResult(callee, posParams, namedParams)
   }
 
-  fun addExpr(expr: BibixAst.Expr, ctx: GraphBuildContext): ExprNodeId = when (expr) {
+  private fun addExpr(expr: BibixAst.Expr, ctx: GraphBuildContext): ExprNodeId = when (expr) {
     is BibixAst.CastExpr -> {
       val valueNode = addExpr(expr.expr, ctx)
       val typeNode = addType(expr.castTo, ctx)
@@ -358,7 +365,7 @@ class BuildGraphBuilder(
     }
   }
 
-  fun addNode(node: TypeGraphNode): TypeNodeId {
+  private fun addNode(node: TypeGraphNode): TypeNodeId {
     val existing = typeNodes[node.id]
     if (existing != null) {
       check(existing == node)
@@ -367,11 +374,11 @@ class BuildGraphBuilder(
     return node.id
   }
 
-  fun addEdge(start: TypeNodeId, end: TypeNodeId) {
+  private fun addEdge(start: TypeNodeId, end: TypeNodeId) {
     typeEdges.add(TypeGraphEdge(start, end))
   }
 
-  fun addType(type: BibixAst.TypeExpr, ctx: GraphBuildContext): TypeNodeId = when (type) {
+  private fun addType(type: BibixAst.TypeExpr, ctx: GraphBuildContext): TypeNodeId = when (type) {
     is BibixAst.CollectionType -> {
       when (type.name) {
         "list" -> {
@@ -411,8 +418,8 @@ class BuildGraphBuilder(
       if (basicType != null) {
         addNode(BasicTypeNode(basicType))
       } else {
-        // TODO name lookup해서 로컬에서 알고 있는 data, super, enum 이면 LocalDataClassTypeRef, LocalSuperClassTypeRef, LocalEnumTypeRef
-        //      import하는 이름이면 ImportedType으로 반환
+        // name lookup해서 로컬에서 알고 있는 data, super, enum 이면 LocalDataClassTypeRef, LocalSuperClassTypeRef, LocalEnumTypeRef로,
+        // import하는 이름이면 ImportedType으로 반환
         val node: TypeGraphNode =
           when (val lookupResult = ctx.nameLookupCtx.lookupName(type.tokens, type)) {
             is NameEntryFound -> {
@@ -420,7 +427,7 @@ class BuildGraphBuilder(
                 is DataClassNameEntry -> LocalDataClassTypeRef(entry.name, entry.def)
                 is SuperClassNameEntry -> LocalSuperClassTypeRef(entry.name, entry.def)
                 is EnumNameEntry -> LocalEnumTypeRef(entry.name, entry.def)
-                else -> TODO()
+                else -> throw IllegalStateException()
               }
             }
 
@@ -497,7 +504,7 @@ data class GraphBuildContext(
 
   fun bibixName(name: String) = BibixName(nameLookupCtx.currentScope.namePath + name)
 
-  fun withLocalLetNames(newNames: Set<String>) = copy(localLetNames = localLetNames + newNames)
+  fun withLocalLetName(newName: String) = copy(localLetNames = localLetNames + newName)
 }
 
 fun BibixAst.Primary.getDefaultImportName(): String = when (this) {

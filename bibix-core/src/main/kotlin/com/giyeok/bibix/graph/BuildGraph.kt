@@ -117,6 +117,8 @@ data class ActionDef(
   val def: BibixAst.ActionDef,
   val stmts: List<ActionStmt>,
 ) {
+  val argsName: String? get() = def.argsName
+
   sealed class ActionStmt
   data class LetStmt(val name: String, val exprNodeId: ExprNodeId): ActionStmt()
   data class CallStmt(
@@ -127,5 +129,13 @@ data class ActionDef(
 }
 
 data class ActionRuleDef(
-  val def: BibixAst.ActionRuleDef
-)
+  val def: BibixAst.ActionRuleDef,
+  val params: Map<String, TypeNodeId>,
+  val paramDefaultValues: Map<String, ExprNodeId>,
+  // implTarget이 null이면 native
+  val implTarget: ExprNodeId?,
+  val implClassName: String,
+  val implMethodNameOpt: String?
+) {
+  val implMethodName: String = implMethodNameOpt ?: "run"
+}

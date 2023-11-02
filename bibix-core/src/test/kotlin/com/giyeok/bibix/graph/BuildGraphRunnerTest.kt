@@ -1,13 +1,11 @@
 package com.giyeok.bibix.graph
 
 import com.giyeok.bibix.base.Architecture
+import com.giyeok.bibix.base.BibixValue
 import com.giyeok.bibix.base.BuildEnv
 import com.giyeok.bibix.base.OS
 import com.giyeok.bibix.frontend.BuildFrontend
-import com.giyeok.bibix.graph.runner.BuildGraphRunner
-import com.giyeok.bibix.graph.runner.BuildTask
-import com.giyeok.bibix.graph.runner.BuildTaskResult
-import com.giyeok.bibix.graph.runner.EvalTarget
+import com.giyeok.bibix.graph.runner.*
 import com.giyeok.bibix.plugins.prelude.preludePlugin
 import com.giyeok.bibix.repo.BibixRepo
 import kotlinx.coroutines.runBlocking
@@ -36,6 +34,8 @@ class BuildGraphRunnerTest {
       )
     }
 
+    runner.runAction(1, 0, BibixName("myaction"))
+
     println(runner.runToFinal(EvalTarget(1, 0, BibixName("x"))))
     println(runner.runToFinal(EvalTarget(1, 0, BibixName("x2"))))
 
@@ -45,6 +45,27 @@ class BuildGraphRunnerTest {
     println(runner.runToFinal(EvalTarget(1, 0, BibixName("ss"))))
     println(runner.runToFinal(EvalTarget(1, 0, BibixName("dd"))))
     println(runner.runToFinal(EvalTarget(1, 0, BibixName("ee"))))
+  }
+
+  fun BuildGraphRunner.runAction(projectId: Int, importInstanceId: Int, name: BibixName) {
+    val buildGraph = multiGraph.getProjectGraph(projectId)
+    val action = buildGraph.actions.getValue(name)
+
+    // TODO action.argsName
+    val letLocals = mutableMapOf<String, BibixValue>()
+    action.stmts.forEach { stmt ->
+      when (stmt) {
+        is ActionDef.LetStmt -> {
+          val result =
+            runToFinal(EvalExpr(projectId, stmt.exprNodeId, importInstanceId, letLocals, null))
+          check(result is BuildTaskResult.ValueResult)
+          letLocals[stmt.name] = result.value
+        }
+
+        is ActionDef.CallStmt ->
+          runToFinal(ExecActionCallExpr(projectId, importInstanceId, stmt, letLocals))
+      }
+    }
   }
 
   fun BuildGraphRunner.runToFinal(buildTask: BuildTask): BuildTaskResult.FinalResult =
