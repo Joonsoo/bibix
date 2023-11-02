@@ -23,6 +23,14 @@ from bibix.plugins import ktjvm
 dd = plgs.ktjvm.library(srcs=ss)
 ee = ktjvm.library(srcs=ss)
 
+import file
+
 action myaction {
   let a = x
+  myaction2()
+  file.copyFile("test/a.txt", "test/b.txt")
+}
+
+action myaction2 {
+  file.copyFile("test/a.txt", "test/c.txt")
 }

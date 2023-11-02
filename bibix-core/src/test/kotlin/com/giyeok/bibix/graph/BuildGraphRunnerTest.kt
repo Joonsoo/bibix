@@ -34,7 +34,7 @@ class BuildGraphRunnerTest {
       )
     }
 
-    runner.runAction(1, 0, BibixName("myaction"))
+    runner.runToFinal(ExecAction(1, 0, BibixName("myaction"), mapOf()))
 
     println(runner.runToFinal(EvalTarget(1, 0, BibixName("x"))))
     println(runner.runToFinal(EvalTarget(1, 0, BibixName("x2"))))
@@ -45,27 +45,6 @@ class BuildGraphRunnerTest {
     println(runner.runToFinal(EvalTarget(1, 0, BibixName("ss"))))
     println(runner.runToFinal(EvalTarget(1, 0, BibixName("dd"))))
     println(runner.runToFinal(EvalTarget(1, 0, BibixName("ee"))))
-  }
-
-  fun BuildGraphRunner.runAction(projectId: Int, importInstanceId: Int, name: BibixName) {
-    val buildGraph = multiGraph.getProjectGraph(projectId)
-    val action = buildGraph.actions.getValue(name)
-
-    // TODO action.argsName
-    val letLocals = mutableMapOf<String, BibixValue>()
-    action.stmts.forEach { stmt ->
-      when (stmt) {
-        is ActionDef.LetStmt -> {
-          val result =
-            runToFinal(EvalExpr(projectId, stmt.exprNodeId, importInstanceId, letLocals, null))
-          check(result is BuildTaskResult.ValueResult)
-          letLocals[stmt.name] = result.value
-        }
-
-        is ActionDef.CallStmt ->
-          runToFinal(ExecActionCallExpr(projectId, importInstanceId, stmt, letLocals))
-      }
-    }
   }
 
   fun BuildGraphRunner.runToFinal(buildTask: BuildTask): BuildTaskResult.FinalResult =

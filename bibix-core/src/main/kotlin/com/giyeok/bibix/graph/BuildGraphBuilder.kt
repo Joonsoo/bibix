@@ -212,6 +212,8 @@ class BuildGraphBuilder(
           is DataClassNameEntry -> LocalDataClassRef(entry.name, entry.def)
           is TargetNameEntry -> LocalTargetRef(entry.name, entry.def)
           is VarNameEntry -> LocalVarRef(entry.name, entry.def)
+          is ActionNameEntry -> LocalActionRef(entry.name, entry.def)
+          is ActionRuleNameEntry -> LocalActionRuleRef(entry.name, entry.def)
           else -> throw IllegalStateException()
         }
       }

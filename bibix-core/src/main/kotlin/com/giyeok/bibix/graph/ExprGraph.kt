@@ -32,6 +32,13 @@ data class LocalBuildRuleRef(val name: BibixName, val def: BibixAst.BuildRuleDef
 
 data class LocalVarRef(val name: BibixName, val def: BibixAst.VarDef): ExprLocalRefNode(def)
 
+data class LocalActionRef(val name: BibixName, val def: BibixAst.ActionDef): ExprLocalRefNode(def)
+
+data class LocalActionRuleRef(
+  val name: BibixName,
+  val def: BibixAst.ActionRuleDef
+): ExprLocalRefNode(def)
+
 // callee에서 사용될 수 있음
 data class LocalDataClassRef(val name: BibixName, val def: BibixAst.DataClassDef):
   ExprLocalRefNode(def)

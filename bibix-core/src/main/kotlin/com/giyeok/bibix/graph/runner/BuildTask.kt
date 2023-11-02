@@ -2,7 +2,6 @@ package com.giyeok.bibix.graph.runner
 
 import com.giyeok.bibix.base.BibixType
 import com.giyeok.bibix.base.BibixValue
-import com.giyeok.bibix.base.BuildRuleReturn
 import com.giyeok.bibix.base.ClassInstanceValue
 import com.giyeok.bibix.graph.*
 import java.lang.reflect.Method
@@ -15,11 +14,24 @@ data class EvalTarget(
   val name: BibixName
 ): BuildTask()
 
+data class EvalAction(
+  val projectId: Int,
+  val importInstanceId: Int,
+  val name: BibixName
+): BuildTask()
+
+data class ExecAction(
+  val projectId: Int,
+  val importInstanceId: Int,
+  val actionName: BibixName,
+  val letLocals: Map<String, BibixValue>,
+): BuildTask()
+
 data class ExecActionCallExpr(
   val projectId: Int,
   val importInstanceId: Int,
   val callStmt: ActionDef.CallStmt,
-  val letLocals: MutableMap<String, BibixValue>,
+  val letLocals: Map<String, BibixValue>,
 ): BuildTask()
 
 data class EvalExpr(
@@ -159,6 +171,13 @@ sealed class BuildTaskResult {
     val implMethod: Method
   ): FinalResult()
 
+  data class ActionResult(
+    val projectId: Int,
+    val importInstanceId: Int,
+    val actionName: BibixName,
+    val actionDef: ActionDef
+  ): FinalResult()
+
   data class ActionRuleResult(
     val projectId: Int,
     val name: BibixName,
@@ -199,6 +218,9 @@ sealed class BuildTaskResult {
 
   class TypeCastFailResult(val value: BibixValue, val type: BibixType): FinalResult()
   class ValueFinalizeFailResult(val values: List<BibixValue>): FinalResult()
+
+  // action rule을 실행했는데 값을 반환한 경우 returnValue에 넣어준다.. 그런데 기본은 값이 없는게 정상
+  class ActionRuleDoneResult(val returnValue: BibixValue?): FinalResult()
 
   data class WithResult(
     val task: BuildTask,

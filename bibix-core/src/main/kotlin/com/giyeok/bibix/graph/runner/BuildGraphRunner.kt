@@ -110,52 +110,18 @@ class BuildGraphRunner(
       }
     }
 
-    is ExecActionCallExpr -> {
-      fun evalTask(exprNodeId: ExprNodeId) = EvalExpr(
+    is EvalAction -> {
+      val action = multiGraph.getProjectGraph(buildTask.projectId).actions.getValue(buildTask.name)
+      BuildTaskResult.ActionResult(
         buildTask.projectId,
-        exprNodeId,
         buildTask.importInstanceId,
-        buildTask.letLocals,
-        null
+        buildTask.name,
+        action
       )
-
-      val callStmt = buildTask.callStmt
-
-      val namedParams = callStmt.namedArgs.entries.toList()
-
-      BuildTaskResult.WithResultList(
-        listOf(evalTask(callStmt.calleeNodeId)) +
-          callStmt.posArgs.map(::evalTask) +
-          namedParams.map { evalTask(it.value) }) { results ->
-        check(results.size == 1 + callStmt.posArgs.size + namedParams.size)
-        val actionRule = results.first()
-        check(actionRule is BuildTaskResult.ActionRuleResult)
-        val posArgs = results.drop(1).take(callStmt.posArgs.size).map {
-          check(it is BuildTaskResult.ValueResult)
-          it.value
-        }
-        val namedArgs =
-          namedParams.zip(results.drop(1 + callStmt.posArgs.size)).associate { (param, result) ->
-            check(result is BuildTaskResult.ValueResult)
-            param.key to result.value
-          }
-
-        val requiredParams = actionRule.actionRuleDef.def.params
-          .filter { param -> !param.optional && param.defaultValue == null }
-          .map { it.name }.toSet()
-        organizeParams(
-          actionRule.paramTypes,
-          requiredParams,
-          actionRule.projectId,
-          actionRule.importInstanceId,
-          actionRule.actionRuleDef.paramDefaultValues,
-          posArgs,
-          namedArgs,
-        ) { args ->
-          TODO()
-        }
-      }
     }
+
+    is ExecAction -> executeAction(buildTask)
+    is ExecActionCallExpr -> executeActionCallExpr(buildTask)
 
     is EvalVar -> {
       val buildGraph = multiGraph.getProjectGraph(buildTask.projectId)
@@ -351,6 +317,129 @@ class BuildGraphRunner(
     }
   }
 
+  private fun executeAction(buildTask: ExecAction): BuildTaskResult {
+    val projectId = buildTask.projectId
+    val importInstanceId = buildTask.importInstanceId
+    return BuildTaskResult.WithResult(
+      EvalAction(projectId, importInstanceId, buildTask.actionName)
+    ) { action ->
+      check(action is BuildTaskResult.ActionResult)
+
+      val stmts = action.actionDef.stmts
+      fun runNextStmt(stmtIdx: Int, letLocals: Map<String, BibixValue>): BuildTaskResult =
+        when (val nextStmt = stmts[stmtIdx]) {
+          is ActionDef.LetStmt -> {
+            BuildTaskResult.WithResult(
+              EvalExpr(projectId, nextStmt.exprNodeId, importInstanceId, letLocals, null)
+            ) { evalResult ->
+              check(evalResult is BuildTaskResult.ValueResult)
+              if (stmtIdx + 1 == stmts.size) {
+                evalResult
+              } else {
+                runNextStmt(stmtIdx + 1, letLocals + (nextStmt.name to evalResult.value))
+              }
+            }
+          }
+
+          is ActionDef.CallStmt ->
+            BuildTaskResult.WithResult(
+              ExecActionCallExpr(projectId, importInstanceId, nextStmt, letLocals)
+            ) { execResult ->
+              check(execResult is BuildTaskResult.ActionRuleDoneResult)
+              if (stmtIdx + 1 == stmts.size) {
+                execResult
+              } else {
+                runNextStmt(stmtIdx + 1, letLocals)
+              }
+            }
+        }
+
+      if (stmts.isEmpty()) BuildTaskResult.ActionRuleDoneResult(null) else runNextStmt(0, mapOf())
+    }
+  }
+
+  private fun executeActionCallExpr(buildTask: ExecActionCallExpr): BuildTaskResult {
+    fun evalTask(exprNodeId: ExprNodeId) = EvalExpr(
+      buildTask.projectId,
+      exprNodeId,
+      buildTask.importInstanceId,
+      buildTask.letLocals,
+      null
+    )
+
+    val callStmt = buildTask.callStmt
+
+    val namedParams = callStmt.namedArgs.entries.toList()
+
+    return BuildTaskResult.WithResultList(
+      listOf(evalTask(callStmt.calleeNodeId)) +
+        callStmt.posArgs.map(::evalTask) +
+        namedParams.map { evalTask(it.value) }) { results ->
+      check(results.size == 1 + callStmt.posArgs.size + namedParams.size)
+      when (val callee = results.first()) {
+        is BuildTaskResult.ActionResult -> {
+          // 다른 action 호출
+          // TODO callStmt에 string list 파라메터 하나는 들어갈 수 있도록(args)
+          check(callStmt.posArgs.isEmpty() && namedParams.isEmpty())
+          BuildTaskResult.WithResult(
+            ExecAction(callee.projectId, callee.importInstanceId, callee.actionName, mapOf())
+          ) { it }
+        }
+
+        is BuildTaskResult.ActionRuleResult -> {
+          val posArgs = results.drop(1).take(callStmt.posArgs.size).map {
+            check(it is BuildTaskResult.ValueResult)
+            it.value
+          }
+          val namedArgs = namedParams.zip(results.drop(1 + callStmt.posArgs.size))
+            .associate { (param, result) ->
+              check(result is BuildTaskResult.ValueResult)
+              param.key to result.value
+            }
+
+          organizeParams(
+            callee.paramTypes,
+            callee.actionRuleDef.def.params.requiredParamNames(),
+            callee.projectId,
+            callee.importInstanceId,
+            callee.actionRuleDef.paramDefaultValues,
+            posArgs,
+            namedArgs,
+          ) { args ->
+            val actionContext = ActionContext(
+              buildEnv,
+              args,
+              object: ProgressLogger {
+                override fun logInfo(message: String) {
+                  println(message)
+                }
+
+                override fun logError(message: String) {
+                  println(message)
+                }
+              }
+            )
+
+            val runner = BuildRuleRunner(
+              this,
+              buildTask.projectId,
+              buildTask.importInstanceId,
+              FinalizeBuildRuleReturnValue.FinalizeContext(
+                callee.projectId,
+                callee.importInstanceId,
+                callee.name
+              )
+            ) { it }
+            val result = callee.implMethod.invoke(callee.implInstance, actionContext)
+            runner.handleActionReturn(result)
+          }
+        }
+
+        else -> throw IllegalStateException()
+      }
+    }
+  }
+
   private fun withParamTypes(
     projectId: Int,
     paramDefs: List<BibixAst.ParamDef>,
@@ -503,3 +592,7 @@ class BuildGraphRunner(
     }
   }
 }
+
+fun List<BibixAst.ParamDef>.requiredParamNames() =
+  this.filter { param -> !param.optional && param.defaultValue == null }
+    .map { it.name }.toSet()
