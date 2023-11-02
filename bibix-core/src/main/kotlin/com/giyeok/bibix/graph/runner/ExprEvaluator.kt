@@ -423,7 +423,7 @@ fun BuildGraphRunner.lookupExprValue(
 
     action != null -> {
       check(actionRule == null)
-      TODO()
+      EvalAction(projectId, importInstanceId, name)
     }
 
     actionRule != null -> {

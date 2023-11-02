@@ -26,9 +26,10 @@ ee = ktjvm.library(srcs=ss)
 import file
 
 action myaction {
-  let a = x
+  let abc = x
   myaction2()
   file.copyFile("test/a.txt", "test/b.txt")
+  a.myaction()
 }
 
 action myaction2 {

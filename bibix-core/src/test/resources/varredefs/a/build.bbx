@@ -8,3 +8,9 @@ var c.foobar = "123123"
 class A(x: string = "123", y: string = "456", z: string = zz, xx: string = c.foobar)
 
 class B(x: string = c.foobar)
+
+
+action myaction {
+  let a = zz
+  file.copyFile("aaa.txt", "bbb.txt")
+}

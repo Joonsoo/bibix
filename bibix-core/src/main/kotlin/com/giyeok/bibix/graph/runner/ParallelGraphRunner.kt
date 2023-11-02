@@ -22,13 +22,13 @@ class ParallelGraphRunner(val runner: BuildGraphRunner, val executor: ExecutorSe
 
   private val resultMap = mutableMapOf<BuildTask, BuildTaskResult.FinalResult>()
 
-  data class DependentSingleFunc(
+  private data class DependentSingleFunc(
     val parentTask: BuildTask,
     val subTask: BuildTask,
     val func: (BuildTaskResult.FinalResult) -> BuildTaskResult
   )
 
-  data class DependentMultiFunc(
+  private data class DependentMultiFunc(
     val parentTask: BuildTask,
     val subTasks: List<BuildTask>,
     val func: (List<BuildTaskResult.FinalResult>) -> BuildTaskResult
