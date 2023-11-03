@@ -9,14 +9,16 @@ import com.giyeok.bibix.graph.BibixName
 import com.giyeok.bibix.repo.BibixRepoProto.*
 import com.giyeok.bibix.repo.TargetStateKt.buildFailed
 import com.giyeok.bibix.repo.TargetStateKt.buildSucceeded
-import com.giyeok.bibix.runner.RunConfigProto
+import com.giyeok.bibix.runner.RunConfigProto.RunConfig
+import com.giyeok.bibix.utils.toInstant
 import com.giyeok.bibix.utils.toProto
 import com.google.protobuf.ByteString
-import com.google.protobuf.TextFormat
+import com.google.protobuf.Message
 import com.google.protobuf.Timestamp
 import com.google.protobuf.empty
+import com.google.protobuf.util.Durations
+import com.google.protobuf.util.JsonFormat
 import com.google.protobuf.util.Timestamps
-import java.io.IOException
 import java.nio.file.FileSystem
 import java.nio.file.Files
 import java.nio.file.Path
@@ -32,7 +34,7 @@ class BibixRepo(
   val uniqueRunId: String,
   val projectRoot: Path,
   val bbxbuildDirectory: Path,
-  val runConfig: RunConfigProto.RunConfig,
+  val runConfig: RunConfig,
   // repo data
   val repoDataFile: Path,
   val repoData: BibixRepoData.Builder,
@@ -83,8 +85,8 @@ class BibixRepo(
 
   private fun commitRepoData() {
     synchronized(this) {
-      repoDataFile.writeText(TextFormat.printer().printToString(repoData))
-      targetLogsFile.writeText(TextFormat.printer().printToString(targetLogs))
+      repoDataFile.writeText(JsonFormat.printer().print(repoData))
+      targetLogsFile.writeText(JsonFormat.printer().print(targetLogs))
     }
   }
 
@@ -111,12 +113,39 @@ class BibixRepo(
 
     val prevState = repoData.getTargetStatesOrDefault(targetId, null)
     // TODO 설정에 따라 이전 run에서 만든 것이라도 일정 시간 이내이면 재사용 시도하도록
-    if (prevState == null || prevState.uniqueRunId != uniqueRunId) {
+    if (prevState == null) {
       // (이번 run에서) 처음 실행하는 것이면 putData하고 null(reuse할 것 없음), null(prevState 없음) 반환
       putData()
       Pair(null, null)
     } else {
-      val reuse = withPrevState(prevState)
+      fun checkCanReuse(): Boolean {
+        if (prevState.uniqueRunId == uniqueRunId) {
+          // 같은 run에서 실행되는 같은 target id면 무조건 재사용 시도
+          return true
+        }
+        if (!runConfig.hasTargetResultReuseDuration()) {
+          // config에서 target result reuse를 설정하지 않았으면 재사용 불가
+          return false
+        }
+        if (prevState.stateCase != TargetState.StateCase.BUILD_SUCCEEDED) {
+          // 기존 결과가 실패였으면 재사용 불가
+          return false
+        }
+        if (prevState.inputHashString != inputHashString) {
+          // input hash값에 바뀐게 있으면 재사용 불가
+          return false
+        }
+        // inputHashString이 동일하면 inputHashes도 같아야 함
+        check(prevState.inputHashes == inputHashes)
+
+        val age =
+          Timestamps.between(prevState.buildSucceeded.buildEndTime, timeProvider().toProto())
+        // config에서 설정한 유효시간 이내이면 재사용
+        return Durations.compare(age, runConfig.targetResultReuseDuration) < 0
+      }
+
+      val canReuse = checkCanReuse()
+      val reuse = if (canReuse) withPrevState(prevState) else null
       if (reuse == null) {
         // reuse할 것이 없으면 putData하고 null(reuse할 것 없음), prevState 반환
         putData()
@@ -270,6 +299,21 @@ class BibixRepo(
   }
 
   companion object {
+    private fun <T: Message.Builder> readOrDefault(file: Path, builder: T, default: (T) -> T): T {
+      if (file.exists()) {
+        try {
+          file.bufferedReader().use { reader ->
+            JsonFormat.parser().merge(reader, builder)
+          }
+          return builder
+        } catch (_: Exception) {
+        }
+      }
+      val defaultBuilder = default(builder)
+      file.writeText(JsonFormat.printer().print(defaultBuilder))
+      return defaultBuilder
+    }
+
     fun load(
       mainDirectory: Path,
       uniqueRunId: String = UniqueIdGen.generate(),
@@ -279,37 +323,20 @@ class BibixRepo(
       if (!Files.exists(bbxbuildDirectory)) {
         Files.createDirectory(bbxbuildDirectory)
       }
-      val runConfigFile = bbxbuildDirectory.resolve("config.pbtxt")
-      val runConfig = RunConfigProto.RunConfig.newBuilder()
-      if (runConfigFile.exists()) {
-        runConfigFile.bufferedReader().use { reader ->
-          TextFormat.merge(reader, runConfig)
-        }
-      } else {
-        runConfig.maxThreads = 3
-        runConfig.minLogLevel = BibixRepoProto.LogLevel.INFO
-        runConfigFile.writeText(TextFormat.printer().printToString(runConfig))
+      val runConfigFile = bbxbuildDirectory.resolve("config.json")
+      val runConfig = readOrDefault(runConfigFile, RunConfig.newBuilder()) { builder ->
+        builder.clear()
+          .setMaxThreads(3)
+          .setMinLogLevel(LogLevel.INFO)
+          .setTargetResultReuseDuration(Durations.fromHours(1))
+      }.build()
+
+      val repoDataFile = bbxbuildDirectory.resolve("repo.json")
+      val repoData = readOrDefault(repoDataFile, BibixRepoData.newBuilder()) { builder ->
+        builder.clear()
       }
 
-      val repoDataFile = bbxbuildDirectory.resolve("repo.pbtxt")
-      val repoData = BibixRepoData.newBuilder()
-      if (repoDataFile.exists()) {
-        try {
-          repoDataFile.bufferedReader().use { reader ->
-            TextFormat.merge(reader, repoData)
-          }
-        } catch (e: IOException) {
-          repoDataFile.writeText("{}")
-          repoData.clearTargetIdData()
-          repoData.clearTargetStates()
-          repoData.clearOutputNames()
-        }
-        // TODO 파싱하다 오류 생기면 클리어하고 다시 시도
-      } else {
-        repoDataFile.writeText("{}")
-      }
-
-      val targetLogsFile = bbxbuildDirectory.resolve("log.pbtxt")
+      val targetLogsFile = bbxbuildDirectory.resolve("log.json")
       val targetLogs = BibixTargetLogs.newBuilder()
       // 기존 로그는 파싱하지 않고 날림
 
@@ -331,7 +358,7 @@ class BibixRepo(
         timeProvider = Instant::now,
         projectRoot = mainDirectory,
         bbxbuildDirectory = bbxbuildDirectory,
-        runConfig = runConfig.build(),
+        runConfig = runConfig,
         repoDataFile = repoDataFile,
         repoData = repoData,
         targetLogsFile = targetLogsFile,

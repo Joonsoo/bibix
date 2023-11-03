@@ -86,8 +86,6 @@ private fun withBuildContext(
 
   val (reuse, prevState) =
     repo.targetStarted(targetIdHex, targetIdData, inputHashes, inputHashString) { prevState ->
-      // 같은 run에선 같은 target id는 값을 재활용하도록
-      check(prevState.uniqueRunId == repo.uniqueRunId)
       val prevTargetIdData = repo.getTargetIdData(targetIdHex)
       // 혹시나 불일치하는 경우가 생기지 않는지 확인
       check(prevTargetIdData == targetIdData)

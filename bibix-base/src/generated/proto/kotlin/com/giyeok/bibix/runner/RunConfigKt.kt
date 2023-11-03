@@ -67,10 +67,37 @@ public object RunConfigKt {
     public fun clearMinLogLevel() {
       _builder.clearMinLogLevel()
     }
+
+    /**
+     * `.google.protobuf.Duration target_result_reuse_duration = 3;`
+     */
+    public var targetResultReuseDuration: com.google.protobuf.Duration
+      @JvmName("getTargetResultReuseDuration")
+      get() = _builder.getTargetResultReuseDuration()
+      @JvmName("setTargetResultReuseDuration")
+      set(value) {
+        _builder.setTargetResultReuseDuration(value)
+      }
+    /**
+     * `.google.protobuf.Duration target_result_reuse_duration = 3;`
+     */
+    public fun clearTargetResultReuseDuration() {
+      _builder.clearTargetResultReuseDuration()
+    }
+    /**
+     * `.google.protobuf.Duration target_result_reuse_duration = 3;`
+     * @return Whether the targetResultReuseDuration field is set.
+     */
+    public fun hasTargetResultReuseDuration(): kotlin.Boolean {
+      return _builder.hasTargetResultReuseDuration()
+    }
   }
 }
 @kotlin.jvm.JvmSynthetic
 @com.google.errorprone.annotations.CheckReturnValue
 public inline fun com.giyeok.bibix.runner.RunConfigProto.RunConfig.copy(block: com.giyeok.bibix.runner.RunConfigKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.runner.RunConfigProto.RunConfig =
   com.giyeok.bibix.runner.RunConfigKt.Dsl._create(this.toBuilder()).apply { block() }._build()
+
+public val com.giyeok.bibix.runner.RunConfigProto.RunConfigOrBuilder.targetResultReuseDurationOrNull: com.google.protobuf.Duration?
+  get() = if (hasTargetResultReuseDuration()) getTargetResultReuseDuration() else null
 

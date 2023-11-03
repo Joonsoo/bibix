@@ -42,6 +42,7 @@ class ParallelGraphRunnerTest {
         EvalTarget(1, 0, BibixName("protoGen"))
       )
     }
+    repo.shutdown()
     println(results)
   }
 }

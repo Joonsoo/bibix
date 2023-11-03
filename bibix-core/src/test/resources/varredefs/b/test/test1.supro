@@ -11,4 +11,6 @@ message SourceId {
       2 scriptName: string
     }
   }
+  6 greeting: string
+  7 farewell: string
 }

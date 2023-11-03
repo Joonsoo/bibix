@@ -209,6 +209,7 @@ class ParallelGraphRunner(
           is BuildRunUpdate.Result -> processTaskResult(update.task, update.result)
           is BuildRunUpdate.Failed -> {
             // 중간에 오류가 발생한 경우
+            update.exception.printStackTrace()
             updateChannel.close()
             break
           }

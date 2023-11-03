@@ -34,6 +34,21 @@ public final class RunConfigProto {
      * @return The minLogLevel.
      */
     com.giyeok.bibix.repo.BibixRepoProto.LogLevel getMinLogLevel();
+
+    /**
+     * <code>.google.protobuf.Duration target_result_reuse_duration = 3;</code>
+     * @return Whether the targetResultReuseDuration field is set.
+     */
+    boolean hasTargetResultReuseDuration();
+    /**
+     * <code>.google.protobuf.Duration target_result_reuse_duration = 3;</code>
+     * @return The targetResultReuseDuration.
+     */
+    com.google.protobuf.Duration getTargetResultReuseDuration();
+    /**
+     * <code>.google.protobuf.Duration target_result_reuse_duration = 3;</code>
+     */
+    com.google.protobuf.DurationOrBuilder getTargetResultReuseDurationOrBuilder();
   }
   /**
    * Protobuf type {@code com.giyeok.bibix.runner.RunConfig}
@@ -100,6 +115,32 @@ public final class RunConfigProto {
       return result == null ? com.giyeok.bibix.repo.BibixRepoProto.LogLevel.UNRECOGNIZED : result;
     }
 
+    public static final int TARGET_RESULT_REUSE_DURATION_FIELD_NUMBER = 3;
+    private com.google.protobuf.Duration targetResultReuseDuration_;
+    /**
+     * <code>.google.protobuf.Duration target_result_reuse_duration = 3;</code>
+     * @return Whether the targetResultReuseDuration field is set.
+     */
+    @java.lang.Override
+    public boolean hasTargetResultReuseDuration() {
+      return targetResultReuseDuration_ != null;
+    }
+    /**
+     * <code>.google.protobuf.Duration target_result_reuse_duration = 3;</code>
+     * @return The targetResultReuseDuration.
+     */
+    @java.lang.Override
+    public com.google.protobuf.Duration getTargetResultReuseDuration() {
+      return targetResultReuseDuration_ == null ? com.google.protobuf.Duration.getDefaultInstance() : targetResultReuseDuration_;
+    }
+    /**
+     * <code>.google.protobuf.Duration target_result_reuse_duration = 3;</code>
+     */
+    @java.lang.Override
+    public com.google.protobuf.DurationOrBuilder getTargetResultReuseDurationOrBuilder() {
+      return targetResultReuseDuration_ == null ? com.google.protobuf.Duration.getDefaultInstance() : targetResultReuseDuration_;
+    }
+
     private byte memoizedIsInitialized = -1;
     @java.lang.Override
     public final boolean isInitialized() {
@@ -120,6 +161,9 @@ public final class RunConfigProto {
       if (minLogLevel_ != com.giyeok.bibix.repo.BibixRepoProto.LogLevel.UNSPECIFIED.getNumber()) {
         output.writeEnum(2, minLogLevel_);
       }
+      if (targetResultReuseDuration_ != null) {
+        output.writeMessage(3, getTargetResultReuseDuration());
+      }
       getUnknownFields().writeTo(output);
     }
 
@@ -136,6 +180,10 @@ public final class RunConfigProto {
       if (minLogLevel_ != com.giyeok.bibix.repo.BibixRepoProto.LogLevel.UNSPECIFIED.getNumber()) {
         size += com.google.protobuf.CodedOutputStream
           .computeEnumSize(2, minLogLevel_);
+      }
+      if (targetResultReuseDuration_ != null) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(3, getTargetResultReuseDuration());
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSize = size;
@@ -155,6 +203,11 @@ public final class RunConfigProto {
       if (getMaxThreads()
           != other.getMaxThreads()) return false;
       if (minLogLevel_ != other.minLogLevel_) return false;
+      if (hasTargetResultReuseDuration() != other.hasTargetResultReuseDuration()) return false;
+      if (hasTargetResultReuseDuration()) {
+        if (!getTargetResultReuseDuration()
+            .equals(other.getTargetResultReuseDuration())) return false;
+      }
       if (!getUnknownFields().equals(other.getUnknownFields())) return false;
       return true;
     }
@@ -170,6 +223,10 @@ public final class RunConfigProto {
       hash = (53 * hash) + getMaxThreads();
       hash = (37 * hash) + MIN_LOG_LEVEL_FIELD_NUMBER;
       hash = (53 * hash) + minLogLevel_;
+      if (hasTargetResultReuseDuration()) {
+        hash = (37 * hash) + TARGET_RESULT_REUSE_DURATION_FIELD_NUMBER;
+        hash = (53 * hash) + getTargetResultReuseDuration().hashCode();
+      }
       hash = (29 * hash) + getUnknownFields().hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -301,6 +358,11 @@ public final class RunConfigProto {
         bitField0_ = 0;
         maxThreads_ = 0;
         minLogLevel_ = 0;
+        targetResultReuseDuration_ = null;
+        if (targetResultReuseDurationBuilder_ != null) {
+          targetResultReuseDurationBuilder_.dispose();
+          targetResultReuseDurationBuilder_ = null;
+        }
         return this;
       }
 
@@ -340,6 +402,11 @@ public final class RunConfigProto {
         if (((from_bitField0_ & 0x00000002) != 0)) {
           result.minLogLevel_ = minLogLevel_;
         }
+        if (((from_bitField0_ & 0x00000004) != 0)) {
+          result.targetResultReuseDuration_ = targetResultReuseDurationBuilder_ == null
+              ? targetResultReuseDuration_
+              : targetResultReuseDurationBuilder_.build();
+        }
       }
 
       @java.lang.Override
@@ -359,6 +426,9 @@ public final class RunConfigProto {
         }
         if (other.minLogLevel_ != 0) {
           setMinLogLevelValue(other.getMinLogLevelValue());
+        }
+        if (other.hasTargetResultReuseDuration()) {
+          mergeTargetResultReuseDuration(other.getTargetResultReuseDuration());
         }
         this.mergeUnknownFields(other.getUnknownFields());
         onChanged();
@@ -396,6 +466,13 @@ public final class RunConfigProto {
                 bitField0_ |= 0x00000002;
                 break;
               } // case 16
+              case 26: {
+                input.readMessage(
+                    getTargetResultReuseDurationFieldBuilder().getBuilder(),
+                    extensionRegistry);
+                bitField0_ |= 0x00000004;
+                break;
+              } // case 26
               default: {
                 if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                   done = true; // was an endgroup tag
@@ -497,6 +574,125 @@ public final class RunConfigProto {
         onChanged();
         return this;
       }
+
+      private com.google.protobuf.Duration targetResultReuseDuration_;
+      private com.google.protobuf.SingleFieldBuilderV3<
+          com.google.protobuf.Duration, com.google.protobuf.Duration.Builder, com.google.protobuf.DurationOrBuilder> targetResultReuseDurationBuilder_;
+      /**
+       * <code>.google.protobuf.Duration target_result_reuse_duration = 3;</code>
+       * @return Whether the targetResultReuseDuration field is set.
+       */
+      public boolean hasTargetResultReuseDuration() {
+        return ((bitField0_ & 0x00000004) != 0);
+      }
+      /**
+       * <code>.google.protobuf.Duration target_result_reuse_duration = 3;</code>
+       * @return The targetResultReuseDuration.
+       */
+      public com.google.protobuf.Duration getTargetResultReuseDuration() {
+        if (targetResultReuseDurationBuilder_ == null) {
+          return targetResultReuseDuration_ == null ? com.google.protobuf.Duration.getDefaultInstance() : targetResultReuseDuration_;
+        } else {
+          return targetResultReuseDurationBuilder_.getMessage();
+        }
+      }
+      /**
+       * <code>.google.protobuf.Duration target_result_reuse_duration = 3;</code>
+       */
+      public Builder setTargetResultReuseDuration(com.google.protobuf.Duration value) {
+        if (targetResultReuseDurationBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          targetResultReuseDuration_ = value;
+        } else {
+          targetResultReuseDurationBuilder_.setMessage(value);
+        }
+        bitField0_ |= 0x00000004;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>.google.protobuf.Duration target_result_reuse_duration = 3;</code>
+       */
+      public Builder setTargetResultReuseDuration(
+          com.google.protobuf.Duration.Builder builderForValue) {
+        if (targetResultReuseDurationBuilder_ == null) {
+          targetResultReuseDuration_ = builderForValue.build();
+        } else {
+          targetResultReuseDurationBuilder_.setMessage(builderForValue.build());
+        }
+        bitField0_ |= 0x00000004;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>.google.protobuf.Duration target_result_reuse_duration = 3;</code>
+       */
+      public Builder mergeTargetResultReuseDuration(com.google.protobuf.Duration value) {
+        if (targetResultReuseDurationBuilder_ == null) {
+          if (((bitField0_ & 0x00000004) != 0) &&
+            targetResultReuseDuration_ != null &&
+            targetResultReuseDuration_ != com.google.protobuf.Duration.getDefaultInstance()) {
+            getTargetResultReuseDurationBuilder().mergeFrom(value);
+          } else {
+            targetResultReuseDuration_ = value;
+          }
+        } else {
+          targetResultReuseDurationBuilder_.mergeFrom(value);
+        }
+        bitField0_ |= 0x00000004;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>.google.protobuf.Duration target_result_reuse_duration = 3;</code>
+       */
+      public Builder clearTargetResultReuseDuration() {
+        bitField0_ = (bitField0_ & ~0x00000004);
+        targetResultReuseDuration_ = null;
+        if (targetResultReuseDurationBuilder_ != null) {
+          targetResultReuseDurationBuilder_.dispose();
+          targetResultReuseDurationBuilder_ = null;
+        }
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>.google.protobuf.Duration target_result_reuse_duration = 3;</code>
+       */
+      public com.google.protobuf.Duration.Builder getTargetResultReuseDurationBuilder() {
+        bitField0_ |= 0x00000004;
+        onChanged();
+        return getTargetResultReuseDurationFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>.google.protobuf.Duration target_result_reuse_duration = 3;</code>
+       */
+      public com.google.protobuf.DurationOrBuilder getTargetResultReuseDurationOrBuilder() {
+        if (targetResultReuseDurationBuilder_ != null) {
+          return targetResultReuseDurationBuilder_.getMessageOrBuilder();
+        } else {
+          return targetResultReuseDuration_ == null ?
+              com.google.protobuf.Duration.getDefaultInstance() : targetResultReuseDuration_;
+        }
+      }
+      /**
+       * <code>.google.protobuf.Duration target_result_reuse_duration = 3;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          com.google.protobuf.Duration, com.google.protobuf.Duration.Builder, com.google.protobuf.DurationOrBuilder> 
+          getTargetResultReuseDurationFieldBuilder() {
+        if (targetResultReuseDurationBuilder_ == null) {
+          targetResultReuseDurationBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              com.google.protobuf.Duration, com.google.protobuf.Duration.Builder, com.google.protobuf.DurationOrBuilder>(
+                  getTargetResultReuseDuration(),
+                  getParentForChildren(),
+                  isClean());
+          targetResultReuseDuration_ = null;
+        }
+        return targetResultReuseDurationBuilder_;
+      }
       @java.lang.Override
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
@@ -576,23 +772,27 @@ public final class RunConfigProto {
   static {
     java.lang.String[] descriptorData = {
       "\n\020run_config.proto\022\027com.giyeok.bibix.run" +
-      "ner\032\nrepo.proto\"X\n\tRunConfig\022\023\n\013max_thre" +
-      "ads\030\001 \001(\005\0226\n\rmin_log_level\030\002 \001(\0162\037.com.g" +
-      "iyeok.bibix.repo.LogLevelB\020B\016RunConfigPr" +
-      "otob\006proto3"
+      "ner\032\nrepo.proto\032\036google/protobuf/duratio" +
+      "n.proto\"\231\001\n\tRunConfig\022\023\n\013max_threads\030\001 \001" +
+      "(\005\0226\n\rmin_log_level\030\002 \001(\0162\037.com.giyeok.b" +
+      "ibix.repo.LogLevel\022?\n\034target_result_reus" +
+      "e_duration\030\003 \001(\0132\031.google.protobuf.Durat" +
+      "ionB\020B\016RunConfigProtob\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
           com.giyeok.bibix.repo.BibixRepoProto.getDescriptor(),
+          com.google.protobuf.DurationProto.getDescriptor(),
         });
     internal_static_com_giyeok_bibix_runner_RunConfig_descriptor =
       getDescriptor().getMessageTypes().get(0);
     internal_static_com_giyeok_bibix_runner_RunConfig_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_giyeok_bibix_runner_RunConfig_descriptor,
-        new java.lang.String[] { "MaxThreads", "MinLogLevel", });
+        new java.lang.String[] { "MaxThreads", "MinLogLevel", "TargetResultReuseDuration", });
     com.giyeok.bibix.repo.BibixRepoProto.getDescriptor();
+    com.google.protobuf.DurationProto.getDescriptor();
   }
 
   // @@protoc_insertion_point(outer_class_scope)
