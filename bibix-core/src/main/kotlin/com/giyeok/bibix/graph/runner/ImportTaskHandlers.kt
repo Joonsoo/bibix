@@ -42,7 +42,28 @@ fun BuildGraphRunner.handleImportTask(importTask: Import): BuildTaskResult {
     ) { source ->
       check(source is BuildTaskResult.ImportInstanceResult)
 
-      importResultFrom(source, BibixName(importFrom.importing)) { it }
+      val importingName = BibixName(importFrom.importing)
+      val importGraph = multiGraph.getProjectGraph(source.projectId)
+
+      val importEntry = importGraph.findName(importingName)
+      if (importEntry is BuildGraphEntity.ImportAll) {
+        BuildTaskResult.WithResult(
+          Import(source.projectId, source.importInstanceId, importingName)
+        ) { importAllResult ->
+          check(importAllResult is BuildTaskResult.ImportInstanceResult)
+          // from bibix.plugins import ktjvm
+          //  - 현재 스크립트 -> bibix.plugins -> ktjvm 으로 import한 것
+          //  - 현재 스크립트에서 ktjvm에 대해 var redef한 것이 전달되지 않아서 별도로 처리
+          createImportInstance(
+            importTask.projectId,
+            importTask.importInstanceId,
+            importTask.importName,
+            importAllResult.projectId
+          )
+        }
+      } else {
+        importResultFrom(source, importingName) { it }
+      }
     }
   }
 }
@@ -90,12 +111,14 @@ fun BuildGraphRunner.importResultFrom(
     )
 
     is BuildGraphEntity.Enum -> {
-      block(BuildTaskResult.EnumTypeResult(
-        importResult.projectId,
-        checkNotNull(importGraph.packageName),
-        importingName,
-        importEntry.def.def.values
-      ))
+      block(
+        BuildTaskResult.EnumTypeResult(
+          importResult.projectId,
+          checkNotNull(importGraph.packageName),
+          importingName,
+          importEntry.def.def.values
+        )
+      )
     }
 
     is BuildGraphEntity.Action -> BuildTaskResult.WithResult(

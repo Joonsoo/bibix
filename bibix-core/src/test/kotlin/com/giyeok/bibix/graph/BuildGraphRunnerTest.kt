@@ -31,7 +31,7 @@ class BuildGraphRunnerTest {
       classWorld = ClassWorld()
     )
 
-    println(runner.runToFinal(EvalTarget(1, 0, BibixName("fromimporttest"))))
+    println(runner.runToFinal(EvalTarget(1, 0, BibixName("ee"))))
 
 //    runner.runToFinal(ExecAction(1, 0, BibixName("myaction"), mapOf()))
 //
