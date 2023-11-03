@@ -1,10 +1,12 @@
 package com.giyeok.bibix.frontend
 
-import com.giyeok.bibix.base.*
-import com.giyeok.bibix.interpreter.*
-import com.giyeok.bibix.interpreter.coroutine.TaskElement
-import com.giyeok.bibix.interpreter.expr.EvaluationResult
-import com.giyeok.bibix.interpreter.task.Task
+import com.giyeok.bibix.base.Architecture
+import com.giyeok.bibix.base.BibixValue
+import com.giyeok.bibix.base.BuildEnv
+import com.giyeok.bibix.base.OS
+import com.giyeok.bibix.graph.BibixName
+import com.giyeok.bibix.graph.BibixProjectLocation
+import com.giyeok.bibix.graph.runner.*
 import com.giyeok.bibix.plugins.PreloadedPlugin
 import com.giyeok.bibix.plugins.bibix.bibixPlugin
 import com.giyeok.bibix.plugins.curl.curlPlugin
@@ -13,20 +15,16 @@ import com.giyeok.bibix.plugins.jvm.jvmPlugin
 import com.giyeok.bibix.plugins.maven.mavenPlugin
 import com.giyeok.bibix.plugins.prelude.preludePlugin
 import com.giyeok.bibix.repo.BibixRepo
-import com.giyeok.bibix.repo.UniqueIdGen
-import kotlinx.coroutines.*
-import java.io.PrintWriter
-import java.io.StringWriter
-import kotlin.system.exitProcess
+import kotlinx.coroutines.runBlocking
+import org.codehaus.plexus.classworlds.ClassWorld
+import java.nio.file.FileSystems
 
 class BuildFrontend(
-  val mainProject: BibixProject,
+  val mainProjectLocation: BibixProjectLocation,
   val buildArgsMap: Map<String, String>,
   val actionArgs: List<String>,
-  val progressNotifier: ProgressNotifier,
   val prelude: PreloadedPlugin = preludePlugin,
   val preloadedPlugins: Map<String, PreloadedPlugin> = defaultPreloadedPlugins,
-  val pluginImplProvider: PluginImplProvider = PluginImplProviderImpl(),
   val debuggingMode: Boolean = false
 ) {
   companion object {
@@ -39,28 +37,27 @@ class BuildFrontend(
     )
   }
 
-  // TODO unique id
-  val repo =
-    BibixRepo.load(mainProject.projectRoot, UniqueIdGen.generate(), debuggingMode = debuggingMode)
+  val repo = BibixRepo.load(mainProjectLocation.projectRoot, debuggingMode = debuggingMode)
 
   val buildEnv = BuildEnv(getOsValue(), getArchValue())
 
-  private val threadPool = ThreadPool(getMaxThreads(), progressNotifier)
-
-  val interpreter = BibixInterpreter(
+  val buildGraphRunner = BuildGraphRunner.create(
+    mainProjectLocation = mainProjectLocation,
+    preludePlugin = preludePlugin,
+    preloadedPlugins = defaultPreloadedPlugins,
     buildEnv = buildEnv,
-    prelude = prelude,
-    preloadedPlugins = preloadedPlugins,
-    pluginImplProvider = pluginImplProvider,
-    mainProject = mainProject,
+    fileSystem = FileSystems.getDefault(),
     repo = repo,
-    progressIndicatorContainer = threadPool,
-    actionArgs = actionArgs
+    classWorld = ClassWorld()
   )
 
-  init {
-    progressNotifier.setInterpreter(interpreter)
-  }
+  val jobExecutorTracker = ExecutorTracker(getMaxThreads())
+
+  val parallelRunner = ParallelGraphRunner(
+    runner = buildGraphRunner,
+    longRunningJobExecutor = jobExecutorTracker.executor,
+    jobExecutorTracker = jobExecutorTracker
+  )
 
   private fun getMaxThreads(): Int {
     val maxThreads = repo.runConfig.maxThreads
@@ -89,74 +86,37 @@ class BuildFrontend(
     }
   }
 
-  fun buildTargets(targetNames: List<String>): Map<String, BibixValue> {
-    val deferred = CoroutineScope(threadPool + TaskElement(Task.RootTask)).async {
-      targetNames.map { targetName ->
-        async { targetName to interpreter.userBuildRequest(targetName) }
-      }.awaitAll()
-    }
-
-    threadPool.processTasks(deferred.job)
-
-    return runBlocking {
-      interpreter.g.clear()
-      try {
-        deferred.await().toMap()
-      } catch (e: Exception) {
-        when (e) {
-          is BibixExecutionException -> {
-            val writer = StringWriter()
-            val pwriter = PrintWriter(writer)
-            pwriter.println("Task trace (size=${e.trace.size}):")
-            e.trace.forEach { task ->
-              pwriter.println(task)
-              interpreter.taskDescriptor.printTaskDescription(task, pwriter)
-            }
-            pwriter.println("===")
-            System.err.println(writer.toString())
-            e.printStackTrace()
-          }
-
-          else -> {
-            e.printStackTrace()
-          }
-        }
-        // Shutdown
-        repo.shutdown()
-        exitProcess(1)
-      }
-    }
-  }
-
-  fun blockingBuildTargets(targetNames: List<String>): Map<String, BibixValue> {
-    threadPool.setLocalProgressIndicator()
-    return runBlocking {
-      interpreter.g.clear()
-      targetNames.associateWith { targetName ->
-        interpreter.userBuildRequest(targetName)
-      }
-    }
-  }
-
-  fun blockingEvaluateName(
-    context: ExprEvalContext,
-    nameTokens: List<String>
-  ): EvaluationResult {
-    threadPool.setLocalProgressIndicator()
-    return runBlocking {
-      interpreter.g.clear()
-      interpreter.exprEvaluator.evaluateName(
-        Task.RootTask,
-        context,
-        nameTokens,
-        null,
-        setOf()
-      )
-    }
-  }
-
   // Returns the list of the name definitions in the main script
-  fun mainScriptDefinitions() = interpreter.nameLookupTable.definitions
-    .filterKeys { cname -> cname.sourceId == MainSourceId }
-    .mapKeys { (cname, _) -> cname.tokens.joinToString(".") }
+  val mainScriptDefinitions: Map<String, BuildTask> by lazy {
+    val mainBuildGraph = buildGraphRunner.multiGraph.getProjectGraph(1)
+
+    val targets = mainBuildGraph.targets.keys.associate { name ->
+      name.toString() to EvalTarget(1, 0, name)
+    }
+    val actions = mainBuildGraph.actions.keys.associate { name ->
+      name.toString() to ExecAction(1, 0, name, mapOf())
+    }
+
+    targets + actions
+  }
+
+  suspend fun runBuild(names: List<String>): Map<String, BibixValue> {
+    check(mainScriptDefinitions.keys.containsAll(names)) {
+      "Unknown name: ${names - mainScriptDefinitions.keys}\nAvailable targets: ${mainScriptDefinitions.keys.sorted()}"
+    }
+
+    val tasks = names.associateWith { mainScriptDefinitions.getValue(it) }
+
+    val results = parallelRunner.runTasks(tasks.values)
+
+    return results.map { (task, result) ->
+      val name = when (task) {
+        is EvalTarget -> task.name.toString()
+        is ExecAction -> task.actionName.toString()
+        else -> throw AssertionError()
+      }
+      check(result is BuildTaskResult.ResultWithValue)
+      name to result.value
+    }.toMap()
+  }
 }

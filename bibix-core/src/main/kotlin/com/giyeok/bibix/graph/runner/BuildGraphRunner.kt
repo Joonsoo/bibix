@@ -327,6 +327,30 @@ class BuildGraphRunner(
       BuildTaskResult.SuperClassHierarchyResult(projectId, buildTask.packageName, className, subs)
     }
 
+    is EvalTypeByName -> {
+      val projectId = multiGraph.getProjectIdByPackageName(buildTask.packageName)
+        ?: throw IllegalStateException()
+      val buildGraph = multiGraph.getProjectGraph(projectId)
+
+      val className = BibixName(buildTask.className)
+      val dataClass = buildGraph.dataClasses[className]
+      val superClass = buildGraph.superClasses[className]
+      val enum = buildGraph.enums[className]
+
+      if (dataClass != null) {
+        check(superClass == null && enum == null)
+        BuildTaskResult.WithResult(EvalDataClass(projectId, 0, className)) { it }
+      } else if (superClass != null) {
+        check(enum == null)
+        BuildTaskResult.WithResult(
+          EvalSuperClassHierarchyByName(buildTask.packageName, buildTask.className)
+        ) { it }
+      } else {
+        check(enum != null)
+        BuildTaskResult.EnumTypeResult(projectId, buildTask.packageName, className, enum.def.values)
+      }
+    }
+
     is EvalType -> {
       val buildGraph = multiGraph.getProjectGraph(buildTask.projectId)
       val packageName = multiGraph.projectPackages[buildTask.projectId]

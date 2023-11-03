@@ -190,7 +190,7 @@ class BuildRuleRunner(
   val callerProjectId: Int,
   val callerImportInstanceId: Int,
   // build rule이 정의된 위치
-  val finalizeCtx: BuildRuleDefContext,
+  val buildRuleDefCtx: BuildRuleDefContext,
   val whenDoneBlock: (BuildTaskResult.FinalResult) -> BuildTaskResult
 ) {
   fun handleBuildReturn(result: Any?): BuildTaskResult = when (result) {
@@ -202,7 +202,7 @@ class BuildRuleRunner(
         throw IllegalStateException("Plugin returned error", result.exception)
 
       is BuildRuleReturn.EvalAndThen -> handleEvalAndThen(result, ::handleBuildReturn)
-      is BuildRuleReturn.GetTypeDetails -> TODO()
+      is BuildRuleReturn.GetTypeDetails -> handleGetTypeDetails(result, ::handleBuildReturn)
       is BuildRuleReturn.WithDirectoryLock -> handleWithDirectoryLock(result, ::handleBuildReturn)
     }
 
@@ -219,7 +219,7 @@ class BuildRuleRunner(
         throw IllegalStateException("Plugin returned error", result.exception)
 
       is BuildRuleReturn.EvalAndThen -> handleEvalAndThen(result, ::handleActionReturn)
-      is BuildRuleReturn.GetTypeDetails -> TODO()
+      is BuildRuleReturn.GetTypeDetails -> handleGetTypeDetails(result, ::handleActionReturn)
       is BuildRuleReturn.WithDirectoryLock -> handleWithDirectoryLock(result, ::handleActionReturn)
     }
 
@@ -233,7 +233,7 @@ class BuildRuleRunner(
     val params = result.params.entries
     return BuildTaskResult.WithResultList(params.map {
       FinalizeBuildRuleReturnValue(
-        finalizeCtx,
+        buildRuleDefCtx,
         it.value,
         callerProjectId,
       )
@@ -246,7 +246,7 @@ class BuildRuleRunner(
 
       BuildTaskResult.WithResult(
         EvalCallExpr(
-          finalizeCtx,
+          buildRuleDefCtx,
           BibixName(result.ruleName),
           callerProjectId,
           callerImportInstanceId,
@@ -257,6 +257,55 @@ class BuildRuleRunner(
         BuildTaskResult.LongRunning {
           afterThen(result.whenDone(evalResult.value))
         }
+      }
+    }
+  }
+
+  private fun handleGetTypeDetails(
+    result: BuildRuleReturn.GetTypeDetails,
+    afterThen: (BuildRuleReturn) -> BuildTaskResult
+  ): BuildTaskResult {
+    if (result.relativeNames.isNotEmpty()) {
+      TODO()
+      result.relativeNames.forEach { relativeName ->
+        buildGraphRunner.lookupExprValue(
+          buildRuleDefCtx.projectId,
+          // TODO 하나씩 위로 올라가면서 검색
+          BibixName(buildRuleDefCtx.name.tokens.dropLast(1) + relativeName),
+          buildRuleDefCtx.importInstanceId
+        ) { typeResult ->
+          TODO()
+        }
+      }
+    }
+    return BuildTaskResult.WithResultList(result.typeNames.map { typeName ->
+      EvalTypeByName(typeName.packageName, typeName.typeName)
+    }) { results ->
+      val typeDetails = result.typeNames.zip(results).associate { (name, result) ->
+        val typeDetail = when (result) {
+          is BuildTaskResult.DataClassResult -> {
+            val fieldTypes = result.fieldTypes.toMap()
+            val fields = result.dataClassDef.def.fields.map { field ->
+              RuleParam(field.name, fieldTypes.getValue(field.name).toTypeValue(), field.optional)
+            }
+            DataClassTypeDetails(result.packageName, result.name.toString(), fields)
+          }
+
+          is BuildTaskResult.SuperClassHierarchyResult -> {
+            val subTypes = result.subTypes.map { it.name.toString() }
+            SuperClassTypeDetails(result.packageName, result.name.toString(), subTypes)
+          }
+
+          is BuildTaskResult.EnumTypeResult -> {
+            EnumTypeDetails(result.packageName, result.name.toString(), result.values)
+          }
+
+          else -> throw IllegalStateException()
+        }
+        name to typeDetail
+      }
+      BuildTaskResult.LongRunning {
+        afterThen(result.whenDone(TypeDetailsMap(typeDetails, mapOf())))
       }
     }
   }

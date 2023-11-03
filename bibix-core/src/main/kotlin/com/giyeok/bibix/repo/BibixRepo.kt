@@ -138,6 +138,11 @@ class BibixRepo(
         // inputHashString이 동일하면 inputHashes도 같아야 함
         check(prevState.inputHashes == inputHashes)
 
+        if (Durations.isNegative(runConfig.targetResultReuseDuration)) {
+          // config에서 reuse duration이 음수이면 항상 재사용
+          return true
+        }
+
         val age =
           Timestamps.between(prevState.buildSucceeded.buildEndTime, timeProvider().toProto())
         // config에서 설정한 유효시간 이내이면 재사용

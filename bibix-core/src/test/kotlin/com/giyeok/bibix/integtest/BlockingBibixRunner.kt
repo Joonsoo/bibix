@@ -2,6 +2,8 @@ package com.giyeok.bibix.integtest
 
 import com.giyeok.bibix.frontend.BuildFrontend
 import com.giyeok.bibix.frontend.NoopProgressNotifier
+import com.giyeok.bibix.graph.BibixProjectLocation
+import com.giyeok.bibix.graph.runner.EvalTarget
 import com.giyeok.bibix.interpreter.BibixProject
 import com.giyeok.bibix.interpreter.expr.Definition
 import com.google.common.truth.Truth.assertThat
@@ -12,10 +14,9 @@ object BlockingBibixRunner {
   @Test
   fun test() {
     val frontend = BuildFrontend(
-      mainProject = BibixProject(Path("../testproject"), null),
+      mainProjectLocation = BibixProjectLocation(Path("../testproject")),
       buildArgsMap = mapOf(),
       actionArgs = listOf(),
-      progressNotifier = NoopProgressNotifier(),
       debuggingMode = true
     )
 
@@ -32,7 +33,7 @@ object BlockingBibixRunner {
       "mytest",
       "mytest.test1",
     )
-    val buildTargets = definitions.filterValues { it is Definition.TargetDef }
+    val buildTargets = definitions.filterValues { it is EvalTarget }
     assertThat(buildTargets.keys).containsExactly(
       "kotlinVersion",
       "test1",
@@ -40,7 +41,7 @@ object BlockingBibixRunner {
       "mytest.test1"
     )
 
-    val results = frontend.blockingBuildTargets(listOf("test1"))
-    println(results)
+//    val results = frontend.blockingBuildTargets(listOf("test1"))
+//    println(results)
   }
 }

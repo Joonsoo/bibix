@@ -527,7 +527,7 @@ fun BibixAst.MemberAccess.firstNonName(): Pair<BibixAst.Expr?, List<String>> =
     }
 
     is BibixAst.NameRef -> Pair(null, listOf(target.name, this.name))
-    else -> Pair(this, listOf(this.name))
+    else -> Pair(target, listOf(this.name))
   }
 
 fun BibixAst.ImportDef.importName() = when (this) {

@@ -39,3 +39,15 @@ protoGen = sugarproto.generateProto(
   "test/test1.supro",
   "test1.proto",
   protoDirs=[])
+
+
+actionImpl = ktjvm.library(
+  srcs = ["AA.kt"],
+  deps = [bibix.base],
+)
+
+action def localActionDef() = actionImpl:com.giyeok.bibix.test.AA
+
+action runLocalAction {
+  localActionDef()
+}

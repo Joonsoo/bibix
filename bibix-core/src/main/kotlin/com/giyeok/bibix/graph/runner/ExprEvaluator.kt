@@ -7,6 +7,7 @@ import com.giyeok.bibix.ast.BibixAst
 import com.giyeok.bibix.base.*
 import com.giyeok.bibix.graph.*
 import com.giyeok.bibix.utils.toProto
+import com.giyeok.jparser.ktlib.hasSingleTrue
 
 class ExprEvaluator(
   private val buildGraphRunner: BuildGraphRunner,
@@ -53,9 +54,8 @@ class ExprEvaluator(
       is ListExprNode ->
         BuildTaskResult.WithResultList(exprNode.elems.map { evalTask(it.value) }) { elems ->
           check(elems.size == exprNode.elems.size)
-          val elemValues = elems.map { elem ->
-            check(elem is BuildTaskResult.ResultWithValue)
-            elem.value
+          val elemValues = elems.map { elemResult ->
+            elemResult.toValue()
           }
           val list = mutableListOf<BibixValue>()
           elemValues.zip(exprNode.elems).forEach { (value, elemInfo) ->
@@ -72,9 +72,8 @@ class ExprEvaluator(
       is TupleNode ->
         BuildTaskResult.WithResultList(exprNode.elems.map { evalTask(it) }) { elems ->
           check(elems.size == exprNode.elems.size)
-          val elemValues = elems.map { elem ->
-            check(elem is BuildTaskResult.ResultWithValue)
-            elem.value
+          val elemValues = elems.map { elemResult ->
+            elemResult.toValue()
           }
           BuildTaskResult.ValueResult(TupleValue(elemValues))
         }
@@ -82,9 +81,8 @@ class ExprEvaluator(
       is NamedTupleNode ->
         BuildTaskResult.WithResultList(exprNode.elems.map { evalTask(it.second) }) { elems ->
           check(elems.size == exprNode.elems.size)
-          val elemValues = exprNode.elems.zip(elems).map { (pair, elem) ->
-            check(elem is BuildTaskResult.ResultWithValue)
-            pair.first to elem.value
+          val elemValues = exprNode.elems.zip(elems).map { (pair, elemResult) ->
+            pair.first to elemResult.toValue()
           }
           BuildTaskResult.ValueResult(NamedTupleValue(elemValues))
         }
@@ -125,8 +123,8 @@ class ExprEvaluator(
               }
 
               is BibixAst.SimpleExpr, is BibixAst.ComplexExpr -> {
-                val value = elems[elemIdx++]
-                check(value is BuildTaskResult.ResultWithValue && value.value is StringValue)
+                val value = elems[elemIdx++].toValue()
+                check(value is StringValue)
                 builder.append(value.value)
               }
             }
@@ -147,13 +145,11 @@ class ExprEvaluator(
           val callee = results.first()
 
           val posArgs = results.drop(1).take(exprNode.posParams.size).map { argResult ->
-            check(argResult is BuildTaskResult.ResultWithValue)
-            argResult.value
+            argResult.toValue()
           }
           val namedArgs = namedParams.zip(results.drop(1 + exprNode.posParams.size))
             .associate { (param, argResult) ->
-              check(argResult is BuildTaskResult.ResultWithValue)
-              param.key to argResult.value
+              param.key to argResult.toValue()
             }
 
           when (callee) {
@@ -192,9 +188,7 @@ class ExprEvaluator(
         BuildTaskResult.WithResultList(
           listOf(evalTask(exprNode.value), evalTask(exprNode.callee))
         ) { results ->
-          val valueResult = results[0]
-          check(valueResult is BuildTaskResult.ResultWithValue)
-          val value = valueResult.value
+          val value = results[0].toValue()
 
           val calleeProjectId: Int
           val paramTypeNodeId: TypeNodeId
@@ -236,9 +230,7 @@ class ExprEvaluator(
           }
 
           BuildTaskResult.WithResult(EvalType(calleeProjectId, paramTypeNodeId)) { result ->
-            check(result is BuildTaskResult.TypeResult)
-
-            valueCaster.castValue(value, result.type)
+            valueCaster.castValue(value, result.toType())
           }
         }
       }
@@ -406,32 +398,55 @@ fun BuildGraphRunner.lookupExprValue(
   val buildRule = buildGraph.buildRules[name]
   val varDef = buildGraph.vars[name]
   val dataClass = buildGraph.dataClasses[name]
+  val superClass = buildGraph.superClasses[name]
+  val enum = buildGraph.enums[name]
   val action = buildGraph.actions[name]
   val actionRule = buildGraph.actionRules[name]
 
+  // 중복된 이름이 있으면 안됨
+  check(
+    listOf(
+      target != null,
+      buildRule != null,
+      varDef != null,
+      dataClass != null,
+      superClass != null,
+      enum != null,
+      action != null,
+      actionRule != null
+    ).count { it } <= 1
+  ) { "Duplicate name: $name at $projectId" }
+
   val followingTask = when {
     target != null -> {
-      check(buildRule == null && varDef == null && dataClass == null && action == null && actionRule == null)
       EvalTarget(projectId, importInstanceId, name)
     }
 
     buildRule != null -> {
-      check(varDef == null && dataClass == null && action == null && actionRule == null)
       EvalBuildRule(projectId, importInstanceId, name)
     }
 
     varDef != null -> {
-      check(dataClass == null && action == null && actionRule == null)
       EvalVar(projectId, importInstanceId, name)
     }
 
     dataClass != null -> {
-      check(action == null && actionRule == null)
       EvalDataClass(projectId, importInstanceId, name)
     }
 
+    superClass != null -> {
+      return BuildTaskResult.ValueResult(
+        TypeValue.SuperClassTypeValue(checkNotNull(buildGraph.packageName), name.toString())
+      )
+    }
+
+    enum != null -> {
+      return BuildTaskResult.ValueResult(
+        TypeValue.EnumTypeValue(checkNotNull(buildGraph.packageName), name.toString())
+      )
+    }
+
     action != null -> {
-      check(actionRule == null)
       EvalAction(projectId, importInstanceId, name)
     }
 
@@ -461,6 +476,7 @@ fun BuildGraphRunner.lookupExprValue(
       }
       buildGraph.importFroms.forEach { (importName, importFrom) ->
         if (name.tokens.take(importName.tokens.size) == importName.tokens) {
+          // TODO 이런 경우는 언제 생기는거지?
           TODO()
         }
       }
@@ -571,4 +587,24 @@ fun BuildGraphRunner.handleImportResult(
       block
     )
   }
+}
+
+fun BuildTaskResult.FinalResult.toType(): BibixType = when (this) {
+  is BuildTaskResult.TypeResult -> this.type
+  is BuildTaskResult.DataClassResult -> DataClassType(this.packageName, this.name.toString())
+  is BuildTaskResult.SuperClassHierarchyResult ->
+    SuperClassType(this.packageName, this.name.toString())
+
+  is BuildTaskResult.EnumTypeResult -> EnumType(this.packageName, this.name.toString())
+
+  else -> throw IllegalStateException()
+}
+
+fun BuildTaskResult.FinalResult.toValue(): BibixValue = when (this) {
+  is BuildTaskResult.ResultWithValue -> this.value
+
+  is BuildTaskResult.DataClassResult ->
+    TypeValue.DataClassTypeValue(this.packageName, this.name.toString())
+
+  else -> throw IllegalStateException()
 }

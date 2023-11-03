@@ -1,7 +1,7 @@
 package com.giyeok.bibix.frontend.cli
 
 import com.giyeok.bibix.frontend.BuildFrontend
-import com.giyeok.bibix.interpreter.BibixProject
+import com.giyeok.bibix.graph.BibixProjectLocation
 import kotlinx.coroutines.runBlocking
 import java.nio.file.Paths
 import java.time.Duration
@@ -15,28 +15,25 @@ object BibixCli {
 
     val splitterIdx = args.indexOf("--")
     val bibixArgs = if (splitterIdx < 0) args.toList() else args.slice(0 until splitterIdx)
-    val (buildArgs, buildTargetNames) = bibixArgs.partition { it.startsWith('-') }
+    val (buildArgs, names) = bibixArgs.partition { it.startsWith('-') }
     val actionArgs = if (splitterIdx < 0) listOf() else args.drop(splitterIdx)
 
-    check(buildTargetNames.isNotEmpty()) { "Must specify at least one build target" }
+    check(names.isNotEmpty()) { "Must specify at least one build target" }
 
     val buildArgsMap = mapOf<String, String>()
 
     val useDebuggingMode = buildArgs.contains("--debug")
 
     val buildFrontend = BuildFrontend(
-      mainProject = BibixProject(Paths.get(""), null),
+      mainProjectLocation = BibixProjectLocation(Paths.get("")),
       buildArgsMap = buildArgsMap,
       actionArgs = actionArgs,
-      progressNotifier = ProgressConsolePrinter(),
       debuggingMode = useDebuggingMode
     )
 
-    val targetResults = buildFrontend.buildTargets(buildTargetNames)
+    val targetResults = runBlocking { buildFrontend.runBuild(names) }
 
-    runBlocking {
-      buildFrontend.repo.shutdown()
-    }
+    buildFrontend.repo.shutdown()
 
     targetResults.forEach { (targetName, value) ->
       println("$targetName = $value")

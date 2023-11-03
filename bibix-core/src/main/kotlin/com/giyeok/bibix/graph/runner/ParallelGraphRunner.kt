@@ -15,6 +15,7 @@ import java.util.concurrent.atomic.AtomicInteger
 class ParallelGraphRunner(
   val runner: BuildGraphRunner,
   val longRunningJobExecutor: ExecutorService,
+  val jobExecutorTracker: ExecutorTracker?,
 ) {
   private val mainJobExecutor = Executors.newSingleThreadExecutor()
   private val longRunningJobDispatcher = longRunningJobExecutor.asCoroutineDispatcher()
@@ -28,7 +29,7 @@ class ParallelGraphRunner(
   private val updateChannel = Channel<BuildRunUpdate>(Channel.UNLIMITED)
 
   suspend fun runTasks(vararg tasks: BuildTask): Map<BuildTask, BuildTaskResult> =
-    runTasks(tasks.toSet())
+    runTasks(tasks.toList())
 
   private val runningTasks = mutableSetOf<BuildTask>()
   private val resultMap = mutableMapOf<BuildTask, BuildTaskResult.FinalResult>()
@@ -73,8 +74,8 @@ class ParallelGraphRunner(
 
       is BuildTaskResult.LongRunning -> {
         activeLongRunningJobs.incrementAndGet()
-        println("Starting long running for $task")
         longRunningJobExecutor.execute {
+          jobExecutorTracker?.notifyJobStartedFor(task)
           try {
             val funcResult = try {
               BuildRunUpdate.Result(task, result.func())
@@ -84,14 +85,15 @@ class ParallelGraphRunner(
             updateChannel.trySendBlocking(funcResult)
           } finally {
             activeLongRunningJobs.decrementAndGet()
+            jobExecutorTracker?.notifyJobFinished(task)
           }
         }
       }
 
       is BuildTaskResult.SuspendLongRunning -> {
         activeLongRunningJobs.incrementAndGet()
-        println("Starting suspend long running for $task")
         CoroutineScope(longRunningJobDispatcher).launch {
+          jobExecutorTracker?.notifySuspendJobStartedFor(task)
           try {
             val funcResult = try {
               BuildRunUpdate.Result(task, result.func())
@@ -101,6 +103,7 @@ class ParallelGraphRunner(
             updateChannel.trySendBlocking(funcResult)
           } finally {
             activeLongRunningJobs.decrementAndGet()
+            jobExecutorTracker?.notifySuspendJobFinished(task)
           }
         }
       }
@@ -131,7 +134,7 @@ class ParallelGraphRunner(
     func: (BuildTaskResult.FinalResult) -> BuildTaskResult
   ) {
     // TODO parentTask -> subTask 관계 저장 - 진행 상황 파악용
-    println("$parentTask -> $subTask")
+    // println("$parentTask -> $subTask")
     dependentSingleFuncs.add(DependentSingleFunc(parentTask, subTask, func))
   }
 
@@ -141,10 +144,10 @@ class ParallelGraphRunner(
     func: (List<BuildTaskResult.FinalResult>) -> BuildTaskResult
   ) {
     // TODO parentTask -> subTasks 관계 저장 - 진행 상황 파악용
-    println("$parentTask ->")
-    subTasks.forEach {
-      println("  $it")
-    }
+//    println("$parentTask ->")
+//    subTasks.forEach {
+//      println("  $it")
+//    }
     dependentMultiFuncs.add(DependentMultiFunc(parentTask, subTasks, func))
   }
 
@@ -200,7 +203,7 @@ class ParallelGraphRunner(
     }
   }
 
-  suspend fun runTasks(tasks: Set<BuildTask>): Map<BuildTask, BuildTaskResult> {
+  suspend fun runTasks(tasks: Collection<BuildTask>): Map<BuildTask, BuildTaskResult> {
     val loop = CoroutineScope(mainJobExecutor.asCoroutineDispatcher()).async {
       for (update in updateChannel) {
         // println(update)
@@ -211,7 +214,7 @@ class ParallelGraphRunner(
             // 중간에 오류가 발생한 경우
             update.exception.printStackTrace()
             updateChannel.close()
-            break
+            throw update.exception
           }
         }
         processDependentTasks()
@@ -222,7 +225,7 @@ class ParallelGraphRunner(
       tasks.associateWith { resultMap.getValue(it) }
     }
     // taskQueue.addAll(tasks)
-    tasks.forEach {
+    tasks.distinct().forEach {
       updateChannel.send(BuildRunUpdate.Task(it))
     }
     return loop.await()

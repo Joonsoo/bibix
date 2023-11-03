@@ -4,10 +4,7 @@ import com.giyeok.bibix.base.Architecture
 import com.giyeok.bibix.base.BuildEnv
 import com.giyeok.bibix.base.OS
 import com.giyeok.bibix.frontend.BuildFrontend
-import com.giyeok.bibix.graph.runner.BuildGraphRunner
-import com.giyeok.bibix.graph.runner.EvalTarget
-import com.giyeok.bibix.graph.runner.ExecAction
-import com.giyeok.bibix.graph.runner.ParallelGraphRunner
+import com.giyeok.bibix.graph.runner.*
 import com.giyeok.bibix.plugins.prelude.preludePlugin
 import com.giyeok.bibix.repo.BibixRepo
 import kotlinx.coroutines.runBlocking
@@ -35,11 +32,13 @@ class ParallelGraphRunnerTest {
       classWorld = ClassWorld()
     )
 
-    val prunner = ParallelGraphRunner(runner, Executors.newFixedThreadPool(4))
+    val tracker = ExecutorTracker(4)
+    val prunner = ParallelGraphRunner(runner, tracker.executor, tracker)
     val results = runBlocking {
       prunner.runTasks(
         // EvalTarget(1, 0, BibixName("dd"))
         EvalTarget(1, 0, BibixName("protoGen"))
+//        ExecAction(1, 0, BibixName("runLocalAction"), mapOf())
       )
     }
     repo.shutdown()

@@ -24,7 +24,7 @@ val preludeSource =
     
     class BibixProject(projectRoot: directory, scriptName?: string)
 
-    def git(
+    singleton def git(
       url: string,
       tag?: string,
       branch?: string,

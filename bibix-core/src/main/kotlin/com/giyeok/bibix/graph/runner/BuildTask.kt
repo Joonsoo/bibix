@@ -119,6 +119,11 @@ data class EvalSuperClassHierarchyByName(
   val className: String
 ): BuildTask()
 
+data class EvalTypeByName(
+  val packageName: String,
+  val className: String
+): BuildTask()
+
 data class EvalType(val projectId: Int, val typeNodeId: TypeNodeId): BuildTask()
 
 data class Import(
@@ -229,6 +234,13 @@ sealed class BuildTaskResult {
     val allSubDataClasses: Set<BibixName>
       get() = subTypes.flatMap { it.allSubDataClasses() }.toSet()
   }
+
+  data class EnumTypeResult(
+    val projectId: Int,
+    val packageName: String,
+    val name: BibixName,
+    val values: List<String>
+  ): FinalResult()
 
   class TypeCastFailResult(val value: BibixValue, val type: BibixType): FinalResult()
   class ValueFinalizeFailResult(val values: List<BibixValue>): FinalResult()
