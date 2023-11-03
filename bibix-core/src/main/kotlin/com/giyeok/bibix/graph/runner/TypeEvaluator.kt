@@ -4,7 +4,9 @@ import com.giyeok.bibix.base.*
 import com.giyeok.bibix.graph.*
 
 class TypeEvaluator(
+  val multiGraph: MultiBuildGraph,
   val projectId: Int,
+  val importInstanceId: Int,
   val packageName: String?,
   val typeGraph: TypeGraph,
 ) {
@@ -13,25 +15,28 @@ class TypeEvaluator(
       is BasicTypeNode -> BuildTaskResult.TypeResult(typeNode.bibixType)
 
       is ImportedType -> {
-        BuildTaskResult.WithResult(Import(projectId, 0, typeNode.import)) { importResult ->
-          check(importResult is BuildTaskResult.ImportResult)
+        BuildTaskResult.WithResult(
+          Import(projectId, importInstanceId, typeNode.import)
+        ) { importResult ->
+          check(importResult is BuildTaskResult.ImportInstanceResult)
 
-          val dataClass = importResult.graph.dataClasses[typeNode.name]
-          val superClass = importResult.graph.superClasses[typeNode.name]
+          val importedGraph = multiGraph.getProjectGraph(importResult.projectId)
+          val dataClass = importedGraph.dataClasses[typeNode.name]
+          val superClass = importedGraph.superClasses[typeNode.name]
 
           when {
             dataClass != null -> {
               check(superClass == null)
-              checkNotNull(importResult.graph.packageName)
+              checkNotNull(importedGraph.packageName)
               BuildTaskResult.TypeResult(
-                DataClassType(importResult.graph.packageName, typeNode.name.toString())
+                DataClassType(importedGraph.packageName, typeNode.name.toString())
               )
             }
 
             superClass != null -> {
-              checkNotNull(importResult.graph.packageName)
+              checkNotNull(importedGraph.packageName)
               BuildTaskResult.TypeResult(
-                SuperClassType(importResult.graph.packageName, typeNode.name.toString())
+                SuperClassType(importedGraph.packageName, typeNode.name.toString())
               )
             }
 

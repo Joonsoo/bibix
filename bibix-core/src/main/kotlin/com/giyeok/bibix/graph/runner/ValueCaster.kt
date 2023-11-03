@@ -17,6 +17,7 @@ class ValueCaster(
     BuildTaskResult.TypeCastFailResult(value, type)
 
   // castValue로 오는 ClassInstanceValue는 모두 각 필드가 적당한 타입으로 cast되고, default field와 optional field가 처리된 것으로 본다.
+  // 최종적으로 ResultWithValue
   fun castValue(value: BibixValue, type: BibixType): BuildTaskResult {
     fun fileFromString(path: String): Path {
       return checkNotNull(projectLocation).projectRoot.resolve(path).normalize().absolute()
@@ -40,7 +41,7 @@ class ValueCaster(
             // value가 type의 sub type의 클래스이면 그대로 반환 - 그 외의 경우엔 계속 진행
             // TODO 지금은 sub type인지 체크해보고 맞으면 성공, 아니면 exception을 내버려서.. 의도한 동작과는 조금 다름.
             return BuildTaskResult.WithResult(
-              EvalSuperClassHierarchyByName(type.packageName, type.className)
+              EvalSuperClassByName(type.packageName, type.className)
             ) { superClassResult ->
               check(superClassResult is BuildTaskResult.SuperClassHierarchyResult)
 
@@ -288,19 +289,15 @@ class ValueCaster(
   ): BuildTaskResult = when (value) {
     is NClassInstanceValue -> {
       // buildRule 위치를 기준으로 ClassInstanceValue로 변경해서 반환
-      val namespace = finalizeCtx.name.tokens.dropLast(1)
-      // TODO namespace에서 마지막에서 하나씩 빼면서 이름 찾기 시도
-      buildGraphRunner.lookupExprValue(
+      buildGraphRunner.lookupDataClass(
         finalizeCtx.projectId,
-        BibixName(namespace + value.nameTokens),
-        finalizeCtx.importInstanceId
-      ) { lookupResult ->
-        check(lookupResult is BuildTaskResult.DataClassResult)
-
-        val fieldTypeMaps = lookupResult.fieldTypes.toMap()
+        finalizeCtx.importInstanceId,
+        BibixName(value.nameTokens)
+      ) { dataClass ->
+        val fieldTypeMaps = dataClass.fieldTypes.toMap()
         finalizeValues(finalizeCtx, value.fieldValues, fieldTypeMaps) { fieldNames, finVals ->
           organizeParamsForDataClass(
-            lookupResult,
+            dataClass,
             listOf(),
             fieldNames.zip(finVals).toMap(),
           ) { BuildTaskResult.ValueResult(it) }

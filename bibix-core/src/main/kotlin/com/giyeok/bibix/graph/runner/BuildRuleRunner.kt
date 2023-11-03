@@ -267,16 +267,6 @@ class BuildRuleRunner(
   ): BuildTaskResult {
     if (result.relativeNames.isNotEmpty()) {
       TODO()
-      result.relativeNames.forEach { relativeName ->
-        buildGraphRunner.lookupExprValue(
-          buildRuleDefCtx.projectId,
-          // TODO 하나씩 위로 올라가면서 검색
-          BibixName(buildRuleDefCtx.name.tokens.dropLast(1) + relativeName),
-          buildRuleDefCtx.importInstanceId
-        ) { typeResult ->
-          TODO()
-        }
-      }
     }
     return BuildTaskResult.WithResultList(result.typeNames.map { typeName ->
       EvalTypeByName(typeName.packageName, typeName.typeName)

@@ -58,9 +58,79 @@ class BuildGraph(
       )
       builder.addDefs(defs, ctx, true)
 
+      builder.checkNoDuplicateNames()
+
       return builder.build()
     }
   }
+
+  fun findName(name: BibixName): BuildGraphEntity? {
+    val target = targets[name]
+    if (target != null) {
+      return BuildGraphEntity.Target(target)
+    }
+
+    val buildRule = buildRules[name]
+    if (buildRule != null) {
+      return BuildGraphEntity.BuildRule(buildRule)
+    }
+
+    val variable = vars[name]
+    if (variable != null) {
+      return BuildGraphEntity.Variable(variable)
+    }
+
+    val dataClass = dataClasses[name]
+    if (dataClass != null) {
+      return BuildGraphEntity.DataClass(dataClass)
+    }
+
+    val superClass = superClasses[name]
+    if (superClass != null) {
+      return BuildGraphEntity.SuperClass(superClass)
+    }
+
+    val enum = enums[name]
+    if (enum != null) {
+      return BuildGraphEntity.Enum(enum)
+    }
+
+    val action = actions[name]
+    if (action != null) {
+      return BuildGraphEntity.Action(action)
+    }
+
+    val actionRule = actionRules[name]
+    if (actionRule != null) {
+      return BuildGraphEntity.ActionRule(actionRule)
+    }
+
+
+    val importAll = importAlls[name]
+    if (importAll != null) {
+      return BuildGraphEntity.ImportAll(importAll)
+    }
+
+    val importFrom = importFroms[name]
+    if (importFrom != null) {
+      return BuildGraphEntity.ImportFrom(importFrom)
+    }
+
+    return null
+  }
+}
+
+sealed class BuildGraphEntity {
+  data class Target(val exprNodeId: ExprNodeId): BuildGraphEntity()
+  data class BuildRule(val def: BuildRuleDef): BuildGraphEntity()
+  data class Variable(val def: VarDef): BuildGraphEntity()
+  data class DataClass(val def: DataClassDef): BuildGraphEntity()
+  data class SuperClass(val def: SuperClassDef): BuildGraphEntity()
+  data class Enum(val def: EnumDef): BuildGraphEntity()
+  data class Action(val def: ActionDef): BuildGraphEntity()
+  data class ActionRule(val def: ActionRuleDef): BuildGraphEntity()
+  data class ImportAll(val def: ImportAllDef): BuildGraphEntity()
+  data class ImportFrom(val def: ImportFromDef): BuildGraphEntity()
 }
 
 data class BibixName(val tokens: List<String>) {
@@ -105,13 +175,19 @@ data class EnumDef(
 )
 
 data class ImportAllDef(
-  val source: ExprNodeId,
+  val source: ImportSource,
 )
 
 data class ImportFromDef(
-  val source: ExprNodeId,
+  val source: ImportSource,
   val importing: List<String>,
 )
+
+sealed class ImportSource {
+  data class Expr(val exprNodeId: ExprNodeId): ImportSource()
+  data class PreloadedPlugin(val pluginName: String): ImportSource()
+  data class AnotherImport(val importName: BibixName): ImportSource()
+}
 
 data class ActionDef(
   val def: BibixAst.ActionDef,
@@ -122,7 +198,7 @@ data class ActionDef(
   sealed class ActionStmt
   data class LetStmt(val name: String, val exprNodeId: ExprNodeId): ActionStmt()
   data class CallStmt(
-    val calleeNodeId: ExprNodeId,
+    val callee: Callee,
     val posArgs: List<ExprNodeId>,
     val namedArgs: Map<String, ExprNodeId>
   ): ActionStmt()

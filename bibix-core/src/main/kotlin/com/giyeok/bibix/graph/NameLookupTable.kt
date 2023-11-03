@@ -85,27 +85,26 @@ class NameLookupTable(
     val firstToken = tokens.first()
     val nameEntry = names[firstToken]
     if (nameEntry != null) {
-      return if (nameEntry is ImportNameEntry) {
-        NameInImport(nameEntry, tokens.drop(1))
-      } else {
-        when {
-          tokens.size == 1 -> {
-            NameEntryFound(nameEntry)
-          }
+      return when {
+        tokens.size == 1 -> {
+          NameEntryFound(nameEntry)
+        }
 
-          else -> {
-            check(tokens.size > 1)
-            when {
-              nameEntry is TargetNameEntry ->
-                TargetMemberName(nameEntry, tokens.drop(1))
+        else -> {
+          check(tokens.size > 1)
+          when {
+            nameEntry is ImportNameEntry ->
+              NameInImport(nameEntry, tokens.drop(1))
 
-              tokens.size == 2 && nameEntry is EnumNameEntry -> {
-                check(tokens[1] in nameEntry.def.values)
-                EnumValueFound(nameEntry, tokens[1])
-              }
+            nameEntry is TargetNameEntry ->
+              TargetMemberName(nameEntry, tokens.drop(1))
 
-              else -> NameNotFound(tokens, nameNode)
+            tokens.size == 2 && nameEntry is EnumNameEntry -> {
+              check(tokens[1] in nameEntry.def.values)
+              EnumValueFound(nameEntry, tokens[1])
             }
+
+            else -> NameNotFound(tokens, nameNode)
           }
         }
       }

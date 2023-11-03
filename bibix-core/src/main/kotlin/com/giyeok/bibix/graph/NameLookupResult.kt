@@ -8,13 +8,7 @@ data class NameEntryFound(val entry: NameEntry): NameLookupResult()
 
 data class EnumValueFound(val enum: EnumNameEntry, val enumValueName: String): NameLookupResult()
 
-data class NameOfPreloadedPlugin(
-  val name: String,
-  val isPrelude: Boolean,
-  val remaining: List<String>
-): NameLookupResult()
-
-data class NameFromPrelude(val name: String, val remaining: List<String>): NameLookupResult()
+data class NameFromPrelude(val name: BibixName): NameLookupResult()
 
 data class NameInImport(
   val importEntry: ImportNameEntry,

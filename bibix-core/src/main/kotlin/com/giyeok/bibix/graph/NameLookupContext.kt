@@ -29,11 +29,8 @@ data class NameLookupContext(
     }
     if (current == null) {
       // 가장 상위 scope까지 확인해 봤는데도 이름이 없으면 prelude 이름에서 찾아봄
-      if (preloadedPluginNames.contains(firstToken)) {
-        return NameOfPreloadedPlugin(firstToken, preludeNames.contains(firstToken), tokens.drop(1))
-      }
       if (preludeNames.contains(firstToken)) {
-        return NameFromPrelude(tokens.first(), tokens.drop(1))
+        return NameFromPrelude(BibixName(tokens))
       }
       return NameNotFound(tokens, nameNode)
     }

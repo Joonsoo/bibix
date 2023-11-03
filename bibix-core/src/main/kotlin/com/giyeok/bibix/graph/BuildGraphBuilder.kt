@@ -89,13 +89,13 @@ class BuildGraphBuilder(
 
         is BibixAst.ImportAll -> {
           val importName = def.rename ?: def.source.getDefaultImportName()
-          val source = preloadedImportSource(def.source) { addExpr(def.source, ctx) }
+          val source = importSource(def.source, ctx)
           importAlls[ctx.bibixName(importName)] = ImportAllDef(source)
         }
 
         is BibixAst.ImportFrom -> {
           val importName = def.rename ?: def.importing.tokens.last()
-          val source = preloadedImportSource(def.source) { addExpr(def.source, ctx) }
+          val source = importSource(def.source, ctx)
           importFroms[ctx.bibixName(importName)] = ImportFromDef(source, def.importing.tokens)
         }
 
@@ -156,6 +156,30 @@ class BuildGraphBuilder(
     }
   }
 
+  fun checkNoDuplicateNames() {
+    val allNames = mutableSetOf<BibixName>()
+
+    check(allNames.intersect(targets.keys).isEmpty())
+    allNames.addAll(targets.keys)
+    check(allNames.intersect(buildRules.keys).isEmpty())
+    allNames.addAll(buildRules.keys)
+    check(allNames.intersect(vars.keys).isEmpty())
+    allNames.addAll(vars.keys)
+    check(allNames.intersect(dataClasses.keys).isEmpty())
+    allNames.addAll(dataClasses.keys)
+    check(allNames.intersect(superClasses.keys).isEmpty())
+    allNames.addAll(superClasses.keys)
+    check(allNames.intersect(enums.keys).isEmpty())
+    allNames.addAll(enums.keys)
+    check(allNames.intersect(actions.keys).isEmpty())
+    allNames.addAll(actions.keys)
+    check(allNames.intersect(actionRules.keys).isEmpty())
+    allNames.addAll(actionRules.keys)
+    check(allNames.intersect(importAlls.keys).isEmpty())
+    allNames.addAll(importAlls.keys)
+    check(allNames.intersect(importFroms.keys).isEmpty())
+  }
+
   private fun defaultValuesMap(
     params: List<BibixAst.ParamDef>,
     paramTypes: Map<String, TypeNodeId>,
@@ -166,14 +190,27 @@ class BuildGraphBuilder(
     it.name to addNode(ValueCastNode(defaultValue, value, paramTypes.getValue(it.name)))
   }
 
-  private fun preloadedImportSource(
+  private fun importSource(
     source: BibixAst.Expr,
-    ifElse: () -> ExprNodeId
-  ): ExprNodeId {
+    ctx: GraphBuildContext
+  ): ImportSource {
     when (source) {
       is BibixAst.NameRef -> {
         if (source.name in preloadedPluginNames) {
-          return addNode(PreloadedPluginRef(source.name))
+          return ImportSource.PreloadedPlugin(source.name)
+        }
+        when (val lookupResult = ctx.nameLookupCtx.lookupName(listOf(source.name), source)) {
+          is NameEntryFound -> {
+            when (val entry = lookupResult.entry) {
+              is ImportNameEntry -> {
+                return ImportSource.AnotherImport(entry.name)
+              }
+
+              else -> {}
+            }
+          }
+
+          else -> {}
         }
       }
 
@@ -181,7 +218,7 @@ class BuildGraphBuilder(
         // do nothing
       }
     }
-    return ifElse()
+    return ImportSource.Expr(addExpr(source, ctx))
   }
 
   private fun addNode(node: ExprGraphNode): ExprNodeId {
@@ -195,6 +232,10 @@ class BuildGraphBuilder(
 
   private fun addEdge(start: ExprNodeId, end: ExprNodeId) {
     exprEdges.add(ExprGraphEdge(start, end))
+  }
+
+  private fun addEdge(start: ExprNodeId, end: Callee) {
+    // TODO
   }
 
   private fun addEdge(start: ExprNodeId, end: TypeNodeId) {
@@ -214,16 +255,17 @@ class BuildGraphBuilder(
           is VarNameEntry -> LocalVarRef(entry.name, entry.def)
           is ActionNameEntry -> LocalActionRef(entry.name, entry.def)
           is ActionRuleNameEntry -> LocalActionRuleRef(entry.name, entry.def)
+          // TODO local import ref
           else -> throw IllegalStateException()
         }
         addNode(node)
       }
 
       is NameFromPrelude ->
-        addNode(ImportedExprFromPrelude(lookupResult.name, lookupResult.remaining))
+        addNode(ImportedExprFromPrelude(lookupResult.name))
 
-      is NameOfPreloadedPlugin ->
-        addNode(ImportedExprFromPreloaded(lookupResult.name, BibixName(lookupResult.remaining)))
+//      is NameOfPreloadedPlugin ->
+//        addNode(ImportedExprFromPreloaded(lookupResult.name, BibixName(lookupResult.remaining)))
 
       is NameInImport ->
         addNode(ImportedExpr(lookupResult.importEntry.name, BibixName(lookupResult.remaining)))
@@ -240,13 +282,35 @@ class BuildGraphBuilder(
     }
 
   data class CallExprAddResult(
-    val callee: ExprNodeId,
+    val callee: Callee,
     val posParams: List<ExprNodeId>,
     val namedParams: Map<String, ExprNodeId>
   )
 
+  private fun lookupCallee(nameTokens: List<String>, ctx: GraphBuildContext): Callee =
+    when (val lookupResult = ctx.nameLookupCtx.lookupName(nameTokens)) {
+      is NameEntryFound -> {
+        when (val entry = lookupResult.entry) {
+          is BuildRuleNameEntry -> Callee.LocalBuildRule(entry.name)
+          is ActionRuleNameEntry -> Callee.LocalActionRule(entry.name)
+          is DataClassNameEntry -> Callee.LocalDataClass(entry.name)
+          is ImportNameEntry -> Callee.ImportedCallee(entry.name)
+          is ActionNameEntry -> Callee.LocalAction(entry.name)
+          else -> throw IllegalStateException("Invalid callee")
+        }
+      }
+
+      is NameInImport ->
+        Callee.ImportedMemberCallee(lookupResult.importEntry.name, lookupResult.remaining)
+
+      is NameFromPrelude ->
+        Callee.PreludeMember(lookupResult.name)
+
+      else -> throw IllegalStateException("Invalid callee")
+    }
+
   private fun addCallExpr(expr: BibixAst.CallExpr, ctx: GraphBuildContext): CallExprAddResult {
-    val callee = lookupExprName(expr.name.tokens, ctx)
+    val callee = lookupCallee(expr.name.tokens, ctx)
     val posParams = expr.params.posParams.mapIndexed { index, argExpr ->
       val arg = addExpr(argExpr, ctx)
       val coercion =
@@ -438,12 +502,12 @@ class BuildGraphBuilder(
             }
 
             is NameFromPrelude -> {
-              ImportedTypeFromPrelude(lookupResult.name, lookupResult.remaining)
+              ImportedTypeFromPrelude(lookupResult.name)
             }
 
-            is NameOfPreloadedPlugin -> {
-              ImportedTypeFromPreloaded(lookupResult.name, BibixName(lookupResult.remaining))
-            }
+//            is NameOfPreloadedPlugin -> {
+//              ImportedTypeFromPreloaded(lookupResult.name, BibixName(lookupResult.remaining))
+//            }
 
             is NameInImport -> {
               ImportedType(lookupResult.importEntry.name, BibixName(lookupResult.remaining))

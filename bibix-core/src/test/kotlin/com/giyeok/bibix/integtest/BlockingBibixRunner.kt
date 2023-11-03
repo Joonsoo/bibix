@@ -20,7 +20,7 @@ object BlockingBibixRunner {
       debuggingMode = true
     )
 
-    val definitions = frontend.mainScriptDefinitions()
+    val definitions = frontend.mainScriptDefinitions
     assertThat(definitions.keys).containsExactly(
       "newbibix",
       "ktjvm",

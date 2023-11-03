@@ -47,18 +47,7 @@ data class LocalEnumValue(val enumType: BibixName, val enumValue: String): ExprG
   override val id: ExprNodeId get() = ExprNodeId.AnyNodeId(this)
 }
 
-data class PreloadedPluginRef(val pluginName: String): ExprGraphNode() {
-  override val id: ExprNodeId get() = ExprNodeId.AnyNodeId(this)
-}
-
-data class ImportedExprFromPreloaded(
-  val pluginName: String,
-  val name: BibixName
-): ExprGraphNode() {
-  override val id: ExprNodeId get() = ExprNodeId.AnyNodeId(this)
-}
-
-data class ImportedExprFromPrelude(val name: String, val remaining: List<String>): ExprGraphNode() {
+data class ImportedExprFromPrelude(val name: BibixName): ExprGraphNode() {
   override val id: ExprNodeId get() = ExprNodeId.AnyNodeId(this)
 }
 
@@ -85,16 +74,31 @@ data class CallExprNode(
   val callExpr: BibixAst.CallExpr,
   // callee는 build rule 혹은 data class type 이어야 함
   // 그러려면 ImportedExpr, LocalBuildRuleRef, LocalDataClassRef 중 하나여야 함
-  val callee: ExprNodeId,
+  val callee: Callee,
   val posParams: List<ExprNodeId>,
   val namedParams: Map<String, ExprNodeId>,
 ): ExprGraphNode() {
   override val id: ExprNodeId get() = ExprNodeId.AnyNodeId(this)
 }
 
+sealed class Callee {
+  data class ImportedCallee(val importName: BibixName): Callee()
+  data class ImportedMemberCallee(
+    val importName: BibixName,
+    val memberNames: List<String>
+  ): Callee()
+
+  data class LocalBuildRule(val name: BibixName): Callee()
+  data class LocalActionRule(val name: BibixName): Callee()
+  data class LocalDataClass(val name: BibixName): Callee()
+  data class LocalAction(val name: BibixName): Callee()
+
+  data class PreludeMember(val name: BibixName): Callee()
+}
+
 data class CallExprParamCoercionNode(
   val value: ExprNodeId,
-  val callee: ExprNodeId,
+  val callee: Callee,
   val paramLocation: ParamLocation
 ): ExprGraphNode() {
   override val id: ExprNodeId get() = ExprNodeId.AnyNodeId(this)

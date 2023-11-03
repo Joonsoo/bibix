@@ -35,7 +35,7 @@ data class ImportedTypeFromPreloaded(val pluginName: String, val name: BibixName
   override val id: TypeNodeId get() = TypeNodeId.AnyNodeId(this)
 }
 
-data class ImportedTypeFromPrelude(val name: String, val remaining: List<String>): TypeGraphNode() {
+data class ImportedTypeFromPrelude(val name: BibixName): TypeGraphNode() {
   override val id: TypeNodeId get() = TypeNodeId.AnyNodeId(this)
 }
 

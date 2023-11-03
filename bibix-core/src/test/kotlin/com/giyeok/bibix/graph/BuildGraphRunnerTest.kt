@@ -31,19 +31,19 @@ class BuildGraphRunnerTest {
       classWorld = ClassWorld()
     )
 
-    println(runner.runToFinal(EvalTarget(1, 0, BibixName("protoGen"))))
+    println(runner.runToFinal(EvalTarget(1, 0, BibixName("fromimporttest"))))
 
-    runner.runToFinal(ExecAction(1, 0, BibixName("myaction"), mapOf()))
-
-    println(runner.runToFinal(EvalTarget(1, 0, BibixName("x"))))
-    println(runner.runToFinal(EvalTarget(1, 0, BibixName("x2"))))
-
-    println(runner.runToFinal(EvalTarget(1, 0, BibixName("aa"))))
-    println(runner.runToFinal(EvalTarget(1, 0, BibixName("bb"))))
-    println(runner.runToFinal(EvalTarget(1, 0, BibixName("cc"))))
-    println(runner.runToFinal(EvalTarget(1, 0, BibixName("ss"))))
-    println(runner.runToFinal(EvalTarget(1, 0, BibixName("dd"))))
-    println(runner.runToFinal(EvalTarget(1, 0, BibixName("ee"))))
+//    runner.runToFinal(ExecAction(1, 0, BibixName("myaction"), mapOf()))
+//
+//    println(runner.runToFinal(EvalTarget(1, 0, BibixName("x"))))
+//    println(runner.runToFinal(EvalTarget(1, 0, BibixName("x2"))))
+//
+//    println(runner.runToFinal(EvalTarget(1, 0, BibixName("aa"))))
+//    println(runner.runToFinal(EvalTarget(1, 0, BibixName("bb"))))
+//    println(runner.runToFinal(EvalTarget(1, 0, BibixName("cc"))))
+//    println(runner.runToFinal(EvalTarget(1, 0, BibixName("ss"))))
+//    println(runner.runToFinal(EvalTarget(1, 0, BibixName("dd"))))
+//    println(runner.runToFinal(EvalTarget(1, 0, BibixName("ee"))))
   }
 
   private val buildTasksGraph = mutableMapOf<BuildTask, MutableSet<BuildTask>>()

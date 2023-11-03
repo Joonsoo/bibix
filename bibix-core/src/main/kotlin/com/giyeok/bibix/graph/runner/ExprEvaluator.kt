@@ -7,7 +7,6 @@ import com.giyeok.bibix.ast.BibixAst
 import com.giyeok.bibix.base.*
 import com.giyeok.bibix.graph.*
 import com.giyeok.bibix.utils.toProto
-import com.giyeok.jparser.ktlib.hasSingleTrue
 
 class ExprEvaluator(
   private val buildGraphRunner: BuildGraphRunner,
@@ -137,7 +136,7 @@ class ExprEvaluator(
       is CallExprNode -> {
         val namedParams = exprNode.namedParams.entries.toList()
         BuildTaskResult.WithResultList(
-          listOf(evalTask(exprNode.callee)) +
+          listOf(EvalCallee(projectId, importInstanceId, exprNode.callee)) +
             exprNode.posParams.map { evalTask(it) } +
             namedParams.map { evalTask(it.value) }
         ) { results ->
@@ -186,7 +185,7 @@ class ExprEvaluator(
 
       is CallExprParamCoercionNode -> {
         BuildTaskResult.WithResultList(
-          listOf(evalTask(exprNode.value), evalTask(exprNode.callee))
+          listOf(evalTask(exprNode.value), EvalCallee(projectId, importInstanceId, exprNode.callee))
         ) { results ->
           val value = results[0].toValue()
 
@@ -271,24 +270,34 @@ class ExprEvaluator(
 
       is ImportedExpr ->
         BuildTaskResult.WithResult(Import(projectId, importInstanceId, exprNode.import)) { result ->
-          check(result is BuildTaskResult.ImportResult)
+          when (result) {
+            is BuildTaskResult.ResultWithValue -> {
+              BuildTaskResult.ValueResult(result.value.followMemberNames(exprNode.name.tokens))
+            }
 
-          handleImportResult(result, exprNode.import, exprNode.name)
+            is BuildTaskResult.ImportInstanceResult -> {
+              val graph = multiGraph.getProjectGraph(result.projectId)
+              when (val entity = graph.findName(exprNode.name)) {
+                is BuildGraphEntity.Target ->
+                  BuildTaskResult.WithResult(
+                    EvalExpr(result.projectId, entity.exprNodeId, result.importInstanceId, null)
+                  ) { it }
+
+                is BuildGraphEntity.Variable ->
+                  BuildTaskResult.WithResult(
+                    EvalVar(result.projectId, result.importInstanceId, exprNode.name)
+                  ) { it }
+
+                else -> throw IllegalStateException("Invalid expression")
+              }
+            }
+
+            else -> throw IllegalStateException("Invalid expression")
+          }
         }
 
-      is PreloadedPluginRef ->
-        BuildTaskResult.WithResult(ImportPreloaded(exprNode.pluginName)) { it }
-
-      is ImportedExprFromPreloaded ->
-        BuildTaskResult.WithResult(ImportPreloaded(exprNode.pluginName)) { result ->
-          check(result is BuildTaskResult.ImportResult)
-
-          handleImportResult(result, BibixName(exprNode.pluginName), exprNode.name)
-        }
-
-      is ImportedExprFromPrelude -> {
-        BuildTaskResult.WithResult(ImportFromPrelude(exprNode.name, exprNode.remaining)) { it }
-      }
+      is ImportedExprFromPrelude ->
+        BuildTaskResult.WithResult(ImportFromPrelude(exprNode.name)) { it }
 
       is ValueCastNode ->
         BuildTaskResult.WithResultList(
@@ -332,13 +341,9 @@ class ExprEvaluator(
   }
 
   fun evaluateCallExpr(buildTask: EvalCallExpr): BuildTaskResult {
-    return buildGraphRunner.lookupExprValue(
-      buildTask.buildRuleDefCtx.projectId,
-      buildTask.ruleName,
-      buildTask.buildRuleDefCtx.importInstanceId,
-    ) { buildRule ->
-      check(buildRule is BuildTaskResult.BuildRuleResult)
+    val graph = multiGraph.getProjectGraph(buildTask.buildRuleDefCtx.projectId)
 
+    fun call(buildRule: BuildTaskResult.BuildRuleResult): BuildTaskResult =
       organizeParamsAndRunBuildRule(
         buildGraphRunner,
         // TODO 여기서 주는 projectId와 importInstanceId가 이게 맞나?
@@ -352,20 +357,36 @@ class ExprEvaluator(
 
         castBuildRuleResult(buildRule, evalResult.targetId, evalResult.value)
       }
+
+    return when (val entity = graph.findName(buildTask.ruleName)) {
+      is BuildGraphEntity.BuildRule -> {
+        BuildTaskResult.WithResult(
+          EvalBuildRule(
+            buildTask.buildRuleDefCtx.projectId,
+            buildTask.buildRuleDefCtx.importInstanceId,
+            buildTask.ruleName
+          )
+        ) { buildRule ->
+          check(buildRule is BuildTaskResult.BuildRuleResult)
+          call(buildRule)
+        }
+      }
+
+      null -> {
+        buildGraphRunner.lookupFromImport(
+          graph,
+          buildTask.buildRuleDefCtx.projectId,
+          buildTask.buildRuleDefCtx.importInstanceId,
+          buildTask.ruleName
+        ) { buildRule ->
+          check(buildRule is BuildTaskResult.BuildRuleResult)
+          call(buildRule)
+        }
+      }
+
+      else -> throw IllegalStateException("Invalid rule name: $entity")
     }
   }
-
-  private fun handleImportResult(
-    result: BuildTaskResult.ImportResult,
-    import: BibixName,
-    importedMemberName: BibixName,
-  ): BuildTaskResult = buildGraphRunner.handleImportResult(
-    result,
-    import,
-    importedMemberName,
-    projectId,
-    importInstanceId
-  ) { it }
 }
 
 fun BibixValue.followMemberNames(memberNames: List<String>): BibixValue {
@@ -386,104 +407,55 @@ fun BibixValue.followMemberNames(memberNames: List<String>): BibixValue {
   }
 }
 
-fun BuildGraphRunner.lookupExprValue(
+fun BuildGraphRunner.lookupDataClass(
   projectId: Int,
-  name: BibixName,
   importInstanceId: Int,
-  block: (BuildTaskResult) -> BuildTaskResult,
+  dataClassName: BibixName,
+  block: (BuildTaskResult.DataClassResult) -> BuildTaskResult
 ): BuildTaskResult {
+  // TODO namespace에서 마지막에서 하나씩 빼면서 이름 찾기 시도
   val buildGraph = multiGraph.getProjectGraph(projectId)
 
-  val target = buildGraph.targets[name]
-  val buildRule = buildGraph.buildRules[name]
-  val varDef = buildGraph.vars[name]
-  val dataClass = buildGraph.dataClasses[name]
-  val superClass = buildGraph.superClasses[name]
-  val enum = buildGraph.enums[name]
-  val action = buildGraph.actions[name]
-  val actionRule = buildGraph.actionRules[name]
-
-  // 중복된 이름이 있으면 안됨
-  check(
-    listOf(
-      target != null,
-      buildRule != null,
-      varDef != null,
-      dataClass != null,
-      superClass != null,
-      enum != null,
-      action != null,
-      actionRule != null
-    ).count { it } <= 1
-  ) { "Duplicate name: $name at $projectId" }
-
-  val followingTask = when {
-    target != null -> {
-      EvalTarget(projectId, importInstanceId, name)
-    }
-
-    buildRule != null -> {
-      EvalBuildRule(projectId, importInstanceId, name)
-    }
-
-    varDef != null -> {
-      EvalVar(projectId, importInstanceId, name)
-    }
-
-    dataClass != null -> {
-      EvalDataClass(projectId, importInstanceId, name)
-    }
-
-    superClass != null -> {
-      return BuildTaskResult.ValueResult(
-        TypeValue.SuperClassTypeValue(checkNotNull(buildGraph.packageName), name.toString())
-      )
-    }
-
-    enum != null -> {
-      return BuildTaskResult.ValueResult(
-        TypeValue.EnumTypeValue(checkNotNull(buildGraph.packageName), name.toString())
-      )
-    }
-
-    action != null -> {
-      EvalAction(projectId, importInstanceId, name)
-    }
-
-    actionRule != null -> {
-      EvalActionRule(projectId, importInstanceId, name)
-    }
-
-    else -> {
-      // graph.imports에서 보고 ImportedExpr task
-      buildGraph.importAlls.forEach { (importName, importAll) ->
-        if (name.tokens.take(importName.tokens.size) == importName.tokens) {
-          return BuildTaskResult.WithResult(
-            Import(projectId, importInstanceId, importName)
-          ) { result ->
-            check(result is BuildTaskResult.ImportResult)
-
-            handleImportResult(
-              result,
-              importName,
-              BibixName(name.tokens.drop(importName.tokens.size)),
-              projectId,
-              importInstanceId,
-              block
-            )
-          }
-        }
-      }
-      buildGraph.importFroms.forEach { (importName, importFrom) ->
-        if (name.tokens.take(importName.tokens.size) == importName.tokens) {
-          // TODO 이런 경우는 언제 생기는거지?
-          TODO()
-        }
-      }
-      throw IllegalStateException()
+  if (dataClassName in buildGraph.dataClasses) {
+    return BuildTaskResult.WithResult(
+      EvalDataClass(projectId, importInstanceId, dataClassName)
+    ) { dataClass ->
+      check(dataClass is BuildTaskResult.DataClassResult)
+      block(dataClass)
     }
   }
-  return BuildTaskResult.WithResult(followingTask, block)
+
+  return lookupFromImport(buildGraph, projectId, importInstanceId, dataClassName) { result ->
+    check(result is BuildTaskResult.DataClassResult) { "Invalid data class name" }
+    block(result)
+  }
+}
+
+fun BuildGraphRunner.lookupFromImport(
+  buildGraph: BuildGraph,
+  projectId: Int,
+  importInstanceId: Int,
+  name: BibixName,
+  block: (BuildTaskResult.FinalResult) -> BuildTaskResult
+): BuildTaskResult {
+  buildGraph.importAlls.forEach { (importName, importAll) ->
+    if (name.tokens.take(importName.tokens.size) == importName.tokens) {
+      return BuildTaskResult.WithResult(
+        Import(projectId, importInstanceId, importName)
+      ) { result ->
+        check(result is BuildTaskResult.ImportInstanceResult)
+
+        importResultFrom(result, BibixName(name.tokens.drop(importName.tokens.size)), block)
+      }
+    }
+  }
+  buildGraph.importFroms.forEach { (importName, importFrom) ->
+    if (name.tokens.take(importName.tokens.size) == importName.tokens) {
+      // TODO 이런 경우는 언제 생기는거지?
+      TODO()
+    }
+  }
+  throw IllegalStateException("Name not found")
 }
 
 fun organizeParamsForDataClass(
@@ -559,35 +531,6 @@ fun argsMapFrom(args: Map<String, BibixValue>): ArgsMap =
         })
       }
   }
-
-fun BuildGraphRunner.handleImportResult(
-  result: BuildTaskResult.ImportResult,
-  import: BibixName,
-  importedMemberName: BibixName,
-  projectId: Int,
-  importInstanceId: Int,
-  block: (BuildTaskResult) -> BuildTaskResult,
-): BuildTaskResult {
-  val importerGraph = multiGraph.getProjectGraph(projectId)
-  val newRedefs = importerGraph.varRedefs[import] ?: mapOf()
-  val newGlobalRedefs = newRedefs.mapValues { (_, exprNodeId) ->
-    GlobalExprNodeId(projectId, importInstanceId, exprNodeId)
-  }
-
-  return BuildTaskResult.WithResult(
-    NewImportInstance(result.projectId, newGlobalRedefs)
-  ) { instance ->
-    check(instance is BuildTaskResult.ImportInstanceResult)
-    check(result.projectId == instance.projectId)
-
-    lookupExprValue(
-      result.projectId,
-      BibixName(result.namePrefix + importedMemberName.tokens),
-      instance.importInstanceId,
-      block
-    )
-  }
-}
 
 fun BuildTaskResult.FinalResult.toType(): BibixType = when (this) {
   is BuildTaskResult.TypeResult -> this.type

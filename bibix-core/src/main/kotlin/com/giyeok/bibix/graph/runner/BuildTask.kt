@@ -103,6 +103,12 @@ data class EvalCallExpr(
   val params: Map<String, BibixValue>
 ): BuildTask()
 
+data class EvalCallee(
+  val projectId: Int,
+  val importInstanceId: Int,
+  val callee: Callee
+): BuildTask()
+
 data class EvalDataClass(
   val projectId: Int,
   val importInstanceId: Int,
@@ -114,7 +120,12 @@ data class EvalDataClassByName(
   val className: String,
 ): BuildTask()
 
-data class EvalSuperClassHierarchyByName(
+data class EvalSuperClass(
+  val projectId: Int,
+  val className: String
+): BuildTask()
+
+data class EvalSuperClassByName(
   val packageName: String,
   val className: String
 ): BuildTask()
@@ -124,7 +135,11 @@ data class EvalTypeByName(
   val className: String
 ): BuildTask()
 
-data class EvalType(val projectId: Int, val typeNodeId: TypeNodeId): BuildTask()
+data class EvalType(
+  val projectId: Int,
+  // val importInstanceId: Int,
+  val typeNodeId: TypeNodeId
+): BuildTask()
 
 data class Import(
   val projectId: Int,
@@ -132,9 +147,14 @@ data class Import(
   val importName: BibixName
 ): BuildTask()
 
-data class ImportFromPrelude(val name: String, val remainingNames: List<String>): BuildTask()
+data class EvalImportSource(
+  val projectId: Int,
+  val importInstanceId: Int,
+  val importName: BibixName,
+  val importSource: ImportSource
+): BuildTask()
 
-data class ImportPreloaded(val pluginName: String): BuildTask()
+data class ImportFromPrelude(val name: BibixName): BuildTask()
 
 data class NewImportInstance(
   val projectId: Int,
@@ -167,12 +187,6 @@ sealed class BuildTaskResult {
     override fun withNewValue(newValue: BibixValue): ResultWithValue =
       ValueOfTargetResult(newValue, targetId)
   }
-
-  data class ImportResult(
-    val projectId: Int,
-    val graph: BuildGraph,
-    val namePrefix: List<String>
-  ): FinalResult()
 
   data class ImportInstanceResult(val projectId: Int, val importInstanceId: Int): FinalResult()
 

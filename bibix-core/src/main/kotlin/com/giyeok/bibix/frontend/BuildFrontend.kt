@@ -4,7 +4,6 @@ import com.giyeok.bibix.base.Architecture
 import com.giyeok.bibix.base.BibixValue
 import com.giyeok.bibix.base.BuildEnv
 import com.giyeok.bibix.base.OS
-import com.giyeok.bibix.graph.BibixName
 import com.giyeok.bibix.graph.BibixProjectLocation
 import com.giyeok.bibix.graph.runner.*
 import com.giyeok.bibix.plugins.PreloadedPlugin
@@ -15,12 +14,12 @@ import com.giyeok.bibix.plugins.jvm.jvmPlugin
 import com.giyeok.bibix.plugins.maven.mavenPlugin
 import com.giyeok.bibix.plugins.prelude.preludePlugin
 import com.giyeok.bibix.repo.BibixRepo
-import kotlinx.coroutines.runBlocking
 import org.codehaus.plexus.classworlds.ClassWorld
 import java.nio.file.FileSystems
 
 class BuildFrontend(
   val mainProjectLocation: BibixProjectLocation,
+  // build args는 어떻게 쓰지? 원래 어쩔 생각이었더라..
   val buildArgsMap: Map<String, String>,
   val actionArgs: List<String>,
   val prelude: PreloadedPlugin = preludePlugin,
@@ -44,7 +43,7 @@ class BuildFrontend(
   val buildGraphRunner = BuildGraphRunner.create(
     mainProjectLocation = mainProjectLocation,
     preludePlugin = preludePlugin,
-    preloadedPlugins = defaultPreloadedPlugins,
+    preloadedPlugins = preloadedPlugins,
     buildEnv = buildEnv,
     fileSystem = FileSystems.getDefault(),
     repo = repo,
