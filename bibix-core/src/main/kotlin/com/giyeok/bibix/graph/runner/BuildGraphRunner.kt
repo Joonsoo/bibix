@@ -171,12 +171,12 @@ class BuildGraphRunner(
     }
 
     is TypeCastValue -> {
-      ValueCaster(this, buildTask.projectId, buildTask.importInstanceId)
+      ValueCaster(this, buildTask.projectId)
         .castValue(buildTask.value, buildTask.type)
     }
 
     is FinalizeBuildRuleReturnValue -> {
-      ValueCaster(this, buildTask.projectId, buildTask.importInstanceId)
+      ValueCaster(this, buildTask.projectId)
         .finalizeBuildRuleReturnValue(buildTask.buildRuleDefCtx, buildTask.value)
     }
 
@@ -489,7 +489,6 @@ class BuildGraphRunner(
           implTargetResult.value,
           DataClassType("com.giyeok.bibix.plugins.jvm", "ClassPkg"),
           projectId,
-          importInstanceId,
         )
       ) { implTarget ->
         check(implTarget is BuildTaskResult.ResultWithValue)

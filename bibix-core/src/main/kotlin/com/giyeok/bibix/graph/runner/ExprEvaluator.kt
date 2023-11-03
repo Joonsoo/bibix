@@ -21,8 +21,7 @@ class ExprEvaluator(
   private val buildGraph get() = multiGraph.getProjectGraph(projectId)
   private val exprGraph: ExprGraph get() = buildGraph.exprGraph
 
-  private val valueCaster: ValueCaster
-    get() = ValueCaster(buildGraphRunner, projectId, importInstanceId)
+  private val valueCaster: ValueCaster get() = ValueCaster(buildGraphRunner, projectId)
 
   private fun evalTask(exprNodeId: ExprNodeId) =
     // isRunningActionStmt는 action stmt에서도 가장 바깥의 call expr에만 적용되면 됨
@@ -137,7 +136,7 @@ class ExprEvaluator(
         }
       }
 
-      is CallExprCallNode -> {
+      is CallExprNode -> {
         val namedParams = exprNode.namedParams.entries.toList()
         BuildTaskResult.WithResultList(
           listOf(evalTask(exprNode.callee)) +
@@ -166,42 +165,21 @@ class ExprEvaluator(
                 callee,
                 posArgs,
                 namedArgs
-              ) { it }
-            }
-
-            is BuildTaskResult.DataClassResult -> {
-              organizeParamsForDataClass(callee, posArgs, namedArgs)
-            }
-
-            else -> throw IllegalStateException()
-          }
-        }
-      }
-
-      is CallExprNode -> {
-        BuildTaskResult.WithResultList(
-          listOf(evalTask(exprNode.callee), evalTask(exprNode.callNode))
-        ) { results ->
-          check(results.size == 2)
-          val valueResult = results[1]
-          check(valueResult is BuildTaskResult.ResultWithValue)
-          val value = valueResult.value
-
-          // value를 callee의 returnType으로 cast
-          when (val callee = results[0]) {
-            is BuildTaskResult.BuildRuleResult -> {
-              check(valueResult is BuildTaskResult.ValueOfTargetResult)
-
-              castBuildRuleResult(callee, valueResult.targetId, value)
+              ) { callResult ->
+                check(callResult is BuildTaskResult.ValueOfTargetResult)
+                castBuildRuleResult(callee, callResult.targetId, callResult.value)
+              }
             }
 
             is BuildTaskResult.DataClassResult -> {
               val classType = DataClassType(callee.packageName, callee.name.toString())
-              BuildTaskResult.WithResult(
-                TypeCastValue(value, classType, projectId, importInstanceId)
-              ) { casted ->
-                check(casted is BuildTaskResult.ValueResult)
-                valueResult.withNewValue(casted.value)
+              organizeParamsForDataClass(callee, posArgs, namedArgs) { value ->
+                BuildTaskResult.WithResult(
+                  TypeCastValue(value, classType, projectId)
+                ) { casted ->
+                  check(casted is BuildTaskResult.ResultWithValue)
+                  BuildTaskResult.ValueResult(casted.value)
+                }
               }
             }
 
@@ -346,13 +324,13 @@ class ExprEvaluator(
     check(typeResult is BuildTaskResult.TypeResult)
 
     BuildTaskResult.WithResult(
-      FinalizeBuildRuleReturnValue(buildRule, value, projectId, importInstanceId)
+      FinalizeBuildRuleReturnValue(BuildRuleDefContext.from(buildRule), value, projectId)
     ) { finalized ->
       // finalized가 ValueFinalizeFailResult 이면 안됨
       check(finalized is BuildTaskResult.ValueResult)
 
       BuildTaskResult.WithResult(
-        TypeCastValue(finalized.value, typeResult.type, projectId, importInstanceId)
+        TypeCastValue(finalized.value, typeResult.type, projectId)
       ) { casted ->
         check(casted is BuildTaskResult.ValueResult)
         buildGraphRunner.repo.targetSucceeded(targetId, casted.value)
@@ -363,17 +341,17 @@ class ExprEvaluator(
 
   fun evaluateCallExpr(buildTask: EvalCallExpr): BuildTaskResult {
     return buildGraphRunner.lookupExprValue(
-      buildTask.projectId,
+      buildTask.buildRuleDefCtx.projectId,
       buildTask.ruleName,
-      buildTask.importInstanceId,
+      buildTask.buildRuleDefCtx.importInstanceId,
     ) { buildRule ->
       check(buildRule is BuildTaskResult.BuildRuleResult)
 
       organizeParamsAndRunBuildRule(
         buildGraphRunner,
         // TODO 여기서 주는 projectId와 importInstanceId가 이게 맞나?
-        buildTask.callerProjectId,
-        buildTask.callerImportInstanceId,
+        buildTask.buildRuleDefCtx.projectId,
+        buildTask.buildRuleDefCtx.importInstanceId,
         buildRule,
         listOf(),
         buildTask.params
@@ -496,6 +474,7 @@ fun organizeParamsForDataClass(
   dataClass: BuildTaskResult.DataClassResult,
   posArgs: List<BibixValue>,
   namedArgs: Map<String, BibixValue>,
+  func: (ClassInstanceValue) -> BuildTaskResult
 ): BuildTaskResult {
   return organizeParams(
     dataClass.fieldTypes,
@@ -504,11 +483,9 @@ fun organizeParamsForDataClass(
     dataClass.importInstanceId,
     dataClass.dataClassDef.fieldDefaultValues,
     posArgs,
-    namedArgs
+    namedArgs,
   ) { args ->
-    BuildTaskResult.ValueResult(
-      ClassInstanceValue(dataClass.packageName, dataClass.name.toString(), args)
-    )
+    func(ClassInstanceValue(dataClass.packageName, dataClass.name.toString(), args))
   }
 }
 

@@ -83,14 +83,6 @@ data class ValueCastNode(
 
 data class CallExprNode(
   val callExpr: BibixAst.CallExpr,
-  val callNode: ExprNodeId, // CallExprCallNode,
-  val callee: ExprNodeId, // callNode의 callee와 같아야 함
-): ExprGraphNode() {
-  override val id: ExprNodeId get() = ExprNodeId.AnyNodeId(this)
-}
-
-data class CallExprCallNode(
-  val callExpr: BibixAst.CallExpr,
   // callee는 build rule 혹은 data class type 이어야 함
   // 그러려면 ImportedExpr, LocalBuildRuleRef, LocalDataClassRef 중 하나여야 함
   val callee: ExprNodeId,

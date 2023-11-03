@@ -287,13 +287,11 @@ class BuildGraphBuilder(
 
     is BibixAst.CallExpr -> {
       val (callee, posParams, namedParams) = addCallExpr(expr, ctx)
-      val call = addNode(CallExprCallNode(expr, callee, posParams, namedParams))
+      val call = addNode(CallExprNode(expr, callee, posParams, namedParams))
       addEdge(call, callee)
       posParams.forEach { addEdge(call, it) }
       namedParams.forEach { addEdge(call, it.value) }
-      val coercion = addNode(CallExprNode(expr, call, callee))
-      addEdge(coercion, call)
-      coercion
+      call
     }
 
     is BibixAst.ListExpr -> {

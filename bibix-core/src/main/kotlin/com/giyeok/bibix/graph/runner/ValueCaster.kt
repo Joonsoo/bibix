@@ -10,7 +10,6 @@ import kotlin.io.path.absolutePathString
 class ValueCaster(
   val buildGraphRunner: BuildGraphRunner,
   val projectId: Int,
-  val importInstanceId: Int,
 ) {
   val projectLocation: BibixProjectLocation? get() = buildGraphRunner.multiGraph.projectLocations[projectId]
 
@@ -202,7 +201,7 @@ class ValueCaster(
             cannotCast(value, type)
           } else {
             BuildTaskResult.WithResult(
-              TypeCastValue(value, type.types[candidateIdx], projectId, importInstanceId)
+              TypeCastValue(value, type.types[candidateIdx], projectId)
             ) { result ->
               when (result) {
                 is BuildTaskResult.ResultWithValue -> result
@@ -264,7 +263,7 @@ class ValueCaster(
     func: (List<BibixValue>) -> BibixValue
   ): BuildTaskResult =
     BuildTaskResult.WithResultList(values.map {
-      TypeCastValue(it, type, projectId, importInstanceId)
+      TypeCastValue(it, type, projectId)
     }) { results ->
       check(results.all { it is BuildTaskResult.ResultWithValue })
       val finalValue = func(results.map { (it as BuildTaskResult.ResultWithValue).value })
@@ -276,12 +275,78 @@ class ValueCaster(
     func: (List<BibixValue>) -> BibixValue
   ): BuildTaskResult =
     BuildTaskResult.WithResultList(valueAndTypes.map { (value, type) ->
-      TypeCastValue(value, type, projectId, importInstanceId)
+      TypeCastValue(value, type, projectId)
     }) { results ->
       check(results.all { it is BuildTaskResult.ResultWithValue })
       val finalValue = func(results.map { (it as BuildTaskResult.ResultWithValue).value })
       BuildTaskResult.ValueResult(finalValue)
     }
+
+  fun finalizeBuildRuleReturnValue(
+    finalizeCtx: BuildRuleDefContext,
+    value: BibixValue,
+  ): BuildTaskResult = when (value) {
+    is NClassInstanceValue -> {
+      // buildRule 위치를 기준으로 ClassInstanceValue로 변경해서 반환
+      val namespace = finalizeCtx.name.tokens.dropLast(1)
+      // TODO namespace에서 마지막에서 하나씩 빼면서 이름 찾기 시도
+      buildGraphRunner.lookupExprValue(
+        finalizeCtx.projectId,
+        BibixName(namespace + value.nameTokens),
+        finalizeCtx.importInstanceId
+      ) { lookupResult ->
+        check(lookupResult is BuildTaskResult.DataClassResult)
+
+        val fieldTypeMaps = lookupResult.fieldTypes.toMap()
+        finalizeValues(finalizeCtx, value.fieldValues, fieldTypeMaps) { fieldNames, finVals ->
+          organizeParamsForDataClass(
+            lookupResult,
+            listOf(),
+            fieldNames.zip(finVals).toMap(),
+          ) { BuildTaskResult.ValueResult(it) }
+        }
+      }
+    }
+
+    is ClassInstanceValue -> {
+      // value가 ClassInstanceValue이면 default value, optional value들 채우고 기존 필드들도 목표 타입으로 캐스팅해서 반환
+      BuildTaskResult.WithResult(
+        EvalDataClassByName(value.packageName, value.className)
+      ) { dataClassResult ->
+        check(dataClassResult is BuildTaskResult.DataClassResult)
+
+        val fieldTypeMaps = dataClassResult.fieldTypes.toMap()
+        finalizeValues(finalizeCtx, value.fieldValues, fieldTypeMaps) { fieldNames, finVals ->
+          val castTasks = fieldNames.zip(finVals).map { (name, value) ->
+            val expectedType = fieldTypeMaps.getValue(name)
+            TypeCastValue(value, expectedType, projectId)
+          }
+          BuildTaskResult.WithResultList(castTasks) { cast ->
+            check(cast.size == finVals.size)
+            val castValues = cast.map {
+              check(it is BuildTaskResult.ResultWithValue)
+              it.value
+            }
+
+            organizeParamsForDataClass(
+              dataClassResult,
+              listOf(),
+              fieldNames.zip(castValues).toMap()
+            ) { BuildTaskResult.ValueResult(it) }
+          }
+        }
+      }
+    }
+
+    is CollectionValue -> finalizeValueList(finalizeCtx, value.values, value::newCollectionWith)
+    is TupleValue -> finalizeValueList(finalizeCtx, value.values, ::TupleValue)
+    is NamedTupleValue ->
+      finalizeValueList(finalizeCtx, value.values) { elems ->
+        NamedTupleValue(value.names.zip(elems))
+      }
+
+    else -> BuildTaskResult.ValueResult(value)
+  }
 
   private fun finalizeValueList(
     finalizeCtx: BuildRuleDefContext,
@@ -289,7 +354,7 @@ class ValueCaster(
     func: (List<BibixValue>) -> BibixValue
   ): BuildTaskResult =
     BuildTaskResult.WithResultList(values.map {
-      FinalizeBuildRuleReturnValue(finalizeCtx, it, projectId, importInstanceId)
+      FinalizeBuildRuleReturnValue(finalizeCtx, it, projectId)
     }) { results ->
       if (results.all { it is BuildTaskResult.ResultWithValue }) {
         val finalValue = func(results.map { (it as BuildTaskResult.ResultWithValue).value })
@@ -309,7 +374,7 @@ class ValueCaster(
 
     val fieldValues = values.entries.sortedBy { it.key }
     val finalizeTasks = fieldValues.map {
-      FinalizeBuildRuleReturnValue(finalizeCtx, it.value, projectId, importInstanceId)
+      FinalizeBuildRuleReturnValue(finalizeCtx, it.value, projectId)
     }
     return BuildTaskResult.WithResultList(finalizeTasks) { finalized ->
       check(finalized.size == fieldValues.size)
@@ -320,71 +385,4 @@ class ValueCaster(
       block(fieldValues.map { it.key }, finalizedValues)
     }
   }
-
-  fun finalizeBuildRuleReturnValue(
-    finalizeCtx: BuildRuleDefContext,
-    value: BibixValue,
-  ): BuildTaskResult =
-    when (value) {
-      is NClassInstanceValue -> {
-        // buildRule 위치를 기준으로 ClassInstanceValue로 변경해서 반환
-        val namespace = finalizeCtx.name.tokens.dropLast(1)
-        // TODO namespace에서 마지막에서 하나씩 빼면서 이름 찾기 시도
-        buildGraphRunner.lookupExprValue(
-          finalizeCtx.projectId,
-          BibixName(namespace + value.nameTokens),
-          finalizeCtx.importInstanceId
-        ) { lookupResult ->
-          check(lookupResult is BuildTaskResult.DataClassResult)
-
-          val fieldTypeMaps = lookupResult.fieldTypes.toMap()
-          finalizeValues(finalizeCtx, value.fieldValues, fieldTypeMaps) { fieldNames, finVals ->
-            organizeParamsForDataClass(
-              lookupResult,
-              listOf(),
-              fieldNames.zip(finVals).toMap()
-            )
-          }
-        }
-      }
-
-      is ClassInstanceValue -> {
-        // value가 ClassInstanceValue이면 default value, optional value들 채우고 기존 필드들도 목표 타입으로 캐스팅해서 반환
-        BuildTaskResult.WithResult(
-          EvalDataClassByName(value.packageName, value.className)
-        ) { dataClassResult ->
-          check(dataClassResult is BuildTaskResult.DataClassResult)
-
-          val fieldTypeMaps = dataClassResult.fieldTypes.toMap()
-          finalizeValues(finalizeCtx, value.fieldValues, fieldTypeMaps) { fieldNames, finVals ->
-            val castTasks = fieldNames.zip(finVals).map { (name, value) ->
-              val expectedType = fieldTypeMaps.getValue(name)
-              TypeCastValue(value, expectedType, projectId, importInstanceId)
-            }
-            BuildTaskResult.WithResultList(castTasks) { cast ->
-              check(cast.size == finVals.size)
-              val castValues = cast.map {
-                check(it is BuildTaskResult.ResultWithValue)
-                it.value
-              }
-
-              organizeParamsForDataClass(
-                dataClassResult,
-                listOf(),
-                fieldNames.zip(castValues).toMap()
-              )
-            }
-          }
-        }
-      }
-
-      is CollectionValue -> finalizeValueList(finalizeCtx, value.values, value::newCollectionWith)
-      is TupleValue -> finalizeValueList(finalizeCtx, value.values, ::TupleValue)
-      is NamedTupleValue ->
-        finalizeValueList(finalizeCtx, value.values) { elems ->
-          NamedTupleValue(value.names.zip(elems))
-        }
-
-      else -> BuildTaskResult.ValueResult(value)
-    }
 }

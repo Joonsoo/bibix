@@ -24,8 +24,7 @@ fun nodeDescription(id: ExprNodeId, node: ExprGraphNode, graph: ExprGraph, sourc
   when (node) {
     is ExprAstNode<*> -> source.substring(node.ast.start, node.ast.end)
     is MemberAccessNode -> "member ${node.target} ${node.memberNames}"
-    is CallExprNode -> "post ${source.substring(node.callExpr.start, node.callExpr.end)}"
-    is CallExprCallNode -> source.substring(node.callExpr.start, node.callExpr.end)
+    is CallExprNode -> "${source.substring(node.callExpr.start, node.callExpr.end)}"
     is CallExprParamCoercionNode -> "param coercion ${node.paramLocation}"
     is LocalBuildRuleRef -> "local buildrule ${node.name}"
     is LocalDataClassRef -> "local data class ${node.name}"

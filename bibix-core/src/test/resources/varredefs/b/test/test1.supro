@@ -1,4 +1,4 @@
-package com.giyeok.bibix;
+package com.giyeok.bibix
 
 message SourceId {
   1 bibixVersion: optional<string>

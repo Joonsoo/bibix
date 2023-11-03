@@ -56,7 +56,6 @@ data class TypeCastValue(
   val value: BibixValue,
   val type: BibixType,
   val projectId: Int,
-  val importInstanceId: Int,
 ): BuildTask()
 
 data class FinalizeBuildRuleReturnValue(
@@ -64,24 +63,7 @@ data class FinalizeBuildRuleReturnValue(
   val buildRuleDefCtx: BuildRuleDefContext,
   val value: BibixValue,
   val projectId: Int,
-  val importInstanceId: Int,
-): BuildTask() {
-  constructor(
-    buildRule: BuildTaskResult.BuildRuleResult,
-    value: BibixValue,
-    projectId: Int,
-    importInstanceId: Int,
-  ): this(
-    BuildRuleDefContext(
-      buildRule.projectId,
-      buildRule.importInstanceId,
-      buildRule.name
-    ),
-    value,
-    projectId,
-    importInstanceId
-  )
-}
+): BuildTask()
 
 // build rule이 정의된 위치의 정보
 data class BuildRuleDefContext(val projectId: Int, val importInstanceId: Int, val name: BibixName) {
@@ -113,11 +95,11 @@ data class EvalVar(
 ): BuildTask()
 
 data class EvalCallExpr(
+  // buildRuleDefCtx가 eval and then으로 ruleName이라는 rule을 호출하려고 한다
+  val buildRuleDefCtx: BuildRuleDefContext,
+  val ruleName: BibixName,
   val projectId: Int,
   val importInstanceId: Int,
-  val callerProjectId: Int,
-  val callerImportInstanceId: Int,
-  val ruleName: BibixName,
   val params: Map<String, BibixValue>
 ): BuildTask()
 

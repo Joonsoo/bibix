@@ -88,6 +88,7 @@ class BibixRepo(
     }
   }
 
+  // withPrevState는 사용 가능한 기존의 target state가 있을 떄, 그 값을 재사용할 수 있는지 확인하기 위함
   fun <T> targetStarted(
     targetId: String,
     targetIdData: TargetIdData,
@@ -109,8 +110,9 @@ class BibixRepo(
     }
 
     val prevState = repoData.getTargetStatesOrDefault(targetId, null)
+    // TODO 설정에 따라 이전 run에서 만든 것이라도 일정 시간 이내이면 재사용 시도하도록
     if (prevState == null || prevState.uniqueRunId != uniqueRunId) {
-      // 처음 실행하는 것이면 putData하고 null(reuse할 것 없음), null(prevState 없음) 반환
+      // (이번 run에서) 처음 실행하는 것이면 putData하고 null(reuse할 것 없음), null(prevState 없음) 반환
       putData()
       Pair(null, null)
     } else {

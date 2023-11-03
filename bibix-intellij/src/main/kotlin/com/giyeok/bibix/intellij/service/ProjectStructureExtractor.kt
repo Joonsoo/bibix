@@ -1,6 +1,7 @@
 package com.giyeok.bibix.intellij.service
 
 import com.giyeok.bibix.ast.BibixAst
+import com.giyeok.bibix.base.DummyProgressLogger
 import com.giyeok.bibix.base.MainSourceId
 import com.giyeok.bibix.base.StringValue
 import com.giyeok.bibix.frontend.BuildFrontend
@@ -396,6 +397,7 @@ object ProjectStructureExtractor {
     val scalaCompilers = scalaSdkVersions.associate { (scalaVersion, _) ->
       val compiler = Artifact.resolveArtifact(
         buildFrontend.buildEnv,
+        DummyProgressLogger,
         buildFrontend.repo.prepareSharedDirectory(Artifact.sharedRepoName),
         groupId = "org.scala-lang",
         artifactId = "scala-compiler",
@@ -408,6 +410,7 @@ object ProjectStructureExtractor {
       )
       val reflect = Artifact.resolveArtifact(
         buildFrontend.buildEnv,
+        DummyProgressLogger,
         buildFrontend.repo.prepareSharedDirectory(Artifact.sharedRepoName),
         groupId = "org.scala-lang",
         artifactId = "scala-reflect",
@@ -420,6 +423,7 @@ object ProjectStructureExtractor {
       )
       val library = Artifact.resolveArtifact(
         buildFrontend.buildEnv,
+        DummyProgressLogger,
         buildFrontend.repo.prepareSharedDirectory(Artifact.sharedRepoName),
         groupId = "org.scala-lang",
         artifactId = "scala-library",

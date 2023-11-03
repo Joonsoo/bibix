@@ -37,7 +37,7 @@ fun organizeParamsAndRunBuildRule(
         buildGraphRunner,
         callerProjectId,
         callerImportInstanceId,
-        FinalizeBuildRuleReturnValue.FinalizeContext.from(buildRule)
+        BuildRuleDefContext.from(buildRule)
       ) { result ->
         if (result is BuildTaskResult.ResultWithValue) {
           block(BuildTaskResult.ValueOfTargetResult(result.value, buildContext.targetId))
@@ -84,8 +84,6 @@ private fun withBuildContext(
 
   val repo = buildGraphRunner.repo
 
-  // TODO 동시에 같은 target이 두 번 이상 호출되려고 하면?
-  //   즉, 이미 target started인데 같은 target을 또 실행하려고 하면 다른쪽 타겟의 결과를 기다렸다가 그걸 사용하면 되는데..
   val (reuse, prevState) =
     repo.targetStarted(targetIdHex, targetIdData, inputHashes, inputHashString) { prevState ->
       // 같은 run에선 같은 target id는 값을 재활용하도록
@@ -96,6 +94,8 @@ private fun withBuildContext(
 
       when (prevState.stateCase) {
         BibixRepoProto.TargetState.StateCase.BUILD_STARTED -> {
+          // 동시에 같은 target이 두 번 이상 호출되려고 하면, 즉, 이미 target started인데
+          // 같은 target을 또 실행하려고 하면 다른쪽 타겟의 결과를 기다렸다가 그걸 사용한다.
           BuildTaskResult.DuplicateTargetResult(targetIdHex)
         }
 
@@ -192,7 +192,7 @@ class BuildRuleRunner(
   val callerProjectId: Int,
   val callerImportInstanceId: Int,
   // build rule이 정의된 위치
-  val finalizeCtx: FinalizeBuildRuleReturnValue.FinalizeContext,
+  val finalizeCtx: BuildRuleDefContext,
   val whenDoneBlock: (BuildTaskResult.FinalResult) -> BuildTaskResult
 ) {
   fun handleBuildReturn(result: Any?): BuildTaskResult = when (result) {
@@ -237,9 +237,7 @@ class BuildRuleRunner(
       FinalizeBuildRuleReturnValue(
         finalizeCtx,
         it.value,
-        // TODO 여기 projectId와 importInstanceId가 이게 맞나?
-        finalizeCtx.projectId,
-        finalizeCtx.importInstanceId
+        callerProjectId,
       )
     }) { finalized ->
       val finValues = finalized.map {
@@ -250,11 +248,10 @@ class BuildRuleRunner(
 
       BuildTaskResult.WithResult(
         EvalCallExpr(
-          finalizeCtx.projectId,
-          finalizeCtx.importInstanceId,
+          finalizeCtx,
+          BibixName(result.ruleName),
           callerProjectId,
           callerImportInstanceId,
-          BibixName(result.ruleName),
           finalizedParams
         )
       ) { evalResult ->
