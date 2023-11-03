@@ -50,7 +50,10 @@ class ResolveClassPkgs {
     )
 
     // TODO 깊이가 같은 dependency가 있을 경우 앞에 나온 것 먼저
-    fun mavenArtifactVersionsToUse(classPkgs: List<ClassPkg>): Map<MavenArtifact, MavenDep> {
+    fun mavenArtifactVersionsToUse(
+      classPkgs: List<ClassPkg>,
+      logger: ProgressLogger?
+    ): Map<MavenArtifact, MavenDep> {
       // value는 버젼명 -> root로부터의 거리
       val depthMap = mutableMapOf<MavenArtifact, MutableMap<MavenDep, MavenVersionDepths>>()
       val path = LinkedList<ClassOrigin>()
@@ -100,7 +103,7 @@ class ResolveClassPkgs {
               }
             }
           val chosen = minDepths.minBy { it.value.priority }.key
-          println("Warning: Possibly conflicting versions of $artifactName\n$depthsMapString\nChosen: $chosen")
+          logger?.logInfo("Warning: Possibly conflicting versions of $artifactName\n$depthsMapString\nChosen: $chosen")
           chosen
         } else {
           // minDepths.keys에 딱 하나밖에 없음
@@ -156,9 +159,9 @@ class ResolveClassPkgs {
       val runtimeDeps: Map<ClassOrigin, ClassPkg>,
     )
 
-    fun flattenClassPkgs(classPkgs: List<ClassPkg>): FlattenedClassPkgs {
+    fun flattenClassPkgs(classPkgs: List<ClassPkg>, logger: ProgressLogger?): FlattenedClassPkgs {
       val pkgsMap = flattenDeps(classPkgs)
-      val mavenVersions = mavenArtifactVersionsToUse(classPkgs)
+      val mavenVersions = mavenArtifactVersionsToUse(classPkgs, logger)
 
       fun filterMavenDeps(origins: Collection<ClassOrigin>): Set<ClassOrigin> =
         origins.mapNotNull { origin ->
@@ -183,8 +186,8 @@ class ResolveClassPkgs {
     }
 
     // classPkgs를 classpath로 주기 위해서 필요한 jar나 디렉토리 목록을 반환
-    fun resolveClassPkgs(classPkgs: List<ClassPkg>): ClassPaths {
-      val flattened = flattenClassPkgs(classPkgs)
+    fun resolveClassPkgs(classPkgs: List<ClassPkg>, logger: ProgressLogger?): ClassPaths {
+      val flattened = flattenClassPkgs(classPkgs, logger)
 
       fun depsToPaths(cps: Collection<ClassPkg>): List<Path> =
         cps.flatMap { it.cpinfo.toPaths() }
@@ -202,7 +205,7 @@ class ResolveClassPkgs {
     // 여기서는 클래스 이름이 충돌하는 것까지 확인하진 않는다.
     val classPkgs = classPkgBibixValues.values.map { ClassPkg.fromBibix(it) }
 
-    val cps = resolveClassPkgs(classPkgs)
+    val cps = resolveClassPkgs(classPkgs, context.progressLogger)
     return cps.toBibix()
   }
 }

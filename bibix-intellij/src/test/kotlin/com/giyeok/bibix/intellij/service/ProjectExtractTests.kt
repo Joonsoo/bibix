@@ -9,7 +9,8 @@ class ProjectExtractTests {
   fun test(): Unit = runBlocking {
     val impl = BibixIntellijServiceImpl()
     val project = impl.loadProject(loadProjectReq {
-      this.projectRoot = "/Users/joonsoo/Documents/workspace/jparser"
+      // this.projectRoot = "/home/joonsoo/Documents/workspace/jparser"
+      this.projectRoot = "/home/joonsoo/Documents/workspace/bibix/bibix-core/src/test/resources/varredefs/b"
     })
     println(project)
   }

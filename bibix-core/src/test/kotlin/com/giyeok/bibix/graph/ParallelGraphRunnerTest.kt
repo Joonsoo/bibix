@@ -29,7 +29,7 @@ class ParallelGraphRunnerTest {
       buildEnv = buildEnv,
       fileSystem = FileSystems.getDefault(),
       repo = repo,
-      classWorld = ClassWorld()
+      classPkgRunner = ClassPkgRunner(ClassWorld())
     )
 
     val tracker = ExecutorTracker(4)

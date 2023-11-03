@@ -62,6 +62,10 @@ private fun withBuildContext(
 ): BuildTaskResult {
   val argsMap = argsMapFrom(args)
   val targetIdData = targetIdData {
+    // target id에 caller측에 대한 정보가 들어갈 필요가 있나?
+    //  - target의 일반적 의미상으론 필요가 없는게 맞는 것 같음
+    //  - 하지만 BuildContext에 caller에 대한 정보(caller의 디렉토리 등)가 들어있기 때문에
+    //    보수적으로 보면 caller에 대한 정보가 target id에도 반영되는 것이 맞을듯 함
     this.sourceId = sourceIdFrom(buildGraphRunner, callerProjectId)
     this.buildRule = buildRuleData {
       this.buildRuleSourceId = sourceIdFrom(buildGraphRunner, buildRule.projectId)

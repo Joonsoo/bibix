@@ -1,11 +1,17 @@
 package com.giyeok.bibix.plugins.prelude
 
-import com.giyeok.bibix.base.*
+import com.giyeok.bibix.base.BibixValue
+import com.giyeok.bibix.base.BuildContext
+import com.giyeok.bibix.base.BuildRuleReturn
+import com.giyeok.bibix.base.StringValue
+import com.giyeok.bibix.graph.runner.argsMapFrom
 import com.giyeok.bibix.interpreter.BibixProject
-import org.eclipse.jgit.api.Git as JGit
+import com.giyeok.bibix.repo.hashString
+import com.giyeok.bibix.utils.toHexString
 import org.eclipse.jgit.transport.CredentialsProvider
 import org.eclipse.jgit.transport.URIish
 import java.io.IOException
+import org.eclipse.jgit.api.Git as JGit
 
 class Git {
   fun refSpec(args: Map<String, BibixValue>): String {
@@ -37,7 +43,9 @@ class Git {
     val gitRepos = context.getSharedDirectory("com.giyeok.bibix.plugins.bibix.git")
 
     return BuildRuleReturn.withDirectoryLock(gitRepos) {
-      val gitDirectory = gitRepos.resolve(context.targetId)
+      // 이 target의 targetId 대신 arguments들의 해시를 ID로 사용
+      val repoId = argsMapFrom(context.arguments).hashString().toHexString()
+      val gitDirectory = gitRepos.resolve(repoId)
 
       val existingRepo = try {
         JGit.open(gitDirectory.toFile())

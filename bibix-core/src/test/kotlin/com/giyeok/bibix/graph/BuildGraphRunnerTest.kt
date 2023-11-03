@@ -28,7 +28,7 @@ class BuildGraphRunnerTest {
       buildEnv = buildEnv,
       fileSystem = FileSystems.getDefault(),
       repo = repo,
-      classWorld = ClassWorld()
+      classPkgRunner = ClassPkgRunner(ClassWorld())
     )
 
     println(runner.runToFinal(EvalTarget(1, 0, BibixName("ee"))))

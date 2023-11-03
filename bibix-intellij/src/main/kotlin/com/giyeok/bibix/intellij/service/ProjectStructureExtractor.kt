@@ -6,6 +6,8 @@ import com.giyeok.bibix.base.MainSourceId
 import com.giyeok.bibix.base.StringValue
 import com.giyeok.bibix.frontend.BuildFrontend
 import com.giyeok.bibix.frontend.NoopProgressNotifier
+import com.giyeok.bibix.graph.BibixProjectLocation
+import com.giyeok.bibix.graph.runner.EvalTarget
 import com.giyeok.bibix.intellij.*
 import com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDep
 import com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDep
@@ -22,6 +24,7 @@ import com.giyeok.bibix.plugins.maven.Artifact
 import com.giyeok.bibix.utils.toHexString
 import com.google.common.annotations.VisibleForTesting
 import kotlinx.coroutines.runBlocking
+import org.codehaus.plexus.classworlds.ClassWorld
 import java.io.PrintWriter
 import java.io.StringWriter
 import java.nio.file.Path
@@ -174,68 +177,79 @@ object ProjectStructureExtractor {
       ModulesCollector("ktjvm", Pair("org.jetbrains.kotlin", "kotlin-stdlib"))
     val scalaModulesCollector =
       ModulesCollector("scala", Pair("org.scala-lang", "scala-library"))
-    val overridingPluginImplProvider = OverridingPluginImplProviderImpl(
+    val overridingClassPkgRunner = OverridingClassPkgRunner(
       mapOf(
-        Pair(MainSourceId, "com.giyeok.bibix.plugins.java.Library") to javaModulesCollector,
-        Pair(MainSourceId, "com.giyeok.bibix.plugins.ktjvm.Library") to ktjvmModulesCollector,
-        Pair(MainSourceId, "com.giyeok.bibix.plugins.scala.Library") to scalaModulesCollector
-      )
+        Pair(1, "com.giyeok.bibix.plugins.java.Library") to javaModulesCollector,
+        Pair(1, "com.giyeok.bibix.plugins.ktjvm.Library") to ktjvmModulesCollector,
+        Pair(1, "com.giyeok.bibix.plugins.scala.Library") to scalaModulesCollector
+      ),
+      ClassWorld()
     )
     val buildFrontend = BuildFrontend(
-      BibixProject(projectRoot, scriptName),
+      if (scriptName == null) {
+        BibixProjectLocation(projectRoot)
+      } else {
+        BibixProjectLocation(projectRoot, scriptName)
+      },
       mapOf(),
       listOf(),
-      NoopProgressNotifier(),
-      pluginImplProvider = overridingPluginImplProvider
+      classPkgRunner = overridingClassPkgRunner
     )
 
     val rootModuleName = projectRoot.name
 
-    val mainTargets = buildFrontend.mainScriptDefinitions()
+    val mainTargets = buildFrontend.mainScriptDefinitions
 
     val moduleTargets = runBlocking {
       mainTargets.filterValues { definition ->
-        if (definition is Definition.TargetDef) {
-          if (definition.target.value is BibixAst.CallExpr) {
-            val callTarget = buildFrontend.blockingEvaluateName(
-              ExprEvalContext(NameLookupContext(definition.cname).dropLastToken(), VarsContext()),
-              (definition.target.value as BibixAst.CallExpr).name.tokens,
-            )
-            when (callTarget) {
-              is EvaluationResult.RuleDef.BuildRuleDef.UserBuildRuleDef ->
-                callTarget.className == "com.giyeok.bibix.plugins.java.Library" ||
-                  callTarget.className == "com.giyeok.bibix.plugins.ktjvm.Library" ||
-                  callTarget.className == "com.giyeok.bibix.plugins.scala.Library"
-
-              else -> false
-            }
-          } else false
+        if (definition is EvalTarget) {
+          true
+//          if (definition.target.value is BibixAst.CallExpr) {
+//            val callTarget = buildFrontend.blockingEvaluateName(
+//              ExprEvalContext(NameLookupContext(definition.cname).dropLastToken(), VarsContext()),
+//              (definition.target.value as BibixAst.CallExpr).name.tokens,
+//            )
+//            when (callTarget) {
+//              is EvaluationResult.RuleDef.BuildRuleDef.UserBuildRuleDef ->
+//                callTarget.className == "com.giyeok.bibix.plugins.java.Library" ||
+//                  callTarget.className == "com.giyeok.bibix.plugins.ktjvm.Library" ||
+//                  callTarget.className == "com.giyeok.bibix.plugins.scala.Library"
+//
+//              else -> false
+//            }
+//          } else false
         } else false
       }
     }
-    moduleTargets.keys.forEachIndexed { index, target ->
-      try {
-        println("${index + 1}/${moduleTargets.keys.size}: Starting $target")
-        val result = buildFrontend.blockingBuildTargets(listOf(target))
-        println(result)
-      } catch (e: Exception) {
-        if (e is BibixExecutionException) {
-          val writer = StringWriter()
-          val pwriter = PrintWriter(writer)
-          pwriter.println("Task trace (size=${e.trace.size}):")
-          val descriptor =
-            TaskDescriptor(buildFrontend.interpreter.g, buildFrontend.interpreter.sourceManager)
-          e.trace.forEach { task ->
-            pwriter.println(task)
-            descriptor.printTaskDescription(task, pwriter)
-          }
-          pwriter.println("===")
-          System.err.println(writer.toString())
-        }
-        e.printStackTrace()
-        println("Failed to build $target. Ignored")
-      }
+    val results = runBlocking {
+      buildFrontend.runBuildTasks(moduleTargets.values.toList())
     }
+    println(results)
+
+    // repo에 output -> name 지정되어 있는 것들 중에, modules collector에 기록된 것들 추려서 반환
+//    moduleTargets.keys.forEachIndexed { index, target ->
+//      try {
+//        println("${index + 1}/${moduleTargets.keys.size}: Starting $target")
+//        val result = buildFrontend.blockingBuildTargets(listOf(target))
+//        println(result)
+//      } catch (e: Exception) {
+//        if (e is BibixExecutionException) {
+//          val writer = StringWriter()
+//          val pwriter = PrintWriter(writer)
+//          pwriter.println("Task trace (size=${e.trace.size}):")
+//          val descriptor =
+//            TaskDescriptor(buildFrontend.interpreter.g, buildFrontend.interpreter.sourceManager)
+//          e.trace.forEach { task ->
+//            pwriter.println(task)
+//            descriptor.printTaskDescription(task, pwriter)
+//          }
+//          pwriter.println("===")
+//          System.err.println(writer.toString())
+//        }
+//        e.printStackTrace()
+//        println("Failed to build $target. Ignored")
+//      }
+//    }
 
     val modules =
       javaModulesCollector.modules + ktjvmModulesCollector.modules + scalaModulesCollector.modules
@@ -305,7 +319,7 @@ object ProjectStructureExtractor {
           })
         }
         val deps =
-          ResolveClassPkgs.flattenClassPkgs(listOfNotNull(module.sdk?.second) + module.deps)
+          ResolveClassPkgs.flattenClassPkgs(listOfNotNull(module.sdk?.second) + module.deps, null)
         (deps.inputDeps + deps.compileDeps).forEach { (origin, pkg) ->
           if (origin is LocalBuilt && isModule(origin)) {
             this.moduleDeps.add(ModuleDep.newBuilder().also {
@@ -437,7 +451,7 @@ object ProjectStructureExtractor {
       scalaVersion to listOf(compiler, reflect, library)
     }
     val scalaCompilerClasspaths = scalaCompilers.mapValues { (_, classPkgs) ->
-      ResolveClassPkgs.resolveClassPkgs(classPkgs).cps.map { it.absolutePathString() }
+      ResolveClassPkgs.resolveClassPkgs(classPkgs, null).cps.map { it.absolutePathString() }
     }
 
     return sdkInfo {

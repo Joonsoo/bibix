@@ -34,7 +34,7 @@ class BuildGraphRunner(
       buildEnv: BuildEnv,
       fileSystem: FileSystem,
       repo: BibixRepo,
-      classWorld: ClassWorld,
+      classPkgRunner: ClassPkgRunner,
     ): BuildGraphRunner {
       val preludeNames = NameLookupTable.fromDefs(preludePlugin.defs).names.keys
 
@@ -88,7 +88,7 @@ class BuildGraphRunner(
         buildEnv = buildEnv,
         fileSystem = fileSystem,
         repo = repo,
-        classPkgRunner = ClassPkgRunner(classWorld)
+        classPkgRunner = classPkgRunner
       )
     }
   }
@@ -242,7 +242,13 @@ class BuildGraphRunner(
 
         is Callee.PreludeMember -> {
           val preludeGraph = multiGraph.getProjectGraph(2)
-          processEntity(2, 0, callee.name, preludeGraph.findName(callee.name))
+          val localEntity = preludeGraph.findName(callee.name)
+          if (localEntity != null) {
+            processEntity(2, 0, callee.name, localEntity)
+          } else {
+            // prelude에 import bibix 가 있어서..
+            lookupFromImport(preludeGraph, 2, 0, callee.name) { it }
+          }
         }
       }
     }
@@ -668,33 +674,9 @@ class BuildGraphRunner(
 
         val classPkg = ClassPkg.fromBibix(implTarget.value)
 
-        val implInstance = classPkgRunner.getPluginImplInstance(classPkg, implClassName)
+        val implInstance = classPkgRunner.getPluginImplInstance(projectId, classPkg, implClassName)
         block(classPkg, implInstance)
       }
-    }
-  }
-
-  // import를 위한 import instance를 만든다
-  fun handleImportResult(
-    importerProjectId: Int,
-    importerInstanceId: Int,
-    importName: BibixName,
-    importedProjectId: Int,
-    block: (BuildTaskResult.ImportInstanceResult) -> BuildTaskResult,
-  ): BuildTaskResult {
-    val importerGraph = multiGraph.getProjectGraph(importerProjectId)
-    val newRedefs = importerGraph.varRedefs[importName] ?: mapOf()
-    val newGlobalRedefs = newRedefs.mapValues { (_, exprNodeId) ->
-      GlobalExprNodeId(importerProjectId, importerInstanceId, exprNodeId)
-    }
-
-    return BuildTaskResult.WithResult(
-      NewImportInstance(importedProjectId, newGlobalRedefs)
-    ) { instance ->
-      check(instance is BuildTaskResult.ImportInstanceResult)
-      check(importedProjectId == instance.projectId)
-
-      block(instance)
     }
   }
 }

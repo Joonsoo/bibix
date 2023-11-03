@@ -28,7 +28,7 @@ class ParallelGraphRunner(
 
   private val updateChannel = Channel<BuildRunUpdate>(Channel.UNLIMITED)
 
-  suspend fun runTasks(vararg tasks: BuildTask): Map<BuildTask, BuildTaskResult> =
+  suspend fun runTasks(vararg tasks: BuildTask): Map<BuildTask, BuildTaskResult?> =
     runTasks(tasks.toList())
 
   private val runningTasks = mutableSetOf<BuildTask>()
@@ -203,7 +203,7 @@ class ParallelGraphRunner(
     }
   }
 
-  suspend fun runTasks(tasks: Collection<BuildTask>): Map<BuildTask, BuildTaskResult> {
+  suspend fun runTasks(tasks: Collection<BuildTask>): Map<BuildTask, BuildTaskResult.FinalResult?> {
     val loop = CoroutineScope(mainJobExecutor.asCoroutineDispatcher()).async {
       for (update in updateChannel) {
         // println(update)
@@ -211,10 +211,11 @@ class ParallelGraphRunner(
           is BuildRunUpdate.Task -> processBuildTask(update.task)
           is BuildRunUpdate.Result -> processTaskResult(update.task, update.result)
           is BuildRunUpdate.Failed -> {
+            // TODO 오류도 기록하기?
             // 중간에 오류가 발생한 경우
             update.exception.printStackTrace()
             updateChannel.close()
-            throw update.exception
+            break
           }
         }
         processDependentTasks()
@@ -222,7 +223,7 @@ class ParallelGraphRunner(
         // 작업이 모두 완료되었으면 break
         if (tasks.all { it in resultMap }) break
       }
-      tasks.associateWith { resultMap.getValue(it) }
+      tasks.associateWith { resultMap[it] }
     }
     // taskQueue.addAll(tasks)
     tasks.distinct().forEach {

@@ -203,12 +203,10 @@ private fun BuildGraphRunner.handleImportLocation(
   importerImportName: BibixName,
   importLocation: BibixProjectLocation,
 ): BuildTaskResult {
-  val importedProjectId: Int
-
   val existingProjectId = multiGraph.getProjectIdByLocation(importLocation)
-  if (existingProjectId != null) {
+  val importedProjectId = if (existingProjectId != null) {
     // 이미 로드된 프로젝트인 경우
-    importedProjectId = existingProjectId
+    existingProjectId
     // importedGraph = multiGraph.getProjectGraph(existingProjectId)
   } else {
     // 새로 로드해야 하는 프로젝트인 경우
@@ -223,7 +221,7 @@ private fun BuildGraphRunner.handleImportLocation(
     val importedGraph =
       BuildGraph.fromScript(importScript, preloadedPluginIds.keys, preludeNames)
 
-    importedProjectId = multiGraph.addProject(importLocation, importedGraph, importSource)
+    multiGraph.addProject(importLocation, importedGraph, importSource)
   }
 
   return createImportInstance(

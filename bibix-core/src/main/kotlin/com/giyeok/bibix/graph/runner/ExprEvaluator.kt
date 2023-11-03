@@ -234,8 +234,12 @@ class ExprEvaluator(
         }
       }
 
-      is LocalBuildRuleRef -> TODO()
+      is LocalBuildRuleRef ->
+        // TODO BuildRuleDefValue 값을 반환하도록 수정
+        TODO()
+
       is LocalDataClassRef ->
+        // TODO DataClassTypeValue 값을 반환하도록 수정
         BuildTaskResult.WithResult(EvalDataClass(projectId, importInstanceId, exprNode.name)) { it }
 
       is LocalTargetRef ->
@@ -253,6 +257,7 @@ class ExprEvaluator(
         }
 
       is LocalActionRef ->
+        // TODO 이건 어떻게 해야되지?
         BuildTaskResult.WithResult(
           EvalAction(projectId, importInstanceId, exprNode.name)
         ) { result ->
@@ -261,6 +266,7 @@ class ExprEvaluator(
         }
 
       is LocalActionRuleRef ->
+        // TODO ActionRuleDefValue 값을 반환하도록 수정
         BuildTaskResult.WithResult(
           EvalActionRule(projectId, importInstanceId, exprNode.name)
         ) { result ->
@@ -288,7 +294,59 @@ class ExprEvaluator(
                     EvalVar(result.projectId, result.importInstanceId, exprNode.name)
                   ) { it }
 
-                else -> throw IllegalStateException("Invalid expression")
+                is BuildGraphEntity.BuildRule ->
+                  // TODO source id
+                  BuildTaskResult.WithResult(
+                    EvalBuildRule(result.projectId, result.importInstanceId, exprNode.name)
+                  ) { buildRule ->
+                    check(buildRule is BuildTaskResult.BuildRuleResult)
+
+                    val paramTypes = buildRule.paramTypes.toMap()
+                    val params = buildRule.buildRuleDef.def.params.map { param ->
+                      RuleParam(
+                        param.name,
+                        paramTypes.getValue(param.name).toTypeValue(),
+                        param.optional
+                      )
+                    }
+                    BuildTaskResult.ValueResult(
+                      BuildRuleDefValue(
+                        CName(MainSourceId, exprNode.name.tokens),
+                        params,
+                        buildRule.implInstance::class.java.canonicalName,
+                        buildRule.implMethod.name
+                      )
+                    )
+                  }
+
+                is BuildGraphEntity.DataClass ->
+                  BuildTaskResult.ValueResult(
+                    TypeValue.DataClassTypeValue(
+                      checkNotNull(graph.packageName),
+                      exprNode.name.toString()
+                    )
+                  )
+
+                is BuildGraphEntity.SuperClass ->
+                  BuildTaskResult.ValueResult(
+                    TypeValue.SuperClassTypeValue(
+                      checkNotNull(graph.packageName),
+                      exprNode.name.toString()
+                    )
+                  )
+
+                is BuildGraphEntity.Enum ->
+                  BuildTaskResult.ValueResult(
+                    TypeValue.EnumTypeValue(
+                      checkNotNull(graph.packageName),
+                      exprNode.name.toString()
+                    )
+                  )
+
+                is BuildGraphEntity.ActionRule -> TODO()
+
+                is BuildGraphEntity.ImportAll, is BuildGraphEntity.ImportFrom,
+                is BuildGraphEntity.Action, null -> throw IllegalStateException("Invalid expression")
               }
             }
 

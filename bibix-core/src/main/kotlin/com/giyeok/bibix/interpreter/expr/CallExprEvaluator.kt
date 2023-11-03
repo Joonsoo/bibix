@@ -64,7 +64,7 @@ class CallExprEvaluator(
     val cpsMap = ResolveClassPkgs.cpsMap(listOf(classPkg))
       // TODo bibix.base를 maven artifact로 넣어서 필터링하는게 나을듯
       .filterNot { it.key is LocalLib && (it.key as LocalLib).path.fileName.name.startsWith("bibix-base-") }
-    val mavenVersions = ResolveClassPkgs.mavenArtifactVersionsToUse(listOf(classPkg))
+    val mavenVersions = ResolveClassPkgs.mavenArtifactVersionsToUse(listOf(classPkg), null)
       .filterNot {
         (it.key.group == "org.jetbrains.kotlin" && it.key.artifact == "kotlin-stdlib") ||
           (it.key.group == "org.jetbrains.kotlin" && it.key.artifact == "kotlin-stdlib-jdk7") ||

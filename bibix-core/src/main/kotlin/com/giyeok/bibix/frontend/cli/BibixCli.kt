@@ -39,10 +39,9 @@ object BibixCli {
       println("$targetName = $value")
     }
 
-    if (useDebuggingMode) {
-      val endTime = Instant.now()
-      println("Build finished in ${Duration.between(startTime, endTime)}")
-    }
+    val endTime = Instant.now()
+    println("Build finished in ${Duration.between(startTime, endTime)}")
+
     exitProcess(0)
   }
 }

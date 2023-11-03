@@ -65,7 +65,7 @@ class ExecutorTracker(threadCount: Int) {
 
   fun printStatus() = synchronized(this) {
     threadTasks.forEachIndexed { index, buildTask ->
-      println("$index: ${buildTask.toString().take(50)}")
+      println("$index: ${buildTask.toString().take(100)}")
     }
     println()
   }

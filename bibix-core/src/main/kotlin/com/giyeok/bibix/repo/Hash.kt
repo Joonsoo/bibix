@@ -48,8 +48,10 @@ fun inputHashesFromPaths(paths: List<String>): BibixIdProto.InputHashes {
     val digest = newDigest()
     val buffer = ByteArray(1000)
     path.inputStream().buffered().use { stream ->
-      stream.read(buffer, 0, 1000)
-      digest.update(buffer)
+      val read = stream.read(buffer, 0, 1000)
+      if (read > 0) {
+        digest.update(buffer, 0, read)
+      }
     }
     val fileHash = digest.digest().toByteString()
 
@@ -77,7 +79,8 @@ fun inputHashesFromPaths(paths: List<String>): BibixIdProto.InputHashes {
   }
 
   return inputHashes {
-    paths.distinct().sorted().map { Path(it) }.forEach { path ->
+    val sortedPaths = paths.map { Path(it).normalize().absolute() }.distinct().sorted()
+    sortedPaths.forEach { path ->
       if (Files.isDirectory(path)) {
         directories.add(traverseDirectory(path))
       } else {

@@ -10,7 +10,6 @@ import com.giyeok.bibix.repo.BibixRepoProto.*
 import com.giyeok.bibix.repo.TargetStateKt.buildFailed
 import com.giyeok.bibix.repo.TargetStateKt.buildSucceeded
 import com.giyeok.bibix.runner.RunConfigProto.RunConfig
-import com.giyeok.bibix.utils.toInstant
 import com.giyeok.bibix.utils.toProto
 import com.google.protobuf.ByteString
 import com.google.protobuf.Message
@@ -70,7 +69,7 @@ class BibixRepo(
     // TODO 임의로 5초에 한번만 저장하게 했는데 더 잘 할 수 없을까..
     val updateNeeded = synchronized(this) {
       if (lastUpdated == null ||
-        Duration.between(lastUpdated, Instant.now()) >= Duration.ofSeconds(5)
+        Duration.between(lastUpdated, Instant.now()) >= Duration.ofSeconds(30)
       ) {
         lastUpdated = Instant.now()
         true
@@ -85,7 +84,9 @@ class BibixRepo(
 
   private fun commitRepoData() {
     synchronized(this) {
-      repoDataFile.writeText(JsonFormat.printer().print(repoData))
+      repoDataFile.outputStream().buffered().use { writer ->
+        repoData.build().writeTo(writer)
+      }
       targetLogsFile.writeText(JsonFormat.printer().print(targetLogs))
     }
   }
@@ -304,7 +305,11 @@ class BibixRepo(
   }
 
   companion object {
-    private fun <T: Message.Builder> readOrDefault(file: Path, builder: T, default: (T) -> T): T {
+    private fun <T: Message.Builder> readJsonOrDefault(
+      file: Path,
+      builder: T,
+      default: (T) -> T
+    ): T {
       if (file.exists()) {
         try {
           file.bufferedReader().use { reader ->
@@ -329,16 +334,21 @@ class BibixRepo(
         Files.createDirectory(bbxbuildDirectory)
       }
       val runConfigFile = bbxbuildDirectory.resolve("config.json")
-      val runConfig = readOrDefault(runConfigFile, RunConfig.newBuilder()) { builder ->
+      val runConfig = readJsonOrDefault(runConfigFile, RunConfig.newBuilder()) { builder ->
         builder.clear()
-          .setMaxThreads(3)
+          .setMaxThreads(8)
           .setMinLogLevel(LogLevel.INFO)
           .setTargetResultReuseDuration(Durations.fromHours(1))
       }.build()
 
-      val repoDataFile = bbxbuildDirectory.resolve("repo.json")
-      val repoData = readOrDefault(repoDataFile, BibixRepoData.newBuilder()) { builder ->
-        builder.clear()
+      val repoDataFile = bbxbuildDirectory.resolve("repo.pb")
+      val repoData = try {
+        repoDataFile.inputStream().buffered().use { input ->
+          BibixRepoData.parseFrom(input).toBuilder()
+        }
+      } catch (e: Exception) {
+        repoDataFile.writeText("")
+        BibixRepoData.newBuilder()
       }
 
       val targetLogsFile = bbxbuildDirectory.resolve("log.json")

@@ -11,17 +11,17 @@ import java.nio.file.Path
 import kotlin.io.path.absolute
 import kotlin.io.path.name
 
-class ClassPkgRunner(private val classWorld: ClassWorld) {
+open class ClassPkgRunner(private val classWorld: ClassWorld) {
   private var realmIdCounter = 0
 
   private val realmCache = mutableMapOf<Set<Path>, ClassRealm>()
 
   private val baseRealm = classWorld.newRealm("bibix-root-realm")
 
-  fun getPluginImplInstance(classPkg: ClassPkg, className: String): Any =
+  open fun getPluginImplInstance(projectId: Int, classPkg: ClassPkg, className: String): Any =
     getPluginImplInstance(prepareClassPathsForPlugin(classPkg), className)
 
-  fun getPluginImplInstance(cps: List<Path>, className: String): Any {
+  private fun getPluginImplInstance(cps: List<Path>, className: String): Any {
     val cpsSet = cps.map { it.absolute() }.toSet()
     val cached = realmCache[cpsSet]
     val realm = if (cached != null) cached else {
@@ -45,7 +45,7 @@ class ClassPkgRunner(private val classWorld: ClassWorld) {
     val cpsMap = ResolveClassPkgs.cpsMap(listOf(classPkg))
       // TODo bibix.base를 maven artifact로 넣어서 필터링하는게 나을듯
       .filterNot { it.key is LocalLib && (it.key as LocalLib).path.fileName.name.startsWith("bibix-base-") }
-    val mavenVersions = ResolveClassPkgs.mavenArtifactVersionsToUse(listOf(classPkg))
+    val mavenVersions = ResolveClassPkgs.mavenArtifactVersionsToUse(listOf(classPkg), null)
       .filterNot {
         (it.key.group == "org.jetbrains.kotlin" && it.key.artifact == "kotlin-stdlib") ||
           (it.key.group == "org.jetbrains.kotlin" && it.key.artifact == "kotlin-stdlib-jdk7") ||

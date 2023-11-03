@@ -1,5 +1,13 @@
+import git("file://${file.homeDirectory()}/Documents/workspace/autodb3") as autodb3
+
+schema {
+  autodbgen = autodb3.genAutoDb3(
+    definitionFile = "test/pho.autodb",
+    generationConfigFile = "test/pho_autodb_config.pbtxt",
+  )
+}
+
 import "../a" as a
-import bibix.plugins as plgs
 import git("https://github.com/Joonsoo/sugarproto.git") as sugarproto
 from bibix.plugins import ktjvm
 from ktjvm import library as ktjvmlib
@@ -25,7 +33,7 @@ bb = bibix.version
 cc = bibix.plugins
 ss = glob("test/**/*.kt")
 
-dd = plgs.ktjvm.library(srcs=ss)
+dd = ktjvm.library(srcs=ss)
 ee = ktjvm.library(srcs=ss)
 
 action myaction {

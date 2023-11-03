@@ -22,8 +22,9 @@ class BuildFrontend(
   // build args는 어떻게 쓰지? 원래 어쩔 생각이었더라..
   val buildArgsMap: Map<String, String>,
   val actionArgs: List<String>,
-  val prelude: PreloadedPlugin = preludePlugin,
-  val preloadedPlugins: Map<String, PreloadedPlugin> = defaultPreloadedPlugins,
+  prelude: PreloadedPlugin = preludePlugin,
+  preloadedPlugins: Map<String, PreloadedPlugin> = defaultPreloadedPlugins,
+  classPkgRunner: ClassPkgRunner = ClassPkgRunner(ClassWorld()),
   val debuggingMode: Boolean = false
 ) {
   companion object {
@@ -42,12 +43,12 @@ class BuildFrontend(
 
   val buildGraphRunner = BuildGraphRunner.create(
     mainProjectLocation = mainProjectLocation,
-    preludePlugin = preludePlugin,
+    preludePlugin = prelude,
     preloadedPlugins = preloadedPlugins,
     buildEnv = buildEnv,
     fileSystem = FileSystems.getDefault(),
     repo = repo,
-    classWorld = ClassWorld()
+    classPkgRunner = classPkgRunner,
   )
 
   val jobExecutorTracker = ExecutorTracker(getMaxThreads())
@@ -99,6 +100,10 @@ class BuildFrontend(
     targets + actions
   }
 
+  suspend fun runBuildTasks(buildTasks: List<BuildTask>): Map<BuildTask, BuildTaskResult.FinalResult?> {
+    return parallelRunner.runTasks(buildTasks)
+  }
+
   suspend fun runBuild(names: List<String>): Map<String, BibixValue> {
     check(mainScriptDefinitions.keys.containsAll(names)) {
       "Unknown name: ${names - mainScriptDefinitions.keys}\nAvailable targets: ${mainScriptDefinitions.keys.sorted()}"
@@ -108,14 +113,17 @@ class BuildFrontend(
 
     val results = parallelRunner.runTasks(tasks.values)
 
-    return results.map { (task, result) ->
-      val name = when (task) {
-        is EvalTarget -> task.name.toString()
-        is ExecAction -> task.actionName.toString()
-        else -> throw AssertionError()
+    return results.mapNotNull { (task, result) ->
+      if (result != null && result is BuildTaskResult.ResultWithValue) {
+        val name = when (task) {
+          is EvalTarget -> task.name.toString()
+          is ExecAction -> task.actionName.toString()
+          else -> throw AssertionError()
+        }
+        name to result.value
+      } else {
+        null
       }
-      check(result is BuildTaskResult.ResultWithValue)
-      name to result.value
     }.toMap()
   }
 }
