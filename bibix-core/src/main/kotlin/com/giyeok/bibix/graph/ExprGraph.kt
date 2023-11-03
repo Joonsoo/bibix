@@ -66,6 +66,13 @@ data class ImportedExpr(val import: BibixName, val name: BibixName): ExprGraphNo
   override val id: ExprNodeId get() = ExprNodeId.AnyNodeId(this)
 }
 
+data class MemberAccessNode(
+  val target: ExprNodeId,
+  val memberNames: List<String>
+): ExprGraphNode() {
+  override val id: ExprNodeId get() = ExprNodeId.AnyNodeId(this)
+}
+
 data class ValueCastNode(
   val ast: BibixAst.AstNode,
   val value: ExprNodeId,
@@ -135,12 +142,6 @@ data class StringNode(
   val expr: BibixAst.StringLiteral,
   val elems: List<ExprNodeId>
 ): ExprAstNode<BibixAst.StringLiteral>(expr)
-
-data class MemberAccessNode(
-  val expr: BibixAst.MemberAccess,
-  val target: ExprNodeId,
-  val memberNames: List<String>
-): ExprAstNode<BibixAst.MemberAccess>(expr)
 
 data class ThisRefNode(
   val expr: BibixAst.This

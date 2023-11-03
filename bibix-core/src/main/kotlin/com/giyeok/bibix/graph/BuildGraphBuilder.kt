@@ -201,13 +201,13 @@ class BuildGraphBuilder(
     exprTypeEdges.add(ExprTypeEdge(start, end))
   }
 
-  private fun lookupExprName(nameTokens: List<String>, ctx: GraphBuildContext): ExprNodeId {
-    val node = when (val lookupResult = ctx.nameLookupCtx.lookupName(nameTokens)) {
+  private fun lookupExprName(nameTokens: List<String>, ctx: GraphBuildContext): ExprNodeId =
+    when (val lookupResult = ctx.nameLookupCtx.lookupName(nameTokens)) {
       is EnumValueFound ->
-        LocalEnumValue(lookupResult.enum.name, lookupResult.enumValueName)
+        addNode(LocalEnumValue(lookupResult.enum.name, lookupResult.enumValueName))
 
       is NameEntryFound -> {
-        when (val entry = lookupResult.entry) {
+        val node = when (val entry = lookupResult.entry) {
           is BuildRuleNameEntry -> LocalBuildRuleRef(entry.name, entry.def)
           is DataClassNameEntry -> LocalDataClassRef(entry.name, entry.def)
           is TargetNameEntry -> LocalTargetRef(entry.name, entry.def)
@@ -216,22 +216,28 @@ class BuildGraphBuilder(
           is ActionRuleNameEntry -> LocalActionRuleRef(entry.name, entry.def)
           else -> throw IllegalStateException()
         }
+        addNode(node)
       }
 
       is NameFromPrelude ->
-        ImportedExprFromPrelude(lookupResult.name, lookupResult.remaining)
+        addNode(ImportedExprFromPrelude(lookupResult.name, lookupResult.remaining))
 
       is NameOfPreloadedPlugin ->
-        ImportedExprFromPreloaded(lookupResult.name, BibixName(lookupResult.remaining))
+        addNode(ImportedExprFromPreloaded(lookupResult.name, BibixName(lookupResult.remaining)))
 
-      is NameInImport -> {
-        ImportedExpr(lookupResult.importEntry.name, BibixName(lookupResult.remaining))
+      is NameInImport ->
+        addNode(ImportedExpr(lookupResult.importEntry.name, BibixName(lookupResult.remaining)))
+
+      is TargetMemberName -> {
+        val target =
+          addNode(LocalTargetRef(lookupResult.targetEntry.name, lookupResult.targetEntry.def))
+        val access = addNode(MemberAccessNode(target, lookupResult.remaining))
+        addEdge(access, target)
+        access
       }
 
       is NameNotFound, is NamespaceFound -> throw NameNotFoundException(nameTokens, null)
     }
-    return addNode(node)
-  }
 
   data class CallExprAddResult(
     val callee: ExprNodeId,
@@ -330,7 +336,7 @@ class BuildGraphBuilder(
         lookupExprName(memberNames, ctx)
       } else {
         val target = addExpr(firstTarget, ctx)
-        val access = addNode(MemberAccessNode(expr, target, memberNames))
+        val access = addNode(MemberAccessNode(target, memberNames))
         addEdge(access, target)
         access
       }

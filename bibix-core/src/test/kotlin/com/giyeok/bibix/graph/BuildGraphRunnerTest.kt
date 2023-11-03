@@ -1,7 +1,6 @@
 package com.giyeok.bibix.graph
 
 import com.giyeok.bibix.base.Architecture
-import com.giyeok.bibix.base.BibixValue
 import com.giyeok.bibix.base.BuildEnv
 import com.giyeok.bibix.base.OS
 import com.giyeok.bibix.frontend.BuildFrontend
@@ -32,6 +31,8 @@ class BuildGraphRunnerTest {
       classWorld = ClassWorld()
     )
 
+    println(runner.runToFinal(EvalTarget(1, 0, BibixName("protoGen"))))
+
     runner.runToFinal(ExecAction(1, 0, BibixName("myaction"), mapOf()))
 
     println(runner.runToFinal(EvalTarget(1, 0, BibixName("x"))))
@@ -45,6 +46,17 @@ class BuildGraphRunnerTest {
     println(runner.runToFinal(EvalTarget(1, 0, BibixName("ee"))))
   }
 
+  private val buildTasksGraph = mutableMapOf<BuildTask, MutableSet<BuildTask>>()
+
+  fun checkCycle(task: BuildTask, path: List<BuildTask>) {
+    if (task in path) {
+      println("!! $path")
+    }
+    buildTasksGraph[task]?.forEach {
+      checkCycle(it, path + task)
+    }
+  }
+
   fun BuildGraphRunner.runToFinal(buildTask: BuildTask): BuildTaskResult.FinalResult =
     handleResult(buildTask, this.runBuildTask(buildTask))
 
@@ -55,28 +67,54 @@ class BuildGraphRunnerTest {
     when (result) {
       is BuildTaskResult.FinalResult -> result
       is BuildTaskResult.WithResult -> {
-//        println("$buildTask -> ${result.task}")
+        buildTasksGraph.getOrPut(buildTask) { mutableSetOf() }.add(result.task)
+        println("$buildTask -> ${result.task}")
         val derivedTaskResult = runToFinal(result.task)
         handleResult(buildTask, result.func(derivedTaskResult))
       }
 
       is BuildTaskResult.WithResultList -> {
-//        println("$buildTask ->")
-//        result.tasks.forEach {
-//          println("  $it")
-//        }
+        buildTasksGraph.getOrPut(buildTask) { mutableSetOf() }.addAll(result.tasks)
+        println("$buildTask ->")
+        result.tasks.forEach {
+          println("  $it")
+        }
         val derivedTaskResults = result.tasks.map { runToFinal(it) }
         handleResult(buildTask, result.func(derivedTaskResults))
       }
 
       is BuildTaskResult.LongRunning -> {
+        println("Long running...")
         handleResult(buildTask, result.func())
       }
 
       is BuildTaskResult.SuspendLongRunning -> {
+        println("Long running (suspend)...")
         handleResult(buildTask, runBlocking { result.func() })
       }
 
-      else -> throw AssertionError()
+      else -> {
+        val buildTaskNumbers = mutableMapOf<BuildTask, String>()
+        println("digraph G {")
+        buildTasksGraph.forEach { (start, ends) ->
+          fun addNode(task: BuildTask) {
+            if (task !in buildTaskNumbers) {
+              val nodeId = "n${buildTaskNumbers.size + 1}"
+              buildTaskNumbers[task] = nodeId
+              println("  $nodeId [label=\"${escapeDotString("$task")}\"];")
+            }
+          }
+          addNode(start)
+          ends.forEach { addNode(it) }
+        }
+        buildTasksGraph.forEach { (start, ends) ->
+          ends.forEach { end ->
+            println("  ${buildTaskNumbers.getValue(start)} -> ${buildTaskNumbers.getValue(end)};")
+          }
+        }
+        println("}")
+        checkCycle(buildTask, listOf())
+        throw AssertionError()
+      }
     }
 }

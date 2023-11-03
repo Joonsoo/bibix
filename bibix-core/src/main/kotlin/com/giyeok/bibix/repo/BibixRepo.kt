@@ -109,7 +109,7 @@ class BibixRepo(
     }
 
     val prevState = repoData.getTargetStatesOrDefault(targetId, null)
-    if (prevState == null) {
+    if (prevState == null || prevState.uniqueRunId != uniqueRunId) {
       // 처음 실행하는 것이면 putData하고 null(reuse할 것 없음), null(prevState 없음) 반환
       putData()
       Pair(null, null)

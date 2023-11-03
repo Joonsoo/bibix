@@ -1,0 +1,14 @@
+package com.giyeok.bibix;
+
+message SourceId {
+  1 bibixVersion: optional<string>
+  oneof source {
+    2 mainSource: {}
+    3 preludeSource: {}
+    4 preloadedPlugin: string
+    5 externalPluginLocation: ExternalBibixProject {
+      1 rootDirectory: string
+      2 scriptName: string
+    }
+  }
+}

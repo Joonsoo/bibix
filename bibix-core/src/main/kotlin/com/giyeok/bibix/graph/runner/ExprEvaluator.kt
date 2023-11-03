@@ -191,26 +191,8 @@ class ExprEvaluator(
           when (val callee = results[0]) {
             is BuildTaskResult.BuildRuleResult -> {
               check(valueResult is BuildTaskResult.ValueOfTargetResult)
-              BuildTaskResult.WithResult(
-                EvalType(callee.projectId, callee.buildRuleDef.returnType)
-              ) { typeResult ->
-                check(typeResult is BuildTaskResult.TypeResult)
 
-                BuildTaskResult.WithResult(
-                  FinalizeBuildRuleReturnValue(callee, value, projectId, importInstanceId)
-                ) { finalized ->
-                  // finalized가 ValueFinalizeFailResult 이면 안됨
-                  check(finalized is BuildTaskResult.ValueResult)
-
-                  BuildTaskResult.WithResult(
-                    TypeCastValue(finalized.value, typeResult.type, projectId, importInstanceId)
-                  ) { casted ->
-                    check(casted is BuildTaskResult.ValueResult)
-                    buildGraphRunner.repo.targetSucceeded(valueResult.targetId, casted.value)
-                    valueResult.withNewValue(casted.value)
-                  }
-                }
-              }
+              castBuildRuleResult(callee, valueResult.targetId, value)
             }
 
             is BuildTaskResult.DataClassResult -> {
@@ -353,6 +335,55 @@ class ExprEvaluator(
       is ActionLocalLetNode ->
         BuildTaskResult.ValueResult(localLets.getValue(exprNode.name))
     }
+
+  private fun castBuildRuleResult(
+    buildRule: BuildTaskResult.BuildRuleResult,
+    targetId: String,
+    value: BibixValue
+  ): BuildTaskResult = BuildTaskResult.WithResult(
+    EvalType(buildRule.projectId, buildRule.buildRuleDef.returnType)
+  ) { typeResult ->
+    check(typeResult is BuildTaskResult.TypeResult)
+
+    BuildTaskResult.WithResult(
+      FinalizeBuildRuleReturnValue(buildRule, value, projectId, importInstanceId)
+    ) { finalized ->
+      // finalized가 ValueFinalizeFailResult 이면 안됨
+      check(finalized is BuildTaskResult.ValueResult)
+
+      BuildTaskResult.WithResult(
+        TypeCastValue(finalized.value, typeResult.type, projectId, importInstanceId)
+      ) { casted ->
+        check(casted is BuildTaskResult.ValueResult)
+        buildGraphRunner.repo.targetSucceeded(targetId, casted.value)
+        BuildTaskResult.ValueOfTargetResult(casted.value, targetId)
+      }
+    }
+  }
+
+  fun evaluateCallExpr(buildTask: EvalCallExpr): BuildTaskResult {
+    return buildGraphRunner.lookupExprValue(
+      buildTask.projectId,
+      buildTask.ruleName,
+      buildTask.importInstanceId,
+    ) { buildRule ->
+      check(buildRule is BuildTaskResult.BuildRuleResult)
+
+      organizeParamsAndRunBuildRule(
+        buildGraphRunner,
+        // TODO 여기서 주는 projectId와 importInstanceId가 이게 맞나?
+        buildTask.callerProjectId,
+        buildTask.callerImportInstanceId,
+        buildRule,
+        listOf(),
+        buildTask.params
+      ) { evalResult ->
+        check(evalResult is BuildTaskResult.ValueOfTargetResult)
+
+        castBuildRuleResult(buildRule, evalResult.targetId, evalResult.value)
+      }
+    }
+  }
 
   private fun handleImportResult(
     result: BuildTaskResult.ImportResult,

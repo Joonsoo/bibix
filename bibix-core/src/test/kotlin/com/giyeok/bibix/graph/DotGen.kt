@@ -8,7 +8,7 @@ fun dotGraphFrom(graph: ExprGraph, source: String): String {
   writer.indent {
     graph.nodes.forEach { (id, node) ->
       val nodeDescription =
-        dotEscape(id.toNodeId() + "\\l" + nodeDescription(id, node, graph, source))
+        escapeDotString(id.toNodeId() + "\\l" + nodeDescription(id, node, graph, source))
       writer.writeLine("${id.toNodeId()} [label=\"$nodeDescription\", shape=rect];")
     }
 
@@ -23,6 +23,7 @@ fun dotGraphFrom(graph: ExprGraph, source: String): String {
 fun nodeDescription(id: ExprNodeId, node: ExprGraphNode, graph: ExprGraph, source: String): String =
   when (node) {
     is ExprAstNode<*> -> source.substring(node.ast.start, node.ast.end)
+    is MemberAccessNode -> "member ${node.target} ${node.memberNames}"
     is CallExprNode -> "post ${source.substring(node.callExpr.start, node.callExpr.end)}"
     is CallExprCallNode -> source.substring(node.callExpr.start, node.callExpr.end)
     is CallExprParamCoercionNode -> "param coercion ${node.paramLocation}"
@@ -42,7 +43,7 @@ fun nodeDescription(id: ExprNodeId, node: ExprGraphNode, graph: ExprGraph, sourc
 
 fun ExprNodeId.toNodeId(): String = "n${this.hashCode().absoluteValue}"
 
-fun dotEscape(text: String): String {
+fun escapeDotString(text: String): String {
   val lines = text.lines()
 //  val linesTrimmed = if (lines.size <= 1) {
 //    lines

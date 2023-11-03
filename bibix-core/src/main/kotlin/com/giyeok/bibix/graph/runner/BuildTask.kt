@@ -60,8 +60,8 @@ data class TypeCastValue(
 ): BuildTask()
 
 data class FinalizeBuildRuleReturnValue(
-  // val buildRule: BuildTaskResult.BuildRuleResult,
-  val finalizeCtx: FinalizeContext,
+  // build rule이 정의된 위치에 대한 정보
+  val buildRuleDefCtx: BuildRuleDefContext,
   val value: BibixValue,
   val projectId: Int,
   val importInstanceId: Int,
@@ -72,7 +72,7 @@ data class FinalizeBuildRuleReturnValue(
     projectId: Int,
     importInstanceId: Int,
   ): this(
-    FinalizeContext(
+    BuildRuleDefContext(
       buildRule.projectId,
       buildRule.importInstanceId,
       buildRule.name
@@ -81,12 +81,16 @@ data class FinalizeBuildRuleReturnValue(
     projectId,
     importInstanceId
   )
+}
 
-  data class FinalizeContext(val projectId: Int, val importInstanceId: Int, val name: BibixName) {
-    companion object {
-      fun from(buildRule: BuildTaskResult.BuildRuleResult): FinalizeContext =
-        FinalizeContext(buildRule.projectId, buildRule.importInstanceId, buildRule.name)
-    }
+// build rule이 정의된 위치의 정보
+data class BuildRuleDefContext(val projectId: Int, val importInstanceId: Int, val name: BibixName) {
+  companion object {
+    fun from(buildRule: BuildTaskResult.BuildRuleResult): BuildRuleDefContext =
+      BuildRuleDefContext(buildRule.projectId, buildRule.importInstanceId, buildRule.name)
+
+    fun from(actionRule: BuildTaskResult.ActionRuleResult): BuildRuleDefContext =
+      BuildRuleDefContext(actionRule.projectId, actionRule.importInstanceId, actionRule.name)
   }
 }
 
@@ -106,6 +110,15 @@ data class EvalVar(
   val projectId: Int,
   val importInstanceId: Int,
   val name: BibixName
+): BuildTask()
+
+data class EvalCallExpr(
+  val projectId: Int,
+  val importInstanceId: Int,
+  val callerProjectId: Int,
+  val callerImportInstanceId: Int,
+  val ruleName: BibixName,
+  val params: Map<String, BibixValue>
 ): BuildTask()
 
 data class EvalDataClass(

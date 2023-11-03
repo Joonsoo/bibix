@@ -21,6 +21,11 @@ data class NameInImport(
   val remaining: List<String>
 ): NameLookupResult()
 
+data class TargetMemberName(
+  val targetEntry: TargetNameEntry,
+  val remaining: List<String>
+): NameLookupResult()
+
 data class NamespaceFound(val name: String, val context: BibixAst.AstNode?): NameLookupResult()
 
 data class NameNotFound(val nameTokens: List<String>, val nameNode: BibixAst.AstNode?):

@@ -88,25 +88,38 @@ class NameLookupTable(
       return if (nameEntry is ImportNameEntry) {
         NameInImport(nameEntry, tokens.drop(1))
       } else {
-        if (tokens.size != 1) {
-          if (tokens.size == 2 && nameEntry is EnumNameEntry) {
-            check(tokens[1] in nameEntry.def.values)
-            return EnumValueFound(nameEntry, tokens[1])
+        when {
+          tokens.size == 1 -> {
+            NameEntryFound(nameEntry)
           }
-          return NameNotFound(tokens, nameNode)
+
+          else -> {
+            check(tokens.size > 1)
+            when {
+              nameEntry is TargetNameEntry ->
+                TargetMemberName(nameEntry, tokens.drop(1))
+
+              tokens.size == 2 && nameEntry is EnumNameEntry -> {
+                check(tokens[1] in nameEntry.def.values)
+                EnumValueFound(nameEntry, tokens[1])
+              }
+
+              else -> NameNotFound(tokens, nameNode)
+            }
+          }
         }
-        NameEntryFound(nameEntry)
       }
     }
     val ns = namespaces[firstToken]
-    if (ns != null) {
-      return if (tokens.size == 1) {
+    return if (ns != null) {
+      if (tokens.size == 1) {
         NamespaceFound(tokens.joinToString("."), nameNode)
       } else {
         ns.lookupName(tokens.drop(1), nameNode)
       }
+    } else {
+      NameNotFound(tokens, nameNode)
     }
-    return NameNotFound(tokens, nameNode)
   }
 }
 

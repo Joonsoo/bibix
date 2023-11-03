@@ -2,24 +2,35 @@ package com.giyeok.bibix.graph.runner
 
 import com.giyeok.bibix.repo.BibixRepoProto
 import com.giyeok.bibix.utils.toBibix
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.asCoroutineDispatcher
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.trySendBlocking
 import java.util.concurrent.ExecutorService
-import java.util.concurrent.LinkedBlockingQueue
+import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicInteger
 
 // graph 버전에서는 다른건 다 한 스레드에서 돌고,
 // LongRunning과 SuspendLongRunning만 여러 스레드에서 분산시켜서 돌린다
 // 또, build task간의 관계를 그래프(정확히는 DAG) 형태로 잘 관리해서 싸이클 감지와 추후 시각화 기능에 사용한다
-class ParallelGraphRunner(val runner: BuildGraphRunner, val executor: ExecutorService) {
-  private val dispatcher = executor.asCoroutineDispatcher()
+class ParallelGraphRunner(
+  val runner: BuildGraphRunner,
+  val longRunningJobExecutor: ExecutorService,
+) {
+  private val mainJobExecutor = Executors.newSingleThreadExecutor()
+  private val longRunningJobDispatcher = longRunningJobExecutor.asCoroutineDispatcher()
 
-  private val taskQueue = LinkedBlockingQueue<BuildTask>()
-  private val taskResultQueue = LinkedBlockingQueue<Pair<BuildTask, BuildTaskResult>>()
+  private sealed class BuildRunUpdate {
+    data class Task(val task: BuildTask): BuildRunUpdate()
+    data class Result(val task: BuildTask, val result: BuildTaskResult): BuildRunUpdate()
+    data class Failed(val task: BuildTask, val exception: Exception): BuildRunUpdate()
+  }
 
-  fun runTasks(vararg tasks: BuildTask): Map<BuildTask, BuildTaskResult> = runTasks(tasks.toSet())
+  private val updateChannel = Channel<BuildRunUpdate>(Channel.UNLIMITED)
 
+  suspend fun runTasks(vararg tasks: BuildTask): Map<BuildTask, BuildTaskResult> =
+    runTasks(tasks.toSet())
+
+  private val runningTasks = mutableSetOf<BuildTask>()
   private val resultMap = mutableMapOf<BuildTask, BuildTaskResult.FinalResult>()
 
   private data class DependentSingleFunc(
@@ -39,63 +50,76 @@ class ParallelGraphRunner(val runner: BuildGraphRunner, val executor: ExecutorSe
   private val activeLongRunningJobs = AtomicInteger(0)
   private val duplicateTargets = mutableMapOf<String, MutableList<BuildTask>>()
 
-  private fun processBuildTasks() {
-    var nextTask = taskQueue.poll()
-    while (nextTask != null) {
-      val result = runner.runBuildTask(nextTask)
-      taskResultQueue.add(Pair(nextTask, result))
-      nextTask = taskQueue.poll()
+  private suspend fun processBuildTask(task: BuildTask) {
+    if (task in runningTasks) {
+      // 이미 실행된(현재 실행중이거나 처리되어서 결과가 있는) task는 생략
+      return
+    }
+    runningTasks.add(task)
+    try {
+      val result = runner.runBuildTask(task)
+      // taskResultQueue.add(Pair(nextTask, result))
+      updateChannel.send(BuildRunUpdate.Result(task, result))
+    } catch (e: Exception) {
+      updateChannel.send(BuildRunUpdate.Failed(task, e))
     }
   }
 
-  private fun processTaskResults() {
-    var pair = taskResultQueue.poll()
-    while (pair != null) {
-      val (task, result) = pair
-      when (result) {
-        is BuildTaskResult.FinalResult -> {
-          resultMap[task] = result
-        }
+  private suspend fun processTaskResult(task: BuildTask, result: BuildTaskResult) {
+    when (result) {
+      is BuildTaskResult.FinalResult -> {
+        resultMap[task] = result
+      }
 
-        is BuildTaskResult.LongRunning -> {
-          activeLongRunningJobs.incrementAndGet()
-          executor.execute {
-            try {
-              val funcResult = result.func()
-              taskResultQueue.add(Pair(task, funcResult))
-            } finally {
-              activeLongRunningJobs.decrementAndGet()
+      is BuildTaskResult.LongRunning -> {
+        activeLongRunningJobs.incrementAndGet()
+        println("Starting long running for $task")
+        longRunningJobExecutor.execute {
+          try {
+            val funcResult = try {
+              BuildRunUpdate.Result(task, result.func())
+            } catch (e: Exception) {
+              BuildRunUpdate.Failed(task, e)
             }
+            updateChannel.trySendBlocking(funcResult)
+          } finally {
+            activeLongRunningJobs.decrementAndGet()
           }
-        }
-
-        is BuildTaskResult.SuspendLongRunning -> {
-          activeLongRunningJobs.incrementAndGet()
-          CoroutineScope(dispatcher).launch {
-            try {
-              val funcResult = result.func()
-              taskResultQueue.add(Pair(task, funcResult))
-            } finally {
-              activeLongRunningJobs.decrementAndGet()
-            }
-          }
-        }
-
-        is BuildTaskResult.WithResult -> {
-          taskQueue.add(result.task)
-          addTaskDependency(task, result.task, result.func)
-        }
-
-        is BuildTaskResult.WithResultList -> {
-          taskQueue.addAll(result.tasks)
-          addTaskDependencies(task, result.tasks, result.func)
-        }
-
-        is BuildTaskResult.DuplicateTargetResult -> {
-          duplicateTargets.getOrPut(result.targetId) { mutableListOf() }.add(task)
         }
       }
-      pair = taskResultQueue.poll()
+
+      is BuildTaskResult.SuspendLongRunning -> {
+        activeLongRunningJobs.incrementAndGet()
+        println("Starting suspend long running for $task")
+        CoroutineScope(longRunningJobDispatcher).launch {
+          try {
+            val funcResult = try {
+              BuildRunUpdate.Result(task, result.func())
+            } catch (e: Exception) {
+              BuildRunUpdate.Failed(task, e)
+            }
+            updateChannel.trySendBlocking(funcResult)
+          } finally {
+            activeLongRunningJobs.decrementAndGet()
+          }
+        }
+      }
+
+      is BuildTaskResult.WithResult -> {
+        updateChannel.send(BuildRunUpdate.Task(result.task))
+        addTaskDependency(task, result.task, result.func)
+      }
+
+      is BuildTaskResult.WithResultList -> {
+        result.tasks.forEach {
+          updateChannel.send(BuildRunUpdate.Task(it))
+        }
+        addTaskDependencies(task, result.tasks, result.func)
+      }
+
+      is BuildTaskResult.DuplicateTargetResult -> {
+        duplicateTargets.getOrPut(result.targetId) { mutableListOf() }.add(task)
+      }
     }
   }
 
@@ -107,6 +131,7 @@ class ParallelGraphRunner(val runner: BuildGraphRunner, val executor: ExecutorSe
     func: (BuildTaskResult.FinalResult) -> BuildTaskResult
   ) {
     // TODO parentTask -> subTask 관계 저장 - 진행 상황 파악용
+    println("$parentTask -> $subTask")
     dependentSingleFuncs.add(DependentSingleFunc(parentTask, subTask, func))
   }
 
@@ -116,17 +141,26 @@ class ParallelGraphRunner(val runner: BuildGraphRunner, val executor: ExecutorSe
     func: (List<BuildTaskResult.FinalResult>) -> BuildTaskResult
   ) {
     // TODO parentTask -> subTasks 관계 저장 - 진행 상황 파악용
+    println("$parentTask ->")
+    subTasks.forEach {
+      println("  $it")
+    }
     dependentMultiFuncs.add(DependentMultiFunc(parentTask, subTasks, func))
   }
 
-  private fun processDependentTasks() {
+  private suspend fun processDependentTasks() {
     val iter1 = dependentSingleFuncs.iterator()
     while (iter1.hasNext()) {
       val (parent, sub, func) = iter1.next()
       val result = resultMap[sub]
       if (result != null) {
-        val funcResult = func(result)
-        taskResultQueue.add(parent to funcResult)
+        val funcResult = try {
+          BuildRunUpdate.Result(parent, func(result))
+        } catch (e: Exception) {
+          BuildRunUpdate.Failed(parent, e)
+        }
+        // taskResultQueue.add(parent to funcResult)
+        updateChannel.send(funcResult)
         iter1.remove()
       }
     }
@@ -136,14 +170,19 @@ class ParallelGraphRunner(val runner: BuildGraphRunner, val executor: ExecutorSe
       val (parent, subs, func) = iter2.next()
       val results = subs.mapNotNull { resultMap[it] }
       if (results.size == subs.size) {
-        val funcResult = func(results)
-        taskResultQueue.add(parent to funcResult)
+        val funcResult = try {
+          BuildRunUpdate.Result(parent, func(results))
+        } catch (e: Exception) {
+          BuildRunUpdate.Failed(parent, e)
+        }
+        // taskResultQueue.add(parent to funcResult)
+        updateChannel.send(funcResult)
         iter2.remove()
       }
     }
   }
 
-  private fun processDuplicateTargets() {
+  private suspend fun processDuplicateTargets() {
     val iter = duplicateTargets.iterator()
     while (iter.hasNext()) {
       val (targetId, tasks) = iter.next()
@@ -153,26 +192,38 @@ class ParallelGraphRunner(val runner: BuildGraphRunner, val executor: ExecutorSe
         val resultValue = targetState.buildSucceeded.resultValue.toBibix()
         val result = BuildTaskResult.ValueOfTargetResult(resultValue, targetId)
         tasks.forEach { task ->
-          taskResultQueue.add(task to result)
+          // taskResultQueue.add(task to result)
+          updateChannel.send(BuildRunUpdate.Result(task, result))
         }
         iter.remove()
       }
     }
   }
 
-  fun runTasks(tasks: Set<BuildTask>): Map<BuildTask, BuildTaskResult> {
-    taskQueue.addAll(tasks)
-    while (taskQueue.isNotEmpty() || taskResultQueue.isNotEmpty() ||
-      dependentSingleFuncs.isNotEmpty() || dependentMultiFuncs.isNotEmpty() ||
-      activeLongRunningJobs.get() > 0 ||
-      duplicateTargets.isNotEmpty()
-    ) {
-      processBuildTasks()
-      processTaskResults()
-      processDependentTasks()
-      processDuplicateTargets()
-      // TODO 이러면 할 일 없어도 계속 돌아서 별로.. 자고 있다가 필요할 때만 일어나서 일하게 수정
+  suspend fun runTasks(tasks: Set<BuildTask>): Map<BuildTask, BuildTaskResult> {
+    val loop = CoroutineScope(mainJobExecutor.asCoroutineDispatcher()).async {
+      for (update in updateChannel) {
+        // println(update)
+        when (update) {
+          is BuildRunUpdate.Task -> processBuildTask(update.task)
+          is BuildRunUpdate.Result -> processTaskResult(update.task, update.result)
+          is BuildRunUpdate.Failed -> {
+            // 중간에 오류가 발생한 경우
+            updateChannel.close()
+            break
+          }
+        }
+        processDependentTasks()
+        processDuplicateTargets()
+        // 작업이 모두 완료되었으면 break
+        if (tasks.all { it in resultMap }) break
+      }
+      tasks.associateWith { resultMap.getValue(it) }
     }
-    return tasks.associateWith { resultMap.getValue(it) }
+    // taskQueue.addAll(tasks)
+    tasks.forEach {
+      updateChannel.send(BuildRunUpdate.Task(it))
+    }
+    return loop.await()
   }
 }

@@ -32,7 +32,7 @@ fun organizeParamsAndRunBuildRule(
     namedArgs,
   ) { args ->
     withBuildContext(buildGraphRunner, callerProjectId, buildRule, args) { buildContext ->
-      // TODO target이 실패한 경우가 다 처리가 안됨..
+      // TODO target이 실패한 경우에 repo에 업데이트
       val runner = BuildRuleRunner(
         buildGraphRunner,
         callerProjectId,
@@ -89,29 +89,26 @@ private fun withBuildContext(
   val (reuse, prevState) =
     repo.targetStarted(targetIdHex, targetIdData, inputHashes, inputHashString) { prevState ->
       // 같은 run에선 같은 target id는 값을 재활용하도록
-      if (prevState.uniqueRunId == repo.uniqueRunId) {
-        val prevTargetIdData = repo.getTargetIdData(targetIdHex)
-        // 혹시나 불일치하는 경우가 생기지 않는지 확인
-        check(prevTargetIdData == targetIdData)
+      check(prevState.uniqueRunId == repo.uniqueRunId)
+      val prevTargetIdData = repo.getTargetIdData(targetIdHex)
+      // 혹시나 불일치하는 경우가 생기지 않는지 확인
+      check(prevTargetIdData == targetIdData)
 
-        when (prevState.stateCase) {
-          BibixRepoProto.TargetState.StateCase.BUILD_STARTED -> {
-            BuildTaskResult.DuplicateTargetResult(targetIdHex)
-          }
-
-          BibixRepoProto.TargetState.StateCase.BUILD_SUCCEEDED -> {
-            // 실패한 경우도 재사용할 수 있겠지만.. 일단 성공한 경우만
-            BuildTaskResult.ValueOfTargetResult(
-              prevState.buildSucceeded.resultValue.toBibix(),
-              targetIdHex
-            )
-          }
-
-          BibixRepoProto.TargetState.StateCase.BUILD_FAILED -> TODO()
-          else -> throw AssertionError()
+      when (prevState.stateCase) {
+        BibixRepoProto.TargetState.StateCase.BUILD_STARTED -> {
+          BuildTaskResult.DuplicateTargetResult(targetIdHex)
         }
-      } else {
-        null
+
+        BibixRepoProto.TargetState.StateCase.BUILD_SUCCEEDED -> {
+          // 실패한 경우도 재사용할 수 있겠지만.. 일단 성공한 경우만
+          BuildTaskResult.ValueOfTargetResult(
+            prevState.buildSucceeded.resultValue.toBibix(),
+            targetIdHex
+          )
+        }
+
+        BibixRepoProto.TargetState.StateCase.BUILD_FAILED -> TODO()
+        else -> throw AssertionError()
       }
     }
 
@@ -194,6 +191,7 @@ class BuildRuleRunner(
   val buildGraphRunner: BuildGraphRunner,
   val callerProjectId: Int,
   val callerImportInstanceId: Int,
+  // build rule이 정의된 위치
   val finalizeCtx: FinalizeBuildRuleReturnValue.FinalizeContext,
   val whenDoneBlock: (BuildTaskResult.FinalResult) -> BuildTaskResult
 ) {
@@ -233,15 +231,9 @@ class BuildRuleRunner(
   private fun handleEvalAndThen(
     result: BuildRuleReturn.EvalAndThen,
     afterThen: (BuildRuleReturn) -> BuildTaskResult
-  ): BuildTaskResult = buildGraphRunner.lookupExprValue(
-    finalizeCtx.projectId,
-    BibixName(result.ruleName),
-    finalizeCtx.importInstanceId,
-  ) { lookupResult ->
-    check(lookupResult is BuildTaskResult.BuildRuleResult)
-
+  ): BuildTaskResult {
     val params = result.params.entries
-    BuildTaskResult.WithResultList(params.map {
+    return BuildTaskResult.WithResultList(params.map {
       FinalizeBuildRuleReturnValue(
         finalizeCtx,
         it.value,
@@ -255,16 +247,17 @@ class BuildRuleRunner(
         it.value
       }
       val finalizedParams = params.map { it.key }.zip(finValues).toMap()
-      organizeParamsAndRunBuildRule(
-        buildGraphRunner,
-        // TODO 여기서 주는 projectId와 importInstanceId가 이게 맞나?
-        callerProjectId,
-        callerImportInstanceId,
-        lookupResult,
-        listOf(),
-        finalizedParams
+
+      BuildTaskResult.WithResult(
+        EvalCallExpr(
+          finalizeCtx.projectId,
+          finalizeCtx.importInstanceId,
+          callerProjectId,
+          callerImportInstanceId,
+          BibixName(result.ruleName),
+          finalizedParams
+        )
       ) { evalResult ->
-        // TODO evalResult를 buildRuleResult의 return type으로 cast
         check(evalResult is BuildTaskResult.ResultWithValue)
         BuildTaskResult.LongRunning {
           afterThen(result.whenDone(evalResult.value))

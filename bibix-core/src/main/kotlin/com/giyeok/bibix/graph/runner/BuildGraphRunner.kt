@@ -8,6 +8,7 @@ import com.giyeok.bibix.plugins.PluginInstanceProvider
 import com.giyeok.bibix.plugins.PreloadedPlugin
 import com.giyeok.bibix.plugins.jvm.ClassPkg
 import com.giyeok.bibix.repo.BibixRepo
+import com.giyeok.jparser.ktlib.ParsingErrorKt
 import com.google.common.collect.BiMap
 import com.google.common.collect.HashBiMap
 import com.google.common.collect.ImmutableBiMap
@@ -158,6 +159,17 @@ class BuildGraphRunner(
       evaluator.evaluateExpr(buildTask.exprNodeId)
     }
 
+    is EvalCallExpr -> {
+      val evaluator = ExprEvaluator(
+        buildGraphRunner = this,
+        projectId = buildTask.projectId,
+        importInstanceId = buildTask.importInstanceId,
+        localLets = mapOf(),
+        thisValue = null,
+      )
+      evaluator.evaluateCallExpr(buildTask)
+    }
+
     is TypeCastValue -> {
       ValueCaster(this, buildTask.projectId, buildTask.importInstanceId)
         .castValue(buildTask.value, buildTask.type)
@@ -165,7 +177,7 @@ class BuildGraphRunner(
 
     is FinalizeBuildRuleReturnValue -> {
       ValueCaster(this, buildTask.projectId, buildTask.importInstanceId)
-        .finalizeBuildRuleReturnValue(buildTask.finalizeCtx, buildTask.value)
+        .finalizeBuildRuleReturnValue(buildTask.buildRuleDefCtx, buildTask.value)
     }
 
     is EvalBuildRule -> {
@@ -421,11 +433,7 @@ class BuildGraphRunner(
               this,
               buildTask.projectId,
               buildTask.importInstanceId,
-              FinalizeBuildRuleReturnValue.FinalizeContext(
-                callee.projectId,
-                callee.importInstanceId,
-                callee.name
-              )
+              BuildRuleDefContext.from(callee)
             ) { it }
             val result = callee.implMethod.invoke(callee.implInstance, actionContext)
             runner.handleActionReturn(result)
@@ -540,7 +548,13 @@ class BuildGraphRunner(
     } else {
       // 새로 로드해야 하는 프로젝트인 경우
       val importSource = importLocation.readScript()
-      val importScript = BibixParser.parse(importSource)
+      val importScript = try {
+        BibixParser.parse(importSource)
+      } catch (e: ParsingErrorKt.UnexpectedInput) {
+        throw IllegalStateException(
+          "Failed to parse: ${importLocation.projectRoot} ${importLocation.scriptName}", e
+        )
+      }
       val importGraph =
         BuildGraph.fromScript(importScript, preloadedPluginIds.keys, preludeNames)
 

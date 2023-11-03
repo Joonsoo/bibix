@@ -1,5 +1,8 @@
 import "../a" as a
 import bibix.plugins as plgs
+import git("https://github.com/Joonsoo/sugarproto.git") as sugarproto
+from bibix.plugins import ktjvm
+import file
 
 var a.zz = "xyz"
 
@@ -18,12 +21,8 @@ bb = bibix.version
 cc = bibix.plugins
 ss = glob("test/**/*.kt")
 
-from bibix.plugins import ktjvm
-
 dd = plgs.ktjvm.library(srcs=ss)
 ee = ktjvm.library(srcs=ss)
-
-import file
 
 action myaction {
   let abc = x
@@ -35,3 +34,8 @@ action myaction {
 action myaction2 {
   file.copyFile("test/a.txt", "test/c.txt")
 }
+
+protoGen = sugarproto.generateProto(
+  "test/test1.supro",
+  "test1.proto",
+  protoDirs=[])

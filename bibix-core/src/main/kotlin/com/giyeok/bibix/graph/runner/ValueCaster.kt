@@ -284,7 +284,7 @@ class ValueCaster(
     }
 
   private fun finalizeValueList(
-    finalizeCtx: FinalizeBuildRuleReturnValue.FinalizeContext,
+    finalizeCtx: BuildRuleDefContext,
     values: List<BibixValue>,
     func: (List<BibixValue>) -> BibixValue
   ): BuildTaskResult =
@@ -300,7 +300,7 @@ class ValueCaster(
     }
 
   private fun finalizeValues(
-    finalizeCtx: FinalizeBuildRuleReturnValue.FinalizeContext,
+    finalizeCtx: BuildRuleDefContext,
     values: Map<String, BibixValue>,
     types: Map<String, BibixType>,
     block: (List<String>, List<BibixValue>) -> BuildTaskResult
@@ -322,7 +322,7 @@ class ValueCaster(
   }
 
   fun finalizeBuildRuleReturnValue(
-    finalizeCtx: FinalizeBuildRuleReturnValue.FinalizeContext,
+    finalizeCtx: BuildRuleDefContext,
     value: BibixValue,
   ): BuildTaskResult =
     when (value) {

@@ -10,6 +10,7 @@ import com.giyeok.bibix.graph.runner.ExecAction
 import com.giyeok.bibix.graph.runner.ParallelGraphRunner
 import com.giyeok.bibix.plugins.prelude.preludePlugin
 import com.giyeok.bibix.repo.BibixRepo
+import kotlinx.coroutines.runBlocking
 import org.codehaus.plexus.classworlds.ClassWorld
 import org.junit.jupiter.api.Test
 import java.nio.file.FileSystems
@@ -35,11 +36,12 @@ class ParallelGraphRunnerTest {
     )
 
     val prunner = ParallelGraphRunner(runner, Executors.newFixedThreadPool(4))
-    val results = prunner.runTasks(
-      ExecAction(1, 0, BibixName("myaction"), mapOf()),
-      EvalTarget(1, 0, BibixName("aa")),
-      EvalTarget(1, 0, BibixName("dd"))
-    )
+    val results = runBlocking {
+      prunner.runTasks(
+        // EvalTarget(1, 0, BibixName("dd"))
+        EvalTarget(1, 0, BibixName("protoGen"))
+      )
+    }
     println(results)
   }
 }
