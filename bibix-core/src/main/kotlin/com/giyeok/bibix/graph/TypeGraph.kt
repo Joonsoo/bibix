@@ -39,27 +39,36 @@ data class ImportedTypeFromPrelude(val name: BibixName): TypeGraphNode() {
   override val id: TypeNodeId get() = TypeNodeId.AnyNodeId(this)
 }
 
-data class ImportedType(val import: BibixName, val name: BibixName): TypeGraphNode() {
+data class ImportedType(
+  val import: BibixName,
+  val name: BibixName
+): TypeGraphNode() {
   override val id: TypeNodeId get() = TypeNodeId.AnyNodeId(this)
 }
 
-data class SetTypeNode(val ast: BibixAst.CollectionType, val elemType: TypeNodeId):
-  TypeGraphNode() {
-  override val id: TypeNodeId get() = TypeNodeId.AnyNodeId(this)
+data class SetTypeNode(
+  val ast: BibixAst.CollectionType,
+  val elemType: TypeNodeId
+): TypeGraphNode() {
+  override val id: TypeNodeId get() = TypeNodeId.TypeAstNodeId(ast.nodeId)
 }
 
-data class ListTypeNode(val ast: BibixAst.CollectionType, val elemType: TypeNodeId):
-  TypeGraphNode() {
-  override val id: TypeNodeId get() = TypeNodeId.AnyNodeId(this)
+data class ListTypeNode(
+  val ast: BibixAst.CollectionType,
+  val elemType: TypeNodeId
+): TypeGraphNode() {
+  override val id: TypeNodeId get() = TypeNodeId.TypeAstNodeId(ast.nodeId)
 }
 
 data class BasicTypeNode(val bibixType: BibixType): TypeGraphNode() {
   override val id: TypeNodeId get() = TypeNodeId.AnyNodeId(this)
 }
 
-data class TupleTypeNode(val ast: BibixAst.TupleType, val elemTypes: List<TypeNodeId>):
-  TypeGraphNode() {
-  override val id: TypeNodeId get() = TypeNodeId.AnyNodeId(this)
+data class TupleTypeNode(
+  val ast: BibixAst.TupleType,
+  val elemTypes: List<TypeNodeId>
+): TypeGraphNode() {
+  override val id: TypeNodeId get() = TypeNodeId.TypeAstNodeId(ast.nodeId)
 }
 
 data class NamedTupleTypeNode(

@@ -55,37 +55,22 @@ class ValueCaster(
           // do nothing - fallthrough
         }
       }
-      return tryCustomCast(value, type) { result ->
-        when (result) {
-          is BuildTaskResult.ResultWithValue -> result
-          is BuildTaskResult.TypeCastFailResult -> {
-            when (type) {
-              is DataClassType -> {
-                if (type.packageName != value.packageName || type.className != value.className) {
-                  cannotCast(value, type)
-                } else {
-                  // TODO field들에 대한 처리
-                  //  - 지금은 일단 그냥 넘겨줌
-                  BuildTaskResult.ValueResult(value)
-                }
-              }
-
-              is SuperClassType -> {
-                if (type.packageName != value.packageName) {
-                  cannotCast(value, type)
-                } else {
-                  // TODO
-                  BuildTaskResult.ValueResult(value)
-                }
-              }
-
-              is TupleType -> TODO()
-              is NamedTupleType -> TODO()
-              else -> cannotCast(value, type)
-            }
+      return tryCustomCast(value, type) { valueDataClass ->
+        // valueDataClass는 value의 DataClassResult
+        when (type) {
+          is DataClassType -> {
+            check(type.packageName != value.packageName || type.className != value.className)
+            cannotCast(value, type)
           }
 
-          else -> throw AssertionError()
+          is SuperClassType -> {
+            check(type.packageName != value.packageName)
+            cannotCast(value, type)
+          }
+
+          is TupleType -> TODO()
+          is NamedTupleType -> TODO()
+          else -> cannotCast(value, type)
         }
       }
     }
@@ -252,10 +237,27 @@ class ValueCaster(
   private fun tryCustomCast(
     value: ClassInstanceValue,
     type: BibixType,
-    func: (BuildTaskResult) -> BuildTaskResult
+    whenNotAvailable: (valueDataClass: BuildTaskResult.DataClassResult) -> BuildTaskResult
   ): BuildTaskResult {
-    // TODO ExprEvaluator(buildGraphRunner, projectId, importInstanceId, value).evaluateExpr()
-    return func(BuildTaskResult.TypeCastFailResult(value, type))
+    return BuildTaskResult.WithResult(
+      EvalDataClassByName(value.packageName, value.className)
+    ) { dataClass ->
+      check(dataClass is BuildTaskResult.DataClassResult)
+
+      // dataClass에서 cast 중 type하고 일치하는 것이 있으면 evaluate해서 func로 반환
+      val customCast = dataClass.customCasts.find { it.first == type }
+      if (customCast == null) {
+        whenNotAvailable(dataClass)
+      } else {
+        ExprEvaluator(
+          buildGraphRunner,
+          dataClass.projectId,
+          dataClass.importInstanceId,
+          mapOf(),
+          value
+        ).evaluateExpr(customCast.second)
+      }
+    }
   }
 
   private fun castValueList(
@@ -297,6 +299,7 @@ class ValueCaster(
         val fieldTypeMaps = dataClass.fieldTypes.toMap()
         finalizeValues(finalizeCtx, value.fieldValues, fieldTypeMaps) { fieldNames, finVals ->
           organizeParamsForDataClass(
+            projectId,
             dataClass,
             listOf(),
             fieldNames.zip(finVals).toMap(),
@@ -326,6 +329,7 @@ class ValueCaster(
             }
 
             organizeParamsForDataClass(
+              projectId,
               dataClassResult,
               listOf(),
               fieldNames.zip(castValues).toMap()

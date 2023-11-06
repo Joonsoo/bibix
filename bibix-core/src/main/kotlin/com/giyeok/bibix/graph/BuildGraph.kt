@@ -1,6 +1,7 @@
 package com.giyeok.bibix.graph
 
 import com.giyeok.bibix.ast.BibixAst
+import com.giyeok.bibix.base.BibixType
 
 class BuildGraph(
   val packageName: String?,
@@ -162,7 +163,8 @@ data class DataClassDef(
   val def: BibixAst.DataClassDef,
   val fields: Map<String, TypeNodeId>,
   val fieldDefaultValues: Map<String, ExprNodeId>,
-  // TODO elements
+  val customAutoCasts: List<Pair<TypeNodeId, ExprNodeId>>,
+  // TODO actions
 )
 
 data class SuperClassDef(

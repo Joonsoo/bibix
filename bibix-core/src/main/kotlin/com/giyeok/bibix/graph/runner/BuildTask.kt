@@ -55,7 +55,8 @@ data class EvalExpr(
 data class TypeCastValue(
   val value: BibixValue,
   val type: BibixType,
-  val projectId: Int,
+  // valueProjectId는 value가 string일 때 path로 변경할 때 base directory를 판별하는 데 사용된다
+  val valueProjectId: Int,
 ): BuildTask()
 
 data class FinalizeBuildRuleReturnValue(
@@ -75,6 +76,12 @@ data class BuildRuleDefContext(val projectId: Int, val importInstanceId: Int, va
       BuildRuleDefContext(actionRule.projectId, actionRule.importInstanceId, actionRule.name)
   }
 }
+
+data class EvalBuildRuleMeta(
+  val projectId: Int,
+  val importInstanceId: Int,
+  val name: BibixName
+): BuildTask()
 
 data class EvalBuildRule(
   val projectId: Int,
@@ -204,6 +211,17 @@ sealed class BuildTaskResult {
     val implMethod: Method
   ): FinalResult()
 
+  // build rule을 값으로 받아가려고 하는 경우, BuildRuleResult를 사용하려고 하면 impl값을 미리 evaluate해야 하고,
+  // impl에서 build rule 값을 사용하면 싸이클이 생기기 때문에 BuildRuleMeta를 별도로 둔다
+  data class BuildRuleMetaResult(
+    val projectId: Int,
+    val name: BibixName,
+    // default field들을 evaluate할 때 사용할 import instance id
+    val importInstanceId: Int,
+    val buildRuleDef: BuildRuleDef,
+    val paramTypes: List<Pair<String, BibixType>>,
+  ): FinalResult()
+
   data class ActionResult(
     val projectId: Int,
     val importInstanceId: Int,
@@ -229,6 +247,7 @@ sealed class BuildTaskResult {
     val importInstanceId: Int,
     val dataClassDef: DataClassDef,
     val fieldTypes: List<Pair<String, BibixType>>,
+    val customCasts: List<Pair<BibixType, ExprNodeId>>,
   ): FinalResult()
 
   data class SuperClassHierarchyResult(

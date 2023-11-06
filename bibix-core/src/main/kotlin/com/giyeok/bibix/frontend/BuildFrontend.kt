@@ -100,9 +100,8 @@ class BuildFrontend(
     targets + actions
   }
 
-  suspend fun runBuildTasks(buildTasks: List<BuildTask>): Map<BuildTask, BuildTaskResult.FinalResult?> {
-    return parallelRunner.runTasks(buildTasks)
-  }
+  suspend fun runBuildTasks(buildTasks: List<BuildTask>): Map<BuildTask, BuildTaskResult.FinalResult?> =
+    parallelRunner.runTasks(buildTasks)
 
   suspend fun runBuild(names: List<String>): Map<String, BibixValue> {
     check(mainScriptDefinitions.keys.containsAll(names)) {
@@ -111,7 +110,7 @@ class BuildFrontend(
 
     val tasks = names.associateWith { mainScriptDefinitions.getValue(it) }
 
-    val results = parallelRunner.runTasks(tasks.values)
+    val results = runBuildTasks(tasks.values.toList())
 
     return results.mapNotNull { (task, result) ->
       if (result != null && result is BuildTaskResult.ResultWithValue) {

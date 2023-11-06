@@ -11,7 +11,6 @@ import com.giyeok.bibix.repo.BibixRepo
 import com.google.common.collect.BiMap
 import com.google.common.collect.HashBiMap
 import com.google.common.collect.ImmutableBiMap
-import org.codehaus.plexus.classworlds.ClassWorld
 import java.nio.file.FileSystem
 
 class BuildGraphRunner(
@@ -254,13 +253,29 @@ class BuildGraphRunner(
     }
 
     is TypeCastValue -> {
-      ValueCaster(this, buildTask.projectId)
+      ValueCaster(this, buildTask.valueProjectId)
         .castValue(buildTask.value, buildTask.type)
     }
 
     is FinalizeBuildRuleReturnValue -> {
       ValueCaster(this, buildTask.projectId)
         .finalizeBuildRuleReturnValue(buildTask.buildRuleDefCtx, buildTask.value)
+    }
+
+    is EvalBuildRuleMeta -> {
+      val buildGraph = multiGraph.getProjectGraph(buildTask.projectId)
+
+      val buildRule = buildGraph.buildRules.getValue(buildTask.name)
+
+      withParamTypes(buildTask.projectId, buildRule.def.params, buildRule.params) { paramTypes ->
+        BuildTaskResult.BuildRuleMetaResult(
+          buildTask.projectId,
+          buildTask.name,
+          buildTask.importInstanceId,
+          buildRule,
+          paramTypes,
+        )
+      }
     }
 
     is EvalBuildRule -> {
@@ -409,9 +424,17 @@ class BuildGraphRunner(
       val dataClassDef = checkNotNull(buildGraph.dataClasses[buildTask.className])
       val fields = dataClassDef.fields.entries.sortedBy { it.key }
       val fieldTasks = fields.map { EvalType(buildTask.projectId, it.value) }
-      BuildTaskResult.WithResultList(fieldTasks) { fieldTypeResults ->
-        check(fields.size == fieldTypeResults.size)
-        val fieldTypes = fieldTypeResults.map {
+      val customCastTypeTasks =
+        dataClassDef.customAutoCasts.map { EvalType(buildTask.projectId, it.first) }
+
+      BuildTaskResult.WithResultList(fieldTasks + customCastTypeTasks) { typeResults ->
+        check(fields.size + customCastTypeTasks.size == typeResults.size)
+
+        val fieldTypes = typeResults.take(fields.size).map {
+          check(it is BuildTaskResult.TypeResult)
+          it.type
+        }
+        val customCastTypes = typeResults.drop(fields.size).map {
           check(it is BuildTaskResult.TypeResult)
           it.type
         }
@@ -424,7 +447,8 @@ class BuildGraphRunner(
           dataClassDef = dataClassDef,
           fieldTypes = dataClassDef.def.fields.map { field ->
             Pair(field.name, fieldTypeMap.getValue(field.name))
-          }
+          },
+          customCasts = customCastTypes.zip(dataClassDef.customAutoCasts.map { it.second })
         )
       }
     }
@@ -595,6 +619,7 @@ class BuildGraphRunner(
             }
 
           organizeParams(
+            buildTask.projectId,
             callee.paramTypes,
             callee.actionRuleDef.def.params.requiredParamNames(),
             callee.projectId,

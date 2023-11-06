@@ -23,6 +23,7 @@ fun organizeParamsAndRunBuildRule(
   block: (BuildTaskResult.FinalResult) -> BuildTaskResult
 ): BuildTaskResult {
   return organizeParams(
+    callerProjectId,
     buildRule.paramTypes,
     buildRule.buildRuleDef.def.params.requiredParamNames(),
     buildRule.projectId,

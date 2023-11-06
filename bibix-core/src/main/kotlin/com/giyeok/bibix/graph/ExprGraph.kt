@@ -63,7 +63,6 @@ data class MemberAccessNode(
 }
 
 data class ValueCastNode(
-  val ast: BibixAst.AstNode,
   val value: ExprNodeId,
   val type: TypeNodeId,
 ): ExprGraphNode() {
@@ -78,7 +77,7 @@ data class CallExprNode(
   val posParams: List<ExprNodeId>,
   val namedParams: Map<String, ExprNodeId>,
 ): ExprGraphNode() {
-  override val id: ExprNodeId get() = ExprNodeId.AnyNodeId(this)
+  override val id: ExprNodeId get() = ExprNodeId.ExprAstNodeId(callExpr.nodeId)
 }
 
 sealed class Callee {
@@ -94,19 +93,6 @@ sealed class Callee {
   data class LocalAction(val name: BibixName): Callee()
 
   data class PreludeMember(val name: BibixName): Callee()
-}
-
-data class CallExprParamCoercionNode(
-  val value: ExprNodeId,
-  val callee: Callee,
-  val paramLocation: ParamLocation
-): ExprGraphNode() {
-  override val id: ExprNodeId get() = ExprNodeId.AnyNodeId(this)
-}
-
-sealed class ParamLocation {
-  data class PosParam(val idx: Int): ParamLocation()
-  data class NamedParam(val name: String): ParamLocation()
 }
 
 sealed class ExprAstNode<T: BibixAst.Expr>(val ast: T): ExprGraphNode() {

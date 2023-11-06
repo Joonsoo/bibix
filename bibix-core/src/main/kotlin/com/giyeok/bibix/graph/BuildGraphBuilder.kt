@@ -109,8 +109,25 @@ class BuildGraphBuilder(
 
         is BibixAst.DataClassDef -> {
           val fieldTypes = def.fields.associate { it.name to addType(it.typ!!, ctx) }
-          dataClasses[ctx.bibixName(def.name)] =
-            DataClassDef(def, fieldTypes, defaultValuesMap(def.fields, fieldTypes, ctx))
+          val customAutoCasts = mutableListOf<Pair<TypeNodeId, ExprNodeId>>()
+          val ctxWithThis = ctx.withThisRefAllowed()
+          def.body.forEach { elem ->
+            when (elem) {
+              is BibixAst.ActionRuleDef -> TODO()
+              is BibixAst.ClassCastDef -> {
+                val targetType = addType(elem.castTo, ctxWithThis)
+                val convertExpr = addExpr(elem.expr, ctxWithThis)
+                customAutoCasts.add(Pair(targetType, convertExpr))
+              }
+            }
+          }
+          val dataClassDef = DataClassDef(
+            def = def,
+            fields = fieldTypes,
+            fieldDefaultValues = defaultValuesMap(def.fields, fieldTypes, ctx),
+            customAutoCasts = customAutoCasts
+          )
+          dataClasses[ctx.bibixName(def.name)] = dataClassDef
         }
 
         is BibixAst.SuperClassDef -> {
@@ -187,7 +204,7 @@ class BuildGraphBuilder(
   ) = params.filter { it.defaultValue != null }.associate {
     val defaultValue = it.defaultValue!!
     val value = addExpr(defaultValue, ctx)
-    it.name to addNode(ValueCastNode(defaultValue, value, paramTypes.getValue(it.name)))
+    it.name to addNode(ValueCastNode(value, paramTypes.getValue(it.name)))
   }
 
   private fun importSource(
@@ -311,21 +328,9 @@ class BuildGraphBuilder(
 
   private fun addCallExpr(expr: BibixAst.CallExpr, ctx: GraphBuildContext): CallExprAddResult {
     val callee = lookupCallee(expr.name.tokens, ctx)
-    val posParams = expr.params.posParams.mapIndexed { index, argExpr ->
-      val arg = addExpr(argExpr, ctx)
-      val coercion =
-        addNode(CallExprParamCoercionNode(arg, callee, ParamLocation.PosParam(index)))
-      addEdge(coercion, callee)
-      addEdge(coercion, arg)
-      coercion
-    }
+    val posParams = expr.params.posParams.map { addExpr(it, ctx) }
     val namedParams = expr.params.namedParams.associate { (name, argExpr) ->
-      val arg = addExpr(argExpr, ctx)
-      val coercion =
-        addNode(CallExprParamCoercionNode(arg, callee, ParamLocation.NamedParam(name)))
-      addEdge(coercion, callee)
-      addEdge(coercion, arg)
-      name to coercion
+      name to addExpr(argExpr, ctx)
     }
     return CallExprAddResult(callee, posParams, namedParams)
   }
@@ -334,7 +339,7 @@ class BuildGraphBuilder(
     is BibixAst.CastExpr -> {
       val valueNode = addExpr(expr.expr, ctx)
       val typeNode = addType(expr.castTo, ctx)
-      val node = addNode(ValueCastNode(expr, valueNode, typeNode))
+      val node = addNode(ValueCastNode(valueNode, typeNode))
       addEdge(node, valueNode)
       addEdge(node, typeNode)
       node
@@ -382,7 +387,7 @@ class BuildGraphBuilder(
           is BibixAst.SimpleExpr -> lookupExprName(listOf(elem.name), ctx)
         }
         value?.let {
-          val cast = addNode(ValueCastNode(elem, value, stringTypeNode))
+          val cast = addNode(ValueCastNode(value, stringTypeNode))
           addEdge(cast, value)
           cast
         }

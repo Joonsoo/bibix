@@ -13,12 +13,13 @@ import org.junit.jupiter.api.Test
 import java.nio.file.FileSystems
 import java.nio.file.Path
 import kotlin.io.path.absolute
+import kotlin.io.path.absolutePathString
 
 class BuildGraphRunnerTest {
   @Test
   fun test() {
     val mainProjectLocation =
-      BibixProjectLocation(Path.of("bibix-core/src/test/resources/varredefs/b").absolute())
+      BibixProjectLocation(Path.of("/home/joonsoo/Documents/workspace/sugarproto").absolute())
     val buildEnv = BuildEnv(OS.Linux("", ""), Architecture.X86_64)
     val repo = BibixRepo.load(mainProjectLocation.projectRoot)
     val runner = BuildGraphRunner.create(
@@ -31,9 +32,10 @@ class BuildGraphRunnerTest {
       classPkgRunner = ClassPkgRunner(ClassWorld())
     )
 
-    println(runner.runToFinal(EvalTarget(1, 0, BibixName("ee"))))
+    try {
+//    println(runner.runToFinal(EvalTarget(1, 0, BibixName("ee"))))
 
-//    runner.runToFinal(ExecAction(1, 0, BibixName("myaction"), mapOf()))
+      runner.runToFinal(ExecAction(1, 0, BibixName("sugarformat.testProto.generate"), mapOf()))
 //
 //    println(runner.runToFinal(EvalTarget(1, 0, BibixName("x"))))
 //    println(runner.runToFinal(EvalTarget(1, 0, BibixName("x2"))))
@@ -44,18 +46,17 @@ class BuildGraphRunnerTest {
 //    println(runner.runToFinal(EvalTarget(1, 0, BibixName("ss"))))
 //    println(runner.runToFinal(EvalTarget(1, 0, BibixName("dd"))))
 //    println(runner.runToFinal(EvalTarget(1, 0, BibixName("ee"))))
-  }
+    } finally {
+      runner.multiGraph.projectLocations.forEach { (id, loc) ->
+        println("$id: ${loc.projectRoot.absolutePathString()}")
+      }
 
-  private val buildTasksGraph = mutableMapOf<BuildTask, MutableSet<BuildTask>>()
-
-  fun checkCycle(task: BuildTask, path: List<BuildTask>) {
-    if (task in path) {
-      println("!! $path")
-    }
-    buildTasksGraph[task]?.forEach {
-      checkCycle(it, path + task)
+      taskRels.checkCycle()
     }
   }
+
+  val taskRels = BuildTaskRelsGraph()
+
 
   fun BuildGraphRunner.runToFinal(buildTask: BuildTask): BuildTaskResult.FinalResult =
     handleResult(buildTask, this.runBuildTask(buildTask))
@@ -67,15 +68,16 @@ class BuildGraphRunnerTest {
     when (result) {
       is BuildTaskResult.FinalResult -> result
       is BuildTaskResult.WithResult -> {
-        buildTasksGraph.getOrPut(buildTask) { mutableSetOf() }.add(result.task)
-        println("$buildTask -> ${result.task}")
+        taskRels.addTaskRel(buildTask, result.task)
+        println("$buildTask")
+        println("  ${result.task}")
         val derivedTaskResult = runToFinal(result.task)
         handleResult(buildTask, result.func(derivedTaskResult))
       }
 
       is BuildTaskResult.WithResultList -> {
-        buildTasksGraph.getOrPut(buildTask) { mutableSetOf() }.addAll(result.tasks)
-        println("$buildTask ->")
+        taskRels.addTaskRel(buildTask, result.tasks)
+        println("$buildTask")
         result.tasks.forEach {
           println("  $it")
         }
@@ -93,28 +95,6 @@ class BuildGraphRunnerTest {
         handleResult(buildTask, runBlocking { result.func() })
       }
 
-      else -> {
-        val buildTaskNumbers = mutableMapOf<BuildTask, String>()
-        println("digraph G {")
-        buildTasksGraph.forEach { (start, ends) ->
-          fun addNode(task: BuildTask) {
-            if (task !in buildTaskNumbers) {
-              val nodeId = "n${buildTaskNumbers.size + 1}"
-              buildTaskNumbers[task] = nodeId
-              println("  $nodeId [label=\"${escapeDotString("$task")}\"];")
-            }
-          }
-          addNode(start)
-          ends.forEach { addNode(it) }
-        }
-        buildTasksGraph.forEach { (start, ends) ->
-          ends.forEach { end ->
-            println("  ${buildTaskNumbers.getValue(start)} -> ${buildTaskNumbers.getValue(end)};")
-          }
-        }
-        println("}")
-        checkCycle(buildTask, listOf())
-        throw AssertionError()
-      }
+      else -> throw AssertionError()
     }
 }

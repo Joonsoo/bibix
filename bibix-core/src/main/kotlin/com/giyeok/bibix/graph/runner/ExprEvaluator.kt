@@ -168,7 +168,7 @@ class ExprEvaluator(
 
             is BuildTaskResult.DataClassResult -> {
               val classType = DataClassType(callee.packageName, callee.name.toString())
-              organizeParamsForDataClass(callee, posArgs, namedArgs) { value ->
+              organizeParamsForDataClass(projectId, callee, posArgs, namedArgs) { value ->
                 BuildTaskResult.WithResult(
                   TypeCastValue(value, classType, projectId)
                 ) { casted ->
@@ -183,64 +183,91 @@ class ExprEvaluator(
         }
       }
 
-      is CallExprParamCoercionNode -> {
-        BuildTaskResult.WithResultList(
-          listOf(evalTask(exprNode.value), EvalCallee(projectId, importInstanceId, exprNode.callee))
-        ) { results ->
-          val value = results[0].toValue()
-
-          val calleeProjectId: Int
-          val paramTypeNodeId: TypeNodeId
-          when (val callee = results[1]) {
-            is BuildTaskResult.BuildRuleResult -> {
-              calleeProjectId = callee.projectId
-              paramTypeNodeId = when (val loc = exprNode.paramLocation) {
-                is ParamLocation.NamedParam ->
-                  callee.buildRuleDef.params.getValue(loc.name)
-
-                is ParamLocation.PosParam ->
-                  callee.buildRuleDef.params.getValue(callee.buildRuleDef.def.params[loc.idx].name)
-              }
-            }
-
-            is BuildTaskResult.ActionRuleResult -> {
-              calleeProjectId = callee.projectId
-              paramTypeNodeId = when (val loc = exprNode.paramLocation) {
-                is ParamLocation.NamedParam ->
-                  callee.actionRuleDef.params.getValue(loc.name)
-
-                is ParamLocation.PosParam ->
-                  callee.actionRuleDef.params.getValue(callee.actionRuleDef.def.params[loc.idx].name)
-              }
-            }
-
-            is BuildTaskResult.DataClassResult -> {
-              calleeProjectId = callee.projectId
-              paramTypeNodeId = when (val loc = exprNode.paramLocation) {
-                is ParamLocation.NamedParam ->
-                  callee.dataClassDef.fields.getValue(loc.name)
-
-                is ParamLocation.PosParam ->
-                  callee.dataClassDef.fields.getValue(callee.dataClassDef.def.fields[loc.idx].name)
-              }
-            }
-
-            else -> throw IllegalStateException()
-          }
-
-          BuildTaskResult.WithResult(EvalType(calleeProjectId, paramTypeNodeId)) { result ->
-            valueCaster.castValue(value, result.toType())
-          }
-        }
-      }
+//      is CallExprParamCoercionNode -> {
+//        BuildTaskResult.WithResultList(
+//          listOf(evalTask(exprNode.value), EvalCallee(projectId, importInstanceId, exprNode.callee))
+//        ) { results ->
+//          val value = results[0].toValue()
+//
+//          val calleeProjectId: Int
+//          val paramTypeNodeId: TypeNodeId
+//          when (val callee = results[1]) {
+//            is BuildTaskResult.BuildRuleResult -> {
+//              calleeProjectId = callee.projectId
+//              paramTypeNodeId = when (val loc = exprNode.paramLocation) {
+//                is ParamLocation.NamedParam ->
+//                  callee.buildRuleDef.params.getValue(loc.name)
+//
+//                is ParamLocation.PosParam ->
+//                  callee.buildRuleDef.params.getValue(callee.buildRuleDef.def.params[loc.idx].name)
+//              }
+//            }
+//
+//            is BuildTaskResult.ActionRuleResult -> {
+//              calleeProjectId = callee.projectId
+//              paramTypeNodeId = when (val loc = exprNode.paramLocation) {
+//                is ParamLocation.NamedParam ->
+//                  callee.actionRuleDef.params.getValue(loc.name)
+//
+//                is ParamLocation.PosParam ->
+//                  callee.actionRuleDef.params.getValue(callee.actionRuleDef.def.params[loc.idx].name)
+//              }
+//            }
+//
+//            is BuildTaskResult.DataClassResult -> {
+//              calleeProjectId = callee.projectId
+//              paramTypeNodeId = when (val loc = exprNode.paramLocation) {
+//                is ParamLocation.NamedParam ->
+//                  callee.dataClassDef.fields.getValue(loc.name)
+//
+//                is ParamLocation.PosParam ->
+//                  callee.dataClassDef.fields.getValue(callee.dataClassDef.def.fields[loc.idx].name)
+//              }
+//            }
+//
+//            else -> throw IllegalStateException()
+//          }
+//
+//          BuildTaskResult.WithResult(EvalType(calleeProjectId, paramTypeNodeId)) { result ->
+//            check(result is BuildTaskResult.TypeResult)
+//            valueCaster.castValue(value, result.type)
+//          }
+//        }
+//      }
 
       is LocalBuildRuleRef ->
-        // TODO BuildRuleDefValue 값을 반환하도록 수정
-        TODO()
+        BuildTaskResult.WithResult(
+          EvalBuildRuleMeta(projectId, importInstanceId, exprNode.name)
+        ) { result ->
+          check(result is BuildTaskResult.BuildRuleMetaResult)
+
+          val source = when (result.projectId) {
+            1 -> MainSourceId
+            2 -> PreludeSourceId
+            else -> ExternSourceId(result.projectId)
+          }
+
+          val paramTypes = result.paramTypes.toMap()
+          BuildTaskResult.ValueResult(
+            BuildRuleDefValue(
+              CName(source, result.name.tokens),
+              result.buildRuleDef.def.params.map { param ->
+                RuleParam(param.name, paramTypes.getValue(param.name).toTypeValue(), param.optional)
+              },
+              result.buildRuleDef.implClassName,
+              result.buildRuleDef.implMethodName,
+            )
+          )
+        }
 
       is LocalDataClassRef ->
-        // TODO DataClassTypeValue 값을 반환하도록 수정
-        BuildTaskResult.WithResult(EvalDataClass(projectId, importInstanceId, exprNode.name)) { it }
+        BuildTaskResult.WithResult(
+          EvalDataClass(projectId, importInstanceId, exprNode.name)
+        ) { result ->
+          check(result is BuildTaskResult.DataClassResult)
+          // TODO DataClassTypeValue 값을 반환하도록 수정
+          result
+        }
 
       is LocalTargetRef ->
         BuildTaskResult.WithResult(
@@ -517,12 +544,14 @@ fun BuildGraphRunner.lookupFromImport(
 }
 
 fun organizeParamsForDataClass(
+  callerProjectId: Int,
   dataClass: BuildTaskResult.DataClassResult,
   posArgs: List<BibixValue>,
   namedArgs: Map<String, BibixValue>,
   func: (ClassInstanceValue) -> BuildTaskResult
 ): BuildTaskResult {
   return organizeParams(
+    callerProjectId,
     dataClass.fieldTypes,
     dataClass.dataClassDef.def.fields.requiredParamNames(),
     dataClass.projectId,
@@ -536,19 +565,27 @@ fun organizeParamsForDataClass(
 }
 
 fun organizeParams(
+  callerProjectId: Int,
   paramTypes: List<Pair<String, BibixType>>,
   requiredParamNames: Set<String>,
-  defaultValueProjectId: Int,
-  defaultValueImportInstanceId: Int,
+  calleeProjectId: Int,
+  calleeImportInstanceId: Int,
   defaultValues: Map<String, ExprNodeId>,
   posArgs: List<BibixValue>,
   namedArgs: Map<String, BibixValue>,
   whenReady: (args: Map<String, BibixValue>) -> BuildTaskResult
 ): BuildTaskResult {
+  val paramTypesMap = paramTypes.toMap()
   val paramNames = paramTypes.map { it.first }
 
   // callee의 parameter 목록을 보고 posParams와 namedParams와 맞춰본다
-  val posArgsMap = posArgs.zip(paramNames) { arg, name -> name to arg }.toMap()
+  val posArgCastTasks = paramNames.zip(posArgs) { name, arg ->
+    TypeCastValue(arg, paramTypesMap.getValue(name), callerProjectId)
+  }
+  val namedArgPairs = namedArgs.entries.toList()
+  val namedArgCastTasks = namedArgPairs.map { (name, arg) ->
+    TypeCastValue(arg, paramTypesMap.getValue(name), callerProjectId)
+  }
 
   val remainingParamNames = paramNames.drop(posArgs.size).toSet()
   check(remainingParamNames.containsAll(namedArgs.keys)) { "Unknown parameters" }
@@ -557,23 +594,43 @@ fun organizeParams(
   check(unspecifiedParamNames.all { it !in requiredParamNames }) { "Required parameters are not specified" }
 
   val defaultArgTasks = unspecifiedParamNames.mapNotNull { paramName ->
+    // default arg는 cast가 완료된 상태로 넘어온다
     defaultValues[paramName]?.let {
-      paramName to EvalExpr(defaultValueProjectId, it, defaultValueImportInstanceId, null)
+      paramName to EvalExpr(calleeProjectId, it, calleeImportInstanceId, null)
     }
   }
   val noneArgs = (unspecifiedParamNames - (defaultArgTasks.map { it.first }.toSet()))
     .associateWith { NoneValue }
 
-  return if (defaultArgTasks.isEmpty()) {
-    whenReady(posArgsMap + namedArgs + noneArgs)
-  } else {
-    BuildTaskResult.WithResultList(defaultArgTasks.map { it.second }) { results ->
-      check(results.size == defaultArgTasks.size)
-      val defaultArgs = defaultArgTasks.zip(results).associate { (pair, result) ->
-        check(result is BuildTaskResult.ResultWithValue)
-        pair.first to result.value
+  // TODO default arg tasks도 합치기
+  return BuildTaskResult.WithResultList(posArgCastTasks + namedArgCastTasks) { results ->
+    val posArgResults = results.take(posArgCastTasks.size)
+    val namedArgResults = results.drop(posArgCastTasks.size)
+
+    val posArgValues = posArgResults.map {
+      check(it is BuildTaskResult.ResultWithValue)
+      it.value
+    }
+    val namedArgValues = namedArgResults.map {
+      check(it is BuildTaskResult.ResultWithValue)
+      it.value
+    }
+    val posArgsMap = paramNames.zip(posArgValues).toMap()
+    val namedArgsMap = namedArgPairs.zip(namedArgValues).map { (param, casted) ->
+      param.key to casted
+    }.toMap()
+
+    if (defaultArgTasks.isEmpty()) {
+      whenReady(posArgsMap + namedArgsMap + noneArgs)
+    } else {
+      BuildTaskResult.WithResultList(defaultArgTasks.map { it.second }) { results ->
+        check(results.size == defaultArgTasks.size)
+        val defaultArgs = defaultArgTasks.zip(results).associate { (pair, result) ->
+          check(result is BuildTaskResult.ResultWithValue)
+          pair.first to result.value
+        }
+        whenReady(posArgsMap + namedArgsMap + defaultArgs + noneArgs)
       }
-      whenReady(posArgsMap + namedArgs + defaultArgs + noneArgs)
     }
   }
 }
@@ -589,17 +646,6 @@ fun argsMapFrom(args: Map<String, BibixValue>): ArgsMap =
         })
       }
   }
-
-fun BuildTaskResult.FinalResult.toType(): BibixType = when (this) {
-  is BuildTaskResult.TypeResult -> this.type
-  is BuildTaskResult.DataClassResult -> DataClassType(this.packageName, this.name.toString())
-  is BuildTaskResult.SuperClassHierarchyResult ->
-    SuperClassType(this.packageName, this.name.toString())
-
-  is BuildTaskResult.EnumTypeResult -> EnumType(this.packageName, this.name.toString())
-
-  else -> throw IllegalStateException()
-}
 
 fun BuildTaskResult.FinalResult.toValue(): BibixValue = when (this) {
   is BuildTaskResult.ResultWithValue -> this.value
