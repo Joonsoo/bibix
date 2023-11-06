@@ -18,8 +18,6 @@ object BibixCli {
     val (buildArgs, names) = bibixArgs.partition { it.startsWith('-') }
     val actionArgs = if (splitterIdx < 0) listOf() else args.drop(splitterIdx)
 
-    check(names.isNotEmpty()) { "Must specify at least one build target" }
-
     val buildArgsMap = mapOf<String, String>()
 
     val useDebuggingMode = buildArgs.contains("--debug")
@@ -30,6 +28,11 @@ object BibixCli {
       actionArgs = actionArgs,
       debuggingMode = useDebuggingMode
     )
+
+    check(names.isNotEmpty()) {
+      val targets = buildFrontend.mainScriptTaskNames()
+      "Must specify at least one build target\nAvailable targets:\n$targets"
+    }
 
     val targetResults = runBlocking { buildFrontend.runBuild(names) }
 

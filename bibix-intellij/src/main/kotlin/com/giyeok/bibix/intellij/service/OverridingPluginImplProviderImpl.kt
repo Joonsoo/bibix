@@ -26,11 +26,11 @@ class OverridingClassPkgRunner(
   classWorld: ClassWorld
 ): ClassPkgRunner(classWorld) {
   // TODO 지금 projectId로 들어오는건 해당 build rule이 있는 project id인듯.. caller쪽을 받아야 할 것 같은데
-  override fun getPluginImplInstance(projectId: Int, classPkg: ClassPkg, className: String): Any {
-    val overridden = overridings[Pair(projectId, className)]
+  override fun getPluginImplInstance(callerProjectId: Int, classPkg: ClassPkg, className: String): Any {
+    val overridden = overridings[Pair(callerProjectId, className)]
     if (overridden != null) {
       return overridden
     }
-    return super.getPluginImplInstance(projectId, classPkg, className)
+    return super.getPluginImplInstance(callerProjectId, classPkg, className)
   }
 }

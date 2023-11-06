@@ -68,8 +68,14 @@ class ValueCaster(
             cannotCast(value, type)
           }
 
-          is TupleType -> TODO()
-          is NamedTupleType -> TODO()
+          is TupleType -> {
+            TODO()
+          }
+
+          is NamedTupleType -> {
+            TODO()
+          }
+
           else -> cannotCast(value, type)
         }
       }
@@ -164,14 +170,32 @@ class ValueCaster(
       is DataClassType -> {
         when (value) {
           is TupleValue -> {
-            TODO()
+            BuildTaskResult.WithResult(
+              EvalDataClassByName(type.packageName, type.className)
+            ) { dataClass ->
+              check(dataClass is BuildTaskResult.DataClassResult)
+
+              check(dataClass.fieldTypes.size == value.values.size)
+              organizeParamsForDataClass(projectId, dataClass, value.values, mapOf()) {
+                BuildTaskResult.ValueResult(it)
+              }
+            }
           }
 
           is NamedTupleValue -> {
-            TODO()
+            BuildTaskResult.WithResult(
+              EvalDataClassByName(type.packageName, type.className)
+            ) { dataClass ->
+              check(dataClass is BuildTaskResult.DataClassResult)
+
+              check(dataClass.fieldTypes.size == value.values.size)
+              check(dataClass.fieldTypes.map { it.first }.toSet() == value.names.toSet())
+
+              throw IllegalStateException("TODO()")
+            }
           }
 
-          else -> TODO()
+          else -> cannotCast(value, type)
         }
       }
 

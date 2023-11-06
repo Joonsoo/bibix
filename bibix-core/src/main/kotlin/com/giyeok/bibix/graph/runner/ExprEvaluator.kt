@@ -322,7 +322,6 @@ class ExprEvaluator(
                   ) { it }
 
                 is BuildGraphEntity.BuildRule ->
-                  // TODO source id
                   BuildTaskResult.WithResult(
                     EvalBuildRule(result.projectId, result.importInstanceId, exprNode.name)
                   ) { buildRule ->
@@ -338,10 +337,14 @@ class ExprEvaluator(
                     }
                     BuildTaskResult.ValueResult(
                       BuildRuleDefValue(
+                        // TODO cname source 제대로 주기
                         CName(MainSourceId, exprNode.name.tokens),
                         params,
-                        buildRule.implInstance::class.java.canonicalName,
-                        buildRule.implMethod.name
+                        when (val impl = buildRule.impl) {
+                          is BuildTaskResult.BuildRuleImpl.NativeImpl -> impl.implInstance::class.java.canonicalName
+                          is BuildTaskResult.BuildRuleImpl.NonNativeImpl -> impl.implClassName
+                        },
+                        buildRule.implMethodName
                       )
                     )
                   }
@@ -381,8 +384,21 @@ class ExprEvaluator(
           }
         }
 
-      is ImportedExprFromPrelude ->
-        BuildTaskResult.WithResult(ImportFromPrelude(exprNode.name)) { it }
+      is ImportedExprFromPrelude -> {
+        val preludeGraph = multiGraph.getProjectGraph(2)
+
+        val target = preludeGraph.targets[BibixName(exprNode.name.tokens.first())]
+        if (target != null) {
+          BuildTaskResult.WithResult(EvalExpr(2, target, 0, null)) { targetResult ->
+            check(targetResult is BuildTaskResult.ResultWithValue)
+            BuildTaskResult.ValueResult(
+              targetResult.value.followMemberNames(exprNode.name.tokens.drop(1))
+            )
+          }
+        } else {
+          BuildTaskResult.WithResult(ImportFromPrelude(exprNode.name)) { it }
+        }
+      }
 
       is ValueCastNode ->
         BuildTaskResult.WithResultList(

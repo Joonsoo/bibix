@@ -4,12 +4,14 @@ import com.giyeok.bibix.base.BibixType
 import com.giyeok.bibix.base.BibixValue
 import com.giyeok.bibix.base.ClassInstanceValue
 import com.giyeok.bibix.graph.*
+import com.giyeok.bibix.interpreter.PluginImplProvider
 import com.giyeok.bibix.plugins.jvm.ClassPkg
 import java.lang.reflect.Method
 
 sealed class BuildTask
 
 // TODO BuildTask들은 ParallelGraphRunner에서 해시/동일성 비교가 계속 이루어지므로 가볍게 만들기
+//  - 특히 BibixValue는 runner 같은 곳에 등록하고 ID만 사용하도록 하거나 하는 식으로 변경할 것
 
 data class EvalTarget(
   val projectId: Int,
@@ -163,6 +165,7 @@ data class EvalImportSource(
 
 data class ImportFromPrelude(val name: BibixName): BuildTask()
 
+// TODO NewImportInstance는 굳이 build task로 안 만들어도 될듯한데?
 data class NewImportInstance(
   val projectId: Int,
   val redefs: Map<BibixName, GlobalExprNodeId>
@@ -206,10 +209,14 @@ sealed class BuildTaskResult {
     val importInstanceId: Int,
     val buildRuleDef: BuildRuleDef,
     val paramTypes: List<Pair<String, BibixType>>,
-    val classPkg: ClassPkg?,
-    val implInstance: Any,
-    val implMethod: Method
+    val impl: BuildRuleImpl,
+    val implMethodName: String
   ): FinalResult()
+
+  sealed class BuildRuleImpl {
+    data class NativeImpl(val implInstance: Any): BuildRuleImpl()
+    data class NonNativeImpl(val classPkg: ClassPkg, val implClassName: String): BuildRuleImpl()
+  }
 
   // build rule을 값으로 받아가려고 하는 경우, BuildRuleResult를 사용하려고 하면 impl값을 미리 evaluate해야 하고,
   // impl에서 build rule 값을 사용하면 싸이클이 생기기 때문에 BuildRuleMeta를 별도로 둔다
@@ -235,8 +242,8 @@ sealed class BuildTaskResult {
     val importInstanceId: Int,
     val actionRuleDef: ActionRuleDef,
     val paramTypes: List<Pair<String, BibixType>>,
-    val implInstance: Any,
-    val implMethod: Method
+    val impl: BuildRuleImpl,
+    val implMethodName: String
   ): FinalResult()
 
   data class DataClassResult(

@@ -326,6 +326,7 @@ class BibixRepo(
 
     fun load(
       mainDirectory: Path,
+      targetLogFileName: String = "log.json",
       uniqueRunId: String = UniqueIdGen.generate(),
       debuggingMode: Boolean = false
     ): BibixRepo {
@@ -351,7 +352,7 @@ class BibixRepo(
         BibixRepoData.newBuilder()
       }
 
-      val targetLogsFile = bbxbuildDirectory.resolve("log.json")
+      val targetLogsFile = bbxbuildDirectory.resolve(targetLogFileName)
       val targetLogs = BibixTargetLogs.newBuilder()
       // 기존 로그는 파싱하지 않고 날림
 

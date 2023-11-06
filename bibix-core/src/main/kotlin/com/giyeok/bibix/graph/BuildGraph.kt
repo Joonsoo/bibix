@@ -155,9 +155,15 @@ data class BuildRuleDef(
 
 data class VarDef(
   val def: BibixAst.VarDef,
-  val type: TypeNodeId,
+  // TODO 지금은 var의 type을 쓰는 데가 없는데.. 실은 var에 지정된 값이나 redef되는 값 coercion 해줘야 할듯
+  val type: VarType,
   val defaultValue: ExprNodeId?
-)
+) {
+  sealed class VarType {
+    data class TypeNode(val typeNode: TypeNodeId): VarType()
+    data class FixedType(val bibixType: BibixType): VarType()
+  }
+}
 
 data class DataClassDef(
   val def: BibixAst.DataClassDef,

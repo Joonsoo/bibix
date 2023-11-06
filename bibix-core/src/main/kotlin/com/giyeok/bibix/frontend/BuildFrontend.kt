@@ -25,6 +25,7 @@ class BuildFrontend(
   prelude: PreloadedPlugin = preludePlugin,
   preloadedPlugins: Map<String, PreloadedPlugin> = defaultPreloadedPlugins,
   classPkgRunner: ClassPkgRunner = ClassPkgRunner(ClassWorld()),
+  targetLogFileName: String = "log.json",
   val debuggingMode: Boolean = false
 ) {
   companion object {
@@ -37,7 +38,11 @@ class BuildFrontend(
     )
   }
 
-  val repo = BibixRepo.load(mainProjectLocation.projectRoot, debuggingMode = debuggingMode)
+  val repo = BibixRepo.load(
+    mainProjectLocation.projectRoot,
+    targetLogFileName = targetLogFileName,
+    debuggingMode = debuggingMode
+  )
 
   val buildEnv = BuildEnv(getOsValue(), getArchValue())
 
@@ -100,12 +105,17 @@ class BuildFrontend(
     targets + actions
   }
 
+  fun mainScriptTaskNames(lineIndent: String = "  ") =
+    mainScriptDefinitions.keys.sorted().joinToString("\n") { "$lineIndent$it" }
+
   suspend fun runBuildTasks(buildTasks: List<BuildTask>): Map<BuildTask, BuildTaskResult.FinalResult?> =
+//    buildTasks.associateWith { BlockingBuildGraphRunner(buildGraphRunner).runToFinal(it) }
     parallelRunner.runTasks(buildTasks)
 
   suspend fun runBuild(names: List<String>): Map<String, BibixValue> {
     check(mainScriptDefinitions.keys.containsAll(names)) {
-      "Unknown name: ${names - mainScriptDefinitions.keys}\nAvailable targets: ${mainScriptDefinitions.keys.sorted()}"
+      val targets = mainScriptTaskNames()
+      "Unknown name: ${names - mainScriptDefinitions.keys}\nAvailable targets:\n$targets"
     }
 
     val tasks = names.associateWith { mainScriptDefinitions.getValue(it) }

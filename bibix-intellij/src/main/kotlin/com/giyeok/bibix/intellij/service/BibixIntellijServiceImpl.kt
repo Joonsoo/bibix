@@ -1,10 +1,12 @@
 package com.giyeok.bibix.intellij.service
 
+import com.giyeok.bibix.graph.BibixProjectLocation
 import com.giyeok.bibix.intellij.BibixIntellijProto.*
 import com.giyeok.bibix.intellij.BibixIntellijServiceGrpcKt.BibixIntellijServiceCoroutineImplBase
 import com.giyeok.bibix.repo.sha1Hash
 import com.google.common.flogger.FluentLogger
 import com.google.protobuf.ByteString
+import com.google.protobuf.kotlin.toByteStringUtf8
 import io.grpc.Status
 import io.grpc.StatusException
 import kotlinx.coroutines.flow.*
@@ -13,7 +15,8 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import java.nio.file.FileSystem
 import java.nio.file.FileSystems
-import java.nio.file.Path
+import java.time.Duration
+import java.time.Instant
 import java.time.LocalDateTime
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
@@ -23,21 +26,26 @@ import kotlin.io.path.readBytes
 class BibixIntellijServiceImpl(
   private val fileSystem: FileSystem = FileSystems.getDefault(),
   private val workers: ExecutorService = Executors.newFixedThreadPool(4),
-) : BibixIntellijServiceCoroutineImplBase() {
+): BibixIntellijServiceCoroutineImplBase() {
   val logger = FluentLogger.forEnclosingClass()
 
+  data class ProjectInfoMemo(
+    val scriptHash: ByteString,
+    val time: Instant,
+    val info: StateFlow<BibixProjectInfo?>
+  )
+
   private val mutex = Mutex()
-  private val memos =
-    mutableMapOf<Pair<Path, String?>, Pair<ByteString, StateFlow<BibixProjectInfo?>>>()
+  private val memos = mutableMapOf<BibixProjectLocation, ProjectInfoMemo>()
 
   private suspend fun startLoadScript(
-    key: Pair<Path, String?>,
+    key: BibixProjectLocation,
     scriptHash: ByteString
   ): StateFlow<BibixProjectInfo?> {
     val (projectRoot, scriptName) = key
 
     val flow = MutableStateFlow<BibixProjectInfo?>(null)
-    memos[key] = Pair(scriptHash, flow)
+    memos[key] = ProjectInfoMemo(scriptHash, Instant.now(), flow)
     workers.submit {
       val loaded = try {
         ProjectStructureExtractor.loadProject(projectRoot, scriptName)
@@ -62,20 +70,21 @@ class BibixIntellijServiceImpl(
 
     val projectRoot = fileSystem.getPath(request.projectRoot).normalize().absolute()
     val scriptName = request.scriptName.ifEmpty { null }
-    val key = Pair(projectRoot, scriptName)
+    val projectLocation = BibixProjectLocation.of(projectRoot, scriptName)
 
-    val scriptPath = projectRoot.resolve(scriptName ?: "build.bbx")
-    val scriptHash = sha1Hash(scriptPath.readBytes())
+    val scriptHash = sha1Hash(projectLocation.readScript().toByteStringUtf8())
 
     val flow = mutex.withLock {
       if (request.forceReload) {
-        startLoadScript(key, scriptHash)
+        startLoadScript(projectLocation, scriptHash)
       } else {
-        val existing = memos[key]
-        if (existing != null && existing.first == scriptHash) {
-          existing.second
+        val existing = memos[projectLocation]
+        if (existing != null && existing.scriptHash == scriptHash &&
+          Duration.between(existing.time, Instant.now()) < Duration.ofMinutes(1)
+        ) {
+          existing.info
         } else {
-          startLoadScript(key, scriptHash)
+          startLoadScript(projectLocation, scriptHash)
         }
       }
     }

@@ -46,8 +46,16 @@ fun organizeParamsAndRunBuildRule(
           block(result)
         }
       }
+
+      val (implInstance, implMethod) = getImpl(
+        buildRule.impl,
+        callerProjectId,
+        buildGraphRunner.classPkgRunner,
+        buildRule.implMethodName
+      )
+
       BuildTaskResult.LongRunning {
-        val result = buildRule.implMethod.invoke(buildRule.implInstance, buildContext)
+        val result = implMethod.invoke(implInstance, buildContext)
         runner.handleBuildReturn(result)
       }
     }
@@ -71,10 +79,11 @@ private fun withBuildContext(
     this.buildRule = buildRuleData {
       this.buildRuleSourceId = sourceIdFrom(buildGraphRunner, buildRule.projectId)
       if (buildRule.buildRuleDef.implTarget == null) {
-        check(buildRule.classPkg == null)
+        check(buildRule.impl is BuildTaskResult.BuildRuleImpl.NativeImpl)
         this.nativeImpl = empty { }
       } else {
-        this.bibixValueHash = checkNotNull(buildRule.classPkg).toBibix().toProto().hashString()
+        check(buildRule.impl is BuildTaskResult.BuildRuleImpl.NonNativeImpl)
+        this.bibixValueHash = checkNotNull(buildRule.impl.classPkg).toBibix().toProto().hashString()
       }
       this.buildRuleClassName = buildRule.buildRuleDef.implClassName
       this.buildRuleMethodName = buildRule.buildRuleDef.implMethodName

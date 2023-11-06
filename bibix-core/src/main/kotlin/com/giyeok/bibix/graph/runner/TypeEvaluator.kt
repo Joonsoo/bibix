@@ -45,10 +45,30 @@ class TypeEvaluator(
         }
       }
 
-      is ImportedTypeFromPreloaded -> TODO()
-      is ImportedTypeFromPrelude -> TODO()
+      is ImportedTypeFromPreloaded -> {
+        TODO()
+      }
 
-      is NamedTupleTypeNode -> TODO()
+      is ImportedTypeFromPrelude -> {
+        val preludeGraph = multiGraph.getProjectGraph(2)
+        val packageName = checkNotNull(preludeGraph.packageName)
+        when (preludeGraph.findName(typeNode.name)) {
+          is BuildGraphEntity.DataClass ->
+            BuildTaskResult.TypeResult(DataClassType(packageName, typeNode.name.toString()))
+
+          is BuildGraphEntity.SuperClass ->
+            BuildTaskResult.TypeResult(SuperClassType(packageName, typeNode.name.toString()))
+
+          is BuildGraphEntity.Enum ->
+            BuildTaskResult.TypeResult(EnumType(packageName, typeNode.name.toString()))
+
+          else -> throw IllegalStateException()
+        }
+      }
+
+      is NamedTupleTypeNode -> {
+        TODO()
+      }
 
       is ListTypeNode -> {
         BuildTaskResult.WithResult(EvalType(projectId, typeNode.elemType)) { typeResult ->

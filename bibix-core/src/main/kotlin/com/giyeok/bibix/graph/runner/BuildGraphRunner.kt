@@ -11,6 +11,7 @@ import com.giyeok.bibix.repo.BibixRepo
 import com.google.common.collect.BiMap
 import com.google.common.collect.HashBiMap
 import com.google.common.collect.ImmutableBiMap
+import java.lang.reflect.Method
 import java.nio.file.FileSystem
 
 class BuildGraphRunner(
@@ -289,21 +290,15 @@ class BuildGraphRunner(
           buildTask.importInstanceId,
           buildRule.implTarget,
           buildRule.implClassName,
-        ) { classPkg, implInstance ->
-          val method = implInstance::class.java.getDeclaredMethod(
-            buildRule.implMethodName,
-            BuildContext::class.java
-          )
-          check(method.trySetAccessible())
+        ) { impl ->
           BuildTaskResult.BuildRuleResult(
             buildTask.projectId,
             buildTask.name,
             buildTask.importInstanceId,
             buildRule,
             paramTypes,
-            classPkg,
-            implInstance,
-            method
+            impl,
+            buildRule.implMethodName
           )
         }
       }
@@ -320,19 +315,15 @@ class BuildGraphRunner(
           buildTask.importInstanceId,
           actionRule.implTarget,
           actionRule.implClassName
-        ) { classPkg, implInstance ->
-          val method = implInstance::class.java.getDeclaredMethod(
-            actionRule.implMethodName,
-            ActionContext::class.java
-          )
+        ) { impl ->
           BuildTaskResult.ActionRuleResult(
             buildTask.projectId,
             buildTask.name,
             buildTask.importInstanceId,
             actionRule,
             paramTypes,
-            implInstance,
-            method
+            impl,
+            actionRule.implMethodName
           )
         }
       }
@@ -639,7 +630,15 @@ class BuildGraphRunner(
               buildTask.importInstanceId,
               BuildRuleDefContext.from(callee)
             ) { it }
-            val result = callee.implMethod.invoke(callee.implInstance, actionContext)
+
+            val (implInstance, implMethod) = getImpl(
+              callee.impl,
+              buildTask.projectId,
+              classPkgRunner,
+              callee.implMethodName
+            )
+
+            val result = implMethod.invoke(implInstance, actionContext)
             runner.handleActionReturn(result)
           }
         }
@@ -675,12 +674,12 @@ class BuildGraphRunner(
     importInstanceId: Int,
     implTarget: ExprNodeId?,
     implClassName: String,
-    block: (classPkg: ClassPkg?, Any) -> BuildTaskResult
+    block: (impl: BuildTaskResult.BuildRuleImpl) -> BuildTaskResult
   ): BuildTaskResult = if (implTarget == null) {
     val pluginInstanceProvider =
       preloadedPluginInstanceProviders.getValue(projectId)
     val implInstance = pluginInstanceProvider.getInstance(implClassName)
-    block(null, implInstance)
+    block(BuildTaskResult.BuildRuleImpl.NativeImpl(implInstance))
   } else {
     BuildTaskResult.WithResult(
       EvalExpr(projectId, implTarget, importInstanceId, null)
@@ -699,8 +698,7 @@ class BuildGraphRunner(
 
         val classPkg = ClassPkg.fromBibix(implTarget.value)
 
-        val implInstance = classPkgRunner.getPluginImplInstance(projectId, classPkg, implClassName)
-        block(classPkg, implInstance)
+        block(BuildTaskResult.BuildRuleImpl.NonNativeImpl(classPkg, implClassName))
       }
     }
   }
@@ -709,3 +707,26 @@ class BuildGraphRunner(
 fun List<BibixAst.ParamDef>.requiredParamNames() =
   this.filter { param -> !param.optional && param.defaultValue == null }
     .map { it.name }.toSet()
+
+fun getImpl(
+  impl: BuildTaskResult.BuildRuleImpl,
+  callerProjectId: Int,
+  classPkgRunner: ClassPkgRunner,
+  methodName: String
+): Pair<Any, Method> {
+  val implInstance = when (impl) {
+    is BuildTaskResult.BuildRuleImpl.NativeImpl -> impl.implInstance
+    is BuildTaskResult.BuildRuleImpl.NonNativeImpl -> {
+      classPkgRunner.getPluginImplInstance(
+        callerProjectId = callerProjectId,
+        classPkg = impl.classPkg,
+        className = impl.implClassName
+      )
+    }
+  }
+  val implMethod =
+    implInstance::class.java.getMethod(methodName, BuildContext::class.java)
+  implMethod.trySetAccessible()
+
+  return Pair(implInstance, implMethod)
+}

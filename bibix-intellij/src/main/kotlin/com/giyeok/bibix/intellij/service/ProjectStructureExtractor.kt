@@ -186,13 +186,10 @@ object ProjectStructureExtractor {
       ClassWorld()
     )
     val buildFrontend = BuildFrontend(
-      if (scriptName == null) {
-        BibixProjectLocation(projectRoot)
-      } else {
-        BibixProjectLocation(projectRoot, scriptName)
-      },
+      BibixProjectLocation.of(projectRoot, scriptName),
       mapOf(),
       listOf(),
+      targetLogFileName = "ijdaemon-log.json",
       classPkgRunner = overridingClassPkgRunner
     )
 

@@ -147,9 +147,22 @@ class BuildGraphBuilder(
         }
 
         is BibixAst.VarDef -> {
+          val varType = when (val specifiedType = def.typ) {
+            null -> {
+              val defaultValue = def.defaultValue!!
+              // TODO 제대로 type inference?
+              val inferredType = when (defaultValue) {
+                is BibixAst.StringLiteral -> StringType
+                else -> TODO()
+              }
+              VarDef.VarType.FixedType(inferredType)
+            }
+
+            else -> VarDef.VarType.TypeNode(addType(specifiedType, ctx))
+          }
           vars[ctx.bibixName(def.name)] = VarDef(
             def = def,
-            type = addType(def.typ!!, ctx),
+            type = varType,
             defaultValue = def.defaultValue?.let { addExpr(it, ctx) }
           )
         }
@@ -158,7 +171,7 @@ class BuildGraphBuilder(
           def.redefs.forEach { redef ->
             when (val lookupResult = ctx.nameLookupCtx.lookupName(redef.nameTokens)) {
               is NameInImport -> {
-                check(isRoot) { "var redef only can be placed in the root. Consider using with statement instead" }
+                check(isRoot) { "var redef only can be placed in the root" }
                 val redefs = varRedefs.getOrPut(lookupResult.importEntry.name) { mutableMapOf() }
                 val varName = BibixName(lookupResult.remaining)
                 check(varName !in redefs) { "Duplicate var redef: $varName" }

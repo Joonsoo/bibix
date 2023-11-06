@@ -18,7 +18,7 @@ open class ClassPkgRunner(private val classWorld: ClassWorld) {
 
   private val baseRealm = classWorld.newRealm("bibix-root-realm")
 
-  open fun getPluginImplInstance(projectId: Int, classPkg: ClassPkg, className: String): Any =
+  open fun getPluginImplInstance(callerProjectId: Int, classPkg: ClassPkg, className: String): Any =
     getPluginImplInstance(prepareClassPathsForPlugin(classPkg), className)
 
   private fun getPluginImplInstance(cps: List<Path>, className: String): Any {

@@ -74,6 +74,7 @@ class ParallelGraphRunner(
 
       is BuildTaskResult.LongRunning -> {
         activeLongRunningJobs.incrementAndGet()
+        // println("Starting long running...")
         longRunningJobExecutor.execute {
           jobExecutorTracker?.notifyJobStartedFor(task)
           try {
@@ -92,6 +93,7 @@ class ParallelGraphRunner(
 
       is BuildTaskResult.SuspendLongRunning -> {
         activeLongRunningJobs.incrementAndGet()
+        // println("Starting (suspend) long running...")
         CoroutineScope(longRunningJobDispatcher).launch {
           jobExecutorTracker?.notifySuspendJobStartedFor(task)
           try {
@@ -144,10 +146,10 @@ class ParallelGraphRunner(
     func: (List<BuildTaskResult.FinalResult>) -> BuildTaskResult
   ) {
     // TODO parentTask -> subTasks 관계 저장 - 진행 상황 파악용
-//    println("$parentTask ->")
-//    subTasks.forEach {
-//      println("  $it")
-//    }
+    // println("$parentTask ->")
+    // subTasks.forEach {
+    //   println("  $it")
+    // }
     dependentMultiFuncs.add(DependentMultiFunc(parentTask, subTasks, func))
   }
 
@@ -206,7 +208,6 @@ class ParallelGraphRunner(
   suspend fun runTasks(tasks: Collection<BuildTask>): Map<BuildTask, BuildTaskResult.FinalResult?> {
     val loop = CoroutineScope(mainJobExecutor.asCoroutineDispatcher()).async {
       for (update in updateChannel) {
-        // println(update)
         when (update) {
           is BuildRunUpdate.Task -> processBuildTask(update.task)
           is BuildRunUpdate.Result -> processTaskResult(update.task, update.result)
