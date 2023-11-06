@@ -47,12 +47,12 @@ fun organizeParamsAndRunBuildRule(
         }
       }
 
-      val (implInstance, implMethod) = getImpl(
-        buildRule.impl,
-        callerProjectId,
-        buildGraphRunner.classPkgRunner,
-        buildRule.implMethodName
-      )
+      val implInstance =
+        getImplInstance(buildRule.impl, callerProjectId, buildGraphRunner.classPkgRunner)
+
+      val implMethod =
+        implInstance::class.java.getMethod(buildRule.implMethodName, BuildContext::class.java)
+      implMethod.trySetAccessible()
 
       BuildTaskResult.LongRunning {
         val result = implMethod.invoke(implInstance, buildContext)

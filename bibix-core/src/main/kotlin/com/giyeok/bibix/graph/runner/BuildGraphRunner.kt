@@ -631,12 +631,11 @@ class BuildGraphRunner(
               BuildRuleDefContext.from(callee)
             ) { it }
 
-            val (implInstance, implMethod) = getImpl(
-              callee.impl,
-              buildTask.projectId,
-              classPkgRunner,
-              callee.implMethodName
-            )
+            val implInstance = getImplInstance(callee.impl, buildTask.projectId, classPkgRunner)
+
+            val implMethod =
+              implInstance::class.java.getMethod(callee.implMethodName, ActionContext::class.java)
+            implMethod.trySetAccessible()
 
             val result = implMethod.invoke(implInstance, actionContext)
             runner.handleActionReturn(result)
@@ -708,25 +707,17 @@ fun List<BibixAst.ParamDef>.requiredParamNames() =
   this.filter { param -> !param.optional && param.defaultValue == null }
     .map { it.name }.toSet()
 
-fun getImpl(
+fun getImplInstance(
   impl: BuildTaskResult.BuildRuleImpl,
   callerProjectId: Int,
   classPkgRunner: ClassPkgRunner,
-  methodName: String
-): Pair<Any, Method> {
-  val implInstance = when (impl) {
-    is BuildTaskResult.BuildRuleImpl.NativeImpl -> impl.implInstance
-    is BuildTaskResult.BuildRuleImpl.NonNativeImpl -> {
-      classPkgRunner.getPluginImplInstance(
-        callerProjectId = callerProjectId,
-        classPkg = impl.classPkg,
-        className = impl.implClassName
-      )
-    }
+): Any = when (impl) {
+  is BuildTaskResult.BuildRuleImpl.NativeImpl -> impl.implInstance
+  is BuildTaskResult.BuildRuleImpl.NonNativeImpl -> {
+    classPkgRunner.getPluginImplInstance(
+      callerProjectId = callerProjectId,
+      classPkg = impl.classPkg,
+      className = impl.implClassName
+    )
   }
-  val implMethod =
-    implInstance::class.java.getMethod(methodName, BuildContext::class.java)
-  implMethod.trySetAccessible()
-
-  return Pair(implInstance, implMethod)
 }
