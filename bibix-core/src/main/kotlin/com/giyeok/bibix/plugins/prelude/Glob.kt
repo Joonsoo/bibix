@@ -14,8 +14,11 @@ class Glob {
     val fileSystem = context.fileSystem
     val matcher = when (val pattern = context.arguments.getValue("pattern")) {
       is StringValue -> {
-        val matcherPattern =
+        val matcherPattern = if (pattern.value.startsWith('/')) {
+          "glob:${pattern.value}"
+        } else {
           "glob:" + (context.callerBaseDirectory!!.absolutePathString() + "/" + pattern.value)
+        }
         fileSystem.getPathMatcher(matcherPattern)
       }
 

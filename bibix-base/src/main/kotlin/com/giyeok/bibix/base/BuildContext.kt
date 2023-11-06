@@ -6,9 +6,7 @@ import com.google.protobuf.ByteString
 import java.nio.file.FileSystem
 import java.nio.file.Path
 import java.time.Instant
-import kotlin.io.path.createDirectory
-import kotlin.io.path.deleteRecursively
-import kotlin.io.path.notExists
+import kotlin.io.path.*
 
 data class BuildContext(
   val buildEnv: BuildEnv,
@@ -49,9 +47,15 @@ data class BuildContext(
     destDirectoryPath
   }
 
+  @OptIn(ExperimentalPathApi::class)
   fun clearDestDirectory(): Path {
-    // TODO()
-    return destDirectory
+    if (destDirectoryPath.exists()) {
+      destDirectoryPath.deleteRecursively()
+    }
+    if (destDirectoryPath.notExists()) {
+      destDirectoryPath.createDirectory()
+    }
+    return destDirectoryPath
   }
 
   fun getSharedDirectory(sharedRepoName: String): Path =

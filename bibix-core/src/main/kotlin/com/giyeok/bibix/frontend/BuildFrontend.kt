@@ -106,7 +106,14 @@ class BuildFrontend(
   }
 
   fun mainScriptTaskNames(lineIndent: String = "  ") =
-    mainScriptDefinitions.keys.sorted().joinToString("\n") { "$lineIndent$it" }
+    mainScriptDefinitions.entries.toList().sortedBy { it.key }.joinToString("\n") { (name, task) ->
+      val taskType = when (task) {
+        is EvalTarget -> "target"
+        is ExecAction -> "action"
+        else -> "??????"
+      }
+      "$lineIndent($taskType) $name"
+    }
 
   suspend fun runBuildTasks(buildTasks: List<BuildTask>): Map<BuildTask, BuildTaskResult.FinalResult?> =
 //    buildTasks.associateWith { BlockingBuildGraphRunner(buildGraphRunner).runToFinal(it) }
