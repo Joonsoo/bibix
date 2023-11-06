@@ -7,6 +7,7 @@ import java.nio.file.FileSystem
 import java.nio.file.Path
 import java.time.Instant
 import kotlin.io.path.createDirectory
+import kotlin.io.path.deleteRecursively
 import kotlin.io.path.notExists
 
 data class BuildContext(

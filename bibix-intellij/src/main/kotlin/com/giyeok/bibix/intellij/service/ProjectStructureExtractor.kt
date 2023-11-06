@@ -1,32 +1,19 @@
 package com.giyeok.bibix.intellij.service
 
-import com.giyeok.bibix.ast.BibixAst
 import com.giyeok.bibix.base.DummyProgressLogger
-import com.giyeok.bibix.base.MainSourceId
 import com.giyeok.bibix.base.StringValue
 import com.giyeok.bibix.frontend.BuildFrontend
-import com.giyeok.bibix.frontend.NoopProgressNotifier
+import com.giyeok.bibix.graph.BibixName
 import com.giyeok.bibix.graph.BibixProjectLocation
 import com.giyeok.bibix.graph.runner.EvalTarget
 import com.giyeok.bibix.intellij.*
 import com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDep
 import com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDep
-import com.giyeok.bibix.interpreter.BibixExecutionException
-import com.giyeok.bibix.interpreter.BibixProject
-import com.giyeok.bibix.interpreter.ExprEvalContext
-import com.giyeok.bibix.interpreter.TaskDescriptor
-import com.giyeok.bibix.interpreter.expr.Definition
-import com.giyeok.bibix.interpreter.expr.EvaluationResult
-import com.giyeok.bibix.interpreter.expr.NameLookupContext
-import com.giyeok.bibix.interpreter.expr.VarsContext
 import com.giyeok.bibix.plugins.jvm.*
 import com.giyeok.bibix.plugins.maven.Artifact
-import com.giyeok.bibix.utils.toHexString
 import com.google.common.annotations.VisibleForTesting
 import kotlinx.coroutines.runBlocking
 import org.codehaus.plexus.classworlds.ClassWorld
-import java.io.PrintWriter
-import java.io.StringWriter
 import java.nio.file.Path
 import kotlin.io.path.*
 
@@ -220,6 +207,7 @@ object ProjectStructureExtractor {
     }
     val results = runBlocking {
       buildFrontend.runBuildTasks(moduleTargets.values.toList())
+//      buildFrontend.runBuildTasks(listOf(EvalTarget(1, 0, BibixName("phoserver.main"))))
     }
     println(results)
 
@@ -248,22 +236,28 @@ object ProjectStructureExtractor {
 //      }
 //    }
 
+    // modules: target id -> module data
     val modules =
       javaModulesCollector.modules + ktjvmModulesCollector.modules + scalaModulesCollector.modules
-    val namesMap = buildFrontend.repo.repoData.outputNamesMap.mapValues { it.value }
 
-    val objectNamesMap = mutableMapOf<String, String>()
-    namesMap.forEach { (targetId, outputName) ->
-      val existingName = objectNamesMap[outputName]
-      if (existingName == null || existingName.length > outputName.length) {
-        objectNamesMap[outputName] = targetId
+    modules.forEach { (targetId, module) ->
+      check(module.origin.objHash == targetId)
+    }
+
+    val targetNamesMap = mutableMapOf<String, String>()
+    buildFrontend.repo.repoData.outputNamesMap.forEach { (moduleName, targetId) ->
+      val existingName = targetNamesMap[moduleName]
+      if (existingName == null || existingName.length > moduleName.length) {
+        targetNamesMap[targetId] = moduleName
       }
     }
 
     val moduleTargetIds = modules.values.map { it.origin.objHash }.toSet()
 
-    fun moduleName(targetId: String): String =
-      "$rootModuleName." + (objectNamesMap[targetId] ?: targetId)
+    fun moduleName(targetId: String): String {
+      val userName = targetNamesMap[targetId] ?: targetId
+      return "$rootModuleName.$userName"
+    }
 
     fun isModule(origin: ClassOrigin) = when (origin) {
       is LocalBuilt -> moduleTargetIds.contains(origin.objHash)

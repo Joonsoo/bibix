@@ -216,9 +216,9 @@ class BibixRepo(
     val targetDirectory = objectsDirectory.resolve(targetId).normalize().absolute()
     if (targetDirectory.exists()) {
       linkFile.createSymbolicLinkPointingTo(targetDirectory)
-      synchronized(this) {
-        repoData.putOutputNames(name.toString(), targetId)
-      }
+    }
+    synchronized(this) {
+      repoData.putOutputNames(name.toString(), targetId)
     }
     saveRepoData()
   }

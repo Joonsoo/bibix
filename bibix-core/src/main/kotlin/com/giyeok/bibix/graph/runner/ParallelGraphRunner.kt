@@ -12,6 +12,11 @@ import java.util.concurrent.atomic.AtomicInteger
 // graph 버전에서는 다른건 다 한 스레드에서 돌고,
 // LongRunning과 SuspendLongRunning만 여러 스레드에서 분산시켜서 돌린다
 // 또, build task간의 관계를 그래프(정확히는 DAG) 형태로 잘 관리해서 싸이클 감지와 추후 시각화 기능에 사용한다
+
+// TODO 1. 모든 결과 저장하지 말고 필요한 것만 저장하도록 수정
+//  - 어차피 call expr에서 target id로 long running job들은 캐싱되고 있으니 여기선 좀더 적극적으로 해도 괜찮음
+// TODO 2. 지금은 중간에 태스크 하나라도 실패하면 모든 동작을 중단시키는데, 문제 없는 것들은 최대한 완료하도록 수정
+//  - 그러렴 BuildTask간의 관계를 관리해야 함
 class ParallelGraphRunner(
   val runner: BuildGraphRunner,
   val longRunningJobExecutor: ExecutorService,
