@@ -15,6 +15,7 @@ import com.giyeok.bibix.plugins.maven.mavenPlugin
 import com.giyeok.bibix.plugins.prelude.preludePlugin
 import com.giyeok.bibix.repo.BibixRepo
 import org.codehaus.plexus.classworlds.ClassWorld
+import java.lang.StringBuilder
 import java.nio.file.FileSystems
 
 class BuildFrontend(
@@ -101,21 +102,35 @@ class BuildFrontend(
       name.toString() to EvalTarget(1, 0, name)
     }
     val actions = mainBuildGraph.actions.keys.associate { name ->
-      name.toString() to ExecAction(1, 0, name, mapOf())
+      name.toString() to ExecAction(1, 0, name, 0)
     }
 
     targets + actions
   }
 
-  fun mainScriptTaskNames(lineIndent: String = "  ") =
-    mainScriptDefinitions.entries.toList().sortedBy { it.key }.joinToString("\n") { (name, task) ->
-      val taskType = when (task) {
-        is EvalTarget -> "target"
-        is ExecAction -> "action"
-        else -> "??????"
+  fun mainScriptTaskNames(lineIndent: String = "  "): String {
+    val targets = mainScriptDefinitions.entries.filter { it.value is EvalTarget }.map { it.key }
+    val actions = mainScriptDefinitions.entries.filter { it.value is ExecAction }.map { it.key }
+
+    return if (targets.isEmpty() && actions.isEmpty()) {
+      "${lineIndent}No targets or actions"
+    } else {
+      val builder = StringBuilder()
+      if (targets.isNotEmpty()) {
+        builder.append("$lineIndent  === targets ===\n")
+        targets.sorted().forEach { target ->
+          builder.append("$lineIndent$target\n")
+        }
       }
-      "$lineIndent($taskType) $name"
+      if (actions.isNotEmpty()) {
+        builder.append("$lineIndent  === actions ===\n")
+        actions.sorted().forEach { action ->
+          builder.append("$lineIndent$action\n")
+        }
+      }
+      builder.toString()
     }
+  }
 
   suspend fun runBuildTasks(buildTasks: List<BuildTask>): Map<BuildTask, BuildTaskResult.FinalResult?> =
 //    buildTasks.associateWith { BlockingBuildGraphRunner(buildGraphRunner).runToFinal(it) }

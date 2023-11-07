@@ -3,6 +3,7 @@ package com.giyeok.bibix.graph.runner
 import com.giyeok.bibix.*
 import com.giyeok.bibix.base.*
 import com.giyeok.bibix.graph.BibixName
+import com.giyeok.bibix.repo.BibixRepo
 import com.giyeok.bibix.repo.BibixRepoProto
 import com.giyeok.bibix.repo.extractInputHashes
 import com.giyeok.bibix.repo.hashString
@@ -23,6 +24,7 @@ fun organizeParamsAndRunBuildRule(
   block: (BuildTaskResult.FinalResult, overriddenPlugin: Boolean) -> BuildTaskResult
 ): BuildTaskResult {
   return organizeParams(
+    buildGraphRunner.valueStore,
     callerProjectId,
     buildRule.paramTypes,
     buildRule.buildRuleDef.def.params.requiredParamNames(),
@@ -44,7 +46,8 @@ fun organizeParamsAndRunBuildRule(
     ) { buildContext ->
       // TODO target이 실패한 경우에 repo에 업데이트
       val runner = BuildRuleRunner(
-        buildGraphRunner,
+        buildGraphRunner.repo,
+        buildGraphRunner.valueStore,
         callerProjectId,
         callerImportInstanceId,
         BuildRuleDefContext.from(buildRule)
@@ -220,7 +223,8 @@ private fun sourceIdFrom(
 }
 
 class BuildRuleRunner(
-  val buildGraphRunner: BuildGraphRunner,
+  val repo: BibixRepo,
+  val valueStore: ValueStore,
   val callerProjectId: Int,
   val callerImportInstanceId: Int,
   // build rule이 정의된 위치
@@ -268,7 +272,7 @@ class BuildRuleRunner(
     return BuildTaskResult.WithResultList(params.map {
       FinalizeBuildRuleReturnValue(
         buildRuleDefCtx,
-        it.value,
+        valueStore.idOf(it.value),
         callerProjectId,
       )
     }) { finalized ->
@@ -284,7 +288,7 @@ class BuildRuleRunner(
           BibixName(result.ruleName),
           callerProjectId,
           callerImportInstanceId,
-          finalizedParams
+          valueStore.idOf(finalizedParams)
         )
       ) { evalResult ->
         check(evalResult is BuildTaskResult.ResultWithValue)
@@ -340,7 +344,7 @@ class BuildRuleRunner(
   ): BuildTaskResult {
     // TODO lock result.directory
     // TODO 그런데 이런식으로 락을 잡으면 중간에 풀리는게 아닌가..?
-    val directoryLocker = buildGraphRunner.repo.directoryLocker
+    val directoryLocker = repo.directoryLocker
     return BuildTaskResult.SuspendLongRunning {
       directoryLocker.acquireLock(result.directory)
       val withLockResult = try {

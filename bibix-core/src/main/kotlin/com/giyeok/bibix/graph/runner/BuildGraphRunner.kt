@@ -26,6 +26,7 @@ class BuildGraphRunner(
   val classPkgRunner: ClassPkgRunner,
   // Pair(caller project ID, class name) -> overriding plugin instance
   val pluginOverrides: PluginOverrides,
+  val valueStore: ValueStore,
 ) {
   companion object {
     fun create(
@@ -92,6 +93,7 @@ class BuildGraphRunner(
         repo = repo,
         classPkgRunner = classPkgRunner,
         pluginOverrides = pluginOverride,
+        valueStore = ValueStore()
       )
     }
   }
@@ -154,8 +156,8 @@ class BuildGraphRunner(
         buildGraphRunner = this,
         projectId = buildTask.projectId,
         importInstanceId = buildTask.importInstanceId,
-        localLets = buildTask.localVars,
-        thisValue = buildTask.thisValue,
+        localLets = valueStore.valueMapOf(buildTask.localVarsId),
+        thisValue = buildTask.thisValueId?.let { valueStore.valueOf(it) as ClassInstanceValue },
       )
       evaluator.evaluateExpr(buildTask.exprNodeId)
     }
@@ -258,12 +260,15 @@ class BuildGraphRunner(
 
     is TypeCastValue -> {
       ValueCaster(this, buildTask.valueProjectId)
-        .castValue(buildTask.value, buildTask.type)
+        .castValue(valueStore.valueOf(buildTask.valueId), buildTask.type)
     }
 
     is FinalizeBuildRuleReturnValue -> {
       ValueCaster(this, buildTask.projectId)
-        .finalizeBuildRuleReturnValue(buildTask.buildRuleDefCtx, buildTask.value)
+        .finalizeBuildRuleReturnValue(
+          buildTask.buildRuleDefCtx,
+          valueStore.valueOf(buildTask.valueId)
+        )
     }
 
     is EvalBuildRuleMeta -> {
@@ -545,7 +550,13 @@ class BuildGraphRunner(
         when (val nextStmt = stmts[stmtIdx]) {
           is ActionDef.LetStmt -> {
             BuildTaskResult.WithResult(
-              EvalExpr(projectId, nextStmt.exprNodeId, importInstanceId, letLocals, null)
+              EvalExpr(
+                projectId,
+                nextStmt.exprNodeId,
+                importInstanceId,
+                valueStore.idOf(letLocals),
+                null
+              )
             ) { evalResult ->
               check(evalResult is BuildTaskResult.ResultWithValue)
               if (stmtIdx + 1 == stmts.size) {
@@ -558,7 +569,7 @@ class BuildGraphRunner(
 
           is ActionDef.CallStmt ->
             BuildTaskResult.WithResult(
-              ExecActionCallExpr(projectId, importInstanceId, nextStmt, letLocals)
+              ExecActionCallExpr(projectId, importInstanceId, nextStmt, valueStore.idOf(letLocals))
             ) { execResult ->
               check(execResult is BuildTaskResult.ActionRuleDoneResult)
               if (stmtIdx + 1 == stmts.size) {
@@ -578,7 +589,7 @@ class BuildGraphRunner(
       buildTask.projectId,
       exprNodeId,
       buildTask.importInstanceId,
-      buildTask.letLocals,
+      buildTask.letLocalsId,
       null
     )
 
@@ -597,7 +608,7 @@ class BuildGraphRunner(
           // TODO callStmt에 string list 파라메터 하나는 들어갈 수 있도록(args)
           check(callStmt.posArgs.isEmpty() && namedParams.isEmpty())
           BuildTaskResult.WithResult(
-            ExecAction(callee.projectId, callee.importInstanceId, callee.actionName, mapOf())
+            ExecAction(callee.projectId, callee.importInstanceId, callee.actionName, 0)
           ) { it }
         }
 
@@ -613,6 +624,7 @@ class BuildGraphRunner(
             }
 
           organizeParams(
+            valueStore,
             buildTask.projectId,
             callee.paramTypes,
             callee.actionRuleDef.def.params.requiredParamNames(),
@@ -628,7 +640,8 @@ class BuildGraphRunner(
             val actionContext = ActionContext(buildEnv, args, progressLogger)
 
             val runner = BuildRuleRunner(
-              this,
+              repo,
+              valueStore,
               buildTask.projectId,
               buildTask.importInstanceId,
               BuildRuleDefContext.from(callee)
@@ -691,7 +704,7 @@ class BuildGraphRunner(
       // implTarget을 ClassPkg로 변환
       BuildTaskResult.WithResult(
         TypeCastValue(
-          implTargetResult.value,
+          valueStore.idOf(implTargetResult.value),
           DataClassType("com.giyeok.bibix.plugins.jvm", "ClassPkg"),
           projectId,
         )

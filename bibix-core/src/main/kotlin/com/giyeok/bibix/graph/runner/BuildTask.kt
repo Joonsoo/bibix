@@ -2,11 +2,8 @@ package com.giyeok.bibix.graph.runner
 
 import com.giyeok.bibix.base.BibixType
 import com.giyeok.bibix.base.BibixValue
-import com.giyeok.bibix.base.ClassInstanceValue
 import com.giyeok.bibix.graph.*
-import com.giyeok.bibix.interpreter.PluginImplProvider
 import com.giyeok.bibix.plugins.jvm.ClassPkg
-import java.lang.reflect.Method
 
 sealed class BuildTask
 
@@ -29,33 +26,40 @@ data class ExecAction(
   val projectId: Int,
   val importInstanceId: Int,
   val actionName: BibixName,
-  val letLocals: Map<String, BibixValue>,
+  // val letLocals: Map<String, BibixValue>,
+  val letLocalsId: Int,
 ): BuildTask()
 
 data class ExecActionCallExpr(
   val projectId: Int,
   val importInstanceId: Int,
+  // TODO callStmt 가볍게 만들기
   val callStmt: ActionDef.CallStmt,
-  val letLocals: Map<String, BibixValue>,
+  // val letLocals: Map<String, BibixValue>,
+  val letLocalsId: Int,
 ): BuildTask()
 
 data class EvalExpr(
   val projectId: Int,
   val exprNodeId: ExprNodeId,
   val importInstanceId: Int,
-  val localVars: Map<String, BibixValue>,
-  val thisValue: ClassInstanceValue?,
+  // val localVars: Map<String, BibixValue>,
+  val localVarsId: Int,
+  // val thisValue: ClassInstanceValue?,
+  val thisValueId: Int?,
 ): BuildTask() {
   constructor(
     projectId: Int,
     exprNodeId: ExprNodeId,
     importInstanceId: Int,
-    thisValue: ClassInstanceValue?,
-  ): this(projectId, exprNodeId, importInstanceId, mapOf(), thisValue)
+    // thisValue: ClassInstanceValue?,
+    thisValueId: Int?
+  ): this(projectId, exprNodeId, importInstanceId, 0, thisValueId)
 }
 
 data class TypeCastValue(
-  val value: BibixValue,
+  // val value: BibixValue,
+  val valueId: Int,
   val type: BibixType,
   // valueProjectId는 value가 string일 때 path로 변경할 때 base directory를 판별하는 데 사용된다
   val valueProjectId: Int,
@@ -64,7 +68,8 @@ data class TypeCastValue(
 data class FinalizeBuildRuleReturnValue(
   // build rule이 정의된 위치에 대한 정보
   val buildRuleDefCtx: BuildRuleDefContext,
-  val value: BibixValue,
+  // val value: BibixValue,
+  val valueId: Int,
   val projectId: Int,
 ): BuildTask()
 
@@ -109,7 +114,8 @@ data class EvalCallExpr(
   val ruleName: BibixName,
   val projectId: Int,
   val importInstanceId: Int,
-  val params: Map<String, BibixValue>
+  // val params: Map<String, BibixValue>
+  val paramsId: Int,
 ): BuildTask()
 
 data class EvalCallee(
