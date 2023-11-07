@@ -58,8 +58,8 @@ class ParallelGraphRunner(
       }
 
       is BuildTaskResult.WithResultList -> {
-        val subResults = result.tasks.map { runTaskToFinal(it) }
-        handleResult(task, result.func(subResults.awaitAll()))
+        val subResults = result.tasks.map { runTaskToFinal(it) }.awaitAll()
+        handleResult(task, result.func(subResults))
       }
 
       is BuildTaskResult.LongRunning -> async {
@@ -103,14 +103,8 @@ class ParallelGraphRunner(
   private suspend fun runTaskToFinal(task: BuildTask): Deferred<BuildTaskResult.FinalResult> =
     handleResult(task, safeRunTask(task))
 
-  suspend fun runTasks(tasks: Collection<BuildTask>): Map<BuildTask, BuildTaskResult.FinalResult?> {
-    val deferredMap = tasks.associateWith { runTaskToFinal(it) }
-    return deferredMap.mapValues { (_, deferred) ->
-      try {
-        deferred.await()
-      } catch (e: Throwable) {
-        null
-      }
-    }
+  suspend fun runTasks(tasks: List<BuildTask>): Map<BuildTask, BuildTaskResult.FinalResult?> {
+    val results = tasks.map { runTaskToFinal(it) }.awaitAll()
+    return tasks.zip(results).toMap()
   }
 }
