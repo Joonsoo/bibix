@@ -141,7 +141,7 @@ class ProjectInfoBuilder(
     moduleContentRoots: List<BibixIntellijProto.ContentRoot>,
     moduleRoot: Path?
   ): BibixIntellijProto.Module = module {
-    this.moduleName = moduleName
+    this.moduleName = "$rootModuleName.$moduleName"
     val origin = classPkg.origin as LocalBuilt
 
     val targetIdData = repoData.getTargetIdDataOrDefault(origin.objHash, null)!!

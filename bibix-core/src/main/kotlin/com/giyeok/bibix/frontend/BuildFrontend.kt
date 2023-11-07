@@ -61,7 +61,7 @@ class BuildFrontend(
 
   val parallelRunner = ParallelGraphRunner(
     runner = buildGraphRunner,
-    longRunningJobExecutor = jobExecutorTracker.executor,
+    executor = jobExecutorTracker.executor,
     jobExecutorTracker = jobExecutorTracker
   )
 

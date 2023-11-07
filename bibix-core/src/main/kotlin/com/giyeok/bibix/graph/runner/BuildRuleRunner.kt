@@ -23,7 +23,6 @@ fun organizeParamsAndRunBuildRule(
   block: (BuildTaskResult.FinalResult) -> BuildTaskResult
 ): BuildTaskResult {
   return organizeParams(
-    buildGraphRunner.valueStore,
     callerProjectId,
     buildRule.paramTypes,
     buildRule.buildRuleDef.def.params.requiredParamNames(),
@@ -40,7 +39,6 @@ fun organizeParamsAndRunBuildRule(
       // TODO target이 실패한 경우에 repo에 업데이트
       val runner = BuildRuleRunner(
         buildGraphRunner.repo,
-        buildGraphRunner.valueStore,
         callerProjectId,
         callerImportInstanceId,
         BuildRuleDefContext.from(buildRule)
@@ -204,7 +202,6 @@ private fun sourceIdFrom(
 
 class BuildRuleRunner(
   val repo: BibixRepo,
-  val valueStore: ValueStore,
   val callerProjectId: Int,
   val callerImportInstanceId: Int,
   // build rule이 정의된 위치
@@ -250,11 +247,7 @@ class BuildRuleRunner(
   ): BuildTaskResult {
     val params = result.params.entries
     return BuildTaskResult.WithResultList(params.map {
-      FinalizeBuildRuleReturnValue(
-        buildRuleDefCtx,
-        valueStore.idOf(it.value),
-        callerProjectId,
-      )
+      FinalizeBuildRuleReturnValue(buildRuleDefCtx, it.value, callerProjectId)
     }) { finalized ->
       val finValues = finalized.map {
         check(it is BuildTaskResult.ResultWithValue)
@@ -268,7 +261,7 @@ class BuildRuleRunner(
           BibixName(result.ruleName),
           callerProjectId,
           callerImportInstanceId,
-          valueStore.idOf(finalizedParams)
+          finalizedParams
         )
       ) { evalResult ->
         check(evalResult is BuildTaskResult.ResultWithValue)

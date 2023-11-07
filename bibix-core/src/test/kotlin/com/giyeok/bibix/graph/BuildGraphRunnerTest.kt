@@ -30,13 +30,12 @@ class BuildGraphRunnerTest {
       fileSystem = FileSystems.getDefault(),
       repo = repo,
       classPkgRunner = ClassPkgRunner(ClassWorld()),
-      pluginOverride = NoPluginOverrides
     )
 
     try {
 //    println(runner.runToFinal(EvalTarget(1, 0, BibixName("ee"))))
 
-      runner.runToFinal(ExecAction(1, 0, BibixName("sugarformat.testProto.generate"), mapOf()))
+      runner.runToFinal(ExecAction(1, 0, BibixName("sugarformat.testProto.generate"), 0))
 //
 //    println(runner.runToFinal(EvalTarget(1, 0, BibixName("x"))))
 //    println(runner.runToFinal(EvalTarget(1, 0, BibixName("x2"))))

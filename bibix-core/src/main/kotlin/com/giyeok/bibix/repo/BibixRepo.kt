@@ -340,7 +340,7 @@ class BibixRepo(
       val runConfigFile = bbxbuildDirectory.resolve(configFileName)
       val runConfig = readSugarFormatOrDefault(runConfigFile, RunConfig.newBuilder()) { builder ->
         builder.clear()
-          .setMaxThreads(8)
+          .setMaxThreads(4)
           .setMinLogLevel(LogLevel.INFO)
           .setTargetResultReuseDuration(Durations.fromHours(1))
       }.build()

@@ -37,7 +37,7 @@ class ParallelGraphRunnerTest {
     val results = runBlocking {
       prunner.runTasks(
         // EvalTarget(1, 0, BibixName("dd"))
-        EvalTarget(1, 0, BibixName("ee"))
+        listOf(EvalTarget(1, 0, BibixName("ee")))
 //        ExecAction(1, 0, BibixName("runLocalAction"), mapOf())
       )
     }

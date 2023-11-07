@@ -21,18 +21,11 @@ class ExprEvaluator(
   private val buildGraph get() = multiGraph.getProjectGraph(projectId)
   private val exprGraph get() = buildGraph.exprGraph
 
-  private val valueStore get() = buildGraphRunner.valueStore
-
   private val valueCaster: ValueCaster get() = ValueCaster(buildGraphRunner, projectId)
 
   private fun evalTask(exprNodeId: ExprNodeId) =
     // isRunningActionStmt는 action stmt에서도 가장 바깥의 call expr에만 적용되면 됨
-    EvalExpr(
-      projectId,
-      exprNodeId,
-      importInstanceId,
-      valueStore.idOf(localLets),
-      thisValue?.let { valueStore.idOf(it) })
+    EvalExpr(projectId, exprNodeId, importInstanceId, localLets, thisValue)
 
   fun evaluateExpr(exprNodeId: ExprNodeId): BuildTaskResult =
     when (val exprNode = exprGraph.nodes.getValue(exprNodeId)) {
@@ -176,14 +169,13 @@ class ExprEvaluator(
             is BuildTaskResult.DataClassResult -> {
               val classType = DataClassType(callee.packageName, callee.name.toString())
               organizeParamsForDataClass(
-                valueStore,
                 projectId,
                 callee,
                 posArgs,
                 namedArgs
               ) { value ->
                 BuildTaskResult.WithResult(
-                  TypeCastValue(valueStore.idOf(value), classType, projectId)
+                  TypeCastValue(value, classType, projectId)
                 ) { casted ->
                   check(casted is BuildTaskResult.ResultWithValue)
                   BuildTaskResult.ValueResult(casted.value)
@@ -439,19 +431,15 @@ class ExprEvaluator(
     check(typeResult is BuildTaskResult.TypeResult)
 
     BuildTaskResult.WithResult(
-      FinalizeBuildRuleReturnValue(
-        BuildRuleDefContext.from(buildRule),
-        valueStore.idOf(value),
-        projectId
-      )
+      FinalizeBuildRuleReturnValue(BuildRuleDefContext.from(buildRule), value, projectId)
     ) { finalized ->
       // finalized가 ValueFinalizeFailResult 이면 안됨
       check(finalized is BuildTaskResult.ValueResult)
 
       BuildTaskResult.WithResult(
-        TypeCastValue(valueStore.idOf(finalized.value), typeResult.type, projectId)
+        TypeCastValue(finalized.value, typeResult.type, projectId)
       ) { casted ->
-        check(casted is BuildTaskResult.ValueResult)
+        check(casted is BuildTaskResult.ValueResult) { "$casted" }
         buildGraphRunner.repo.targetSucceeded(targetId, casted.value)
         BuildTaskResult.ValueOfTargetResult(casted.value, targetId)
       }
@@ -469,7 +457,7 @@ class ExprEvaluator(
         buildTask.buildRuleDefCtx.importInstanceId,
         buildRule,
         listOf(),
-        valueStore.valueMapOf(buildTask.paramsId)
+        buildTask.params
       ) { evalResult ->
         check(evalResult is BuildTaskResult.ValueOfTargetResult)
 
@@ -577,7 +565,6 @@ fun BuildGraphRunner.lookupFromImport(
 }
 
 fun organizeParamsForDataClass(
-  valueStore: ValueStore,
   callerProjectId: Int,
   dataClass: BuildTaskResult.DataClassResult,
   posArgs: List<BibixValue>,
@@ -585,7 +572,6 @@ fun organizeParamsForDataClass(
   func: (ClassInstanceValue) -> BuildTaskResult
 ): BuildTaskResult {
   return organizeParams(
-    valueStore,
     callerProjectId,
     dataClass.fieldTypes,
     dataClass.dataClassDef.def.fields.requiredParamNames(),
@@ -600,7 +586,6 @@ fun organizeParamsForDataClass(
 }
 
 fun organizeParams(
-  valueStore: ValueStore,
   callerProjectId: Int,
   paramTypes: List<Pair<String, BibixType>>,
   requiredParamNames: Set<String>,
@@ -616,11 +601,11 @@ fun organizeParams(
 
   // callee의 parameter 목록을 보고 posParams와 namedParams와 맞춰본다
   val posArgCastTasks = paramNames.zip(posArgs) { name, arg ->
-    TypeCastValue(valueStore.idOf(arg), paramTypesMap.getValue(name), callerProjectId)
+    TypeCastValue(arg, paramTypesMap.getValue(name), callerProjectId)
   }
   val namedArgPairs = namedArgs.entries.toList()
   val namedArgCastTasks = namedArgPairs.map { (name, arg) ->
-    TypeCastValue(valueStore.idOf(arg), paramTypesMap.getValue(name), callerProjectId)
+    TypeCastValue(arg, paramTypesMap.getValue(name), callerProjectId)
   }
 
   val remainingParamNames = paramNames.drop(posArgs.size).toSet()

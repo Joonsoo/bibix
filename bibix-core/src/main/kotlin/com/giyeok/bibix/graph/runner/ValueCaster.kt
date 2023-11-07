@@ -12,7 +12,6 @@ class ValueCaster(
   val projectId: Int,
 ) {
   val projectLocation: BibixProjectLocation? get() = buildGraphRunner.multiGraph.projectLocations[projectId]
-  val valueStore get() = buildGraphRunner.valueStore
 
   private fun cannotCast(value: BibixValue, type: BibixType) =
     BuildTaskResult.TypeCastFailResult(value, type)
@@ -177,7 +176,7 @@ class ValueCaster(
               check(dataClass is BuildTaskResult.DataClassResult)
 
               check(dataClass.fieldTypes.size == value.values.size)
-              organizeParamsForDataClass(valueStore, projectId, dataClass, value.values, mapOf()) {
+              organizeParamsForDataClass(projectId, dataClass, value.values, mapOf()) {
                 BuildTaskResult.ValueResult(it)
               }
             }
@@ -212,7 +211,7 @@ class ValueCaster(
             cannotCast(value, type)
           } else {
             BuildTaskResult.WithResult(
-              TypeCastValue(valueStore.idOf(value), type.types[candidateIdx], projectId)
+              TypeCastValue(value, type.types[candidateIdx], projectId)
             ) { result ->
               when (result) {
                 is BuildTaskResult.ResultWithValue -> result
@@ -291,7 +290,7 @@ class ValueCaster(
     func: (List<BibixValue>) -> BibixValue
   ): BuildTaskResult =
     BuildTaskResult.WithResultList(values.map {
-      TypeCastValue(valueStore.idOf(it), type, projectId)
+      TypeCastValue(it, type, projectId)
     }) { results ->
       check(results.all { it is BuildTaskResult.ResultWithValue })
       val finalValue = func(results.map { (it as BuildTaskResult.ResultWithValue).value })
@@ -303,7 +302,7 @@ class ValueCaster(
     func: (List<BibixValue>) -> BibixValue
   ): BuildTaskResult =
     BuildTaskResult.WithResultList(valueAndTypes.map { (value, type) ->
-      TypeCastValue(valueStore.idOf(value), type, projectId)
+      TypeCastValue(value, type, projectId)
     }) { results ->
       check(results.all { it is BuildTaskResult.ResultWithValue })
       val finalValue = func(results.map { (it as BuildTaskResult.ResultWithValue).value })
@@ -324,7 +323,6 @@ class ValueCaster(
         val fieldTypeMaps = dataClass.fieldTypes.toMap()
         finalizeValues(finalizeCtx, value.fieldValues, fieldTypeMaps) { fieldNames, finVals ->
           organizeParamsForDataClass(
-            valueStore,
             projectId,
             dataClass,
             listOf(),
@@ -345,7 +343,7 @@ class ValueCaster(
         finalizeValues(finalizeCtx, value.fieldValues, fieldTypeMaps) { fieldNames, finVals ->
           val castTasks = fieldNames.zip(finVals).map { (name, value) ->
             val expectedType = fieldTypeMaps.getValue(name)
-            TypeCastValue(valueStore.idOf(value), expectedType, projectId)
+            TypeCastValue(value, expectedType, projectId)
           }
           BuildTaskResult.WithResultList(castTasks) { cast ->
             check(cast.size == finVals.size)
@@ -355,7 +353,6 @@ class ValueCaster(
             }
 
             organizeParamsForDataClass(
-              valueStore,
               projectId,
               dataClassResult,
               listOf(),
@@ -382,7 +379,7 @@ class ValueCaster(
     func: (List<BibixValue>) -> BibixValue
   ): BuildTaskResult =
     BuildTaskResult.WithResultList(values.map {
-      FinalizeBuildRuleReturnValue(finalizeCtx, valueStore.idOf(it), projectId)
+      FinalizeBuildRuleReturnValue(finalizeCtx, it, projectId)
     }) { results ->
       if (results.all { it is BuildTaskResult.ResultWithValue }) {
         val finalValue = func(results.map { (it as BuildTaskResult.ResultWithValue).value })
@@ -402,7 +399,7 @@ class ValueCaster(
 
     val fieldValues = values.entries.sortedBy { it.key }
     val finalizeTasks = fieldValues.map {
-      FinalizeBuildRuleReturnValue(finalizeCtx, valueStore.idOf(it.value), projectId)
+      FinalizeBuildRuleReturnValue(finalizeCtx, it.value, projectId)
     }
     return BuildTaskResult.WithResultList(finalizeTasks) { finalized ->
       check(finalized.size == fieldValues.size)

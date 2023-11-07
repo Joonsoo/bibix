@@ -24,7 +24,6 @@ class BuildGraphRunner(
   val fileSystem: FileSystem,
   val repo: BibixRepo,
   val classPkgRunner: ClassPkgRunner,
-  val valueStore: ValueStore,
   val fileHashStore: FileHashStore,
 ) {
   companion object {
@@ -90,7 +89,6 @@ class BuildGraphRunner(
         fileSystem = fileSystem,
         repo = repo,
         classPkgRunner = classPkgRunner,
-        valueStore = ValueStore(),
         fileHashStore = FileHashStore()
       )
     }
@@ -154,8 +152,8 @@ class BuildGraphRunner(
         buildGraphRunner = this,
         projectId = buildTask.projectId,
         importInstanceId = buildTask.importInstanceId,
-        localLets = valueStore.valueMapOf(buildTask.localVarsId),
-        thisValue = buildTask.thisValueId?.let { valueStore.valueOf(it) as ClassInstanceValue },
+        localLets = buildTask.localVars,
+        thisValue = buildTask.thisValue,
       )
       evaluator.evaluateExpr(buildTask.exprNodeId)
     }
@@ -258,14 +256,14 @@ class BuildGraphRunner(
 
     is TypeCastValue -> {
       ValueCaster(this, buildTask.valueProjectId)
-        .castValue(valueStore.valueOf(buildTask.valueId), buildTask.type)
+        .castValue(buildTask.value, buildTask.type)
     }
 
     is FinalizeBuildRuleReturnValue -> {
       ValueCaster(this, buildTask.projectId)
         .finalizeBuildRuleReturnValue(
           buildTask.buildRuleDefCtx,
-          valueStore.valueOf(buildTask.valueId)
+          buildTask.value
         )
     }
 
@@ -552,7 +550,7 @@ class BuildGraphRunner(
                 projectId,
                 nextStmt.exprNodeId,
                 importInstanceId,
-                valueStore.idOf(letLocals),
+                letLocals,
                 null
               )
             ) { evalResult ->
@@ -567,7 +565,7 @@ class BuildGraphRunner(
 
           is ActionDef.CallStmt ->
             BuildTaskResult.WithResult(
-              ExecActionCallExpr(projectId, importInstanceId, nextStmt, valueStore.idOf(letLocals))
+              ExecActionCallExpr(projectId, importInstanceId, nextStmt, letLocals)
             ) { execResult ->
               check(execResult is BuildTaskResult.ActionRuleDoneResult)
               if (stmtIdx + 1 == stmts.size) {
@@ -587,7 +585,7 @@ class BuildGraphRunner(
       buildTask.projectId,
       exprNodeId,
       buildTask.importInstanceId,
-      buildTask.letLocalsId,
+      buildTask.letLocals,
       null
     )
 
@@ -622,7 +620,6 @@ class BuildGraphRunner(
             }
 
           organizeParams(
-            valueStore,
             buildTask.projectId,
             callee.paramTypes,
             callee.actionRuleDef.def.params.requiredParamNames(),
@@ -639,7 +636,6 @@ class BuildGraphRunner(
 
             val runner = BuildRuleRunner(
               repo,
-              valueStore,
               buildTask.projectId,
               buildTask.importInstanceId,
               BuildRuleDefContext.from(callee)
@@ -702,7 +698,7 @@ class BuildGraphRunner(
       // implTarget을 ClassPkg로 변환
       BuildTaskResult.WithResult(
         TypeCastValue(
-          valueStore.idOf(implTargetResult.value),
+          implTargetResult.value,
           DataClassType("com.giyeok.bibix.plugins.jvm", "ClassPkg"),
           projectId,
         )

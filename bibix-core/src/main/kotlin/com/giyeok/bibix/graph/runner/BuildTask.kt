@@ -2,6 +2,7 @@ package com.giyeok.bibix.graph.runner
 
 import com.giyeok.bibix.base.BibixType
 import com.giyeok.bibix.base.BibixValue
+import com.giyeok.bibix.base.ClassInstanceValue
 import com.giyeok.bibix.graph.*
 import com.giyeok.bibix.plugins.jvm.ClassPkg
 
@@ -33,33 +34,27 @@ data class ExecAction(
 data class ExecActionCallExpr(
   val projectId: Int,
   val importInstanceId: Int,
-  // TODO callStmt 가볍게 만들기
   val callStmt: ActionDef.CallStmt,
-  // val letLocals: Map<String, BibixValue>,
-  val letLocalsId: Int,
+  val letLocals: Map<String, BibixValue>,
 ): BuildTask()
 
 data class EvalExpr(
   val projectId: Int,
   val exprNodeId: ExprNodeId,
   val importInstanceId: Int,
-  // val localVars: Map<String, BibixValue>,
-  val localVarsId: Int,
-  // val thisValue: ClassInstanceValue?,
-  val thisValueId: Int?,
+  val localVars: Map<String, BibixValue>,
+  val thisValue: ClassInstanceValue?,
 ): BuildTask() {
   constructor(
     projectId: Int,
     exprNodeId: ExprNodeId,
     importInstanceId: Int,
-    // thisValue: ClassInstanceValue?,
-    thisValueId: Int?
-  ): this(projectId, exprNodeId, importInstanceId, 0, thisValueId)
+    thisValue: ClassInstanceValue?,
+  ): this(projectId, exprNodeId, importInstanceId, mapOf(), thisValue)
 }
 
 data class TypeCastValue(
-  // val value: BibixValue,
-  val valueId: Int,
+  val value: BibixValue,
   val type: BibixType,
   // valueProjectId는 value가 string일 때 path로 변경할 때 base directory를 판별하는 데 사용된다
   val valueProjectId: Int,
@@ -68,8 +63,7 @@ data class TypeCastValue(
 data class FinalizeBuildRuleReturnValue(
   // build rule이 정의된 위치에 대한 정보
   val buildRuleDefCtx: BuildRuleDefContext,
-  // val value: BibixValue,
-  val valueId: Int,
+  val value: BibixValue,
   val projectId: Int,
 ): BuildTask()
 
@@ -114,8 +108,7 @@ data class EvalCallExpr(
   val ruleName: BibixName,
   val projectId: Int,
   val importInstanceId: Int,
-  // val params: Map<String, BibixValue>
-  val paramsId: Int,
+  val params: Map<String, BibixValue>
 ): BuildTask()
 
 data class EvalCallee(
@@ -288,7 +281,7 @@ sealed class BuildTaskResult {
     val values: List<String>
   ): FinalResult()
 
-  class TypeCastFailResult(val value: BibixValue, val type: BibixType): FinalResult()
+  data class TypeCastFailResult(val value: BibixValue, val type: BibixType): FinalResult()
   class ValueFinalizeFailResult(val values: List<BibixValue>): FinalResult()
 
   // action rule을 실행했는데 값을 반환한 경우 returnValue에 넣어준다.. 그런데 기본은 값이 없는게 정상
