@@ -58,7 +58,7 @@ message BibixTargetLogs {
 message TargetLogs {
   string unique_run_id = 1;
   string target_id = 2;
-  LogBlocks blocks = 3;
+  repeated LogBlock blocks = 3;
 }
 
 message ActionLogs {
@@ -66,11 +66,7 @@ message ActionLogs {
   int32 project_id = 2;
   int32 import_instance_id = 3;
   string action_name = 4;
-  LogBlocks blocks = 5;
-}
-
-message LogBlocks {
-  repeated LogBlock blocks = 1;
+  repeated LogBlock blocks = 5;
 }
 
 message LogBlock {

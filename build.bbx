@@ -17,6 +17,7 @@ kotlinVersion = "1.9.10"
 var ktjvm.compilerVersion = kotlinVersion
 var ktjvm.sdkVersion = kotlinVersion
 var ktjvm.outVersion = "19"
+import git("https://github.com/Joonsoo/sugarproto") as sugarproto
 
 bibixVersion = "0.7.0"
 
@@ -111,6 +112,8 @@ core {
 
       maven.artifact("commons-codec", "commons-codec", "1.15"),
       maven.artifact("com.google.guava", "guava", "32.1.3-jre"),
+
+      sugarproto.sugarformat.main,
 
       ...floggerDeps,
     ]

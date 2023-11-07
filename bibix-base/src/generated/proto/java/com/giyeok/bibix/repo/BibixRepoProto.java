@@ -6290,19 +6290,28 @@ java.lang.String defaultValue) {
         getTargetIdBytes();
 
     /**
-     * <code>.com.giyeok.bibix.repo.LogBlocks blocks = 3;</code>
-     * @return Whether the blocks field is set.
+     * <code>repeated .com.giyeok.bibix.repo.LogBlock blocks = 3;</code>
      */
-    boolean hasBlocks();
+    java.util.List<com.giyeok.bibix.repo.BibixRepoProto.LogBlock> 
+        getBlocksList();
     /**
-     * <code>.com.giyeok.bibix.repo.LogBlocks blocks = 3;</code>
-     * @return The blocks.
+     * <code>repeated .com.giyeok.bibix.repo.LogBlock blocks = 3;</code>
      */
-    com.giyeok.bibix.repo.BibixRepoProto.LogBlocks getBlocks();
+    com.giyeok.bibix.repo.BibixRepoProto.LogBlock getBlocks(int index);
     /**
-     * <code>.com.giyeok.bibix.repo.LogBlocks blocks = 3;</code>
+     * <code>repeated .com.giyeok.bibix.repo.LogBlock blocks = 3;</code>
      */
-    com.giyeok.bibix.repo.BibixRepoProto.LogBlocksOrBuilder getBlocksOrBuilder();
+    int getBlocksCount();
+    /**
+     * <code>repeated .com.giyeok.bibix.repo.LogBlock blocks = 3;</code>
+     */
+    java.util.List<? extends com.giyeok.bibix.repo.BibixRepoProto.LogBlockOrBuilder> 
+        getBlocksOrBuilderList();
+    /**
+     * <code>repeated .com.giyeok.bibix.repo.LogBlock blocks = 3;</code>
+     */
+    com.giyeok.bibix.repo.BibixRepoProto.LogBlockOrBuilder getBlocksOrBuilder(
+        int index);
   }
   /**
    * Protobuf type {@code com.giyeok.bibix.repo.TargetLogs}
@@ -6319,6 +6328,7 @@ java.lang.String defaultValue) {
     private TargetLogs() {
       uniqueRunId_ = "";
       targetId_ = "";
+      blocks_ = java.util.Collections.emptyList();
     }
 
     @java.lang.Override
@@ -6420,29 +6430,44 @@ java.lang.String defaultValue) {
     }
 
     public static final int BLOCKS_FIELD_NUMBER = 3;
-    private com.giyeok.bibix.repo.BibixRepoProto.LogBlocks blocks_;
+    @SuppressWarnings("serial")
+    private java.util.List<com.giyeok.bibix.repo.BibixRepoProto.LogBlock> blocks_;
     /**
-     * <code>.com.giyeok.bibix.repo.LogBlocks blocks = 3;</code>
-     * @return Whether the blocks field is set.
+     * <code>repeated .com.giyeok.bibix.repo.LogBlock blocks = 3;</code>
      */
     @java.lang.Override
-    public boolean hasBlocks() {
-      return blocks_ != null;
+    public java.util.List<com.giyeok.bibix.repo.BibixRepoProto.LogBlock> getBlocksList() {
+      return blocks_;
     }
     /**
-     * <code>.com.giyeok.bibix.repo.LogBlocks blocks = 3;</code>
-     * @return The blocks.
+     * <code>repeated .com.giyeok.bibix.repo.LogBlock blocks = 3;</code>
      */
     @java.lang.Override
-    public com.giyeok.bibix.repo.BibixRepoProto.LogBlocks getBlocks() {
-      return blocks_ == null ? com.giyeok.bibix.repo.BibixRepoProto.LogBlocks.getDefaultInstance() : blocks_;
+    public java.util.List<? extends com.giyeok.bibix.repo.BibixRepoProto.LogBlockOrBuilder> 
+        getBlocksOrBuilderList() {
+      return blocks_;
     }
     /**
-     * <code>.com.giyeok.bibix.repo.LogBlocks blocks = 3;</code>
+     * <code>repeated .com.giyeok.bibix.repo.LogBlock blocks = 3;</code>
      */
     @java.lang.Override
-    public com.giyeok.bibix.repo.BibixRepoProto.LogBlocksOrBuilder getBlocksOrBuilder() {
-      return blocks_ == null ? com.giyeok.bibix.repo.BibixRepoProto.LogBlocks.getDefaultInstance() : blocks_;
+    public int getBlocksCount() {
+      return blocks_.size();
+    }
+    /**
+     * <code>repeated .com.giyeok.bibix.repo.LogBlock blocks = 3;</code>
+     */
+    @java.lang.Override
+    public com.giyeok.bibix.repo.BibixRepoProto.LogBlock getBlocks(int index) {
+      return blocks_.get(index);
+    }
+    /**
+     * <code>repeated .com.giyeok.bibix.repo.LogBlock blocks = 3;</code>
+     */
+    @java.lang.Override
+    public com.giyeok.bibix.repo.BibixRepoProto.LogBlockOrBuilder getBlocksOrBuilder(
+        int index) {
+      return blocks_.get(index);
     }
 
     private byte memoizedIsInitialized = -1;
@@ -6465,8 +6490,8 @@ java.lang.String defaultValue) {
       if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(targetId_)) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 2, targetId_);
       }
-      if (blocks_ != null) {
-        output.writeMessage(3, getBlocks());
+      for (int i = 0; i < blocks_.size(); i++) {
+        output.writeMessage(3, blocks_.get(i));
       }
       getUnknownFields().writeTo(output);
     }
@@ -6483,9 +6508,9 @@ java.lang.String defaultValue) {
       if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(targetId_)) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, targetId_);
       }
-      if (blocks_ != null) {
+      for (int i = 0; i < blocks_.size(); i++) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(3, getBlocks());
+          .computeMessageSize(3, blocks_.get(i));
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSize = size;
@@ -6506,11 +6531,8 @@ java.lang.String defaultValue) {
           .equals(other.getUniqueRunId())) return false;
       if (!getTargetId()
           .equals(other.getTargetId())) return false;
-      if (hasBlocks() != other.hasBlocks()) return false;
-      if (hasBlocks()) {
-        if (!getBlocks()
-            .equals(other.getBlocks())) return false;
-      }
+      if (!getBlocksList()
+          .equals(other.getBlocksList())) return false;
       if (!getUnknownFields().equals(other.getUnknownFields())) return false;
       return true;
     }
@@ -6526,9 +6548,9 @@ java.lang.String defaultValue) {
       hash = (53 * hash) + getUniqueRunId().hashCode();
       hash = (37 * hash) + TARGET_ID_FIELD_NUMBER;
       hash = (53 * hash) + getTargetId().hashCode();
-      if (hasBlocks()) {
+      if (getBlocksCount() > 0) {
         hash = (37 * hash) + BLOCKS_FIELD_NUMBER;
-        hash = (53 * hash) + getBlocks().hashCode();
+        hash = (53 * hash) + getBlocksList().hashCode();
       }
       hash = (29 * hash) + getUnknownFields().hashCode();
       memoizedHashCode = hash;
@@ -6661,11 +6683,13 @@ java.lang.String defaultValue) {
         bitField0_ = 0;
         uniqueRunId_ = "";
         targetId_ = "";
-        blocks_ = null;
-        if (blocksBuilder_ != null) {
-          blocksBuilder_.dispose();
-          blocksBuilder_ = null;
+        if (blocksBuilder_ == null) {
+          blocks_ = java.util.Collections.emptyList();
+        } else {
+          blocks_ = null;
+          blocksBuilder_.clear();
         }
+        bitField0_ = (bitField0_ & ~0x00000004);
         return this;
       }
 
@@ -6692,9 +6716,22 @@ java.lang.String defaultValue) {
       @java.lang.Override
       public com.giyeok.bibix.repo.BibixRepoProto.TargetLogs buildPartial() {
         com.giyeok.bibix.repo.BibixRepoProto.TargetLogs result = new com.giyeok.bibix.repo.BibixRepoProto.TargetLogs(this);
+        buildPartialRepeatedFields(result);
         if (bitField0_ != 0) { buildPartial0(result); }
         onBuilt();
         return result;
+      }
+
+      private void buildPartialRepeatedFields(com.giyeok.bibix.repo.BibixRepoProto.TargetLogs result) {
+        if (blocksBuilder_ == null) {
+          if (((bitField0_ & 0x00000004) != 0)) {
+            blocks_ = java.util.Collections.unmodifiableList(blocks_);
+            bitField0_ = (bitField0_ & ~0x00000004);
+          }
+          result.blocks_ = blocks_;
+        } else {
+          result.blocks_ = blocksBuilder_.build();
+        }
       }
 
       private void buildPartial0(com.giyeok.bibix.repo.BibixRepoProto.TargetLogs result) {
@@ -6704,11 +6741,6 @@ java.lang.String defaultValue) {
         }
         if (((from_bitField0_ & 0x00000002) != 0)) {
           result.targetId_ = targetId_;
-        }
-        if (((from_bitField0_ & 0x00000004) != 0)) {
-          result.blocks_ = blocksBuilder_ == null
-              ? blocks_
-              : blocksBuilder_.build();
         }
       }
 
@@ -6734,8 +6766,31 @@ java.lang.String defaultValue) {
           bitField0_ |= 0x00000002;
           onChanged();
         }
-        if (other.hasBlocks()) {
-          mergeBlocks(other.getBlocks());
+        if (blocksBuilder_ == null) {
+          if (!other.blocks_.isEmpty()) {
+            if (blocks_.isEmpty()) {
+              blocks_ = other.blocks_;
+              bitField0_ = (bitField0_ & ~0x00000004);
+            } else {
+              ensureBlocksIsMutable();
+              blocks_.addAll(other.blocks_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.blocks_.isEmpty()) {
+            if (blocksBuilder_.isEmpty()) {
+              blocksBuilder_.dispose();
+              blocksBuilder_ = null;
+              blocks_ = other.blocks_;
+              bitField0_ = (bitField0_ & ~0x00000004);
+              blocksBuilder_ = 
+                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                   getBlocksFieldBuilder() : null;
+            } else {
+              blocksBuilder_.addAllMessages(other.blocks_);
+            }
+          }
         }
         this.mergeUnknownFields(other.getUnknownFields());
         onChanged();
@@ -6774,10 +6829,16 @@ java.lang.String defaultValue) {
                 break;
               } // case 18
               case 26: {
-                input.readMessage(
-                    getBlocksFieldBuilder().getBuilder(),
-                    extensionRegistry);
-                bitField0_ |= 0x00000004;
+                com.giyeok.bibix.repo.BibixRepoProto.LogBlock m =
+                    input.readMessage(
+                        com.giyeok.bibix.repo.BibixRepoProto.LogBlock.parser(),
+                        extensionRegistry);
+                if (blocksBuilder_ == null) {
+                  ensureBlocksIsMutable();
+                  blocks_.add(m);
+                } else {
+                  blocksBuilder_.addMessage(m);
+                }
                 break;
               } // case 26
               default: {
@@ -6941,118 +7002,239 @@ java.lang.String defaultValue) {
         return this;
       }
 
-      private com.giyeok.bibix.repo.BibixRepoProto.LogBlocks blocks_;
-      private com.google.protobuf.SingleFieldBuilderV3<
-          com.giyeok.bibix.repo.BibixRepoProto.LogBlocks, com.giyeok.bibix.repo.BibixRepoProto.LogBlocks.Builder, com.giyeok.bibix.repo.BibixRepoProto.LogBlocksOrBuilder> blocksBuilder_;
-      /**
-       * <code>.com.giyeok.bibix.repo.LogBlocks blocks = 3;</code>
-       * @return Whether the blocks field is set.
-       */
-      public boolean hasBlocks() {
-        return ((bitField0_ & 0x00000004) != 0);
+      private java.util.List<com.giyeok.bibix.repo.BibixRepoProto.LogBlock> blocks_ =
+        java.util.Collections.emptyList();
+      private void ensureBlocksIsMutable() {
+        if (!((bitField0_ & 0x00000004) != 0)) {
+          blocks_ = new java.util.ArrayList<com.giyeok.bibix.repo.BibixRepoProto.LogBlock>(blocks_);
+          bitField0_ |= 0x00000004;
+         }
       }
+
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          com.giyeok.bibix.repo.BibixRepoProto.LogBlock, com.giyeok.bibix.repo.BibixRepoProto.LogBlock.Builder, com.giyeok.bibix.repo.BibixRepoProto.LogBlockOrBuilder> blocksBuilder_;
+
       /**
-       * <code>.com.giyeok.bibix.repo.LogBlocks blocks = 3;</code>
-       * @return The blocks.
+       * <code>repeated .com.giyeok.bibix.repo.LogBlock blocks = 3;</code>
        */
-      public com.giyeok.bibix.repo.BibixRepoProto.LogBlocks getBlocks() {
+      public java.util.List<com.giyeok.bibix.repo.BibixRepoProto.LogBlock> getBlocksList() {
         if (blocksBuilder_ == null) {
-          return blocks_ == null ? com.giyeok.bibix.repo.BibixRepoProto.LogBlocks.getDefaultInstance() : blocks_;
+          return java.util.Collections.unmodifiableList(blocks_);
         } else {
-          return blocksBuilder_.getMessage();
+          return blocksBuilder_.getMessageList();
         }
       }
       /**
-       * <code>.com.giyeok.bibix.repo.LogBlocks blocks = 3;</code>
+       * <code>repeated .com.giyeok.bibix.repo.LogBlock blocks = 3;</code>
        */
-      public Builder setBlocks(com.giyeok.bibix.repo.BibixRepoProto.LogBlocks value) {
+      public int getBlocksCount() {
+        if (blocksBuilder_ == null) {
+          return blocks_.size();
+        } else {
+          return blocksBuilder_.getCount();
+        }
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.repo.LogBlock blocks = 3;</code>
+       */
+      public com.giyeok.bibix.repo.BibixRepoProto.LogBlock getBlocks(int index) {
+        if (blocksBuilder_ == null) {
+          return blocks_.get(index);
+        } else {
+          return blocksBuilder_.getMessage(index);
+        }
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.repo.LogBlock blocks = 3;</code>
+       */
+      public Builder setBlocks(
+          int index, com.giyeok.bibix.repo.BibixRepoProto.LogBlock value) {
         if (blocksBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
           }
-          blocks_ = value;
+          ensureBlocksIsMutable();
+          blocks_.set(index, value);
+          onChanged();
         } else {
-          blocksBuilder_.setMessage(value);
+          blocksBuilder_.setMessage(index, value);
         }
-        bitField0_ |= 0x00000004;
-        onChanged();
         return this;
       }
       /**
-       * <code>.com.giyeok.bibix.repo.LogBlocks blocks = 3;</code>
+       * <code>repeated .com.giyeok.bibix.repo.LogBlock blocks = 3;</code>
        */
       public Builder setBlocks(
-          com.giyeok.bibix.repo.BibixRepoProto.LogBlocks.Builder builderForValue) {
+          int index, com.giyeok.bibix.repo.BibixRepoProto.LogBlock.Builder builderForValue) {
         if (blocksBuilder_ == null) {
-          blocks_ = builderForValue.build();
+          ensureBlocksIsMutable();
+          blocks_.set(index, builderForValue.build());
+          onChanged();
         } else {
-          blocksBuilder_.setMessage(builderForValue.build());
+          blocksBuilder_.setMessage(index, builderForValue.build());
         }
-        bitField0_ |= 0x00000004;
-        onChanged();
         return this;
       }
       /**
-       * <code>.com.giyeok.bibix.repo.LogBlocks blocks = 3;</code>
+       * <code>repeated .com.giyeok.bibix.repo.LogBlock blocks = 3;</code>
        */
-      public Builder mergeBlocks(com.giyeok.bibix.repo.BibixRepoProto.LogBlocks value) {
+      public Builder addBlocks(com.giyeok.bibix.repo.BibixRepoProto.LogBlock value) {
         if (blocksBuilder_ == null) {
-          if (((bitField0_ & 0x00000004) != 0) &&
-            blocks_ != null &&
-            blocks_ != com.giyeok.bibix.repo.BibixRepoProto.LogBlocks.getDefaultInstance()) {
-            getBlocksBuilder().mergeFrom(value);
-          } else {
-            blocks_ = value;
+          if (value == null) {
+            throw new NullPointerException();
           }
+          ensureBlocksIsMutable();
+          blocks_.add(value);
+          onChanged();
         } else {
-          blocksBuilder_.mergeFrom(value);
+          blocksBuilder_.addMessage(value);
         }
-        bitField0_ |= 0x00000004;
-        onChanged();
         return this;
       }
       /**
-       * <code>.com.giyeok.bibix.repo.LogBlocks blocks = 3;</code>
+       * <code>repeated .com.giyeok.bibix.repo.LogBlock blocks = 3;</code>
+       */
+      public Builder addBlocks(
+          int index, com.giyeok.bibix.repo.BibixRepoProto.LogBlock value) {
+        if (blocksBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureBlocksIsMutable();
+          blocks_.add(index, value);
+          onChanged();
+        } else {
+          blocksBuilder_.addMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.repo.LogBlock blocks = 3;</code>
+       */
+      public Builder addBlocks(
+          com.giyeok.bibix.repo.BibixRepoProto.LogBlock.Builder builderForValue) {
+        if (blocksBuilder_ == null) {
+          ensureBlocksIsMutable();
+          blocks_.add(builderForValue.build());
+          onChanged();
+        } else {
+          blocksBuilder_.addMessage(builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.repo.LogBlock blocks = 3;</code>
+       */
+      public Builder addBlocks(
+          int index, com.giyeok.bibix.repo.BibixRepoProto.LogBlock.Builder builderForValue) {
+        if (blocksBuilder_ == null) {
+          ensureBlocksIsMutable();
+          blocks_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          blocksBuilder_.addMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.repo.LogBlock blocks = 3;</code>
+       */
+      public Builder addAllBlocks(
+          java.lang.Iterable<? extends com.giyeok.bibix.repo.BibixRepoProto.LogBlock> values) {
+        if (blocksBuilder_ == null) {
+          ensureBlocksIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, blocks_);
+          onChanged();
+        } else {
+          blocksBuilder_.addAllMessages(values);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.repo.LogBlock blocks = 3;</code>
        */
       public Builder clearBlocks() {
-        bitField0_ = (bitField0_ & ~0x00000004);
-        blocks_ = null;
-        if (blocksBuilder_ != null) {
-          blocksBuilder_.dispose();
-          blocksBuilder_ = null;
+        if (blocksBuilder_ == null) {
+          blocks_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000004);
+          onChanged();
+        } else {
+          blocksBuilder_.clear();
         }
-        onChanged();
         return this;
       }
       /**
-       * <code>.com.giyeok.bibix.repo.LogBlocks blocks = 3;</code>
+       * <code>repeated .com.giyeok.bibix.repo.LogBlock blocks = 3;</code>
        */
-      public com.giyeok.bibix.repo.BibixRepoProto.LogBlocks.Builder getBlocksBuilder() {
-        bitField0_ |= 0x00000004;
-        onChanged();
-        return getBlocksFieldBuilder().getBuilder();
+      public Builder removeBlocks(int index) {
+        if (blocksBuilder_ == null) {
+          ensureBlocksIsMutable();
+          blocks_.remove(index);
+          onChanged();
+        } else {
+          blocksBuilder_.remove(index);
+        }
+        return this;
       }
       /**
-       * <code>.com.giyeok.bibix.repo.LogBlocks blocks = 3;</code>
+       * <code>repeated .com.giyeok.bibix.repo.LogBlock blocks = 3;</code>
        */
-      public com.giyeok.bibix.repo.BibixRepoProto.LogBlocksOrBuilder getBlocksOrBuilder() {
-        if (blocksBuilder_ != null) {
-          return blocksBuilder_.getMessageOrBuilder();
-        } else {
-          return blocks_ == null ?
-              com.giyeok.bibix.repo.BibixRepoProto.LogBlocks.getDefaultInstance() : blocks_;
+      public com.giyeok.bibix.repo.BibixRepoProto.LogBlock.Builder getBlocksBuilder(
+          int index) {
+        return getBlocksFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.repo.LogBlock blocks = 3;</code>
+       */
+      public com.giyeok.bibix.repo.BibixRepoProto.LogBlockOrBuilder getBlocksOrBuilder(
+          int index) {
+        if (blocksBuilder_ == null) {
+          return blocks_.get(index);  } else {
+          return blocksBuilder_.getMessageOrBuilder(index);
         }
       }
       /**
-       * <code>.com.giyeok.bibix.repo.LogBlocks blocks = 3;</code>
+       * <code>repeated .com.giyeok.bibix.repo.LogBlock blocks = 3;</code>
        */
-      private com.google.protobuf.SingleFieldBuilderV3<
-          com.giyeok.bibix.repo.BibixRepoProto.LogBlocks, com.giyeok.bibix.repo.BibixRepoProto.LogBlocks.Builder, com.giyeok.bibix.repo.BibixRepoProto.LogBlocksOrBuilder> 
+      public java.util.List<? extends com.giyeok.bibix.repo.BibixRepoProto.LogBlockOrBuilder> 
+           getBlocksOrBuilderList() {
+        if (blocksBuilder_ != null) {
+          return blocksBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(blocks_);
+        }
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.repo.LogBlock blocks = 3;</code>
+       */
+      public com.giyeok.bibix.repo.BibixRepoProto.LogBlock.Builder addBlocksBuilder() {
+        return getBlocksFieldBuilder().addBuilder(
+            com.giyeok.bibix.repo.BibixRepoProto.LogBlock.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.repo.LogBlock blocks = 3;</code>
+       */
+      public com.giyeok.bibix.repo.BibixRepoProto.LogBlock.Builder addBlocksBuilder(
+          int index) {
+        return getBlocksFieldBuilder().addBuilder(
+            index, com.giyeok.bibix.repo.BibixRepoProto.LogBlock.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.repo.LogBlock blocks = 3;</code>
+       */
+      public java.util.List<com.giyeok.bibix.repo.BibixRepoProto.LogBlock.Builder> 
+           getBlocksBuilderList() {
+        return getBlocksFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          com.giyeok.bibix.repo.BibixRepoProto.LogBlock, com.giyeok.bibix.repo.BibixRepoProto.LogBlock.Builder, com.giyeok.bibix.repo.BibixRepoProto.LogBlockOrBuilder> 
           getBlocksFieldBuilder() {
         if (blocksBuilder_ == null) {
-          blocksBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-              com.giyeok.bibix.repo.BibixRepoProto.LogBlocks, com.giyeok.bibix.repo.BibixRepoProto.LogBlocks.Builder, com.giyeok.bibix.repo.BibixRepoProto.LogBlocksOrBuilder>(
-                  getBlocks(),
+          blocksBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+              com.giyeok.bibix.repo.BibixRepoProto.LogBlock, com.giyeok.bibix.repo.BibixRepoProto.LogBlock.Builder, com.giyeok.bibix.repo.BibixRepoProto.LogBlockOrBuilder>(
+                  blocks_,
+                  ((bitField0_ & 0x00000004) != 0),
                   getParentForChildren(),
                   isClean());
           blocks_ = null;
@@ -7164,19 +7346,28 @@ java.lang.String defaultValue) {
         getActionNameBytes();
 
     /**
-     * <code>.com.giyeok.bibix.repo.LogBlocks blocks = 5;</code>
-     * @return Whether the blocks field is set.
+     * <code>repeated .com.giyeok.bibix.repo.LogBlock blocks = 5;</code>
      */
-    boolean hasBlocks();
+    java.util.List<com.giyeok.bibix.repo.BibixRepoProto.LogBlock> 
+        getBlocksList();
     /**
-     * <code>.com.giyeok.bibix.repo.LogBlocks blocks = 5;</code>
-     * @return The blocks.
+     * <code>repeated .com.giyeok.bibix.repo.LogBlock blocks = 5;</code>
      */
-    com.giyeok.bibix.repo.BibixRepoProto.LogBlocks getBlocks();
+    com.giyeok.bibix.repo.BibixRepoProto.LogBlock getBlocks(int index);
     /**
-     * <code>.com.giyeok.bibix.repo.LogBlocks blocks = 5;</code>
+     * <code>repeated .com.giyeok.bibix.repo.LogBlock blocks = 5;</code>
      */
-    com.giyeok.bibix.repo.BibixRepoProto.LogBlocksOrBuilder getBlocksOrBuilder();
+    int getBlocksCount();
+    /**
+     * <code>repeated .com.giyeok.bibix.repo.LogBlock blocks = 5;</code>
+     */
+    java.util.List<? extends com.giyeok.bibix.repo.BibixRepoProto.LogBlockOrBuilder> 
+        getBlocksOrBuilderList();
+    /**
+     * <code>repeated .com.giyeok.bibix.repo.LogBlock blocks = 5;</code>
+     */
+    com.giyeok.bibix.repo.BibixRepoProto.LogBlockOrBuilder getBlocksOrBuilder(
+        int index);
   }
   /**
    * Protobuf type {@code com.giyeok.bibix.repo.ActionLogs}
@@ -7193,6 +7384,7 @@ java.lang.String defaultValue) {
     private ActionLogs() {
       uniqueRunId_ = "";
       actionName_ = "";
+      blocks_ = java.util.Collections.emptyList();
     }
 
     @java.lang.Override
@@ -7316,29 +7508,44 @@ java.lang.String defaultValue) {
     }
 
     public static final int BLOCKS_FIELD_NUMBER = 5;
-    private com.giyeok.bibix.repo.BibixRepoProto.LogBlocks blocks_;
+    @SuppressWarnings("serial")
+    private java.util.List<com.giyeok.bibix.repo.BibixRepoProto.LogBlock> blocks_;
     /**
-     * <code>.com.giyeok.bibix.repo.LogBlocks blocks = 5;</code>
-     * @return Whether the blocks field is set.
+     * <code>repeated .com.giyeok.bibix.repo.LogBlock blocks = 5;</code>
      */
     @java.lang.Override
-    public boolean hasBlocks() {
-      return blocks_ != null;
+    public java.util.List<com.giyeok.bibix.repo.BibixRepoProto.LogBlock> getBlocksList() {
+      return blocks_;
     }
     /**
-     * <code>.com.giyeok.bibix.repo.LogBlocks blocks = 5;</code>
-     * @return The blocks.
+     * <code>repeated .com.giyeok.bibix.repo.LogBlock blocks = 5;</code>
      */
     @java.lang.Override
-    public com.giyeok.bibix.repo.BibixRepoProto.LogBlocks getBlocks() {
-      return blocks_ == null ? com.giyeok.bibix.repo.BibixRepoProto.LogBlocks.getDefaultInstance() : blocks_;
+    public java.util.List<? extends com.giyeok.bibix.repo.BibixRepoProto.LogBlockOrBuilder> 
+        getBlocksOrBuilderList() {
+      return blocks_;
     }
     /**
-     * <code>.com.giyeok.bibix.repo.LogBlocks blocks = 5;</code>
+     * <code>repeated .com.giyeok.bibix.repo.LogBlock blocks = 5;</code>
      */
     @java.lang.Override
-    public com.giyeok.bibix.repo.BibixRepoProto.LogBlocksOrBuilder getBlocksOrBuilder() {
-      return blocks_ == null ? com.giyeok.bibix.repo.BibixRepoProto.LogBlocks.getDefaultInstance() : blocks_;
+    public int getBlocksCount() {
+      return blocks_.size();
+    }
+    /**
+     * <code>repeated .com.giyeok.bibix.repo.LogBlock blocks = 5;</code>
+     */
+    @java.lang.Override
+    public com.giyeok.bibix.repo.BibixRepoProto.LogBlock getBlocks(int index) {
+      return blocks_.get(index);
+    }
+    /**
+     * <code>repeated .com.giyeok.bibix.repo.LogBlock blocks = 5;</code>
+     */
+    @java.lang.Override
+    public com.giyeok.bibix.repo.BibixRepoProto.LogBlockOrBuilder getBlocksOrBuilder(
+        int index) {
+      return blocks_.get(index);
     }
 
     private byte memoizedIsInitialized = -1;
@@ -7367,8 +7574,8 @@ java.lang.String defaultValue) {
       if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(actionName_)) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 4, actionName_);
       }
-      if (blocks_ != null) {
-        output.writeMessage(5, getBlocks());
+      for (int i = 0; i < blocks_.size(); i++) {
+        output.writeMessage(5, blocks_.get(i));
       }
       getUnknownFields().writeTo(output);
     }
@@ -7393,9 +7600,9 @@ java.lang.String defaultValue) {
       if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(actionName_)) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, actionName_);
       }
-      if (blocks_ != null) {
+      for (int i = 0; i < blocks_.size(); i++) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(5, getBlocks());
+          .computeMessageSize(5, blocks_.get(i));
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSize = size;
@@ -7420,11 +7627,8 @@ java.lang.String defaultValue) {
           != other.getImportInstanceId()) return false;
       if (!getActionName()
           .equals(other.getActionName())) return false;
-      if (hasBlocks() != other.hasBlocks()) return false;
-      if (hasBlocks()) {
-        if (!getBlocks()
-            .equals(other.getBlocks())) return false;
-      }
+      if (!getBlocksList()
+          .equals(other.getBlocksList())) return false;
       if (!getUnknownFields().equals(other.getUnknownFields())) return false;
       return true;
     }
@@ -7444,9 +7648,9 @@ java.lang.String defaultValue) {
       hash = (53 * hash) + getImportInstanceId();
       hash = (37 * hash) + ACTION_NAME_FIELD_NUMBER;
       hash = (53 * hash) + getActionName().hashCode();
-      if (hasBlocks()) {
+      if (getBlocksCount() > 0) {
         hash = (37 * hash) + BLOCKS_FIELD_NUMBER;
-        hash = (53 * hash) + getBlocks().hashCode();
+        hash = (53 * hash) + getBlocksList().hashCode();
       }
       hash = (29 * hash) + getUnknownFields().hashCode();
       memoizedHashCode = hash;
@@ -7581,11 +7785,13 @@ java.lang.String defaultValue) {
         projectId_ = 0;
         importInstanceId_ = 0;
         actionName_ = "";
-        blocks_ = null;
-        if (blocksBuilder_ != null) {
-          blocksBuilder_.dispose();
-          blocksBuilder_ = null;
+        if (blocksBuilder_ == null) {
+          blocks_ = java.util.Collections.emptyList();
+        } else {
+          blocks_ = null;
+          blocksBuilder_.clear();
         }
+        bitField0_ = (bitField0_ & ~0x00000010);
         return this;
       }
 
@@ -7612,9 +7818,22 @@ java.lang.String defaultValue) {
       @java.lang.Override
       public com.giyeok.bibix.repo.BibixRepoProto.ActionLogs buildPartial() {
         com.giyeok.bibix.repo.BibixRepoProto.ActionLogs result = new com.giyeok.bibix.repo.BibixRepoProto.ActionLogs(this);
+        buildPartialRepeatedFields(result);
         if (bitField0_ != 0) { buildPartial0(result); }
         onBuilt();
         return result;
+      }
+
+      private void buildPartialRepeatedFields(com.giyeok.bibix.repo.BibixRepoProto.ActionLogs result) {
+        if (blocksBuilder_ == null) {
+          if (((bitField0_ & 0x00000010) != 0)) {
+            blocks_ = java.util.Collections.unmodifiableList(blocks_);
+            bitField0_ = (bitField0_ & ~0x00000010);
+          }
+          result.blocks_ = blocks_;
+        } else {
+          result.blocks_ = blocksBuilder_.build();
+        }
       }
 
       private void buildPartial0(com.giyeok.bibix.repo.BibixRepoProto.ActionLogs result) {
@@ -7630,11 +7849,6 @@ java.lang.String defaultValue) {
         }
         if (((from_bitField0_ & 0x00000008) != 0)) {
           result.actionName_ = actionName_;
-        }
-        if (((from_bitField0_ & 0x00000010) != 0)) {
-          result.blocks_ = blocksBuilder_ == null
-              ? blocks_
-              : blocksBuilder_.build();
         }
       }
 
@@ -7666,8 +7880,31 @@ java.lang.String defaultValue) {
           bitField0_ |= 0x00000008;
           onChanged();
         }
-        if (other.hasBlocks()) {
-          mergeBlocks(other.getBlocks());
+        if (blocksBuilder_ == null) {
+          if (!other.blocks_.isEmpty()) {
+            if (blocks_.isEmpty()) {
+              blocks_ = other.blocks_;
+              bitField0_ = (bitField0_ & ~0x00000010);
+            } else {
+              ensureBlocksIsMutable();
+              blocks_.addAll(other.blocks_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.blocks_.isEmpty()) {
+            if (blocksBuilder_.isEmpty()) {
+              blocksBuilder_.dispose();
+              blocksBuilder_ = null;
+              blocks_ = other.blocks_;
+              bitField0_ = (bitField0_ & ~0x00000010);
+              blocksBuilder_ = 
+                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                   getBlocksFieldBuilder() : null;
+            } else {
+              blocksBuilder_.addAllMessages(other.blocks_);
+            }
+          }
         }
         this.mergeUnknownFields(other.getUnknownFields());
         onChanged();
@@ -7716,10 +7953,16 @@ java.lang.String defaultValue) {
                 break;
               } // case 34
               case 42: {
-                input.readMessage(
-                    getBlocksFieldBuilder().getBuilder(),
-                    extensionRegistry);
-                bitField0_ |= 0x00000010;
+                com.giyeok.bibix.repo.BibixRepoProto.LogBlock m =
+                    input.readMessage(
+                        com.giyeok.bibix.repo.BibixRepoProto.LogBlock.parser(),
+                        extensionRegistry);
+                if (blocksBuilder_ == null) {
+                  ensureBlocksIsMutable();
+                  blocks_.add(m);
+                } else {
+                  blocksBuilder_.addMessage(m);
+                }
                 break;
               } // case 42
               default: {
@@ -7947,118 +8190,239 @@ java.lang.String defaultValue) {
         return this;
       }
 
-      private com.giyeok.bibix.repo.BibixRepoProto.LogBlocks blocks_;
-      private com.google.protobuf.SingleFieldBuilderV3<
-          com.giyeok.bibix.repo.BibixRepoProto.LogBlocks, com.giyeok.bibix.repo.BibixRepoProto.LogBlocks.Builder, com.giyeok.bibix.repo.BibixRepoProto.LogBlocksOrBuilder> blocksBuilder_;
-      /**
-       * <code>.com.giyeok.bibix.repo.LogBlocks blocks = 5;</code>
-       * @return Whether the blocks field is set.
-       */
-      public boolean hasBlocks() {
-        return ((bitField0_ & 0x00000010) != 0);
+      private java.util.List<com.giyeok.bibix.repo.BibixRepoProto.LogBlock> blocks_ =
+        java.util.Collections.emptyList();
+      private void ensureBlocksIsMutable() {
+        if (!((bitField0_ & 0x00000010) != 0)) {
+          blocks_ = new java.util.ArrayList<com.giyeok.bibix.repo.BibixRepoProto.LogBlock>(blocks_);
+          bitField0_ |= 0x00000010;
+         }
       }
+
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          com.giyeok.bibix.repo.BibixRepoProto.LogBlock, com.giyeok.bibix.repo.BibixRepoProto.LogBlock.Builder, com.giyeok.bibix.repo.BibixRepoProto.LogBlockOrBuilder> blocksBuilder_;
+
       /**
-       * <code>.com.giyeok.bibix.repo.LogBlocks blocks = 5;</code>
-       * @return The blocks.
+       * <code>repeated .com.giyeok.bibix.repo.LogBlock blocks = 5;</code>
        */
-      public com.giyeok.bibix.repo.BibixRepoProto.LogBlocks getBlocks() {
+      public java.util.List<com.giyeok.bibix.repo.BibixRepoProto.LogBlock> getBlocksList() {
         if (blocksBuilder_ == null) {
-          return blocks_ == null ? com.giyeok.bibix.repo.BibixRepoProto.LogBlocks.getDefaultInstance() : blocks_;
+          return java.util.Collections.unmodifiableList(blocks_);
         } else {
-          return blocksBuilder_.getMessage();
+          return blocksBuilder_.getMessageList();
         }
       }
       /**
-       * <code>.com.giyeok.bibix.repo.LogBlocks blocks = 5;</code>
+       * <code>repeated .com.giyeok.bibix.repo.LogBlock blocks = 5;</code>
        */
-      public Builder setBlocks(com.giyeok.bibix.repo.BibixRepoProto.LogBlocks value) {
+      public int getBlocksCount() {
+        if (blocksBuilder_ == null) {
+          return blocks_.size();
+        } else {
+          return blocksBuilder_.getCount();
+        }
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.repo.LogBlock blocks = 5;</code>
+       */
+      public com.giyeok.bibix.repo.BibixRepoProto.LogBlock getBlocks(int index) {
+        if (blocksBuilder_ == null) {
+          return blocks_.get(index);
+        } else {
+          return blocksBuilder_.getMessage(index);
+        }
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.repo.LogBlock blocks = 5;</code>
+       */
+      public Builder setBlocks(
+          int index, com.giyeok.bibix.repo.BibixRepoProto.LogBlock value) {
         if (blocksBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
           }
-          blocks_ = value;
+          ensureBlocksIsMutable();
+          blocks_.set(index, value);
+          onChanged();
         } else {
-          blocksBuilder_.setMessage(value);
+          blocksBuilder_.setMessage(index, value);
         }
-        bitField0_ |= 0x00000010;
-        onChanged();
         return this;
       }
       /**
-       * <code>.com.giyeok.bibix.repo.LogBlocks blocks = 5;</code>
+       * <code>repeated .com.giyeok.bibix.repo.LogBlock blocks = 5;</code>
        */
       public Builder setBlocks(
-          com.giyeok.bibix.repo.BibixRepoProto.LogBlocks.Builder builderForValue) {
+          int index, com.giyeok.bibix.repo.BibixRepoProto.LogBlock.Builder builderForValue) {
         if (blocksBuilder_ == null) {
-          blocks_ = builderForValue.build();
+          ensureBlocksIsMutable();
+          blocks_.set(index, builderForValue.build());
+          onChanged();
         } else {
-          blocksBuilder_.setMessage(builderForValue.build());
+          blocksBuilder_.setMessage(index, builderForValue.build());
         }
-        bitField0_ |= 0x00000010;
-        onChanged();
         return this;
       }
       /**
-       * <code>.com.giyeok.bibix.repo.LogBlocks blocks = 5;</code>
+       * <code>repeated .com.giyeok.bibix.repo.LogBlock blocks = 5;</code>
        */
-      public Builder mergeBlocks(com.giyeok.bibix.repo.BibixRepoProto.LogBlocks value) {
+      public Builder addBlocks(com.giyeok.bibix.repo.BibixRepoProto.LogBlock value) {
         if (blocksBuilder_ == null) {
-          if (((bitField0_ & 0x00000010) != 0) &&
-            blocks_ != null &&
-            blocks_ != com.giyeok.bibix.repo.BibixRepoProto.LogBlocks.getDefaultInstance()) {
-            getBlocksBuilder().mergeFrom(value);
-          } else {
-            blocks_ = value;
+          if (value == null) {
+            throw new NullPointerException();
           }
+          ensureBlocksIsMutable();
+          blocks_.add(value);
+          onChanged();
         } else {
-          blocksBuilder_.mergeFrom(value);
+          blocksBuilder_.addMessage(value);
         }
-        bitField0_ |= 0x00000010;
-        onChanged();
         return this;
       }
       /**
-       * <code>.com.giyeok.bibix.repo.LogBlocks blocks = 5;</code>
+       * <code>repeated .com.giyeok.bibix.repo.LogBlock blocks = 5;</code>
+       */
+      public Builder addBlocks(
+          int index, com.giyeok.bibix.repo.BibixRepoProto.LogBlock value) {
+        if (blocksBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureBlocksIsMutable();
+          blocks_.add(index, value);
+          onChanged();
+        } else {
+          blocksBuilder_.addMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.repo.LogBlock blocks = 5;</code>
+       */
+      public Builder addBlocks(
+          com.giyeok.bibix.repo.BibixRepoProto.LogBlock.Builder builderForValue) {
+        if (blocksBuilder_ == null) {
+          ensureBlocksIsMutable();
+          blocks_.add(builderForValue.build());
+          onChanged();
+        } else {
+          blocksBuilder_.addMessage(builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.repo.LogBlock blocks = 5;</code>
+       */
+      public Builder addBlocks(
+          int index, com.giyeok.bibix.repo.BibixRepoProto.LogBlock.Builder builderForValue) {
+        if (blocksBuilder_ == null) {
+          ensureBlocksIsMutable();
+          blocks_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          blocksBuilder_.addMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.repo.LogBlock blocks = 5;</code>
+       */
+      public Builder addAllBlocks(
+          java.lang.Iterable<? extends com.giyeok.bibix.repo.BibixRepoProto.LogBlock> values) {
+        if (blocksBuilder_ == null) {
+          ensureBlocksIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, blocks_);
+          onChanged();
+        } else {
+          blocksBuilder_.addAllMessages(values);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.repo.LogBlock blocks = 5;</code>
        */
       public Builder clearBlocks() {
-        bitField0_ = (bitField0_ & ~0x00000010);
-        blocks_ = null;
-        if (blocksBuilder_ != null) {
-          blocksBuilder_.dispose();
-          blocksBuilder_ = null;
+        if (blocksBuilder_ == null) {
+          blocks_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000010);
+          onChanged();
+        } else {
+          blocksBuilder_.clear();
         }
-        onChanged();
         return this;
       }
       /**
-       * <code>.com.giyeok.bibix.repo.LogBlocks blocks = 5;</code>
+       * <code>repeated .com.giyeok.bibix.repo.LogBlock blocks = 5;</code>
        */
-      public com.giyeok.bibix.repo.BibixRepoProto.LogBlocks.Builder getBlocksBuilder() {
-        bitField0_ |= 0x00000010;
-        onChanged();
-        return getBlocksFieldBuilder().getBuilder();
+      public Builder removeBlocks(int index) {
+        if (blocksBuilder_ == null) {
+          ensureBlocksIsMutable();
+          blocks_.remove(index);
+          onChanged();
+        } else {
+          blocksBuilder_.remove(index);
+        }
+        return this;
       }
       /**
-       * <code>.com.giyeok.bibix.repo.LogBlocks blocks = 5;</code>
+       * <code>repeated .com.giyeok.bibix.repo.LogBlock blocks = 5;</code>
        */
-      public com.giyeok.bibix.repo.BibixRepoProto.LogBlocksOrBuilder getBlocksOrBuilder() {
-        if (blocksBuilder_ != null) {
-          return blocksBuilder_.getMessageOrBuilder();
-        } else {
-          return blocks_ == null ?
-              com.giyeok.bibix.repo.BibixRepoProto.LogBlocks.getDefaultInstance() : blocks_;
+      public com.giyeok.bibix.repo.BibixRepoProto.LogBlock.Builder getBlocksBuilder(
+          int index) {
+        return getBlocksFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.repo.LogBlock blocks = 5;</code>
+       */
+      public com.giyeok.bibix.repo.BibixRepoProto.LogBlockOrBuilder getBlocksOrBuilder(
+          int index) {
+        if (blocksBuilder_ == null) {
+          return blocks_.get(index);  } else {
+          return blocksBuilder_.getMessageOrBuilder(index);
         }
       }
       /**
-       * <code>.com.giyeok.bibix.repo.LogBlocks blocks = 5;</code>
+       * <code>repeated .com.giyeok.bibix.repo.LogBlock blocks = 5;</code>
        */
-      private com.google.protobuf.SingleFieldBuilderV3<
-          com.giyeok.bibix.repo.BibixRepoProto.LogBlocks, com.giyeok.bibix.repo.BibixRepoProto.LogBlocks.Builder, com.giyeok.bibix.repo.BibixRepoProto.LogBlocksOrBuilder> 
+      public java.util.List<? extends com.giyeok.bibix.repo.BibixRepoProto.LogBlockOrBuilder> 
+           getBlocksOrBuilderList() {
+        if (blocksBuilder_ != null) {
+          return blocksBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(blocks_);
+        }
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.repo.LogBlock blocks = 5;</code>
+       */
+      public com.giyeok.bibix.repo.BibixRepoProto.LogBlock.Builder addBlocksBuilder() {
+        return getBlocksFieldBuilder().addBuilder(
+            com.giyeok.bibix.repo.BibixRepoProto.LogBlock.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.repo.LogBlock blocks = 5;</code>
+       */
+      public com.giyeok.bibix.repo.BibixRepoProto.LogBlock.Builder addBlocksBuilder(
+          int index) {
+        return getBlocksFieldBuilder().addBuilder(
+            index, com.giyeok.bibix.repo.BibixRepoProto.LogBlock.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .com.giyeok.bibix.repo.LogBlock blocks = 5;</code>
+       */
+      public java.util.List<com.giyeok.bibix.repo.BibixRepoProto.LogBlock.Builder> 
+           getBlocksBuilderList() {
+        return getBlocksFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          com.giyeok.bibix.repo.BibixRepoProto.LogBlock, com.giyeok.bibix.repo.BibixRepoProto.LogBlock.Builder, com.giyeok.bibix.repo.BibixRepoProto.LogBlockOrBuilder> 
           getBlocksFieldBuilder() {
         if (blocksBuilder_ == null) {
-          blocksBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-              com.giyeok.bibix.repo.BibixRepoProto.LogBlocks, com.giyeok.bibix.repo.BibixRepoProto.LogBlocks.Builder, com.giyeok.bibix.repo.BibixRepoProto.LogBlocksOrBuilder>(
-                  getBlocks(),
+          blocksBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+              com.giyeok.bibix.repo.BibixRepoProto.LogBlock, com.giyeok.bibix.repo.BibixRepoProto.LogBlock.Builder, com.giyeok.bibix.repo.BibixRepoProto.LogBlockOrBuilder>(
+                  blocks_,
+                  ((bitField0_ & 0x00000010) != 0),
                   getParentForChildren(),
                   isClean());
           blocks_ = null;
@@ -8124,754 +8488,6 @@ java.lang.String defaultValue) {
 
     @java.lang.Override
     public com.giyeok.bibix.repo.BibixRepoProto.ActionLogs getDefaultInstanceForType() {
-      return DEFAULT_INSTANCE;
-    }
-
-  }
-
-  public interface LogBlocksOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:com.giyeok.bibix.repo.LogBlocks)
-      com.google.protobuf.MessageOrBuilder {
-
-    /**
-     * <code>repeated .com.giyeok.bibix.repo.LogBlock blocks = 1;</code>
-     */
-    java.util.List<com.giyeok.bibix.repo.BibixRepoProto.LogBlock> 
-        getBlocksList();
-    /**
-     * <code>repeated .com.giyeok.bibix.repo.LogBlock blocks = 1;</code>
-     */
-    com.giyeok.bibix.repo.BibixRepoProto.LogBlock getBlocks(int index);
-    /**
-     * <code>repeated .com.giyeok.bibix.repo.LogBlock blocks = 1;</code>
-     */
-    int getBlocksCount();
-    /**
-     * <code>repeated .com.giyeok.bibix.repo.LogBlock blocks = 1;</code>
-     */
-    java.util.List<? extends com.giyeok.bibix.repo.BibixRepoProto.LogBlockOrBuilder> 
-        getBlocksOrBuilderList();
-    /**
-     * <code>repeated .com.giyeok.bibix.repo.LogBlock blocks = 1;</code>
-     */
-    com.giyeok.bibix.repo.BibixRepoProto.LogBlockOrBuilder getBlocksOrBuilder(
-        int index);
-  }
-  /**
-   * Protobuf type {@code com.giyeok.bibix.repo.LogBlocks}
-   */
-  public static final class LogBlocks extends
-      com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:com.giyeok.bibix.repo.LogBlocks)
-      LogBlocksOrBuilder {
-  private static final long serialVersionUID = 0L;
-    // Use LogBlocks.newBuilder() to construct.
-    private LogBlocks(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
-      super(builder);
-    }
-    private LogBlocks() {
-      blocks_ = java.util.Collections.emptyList();
-    }
-
-    @java.lang.Override
-    @SuppressWarnings({"unused"})
-    protected java.lang.Object newInstance(
-        UnusedPrivateParameter unused) {
-      return new LogBlocks();
-    }
-
-    public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return com.giyeok.bibix.repo.BibixRepoProto.internal_static_com_giyeok_bibix_repo_LogBlocks_descriptor;
-    }
-
-    @java.lang.Override
-    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-      return com.giyeok.bibix.repo.BibixRepoProto.internal_static_com_giyeok_bibix_repo_LogBlocks_fieldAccessorTable
-          .ensureFieldAccessorsInitialized(
-              com.giyeok.bibix.repo.BibixRepoProto.LogBlocks.class, com.giyeok.bibix.repo.BibixRepoProto.LogBlocks.Builder.class);
-    }
-
-    public static final int BLOCKS_FIELD_NUMBER = 1;
-    @SuppressWarnings("serial")
-    private java.util.List<com.giyeok.bibix.repo.BibixRepoProto.LogBlock> blocks_;
-    /**
-     * <code>repeated .com.giyeok.bibix.repo.LogBlock blocks = 1;</code>
-     */
-    @java.lang.Override
-    public java.util.List<com.giyeok.bibix.repo.BibixRepoProto.LogBlock> getBlocksList() {
-      return blocks_;
-    }
-    /**
-     * <code>repeated .com.giyeok.bibix.repo.LogBlock blocks = 1;</code>
-     */
-    @java.lang.Override
-    public java.util.List<? extends com.giyeok.bibix.repo.BibixRepoProto.LogBlockOrBuilder> 
-        getBlocksOrBuilderList() {
-      return blocks_;
-    }
-    /**
-     * <code>repeated .com.giyeok.bibix.repo.LogBlock blocks = 1;</code>
-     */
-    @java.lang.Override
-    public int getBlocksCount() {
-      return blocks_.size();
-    }
-    /**
-     * <code>repeated .com.giyeok.bibix.repo.LogBlock blocks = 1;</code>
-     */
-    @java.lang.Override
-    public com.giyeok.bibix.repo.BibixRepoProto.LogBlock getBlocks(int index) {
-      return blocks_.get(index);
-    }
-    /**
-     * <code>repeated .com.giyeok.bibix.repo.LogBlock blocks = 1;</code>
-     */
-    @java.lang.Override
-    public com.giyeok.bibix.repo.BibixRepoProto.LogBlockOrBuilder getBlocksOrBuilder(
-        int index) {
-      return blocks_.get(index);
-    }
-
-    private byte memoizedIsInitialized = -1;
-    @java.lang.Override
-    public final boolean isInitialized() {
-      byte isInitialized = memoizedIsInitialized;
-      if (isInitialized == 1) return true;
-      if (isInitialized == 0) return false;
-
-      memoizedIsInitialized = 1;
-      return true;
-    }
-
-    @java.lang.Override
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
-      for (int i = 0; i < blocks_.size(); i++) {
-        output.writeMessage(1, blocks_.get(i));
-      }
-      getUnknownFields().writeTo(output);
-    }
-
-    @java.lang.Override
-    public int getSerializedSize() {
-      int size = memoizedSize;
-      if (size != -1) return size;
-
-      size = 0;
-      for (int i = 0; i < blocks_.size(); i++) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(1, blocks_.get(i));
-      }
-      size += getUnknownFields().getSerializedSize();
-      memoizedSize = size;
-      return size;
-    }
-
-    @java.lang.Override
-    public boolean equals(final java.lang.Object obj) {
-      if (obj == this) {
-       return true;
-      }
-      if (!(obj instanceof com.giyeok.bibix.repo.BibixRepoProto.LogBlocks)) {
-        return super.equals(obj);
-      }
-      com.giyeok.bibix.repo.BibixRepoProto.LogBlocks other = (com.giyeok.bibix.repo.BibixRepoProto.LogBlocks) obj;
-
-      if (!getBlocksList()
-          .equals(other.getBlocksList())) return false;
-      if (!getUnknownFields().equals(other.getUnknownFields())) return false;
-      return true;
-    }
-
-    @java.lang.Override
-    public int hashCode() {
-      if (memoizedHashCode != 0) {
-        return memoizedHashCode;
-      }
-      int hash = 41;
-      hash = (19 * hash) + getDescriptor().hashCode();
-      if (getBlocksCount() > 0) {
-        hash = (37 * hash) + BLOCKS_FIELD_NUMBER;
-        hash = (53 * hash) + getBlocksList().hashCode();
-      }
-      hash = (29 * hash) + getUnknownFields().hashCode();
-      memoizedHashCode = hash;
-      return hash;
-    }
-
-    public static com.giyeok.bibix.repo.BibixRepoProto.LogBlocks parseFrom(
-        java.nio.ByteBuffer data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static com.giyeok.bibix.repo.BibixRepoProto.LogBlocks parseFrom(
-        java.nio.ByteBuffer data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static com.giyeok.bibix.repo.BibixRepoProto.LogBlocks parseFrom(
-        com.google.protobuf.ByteString data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static com.giyeok.bibix.repo.BibixRepoProto.LogBlocks parseFrom(
-        com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static com.giyeok.bibix.repo.BibixRepoProto.LogBlocks parseFrom(byte[] data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static com.giyeok.bibix.repo.BibixRepoProto.LogBlocks parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static com.giyeok.bibix.repo.BibixRepoProto.LogBlocks parseFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
-    }
-    public static com.giyeok.bibix.repo.BibixRepoProto.LogBlocks parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
-    }
-    public static com.giyeok.bibix.repo.BibixRepoProto.LogBlocks parseDelimitedFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input);
-    }
-    public static com.giyeok.bibix.repo.BibixRepoProto.LogBlocks parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
-    }
-    public static com.giyeok.bibix.repo.BibixRepoProto.LogBlocks parseFrom(
-        com.google.protobuf.CodedInputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
-    }
-    public static com.giyeok.bibix.repo.BibixRepoProto.LogBlocks parseFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
-    }
-
-    @java.lang.Override
-    public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder() {
-      return DEFAULT_INSTANCE.toBuilder();
-    }
-    public static Builder newBuilder(com.giyeok.bibix.repo.BibixRepoProto.LogBlocks prototype) {
-      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
-    }
-    @java.lang.Override
-    public Builder toBuilder() {
-      return this == DEFAULT_INSTANCE
-          ? new Builder() : new Builder().mergeFrom(this);
-    }
-
-    @java.lang.Override
-    protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-      Builder builder = new Builder(parent);
-      return builder;
-    }
-    /**
-     * Protobuf type {@code com.giyeok.bibix.repo.LogBlocks}
-     */
-    public static final class Builder extends
-        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:com.giyeok.bibix.repo.LogBlocks)
-        com.giyeok.bibix.repo.BibixRepoProto.LogBlocksOrBuilder {
-      public static final com.google.protobuf.Descriptors.Descriptor
-          getDescriptor() {
-        return com.giyeok.bibix.repo.BibixRepoProto.internal_static_com_giyeok_bibix_repo_LogBlocks_descriptor;
-      }
-
-      @java.lang.Override
-      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-          internalGetFieldAccessorTable() {
-        return com.giyeok.bibix.repo.BibixRepoProto.internal_static_com_giyeok_bibix_repo_LogBlocks_fieldAccessorTable
-            .ensureFieldAccessorsInitialized(
-                com.giyeok.bibix.repo.BibixRepoProto.LogBlocks.class, com.giyeok.bibix.repo.BibixRepoProto.LogBlocks.Builder.class);
-      }
-
-      // Construct using com.giyeok.bibix.repo.BibixRepoProto.LogBlocks.newBuilder()
-      private Builder() {
-
-      }
-
-      private Builder(
-          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        super(parent);
-
-      }
-      @java.lang.Override
-      public Builder clear() {
-        super.clear();
-        bitField0_ = 0;
-        if (blocksBuilder_ == null) {
-          blocks_ = java.util.Collections.emptyList();
-        } else {
-          blocks_ = null;
-          blocksBuilder_.clear();
-        }
-        bitField0_ = (bitField0_ & ~0x00000001);
-        return this;
-      }
-
-      @java.lang.Override
-      public com.google.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
-        return com.giyeok.bibix.repo.BibixRepoProto.internal_static_com_giyeok_bibix_repo_LogBlocks_descriptor;
-      }
-
-      @java.lang.Override
-      public com.giyeok.bibix.repo.BibixRepoProto.LogBlocks getDefaultInstanceForType() {
-        return com.giyeok.bibix.repo.BibixRepoProto.LogBlocks.getDefaultInstance();
-      }
-
-      @java.lang.Override
-      public com.giyeok.bibix.repo.BibixRepoProto.LogBlocks build() {
-        com.giyeok.bibix.repo.BibixRepoProto.LogBlocks result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(result);
-        }
-        return result;
-      }
-
-      @java.lang.Override
-      public com.giyeok.bibix.repo.BibixRepoProto.LogBlocks buildPartial() {
-        com.giyeok.bibix.repo.BibixRepoProto.LogBlocks result = new com.giyeok.bibix.repo.BibixRepoProto.LogBlocks(this);
-        buildPartialRepeatedFields(result);
-        if (bitField0_ != 0) { buildPartial0(result); }
-        onBuilt();
-        return result;
-      }
-
-      private void buildPartialRepeatedFields(com.giyeok.bibix.repo.BibixRepoProto.LogBlocks result) {
-        if (blocksBuilder_ == null) {
-          if (((bitField0_ & 0x00000001) != 0)) {
-            blocks_ = java.util.Collections.unmodifiableList(blocks_);
-            bitField0_ = (bitField0_ & ~0x00000001);
-          }
-          result.blocks_ = blocks_;
-        } else {
-          result.blocks_ = blocksBuilder_.build();
-        }
-      }
-
-      private void buildPartial0(com.giyeok.bibix.repo.BibixRepoProto.LogBlocks result) {
-        int from_bitField0_ = bitField0_;
-      }
-
-      @java.lang.Override
-      public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof com.giyeok.bibix.repo.BibixRepoProto.LogBlocks) {
-          return mergeFrom((com.giyeok.bibix.repo.BibixRepoProto.LogBlocks)other);
-        } else {
-          super.mergeFrom(other);
-          return this;
-        }
-      }
-
-      public Builder mergeFrom(com.giyeok.bibix.repo.BibixRepoProto.LogBlocks other) {
-        if (other == com.giyeok.bibix.repo.BibixRepoProto.LogBlocks.getDefaultInstance()) return this;
-        if (blocksBuilder_ == null) {
-          if (!other.blocks_.isEmpty()) {
-            if (blocks_.isEmpty()) {
-              blocks_ = other.blocks_;
-              bitField0_ = (bitField0_ & ~0x00000001);
-            } else {
-              ensureBlocksIsMutable();
-              blocks_.addAll(other.blocks_);
-            }
-            onChanged();
-          }
-        } else {
-          if (!other.blocks_.isEmpty()) {
-            if (blocksBuilder_.isEmpty()) {
-              blocksBuilder_.dispose();
-              blocksBuilder_ = null;
-              blocks_ = other.blocks_;
-              bitField0_ = (bitField0_ & ~0x00000001);
-              blocksBuilder_ = 
-                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
-                   getBlocksFieldBuilder() : null;
-            } else {
-              blocksBuilder_.addAllMessages(other.blocks_);
-            }
-          }
-        }
-        this.mergeUnknownFields(other.getUnknownFields());
-        onChanged();
-        return this;
-      }
-
-      @java.lang.Override
-      public final boolean isInitialized() {
-        return true;
-      }
-
-      @java.lang.Override
-      public Builder mergeFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        if (extensionRegistry == null) {
-          throw new java.lang.NullPointerException();
-        }
-        try {
-          boolean done = false;
-          while (!done) {
-            int tag = input.readTag();
-            switch (tag) {
-              case 0:
-                done = true;
-                break;
-              case 10: {
-                com.giyeok.bibix.repo.BibixRepoProto.LogBlock m =
-                    input.readMessage(
-                        com.giyeok.bibix.repo.BibixRepoProto.LogBlock.parser(),
-                        extensionRegistry);
-                if (blocksBuilder_ == null) {
-                  ensureBlocksIsMutable();
-                  blocks_.add(m);
-                } else {
-                  blocksBuilder_.addMessage(m);
-                }
-                break;
-              } // case 10
-              default: {
-                if (!super.parseUnknownField(input, extensionRegistry, tag)) {
-                  done = true; // was an endgroup tag
-                }
-                break;
-              } // default:
-            } // switch (tag)
-          } // while (!done)
-        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          throw e.unwrapIOException();
-        } finally {
-          onChanged();
-        } // finally
-        return this;
-      }
-      private int bitField0_;
-
-      private java.util.List<com.giyeok.bibix.repo.BibixRepoProto.LogBlock> blocks_ =
-        java.util.Collections.emptyList();
-      private void ensureBlocksIsMutable() {
-        if (!((bitField0_ & 0x00000001) != 0)) {
-          blocks_ = new java.util.ArrayList<com.giyeok.bibix.repo.BibixRepoProto.LogBlock>(blocks_);
-          bitField0_ |= 0x00000001;
-         }
-      }
-
-      private com.google.protobuf.RepeatedFieldBuilderV3<
-          com.giyeok.bibix.repo.BibixRepoProto.LogBlock, com.giyeok.bibix.repo.BibixRepoProto.LogBlock.Builder, com.giyeok.bibix.repo.BibixRepoProto.LogBlockOrBuilder> blocksBuilder_;
-
-      /**
-       * <code>repeated .com.giyeok.bibix.repo.LogBlock blocks = 1;</code>
-       */
-      public java.util.List<com.giyeok.bibix.repo.BibixRepoProto.LogBlock> getBlocksList() {
-        if (blocksBuilder_ == null) {
-          return java.util.Collections.unmodifiableList(blocks_);
-        } else {
-          return blocksBuilder_.getMessageList();
-        }
-      }
-      /**
-       * <code>repeated .com.giyeok.bibix.repo.LogBlock blocks = 1;</code>
-       */
-      public int getBlocksCount() {
-        if (blocksBuilder_ == null) {
-          return blocks_.size();
-        } else {
-          return blocksBuilder_.getCount();
-        }
-      }
-      /**
-       * <code>repeated .com.giyeok.bibix.repo.LogBlock blocks = 1;</code>
-       */
-      public com.giyeok.bibix.repo.BibixRepoProto.LogBlock getBlocks(int index) {
-        if (blocksBuilder_ == null) {
-          return blocks_.get(index);
-        } else {
-          return blocksBuilder_.getMessage(index);
-        }
-      }
-      /**
-       * <code>repeated .com.giyeok.bibix.repo.LogBlock blocks = 1;</code>
-       */
-      public Builder setBlocks(
-          int index, com.giyeok.bibix.repo.BibixRepoProto.LogBlock value) {
-        if (blocksBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ensureBlocksIsMutable();
-          blocks_.set(index, value);
-          onChanged();
-        } else {
-          blocksBuilder_.setMessage(index, value);
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .com.giyeok.bibix.repo.LogBlock blocks = 1;</code>
-       */
-      public Builder setBlocks(
-          int index, com.giyeok.bibix.repo.BibixRepoProto.LogBlock.Builder builderForValue) {
-        if (blocksBuilder_ == null) {
-          ensureBlocksIsMutable();
-          blocks_.set(index, builderForValue.build());
-          onChanged();
-        } else {
-          blocksBuilder_.setMessage(index, builderForValue.build());
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .com.giyeok.bibix.repo.LogBlock blocks = 1;</code>
-       */
-      public Builder addBlocks(com.giyeok.bibix.repo.BibixRepoProto.LogBlock value) {
-        if (blocksBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ensureBlocksIsMutable();
-          blocks_.add(value);
-          onChanged();
-        } else {
-          blocksBuilder_.addMessage(value);
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .com.giyeok.bibix.repo.LogBlock blocks = 1;</code>
-       */
-      public Builder addBlocks(
-          int index, com.giyeok.bibix.repo.BibixRepoProto.LogBlock value) {
-        if (blocksBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ensureBlocksIsMutable();
-          blocks_.add(index, value);
-          onChanged();
-        } else {
-          blocksBuilder_.addMessage(index, value);
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .com.giyeok.bibix.repo.LogBlock blocks = 1;</code>
-       */
-      public Builder addBlocks(
-          com.giyeok.bibix.repo.BibixRepoProto.LogBlock.Builder builderForValue) {
-        if (blocksBuilder_ == null) {
-          ensureBlocksIsMutable();
-          blocks_.add(builderForValue.build());
-          onChanged();
-        } else {
-          blocksBuilder_.addMessage(builderForValue.build());
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .com.giyeok.bibix.repo.LogBlock blocks = 1;</code>
-       */
-      public Builder addBlocks(
-          int index, com.giyeok.bibix.repo.BibixRepoProto.LogBlock.Builder builderForValue) {
-        if (blocksBuilder_ == null) {
-          ensureBlocksIsMutable();
-          blocks_.add(index, builderForValue.build());
-          onChanged();
-        } else {
-          blocksBuilder_.addMessage(index, builderForValue.build());
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .com.giyeok.bibix.repo.LogBlock blocks = 1;</code>
-       */
-      public Builder addAllBlocks(
-          java.lang.Iterable<? extends com.giyeok.bibix.repo.BibixRepoProto.LogBlock> values) {
-        if (blocksBuilder_ == null) {
-          ensureBlocksIsMutable();
-          com.google.protobuf.AbstractMessageLite.Builder.addAll(
-              values, blocks_);
-          onChanged();
-        } else {
-          blocksBuilder_.addAllMessages(values);
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .com.giyeok.bibix.repo.LogBlock blocks = 1;</code>
-       */
-      public Builder clearBlocks() {
-        if (blocksBuilder_ == null) {
-          blocks_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000001);
-          onChanged();
-        } else {
-          blocksBuilder_.clear();
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .com.giyeok.bibix.repo.LogBlock blocks = 1;</code>
-       */
-      public Builder removeBlocks(int index) {
-        if (blocksBuilder_ == null) {
-          ensureBlocksIsMutable();
-          blocks_.remove(index);
-          onChanged();
-        } else {
-          blocksBuilder_.remove(index);
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .com.giyeok.bibix.repo.LogBlock blocks = 1;</code>
-       */
-      public com.giyeok.bibix.repo.BibixRepoProto.LogBlock.Builder getBlocksBuilder(
-          int index) {
-        return getBlocksFieldBuilder().getBuilder(index);
-      }
-      /**
-       * <code>repeated .com.giyeok.bibix.repo.LogBlock blocks = 1;</code>
-       */
-      public com.giyeok.bibix.repo.BibixRepoProto.LogBlockOrBuilder getBlocksOrBuilder(
-          int index) {
-        if (blocksBuilder_ == null) {
-          return blocks_.get(index);  } else {
-          return blocksBuilder_.getMessageOrBuilder(index);
-        }
-      }
-      /**
-       * <code>repeated .com.giyeok.bibix.repo.LogBlock blocks = 1;</code>
-       */
-      public java.util.List<? extends com.giyeok.bibix.repo.BibixRepoProto.LogBlockOrBuilder> 
-           getBlocksOrBuilderList() {
-        if (blocksBuilder_ != null) {
-          return blocksBuilder_.getMessageOrBuilderList();
-        } else {
-          return java.util.Collections.unmodifiableList(blocks_);
-        }
-      }
-      /**
-       * <code>repeated .com.giyeok.bibix.repo.LogBlock blocks = 1;</code>
-       */
-      public com.giyeok.bibix.repo.BibixRepoProto.LogBlock.Builder addBlocksBuilder() {
-        return getBlocksFieldBuilder().addBuilder(
-            com.giyeok.bibix.repo.BibixRepoProto.LogBlock.getDefaultInstance());
-      }
-      /**
-       * <code>repeated .com.giyeok.bibix.repo.LogBlock blocks = 1;</code>
-       */
-      public com.giyeok.bibix.repo.BibixRepoProto.LogBlock.Builder addBlocksBuilder(
-          int index) {
-        return getBlocksFieldBuilder().addBuilder(
-            index, com.giyeok.bibix.repo.BibixRepoProto.LogBlock.getDefaultInstance());
-      }
-      /**
-       * <code>repeated .com.giyeok.bibix.repo.LogBlock blocks = 1;</code>
-       */
-      public java.util.List<com.giyeok.bibix.repo.BibixRepoProto.LogBlock.Builder> 
-           getBlocksBuilderList() {
-        return getBlocksFieldBuilder().getBuilderList();
-      }
-      private com.google.protobuf.RepeatedFieldBuilderV3<
-          com.giyeok.bibix.repo.BibixRepoProto.LogBlock, com.giyeok.bibix.repo.BibixRepoProto.LogBlock.Builder, com.giyeok.bibix.repo.BibixRepoProto.LogBlockOrBuilder> 
-          getBlocksFieldBuilder() {
-        if (blocksBuilder_ == null) {
-          blocksBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
-              com.giyeok.bibix.repo.BibixRepoProto.LogBlock, com.giyeok.bibix.repo.BibixRepoProto.LogBlock.Builder, com.giyeok.bibix.repo.BibixRepoProto.LogBlockOrBuilder>(
-                  blocks_,
-                  ((bitField0_ & 0x00000001) != 0),
-                  getParentForChildren(),
-                  isClean());
-          blocks_ = null;
-        }
-        return blocksBuilder_;
-      }
-      @java.lang.Override
-      public final Builder setUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.setUnknownFields(unknownFields);
-      }
-
-      @java.lang.Override
-      public final Builder mergeUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.mergeUnknownFields(unknownFields);
-      }
-
-
-      // @@protoc_insertion_point(builder_scope:com.giyeok.bibix.repo.LogBlocks)
-    }
-
-    // @@protoc_insertion_point(class_scope:com.giyeok.bibix.repo.LogBlocks)
-    private static final com.giyeok.bibix.repo.BibixRepoProto.LogBlocks DEFAULT_INSTANCE;
-    static {
-      DEFAULT_INSTANCE = new com.giyeok.bibix.repo.BibixRepoProto.LogBlocks();
-    }
-
-    public static com.giyeok.bibix.repo.BibixRepoProto.LogBlocks getDefaultInstance() {
-      return DEFAULT_INSTANCE;
-    }
-
-    private static final com.google.protobuf.Parser<LogBlocks>
-        PARSER = new com.google.protobuf.AbstractParser<LogBlocks>() {
-      @java.lang.Override
-      public LogBlocks parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        Builder builder = newBuilder();
-        try {
-          builder.mergeFrom(input, extensionRegistry);
-        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          throw e.setUnfinishedMessage(builder.buildPartial());
-        } catch (com.google.protobuf.UninitializedMessageException e) {
-          throw e.asInvalidProtocolBufferException().setUnfinishedMessage(builder.buildPartial());
-        } catch (java.io.IOException e) {
-          throw new com.google.protobuf.InvalidProtocolBufferException(e)
-              .setUnfinishedMessage(builder.buildPartial());
-        }
-        return builder.buildPartial();
-      }
-    };
-
-    public static com.google.protobuf.Parser<LogBlocks> parser() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<LogBlocks> getParserForType() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public com.giyeok.bibix.repo.BibixRepoProto.LogBlocks getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -9747,11 +9363,6 @@ java.lang.String defaultValue) {
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_com_giyeok_bibix_repo_ActionLogs_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_com_giyeok_bibix_repo_LogBlocks_descriptor;
-  private static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_com_giyeok_bibix_repo_LogBlocks_fieldAccessorTable;
-  private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_com_giyeok_bibix_repo_LogBlock_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
@@ -9799,20 +9410,18 @@ java.lang.String defaultValue) {
       "BibixTargetLogs\0226\n\013target_logs\030\001 \003(\0132!.c" +
       "om.giyeok.bibix.repo.TargetLogs\0226\n\013actio" +
       "n_logs\030\002 \003(\0132!.com.giyeok.bibix.repo.Act" +
-      "ionLogs\"h\n\nTargetLogs\022\025\n\runique_run_id\030\001" +
-      " \001(\t\022\021\n\ttarget_id\030\002 \001(\t\0220\n\006blocks\030\003 \001(\0132" +
-      " .com.giyeok.bibix.repo.LogBlocks\"\232\001\n\nAc" +
-      "tionLogs\022\025\n\runique_run_id\030\001 \001(\t\022\022\n\nproje" +
-      "ct_id\030\002 \001(\005\022\032\n\022import_instance_id\030\003 \001(\005\022" +
-      "\023\n\013action_name\030\004 \001(\t\0220\n\006blocks\030\005 \001(\0132 .c" +
-      "om.giyeok.bibix.repo.LogBlocks\"<\n\tLogBlo" +
-      "cks\022/\n\006blocks\030\001 \003(\0132\037.com.giyeok.bibix.r" +
-      "epo.LogBlock\"u\n\010LogBlock\022.\n\005level\030\001 \001(\0162" +
-      "\037.com.giyeok.bibix.repo.LogLevel\022(\n\004time" +
-      "\030\002 \001(\0132\032.google.protobuf.Timestamp\022\017\n\007me" +
-      "ssage\030\003 \001(\t*=\n\010LogLevel\022\017\n\013UNSPECIFIED\020\000" +
-      "\022\013\n\007VERBOSE\020\001\022\010\n\004INFO\020\010\022\t\n\005ERROR\020\017B\020B\016Bi" +
-      "bixRepoProtob\006proto3"
+      "ionLogs\"g\n\nTargetLogs\022\025\n\runique_run_id\030\001" +
+      " \001(\t\022\021\n\ttarget_id\030\002 \001(\t\022/\n\006blocks\030\003 \003(\0132" +
+      "\037.com.giyeok.bibix.repo.LogBlock\"\231\001\n\nAct" +
+      "ionLogs\022\025\n\runique_run_id\030\001 \001(\t\022\022\n\nprojec" +
+      "t_id\030\002 \001(\005\022\032\n\022import_instance_id\030\003 \001(\005\022\023" +
+      "\n\013action_name\030\004 \001(\t\022/\n\006blocks\030\005 \003(\0132\037.co" +
+      "m.giyeok.bibix.repo.LogBlock\"u\n\010LogBlock" +
+      "\022.\n\005level\030\001 \001(\0162\037.com.giyeok.bibix.repo." +
+      "LogLevel\022(\n\004time\030\002 \001(\0132\032.google.protobuf" +
+      ".Timestamp\022\017\n\007message\030\003 \001(\t*=\n\010LogLevel\022" +
+      "\017\n\013UNSPECIFIED\020\000\022\013\n\007VERBOSE\020\001\022\010\n\004INFO\020\010\022" +
+      "\t\n\005ERROR\020\017B\020B\016BibixRepoProtob\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -9882,14 +9491,8 @@ java.lang.String defaultValue) {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_giyeok_bibix_repo_ActionLogs_descriptor,
         new java.lang.String[] { "UniqueRunId", "ProjectId", "ImportInstanceId", "ActionName", "Blocks", });
-    internal_static_com_giyeok_bibix_repo_LogBlocks_descriptor =
-      getDescriptor().getMessageTypes().get(5);
-    internal_static_com_giyeok_bibix_repo_LogBlocks_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_com_giyeok_bibix_repo_LogBlocks_descriptor,
-        new java.lang.String[] { "Blocks", });
     internal_static_com_giyeok_bibix_repo_LogBlock_descriptor =
-      getDescriptor().getMessageTypes().get(6);
+      getDescriptor().getMessageTypes().get(5);
     internal_static_com_giyeok_bibix_repo_LogBlock_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_giyeok_bibix_repo_LogBlock_descriptor,

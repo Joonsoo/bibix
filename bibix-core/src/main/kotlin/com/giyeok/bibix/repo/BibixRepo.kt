@@ -11,6 +11,7 @@ import com.giyeok.bibix.repo.TargetStateKt.buildFailed
 import com.giyeok.bibix.repo.TargetStateKt.buildSucceeded
 import com.giyeok.bibix.runner.RunConfigProto.RunConfig
 import com.giyeok.bibix.utils.toProto
+import com.giyeok.sugarproto.sugarformat.SugarFormat
 import com.google.protobuf.ByteString
 import com.google.protobuf.Message
 import com.google.protobuf.Timestamp
@@ -87,7 +88,7 @@ class BibixRepo(
       repoDataFile.outputStream().buffered().use { writer ->
         repoData.build().writeTo(writer)
       }
-      targetLogsFile.writeText(JsonFormat.printer().print(targetLogs))
+      targetLogsFile.writeText(SugarFormat.print(targetLogs))
     }
   }
 
@@ -251,11 +252,12 @@ class BibixRepo(
     repoData.getTargetIdDataOrDefault(targetId, null)
   }
 
-  private inner class ProgressLoggerRepoImpl(
-    private var logsBuilderOpt: LogBlocks.Builder? = null,
-    private val initLogsBuilder: () -> LogBlocks.Builder
+  private inner class ProgressLoggerRepoImpl<T>(
+    private var logsBuilderOpt: T? = null,
+    private val initLogsBuilder: () -> T,
+    private val addBlock: (T) -> LogBlock.Builder
   ): ProgressLogger {
-    private fun initializeLogsBuilder(): LogBlocks.Builder {
+    private fun initializeLogsBuilder(): T {
       check(logsBuilderOpt == null)
       val newBuilder = synchronized(this@BibixRepo) {
         initLogsBuilder()
@@ -271,11 +273,11 @@ class BibixRepo(
         }
         val now = timeProvider().toProto()
         synchronized(this@BibixRepo) {
-          logsBuilder.addBlocks(logBlock {
+          addBlock(logsBuilder).apply {
             this.level = level
             this.time = now
             this.message = message
-          })
+          }
         }
         // TODO repo data와 targets log 저장 루틴을 다르게 해야..
         saveRepoData()
@@ -297,12 +299,11 @@ class BibixRepo(
 
   fun progressLoggerFor(targetIdHex: String): ProgressLogger {
     // 어차피 같은 target은 두번 이상 실행되지 않기 때문에(그래야 하기 때문에) 기존의 targetLogs를 검색할 필요는 없다
-    return ProgressLoggerRepoImpl {
+    return ProgressLoggerRepoImpl<TargetLogs.Builder>(null, {
       targetLogs.addTargetLogsBuilder()
         .setUniqueRunId(uniqueRunId)
         .setTargetId(targetIdHex)
-        .blocksBuilder
-    }
+    }, { it.addBlocksBuilder() })
   }
 
   fun progressLoggerForAction(
@@ -310,39 +311,37 @@ class BibixRepo(
     importInstanceId: Int,
     name: BibixName
   ): ProgressLogger {
-    return ProgressLoggerRepoImpl {
+    return ProgressLoggerRepoImpl<ActionLogs.Builder>(null, {
       targetLogs.addActionLogsBuilder()
         .setUniqueRunId(uniqueRunId)
         .setProjectId(projectId)
         .setImportInstanceId(importInstanceId)
         .setActionName(name.toString())
-        .blocksBuilder
-    }
+    }, { it.addBlocksBuilder() })
   }
 
   companion object {
-    private fun <T: Message.Builder> readJsonOrDefault(
+    private fun <T: Message.Builder> readSugarFormatOrDefault(
       file: Path,
       builder: T,
       default: (T) -> T
     ): T {
       if (file.exists()) {
         try {
-          file.bufferedReader().use { reader ->
-            JsonFormat.parser().merge(reader, builder)
-          }
+          SugarFormat.merge(file.readText(), builder)
           return builder
         } catch (_: Exception) {
         }
       }
       val defaultBuilder = default(builder)
-      file.writeText(JsonFormat.printer().print(defaultBuilder))
+      file.writeText(SugarFormat.print(defaultBuilder))
       return defaultBuilder
     }
 
     fun load(
       mainDirectory: Path,
-      targetLogFileName: String = "log.json",
+      targetLogFileName: String = "log.pbsuf",
+      configFileName: String = "config.pbsuf",
       uniqueRunId: String = UniqueIdGen.generate(),
       debuggingMode: Boolean = false
     ): BibixRepo {
@@ -350,8 +349,8 @@ class BibixRepo(
       if (!Files.exists(bbxbuildDirectory)) {
         Files.createDirectory(bbxbuildDirectory)
       }
-      val runConfigFile = bbxbuildDirectory.resolve("config.json")
-      val runConfig = readJsonOrDefault(runConfigFile, RunConfig.newBuilder()) { builder ->
+      val runConfigFile = bbxbuildDirectory.resolve(configFileName)
+      val runConfig = readSugarFormatOrDefault(runConfigFile, RunConfig.newBuilder()) { builder ->
         builder.clear()
           .setMaxThreads(8)
           .setMinLogLevel(LogLevel.INFO)

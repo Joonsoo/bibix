@@ -27,7 +27,7 @@ class BuildFrontend(
   preloadedPlugins: Map<String, PreloadedPlugin> = defaultPreloadedPlugins,
   classPkgRunner: ClassPkgRunner = ClassPkgRunner(ClassWorld()),
   pluginOverrides: PluginOverrides = NoPluginOverrides,
-  targetLogFileName: String = "log.json",
+  targetLogFileName: String = "log.pbsuf",
   val debuggingMode: Boolean = false
 ) {
   companion object {

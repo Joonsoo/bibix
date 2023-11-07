@@ -164,19 +164,11 @@ object ProjectStructureExtractor {
       ModulesCollector("ktjvm", Pair("org.jetbrains.kotlin", "kotlin-stdlib"))
     val scalaModulesCollector =
       ModulesCollector("scala", Pair("org.scala-lang", "scala-library"))
-    val overridingClassPkgRunner = OverridingClassPkgRunner(
-      mapOf(
-        Pair(1, "com.giyeok.bibix.plugins.java.Library") to javaModulesCollector,
-        Pair(1, "com.giyeok.bibix.plugins.ktjvm.Library") to ktjvmModulesCollector,
-        Pair(1, "com.giyeok.bibix.plugins.scala.Library") to scalaModulesCollector
-      ),
-      ClassWorld()
-    )
     val buildFrontend = BuildFrontend(
       BibixProjectLocation.of(projectRoot, scriptName),
       mapOf(),
       listOf(),
-      targetLogFileName = "ijdaemon-log.json",
+      targetLogFileName = "ijdaemon-log.pbsuf",
       pluginOverrides = PluginOverridesImpl(
         mapOf(
           Pair(1, "com.giyeok.bibix.plugins.java.Library") to javaModulesCollector,
@@ -193,6 +185,7 @@ object ProjectStructureExtractor {
     val moduleTargets = runBlocking {
       mainTargets.filterValues { definition ->
         if (definition is EvalTarget) {
+          // TODO EvalTarget이면서 java, ktjvm, scala 플러그인에 대한 call expr인 경우만
           true
 //          if (definition.target.value is BibixAst.CallExpr) {
 //            val callTarget = buildFrontend.blockingEvaluateName(

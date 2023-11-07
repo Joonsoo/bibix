@@ -96,35 +96,80 @@ public object ActionLogsKt {
     }
 
     /**
-     * `.com.giyeok.bibix.repo.LogBlocks blocks = 5;`
+     * An uninstantiable, behaviorless type to represent the field in
+     * generics.
      */
-    public var blocks: com.giyeok.bibix.repo.BibixRepoProto.LogBlocks
-      @JvmName("getBlocks")
-      get() = _builder.getBlocks()
-      @JvmName("setBlocks")
-      set(value) {
-        _builder.setBlocks(value)
-      }
+    @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
+    public class BlocksProxy private constructor() : com.google.protobuf.kotlin.DslProxy()
     /**
-     * `.com.giyeok.bibix.repo.LogBlocks blocks = 5;`
+     * `repeated .com.giyeok.bibix.repo.LogBlock blocks = 5;`
      */
-    public fun clearBlocks() {
+     public val blocks: com.google.protobuf.kotlin.DslList<com.giyeok.bibix.repo.BibixRepoProto.LogBlock, BlocksProxy>
+      @kotlin.jvm.JvmSynthetic
+      get() = com.google.protobuf.kotlin.DslList(
+        _builder.getBlocksList()
+      )
+    /**
+     * `repeated .com.giyeok.bibix.repo.LogBlock blocks = 5;`
+     * @param value The blocks to add.
+     */
+    @kotlin.jvm.JvmSynthetic
+    @kotlin.jvm.JvmName("addBlocks")
+    public fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.repo.BibixRepoProto.LogBlock, BlocksProxy>.add(value: com.giyeok.bibix.repo.BibixRepoProto.LogBlock) {
+      _builder.addBlocks(value)
+    }
+    /**
+     * `repeated .com.giyeok.bibix.repo.LogBlock blocks = 5;`
+     * @param value The blocks to add.
+     */
+    @kotlin.jvm.JvmSynthetic
+    @kotlin.jvm.JvmName("plusAssignBlocks")
+    @Suppress("NOTHING_TO_INLINE")
+    public inline operator fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.repo.BibixRepoProto.LogBlock, BlocksProxy>.plusAssign(value: com.giyeok.bibix.repo.BibixRepoProto.LogBlock) {
+      add(value)
+    }
+    /**
+     * `repeated .com.giyeok.bibix.repo.LogBlock blocks = 5;`
+     * @param values The blocks to add.
+     */
+    @kotlin.jvm.JvmSynthetic
+    @kotlin.jvm.JvmName("addAllBlocks")
+    public fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.repo.BibixRepoProto.LogBlock, BlocksProxy>.addAll(values: kotlin.collections.Iterable<com.giyeok.bibix.repo.BibixRepoProto.LogBlock>) {
+      _builder.addAllBlocks(values)
+    }
+    /**
+     * `repeated .com.giyeok.bibix.repo.LogBlock blocks = 5;`
+     * @param values The blocks to add.
+     */
+    @kotlin.jvm.JvmSynthetic
+    @kotlin.jvm.JvmName("plusAssignAllBlocks")
+    @Suppress("NOTHING_TO_INLINE")
+    public inline operator fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.repo.BibixRepoProto.LogBlock, BlocksProxy>.plusAssign(values: kotlin.collections.Iterable<com.giyeok.bibix.repo.BibixRepoProto.LogBlock>) {
+      addAll(values)
+    }
+    /**
+     * `repeated .com.giyeok.bibix.repo.LogBlock blocks = 5;`
+     * @param index The index to set the value at.
+     * @param value The blocks to set.
+     */
+    @kotlin.jvm.JvmSynthetic
+    @kotlin.jvm.JvmName("setBlocks")
+    public operator fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.repo.BibixRepoProto.LogBlock, BlocksProxy>.set(index: kotlin.Int, value: com.giyeok.bibix.repo.BibixRepoProto.LogBlock) {
+      _builder.setBlocks(index, value)
+    }
+    /**
+     * `repeated .com.giyeok.bibix.repo.LogBlock blocks = 5;`
+     */
+    @kotlin.jvm.JvmSynthetic
+    @kotlin.jvm.JvmName("clearBlocks")
+    public fun com.google.protobuf.kotlin.DslList<com.giyeok.bibix.repo.BibixRepoProto.LogBlock, BlocksProxy>.clear() {
       _builder.clearBlocks()
     }
-    /**
-     * `.com.giyeok.bibix.repo.LogBlocks blocks = 5;`
-     * @return Whether the blocks field is set.
-     */
-    public fun hasBlocks(): kotlin.Boolean {
-      return _builder.hasBlocks()
-    }
+
   }
 }
 @kotlin.jvm.JvmSynthetic
 @com.google.errorprone.annotations.CheckReturnValue
 public inline fun com.giyeok.bibix.repo.BibixRepoProto.ActionLogs.copy(block: com.giyeok.bibix.repo.ActionLogsKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.repo.BibixRepoProto.ActionLogs =
   com.giyeok.bibix.repo.ActionLogsKt.Dsl._create(this.toBuilder()).apply { block() }._build()
-
-public val com.giyeok.bibix.repo.BibixRepoProto.ActionLogsOrBuilder.blocksOrNull: com.giyeok.bibix.repo.BibixRepoProto.LogBlocks?
-  get() = if (hasBlocks()) getBlocks() else null
 
