@@ -5,7 +5,6 @@ import com.giyeok.bibix.base.*
 import com.giyeok.bibix.graph.BibixName
 import com.giyeok.bibix.repo.BibixRepo
 import com.giyeok.bibix.repo.BibixRepoProto
-import com.giyeok.bibix.repo.extractInputHashes
 import com.giyeok.bibix.repo.hashString
 import com.giyeok.bibix.utils.toBibix
 import com.giyeok.bibix.utils.toHexString
@@ -107,7 +106,7 @@ private fun withBuildContext(
   val targetId = targetIdData.hashString()
   val targetIdHex = targetId.toHexString()
 
-  val inputHashes = argsMap.extractInputHashes()
+  val inputHashes = buildGraphRunner.fileHashStore.extractInputHashes(argsMap)
   val inputHashString = inputHashes.hashString()
 
   val repo = buildGraphRunner.repo

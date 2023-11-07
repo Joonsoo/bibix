@@ -27,6 +27,7 @@ class BuildGraphRunner(
   // Pair(caller project ID, class name) -> overriding plugin instance
   val pluginOverrides: PluginOverrides,
   val valueStore: ValueStore,
+  val fileHashStore: FileHashStore,
 ) {
   companion object {
     fun create(
@@ -93,7 +94,8 @@ class BuildGraphRunner(
         repo = repo,
         classPkgRunner = classPkgRunner,
         pluginOverrides = pluginOverride,
-        valueStore = ValueStore()
+        valueStore = ValueStore(),
+        fileHashStore = FileHashStore()
       )
     }
   }
