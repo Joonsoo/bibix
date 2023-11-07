@@ -3,12 +3,12 @@ package com.giyeok.bibix.intellij.service
 import com.giyeok.bibix.base.DummyProgressLogger
 import com.giyeok.bibix.base.StringValue
 import com.giyeok.bibix.frontend.BuildFrontend
-import com.giyeok.bibix.graph.BibixName
 import com.giyeok.bibix.graph.BibixProjectLocation
 import com.giyeok.bibix.graph.runner.EvalTarget
+import com.giyeok.bibix.graph.runner.PluginOverridesImpl
 import com.giyeok.bibix.intellij.*
-import com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDep
 import com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDep
+import com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDep
 import com.giyeok.bibix.plugins.jvm.*
 import com.giyeok.bibix.plugins.maven.Artifact
 import com.google.common.annotations.VisibleForTesting
@@ -177,7 +177,13 @@ object ProjectStructureExtractor {
       mapOf(),
       listOf(),
       targetLogFileName = "ijdaemon-log.json",
-      classPkgRunner = overridingClassPkgRunner
+      pluginOverrides = PluginOverridesImpl(
+        mapOf(
+          Pair(1, "com.giyeok.bibix.plugins.java.Library") to javaModulesCollector,
+          Pair(1, "com.giyeok.bibix.plugins.ktjvm.Library") to ktjvmModulesCollector,
+          Pair(1, "com.giyeok.bibix.plugins.scala.Library") to scalaModulesCollector
+        )
+      )
     )
 
     val rootModuleName = projectRoot.name

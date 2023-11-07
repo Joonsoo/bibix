@@ -160,9 +160,9 @@ class ExprEvaluator(
                 callee,
                 posArgs,
                 namedArgs
-              ) { callResult ->
+              ) { callResult, overriddenPlugin ->
                 check(callResult is BuildTaskResult.ValueOfTargetResult)
-                castBuildRuleResult(callee, callResult.targetId, callResult.value)
+                castBuildRuleResult(callee, callResult.targetId, callResult.value, overriddenPlugin)
               }
             }
 
@@ -419,7 +419,8 @@ class ExprEvaluator(
   private fun castBuildRuleResult(
     buildRule: BuildTaskResult.BuildRuleResult,
     targetId: String,
-    value: BibixValue
+    value: BibixValue,
+    notReusableResult: Boolean,
   ): BuildTaskResult = BuildTaskResult.WithResult(
     EvalType(buildRule.projectId, buildRule.buildRuleDef.returnType)
   ) { typeResult ->
@@ -435,7 +436,7 @@ class ExprEvaluator(
         TypeCastValue(finalized.value, typeResult.type, projectId)
       ) { casted ->
         check(casted is BuildTaskResult.ValueResult)
-        buildGraphRunner.repo.targetSucceeded(targetId, casted.value)
+        buildGraphRunner.repo.targetSucceeded(targetId, casted.value, notReusableResult)
         BuildTaskResult.ValueOfTargetResult(casted.value, targetId)
       }
     }
@@ -453,10 +454,10 @@ class ExprEvaluator(
         buildRule,
         listOf(),
         buildTask.params
-      ) { evalResult ->
+      ) { evalResult, overriddenPlugin ->
         check(evalResult is BuildTaskResult.ValueOfTargetResult)
 
-        castBuildRuleResult(buildRule, evalResult.targetId, evalResult.value)
+        castBuildRuleResult(buildRule, evalResult.targetId, evalResult.value, overriddenPlugin)
       }
 
     return when (val entity = graph.findName(buildTask.ruleName)) {

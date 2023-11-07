@@ -91,16 +91,18 @@ class BibixRepo(
     }
   }
 
+  private val transientResults = mutableMapOf<String, BibixValue>()
+
   // withPrevState는 사용 가능한 기존의 target state가 있을 떄, 그 값을 재사용할 수 있는지 확인하기 위함
   fun <T> targetStarted(
     targetId: String,
     targetIdData: TargetIdData,
     inputHashes: InputHashes,
     inputHashString: ByteString,
-    withPrevState: (TargetState) -> T?
+    withPrevState: (prevState: TargetState, transientResult: BibixValue?) -> T?
   ): Pair<T?, TargetState?> = synchronized(this) {
+    val uniqueRunId = this.uniqueRunId
     fun putData() {
-      val uniqueRunId = this.uniqueRunId
       repoData.putTargetIdData(targetId, targetIdData)
       repoData.putTargetStates(targetId, targetState {
         this.uniqueRunId = uniqueRunId
@@ -113,6 +115,7 @@ class BibixRepo(
     }
 
     val prevState = repoData.getTargetStatesOrDefault(targetId, null)
+    val transientResult = transientResults[targetId]
     // TODO 설정에 따라 이전 run에서 만든 것이라도 일정 시간 이내이면 재사용 시도하도록
     if (prevState == null) {
       // (이번 run에서) 처음 실행하는 것이면 putData하고 null(reuse할 것 없음), null(prevState 없음) 반환
@@ -151,7 +154,7 @@ class BibixRepo(
       }
 
       val canReuse = checkCanReuse()
-      val reuse = if (canReuse) withPrevState(prevState) else null
+      val reuse = if (canReuse) withPrevState(prevState, transientResult) else null
       if (reuse == null) {
         // reuse할 것이 없으면 putData하고 null(reuse할 것 없음), prevState 반환
         putData()
@@ -160,27 +163,40 @@ class BibixRepo(
     }
   }
 
-  fun targetSucceeded(targetId: String, resultValue: BibixValue) = synchronized(this) {
-    val uniqueRunId = this.uniqueRunId
-    val prevState = repoData.targetStatesMap[targetId]
-    if (prevState == null) {
-      // 오류상황인데.. 그냥 대충 넣고 지나가자
-      repoData.putTargetStates(targetId, targetState {
-        this.uniqueRunId = uniqueRunId
-        this.buildSucceeded = buildSucceeded {
-          this.buildEndTime = timeProvider().toProto()
-          this.resultValue = resultValue.toProto()
-        }
-      })
+  fun targetSucceeded(
+    targetId: String,
+    resultValue: BibixValue,
+    // isTransientResult 가 true이면 repo data에 기록하지 않고 이번 run 에서만 사용하고 없어진다
+    isTransientResult: Boolean
+  ) {
+    if (isTransientResult) {
+      synchronized(this) {
+        transientResults[targetId] = resultValue
+      }
     } else {
-      repoData.putTargetStates(targetId, prevState.toBuilder().apply {
-        this.buildSucceeded = buildSucceeded {
-          this.buildEndTime = timeProvider().toProto()
-          this.resultValue = resultValue.toProto()
+      synchronized(this) {
+        val uniqueRunId = this.uniqueRunId
+        val prevState = repoData.targetStatesMap[targetId]
+        if (prevState == null) {
+          // 오류상황인데.. 그냥 대충 넣고 지나가자
+          repoData.putTargetStates(targetId, targetState {
+            this.uniqueRunId = uniqueRunId
+            this.buildSucceeded = buildSucceeded {
+              this.buildEndTime = timeProvider().toProto()
+              this.resultValue = resultValue.toProto()
+            }
+          })
+        } else {
+          repoData.putTargetStates(targetId, prevState.toBuilder().apply {
+            this.buildSucceeded = buildSucceeded {
+              this.buildEndTime = timeProvider().toProto()
+              this.resultValue = resultValue.toProto()
+            }
+          }.build())
         }
-      }.build())
+        saveRepoData()
+      }
     }
-    saveRepoData()
   }
 
   // TODO 필요한 곳에서 targetFailed 호출하도록 수정

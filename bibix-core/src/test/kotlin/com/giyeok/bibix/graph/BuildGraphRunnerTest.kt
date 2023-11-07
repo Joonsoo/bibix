@@ -29,7 +29,8 @@ class BuildGraphRunnerTest {
       buildEnv = buildEnv,
       fileSystem = FileSystems.getDefault(),
       repo = repo,
-      classPkgRunner = ClassPkgRunner(ClassWorld())
+      classPkgRunner = ClassPkgRunner(ClassWorld()),
+      pluginOverride = NoPluginOverrides
     )
 
     try {

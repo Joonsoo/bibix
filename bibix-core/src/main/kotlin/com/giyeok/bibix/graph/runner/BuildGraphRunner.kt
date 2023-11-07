@@ -11,7 +11,6 @@ import com.giyeok.bibix.repo.BibixRepo
 import com.google.common.collect.BiMap
 import com.google.common.collect.HashBiMap
 import com.google.common.collect.ImmutableBiMap
-import java.lang.reflect.Method
 import java.nio.file.FileSystem
 
 class BuildGraphRunner(
@@ -25,6 +24,8 @@ class BuildGraphRunner(
   val fileSystem: FileSystem,
   val repo: BibixRepo,
   val classPkgRunner: ClassPkgRunner,
+  // Pair(caller project ID, class name) -> overriding plugin instance
+  val pluginOverrides: PluginOverrides,
 ) {
   companion object {
     fun create(
@@ -35,6 +36,7 @@ class BuildGraphRunner(
       fileSystem: FileSystem,
       repo: BibixRepo,
       classPkgRunner: ClassPkgRunner,
+      pluginOverride: PluginOverrides,
     ): BuildGraphRunner {
       val preludeNames = NameLookupTable.fromDefs(preludePlugin.defs).names.keys
 
@@ -88,7 +90,8 @@ class BuildGraphRunner(
         buildEnv = buildEnv,
         fileSystem = fileSystem,
         repo = repo,
-        classPkgRunner = classPkgRunner
+        classPkgRunner = classPkgRunner,
+        pluginOverrides = pluginOverride,
       )
     }
   }
