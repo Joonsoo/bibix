@@ -40,7 +40,7 @@ VarRedef = SimpleName (WS '.' WS SimpleName)+ WS '=' WS Expr
 
 BuildRuleDef = (BuildRuleMod WS $0)* "def"&Tk WS SimpleName WS ParamsDef WS ':' WS TypeExpr WS '=' WS MethodRef
                {BuildRuleDef(mods=$0, name=$3, params=$5, returnType=$9, impl=$13)}
-BuildRuleMod: %BuildRuleMod = ("singleton" {%Singleton} | "sync" {%Synchronized})&Tk
+BuildRuleMod: %BuildRuleMod = ("singleton" {%Singleton} | "sync" {%Synchronized} | "noreuse" {%NoReuse})&Tk
 ActionDef = "action"&Tk WS SimpleName (WS ActionParams)? WS ActionBody {ActionDef(name=$2, argsName=$3, body=$5)}
 ActionBody = '{' (WS ActionStmt)+ WS '}' {MultiCallActions(stmts=$1)}
 ActionParams = '(' WS SimpleName WS ')' $2

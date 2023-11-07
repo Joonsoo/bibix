@@ -1,6 +1,7 @@
 package com.giyeok.bibix.graph.runner
 
 import com.giyeok.bibix.*
+import com.giyeok.bibix.ast.BibixAst
 import com.giyeok.bibix.base.*
 import com.giyeok.bibix.graph.BibixName
 import com.giyeok.bibix.repo.BibixRepo
@@ -100,29 +101,33 @@ private fun withBuildContext(
 
   val repo = buildGraphRunner.repo
 
+  val noReuse = buildRule.buildRuleDef.def.mods.contains(BibixAst.BuildRuleMod.NoReuse)
+
   val (reuse, prevState) =
     repo.targetStarted(targetIdHex, targetIdData, inputHashes, inputHashString) { prevState ->
-      val prevTargetIdData = repo.getTargetIdData(targetIdHex)
-      // 혹시나 불일치하는 경우가 생기지 않는지 확인
-      check(prevTargetIdData == targetIdData)
+      if (noReuse) null else {
+        val prevTargetIdData = repo.getTargetIdData(targetIdHex)
+        // 혹시나 불일치하는 경우가 생기지 않는지 확인
+        check(prevTargetIdData == targetIdData)
 
-      when (prevState.stateCase) {
-        BibixRepoProto.TargetState.StateCase.BUILD_STARTED -> {
-          // 동시에 같은 target이 두 번 이상 호출되려고 하면, 즉, 이미 target started인데
-          // 같은 target을 또 실행하려고 하면 다른쪽 타겟의 결과를 기다렸다가 그걸 사용한다.
-          BuildTaskResult.DuplicateTargetResult(targetIdHex)
+        when (prevState.stateCase) {
+          BibixRepoProto.TargetState.StateCase.BUILD_STARTED -> {
+            // 동시에 같은 target이 두 번 이상 호출되려고 하면, 즉, 이미 target started인데
+            // 같은 target을 또 실행하려고 하면 다른쪽 타겟의 결과를 기다렸다가 그걸 사용한다.
+            BuildTaskResult.DuplicateTargetResult(targetIdHex)
+          }
+
+          BibixRepoProto.TargetState.StateCase.BUILD_SUCCEEDED -> {
+            // 실패한 경우도 재사용할 수 있겠지만.. 일단 성공한 경우만
+            BuildTaskResult.ValueOfTargetResult(
+              prevState.buildSucceeded.resultValue.toBibix(),
+              targetIdHex
+            )
+          }
+
+          BibixRepoProto.TargetState.StateCase.BUILD_FAILED -> TODO()
+          else -> throw AssertionError()
         }
-
-        BibixRepoProto.TargetState.StateCase.BUILD_SUCCEEDED -> {
-          // 실패한 경우도 재사용할 수 있겠지만.. 일단 성공한 경우만
-          BuildTaskResult.ValueOfTargetResult(
-            prevState.buildSucceeded.resultValue.toBibix(),
-            targetIdHex
-          )
-        }
-
-        BibixRepoProto.TargetState.StateCase.BUILD_FAILED -> TODO()
-        else -> throw AssertionError()
       }
     }
   if (reuse != null) {
