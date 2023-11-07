@@ -26,7 +26,6 @@ class BuildFrontend(
   prelude: PreloadedPlugin = preludePlugin,
   preloadedPlugins: Map<String, PreloadedPlugin> = defaultPreloadedPlugins,
   classPkgRunner: ClassPkgRunner = ClassPkgRunner(ClassWorld()),
-  pluginOverrides: PluginOverrides = NoPluginOverrides,
   targetLogFileName: String = "log.pbsuf",
   val debuggingMode: Boolean = false
 ) {
@@ -56,7 +55,6 @@ class BuildFrontend(
     fileSystem = FileSystems.getDefault(),
     repo = repo,
     classPkgRunner = classPkgRunner,
-    pluginOverride = pluginOverrides,
   )
 
   val jobExecutorTracker = ExecutorTracker(getMaxThreads())

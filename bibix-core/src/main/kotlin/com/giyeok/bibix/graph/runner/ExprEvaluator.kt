@@ -167,9 +167,9 @@ class ExprEvaluator(
                 callee,
                 posArgs,
                 namedArgs
-              ) { callResult, overriddenPlugin ->
+              ) { callResult ->
                 check(callResult is BuildTaskResult.ValueOfTargetResult)
-                castBuildRuleResult(callee, callResult.targetId, callResult.value, overriddenPlugin)
+                castBuildRuleResult(callee, callResult.targetId, callResult.value)
               }
             }
 
@@ -433,7 +433,6 @@ class ExprEvaluator(
     buildRule: BuildTaskResult.BuildRuleResult,
     targetId: String,
     value: BibixValue,
-    notReusableResult: Boolean,
   ): BuildTaskResult = BuildTaskResult.WithResult(
     EvalType(buildRule.projectId, buildRule.buildRuleDef.returnType)
   ) { typeResult ->
@@ -453,7 +452,7 @@ class ExprEvaluator(
         TypeCastValue(valueStore.idOf(finalized.value), typeResult.type, projectId)
       ) { casted ->
         check(casted is BuildTaskResult.ValueResult)
-        buildGraphRunner.repo.targetSucceeded(targetId, casted.value, notReusableResult)
+        buildGraphRunner.repo.targetSucceeded(targetId, casted.value)
         BuildTaskResult.ValueOfTargetResult(casted.value, targetId)
       }
     }
@@ -471,10 +470,10 @@ class ExprEvaluator(
         buildRule,
         listOf(),
         valueStore.valueMapOf(buildTask.paramsId)
-      ) { evalResult, overriddenPlugin ->
+      ) { evalResult ->
         check(evalResult is BuildTaskResult.ValueOfTargetResult)
 
-        castBuildRuleResult(buildRule, evalResult.targetId, evalResult.value, overriddenPlugin)
+        castBuildRuleResult(buildRule, evalResult.targetId, evalResult.value)
       }
 
     return when (val entity = graph.findName(buildTask.ruleName)) {
@@ -649,6 +648,10 @@ fun organizeParams(
       it.value
     }
     val namedArgValues = namedArgResults.map {
+      if (it !is BuildTaskResult.ResultWithValue) {
+        val failure = it as? BuildTaskResult.TypeCastFailResult
+        throw IllegalStateException("???: $it $namedArgCastTasks ${failure?.value}")
+      }
       check(it is BuildTaskResult.ResultWithValue)
       it.value
     }

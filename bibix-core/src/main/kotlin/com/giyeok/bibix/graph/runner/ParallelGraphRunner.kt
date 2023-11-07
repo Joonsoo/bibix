@@ -28,7 +28,7 @@ class ParallelGraphRunner(
   private sealed class BuildRunUpdate {
     data class Task(val task: BuildTask): BuildRunUpdate()
     data class Result(val task: BuildTask, val result: BuildTaskResult): BuildRunUpdate()
-    data class Failed(val task: BuildTask, val exception: Exception): BuildRunUpdate()
+    data class Failed(val task: BuildTask, val exception: Throwable): BuildRunUpdate()
   }
 
   private val updateChannel = Channel<BuildRunUpdate>(Channel.UNLIMITED)
@@ -66,7 +66,7 @@ class ParallelGraphRunner(
       val result = runner.runBuildTask(task)
       // taskResultQueue.add(Pair(nextTask, result))
       updateChannel.send(BuildRunUpdate.Result(task, result))
-    } catch (e: Exception) {
+    } catch (e: Throwable) {
       updateChannel.send(BuildRunUpdate.Failed(task, e))
     }
   }
@@ -85,7 +85,7 @@ class ParallelGraphRunner(
           try {
             val funcResult = try {
               BuildRunUpdate.Result(task, result.func())
-            } catch (e: Exception) {
+            } catch (e: Throwable) {
               BuildRunUpdate.Failed(task, e)
             }
             updateChannel.trySendBlocking(funcResult)
@@ -104,7 +104,7 @@ class ParallelGraphRunner(
           try {
             val funcResult = try {
               BuildRunUpdate.Result(task, result.func())
-            } catch (e: Exception) {
+            } catch (e: Throwable) {
               BuildRunUpdate.Failed(task, e)
             }
             updateChannel.trySendBlocking(funcResult)
@@ -166,7 +166,7 @@ class ParallelGraphRunner(
       if (result != null) {
         val funcResult = try {
           BuildRunUpdate.Result(parent, func(result))
-        } catch (e: Exception) {
+        } catch (e: Throwable) {
           BuildRunUpdate.Failed(parent, e)
         }
         // taskResultQueue.add(parent to funcResult)
@@ -182,7 +182,7 @@ class ParallelGraphRunner(
       if (results.size == subs.size) {
         val funcResult = try {
           BuildRunUpdate.Result(parent, func(results))
-        } catch (e: Exception) {
+        } catch (e: Throwable) {
           BuildRunUpdate.Failed(parent, e)
         }
         // taskResultQueue.add(parent to funcResult)
@@ -229,6 +229,7 @@ class ParallelGraphRunner(
         // 작업이 모두 완료되었으면 break
         if (tasks.all { it in resultMap }) break
       }
+      runner.repo.commitRepoData()
       tasks.associateWith { resultMap[it] }
     }
     // taskQueue.addAll(tasks)

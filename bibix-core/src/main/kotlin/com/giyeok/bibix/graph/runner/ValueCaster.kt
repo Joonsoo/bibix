@@ -350,7 +350,7 @@ class ValueCaster(
           BuildTaskResult.WithResultList(castTasks) { cast ->
             check(cast.size == finVals.size)
             val castValues = cast.map {
-              check(it is BuildTaskResult.ResultWithValue)
+              check(it is BuildTaskResult.ResultWithValue) { "$it" }
               it.value
             }
 

@@ -6,12 +6,16 @@ import com.giyeok.bibix.plugins.jvm.LocalBuilt
 import java.nio.file.Path
 import java.util.concurrent.ConcurrentHashMap
 
-class ModulesCollector(val languageType: String, val sdkArtifactName: Pair<String, String>?) {
+class ModuleCollector(val languageType: String, val sdkArtifactName: Pair<String, String>?) {
   private val _modules = ConcurrentHashMap<String, ModuleData>()
 
   val modules get() = _modules.toMap()
 
-  fun withSdkArtifact(context: BuildContext, sdk: Pair<String, ClassPkg>?): BuildRuleReturn {
+  fun withSdkArtifact(
+    context: BuildContext,
+    sdk: Pair<String, ClassPkg>?,
+    thenBlock: () -> BuildRuleReturn
+  ): BuildRuleReturn {
     val srcs = context.arguments.getValue("srcs") as SetValue
     val resources = context.arguments["resources"] as? SetValue ?: SetValue(listOf())
     val resDirs =
@@ -30,34 +34,35 @@ class ModulesCollector(val languageType: String, val sdkArtifactName: Pair<Strin
       runtimeDeps = runtimeDeps.values.map { ClassPkg.fromBibix(it) },
       allArgs = context.arguments
     )
-    val cpinfo = ClassInstanceValue(
-      "com.giyeok.bibix.plugins.jvm",
-      "ClassesInfo",
-      mapOf(
-        "classDirs" to SetValue(),
-        "resDirs" to SetValue(),
-        "srcs" to NoneValue
-      )
-    )
-    return BuildRuleReturn.value(
-      ClassInstanceValue(
-        "com.giyeok.bibix.plugins.jvm",
-        "ClassPkg",
-        mapOf(
-          "origin" to origin.toBibix(),
-          "cpinfo" to cpinfo,
-          "deps" to SetValue(listOfNotNull(sdk?.second?.toBibix()) + deps.values),
-          "runtimeDeps" to SetValue(runtimeDeps.values),
-        )
-      )
-    )
+    return thenBlock()
+//    val cpinfo = ClassInstanceValue(
+//      "com.giyeok.bibix.plugins.jvm",
+//      "ClassesInfo",
+//      mapOf(
+//        "classDirs" to SetValue(),
+//        "resDirs" to SetValue(),
+//        "srcs" to NoneValue
+//      )
+//    )
+//    return BuildRuleReturn.value(
+//      ClassInstanceValue(
+//        "com.giyeok.bibix.plugins.jvm",
+//        "ClassPkg",
+//        mapOf(
+//          "origin" to origin.toBibix(),
+//          "cpinfo" to cpinfo,
+//          "deps" to SetValue(listOfNotNull(sdk?.second?.toBibix()) + deps.values),
+//          "runtimeDeps" to SetValue(runtimeDeps.values),
+//        )
+//      )
+//    )
   }
 
-  fun build(context: BuildContext): BuildRuleReturn {
+  fun processAndThen(context: BuildContext, thenBlock: () -> BuildRuleReturn): BuildRuleReturn {
     val sdkVersion = context.arguments["sdkVersion"] as? StringValue
 
     return if (sdkVersion == null || sdkArtifactName == null) {
-      withSdkArtifact(context, null)
+      withSdkArtifact(context, null, thenBlock)
     } else {
       BuildRuleReturn.evalAndThen(
         "maven.artifact",
@@ -67,7 +72,7 @@ class ModulesCollector(val languageType: String, val sdkArtifactName: Pair<Strin
           "version" to sdkVersion
         )
       ) { sdkArtifact ->
-        withSdkArtifact(context, Pair(sdkVersion.value, ClassPkg.fromBibix(sdkArtifact)))
+        withSdkArtifact(context, Pair(sdkVersion.value, ClassPkg.fromBibix(sdkArtifact)), thenBlock)
       }
     }
   }

@@ -1,4 +1,4 @@
-//package com.giyeok.bibix.integtest
+package com.giyeok.bibix.integtest
 //
 //import com.giyeok.bibix.base.*
 //import com.giyeok.bibix.frontend.BuildFrontend

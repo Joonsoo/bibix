@@ -50,9 +50,10 @@ data class BuildContext(
   @OptIn(ExperimentalPathApi::class)
   fun clearDestDirectory(): Path {
     if (destDirectoryPath.exists()) {
-      destDirectoryPath.deleteRecursively()
-    }
-    if (destDirectoryPath.notExists()) {
+      destDirectoryPath.listDirectoryEntries().forEach {
+        it.deleteRecursively()
+      }
+    } else {
       destDirectoryPath.createDirectory()
     }
     return destDirectoryPath

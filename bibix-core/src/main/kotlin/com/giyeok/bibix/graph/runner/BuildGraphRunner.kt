@@ -24,8 +24,6 @@ class BuildGraphRunner(
   val fileSystem: FileSystem,
   val repo: BibixRepo,
   val classPkgRunner: ClassPkgRunner,
-  // Pair(caller project ID, class name) -> overriding plugin instance
-  val pluginOverrides: PluginOverrides,
   val valueStore: ValueStore,
   val fileHashStore: FileHashStore,
 ) {
@@ -38,7 +36,6 @@ class BuildGraphRunner(
       fileSystem: FileSystem,
       repo: BibixRepo,
       classPkgRunner: ClassPkgRunner,
-      pluginOverride: PluginOverrides,
     ): BuildGraphRunner {
       val preludeNames = NameLookupTable.fromDefs(preludePlugin.defs).names.keys
 
@@ -93,7 +90,6 @@ class BuildGraphRunner(
         fileSystem = fileSystem,
         repo = repo,
         classPkgRunner = classPkgRunner,
-        pluginOverrides = pluginOverride,
         valueStore = ValueStore(),
         fileHashStore = FileHashStore()
       )

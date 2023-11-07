@@ -20,7 +20,7 @@ fun organizeParamsAndRunBuildRule(
   buildRule: BuildTaskResult.BuildRuleResult,
   posArgs: List<BibixValue>,
   namedArgs: Map<String, BibixValue>,
-  block: (BuildTaskResult.FinalResult, overriddenPlugin: Boolean) -> BuildTaskResult
+  block: (BuildTaskResult.FinalResult) -> BuildTaskResult
 ): BuildTaskResult {
   return organizeParams(
     buildGraphRunner.valueStore,
@@ -33,16 +33,10 @@ fun organizeParamsAndRunBuildRule(
     posArgs,
     namedArgs,
   ) { args ->
-    val overriding =
-      buildGraphRunner.pluginOverrides.getOverrideInstance(callerProjectId, buildRule.impl)
+    val implInstance =
+      getImplInstance(buildRule.impl, callerProjectId, buildGraphRunner.classPkgRunner)
 
-    withBuildContext(
-      buildGraphRunner,
-      callerProjectId,
-      buildRule,
-      args,
-      overriding != null
-    ) { buildContext ->
+    withBuildContext(buildGraphRunner, callerProjectId, buildRule, args) { buildContext ->
       // TODO target이 실패한 경우에 repo에 업데이트
       val runner = BuildRuleRunner(
         buildGraphRunner.repo,
@@ -56,11 +50,9 @@ fun organizeParamsAndRunBuildRule(
         } else {
           result
         }
-        block(finalResult, overriding != null)
+        block(finalResult)
       }
 
-      val implInstance = overriding
-        ?: getImplInstance(buildRule.impl, callerProjectId, buildGraphRunner.classPkgRunner)
 
       val implMethod =
         implInstance::class.java.getMethod(buildRule.implMethodName, BuildContext::class.java)
@@ -79,7 +71,6 @@ private fun withBuildContext(
   callerProjectId: Int,
   buildRule: BuildTaskResult.BuildRuleResult,
   args: Map<String, BibixValue>,
-  noReuse: Boolean,
   block: (BuildContext) -> BuildTaskResult
 ): BuildTaskResult {
   val argsMap = argsMapFrom(args)
@@ -111,17 +102,8 @@ private fun withBuildContext(
 
   val repo = buildGraphRunner.repo
 
-  val (reuse, prevState) = repo.targetStarted(
-    targetIdHex,
-    targetIdData,
-    inputHashes,
-    inputHashString
-  ) { prevState, transientResult ->
-    if (noReuse) {
-      transientResult?.let {
-        BuildTaskResult.ValueOfTargetResult(transientResult, targetIdHex)
-      }
-    } else {
+  val (reuse, prevState) =
+    repo.targetStarted(targetIdHex, targetIdData, inputHashes, inputHashString) { prevState ->
       val prevTargetIdData = repo.getTargetIdData(targetIdHex)
       // 혹시나 불일치하는 경우가 생기지 않는지 확인
       check(prevTargetIdData == targetIdData)
@@ -145,7 +127,6 @@ private fun withBuildContext(
         else -> throw AssertionError()
       }
     }
-  }
   if (reuse != null) {
     return reuse
   }
