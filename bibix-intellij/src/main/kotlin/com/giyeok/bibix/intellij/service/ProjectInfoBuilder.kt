@@ -105,7 +105,24 @@ class ProjectInfoBuilder(
         }
         )
       }
-//      TODO this.sdkInfo = sdks
+
+      this.sdkInfo = sdkInfo {
+        usedKtJvmSdkVersions.forEach { (sdkVersion, artifactCandidates) ->
+          val mavenDeps = artifactCandidates.map { it.origin }.filterIsInstance<MavenDep>()
+          val artifacts = mavenDeps.filter {
+            it.artifact.startsWith("kotlin-stdlib") && it.version == sdkVersion
+          }.distinct()
+          this.ktjvmSdks.add(kotlinJvmSdk {
+            this.version = sdkVersion
+            this.sdkLibraryIds.addAll(artifacts.map { libIdFromOrigin(it) })
+          })
+        }
+
+        usedScalaSdkVersions.forEach { (sdkVersion, artifactCandidates) ->
+          val mavenDeps = artifactCandidates.map { it.origin }.filterIsInstance<MavenDep>()
+          TODO()
+        }
+      }
     }
   }
 
@@ -115,6 +132,8 @@ class ProjectInfoBuilder(
   }
 
   private val usedExternalLibraries = mutableMapOf<ClassOrigin, ClassPkg>()
+  private val usedKtJvmSdkVersions = mutableMapOf<String, MutableList<ClassPkg>>()
+  private val usedScalaSdkVersions = mutableMapOf<String, MutableList<ClassPkg>>()
 
   private fun createModule(
     moduleName: String,
@@ -144,6 +163,8 @@ class ProjectInfoBuilder(
         this.usingSdks.add(sdkVersion {
           // TODO val sdkVersion = (module.allArgs["sdkVersion"] as StringValue).value
           this.ktjvmSdkVersion = (sdkVersion!!.value.toBibix() as StringValue).value
+          usedKtJvmSdkVersions.getOrPut(this.ktjvmSdkVersion) { mutableListOf() }
+            .addAll(classPkg.deps)
         })
         this.usingSdks.add(sdkVersion {
           // TODO val jdkVersion = (module.allArgs["outVersion"] as StringValue).value
@@ -158,6 +179,8 @@ class ProjectInfoBuilder(
         this.usingSdks.add(sdkVersion {
           // TODO val sdkVersion = (module.allArgs["sdkVersion"] as StringValue).value
           this.scalaSdkVersion = (sdkVersion!!.value.toBibix() as StringValue).value
+          usedScalaSdkVersions.getOrPut(this.scalaSdkVersion) { mutableListOf() }
+            .addAll(classPkg.deps)
         })
         this.usingSdks.add(sdkVersion {
           // TODO val jdkVersion = (module.allArgs["outVersion"] as StringValue).value
