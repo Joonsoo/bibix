@@ -1,18 +1,22 @@
 package com.giyeok.bibix.intellij.service
 
 import com.giyeok.bibix.base.DummyProgressLogger
+import com.giyeok.bibix.base.StringValue
 import com.giyeok.bibix.frontend.BuildFrontend
 import com.giyeok.bibix.graph.BibixProjectLocation
 import com.giyeok.bibix.intellij.*
 import com.giyeok.bibix.plugins.jvm.*
 import com.giyeok.bibix.plugins.maven.Artifact
+import com.giyeok.bibix.repo.BibixRepoProto.BibixRepoData
+import com.giyeok.bibix.utils.toBibix
 import com.google.common.annotations.VisibleForTesting
 import java.nio.file.Path
 import kotlin.io.path.*
 
 class ProjectInfoBuilder(
   val projectLocation: BibixProjectLocation,
-  val buildResults: Map<String, ClassPkg>
+  val buildResults: Map<String, ClassPkg>,
+  val repoData: BibixRepoData.Builder,
 ) {
   // target id -> name
   val namedTargets: Map<String, String> = buildResults.map {
@@ -101,7 +105,7 @@ class ProjectInfoBuilder(
         }
         )
       }
-//      this.sdkInfo = sdks
+//      TODO this.sdkInfo = sdks
     }
   }
 
@@ -119,36 +123,45 @@ class ProjectInfoBuilder(
     moduleRoot: Path?
   ): BibixIntellijProto.Module = module {
     this.moduleName = moduleName
-    when ((classPkg.origin as LocalBuilt).builderName) {
+    val origin = classPkg.origin as LocalBuilt
+
+    val targetIdData = repoData.getTargetIdDataOrDefault(origin.objHash, null)!!
+
+    when (origin.builderName) {
       "java.library" -> {
+        val jdkVersion = targetIdData.argsMap.pairsList.find { it.name == "jdkVersion" }
         this.usingSdks.add(sdkVersion {
           // assuming java
-          val jdkVersion = (module.allArgs["jdkVersion"] as StringValue).value
-          this.jdkVersion = jdkVersion
+          // TODO val jdkVersion = (module.allArgs["jdkVersion"] as StringValue).value
+          this.jdkVersion = (jdkVersion!!.value.toBibix() as StringValue).value
         })
         this.moduleType = "java"
       }
 
       "ktjvm.library" -> {
+        val sdkVersion = targetIdData.argsMap.pairsList.find { it.name == "sdkVersion" }
+        val outVersion = targetIdData.argsMap.pairsList.find { it.name == "outVersion" }
         this.usingSdks.add(sdkVersion {
-          val sdkVersion = (module.allArgs["sdkVersion"] as StringValue).value
-          this.ktjvmSdkVersion = sdkVersion
+          // TODO val sdkVersion = (module.allArgs["sdkVersion"] as StringValue).value
+          this.ktjvmSdkVersion = (sdkVersion!!.value.toBibix() as StringValue).value
         })
         this.usingSdks.add(sdkVersion {
-          val jdkVersion = (module.allArgs["outVersion"] as StringValue).value
-          this.jdkVersion = jdkVersion
+          // TODO val jdkVersion = (module.allArgs["outVersion"] as StringValue).value
+          this.jdkVersion = (outVersion!!.value.toBibix() as StringValue).value
         })
         this.moduleType = "ktjvm"
       }
 
       "scala.library" -> {
+        val sdkVersion = targetIdData.argsMap.pairsList.find { it.name == "sdkVersion" }
+        val outVersion = targetIdData.argsMap.pairsList.find { it.name == "outVersion" }
         this.usingSdks.add(sdkVersion {
-          val sdkVersion = (module.allArgs["sdkVersion"] as StringValue).value
-          this.scalaSdkVersion = sdkVersion
+          // TODO val sdkVersion = (module.allArgs["sdkVersion"] as StringValue).value
+          this.scalaSdkVersion = (sdkVersion!!.value.toBibix() as StringValue).value
         })
         this.usingSdks.add(sdkVersion {
-          val jdkVersion = (module.allArgs["outVersion"] as StringValue).value
-          this.jdkVersion = jdkVersion
+          // TODO val jdkVersion = (module.allArgs["outVersion"] as StringValue).value
+          this.jdkVersion = (outVersion!!.value.toBibix() as StringValue).value
         })
         this.moduleType = "scala"
       }
@@ -157,9 +170,7 @@ class ProjectInfoBuilder(
     }
 
     this.moduleRootPath = moduleRoot?.absolutePathString() ?: ""
-    this
-
-      .contentRoots.addAll(moduleContentRoots)
+    this.contentRoots.addAll(moduleContentRoots)
 
     val deps =
       ResolveClassPkgs.flattenClassPkgs(classPkg.deps, null)
@@ -254,49 +265,6 @@ class ProjectInfoBuilder(
     is LocalBuilt -> namedTargets.contains(origin.objHash)
     else -> false
   }
-
-//    val projectModules = modules.values.map { module ->
-//      val moduleId = module.origin
-//      val moduleRoot = moduleRoots[moduleId]?.absolutePathString()
-//      module {
-//        this.moduleName = moduleName(module.origin.objHash)
-//        this.moduleType = module.languageType
-//        this.moduleRootPath = moduleRoot ?: ""
-//        this.contentRoots.addAll(moduleContentRoots.getValue(moduleId))
-//        when (module.languageType) {
-//          "ktjvm" -> {
-//            this.usingSdks.add(sdkVersion {
-//              val sdkVersion = (module.allArgs["sdkVersion"] as StringValue).value
-//              this.ktjvmSdkVersion = sdkVersion
-//            })
-//            this.usingSdks.add(sdkVersion {
-//              val jdkVersion = (module.allArgs["outVersion"] as StringValue).value
-//              this.jdkVersion = jdkVersion
-//            })
-//          }
-//
-//          "scala" -> {
-//            this.usingSdks.add(sdkVersion {
-//              val sdkVersion = (module.allArgs["sdkVersion"] as StringValue).value
-//              this.scalaSdkVersion = sdkVersion
-//            })
-//            this.usingSdks.add(sdkVersion {
-//              val jdkVersion = (module.allArgs["outVersion"] as StringValue).value
-//              this.jdkVersion = jdkVersion
-//            })
-//          }
-//
-//          else -> this.usingSdks.add(sdkVersion {
-//            // assuming java
-//            val jdkVersion = (module.allArgs["jdkVersion"] as StringValue).value
-//            this.jdkVersion = jdkVersion
-//          })
-//        }
-//      }
-//    }
-//
-  // val sdks = getSdksForModules(buildFrontend, modules.values)
-
 
   private fun getSdksForModules(
     buildFrontend: BuildFrontend,

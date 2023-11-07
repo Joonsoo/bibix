@@ -1,21 +1,13 @@
 package com.giyeok.bibix.intellij.service
 
 import com.giyeok.bibix.base.ClassInstanceValue
-import com.giyeok.bibix.base.DummyProgressLogger
-import com.giyeok.bibix.base.StringValue
 import com.giyeok.bibix.frontend.BuildFrontend
 import com.giyeok.bibix.graph.BibixProjectLocation
 import com.giyeok.bibix.graph.CallExprNode
-import com.giyeok.bibix.graph.runner.BuildTask
-import com.giyeok.bibix.graph.runner.BuildTaskResult
-import com.giyeok.bibix.graph.runner.EvalCallee
-import com.giyeok.bibix.graph.runner.EvalTarget
+import com.giyeok.bibix.graph.ExprNodeId
+import com.giyeok.bibix.graph.runner.*
 import com.giyeok.bibix.intellij.*
-import com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDep
-import com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDep
 import com.giyeok.bibix.plugins.jvm.*
-import com.giyeok.bibix.plugins.maven.Artifact
-import com.google.common.annotations.VisibleForTesting
 import kotlinx.coroutines.runBlocking
 import java.nio.file.Path
 import kotlin.io.path.*
@@ -31,21 +23,26 @@ object ProjectStructureExtractor {
     )
 
     val mainTargets = buildFrontend.mainScriptDefinitions
+    val mainBuildGraph = buildFrontend.buildGraphRunner.multiGraph.getProjectGraph(1)
 
-    data class Candidate(val name: String, val evalTarget: EvalTarget, val evalCallee: EvalCallee)
+    data class Candidate(
+      val name: String,
+      val callExprNodeId: ExprNodeId,
+      val evalTarget: EvalTarget,
+      val evalCallee: EvalCallee
+    )
 
     val candidates = mutableListOf<Candidate>()
     mainTargets.forEach { (name, buildTask) ->
       if (buildTask is EvalTarget) {
-        val buildGraph = buildFrontend.buildGraphRunner.multiGraph
-          .getProjectGraph(buildTask.projectId)
-        val target = buildGraph.targets[buildTask.name]
+        val target = mainBuildGraph.targets[buildTask.name]
         if (target != null) {
-          val node = buildGraph.exprGraph.nodes.getValue(target)
+          val node = mainBuildGraph.exprGraph.nodes.getValue(target)
           if (node is CallExprNode) {
             candidates.add(
               Candidate(
                 name,
+                target,
                 buildTask,
                 EvalCallee(buildTask.projectId, buildTask.importInstanceId, node.callee)
               )
@@ -91,7 +88,8 @@ object ProjectStructureExtractor {
             } else null
           } else null
         }
-      }.toMap()
+      }.toMap(),
+      buildFrontend.repo.repoData
     )
 
     return projectInfoBuilder.build()
