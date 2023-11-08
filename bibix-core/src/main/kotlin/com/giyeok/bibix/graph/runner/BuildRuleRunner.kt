@@ -330,7 +330,8 @@ class BuildRuleRunner(
     afterThen: (BuildRuleReturn) -> BuildTaskResult
   ): BuildTaskResult {
     // TODO lock result.directory
-    // TODO 그런데 이런식으로 락을 잡으면 중간에 풀리는게 아닌가..?
+    //  지금은 동일 프로세스 내에서만 락을 잡는데.. 제대로 잡는 방법을 찾아보자
+    //  build rule에 synchronized 기능 구현하면 별로 필요 없을 지도..
     val directoryLocker = repo.directoryLocker
     return BuildTaskResult.LongRunning(
       preCondition = {

@@ -13,21 +13,15 @@ class ParallelGraphRunner(
   val executor: ExecutorService,
   val jobExecutorTracker: ExecutorTracker?,
 ) {
-  private val mutex = Mutex()
+  private val runnerMutex = Mutex()
 
-  private suspend inline fun <T> safeRunnerRun(block: () -> T): T = mutex.withLock {
-    block()
-  }
+  private val targetValuesMutex = Mutex()
+  private val targetValues =
+    mutableMapOf<String, MutableStateFlow<BuildTaskResult.ValueOfTargetResult?>>()
 
-  private suspend fun safeRunTask(task: BuildTask): BuildTaskResult = safeRunnerRun {
-    runner.runBuildTask(task)
-  }
-
-  private suspend fun safeRunTaskOrFailure(task: BuildTask): FailureOr<BuildTaskResult> =
-    try {
-      FailureOr.Result(safeRunTask(task))
-    } catch (e: Throwable) {
-      FailureOr.Failure(e)
+  private suspend inline fun <T> safeRunnerRun(block: () -> T): T =
+    runnerMutex.withLock {
+      block()
     }
 
   private inline fun launch(crossinline block: suspend () -> Unit) {
@@ -41,82 +35,11 @@ class ParallelGraphRunner(
       block()
     }
 
-  private val targetValues =
-    mutableMapOf<String, MutableStateFlow<BuildTaskResult.ValueOfTargetResult?>>()
-
   suspend fun runTasks(tasks: List<BuildTask>): Map<BuildTask, BuildTaskResult.FinalResult> {
-    val results = tasks.map { runTaskToFinal(it) }.awaitAll()
+    val results = tasks.map { runTaskToFinalOrFailure(it) }.awaitAll()
     return tasks.zip(results).toMap()
-  }
-
-  private suspend fun runTaskToFinal(task: BuildTask): Deferred<BuildTaskResult.FinalResult> =
-    handleResult(task, safeRunTask(task))
-
-  private suspend fun handleResult(
-    task: BuildTask,
-    result: BuildTaskResult
-  ): Deferred<BuildTaskResult.FinalResult> = when (result) {
-    is BuildTaskResult.FinalResult -> {
-      if (result is BuildTaskResult.ValueOfTargetResult) {
-        mutex.withLock {
-          val existing = targetValues[result.targetId]
-          if (existing != null) {
-            existing.value = result
-          } else {
-            targetValues[result.targetId] = MutableStateFlow(result)
-          }
-        }
-      }
-      CompletableDeferred(result)
-    }
-
-    is BuildTaskResult.WithResult ->
-      async {
-        val subResult = runTaskToFinal(result.task).await()
-        handleResult(task, safeRunnerRun { result.func(subResult) }).await()
-      }
-
-    is BuildTaskResult.WithResultList ->
-      async {
-        val subResults = result.tasks.map { runTaskToFinal(it) }.awaitAll()
-        handleResult(task, safeRunnerRun { result.func(subResults) }).await()
-      }
-
-    is BuildTaskResult.LongRunning ->
-      async {
-        val stateFlow = MutableStateFlow<BuildTaskResult.FinalResult?>(null)
-        executor.execute {
-          jobExecutorTracker?.notifyJobStartedFor(task)
-          launch {
-            val funcResult = try {
-              safeRunnerRun {
-                result.preCondition()
-              }
-              val bodyResult = try {
-                result.body()
-              } finally {
-                safeRunnerRun {
-                  result.postCondition()
-                }
-              }
-              safeRunnerRun {
-                result.after(bodyResult)
-              }
-            } finally {
-              jobExecutorTracker?.notifyJobFinished(task)
-            }
-            stateFlow.value = handleResult(task, funcResult).await()
-          }
-        }
-        stateFlow.filterNotNull().first()
-      }
-
-    is BuildTaskResult.DuplicateTargetResult -> {
-      val stateFlow = mutex.withLock {
-        targetValues.getOrPut(result.targetId) { MutableStateFlow(null) }
-      }
-      async { stateFlow.filterNotNull().first() }
-    }
+      .filter { (_, result) -> result is FailureOr.Result }
+      .mapValues { (_, result) -> (result as FailureOr.Result).result }
   }
 
   private suspend fun handleResultOrFailure(
@@ -129,7 +52,7 @@ class ParallelGraphRunner(
     is FailureOr.Result -> when (val result = resultOrFailure.result) {
       is BuildTaskResult.FinalResult -> {
         if (result is BuildTaskResult.ValueOfTargetResult) {
-          mutex.withLock {
+          targetValuesMutex.withLock {
             val existing = targetValues[result.targetId]
             if (existing != null) {
               existing.value = result
@@ -138,7 +61,6 @@ class ParallelGraphRunner(
             }
           }
         }
-        // TODO targetValues
         CompletableDeferred(FailureOr.Result(result))
       }
 
@@ -169,8 +91,9 @@ class ParallelGraphRunner(
             FailureOr.Failure(IllegalStateException(errors.first()))
           } else {
             val next = try {
+              val subResultsList = subResults.map { (it as FailureOr.Result).result }
               FailureOr.Result(safeRunnerRun {
-                result.func(subResults.map { (it as FailureOr.Result).result })
+                result.func(subResultsList)
               })
             } catch (e: Throwable) {
               FailureOr.Failure(e)
@@ -188,19 +111,16 @@ class ParallelGraphRunner(
             launch {
               try {
                 val bodyResult = try {
-                  safeRunnerRun {
-                    result.preCondition()
-                  }
+                  result.preCondition()
                   FailureOr.Result(result.body())
                 } catch (e: Throwable) {
                   FailureOr.Failure(e)
                 } finally {
                   try {
-                    safeRunnerRun {
-                      result.postCondition()
-                    }
+                    result.postCondition()
                   } catch (e: Throwable) {
                     // TODO 이건 어떻게 처리하지?
+                    e.printStackTrace()
                   }
                 }
                 val longRunningResult = when (bodyResult) {
@@ -224,7 +144,7 @@ class ParallelGraphRunner(
 
       is BuildTaskResult.DuplicateTargetResult -> {
         // TODO target 빌드가 실패하는 경우 처리가 안됨..
-        val stateFlow = mutex.withLock {
+        val stateFlow = targetValuesMutex.withLock {
           targetValues.getOrPut(result.targetId) { MutableStateFlow(null) }
         }
         async { FailureOr.Result(stateFlow.filterNotNull().first()) }
@@ -232,8 +152,14 @@ class ParallelGraphRunner(
     }
   }
 
-  private suspend fun runTaskToFinalOrFailure(task: BuildTask): Deferred<FailureOr<BuildTaskResult.FinalResult>> =
-    handleResultOrFailure(task, safeRunTaskOrFailure(task))
+  private suspend fun runTaskToFinalOrFailure(task: BuildTask): Deferred<FailureOr<BuildTaskResult.FinalResult>> {
+    val result = try {
+      FailureOr.Result(safeRunnerRun { runner.runBuildTask(task) })
+    } catch (e: Throwable) {
+      FailureOr.Failure(e)
+    }
+    return handleResultOrFailure(task, result)
+  }
 
   suspend fun runTasksOrFailure(tasks: List<BuildTask>): Map<BuildTask, FailureOr<BuildTaskResult.FinalResult>> {
     val results = tasks.map { runTaskToFinalOrFailure(it) }.awaitAll()
@@ -243,5 +169,9 @@ class ParallelGraphRunner(
 
 sealed class FailureOr<T> {
   data class Result<T>(val result: T): FailureOr<T>()
-  data class Failure<T>(val error: Throwable): FailureOr<T>()
+  data class Failure<T>(val error: Throwable): FailureOr<T>() {
+    init {
+      error.printStackTrace()
+    }
+  }
 }
