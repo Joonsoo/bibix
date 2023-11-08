@@ -39,20 +39,18 @@ class BlockingBuildGraphRunner(val runner: BuildGraphRunner) {
       }
 
       is BuildTaskResult.LongRunning -> {
-        println("Long running...")
-        val funcResult = result.func()
-        handleResult(buildTask, funcResult)
-      }
-
-      is BuildTaskResult.SuspendLongRunning -> {
         println("Long running (suspend)...")
         val funcResult = runBlocking(suspendDispatcher) {
-          try {
-            result.func()
-          } catch (e: Exception) {
+          result.preCondition()
+          val bodyResult = try {
+            result.body()
+          } catch (e: Throwable) {
             e.printStackTrace()
             throw e
+          } finally {
+            result.postCondition()
           }
+          result.after(bodyResult)
         }
         handleResult(buildTask, funcResult)
       }

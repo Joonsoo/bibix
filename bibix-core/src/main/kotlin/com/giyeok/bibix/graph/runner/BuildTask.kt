@@ -297,9 +297,12 @@ sealed class BuildTaskResult {
     val func: (List<FinalResult>) -> BuildTaskResult
   ): BuildTaskResult()
 
-  data class LongRunning(val func: () -> BuildTaskResult): BuildTaskResult()
-
-  data class SuspendLongRunning(val func: suspend () -> BuildTaskResult): BuildTaskResult()
+  data class LongRunning constructor(
+    val preCondition: suspend () -> Unit = {},
+    val body: () -> Any,
+    val postCondition: suspend () -> Unit = {},
+    val after: suspend (Any) -> BuildTaskResult
+  ): BuildTaskResult()
 
   data class DuplicateTargetResult(val targetId: String): BuildTaskResult()
 }

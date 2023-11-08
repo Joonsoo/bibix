@@ -2,6 +2,7 @@ package com.giyeok.bibix.frontend.cli
 
 import com.giyeok.bibix.frontend.BuildFrontend
 import com.giyeok.bibix.graph.BibixProjectLocation
+import com.giyeok.bibix.graph.runner.FailureOr
 import kotlinx.coroutines.runBlocking
 import java.nio.file.Paths
 import java.time.Duration
@@ -34,12 +35,23 @@ object BibixCli {
       "Must specify at least one build target\nAvailable targets:\n$targets"
     }
 
-    val targetResults = runBlocking { buildFrontend.runBuild(names) }
+    val targetResults = runBlocking { buildFrontend.runBuildOrFailure(names) }
 
     buildFrontend.repo.shutdown()
 
-    targetResults.forEach { (targetName, value) ->
-      println("$targetName = $value")
+    val (succeeded, failed) = targetResults.entries.partition { it.value is FailureOr.Result }
+
+    failed.sortedBy { it.key }.forEach { (name, failure) ->
+      println("$name:")
+      check(failure is FailureOr.Failure<*>)
+      failure.error.printStackTrace()
+    }
+    succeeded.sortedBy { it.key }.forEach { (name, result) ->
+      check(result is FailureOr.Result<*>)
+      println("$name: ${result.result}")
+    }
+    if (failed.isNotEmpty()) {
+      println("Failed: ${failed.map { it.key }.sorted()}")
     }
 
     val endTime = Instant.now()

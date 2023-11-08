@@ -146,15 +146,47 @@ class BuildFrontend(
 
     return results.mapNotNull { (task, result) ->
       if (result != null && result is BuildTaskResult.ResultWithValue) {
-        val name = when (task) {
-          is EvalTarget -> task.name.toString()
-          is ExecAction -> task.actionName.toString()
-          else -> throw AssertionError()
-        }
-        name to result.value
+        task.name() to result.value
       } else {
         null
       }
     }.toMap()
+  }
+
+  suspend fun runBuildTasksOrFailure(
+    buildTasks: List<BuildTask>
+  ): Map<BuildTask, FailureOr<BuildTaskResult.FinalResult>> =
+    parallelRunner.runTasksOrFailure(buildTasks)
+
+  suspend fun runBuildOrFailure(names: List<String>): Map<String, FailureOr<BibixValue>> {
+    check(mainScriptDefinitions.keys.containsAll(names)) {
+      val targets = mainScriptTaskNames()
+      "Unknown name: ${names - mainScriptDefinitions.keys}\nAvailable targets:\n$targets"
+    }
+
+    val tasks = names.associateWith { mainScriptDefinitions.getValue(it) }
+
+    val results = runBuildTasksOrFailure(tasks.values.toList())
+
+    return results.mapNotNull { (task, result) ->
+      when (result) {
+        is FailureOr.Result -> {
+          if (result.result is BuildTaskResult.ResultWithValue) {
+            task.name() to FailureOr.Result(result.result.value)
+          } else {
+            null
+          }
+        }
+
+        is FailureOr.Failure ->
+          task.name() to FailureOr.Failure<BibixValue>(result.error)
+      }
+    }.toMap()
+  }
+
+  private fun BuildTask.name(): String = when (this) {
+    is EvalTarget -> this.name.toString()
+    is ExecAction -> this.actionName.toString()
+    else -> throw AssertionError()
   }
 }

@@ -90,7 +90,7 @@ class BuildGraphRunnerTest {
         handleResult(buildTask, result.func())
       }
 
-      is BuildTaskResult.SuspendLongRunning -> {
+      is BuildTaskResult.LongRunning -> {
         println("Long running (suspend)...")
         handleResult(buildTask, runBlocking { result.func() })
       }

@@ -57,10 +57,10 @@ fun organizeParamsAndRunBuildRule(
         implInstance::class.java.getMethod(buildRule.implMethodName, BuildContext::class.java)
       implMethod.trySetAccessible()
 
-      BuildTaskResult.LongRunning {
-        val result = implMethod.invoke(implInstance, buildContext)
-        runner.handleBuildReturn(result)
-      }
+      BuildTaskResult.LongRunning(
+        body = { implMethod.invoke(implInstance, buildContext) },
+        after = { runner.handleBuildReturn(it) },
+      )
     }
   }
 }
@@ -270,9 +270,13 @@ class BuildRuleRunner(
         )
       ) { evalResult ->
         check(evalResult is BuildTaskResult.ResultWithValue)
-        BuildTaskResult.LongRunning {
-          afterThen(result.whenDone(evalResult.value))
-        }
+        BuildTaskResult.LongRunning(
+          body = { result.whenDone(evalResult.value) },
+          after = {
+            check(it is BuildRuleReturn)
+            afterThen(it)
+          }
+        )
       }
     }
   }
@@ -310,9 +314,14 @@ class BuildRuleRunner(
         }
         name to typeDetail
       }
-      BuildTaskResult.LongRunning {
-        afterThen(result.whenDone(TypeDetailsMap(typeDetails, mapOf())))
-      }
+      val typeDetailsMap = TypeDetailsMap(typeDetails, mapOf())
+      BuildTaskResult.LongRunning(
+        body = { result.whenDone(typeDetailsMap) },
+        after = {
+          check(it is BuildRuleReturn)
+          afterThen(it)
+        }
+      )
     }
   }
 
@@ -323,14 +332,17 @@ class BuildRuleRunner(
     // TODO lock result.directory
     // TODO 그런데 이런식으로 락을 잡으면 중간에 풀리는게 아닌가..?
     val directoryLocker = repo.directoryLocker
-    return BuildTaskResult.SuspendLongRunning {
-      directoryLocker.acquireLock(result.directory)
-      val withLockResult = try {
-        result.withLock()
-      } finally {
+    return BuildTaskResult.LongRunning(
+      preCondition = {
+        directoryLocker.acquireLock(result.directory)
+      },
+      body = { result.withLock() },
+      postCondition = {
         directoryLocker.releaseLock(result.directory)
-      }
-      afterThen(withLockResult)
-    }
+      },
+      after = {
+        check(it is BuildRuleReturn)
+        afterThen(it)
+      })
   }
 }
