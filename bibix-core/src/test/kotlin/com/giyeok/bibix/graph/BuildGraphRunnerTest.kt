@@ -3,6 +3,7 @@ package com.giyeok.bibix.graph
 import com.giyeok.bibix.base.Architecture
 import com.giyeok.bibix.base.BuildEnv
 import com.giyeok.bibix.base.OS
+import com.giyeok.bibix.frontend.BlockingBuildGraphRunner
 import com.giyeok.bibix.frontend.BuildFrontend
 import com.giyeok.bibix.graph.runner.*
 import com.giyeok.bibix.plugins.prelude.preludePlugin
@@ -35,7 +36,9 @@ class BuildGraphRunnerTest {
     try {
 //    println(runner.runToFinal(EvalTarget(1, 0, BibixName("ee"))))
 
-      runner.runToFinal(ExecAction(1, 0, BibixName("sugarformat.testProto.generate"), 0))
+      BlockingBuildGraphRunner(runner).runToFinal(
+        ExecAction(1, 0, BibixName("sugarformat.testProto.generate"), 0)
+      )
 //
 //    println(runner.runToFinal(EvalTarget(1, 0, BibixName("x"))))
 //    println(runner.runToFinal(EvalTarget(1, 0, BibixName("x2"))))
@@ -50,51 +53,6 @@ class BuildGraphRunnerTest {
       runner.multiGraph.projectLocations.forEach { (id, loc) ->
         println("$id: ${loc.projectRoot.absolutePathString()}")
       }
-
-      taskRels.checkCycle()
     }
   }
-
-  val taskRels = BuildTaskRelsGraph()
-
-
-  fun BuildGraphRunner.runToFinal(buildTask: BuildTask): BuildTaskResult.FinalResult =
-    handleResult(buildTask, this.runBuildTask(buildTask))
-
-  fun BuildGraphRunner.handleResult(
-    buildTask: BuildTask,
-    result: BuildTaskResult
-  ): BuildTaskResult.FinalResult =
-    when (result) {
-      is BuildTaskResult.FinalResult -> result
-      is BuildTaskResult.WithResult -> {
-        taskRels.addTaskRel(buildTask, result.task)
-        println("$buildTask")
-        println("  ${result.task}")
-        val derivedTaskResult = runToFinal(result.task)
-        handleResult(buildTask, result.func(derivedTaskResult))
-      }
-
-      is BuildTaskResult.WithResultList -> {
-        taskRels.addTaskRel(buildTask, result.tasks)
-        println("$buildTask")
-        result.tasks.forEach {
-          println("  $it")
-        }
-        val derivedTaskResults = result.tasks.map { runToFinal(it) }
-        handleResult(buildTask, result.func(derivedTaskResults))
-      }
-
-      is BuildTaskResult.LongRunning -> {
-        println("Long running...")
-        handleResult(buildTask, result.func())
-      }
-
-      is BuildTaskResult.LongRunning -> {
-        println("Long running (suspend)...")
-        handleResult(buildTask, runBlocking { result.func() })
-      }
-
-      else -> throw AssertionError()
-    }
 }

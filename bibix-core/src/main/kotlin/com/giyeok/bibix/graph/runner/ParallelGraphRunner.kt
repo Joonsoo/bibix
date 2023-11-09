@@ -9,9 +9,9 @@ import kotlinx.coroutines.sync.withLock
 import java.util.concurrent.ExecutorService
 
 class ParallelGraphRunner(
-  val runner: BuildGraphRunner,
-  val executor: ExecutorService,
-  val jobExecutorTracker: ExecutorTracker?,
+  private val runner: BuildGraphRunner,
+  private val executor: ExecutorService,
+  private val jobExecutorTracker: ExecutorTracker?,
 ) {
   private val runnerMutex = Mutex()
 
@@ -35,22 +35,19 @@ class ParallelGraphRunner(
       block()
     }
 
-  suspend fun runTasks(tasks: List<BuildTask>): Map<BuildTask, BuildTaskResult.FinalResult> {
-    val results = tasks.map { runTaskToFinalOrFailure(it) }.awaitAll()
-    return tasks.zip(results).toMap()
-      .filter { (_, result) -> result is FailureOr.Result }
-      .mapValues { (_, result) -> (result as FailureOr.Result).result }
-  }
-
   private suspend fun handleResultOrFailure(
+    taskRels: TaskRelManager,
     task: BuildTask,
     resultOrFailure: FailureOr<BuildTaskResult>
   ): Deferred<FailureOr<BuildTaskResult.FinalResult>> = when (resultOrFailure) {
-    is FailureOr.Failure ->
+    is FailureOr.Failure -> {
+      taskRels.markTaskFailed(task, resultOrFailure)
       CompletableDeferred(FailureOr.Failure(resultOrFailure.error))
+    }
 
     is FailureOr.Result -> when (val result = resultOrFailure.result) {
       is BuildTaskResult.FinalResult -> {
+        taskRels.markTaskFinished(task)
         if (result is BuildTaskResult.ValueOfTargetResult) {
           targetValuesMutex.withLock {
             val existing = targetValues[result.targetId]
@@ -66,39 +63,50 @@ class ParallelGraphRunner(
 
       is BuildTaskResult.WithResult ->
         async {
-          when (val subResult = runTaskToFinalOrFailure(result.task).await()) {
-            is FailureOr.Failure<*> ->
-              FailureOr.Failure(subResult.error)
-
-            is FailureOr.Result -> {
-              val next = try {
-                FailureOr.Result(safeRunnerRun {
-                  result.func(subResult.result)
-                })
-              } catch (e: Throwable) {
-                FailureOr.Failure(e)
+          val detectedCycle = taskRels.addTaskRelation(task, result.task)
+          if (detectedCycle != null) {
+            FailureOr.Failure(FailureOr.CycleFound(detectedCycle))
+          } else {
+            when (val subResult = runTaskToFinalOrFailure(taskRels, result.task).await()) {
+              is FailureOr.Failure<*> -> {
+                FailureOr.Failure(subResult.error)
               }
-              handleResultOrFailure(task, next).await()
+
+              is FailureOr.Result -> {
+                val next = try {
+                  FailureOr.Result(safeRunnerRun {
+                    result.func(subResult.result)
+                  })
+                } catch (e: Throwable) {
+                  FailureOr.Failure(e)
+                }
+                handleResultOrFailure(taskRels, task, next).await()
+              }
             }
           }
         }
 
       is BuildTaskResult.WithResultList -> {
         async {
-          val subResults = result.tasks.map { runTaskToFinalOrFailure(it) }.awaitAll()
-          if (subResults.any { it is FailureOr.Failure }) {
-            val errors = subResults.filterIsInstance<FailureOr.Failure<*>>().map { it.error }
-            FailureOr.Failure(IllegalStateException(errors.first()))
+          val detectedCycle = taskRels.addTaskRelations(task, result.tasks)
+          if (detectedCycle != null) {
+            FailureOr.Failure(FailureOr.CycleFound(detectedCycle))
           } else {
-            val next = try {
-              val subResultsList = subResults.map { (it as FailureOr.Result).result }
-              FailureOr.Result(safeRunnerRun {
-                result.func(subResultsList)
-              })
-            } catch (e: Throwable) {
-              FailureOr.Failure(e)
+            val subResults = result.tasks.map { runTaskToFinalOrFailure(taskRels, it) }.awaitAll()
+            if (subResults.any { it is FailureOr.Failure }) {
+              val errors = subResults.filterIsInstance<FailureOr.Failure<*>>().map { it.error }
+              FailureOr.Failure(IllegalStateException(errors.first()))
+            } else {
+              val next = try {
+                val subResultsList = subResults.map { (it as FailureOr.Result).result }
+                FailureOr.Result(safeRunnerRun {
+                  result.func(subResultsList)
+                })
+              } catch (e: Throwable) {
+                FailureOr.Failure(e)
+              }
+              handleResultOrFailure(taskRels, task, next).await()
             }
-            handleResultOrFailure(task, next).await()
           }
         }
       }
@@ -133,7 +141,7 @@ class ParallelGraphRunner(
                     }
                   }
                 }
-                stateFlow.value = handleResultOrFailure(task, longRunningResult).await()
+                stateFlow.value = handleResultOrFailure(taskRels, task, longRunningResult).await()
               } finally {
                 jobExecutorTracker?.notifyJobFinished(task)
               }
@@ -152,18 +160,29 @@ class ParallelGraphRunner(
     }
   }
 
-  private suspend fun runTaskToFinalOrFailure(task: BuildTask): Deferred<FailureOr<BuildTaskResult.FinalResult>> {
+  private suspend fun runTaskToFinalOrFailure(
+    taskRels: TaskRelManager,
+    task: BuildTask
+  ): Deferred<FailureOr<BuildTaskResult.FinalResult>> {
     val result = try {
       FailureOr.Result(safeRunnerRun { runner.runBuildTask(task) })
     } catch (e: Throwable) {
       FailureOr.Failure(e)
     }
-    return handleResultOrFailure(task, result)
+    return handleResultOrFailure(taskRels, task, result)
   }
 
   suspend fun runTasksOrFailure(tasks: List<BuildTask>): Map<BuildTask, FailureOr<BuildTaskResult.FinalResult>> {
-    val results = tasks.map { runTaskToFinalOrFailure(it) }.awaitAll()
+    val taskRels = TaskRelManager()
+    tasks.forEach { taskRels.addRootTask(it) }
+    val results = tasks.map { runTaskToFinalOrFailure(taskRels, it) }.awaitAll()
     return tasks.zip(results).toMap()
+  }
+
+  suspend fun runTasks(tasks: List<BuildTask>): Map<BuildTask, BuildTaskResult.FinalResult> {
+    return runTasksOrFailure(tasks)
+      .filter { (_, result) -> result is FailureOr.Result }
+      .mapValues { (_, result) -> (result as FailureOr.Result).result }
   }
 }
 
@@ -174,4 +193,6 @@ sealed class FailureOr<T> {
       error.printStackTrace()
     }
   }
+
+  data class CycleFound(val cycle: TasksCycle): Exception()
 }

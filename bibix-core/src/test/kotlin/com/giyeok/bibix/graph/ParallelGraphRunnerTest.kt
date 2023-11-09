@@ -19,7 +19,7 @@ class ParallelGraphRunnerTest {
   @Test
   fun test() {
     val mainProjectLocation =
-      BibixProjectLocation(Path.of("bibix-core/src/test/resources/varredefs/b").absolute())
+      BibixProjectLocation(Path.of("bibix-core/src/test/resources/cycle").absolute())
     val buildEnv = BuildEnv(OS.Linux("", ""), Architecture.X86_64)
     val repo = BibixRepo.load(mainProjectLocation.projectRoot)
     val runner = BuildGraphRunner.create(
@@ -31,13 +31,13 @@ class ParallelGraphRunnerTest {
       repo = repo,
       classPkgRunner = ClassPkgRunner(ClassWorld()),
     )
-
     val tracker = ExecutorTracker(4)
+
     val prunner = ParallelGraphRunner(runner, tracker.executor, tracker)
     val results = runBlocking {
-      prunner.runTasks(
+      prunner.runTasksOrFailure(
         // EvalTarget(1, 0, BibixName("dd"))
-        listOf(EvalTarget(1, 0, BibixName("ee")))
+        listOf(EvalTarget(1, 0, BibixName("a")))
 //        ExecAction(1, 0, BibixName("runLocalAction"), mapOf())
       )
     }
