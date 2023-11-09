@@ -89,8 +89,7 @@ class BibixRepo(
       }
       if (targetLogs.targetLogsCount > 0 || targetLogs.actionLogsCount > 0) {
         targetLogsFile.bufferedWriter().use { writer ->
-          // TODO SugarFormat.print(targetLogs, writer)
-          writer.write(SugarFormat.print(targetLogs))
+          SugarFormat.printTo(targetLogs, writer)
         }
       }
     }
@@ -327,7 +326,9 @@ class BibixRepo(
         }
       }
       val defaultBuilder = default(builder)
-      file.writeText(SugarFormat.print(defaultBuilder))
+      file.bufferedWriter().use { writer ->
+        SugarFormat.printTo(defaultBuilder, writer)
+      }
       return defaultBuilder
     }
 
