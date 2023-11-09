@@ -11,8 +11,6 @@ class TaskRelManager {
   private val notableRels = TasksGraph()
 
   fun addRootTask(task: BuildTask) {
-    check(task.isNotableTask())
-    notableAncestors[task] = mutableSetOf(task)
   }
 
   private fun BuildTask.isNotableTask() =

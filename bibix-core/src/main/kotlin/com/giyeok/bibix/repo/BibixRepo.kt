@@ -87,7 +87,12 @@ class BibixRepo(
       repoDataFile.outputStream().buffered().use { writer ->
         repoData.build().writeTo(writer)
       }
-      targetLogsFile.writeText(SugarFormat.print(targetLogs))
+      if (targetLogs.targetLogsCount > 0 || targetLogs.actionLogsCount > 0) {
+        targetLogsFile.bufferedWriter().use { writer ->
+          // TODO SugarFormat.print(targetLogs, writer)
+          writer.write(SugarFormat.print(targetLogs))
+        }
+      }
     }
   }
 
@@ -355,9 +360,12 @@ class BibixRepo(
         BibixRepoData.newBuilder()
       }
 
-      val targetLogsFile = bbxbuildDirectory.resolve(targetLogFileName)
+      val logsDirectory = bbxbuildDirectory.resolve("logs")
+      if (logsDirectory.notExists()) {
+        logsDirectory.createDirectory()
+      }
+      val targetLogsFile = logsDirectory.resolve("$uniqueRunId.pbsuf")
       val targetLogs = BibixTargetLogs.newBuilder()
-      // 기존 로그는 파싱하지 않고 날림
 
       val objectsDirectory = bbxbuildDirectory.resolve("objects")
       if (objectsDirectory.notExists()) {
