@@ -15,10 +15,8 @@ class TaskRelManager {
     notableAncestors[task] = mutableSetOf(task)
   }
 
-  private fun BuildTask.isNotableTask() = when (this) {
-    is EvalAction, is EvalCallExpr, is EvalTarget, is Import -> true
-    else -> false
-  }
+  private fun BuildTask.isNotableTask() =
+    this is ExecAction || this is EvalTarget
 
   fun markTaskFinished(task: BuildTask) {
   }

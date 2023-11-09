@@ -5,6 +5,7 @@ import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicInteger
 
 // 원래는 꼭 thread safe할 필요가 없을 것 같은데 어딘가에서 오류가 생기는 것 같아서 thread-safe하게 만듦
+// BuildTask
 class ValueStore {
   private val idCounter = AtomicInteger(0)
   private val values = ConcurrentHashMap<Int, BibixValue>()
