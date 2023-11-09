@@ -27,7 +27,6 @@ class BuildFrontend(
   prelude: PreloadedPlugin = preludePlugin,
   preloadedPlugins: Map<String, PreloadedPlugin> = defaultPreloadedPlugins,
   classPkgRunner: ClassPkgRunner = ClassPkgRunner(ClassWorld()),
-  targetLogFileName: String = "log.pbsuf",
   val debuggingMode: Boolean = false
 ) {
   companion object {
@@ -42,7 +41,6 @@ class BuildFrontend(
 
   val repo = BibixRepo.load(
     mainProjectLocation.projectRoot,
-    targetLogFileName = targetLogFileName,
     debuggingMode = debuggingMode
   )
 

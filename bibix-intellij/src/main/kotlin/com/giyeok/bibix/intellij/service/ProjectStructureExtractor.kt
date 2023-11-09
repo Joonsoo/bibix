@@ -19,7 +19,6 @@ object ProjectStructureExtractor {
       BibixProjectLocation.of(projectRoot, scriptName),
       mapOf(),
       listOf(),
-      targetLogFileName = "ijdaemon-log.pbsuf",
     )
 
     val mainTargets = buildFrontend.mainScriptDefinitions

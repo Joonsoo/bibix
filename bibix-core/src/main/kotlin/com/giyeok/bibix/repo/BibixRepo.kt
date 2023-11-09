@@ -334,7 +334,6 @@ class BibixRepo(
 
     fun load(
       mainDirectory: Path,
-      targetLogFileName: String = "log.pbsuf",
       configFileName: String = "config.pbsuf",
       uniqueRunId: String = UniqueIdGen.generate(),
       debuggingMode: Boolean = false
