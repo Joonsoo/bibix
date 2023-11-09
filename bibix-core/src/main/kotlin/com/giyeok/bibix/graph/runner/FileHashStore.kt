@@ -9,6 +9,7 @@ import java.nio.file.Path
 import kotlin.io.path.*
 
 // File hash는 동일한 빌드 run에서는 파일이 변경되지 않는다고 가정하고 해시값을 캐시해놓는 곳
+// TODO 그런데 bbxbuild 폴더 밑의 파일의 해시라면..? 변경되지 않는다고 일반적으로 가정할 수 있을까? 근데 변경되면.. 안되지 않나?
 class FileHashStore {
   val fileHashCache: MutableMap<Path, BibixIdProto.FileHash> = mutableMapOf()
   val directoryHashCache: MutableMap<Path, BibixIdProto.DirectoryHash> = mutableMapOf()
@@ -69,30 +70,33 @@ class FileHashStore {
       Pair(fileHashCache[path], directoryHashCache[path])
     }
 
-  fun extractInputHashes(argsMap: BibixIdProto.ArgsMap): BibixIdProto.InputHashes {
-    fun traverseValue(value: BibixValueProto.BibixValue): List<String> = when (value.valueCase) {
-      BibixValueProto.BibixValue.ValueCase.PATH_VALUE -> listOf(value.pathValue)
-      BibixValueProto.BibixValue.ValueCase.FILE_VALUE -> listOf(value.fileValue)
-      BibixValueProto.BibixValue.ValueCase.DIRECTORY_VALUE -> listOf(value.directoryValue)
-      BibixValueProto.BibixValue.ValueCase.LIST_VALUE ->
-        value.listValue.valuesList.flatMap { traverseValue(it) }
+  fun traverseValue(value: BibixValueProto.BibixValue): List<String> = when (value.valueCase) {
+    BibixValueProto.BibixValue.ValueCase.PATH_VALUE -> listOf(value.pathValue)
+    BibixValueProto.BibixValue.ValueCase.FILE_VALUE -> listOf(value.fileValue)
+    BibixValueProto.BibixValue.ValueCase.DIRECTORY_VALUE -> listOf(value.directoryValue)
+    BibixValueProto.BibixValue.ValueCase.LIST_VALUE ->
+      value.listValue.valuesList.flatMap { traverseValue(it) }
 
-      BibixValueProto.BibixValue.ValueCase.SET_VALUE ->
-        value.setValue.valuesList.flatMap { traverseValue(it) }
+    BibixValueProto.BibixValue.ValueCase.SET_VALUE ->
+      value.setValue.valuesList.flatMap { traverseValue(it) }
 
-      BibixValueProto.BibixValue.ValueCase.TUPLE_VALUE ->
-        value.tupleValue.valuesList.flatMap { traverseValue(it) }
+    BibixValueProto.BibixValue.ValueCase.TUPLE_VALUE ->
+      value.tupleValue.valuesList.flatMap { traverseValue(it) }
 
-      BibixValueProto.BibixValue.ValueCase.NAMED_TUPLE_VALUE ->
-        value.namedTupleValue.valuesList.flatMap { traverseValue(it.value) }
+    BibixValueProto.BibixValue.ValueCase.NAMED_TUPLE_VALUE ->
+      value.namedTupleValue.valuesList.flatMap { traverseValue(it.value) }
 
-      BibixValueProto.BibixValue.ValueCase.DATA_CLASS_INSTANCE_VALUE ->
-        value.dataClassInstanceValue.fieldsList.flatMap { traverseValue(it.value) }
+    BibixValueProto.BibixValue.ValueCase.DATA_CLASS_INSTANCE_VALUE ->
+      value.dataClassInstanceValue.fieldsList.flatMap { traverseValue(it.value) }
 
-      else -> listOf()
-    }
-    return inputHashesFromPaths(argsMap.pairsList.flatMap { traverseValue(it.value) })
+    else -> listOf()
   }
+
+  fun extractInputHashes(value: BibixValueProto.BibixValue): BibixIdProto.InputHashes =
+    inputHashesFromPaths(traverseValue(value))
+
+  fun extractInputHashes(argsMap: BibixIdProto.ArgsMap): BibixIdProto.InputHashes =
+    inputHashesFromPaths(argsMap.pairsList.flatMap { traverseValue(it.value) })
 
   fun inputHashesFromPaths(paths: List<String>): BibixIdProto.InputHashes = inputHashes {
     val sortedPaths = paths.map { Path(it).normalize().absolute() }.distinct().sorted()

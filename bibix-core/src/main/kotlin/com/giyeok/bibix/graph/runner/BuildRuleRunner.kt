@@ -7,6 +7,7 @@ import com.giyeok.bibix.graph.BibixName
 import com.giyeok.bibix.repo.BibixRepo
 import com.giyeok.bibix.repo.BibixRepoProto
 import com.giyeok.bibix.repo.hashString
+import com.giyeok.bibix.repo.inputHashesFromPaths
 import com.giyeok.bibix.utils.toBibix
 import com.giyeok.bibix.utils.toHexString
 import com.giyeok.bibix.utils.toInstant
@@ -81,12 +82,19 @@ private fun withBuildContext(
     this.sourceId = sourceIdFrom(buildGraphRunner, callerProjectId)
     this.buildRule = buildRuleData {
       this.buildRuleSourceId = sourceIdFrom(buildGraphRunner, buildRule.projectId)
-      if (buildRule.buildRuleDef.implTarget == null) {
-        check(buildRule.impl is BuildTaskResult.BuildRuleImpl.NativeImpl)
-        this.nativeImpl = empty { }
-      } else {
-        check(buildRule.impl is BuildTaskResult.BuildRuleImpl.NonNativeImpl)
-        this.bibixValueHash = checkNotNull(buildRule.impl.classPkg).toBibix().toProto().hashString()
+      when (buildRule.impl) {
+        is BuildTaskResult.BuildRuleImpl.NativeImpl ->
+          this.nativeImpl = empty { }
+
+        is BuildTaskResult.BuildRuleImpl.NonNativeImpl -> {
+          this.bibixValueHash = buildRuleImplValueHash {
+            val implValueProto = buildRule.impl.classPkg.toBibix().toProto()
+            this.implValue = implValueProto
+            // impl value에 들어있는 file/direcotry 값들의 해시도 포함
+            this.implValueFilesHash =
+              buildGraphRunner.fileHashStore.extractInputHashes(implValueProto)
+          }
+        }
       }
       this.buildRuleClassName = buildRule.buildRuleDef.implClassName
       this.buildRuleMethodName = buildRule.buildRuleDef.implMethodName

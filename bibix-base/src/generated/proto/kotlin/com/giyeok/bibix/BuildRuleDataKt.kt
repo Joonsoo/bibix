@@ -116,9 +116,9 @@ public object BuildRuleDataKt {
      * jvm.ClassPaths같은 data class를 사용한 경우 value의 해시값을 사용
      * ```
      *
-     * `bytes bibix_value_hash = 4;`
+     * `.com.giyeok.bibix.BuildRuleImplValueHash bibix_value_hash = 4;`
      */
-    public var bibixValueHash: com.google.protobuf.ByteString
+    public var bibixValueHash: com.giyeok.bibix.BibixIdProto.BuildRuleImplValueHash
       @JvmName("getBibixValueHash")
       get() = _builder.getBibixValueHash()
       @JvmName("setBibixValueHash")
@@ -130,7 +130,7 @@ public object BuildRuleDataKt {
      * jvm.ClassPaths같은 data class를 사용한 경우 value의 해시값을 사용
      * ```
      *
-     * `bytes bibix_value_hash = 4;`
+     * `.com.giyeok.bibix.BuildRuleImplValueHash bibix_value_hash = 4;`
      */
     public fun clearBibixValueHash() {
       _builder.clearBibixValueHash()
@@ -140,7 +140,7 @@ public object BuildRuleDataKt {
      * jvm.ClassPaths같은 data class를 사용한 경우 value의 해시값을 사용
      * ```
      *
-     * `bytes bibix_value_hash = 4;`
+     * `.com.giyeok.bibix.BuildRuleImplValueHash bibix_value_hash = 4;`
      * @return Whether the bibixValueHash field is set.
      */
     public fun hasBibixValueHash(): kotlin.Boolean {
@@ -210,4 +210,7 @@ public val com.giyeok.bibix.BibixIdProto.BuildRuleDataOrBuilder.nativeImplOrNull
 
 public val com.giyeok.bibix.BibixIdProto.BuildRuleDataOrBuilder.buildRuleImplIdOrNull: com.giyeok.bibix.BibixIdProto.BuildRuleImplId?
   get() = if (hasBuildRuleImplId()) getBuildRuleImplId() else null
+
+public val com.giyeok.bibix.BibixIdProto.BuildRuleDataOrBuilder.bibixValueHashOrNull: com.giyeok.bibix.BibixIdProto.BuildRuleImplValueHash?
+  get() = if (hasBibixValueHash()) getBibixValueHash() else null
 

@@ -3331,7 +3331,7 @@ public final class BibixIdProto {
      * jvm.ClassPaths같은 data class를 사용한 경우 value의 해시값을 사용
      * </pre>
      *
-     * <code>bytes bibix_value_hash = 4;</code>
+     * <code>.com.giyeok.bibix.BuildRuleImplValueHash bibix_value_hash = 4;</code>
      * @return Whether the bibixValueHash field is set.
      */
     boolean hasBibixValueHash();
@@ -3340,10 +3340,18 @@ public final class BibixIdProto {
      * jvm.ClassPaths같은 data class를 사용한 경우 value의 해시값을 사용
      * </pre>
      *
-     * <code>bytes bibix_value_hash = 4;</code>
+     * <code>.com.giyeok.bibix.BuildRuleImplValueHash bibix_value_hash = 4;</code>
      * @return The bibixValueHash.
      */
-    com.google.protobuf.ByteString getBibixValueHash();
+    com.giyeok.bibix.BibixIdProto.BuildRuleImplValueHash getBibixValueHash();
+    /**
+     * <pre>
+     * jvm.ClassPaths같은 data class를 사용한 경우 value의 해시값을 사용
+     * </pre>
+     *
+     * <code>.com.giyeok.bibix.BuildRuleImplValueHash bibix_value_hash = 4;</code>
+     */
+    com.giyeok.bibix.BibixIdProto.BuildRuleImplValueHashOrBuilder getBibixValueHashOrBuilder();
 
     /**
      * <pre>
@@ -3566,7 +3574,7 @@ public final class BibixIdProto {
      * jvm.ClassPaths같은 data class를 사용한 경우 value의 해시값을 사용
      * </pre>
      *
-     * <code>bytes bibix_value_hash = 4;</code>
+     * <code>.com.giyeok.bibix.BuildRuleImplValueHash bibix_value_hash = 4;</code>
      * @return Whether the bibixValueHash field is set.
      */
     @java.lang.Override
@@ -3578,15 +3586,29 @@ public final class BibixIdProto {
      * jvm.ClassPaths같은 data class를 사용한 경우 value의 해시값을 사용
      * </pre>
      *
-     * <code>bytes bibix_value_hash = 4;</code>
+     * <code>.com.giyeok.bibix.BuildRuleImplValueHash bibix_value_hash = 4;</code>
      * @return The bibixValueHash.
      */
     @java.lang.Override
-    public com.google.protobuf.ByteString getBibixValueHash() {
+    public com.giyeok.bibix.BibixIdProto.BuildRuleImplValueHash getBibixValueHash() {
       if (buildRuleCase_ == 4) {
-        return (com.google.protobuf.ByteString) buildRule_;
+         return (com.giyeok.bibix.BibixIdProto.BuildRuleImplValueHash) buildRule_;
       }
-      return com.google.protobuf.ByteString.EMPTY;
+      return com.giyeok.bibix.BibixIdProto.BuildRuleImplValueHash.getDefaultInstance();
+    }
+    /**
+     * <pre>
+     * jvm.ClassPaths같은 data class를 사용한 경우 value의 해시값을 사용
+     * </pre>
+     *
+     * <code>.com.giyeok.bibix.BuildRuleImplValueHash bibix_value_hash = 4;</code>
+     */
+    @java.lang.Override
+    public com.giyeok.bibix.BibixIdProto.BuildRuleImplValueHashOrBuilder getBibixValueHashOrBuilder() {
+      if (buildRuleCase_ == 4) {
+         return (com.giyeok.bibix.BibixIdProto.BuildRuleImplValueHash) buildRule_;
+      }
+      return com.giyeok.bibix.BibixIdProto.BuildRuleImplValueHash.getDefaultInstance();
     }
 
     public static final int BUILD_RULE_CLASS_NAME_FIELD_NUMBER = 5;
@@ -3699,8 +3721,7 @@ public final class BibixIdProto {
         output.writeMessage(3, (com.giyeok.bibix.BibixIdProto.BuildRuleImplId) buildRule_);
       }
       if (buildRuleCase_ == 4) {
-        output.writeBytes(
-            4, (com.google.protobuf.ByteString) buildRule_);
+        output.writeMessage(4, (com.giyeok.bibix.BibixIdProto.BuildRuleImplValueHash) buildRule_);
       }
       if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(buildRuleClassName_)) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 5, buildRuleClassName_);
@@ -3731,8 +3752,7 @@ public final class BibixIdProto {
       }
       if (buildRuleCase_ == 4) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(
-              4, (com.google.protobuf.ByteString) buildRule_);
+          .computeMessageSize(4, (com.giyeok.bibix.BibixIdProto.BuildRuleImplValueHash) buildRule_);
       }
       if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(buildRuleClassName_)) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(5, buildRuleClassName_);
@@ -3956,6 +3976,9 @@ public final class BibixIdProto {
         if (buildRuleImplIdBuilder_ != null) {
           buildRuleImplIdBuilder_.clear();
         }
+        if (bibixValueHashBuilder_ != null) {
+          bibixValueHashBuilder_.clear();
+        }
         buildRuleClassName_ = "";
         buildRuleMethodName_ = "";
         buildRuleCase_ = 0;
@@ -4018,6 +4041,10 @@ public final class BibixIdProto {
             buildRuleImplIdBuilder_ != null) {
           result.buildRule_ = buildRuleImplIdBuilder_.build();
         }
+        if (buildRuleCase_ == 4 &&
+            bibixValueHashBuilder_ != null) {
+          result.buildRule_ = bibixValueHashBuilder_.build();
+        }
       }
 
       @java.lang.Override
@@ -4055,7 +4082,7 @@ public final class BibixIdProto {
             break;
           }
           case BIBIX_VALUE_HASH: {
-            setBibixValueHash(other.getBibixValueHash());
+            mergeBibixValueHash(other.getBibixValueHash());
             break;
           }
           case BUILDRULE_NOT_SET: {
@@ -4110,7 +4137,9 @@ public final class BibixIdProto {
                 break;
               } // case 26
               case 34: {
-                buildRule_ = input.readBytes();
+                input.readMessage(
+                    getBibixValueHashFieldBuilder().getBuilder(),
+                    extensionRegistry);
                 buildRuleCase_ = 4;
                 break;
               } // case 34
@@ -4595,14 +4624,17 @@ public final class BibixIdProto {
         return buildRuleImplIdBuilder_;
       }
 
+      private com.google.protobuf.SingleFieldBuilderV3<
+          com.giyeok.bibix.BibixIdProto.BuildRuleImplValueHash, com.giyeok.bibix.BibixIdProto.BuildRuleImplValueHash.Builder, com.giyeok.bibix.BibixIdProto.BuildRuleImplValueHashOrBuilder> bibixValueHashBuilder_;
       /**
        * <pre>
        * jvm.ClassPaths같은 data class를 사용한 경우 value의 해시값을 사용
        * </pre>
        *
-       * <code>bytes bibix_value_hash = 4;</code>
+       * <code>.com.giyeok.bibix.BuildRuleImplValueHash bibix_value_hash = 4;</code>
        * @return Whether the bibixValueHash field is set.
        */
+      @java.lang.Override
       public boolean hasBibixValueHash() {
         return buildRuleCase_ == 4;
       }
@@ -4611,29 +4643,41 @@ public final class BibixIdProto {
        * jvm.ClassPaths같은 data class를 사용한 경우 value의 해시값을 사용
        * </pre>
        *
-       * <code>bytes bibix_value_hash = 4;</code>
+       * <code>.com.giyeok.bibix.BuildRuleImplValueHash bibix_value_hash = 4;</code>
        * @return The bibixValueHash.
        */
-      public com.google.protobuf.ByteString getBibixValueHash() {
-        if (buildRuleCase_ == 4) {
-          return (com.google.protobuf.ByteString) buildRule_;
+      @java.lang.Override
+      public com.giyeok.bibix.BibixIdProto.BuildRuleImplValueHash getBibixValueHash() {
+        if (bibixValueHashBuilder_ == null) {
+          if (buildRuleCase_ == 4) {
+            return (com.giyeok.bibix.BibixIdProto.BuildRuleImplValueHash) buildRule_;
+          }
+          return com.giyeok.bibix.BibixIdProto.BuildRuleImplValueHash.getDefaultInstance();
+        } else {
+          if (buildRuleCase_ == 4) {
+            return bibixValueHashBuilder_.getMessage();
+          }
+          return com.giyeok.bibix.BibixIdProto.BuildRuleImplValueHash.getDefaultInstance();
         }
-        return com.google.protobuf.ByteString.EMPTY;
       }
       /**
        * <pre>
        * jvm.ClassPaths같은 data class를 사용한 경우 value의 해시값을 사용
        * </pre>
        *
-       * <code>bytes bibix_value_hash = 4;</code>
-       * @param value The bibixValueHash to set.
-       * @return This builder for chaining.
+       * <code>.com.giyeok.bibix.BuildRuleImplValueHash bibix_value_hash = 4;</code>
        */
-      public Builder setBibixValueHash(com.google.protobuf.ByteString value) {
-        if (value == null) { throw new NullPointerException(); }
+      public Builder setBibixValueHash(com.giyeok.bibix.BibixIdProto.BuildRuleImplValueHash value) {
+        if (bibixValueHashBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          buildRule_ = value;
+          onChanged();
+        } else {
+          bibixValueHashBuilder_.setMessage(value);
+        }
         buildRuleCase_ = 4;
-        buildRule_ = value;
-        onChanged();
         return this;
       }
       /**
@@ -4641,16 +4685,121 @@ public final class BibixIdProto {
        * jvm.ClassPaths같은 data class를 사용한 경우 value의 해시값을 사용
        * </pre>
        *
-       * <code>bytes bibix_value_hash = 4;</code>
-       * @return This builder for chaining.
+       * <code>.com.giyeok.bibix.BuildRuleImplValueHash bibix_value_hash = 4;</code>
+       */
+      public Builder setBibixValueHash(
+          com.giyeok.bibix.BibixIdProto.BuildRuleImplValueHash.Builder builderForValue) {
+        if (bibixValueHashBuilder_ == null) {
+          buildRule_ = builderForValue.build();
+          onChanged();
+        } else {
+          bibixValueHashBuilder_.setMessage(builderForValue.build());
+        }
+        buildRuleCase_ = 4;
+        return this;
+      }
+      /**
+       * <pre>
+       * jvm.ClassPaths같은 data class를 사용한 경우 value의 해시값을 사용
+       * </pre>
+       *
+       * <code>.com.giyeok.bibix.BuildRuleImplValueHash bibix_value_hash = 4;</code>
+       */
+      public Builder mergeBibixValueHash(com.giyeok.bibix.BibixIdProto.BuildRuleImplValueHash value) {
+        if (bibixValueHashBuilder_ == null) {
+          if (buildRuleCase_ == 4 &&
+              buildRule_ != com.giyeok.bibix.BibixIdProto.BuildRuleImplValueHash.getDefaultInstance()) {
+            buildRule_ = com.giyeok.bibix.BibixIdProto.BuildRuleImplValueHash.newBuilder((com.giyeok.bibix.BibixIdProto.BuildRuleImplValueHash) buildRule_)
+                .mergeFrom(value).buildPartial();
+          } else {
+            buildRule_ = value;
+          }
+          onChanged();
+        } else {
+          if (buildRuleCase_ == 4) {
+            bibixValueHashBuilder_.mergeFrom(value);
+          } else {
+            bibixValueHashBuilder_.setMessage(value);
+          }
+        }
+        buildRuleCase_ = 4;
+        return this;
+      }
+      /**
+       * <pre>
+       * jvm.ClassPaths같은 data class를 사용한 경우 value의 해시값을 사용
+       * </pre>
+       *
+       * <code>.com.giyeok.bibix.BuildRuleImplValueHash bibix_value_hash = 4;</code>
        */
       public Builder clearBibixValueHash() {
-        if (buildRuleCase_ == 4) {
-          buildRuleCase_ = 0;
-          buildRule_ = null;
-          onChanged();
+        if (bibixValueHashBuilder_ == null) {
+          if (buildRuleCase_ == 4) {
+            buildRuleCase_ = 0;
+            buildRule_ = null;
+            onChanged();
+          }
+        } else {
+          if (buildRuleCase_ == 4) {
+            buildRuleCase_ = 0;
+            buildRule_ = null;
+          }
+          bibixValueHashBuilder_.clear();
         }
         return this;
+      }
+      /**
+       * <pre>
+       * jvm.ClassPaths같은 data class를 사용한 경우 value의 해시값을 사용
+       * </pre>
+       *
+       * <code>.com.giyeok.bibix.BuildRuleImplValueHash bibix_value_hash = 4;</code>
+       */
+      public com.giyeok.bibix.BibixIdProto.BuildRuleImplValueHash.Builder getBibixValueHashBuilder() {
+        return getBibixValueHashFieldBuilder().getBuilder();
+      }
+      /**
+       * <pre>
+       * jvm.ClassPaths같은 data class를 사용한 경우 value의 해시값을 사용
+       * </pre>
+       *
+       * <code>.com.giyeok.bibix.BuildRuleImplValueHash bibix_value_hash = 4;</code>
+       */
+      @java.lang.Override
+      public com.giyeok.bibix.BibixIdProto.BuildRuleImplValueHashOrBuilder getBibixValueHashOrBuilder() {
+        if ((buildRuleCase_ == 4) && (bibixValueHashBuilder_ != null)) {
+          return bibixValueHashBuilder_.getMessageOrBuilder();
+        } else {
+          if (buildRuleCase_ == 4) {
+            return (com.giyeok.bibix.BibixIdProto.BuildRuleImplValueHash) buildRule_;
+          }
+          return com.giyeok.bibix.BibixIdProto.BuildRuleImplValueHash.getDefaultInstance();
+        }
+      }
+      /**
+       * <pre>
+       * jvm.ClassPaths같은 data class를 사용한 경우 value의 해시값을 사용
+       * </pre>
+       *
+       * <code>.com.giyeok.bibix.BuildRuleImplValueHash bibix_value_hash = 4;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          com.giyeok.bibix.BibixIdProto.BuildRuleImplValueHash, com.giyeok.bibix.BibixIdProto.BuildRuleImplValueHash.Builder, com.giyeok.bibix.BibixIdProto.BuildRuleImplValueHashOrBuilder> 
+          getBibixValueHashFieldBuilder() {
+        if (bibixValueHashBuilder_ == null) {
+          if (!(buildRuleCase_ == 4)) {
+            buildRule_ = com.giyeok.bibix.BibixIdProto.BuildRuleImplValueHash.getDefaultInstance();
+          }
+          bibixValueHashBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              com.giyeok.bibix.BibixIdProto.BuildRuleImplValueHash, com.giyeok.bibix.BibixIdProto.BuildRuleImplValueHash.Builder, com.giyeok.bibix.BibixIdProto.BuildRuleImplValueHashOrBuilder>(
+                  (com.giyeok.bibix.BibixIdProto.BuildRuleImplValueHash) buildRule_,
+                  getParentForChildren(),
+                  isClean());
+          buildRule_ = null;
+        }
+        buildRuleCase_ = 4;
+        onChanged();
+        return bibixValueHashBuilder_;
       }
 
       private java.lang.Object buildRuleClassName_ = "";
@@ -4875,6 +5024,768 @@ public final class BibixIdProto {
 
     @java.lang.Override
     public com.giyeok.bibix.BibixIdProto.BuildRuleData getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
+  public interface BuildRuleImplValueHashOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:com.giyeok.bibix.BuildRuleImplValueHash)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>.com.giyeok.bibix.BibixValue impl_value = 1;</code>
+     * @return Whether the implValue field is set.
+     */
+    boolean hasImplValue();
+    /**
+     * <code>.com.giyeok.bibix.BibixValue impl_value = 1;</code>
+     * @return The implValue.
+     */
+    com.giyeok.bibix.BibixValueProto.BibixValue getImplValue();
+    /**
+     * <code>.com.giyeok.bibix.BibixValue impl_value = 1;</code>
+     */
+    com.giyeok.bibix.BibixValueProto.BibixValueOrBuilder getImplValueOrBuilder();
+
+    /**
+     * <code>.com.giyeok.bibix.InputHashes impl_value_files_hash = 2;</code>
+     * @return Whether the implValueFilesHash field is set.
+     */
+    boolean hasImplValueFilesHash();
+    /**
+     * <code>.com.giyeok.bibix.InputHashes impl_value_files_hash = 2;</code>
+     * @return The implValueFilesHash.
+     */
+    com.giyeok.bibix.BibixIdProto.InputHashes getImplValueFilesHash();
+    /**
+     * <code>.com.giyeok.bibix.InputHashes impl_value_files_hash = 2;</code>
+     */
+    com.giyeok.bibix.BibixIdProto.InputHashesOrBuilder getImplValueFilesHashOrBuilder();
+  }
+  /**
+   * Protobuf type {@code com.giyeok.bibix.BuildRuleImplValueHash}
+   */
+  public static final class BuildRuleImplValueHash extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:com.giyeok.bibix.BuildRuleImplValueHash)
+      BuildRuleImplValueHashOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use BuildRuleImplValueHash.newBuilder() to construct.
+    private BuildRuleImplValueHash(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private BuildRuleImplValueHash() {
+    }
+
+    @java.lang.Override
+    @SuppressWarnings({"unused"})
+    protected java.lang.Object newInstance(
+        UnusedPrivateParameter unused) {
+      return new BuildRuleImplValueHash();
+    }
+
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return com.giyeok.bibix.BibixIdProto.internal_static_com_giyeok_bibix_BuildRuleImplValueHash_descriptor;
+    }
+
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return com.giyeok.bibix.BibixIdProto.internal_static_com_giyeok_bibix_BuildRuleImplValueHash_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              com.giyeok.bibix.BibixIdProto.BuildRuleImplValueHash.class, com.giyeok.bibix.BibixIdProto.BuildRuleImplValueHash.Builder.class);
+    }
+
+    public static final int IMPL_VALUE_FIELD_NUMBER = 1;
+    private com.giyeok.bibix.BibixValueProto.BibixValue implValue_;
+    /**
+     * <code>.com.giyeok.bibix.BibixValue impl_value = 1;</code>
+     * @return Whether the implValue field is set.
+     */
+    @java.lang.Override
+    public boolean hasImplValue() {
+      return implValue_ != null;
+    }
+    /**
+     * <code>.com.giyeok.bibix.BibixValue impl_value = 1;</code>
+     * @return The implValue.
+     */
+    @java.lang.Override
+    public com.giyeok.bibix.BibixValueProto.BibixValue getImplValue() {
+      return implValue_ == null ? com.giyeok.bibix.BibixValueProto.BibixValue.getDefaultInstance() : implValue_;
+    }
+    /**
+     * <code>.com.giyeok.bibix.BibixValue impl_value = 1;</code>
+     */
+    @java.lang.Override
+    public com.giyeok.bibix.BibixValueProto.BibixValueOrBuilder getImplValueOrBuilder() {
+      return implValue_ == null ? com.giyeok.bibix.BibixValueProto.BibixValue.getDefaultInstance() : implValue_;
+    }
+
+    public static final int IMPL_VALUE_FILES_HASH_FIELD_NUMBER = 2;
+    private com.giyeok.bibix.BibixIdProto.InputHashes implValueFilesHash_;
+    /**
+     * <code>.com.giyeok.bibix.InputHashes impl_value_files_hash = 2;</code>
+     * @return Whether the implValueFilesHash field is set.
+     */
+    @java.lang.Override
+    public boolean hasImplValueFilesHash() {
+      return implValueFilesHash_ != null;
+    }
+    /**
+     * <code>.com.giyeok.bibix.InputHashes impl_value_files_hash = 2;</code>
+     * @return The implValueFilesHash.
+     */
+    @java.lang.Override
+    public com.giyeok.bibix.BibixIdProto.InputHashes getImplValueFilesHash() {
+      return implValueFilesHash_ == null ? com.giyeok.bibix.BibixIdProto.InputHashes.getDefaultInstance() : implValueFilesHash_;
+    }
+    /**
+     * <code>.com.giyeok.bibix.InputHashes impl_value_files_hash = 2;</code>
+     */
+    @java.lang.Override
+    public com.giyeok.bibix.BibixIdProto.InputHashesOrBuilder getImplValueFilesHashOrBuilder() {
+      return implValueFilesHash_ == null ? com.giyeok.bibix.BibixIdProto.InputHashes.getDefaultInstance() : implValueFilesHash_;
+    }
+
+    private byte memoizedIsInitialized = -1;
+    @java.lang.Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    @java.lang.Override
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      if (implValue_ != null) {
+        output.writeMessage(1, getImplValue());
+      }
+      if (implValueFilesHash_ != null) {
+        output.writeMessage(2, getImplValueFilesHash());
+      }
+      getUnknownFields().writeTo(output);
+    }
+
+    @java.lang.Override
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (implValue_ != null) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(1, getImplValue());
+      }
+      if (implValueFilesHash_ != null) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(2, getImplValueFilesHash());
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof com.giyeok.bibix.BibixIdProto.BuildRuleImplValueHash)) {
+        return super.equals(obj);
+      }
+      com.giyeok.bibix.BibixIdProto.BuildRuleImplValueHash other = (com.giyeok.bibix.BibixIdProto.BuildRuleImplValueHash) obj;
+
+      if (hasImplValue() != other.hasImplValue()) return false;
+      if (hasImplValue()) {
+        if (!getImplValue()
+            .equals(other.getImplValue())) return false;
+      }
+      if (hasImplValueFilesHash() != other.hasImplValueFilesHash()) return false;
+      if (hasImplValueFilesHash()) {
+        if (!getImplValueFilesHash()
+            .equals(other.getImplValueFilesHash())) return false;
+      }
+      if (!getUnknownFields().equals(other.getUnknownFields())) return false;
+      return true;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      if (hasImplValue()) {
+        hash = (37 * hash) + IMPL_VALUE_FIELD_NUMBER;
+        hash = (53 * hash) + getImplValue().hashCode();
+      }
+      if (hasImplValueFilesHash()) {
+        hash = (37 * hash) + IMPL_VALUE_FILES_HASH_FIELD_NUMBER;
+        hash = (53 * hash) + getImplValueFilesHash().hashCode();
+      }
+      hash = (29 * hash) + getUnknownFields().hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static com.giyeok.bibix.BibixIdProto.BuildRuleImplValueHash parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.giyeok.bibix.BibixIdProto.BuildRuleImplValueHash parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.giyeok.bibix.BibixIdProto.BuildRuleImplValueHash parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.giyeok.bibix.BibixIdProto.BuildRuleImplValueHash parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.giyeok.bibix.BibixIdProto.BuildRuleImplValueHash parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.giyeok.bibix.BibixIdProto.BuildRuleImplValueHash parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.giyeok.bibix.BibixIdProto.BuildRuleImplValueHash parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.giyeok.bibix.BibixIdProto.BuildRuleImplValueHash parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.giyeok.bibix.BibixIdProto.BuildRuleImplValueHash parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static com.giyeok.bibix.BibixIdProto.BuildRuleImplValueHash parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.giyeok.bibix.BibixIdProto.BuildRuleImplValueHash parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.giyeok.bibix.BibixIdProto.BuildRuleImplValueHash parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    @java.lang.Override
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(com.giyeok.bibix.BibixIdProto.BuildRuleImplValueHash prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @java.lang.Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code com.giyeok.bibix.BuildRuleImplValueHash}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:com.giyeok.bibix.BuildRuleImplValueHash)
+        com.giyeok.bibix.BibixIdProto.BuildRuleImplValueHashOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return com.giyeok.bibix.BibixIdProto.internal_static_com_giyeok_bibix_BuildRuleImplValueHash_descriptor;
+      }
+
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return com.giyeok.bibix.BibixIdProto.internal_static_com_giyeok_bibix_BuildRuleImplValueHash_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                com.giyeok.bibix.BibixIdProto.BuildRuleImplValueHash.class, com.giyeok.bibix.BibixIdProto.BuildRuleImplValueHash.Builder.class);
+      }
+
+      // Construct using com.giyeok.bibix.BibixIdProto.BuildRuleImplValueHash.newBuilder()
+      private Builder() {
+
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+
+      }
+      @java.lang.Override
+      public Builder clear() {
+        super.clear();
+        bitField0_ = 0;
+        implValue_ = null;
+        if (implValueBuilder_ != null) {
+          implValueBuilder_.dispose();
+          implValueBuilder_ = null;
+        }
+        implValueFilesHash_ = null;
+        if (implValueFilesHashBuilder_ != null) {
+          implValueFilesHashBuilder_.dispose();
+          implValueFilesHashBuilder_ = null;
+        }
+        return this;
+      }
+
+      @java.lang.Override
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return com.giyeok.bibix.BibixIdProto.internal_static_com_giyeok_bibix_BuildRuleImplValueHash_descriptor;
+      }
+
+      @java.lang.Override
+      public com.giyeok.bibix.BibixIdProto.BuildRuleImplValueHash getDefaultInstanceForType() {
+        return com.giyeok.bibix.BibixIdProto.BuildRuleImplValueHash.getDefaultInstance();
+      }
+
+      @java.lang.Override
+      public com.giyeok.bibix.BibixIdProto.BuildRuleImplValueHash build() {
+        com.giyeok.bibix.BibixIdProto.BuildRuleImplValueHash result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      @java.lang.Override
+      public com.giyeok.bibix.BibixIdProto.BuildRuleImplValueHash buildPartial() {
+        com.giyeok.bibix.BibixIdProto.BuildRuleImplValueHash result = new com.giyeok.bibix.BibixIdProto.BuildRuleImplValueHash(this);
+        if (bitField0_ != 0) { buildPartial0(result); }
+        onBuilt();
+        return result;
+      }
+
+      private void buildPartial0(com.giyeok.bibix.BibixIdProto.BuildRuleImplValueHash result) {
+        int from_bitField0_ = bitField0_;
+        if (((from_bitField0_ & 0x00000001) != 0)) {
+          result.implValue_ = implValueBuilder_ == null
+              ? implValue_
+              : implValueBuilder_.build();
+        }
+        if (((from_bitField0_ & 0x00000002) != 0)) {
+          result.implValueFilesHash_ = implValueFilesHashBuilder_ == null
+              ? implValueFilesHash_
+              : implValueFilesHashBuilder_.build();
+        }
+      }
+
+      @java.lang.Override
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof com.giyeok.bibix.BibixIdProto.BuildRuleImplValueHash) {
+          return mergeFrom((com.giyeok.bibix.BibixIdProto.BuildRuleImplValueHash)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(com.giyeok.bibix.BibixIdProto.BuildRuleImplValueHash other) {
+        if (other == com.giyeok.bibix.BibixIdProto.BuildRuleImplValueHash.getDefaultInstance()) return this;
+        if (other.hasImplValue()) {
+          mergeImplValue(other.getImplValue());
+        }
+        if (other.hasImplValueFilesHash()) {
+          mergeImplValueFilesHash(other.getImplValueFilesHash());
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        onChanged();
+        return this;
+      }
+
+      @java.lang.Override
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      @java.lang.Override
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        if (extensionRegistry == null) {
+          throw new java.lang.NullPointerException();
+        }
+        try {
+          boolean done = false;
+          while (!done) {
+            int tag = input.readTag();
+            switch (tag) {
+              case 0:
+                done = true;
+                break;
+              case 10: {
+                input.readMessage(
+                    getImplValueFieldBuilder().getBuilder(),
+                    extensionRegistry);
+                bitField0_ |= 0x00000001;
+                break;
+              } // case 10
+              case 18: {
+                input.readMessage(
+                    getImplValueFilesHashFieldBuilder().getBuilder(),
+                    extensionRegistry);
+                bitField0_ |= 0x00000002;
+                break;
+              } // case 18
+              default: {
+                if (!super.parseUnknownField(input, extensionRegistry, tag)) {
+                  done = true; // was an endgroup tag
+                }
+                break;
+              } // default:
+            } // switch (tag)
+          } // while (!done)
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          throw e.unwrapIOException();
+        } finally {
+          onChanged();
+        } // finally
+        return this;
+      }
+      private int bitField0_;
+
+      private com.giyeok.bibix.BibixValueProto.BibixValue implValue_;
+      private com.google.protobuf.SingleFieldBuilderV3<
+          com.giyeok.bibix.BibixValueProto.BibixValue, com.giyeok.bibix.BibixValueProto.BibixValue.Builder, com.giyeok.bibix.BibixValueProto.BibixValueOrBuilder> implValueBuilder_;
+      /**
+       * <code>.com.giyeok.bibix.BibixValue impl_value = 1;</code>
+       * @return Whether the implValue field is set.
+       */
+      public boolean hasImplValue() {
+        return ((bitField0_ & 0x00000001) != 0);
+      }
+      /**
+       * <code>.com.giyeok.bibix.BibixValue impl_value = 1;</code>
+       * @return The implValue.
+       */
+      public com.giyeok.bibix.BibixValueProto.BibixValue getImplValue() {
+        if (implValueBuilder_ == null) {
+          return implValue_ == null ? com.giyeok.bibix.BibixValueProto.BibixValue.getDefaultInstance() : implValue_;
+        } else {
+          return implValueBuilder_.getMessage();
+        }
+      }
+      /**
+       * <code>.com.giyeok.bibix.BibixValue impl_value = 1;</code>
+       */
+      public Builder setImplValue(com.giyeok.bibix.BibixValueProto.BibixValue value) {
+        if (implValueBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          implValue_ = value;
+        } else {
+          implValueBuilder_.setMessage(value);
+        }
+        bitField0_ |= 0x00000001;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>.com.giyeok.bibix.BibixValue impl_value = 1;</code>
+       */
+      public Builder setImplValue(
+          com.giyeok.bibix.BibixValueProto.BibixValue.Builder builderForValue) {
+        if (implValueBuilder_ == null) {
+          implValue_ = builderForValue.build();
+        } else {
+          implValueBuilder_.setMessage(builderForValue.build());
+        }
+        bitField0_ |= 0x00000001;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>.com.giyeok.bibix.BibixValue impl_value = 1;</code>
+       */
+      public Builder mergeImplValue(com.giyeok.bibix.BibixValueProto.BibixValue value) {
+        if (implValueBuilder_ == null) {
+          if (((bitField0_ & 0x00000001) != 0) &&
+            implValue_ != null &&
+            implValue_ != com.giyeok.bibix.BibixValueProto.BibixValue.getDefaultInstance()) {
+            getImplValueBuilder().mergeFrom(value);
+          } else {
+            implValue_ = value;
+          }
+        } else {
+          implValueBuilder_.mergeFrom(value);
+        }
+        bitField0_ |= 0x00000001;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>.com.giyeok.bibix.BibixValue impl_value = 1;</code>
+       */
+      public Builder clearImplValue() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        implValue_ = null;
+        if (implValueBuilder_ != null) {
+          implValueBuilder_.dispose();
+          implValueBuilder_ = null;
+        }
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>.com.giyeok.bibix.BibixValue impl_value = 1;</code>
+       */
+      public com.giyeok.bibix.BibixValueProto.BibixValue.Builder getImplValueBuilder() {
+        bitField0_ |= 0x00000001;
+        onChanged();
+        return getImplValueFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>.com.giyeok.bibix.BibixValue impl_value = 1;</code>
+       */
+      public com.giyeok.bibix.BibixValueProto.BibixValueOrBuilder getImplValueOrBuilder() {
+        if (implValueBuilder_ != null) {
+          return implValueBuilder_.getMessageOrBuilder();
+        } else {
+          return implValue_ == null ?
+              com.giyeok.bibix.BibixValueProto.BibixValue.getDefaultInstance() : implValue_;
+        }
+      }
+      /**
+       * <code>.com.giyeok.bibix.BibixValue impl_value = 1;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          com.giyeok.bibix.BibixValueProto.BibixValue, com.giyeok.bibix.BibixValueProto.BibixValue.Builder, com.giyeok.bibix.BibixValueProto.BibixValueOrBuilder> 
+          getImplValueFieldBuilder() {
+        if (implValueBuilder_ == null) {
+          implValueBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              com.giyeok.bibix.BibixValueProto.BibixValue, com.giyeok.bibix.BibixValueProto.BibixValue.Builder, com.giyeok.bibix.BibixValueProto.BibixValueOrBuilder>(
+                  getImplValue(),
+                  getParentForChildren(),
+                  isClean());
+          implValue_ = null;
+        }
+        return implValueBuilder_;
+      }
+
+      private com.giyeok.bibix.BibixIdProto.InputHashes implValueFilesHash_;
+      private com.google.protobuf.SingleFieldBuilderV3<
+          com.giyeok.bibix.BibixIdProto.InputHashes, com.giyeok.bibix.BibixIdProto.InputHashes.Builder, com.giyeok.bibix.BibixIdProto.InputHashesOrBuilder> implValueFilesHashBuilder_;
+      /**
+       * <code>.com.giyeok.bibix.InputHashes impl_value_files_hash = 2;</code>
+       * @return Whether the implValueFilesHash field is set.
+       */
+      public boolean hasImplValueFilesHash() {
+        return ((bitField0_ & 0x00000002) != 0);
+      }
+      /**
+       * <code>.com.giyeok.bibix.InputHashes impl_value_files_hash = 2;</code>
+       * @return The implValueFilesHash.
+       */
+      public com.giyeok.bibix.BibixIdProto.InputHashes getImplValueFilesHash() {
+        if (implValueFilesHashBuilder_ == null) {
+          return implValueFilesHash_ == null ? com.giyeok.bibix.BibixIdProto.InputHashes.getDefaultInstance() : implValueFilesHash_;
+        } else {
+          return implValueFilesHashBuilder_.getMessage();
+        }
+      }
+      /**
+       * <code>.com.giyeok.bibix.InputHashes impl_value_files_hash = 2;</code>
+       */
+      public Builder setImplValueFilesHash(com.giyeok.bibix.BibixIdProto.InputHashes value) {
+        if (implValueFilesHashBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          implValueFilesHash_ = value;
+        } else {
+          implValueFilesHashBuilder_.setMessage(value);
+        }
+        bitField0_ |= 0x00000002;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>.com.giyeok.bibix.InputHashes impl_value_files_hash = 2;</code>
+       */
+      public Builder setImplValueFilesHash(
+          com.giyeok.bibix.BibixIdProto.InputHashes.Builder builderForValue) {
+        if (implValueFilesHashBuilder_ == null) {
+          implValueFilesHash_ = builderForValue.build();
+        } else {
+          implValueFilesHashBuilder_.setMessage(builderForValue.build());
+        }
+        bitField0_ |= 0x00000002;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>.com.giyeok.bibix.InputHashes impl_value_files_hash = 2;</code>
+       */
+      public Builder mergeImplValueFilesHash(com.giyeok.bibix.BibixIdProto.InputHashes value) {
+        if (implValueFilesHashBuilder_ == null) {
+          if (((bitField0_ & 0x00000002) != 0) &&
+            implValueFilesHash_ != null &&
+            implValueFilesHash_ != com.giyeok.bibix.BibixIdProto.InputHashes.getDefaultInstance()) {
+            getImplValueFilesHashBuilder().mergeFrom(value);
+          } else {
+            implValueFilesHash_ = value;
+          }
+        } else {
+          implValueFilesHashBuilder_.mergeFrom(value);
+        }
+        bitField0_ |= 0x00000002;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>.com.giyeok.bibix.InputHashes impl_value_files_hash = 2;</code>
+       */
+      public Builder clearImplValueFilesHash() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        implValueFilesHash_ = null;
+        if (implValueFilesHashBuilder_ != null) {
+          implValueFilesHashBuilder_.dispose();
+          implValueFilesHashBuilder_ = null;
+        }
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>.com.giyeok.bibix.InputHashes impl_value_files_hash = 2;</code>
+       */
+      public com.giyeok.bibix.BibixIdProto.InputHashes.Builder getImplValueFilesHashBuilder() {
+        bitField0_ |= 0x00000002;
+        onChanged();
+        return getImplValueFilesHashFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>.com.giyeok.bibix.InputHashes impl_value_files_hash = 2;</code>
+       */
+      public com.giyeok.bibix.BibixIdProto.InputHashesOrBuilder getImplValueFilesHashOrBuilder() {
+        if (implValueFilesHashBuilder_ != null) {
+          return implValueFilesHashBuilder_.getMessageOrBuilder();
+        } else {
+          return implValueFilesHash_ == null ?
+              com.giyeok.bibix.BibixIdProto.InputHashes.getDefaultInstance() : implValueFilesHash_;
+        }
+      }
+      /**
+       * <code>.com.giyeok.bibix.InputHashes impl_value_files_hash = 2;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          com.giyeok.bibix.BibixIdProto.InputHashes, com.giyeok.bibix.BibixIdProto.InputHashes.Builder, com.giyeok.bibix.BibixIdProto.InputHashesOrBuilder> 
+          getImplValueFilesHashFieldBuilder() {
+        if (implValueFilesHashBuilder_ == null) {
+          implValueFilesHashBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              com.giyeok.bibix.BibixIdProto.InputHashes, com.giyeok.bibix.BibixIdProto.InputHashes.Builder, com.giyeok.bibix.BibixIdProto.InputHashesOrBuilder>(
+                  getImplValueFilesHash(),
+                  getParentForChildren(),
+                  isClean());
+          implValueFilesHash_ = null;
+        }
+        return implValueFilesHashBuilder_;
+      }
+      @java.lang.Override
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFields(unknownFields);
+      }
+
+      @java.lang.Override
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:com.giyeok.bibix.BuildRuleImplValueHash)
+    }
+
+    // @@protoc_insertion_point(class_scope:com.giyeok.bibix.BuildRuleImplValueHash)
+    private static final com.giyeok.bibix.BibixIdProto.BuildRuleImplValueHash DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new com.giyeok.bibix.BibixIdProto.BuildRuleImplValueHash();
+    }
+
+    public static com.giyeok.bibix.BibixIdProto.BuildRuleImplValueHash getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<BuildRuleImplValueHash>
+        PARSER = new com.google.protobuf.AbstractParser<BuildRuleImplValueHash>() {
+      @java.lang.Override
+      public BuildRuleImplValueHash parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        Builder builder = newBuilder();
+        try {
+          builder.mergeFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          throw e.setUnfinishedMessage(builder.buildPartial());
+        } catch (com.google.protobuf.UninitializedMessageException e) {
+          throw e.asInvalidProtocolBufferException().setUnfinishedMessage(builder.buildPartial());
+        } catch (java.io.IOException e) {
+          throw new com.google.protobuf.InvalidProtocolBufferException(e)
+              .setUnfinishedMessage(builder.buildPartial());
+        }
+        return builder.buildPartial();
+      }
+    };
+
+    public static com.google.protobuf.Parser<BuildRuleImplValueHash> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<BuildRuleImplValueHash> getParserForType() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.giyeok.bibix.BibixIdProto.BuildRuleImplValueHash getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -11073,6 +11984,11 @@ public final class BibixIdProto {
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_com_giyeok_bibix_BuildRuleData_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_com_giyeok_bibix_BuildRuleImplValueHash_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_com_giyeok_bibix_BuildRuleImplValueHash_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_com_giyeok_bibix_BuildRuleImplId_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
@@ -11131,31 +12047,36 @@ public final class BibixIdProto {
       "\032.com.giyeok.bibix.SourceId\0223\n\nbuild_rul" +
       "e\030\002 \001(\0132\037.com.giyeok.bibix.BuildRuleData" +
       "\022+\n\010args_map\030\010 \001(\0132\031.com.giyeok.bibix.Ar" +
-      "gsMap\"\242\002\n\rBuildRuleData\0228\n\024build_rule_so" +
+      "gsMap\"\314\002\n\rBuildRuleData\0228\n\024build_rule_so" +
       "urce_id\030\001 \001(\0132\032.com.giyeok.bibix.SourceI" +
       "d\022-\n\013native_impl\030\002 \001(\0132\026.google.protobuf" +
       ".EmptyH\000\022?\n\022build_rule_impl_id\030\003 \001(\0132!.c" +
-      "om.giyeok.bibix.BuildRuleImplIdH\000\022\032\n\020bib" +
-      "ix_value_hash\030\004 \001(\014H\000\022\035\n\025build_rule_clas" +
-      "s_name\030\005 \001(\t\022\036\n\026build_rule_method_name\030\006" +
-      " \001(\tB\014\n\nbuild_rule\"f\n\017BuildRuleImplId\022-\n" +
-      "\tsource_id\030\001 \001(\0132\032.com.giyeok.bibix.Sour" +
-      "ceId\022\021\n\ttarget_id\030\002 \001(\014\022\021\n\tobject_id\030\003 \001" +
-      "(\014\"6\n\014ObjectIdData\022\021\n\ttarget_id\030\001 \001(\014\022\023\n" +
-      "\013inputs_hash\030\002 \001(\014\"3\n\007ArgsMap\022(\n\005pairs\030\001" +
-      " \003(\0132\031.com.giyeok.bibix.ArgPair\"D\n\007ArgPa" +
-      "ir\022\014\n\004name\030\001 \001(\t\022+\n\005value\030\002 \001(\0132\034.com.gi" +
-      "yeok.bibix.BibixValue\"\204\001\n\013InputHashes\0224\n" +
-      "\013directories\030\001 \003(\0132\037.com.giyeok.bibix.Di" +
-      "rectoryHash\022)\n\005files\030\002 \003(\0132\032.com.giyeok." +
-      "bibix.FileHash\022\024\n\014non_existent\030\003 \003(\t\"~\n\r" +
-      "DirectoryHash\022\014\n\004path\030\001 \001(\t\0224\n\013directori" +
-      "es\030\002 \003(\0132\037.com.giyeok.bibix.DirectoryHas" +
-      "h\022)\n\005files\030\003 \003(\0132\032.com.giyeok.bibix.File" +
-      "Hash\"q\n\010FileHash\022\014\n\004path\030\001 \001(\t\0226\n\022last_m" +
-      "odified_time\030\002 \001(\0132\032.google.protobuf.Tim" +
-      "estamp\022\014\n\004size\030\003 \001(\003\022\021\n\tsha1_hash\030\004 \001(\014B" +
-      "\016B\014BibixIdProtob\006proto3"
+      "om.giyeok.bibix.BuildRuleImplIdH\000\022D\n\020bib" +
+      "ix_value_hash\030\004 \001(\0132(.com.giyeok.bibix.B" +
+      "uildRuleImplValueHashH\000\022\035\n\025build_rule_cl" +
+      "ass_name\030\005 \001(\t\022\036\n\026build_rule_method_name" +
+      "\030\006 \001(\tB\014\n\nbuild_rule\"\210\001\n\026BuildRuleImplVa" +
+      "lueHash\0220\n\nimpl_value\030\001 \001(\0132\034.com.giyeok" +
+      ".bibix.BibixValue\022<\n\025impl_value_files_ha" +
+      "sh\030\002 \001(\0132\035.com.giyeok.bibix.InputHashes\"" +
+      "f\n\017BuildRuleImplId\022-\n\tsource_id\030\001 \001(\0132\032." +
+      "com.giyeok.bibix.SourceId\022\021\n\ttarget_id\030\002" +
+      " \001(\014\022\021\n\tobject_id\030\003 \001(\014\"6\n\014ObjectIdData\022" +
+      "\021\n\ttarget_id\030\001 \001(\014\022\023\n\013inputs_hash\030\002 \001(\014\"" +
+      "3\n\007ArgsMap\022(\n\005pairs\030\001 \003(\0132\031.com.giyeok.b" +
+      "ibix.ArgPair\"D\n\007ArgPair\022\014\n\004name\030\001 \001(\t\022+\n" +
+      "\005value\030\002 \001(\0132\034.com.giyeok.bibix.BibixVal" +
+      "ue\"\204\001\n\013InputHashes\0224\n\013directories\030\001 \003(\0132" +
+      "\037.com.giyeok.bibix.DirectoryHash\022)\n\005file" +
+      "s\030\002 \003(\0132\032.com.giyeok.bibix.FileHash\022\024\n\014n" +
+      "on_existent\030\003 \003(\t\"~\n\rDirectoryHash\022\014\n\004pa" +
+      "th\030\001 \001(\t\0224\n\013directories\030\002 \003(\0132\037.com.giye" +
+      "ok.bibix.DirectoryHash\022)\n\005files\030\003 \003(\0132\032." +
+      "com.giyeok.bibix.FileHash\"q\n\010FileHash\022\014\n" +
+      "\004path\030\001 \001(\t\0226\n\022last_modified_time\030\002 \001(\0132" +
+      "\032.google.protobuf.Timestamp\022\014\n\004size\030\003 \001(" +
+      "\003\022\021\n\tsha1_hash\030\004 \001(\014B\016B\014BibixIdProtob\006pr" +
+      "oto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -11188,44 +12109,50 @@ public final class BibixIdProto {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_giyeok_bibix_BuildRuleData_descriptor,
         new java.lang.String[] { "BuildRuleSourceId", "NativeImpl", "BuildRuleImplId", "BibixValueHash", "BuildRuleClassName", "BuildRuleMethodName", "BuildRule", });
-    internal_static_com_giyeok_bibix_BuildRuleImplId_descriptor =
+    internal_static_com_giyeok_bibix_BuildRuleImplValueHash_descriptor =
       getDescriptor().getMessageTypes().get(4);
+    internal_static_com_giyeok_bibix_BuildRuleImplValueHash_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_com_giyeok_bibix_BuildRuleImplValueHash_descriptor,
+        new java.lang.String[] { "ImplValue", "ImplValueFilesHash", });
+    internal_static_com_giyeok_bibix_BuildRuleImplId_descriptor =
+      getDescriptor().getMessageTypes().get(5);
     internal_static_com_giyeok_bibix_BuildRuleImplId_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_giyeok_bibix_BuildRuleImplId_descriptor,
         new java.lang.String[] { "SourceId", "TargetId", "ObjectId", });
     internal_static_com_giyeok_bibix_ObjectIdData_descriptor =
-      getDescriptor().getMessageTypes().get(5);
+      getDescriptor().getMessageTypes().get(6);
     internal_static_com_giyeok_bibix_ObjectIdData_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_giyeok_bibix_ObjectIdData_descriptor,
         new java.lang.String[] { "TargetId", "InputsHash", });
     internal_static_com_giyeok_bibix_ArgsMap_descriptor =
-      getDescriptor().getMessageTypes().get(6);
+      getDescriptor().getMessageTypes().get(7);
     internal_static_com_giyeok_bibix_ArgsMap_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_giyeok_bibix_ArgsMap_descriptor,
         new java.lang.String[] { "Pairs", });
     internal_static_com_giyeok_bibix_ArgPair_descriptor =
-      getDescriptor().getMessageTypes().get(7);
+      getDescriptor().getMessageTypes().get(8);
     internal_static_com_giyeok_bibix_ArgPair_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_giyeok_bibix_ArgPair_descriptor,
         new java.lang.String[] { "Name", "Value", });
     internal_static_com_giyeok_bibix_InputHashes_descriptor =
-      getDescriptor().getMessageTypes().get(8);
+      getDescriptor().getMessageTypes().get(9);
     internal_static_com_giyeok_bibix_InputHashes_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_giyeok_bibix_InputHashes_descriptor,
         new java.lang.String[] { "Directories", "Files", "NonExistent", });
     internal_static_com_giyeok_bibix_DirectoryHash_descriptor =
-      getDescriptor().getMessageTypes().get(9);
+      getDescriptor().getMessageTypes().get(10);
     internal_static_com_giyeok_bibix_DirectoryHash_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_giyeok_bibix_DirectoryHash_descriptor,
         new java.lang.String[] { "Path", "Directories", "Files", });
     internal_static_com_giyeok_bibix_FileHash_descriptor =
-      getDescriptor().getMessageTypes().get(10);
+      getDescriptor().getMessageTypes().get(11);
     internal_static_com_giyeok_bibix_FileHash_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_giyeok_bibix_FileHash_descriptor,
