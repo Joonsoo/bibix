@@ -35,9 +35,13 @@ object BibixCli {
       "Must specify at least one build target\nAvailable targets:\n$targets"
     }
 
-    val targetResults = runBlocking { buildFrontend.runBuildOrFailure(names) }
-
-    buildFrontend.repo.shutdown()
+    val targetResults = runBlocking {
+      try {
+        buildFrontend.runBuildOrFailure(names)
+      } finally {
+        buildFrontend.repo.shutdown()
+      }
+    }
 
     val (succeeded, failed) = targetResults.entries.partition { it.value is FailureOr.Result }
 

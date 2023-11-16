@@ -148,11 +148,11 @@ class ProjectInfoBuilder(
 
     when (origin.builderName) {
       "java.library" -> {
-        val jdkVersion = targetIdData.argsMap.pairsList.find { it.name == "jdkVersion" }
+        val srcVersion = targetIdData.argsMap.pairsList.find { it.name == "srcVersion" }
         this.usingSdks.add(sdkVersion {
           // assuming java
           // TODO val jdkVersion = (module.allArgs["jdkVersion"] as StringValue).value
-          this.jdkVersion = (jdkVersion!!.value.toBibix() as StringValue).value
+          this.jdkVersion = (srcVersion!!.value.toBibix() as StringValue).value
         })
         this.moduleType = "java"
       }
@@ -401,6 +401,7 @@ class ProjectInfoBuilder(
       }
     }
 
+    // TODO resourceDirs도 공통 ancestor directory를 content root로 설정
     val resRoots = resourceDirs.map { resDir ->
       contentRoot {
         this.contentRootName = "Resources"

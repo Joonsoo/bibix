@@ -269,4 +269,5 @@ grpcDeps = [
   maven.artifact("io.grpc", "grpc-kotlin-stub", "1.3.0"),
 ]
 
-uberJars = [base.uberJar, core.uberJar, intellij.uberJar]
+uberJars = (base: base.uberJar, core: core.uberJar, intellij: intellij.uberJar)
+
