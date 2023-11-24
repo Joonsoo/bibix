@@ -152,7 +152,7 @@ class ProjectInfoBuilder(
         this.usingSdks.add(sdkVersion {
           // assuming java
           // TODO val jdkVersion = (module.allArgs["jdkVersion"] as StringValue).value
-          this.jdkVersion = (srcVersion!!.value.toBibix() as StringValue).value
+          this.jdkVersion = (srcVersion?.value?.toBibix() as? StringValue)?.value ?: "21"
         })
         this.moduleType = "java"
       }
