@@ -6,6 +6,7 @@ Defs = Def (WS Def)* {[$0] + $1}
 
 Def: Def = ImportDef
   | NamespaceDef
+  | NamespaceFromDef
   | TargetDef
   | ActionDef
   | ClassDef
@@ -15,7 +16,18 @@ Def: Def = ImportDef
   | BuildRuleDef
   | ActionRuleDef
 
-NamespaceDef = SimpleName WS '{' (WS Defs)? WS '}' {NamespaceDef(name=$0, body=$3 ?: [])}
+// e.g. abseilCpp at test/abseil-cpp { ... }
+//      -> abseilCpp 네임스페이스 안에서는 base directory가 test/abseil-cpp 안인 것처럼 동작
+//         test/abseil-cpp 안에 build.bbx 파일이 있으면 오류
+NamespaceDef = SimpleName (WS "at"&Tk WS PathDirection)? WS '{' (WS Defs)? WS '}'
+               {NamespaceDef(name=$0, path=$1, body=$4 ?: [])}
+PathDirection: PathDirection = String | Path
+Path = <Word (WS '/' WS Word)* {Path(dirs=[$0] + $1)}>
+PathName = <'a-zA-Z0-9_\-'+ {str($0)}>
+
+// e.g. abseilCpp from test/abseil-cpp
+//      -> 현재 폴더 밑에 test/abseil-cpp 폴더 밑에 있는 build.bbx 파일을 abseilCpp 네임스페이스 밑에 복사해온 것처럼 동작(base directory는 test/abseil-cpp 인것처럼)
+NamespaceFromDef = SimpleName WS "from"&Tk WS PathDirection {NamespaceFromDef(name=$0, path=$4)}
 
 ImportDef: ImportDef = "import"&Tk WS Primary (WS "as"&Tk WS SimpleName)? {ImportAll(source=$2, rename=$3)}
   | "from"&Tk WS Expr WS "import"&Tk WS Name (WS "as"&Tk WS SimpleName)? {ImportFrom(source=$2, importing=$6, rename=$7)}
@@ -118,9 +130,9 @@ TypeParams = '<' WS TypeExpr (WS ',' WS TypeExpr)* WS '>' {TypeParams(params=[$2
 TupleType = '(' WS TypeExpr (WS ',' WS TypeExpr)* WS ')' {TupleType(elems=[$2] + $3)}
 NamedTupleType = '(' WS NamedType (WS ',' WS NamedType)* WS ')' {NamedTupleType(elems=[$2] + $3)}
 NamedType = SimpleName WS ':' WS TypeExpr {NamedType(name=$0, typ=$4)}
-UnionType = '{' WS NoUnionType (WS ',' WS NoUnionType)* WS '}' {UnionType(elems=[$2] + $3)}
+UnionType = <NoUnionType (WS '|' WS NoUnionType)* {UnionType(elems=[$0] + $1)}>
 
-SimpleName = <('a-zA-z' 'a-zA-Z0-9_'* {str($0, $1)})&Tk>-Keyword {$0}
+SimpleName = <('a-zA-z' 'a-zA-Z0-9_'* {str($0, $1)})&Tk>-Keyword
 Name = SimpleName (WS '.' WS SimpleName)* {Name(tokens=[$0] + $1)}
 
 // literal에서 사용되면 ambiguous해지는 것만 막으면 될듯?

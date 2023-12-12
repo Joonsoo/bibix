@@ -286,7 +286,7 @@ class BuildGraphBuilder(
           is ActionNameEntry -> LocalActionRef(entry.name, entry.def)
           is ActionRuleNameEntry -> LocalActionRuleRef(entry.name, entry.def)
           // TODO local import ref
-          else -> throw IllegalStateException()
+          else -> throw IllegalStateException("Name not found ${entry.name.tokens}")
         }
         addNode(node)
       }

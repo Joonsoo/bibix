@@ -232,7 +232,7 @@ kotlinxCoroutinesDeps = [
   maven.artifact("org.jetbrains.kotlinx", "kotlinx-coroutines-jdk9", kotlinxCoroutinesVersion),
 ]
 
-protobufVersion = "3.22.0"
+protobufVersion = "3.25.1"
 protobufDeps = [
   maven.artifact("com.google.protobuf", "protobuf-java", protobufVersion),
   maven.artifact("com.google.protobuf", "protobuf-java-util", protobufVersion),
@@ -260,13 +260,13 @@ truthDeps = [
 
 jimfsDep = maven.artifact("com.google.jimfs", "jimfs", "1.2")
 
-grpcVersion = "1.53.0"
+grpcVersion = "1.60.0"
 grpcDeps = [
   maven.artifact("io.grpc", "grpc-api", grpcVersion),
   maven.artifact("io.grpc", "grpc-services", grpcVersion),
   maven.artifact("io.grpc", "grpc-stub", grpcVersion),
   maven.artifact("io.grpc", "grpc-netty-shaded", grpcVersion),
-  maven.artifact("io.grpc", "grpc-kotlin-stub", "1.3.0"),
+  maven.artifact("io.grpc", "grpc-kotlin-stub", "1.4.1"),
 ]
 
 uberJars = (base: base.uberJar, core: core.uberJar, intellij: intellij.uberJar)

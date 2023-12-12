@@ -71,7 +71,6 @@ class FileHashStore {
     }
 
   fun traverseValue(value: BibixValueProto.BibixValue): List<String> = when (value.valueCase) {
-    BibixValueProto.BibixValue.ValueCase.PATH_VALUE -> listOf(value.pathValue)
     BibixValueProto.BibixValue.ValueCase.FILE_VALUE -> listOf(value.fileValue)
     BibixValueProto.BibixValue.ValueCase.DIRECTORY_VALUE -> listOf(value.directoryValue)
     BibixValueProto.BibixValue.ValueCase.LIST_VALUE ->
@@ -89,6 +88,9 @@ class FileHashStore {
     BibixValueProto.BibixValue.ValueCase.DATA_CLASS_INSTANCE_VALUE ->
       value.dataClassInstanceValue.fieldsList.flatMap { traverseValue(it.value) }
 
+    BibixValueProto.BibixValue.ValueCase.PATH_VALUE ->
+      // path는 내용을 확인하지 않는다
+      listOf()
     else -> listOf()
   }
 

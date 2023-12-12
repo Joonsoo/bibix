@@ -3,6 +3,7 @@ package com.giyeok.bibix.graph.runner
 import com.giyeok.bibix.base.*
 import com.giyeok.bibix.graph.BibixName
 import com.giyeok.bibix.graph.BibixProjectLocation
+import org.apache.tools.ant.types.resources.Union
 import java.nio.file.Path
 import kotlin.io.path.absolute
 import kotlin.io.path.absolutePathString
@@ -29,6 +30,9 @@ class ValueCaster(
     if (value is ClassInstanceValue) {
       // 사용자가 정의한 custom cast가 있으면 그것부터 시도해보고, 그게 실패하면 기본 캐스팅 시도
       when (type) {
+        is UnionType ->
+          return castToUnionType(value, type)
+
         is DataClassType -> {
           if (type.packageName == value.packageName && type.className == value.className) {
             // type과 일치하고, value가 이미 온전한 것이 확인되었으므로 값을 그대로 반환
@@ -205,22 +209,7 @@ class ValueCaster(
         cannotCast(value, type)
       }
 
-      is UnionType -> {
-        fun tryCandidateAt(candidateIdx: Int): BuildTaskResult =
-          if (candidateIdx >= type.types.size) {
-            cannotCast(value, type)
-          } else {
-            BuildTaskResult.WithResult(
-              TypeCastValue(value, type.types[candidateIdx], projectId)
-            ) { result ->
-              when (result) {
-                is BuildTaskResult.ResultWithValue -> result
-                else -> tryCandidateAt(candidateIdx + 1)
-              }
-            }
-          }
-        tryCandidateAt(0)
-      }
+      is UnionType -> castToUnionType(value, type)
 
       NoneType ->
         if (value is NoneValue) BuildTaskResult.ValueResult(value)
@@ -256,6 +245,23 @@ class ValueCaster(
           else -> cannotCast(value, type)
         }
     }
+  }
+
+  fun castToUnionType(value: BibixValue, type: UnionType): BuildTaskResult {
+    fun tryCandidateAt(candidateIdx: Int): BuildTaskResult =
+      if (candidateIdx >= type.types.size) {
+        cannotCast(value, type)
+      } else {
+        BuildTaskResult.WithResult(
+          TypeCastValue(value, type.types[candidateIdx], projectId)
+        ) { result ->
+          when (result) {
+            is BuildTaskResult.ResultWithValue -> result
+            else -> tryCandidateAt(candidateIdx + 1)
+          }
+        }
+      }
+    return tryCandidateAt(0)
   }
 
   private fun tryCustomCast(

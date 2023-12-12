@@ -131,7 +131,8 @@ fun BuildGraphRunner.importResultFrom(
       block
     )
 
-    is BuildGraphEntity.ImportFrom, null -> throw IllegalStateException("Cannot import")
+    is BuildGraphEntity.ImportFrom, null ->
+      throw IllegalStateException("Cannot import")
   }
 }
 

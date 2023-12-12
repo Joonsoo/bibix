@@ -557,8 +557,13 @@ fun BuildGraphRunner.lookupFromImport(
   }
   buildGraph.importFroms.forEach { (importName, importFrom) ->
     if (name.tokens.take(importName.tokens.size) == importName.tokens) {
-      // TODO 이런 경우는 언제 생기는거지?
-      TODO()
+      return BuildTaskResult.WithResult(
+        Import(projectId, importInstanceId, importName)
+      ) { result ->
+        check(result is BuildTaskResult.ImportInstanceResult)
+
+        importResultFrom(result, BibixName(name.tokens.drop(importName.tokens.size)), block)
+      }
     }
   }
   throw IllegalStateException("Name not found")

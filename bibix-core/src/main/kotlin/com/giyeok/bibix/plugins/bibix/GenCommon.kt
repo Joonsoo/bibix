@@ -1,5 +1,6 @@
 package com.giyeok.bibix.plugins.bibix
 
+import com.giyeok.bibix.base.EnumValue
 import com.giyeok.bibix.base.TypeValue
 
 fun isNullableType(type: TypeValue.UnionTypeValue): TypeValue? =
@@ -81,7 +82,9 @@ fun ktValueToBibix(expr: String, bibixType: TypeValue): String = when (bibixType
   TypeValue.DirectoryTypeValue -> "DirectoryValue($expr)"
   is TypeValue.DataClassTypeValue -> "$expr.toBibix()"
   is TypeValue.SuperClassTypeValue -> "$expr.toBibix()"
-  is TypeValue.EnumTypeValue -> TODO()
+  is TypeValue.EnumTypeValue -> {
+    "EnumValue(\"${bibixType.packageName}\", \"${bibixType.enumName}\", $expr.toString())"
+  }
   is TypeValue.ListTypeValue ->
     "ListValue($expr.map { ${ktValueToBibix("it", bibixType.elemType)} })"
 
