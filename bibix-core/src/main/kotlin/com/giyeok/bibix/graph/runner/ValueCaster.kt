@@ -401,7 +401,7 @@ class ValueCaster(
     types: Map<String, BibixType>,
     block: (List<String>, List<BibixValue>) -> BuildTaskResult
   ): BuildTaskResult {
-    check(types.keys.containsAll(values.keys)) { "Missing args" }
+    check(types.keys.containsAll(values.keys)) { "Missing args: ${types.keys - values.keys}" }
 
     val fieldValues = values.entries.sortedBy { it.key }
     val finalizeTasks = fieldValues.map {

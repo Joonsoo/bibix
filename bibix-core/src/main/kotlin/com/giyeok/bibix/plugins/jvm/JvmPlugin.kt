@@ -10,6 +10,7 @@ val jvmPlugin = PreloadedPlugin.fromScript(
       cps: set<path>,
       // TODO coercion할 때 data class field default value 처리
       runtimeCps: set<path> = [],
+      nativeLibDirs: set<path> = [],
     )
 
     class ClassPkg(
@@ -17,6 +18,8 @@ val jvmPlugin = PreloadedPlugin.fromScript(
       cpinfo: CpInfo,
       deps: set<ClassPkg>,
       runtimeDeps: set<ClassPkg> = [],
+      // nativeLibDirs는 아직 쓰이는데 없음
+      nativeLibDirs: set<directory> = [],
     ) {
       // resources는 classpath의 일부로 취급
       as ClassPaths = resolveClassPkgs([this])
