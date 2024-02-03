@@ -1,0 +1,5 @@
+kotlin_package_name: "com.giyeok.phoclub.db"
+public_proto_filename: "public.proto"
+public_proto_package_name: "com.giyeok.phoclub.proto"
+internal_proto_filename: "internal.proto"
+internal_proto_package_name: "com.giyeok.phoclub.proto"

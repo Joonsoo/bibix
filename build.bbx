@@ -22,31 +22,31 @@ bibixVersion = "0.8.0"
 
 base {
   proto {
-    schema = protobuf.schema(glob("bibix-base/src/proto/*.proto"))
+    schema = protobuf.schema(glob("bibix-base/proto/*.proto"))
 
     javacode = protobuf.java(schema)
     kotlincode = protobuf.kotlin(schema)
 
     action generate {
-      file.clearDirectory("bibix-base/src/generated/proto/java")
-      file.clearDirectory("bibix-base/src/generated/proto/kotlin")
-      file.copyDirectory(javacode.rootDir, "bibix-base/src/generated/proto/java")
-      file.copyDirectory(kotlincode.rootDir, "bibix-base/src/generated/proto/kotlin")
+      file.clearDirectory("bibix-base/generated/proto/java")
+      file.clearDirectory("bibix-base/generated/proto/kotlin")
+      file.copyDirectory(javacode.rootDir, "bibix-base/generated/proto/java")
+      file.copyDirectory(kotlincode.rootDir, "bibix-base/generated/proto/kotlin")
     }
 
     javalib = java.library(
-      srcs = glob("bibix-base/src/generated/proto/java/**/*.java"),
+      srcs = glob("bibix-base/generated/proto/java/**/*.java"),
       deps = protobufDeps,
     )
 
     lib = ktjvm.library(
-      srcs = glob("bibix-base/src/generated/proto/kotlin/**/*.kt"),
+      srcs = glob("bibix-base/generated/proto/kotlin/**/*.kt"),
       deps = [javalib],
     )
   }
 
   main = ktjvm.library(
-    srcs = glob("bibix-base/src/main/kotlin/**/*.kt"),
+    srcs = glob("bibix-base/main/kotlin/**/*.kt"),
     deps = [
       ...kotlinxCoroutinesDeps,
       ...protobufDeps,
@@ -65,13 +65,13 @@ parser {
   )
 
   action generate {
-    file.copyDirectory(gen.srcsRoot, "bibix-parser/src/generated/kotlin")
-    file.copyFile(zip.gzip(gen.parserData), "bibix-parser/src/generated/resources")
+    file.copyDirectory(gen.srcsRoot, "bibix-parser/generated/kotlin")
+    file.copyFile(zip.gzip(gen.parserData), "bibix-parser/generated/resources")
   }
 
   main = ktjvm.library(
-    srcs = glob("bibix-parser/src/generated/kotlin/**/*.kt"),
-    resources = glob("bibix-parser/src/generated/resources/**"),
+    srcs = glob("bibix-parser/generated/kotlin/**/*.kt"),
+    resources = glob("bibix-parser/generated/resources/**"),
     deps = [
       jparser.ktparser.main,
       // maven.artifact("org.scala-lang", "scala-library", "2.13.10"),
@@ -80,7 +80,7 @@ parser {
   )
 
   test = ktjvm.library(
-    srcs = glob("bibix-parser/src/test/kotlin/**/*.kt"),
+    srcs = glob("bibix-parser/test/kotlin/**/*.kt"),
     deps = [...testDeps, parser.main]
   )
 }
@@ -89,7 +89,7 @@ mavenResolverVersion = "1.9.5"
 
 core {
   main = ktjvm.library(
-    srcs = glob("bibix-core/src/main/kotlin/**/*.kt"),
+    srcs = glob("bibix-core/main/kotlin/**/*.kt"),
     deps = [
       base.main,
       parser.main,
@@ -118,8 +118,8 @@ core {
   )
 
   test = ktjvm.library(
-    srcs = glob("bibix-core/src/test/kotlin/**/*.kt"),
-    resources = glob("bibix-core/src/test/resources/**"),
+    srcs = glob("bibix-core/test/kotlin/**/*.kt"),
+    resources = glob("bibix-core/test/resources/**"),
     deps = [
       main,
       ...testDeps,
@@ -137,7 +137,7 @@ core {
 
 intellij {
   proto {
-    schema = protobuf.schema(glob("bibix-intellij/src/proto/*.proto"))
+    schema = protobuf.schema(glob("bibix-intellij/proto/*.proto"))
 
     protoJavaCode = protobuf.java(schema)
     protoKotlinCode = protobuf.kotlin(schema)
@@ -146,38 +146,38 @@ intellij {
     grpcKotlinCode = grpc.kotlin(schema)
 
     action generate {
-      file.clearDirectory("bibix-intellij/src/generated/proto/java")
-      file.clearDirectory("bibix-intellij/src/generated/proto/kotlin")
-      file.copyDirectory(protoJavaCode.rootDir, "bibix-intellij/src/generated/proto/java")
-      file.copyDirectory(protoKotlinCode.rootDir, "bibix-intellij/src/generated/proto/kotlin")
+      file.clearDirectory("bibix-intellij/generated/proto/java")
+      file.clearDirectory("bibix-intellij/generated/proto/kotlin")
+      file.copyDirectory(protoJavaCode.rootDir, "bibix-intellij/generated/proto/java")
+      file.copyDirectory(protoKotlinCode.rootDir, "bibix-intellij/generated/proto/kotlin")
 
-      file.clearDirectory("bibix-intellij/src/generated/grpc/java")
-      file.clearDirectory("bibix-intellij/src/generated/grpc/kotlin")
-      file.copyDirectory(grpcJavaCode.rootDir, "bibix-intellij/src/generated/grpc/java")
-      file.copyDirectory(grpcKotlinCode.rootDir, "bibix-intellij/src/generated/grpc/kotlin")
+      file.clearDirectory("bibix-intellij/generated/grpc/java")
+      file.clearDirectory("bibix-intellij/generated/grpc/kotlin")
+      file.copyDirectory(grpcJavaCode.rootDir, "bibix-intellij/generated/grpc/java")
+      file.copyDirectory(grpcKotlinCode.rootDir, "bibix-intellij/generated/grpc/kotlin")
     }
 
     javaProtoLib = java.library(
-      srcs = glob("bibix-intellij/src/generated/proto/java/**/*.java"),
+      srcs = glob("bibix-intellij/generated/proto/java/**/*.java"),
       deps = protobufDeps,
     )
     javaGrpcLib = java.library(
-      srcs = glob("bibix-intellij/src/generated/grpc/java/**/*.java"),
+      srcs = glob("bibix-intellij/generated/grpc/java/**/*.java"),
       deps = [javaProtoLib, ...grpcDeps],
     )
     kotlinProtoLib = ktjvm.library(
-      srcs = glob("bibix-intellij/src/generated/proto/kotlin/**/*.kt"),
+      srcs = glob("bibix-intellij/generated/proto/kotlin/**/*.kt"),
       deps = [javaGrpcLib],
     )
     kotlinGrpcLib = ktjvm.library(
-      srcs = glob("bibix-intellij/src/generated/grpc/kotlin/**/*.kt"),
+      srcs = glob("bibix-intellij/generated/grpc/kotlin/**/*.kt"),
       deps = [kotlinProtoLib, ...kotlinxCoroutinesDeps],
     )
     lib = kotlinGrpcLib
   }
 
   main = ktjvm.library(
-    srcs = glob("bibix-intellij/src/main/kotlin/**/*.kt"),
+    srcs = glob("bibix-intellij/main/kotlin/**/*.kt"),
     deps = [
       intellij.proto.lib,
       core.main,
@@ -185,7 +185,7 @@ intellij {
   )
 
   test = ktjvm.library(
-    srcs = glob("bibix-intellij/src/test/kotlin/**/*.kt"),
+    srcs = glob("bibix-intellij/test/kotlin/**/*.kt"),
     deps = [
       main,
       ...testDeps,
@@ -205,8 +205,8 @@ from bibix.plugins import mustache
 
 action buildRelease {
   file.copyFile(
-    mustache.render("bibix-base/src/template/Constants.kt.template", [("BIBIX_VERSION", bibixVersion)]),
-    "bibix-base/src/main/kotlin/com/giyeok/bibix/base/Constants.kt"
+    mustache.render("bibix-base/template/Constants.kt.template", [("BIBIX_VERSION", bibixVersion)]),
+    "bibix-base/main/kotlin/com/giyeok/bibix/base/Constants.kt"
   )
   file.clearDirectory("release")
   file.copyFile(base.uberJar, "release")
@@ -260,4 +260,3 @@ grpcDeps = [
 ]
 
 uberJars = (base: base.uberJar, core: core.uberJar, intellij: intellij.uberJar)
-

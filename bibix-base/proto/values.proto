@@ -1,0 +1,60 @@
+syntax = "proto3";
+
+package com.giyeok.bibix;
+
+import "google/protobuf/empty.proto";
+
+option java_outer_classname = "BibixValueProto";
+
+message BibixValue {
+  oneof value {
+    google.protobuf.Empty none_value = 1;
+    bool boolean_value = 2;
+    string string_value = 3;
+    string path_value = 4;
+    string file_value = 5;
+    string directory_value = 6;
+    EnumValue enum_value = 7;
+    ListValue list_value = 8;
+    SetValue set_value = 9;
+    TupleValue tuple_value = 10;
+    NamedTupleValue named_tuple_value = 11;
+    DataClassInstanceValue data_class_instance_value = 12;
+  }
+}
+
+message EnumValue {
+  string enum_type = 1;
+  string value = 2;
+}
+
+message ListValue {
+  repeated BibixValue values = 1;
+}
+
+message SetValue {
+  repeated BibixValue values = 1;
+}
+
+message TupleValue {
+  repeated BibixValue values = 1;
+}
+
+message NamedTupleValue {
+  repeated NamedValue values = 1;
+}
+
+message NamedValue {
+  string name = 1;
+  BibixValue value = 2;
+}
+
+message DataClassInstanceValue {
+  string class_cname = 1;
+  repeated DataClassField fields = 2;
+}
+
+message DataClassField {
+  string name = 1;
+  BibixValue value = 2;
+}

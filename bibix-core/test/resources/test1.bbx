@@ -1,0 +1,56 @@
+package com.giyeok.bibix.dev.test
+
+import maven
+from bibix.plugins import ktjvm
+from bibix.plugins import java
+import git("https://github.com/Joonsoo/jparser.git") as jparser
+
+abc = ktjvm.library(
+  srcs = glob("srcs/**/*.kt"),
+  deps = [
+    maven.artifact("org.jetbrains.kotlinx", "kotlinx-coroutines-core", ktxCoroutinesVersion),
+  ]
+)
+
+kotlinVersion = "1.9.0"
+var ktjvm.compilerVersion = kotlinVersion
+var ktjvm.sdkVersion = kotlinVersion
+var java.compilerVersion = "11"
+
+ktxCoroutinesVersion = "1.7.0"
+
+with ktjvm.compilerVersion = "1.7.0", ktjvm.sdkVersion = "1.7.1", java.javaVersion = "11" {
+  xyz = ktjvm.library(
+    srcs = glob("srcs2/**/*.kt")
+  )
+}
+
+qwe = ktjvm.library(
+  srcs = glob("srcs3/**/*.kt")
+)
+
+def testBuildRule(
+  definitionFile: file,
+  xyz: MySuperClass,
+  asd: MyClass,
+  sdf: MyEnum,
+  generationConfigFile?: file,
+  defaultValue: string = "hello~",
+): string = qwe:com.giyeok.autodb3.bibixPlugin.GenerateAutodb3
+
+xxx = testBuildRule("hello~")
+
+super class MySuperClass { MyClass, MyClass2 }
+class MyClass(a: file, b: MySuperClass)
+class MyClass2()
+enum MyEnum { A, B, C }
+
+yyy = MyClass("hello", MyClass2())
+
+zzz = jparser.generateParser("x.cdg")
+
+with jparser.grammarVersion = "1.2" {
+  zzz2 = jparser.generateParser("y.cdg")
+}
+
+zzzz = bibix.x86("123")

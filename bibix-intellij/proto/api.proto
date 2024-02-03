@@ -1,0 +1,126 @@
+syntax = "proto3";
+
+package com.giyeok.bibix.intellij;
+
+option java_outer_classname = "BibixIntellijProto";
+
+service BibixIntellijService {
+  rpc loadProject(LoadProjectReq) returns (BibixProjectInfo);
+  rpc buildTargets(BuildTargetsReq) returns (BuildTargetsRes);
+  rpc buildTargetsStreaming(BuildTargetsReq) returns (stream BuildTargetsUpdate);
+  rpc executeActions(ExecuteActionsReq) returns (ExecuteActionsRes);
+  rpc executeActionsStreaming(BuildTargetsReq) returns (stream ExecuteActionUpdate);
+}
+
+message LoadProjectReq {
+  string project_root = 1;
+  string script_name = 2;
+  bool force_reload = 3;
+}
+
+message BibixProjectInfo {
+  string project_id = 1;
+  string project_name = 2;
+  repeated SdkVersion using_sdks = 3;
+  repeated Module modules = 4;
+  repeated ExternalLibrary external_libraries = 5;
+  SdkInfo sdk_info = 6;
+
+  repeated Action actions = 7;
+}
+
+message Module {
+  string module_name = 1;
+  // java, ktjvm, scala, ...
+  string module_type = 2;
+  string module_root_path = 3;
+  // module sources
+  repeated ContentRoot content_roots = 4;
+  repeated SdkVersion using_sdks = 5;
+  // dependent한 module 이름 목록
+  repeated ModuleDep module_deps = 6;
+  // dependent한 라이브러리 id 목록
+  repeated LibraryDep library_deps = 7;
+
+  message ModuleDep {
+    string module_name = 1;
+    DependencyType dependency_type = 2;
+  }
+  message LibraryDep {
+    string library_name = 1;
+    DependencyType dependency_type = 2;
+  }
+}
+
+enum DependencyType {
+  DEPENDENCY_UNSPECIFIED = 0;
+  COMPILE_DEPENDENCY = 1;
+  RUNTIME_DEPENDENCY = 2;
+}
+
+message ContentRoot {
+  string content_root_name = 1;
+  string content_root_type = 2;
+  string content_root_path = 3;
+}
+
+message SdkVersion {
+  oneof sdk {
+    string jdk_version = 1;
+    string ktjvm_sdk_version = 2;
+    string scala_sdk_version = 3;
+  }
+}
+
+message ExternalLibrary {
+  string library_id = 1;
+  string description = 2;
+  repeated string classpaths = 3;
+  repeated string sources = 4;
+}
+
+message SdkInfo {
+  repeated KotlinJvmSdk ktjvm_sdks = 1;
+  repeated ScalaSdk scala_sdks = 2;
+}
+
+message KotlinJvmSdk {
+  string version = 1;
+  repeated string sdk_library_ids = 2;
+}
+
+message ScalaSdk {
+  string version = 1;
+  string scala_language_version = 2;
+  repeated string compiler_classpaths = 3;
+  repeated string sdk_library_ids = 4;
+}
+
+message Action {
+  string action_name = 1;
+  // TODO definition
+}
+
+message BuildTargetsReq {
+  string project_id = 1;
+  repeated string build_targets = 2;
+}
+
+message BuildTargetsRes {
+}
+
+message BuildTargetsUpdate {
+  // TODO
+}
+
+message ExecuteActionsReq {
+  string project_id = 1;
+  repeated string actions = 2;
+}
+
+message ExecuteActionsRes {
+}
+
+message ExecuteActionUpdate {
+  // TODO
+}

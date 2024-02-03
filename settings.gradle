@@ -1,2 +1,0 @@
-rootProject.name = "bibix"
-include 'bibix-parser', 'bibix-base', 'bibix-core', 'bibix-intellij'

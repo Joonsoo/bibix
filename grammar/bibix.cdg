@@ -6,7 +6,6 @@ Defs = Def (WS Def)* {[$0] + $1}
 
 Def: Def = ImportDef
   | NamespaceDef
-  | NamespaceFromDef
   | TargetDef
   | ActionDef
   | ClassDef
@@ -21,8 +20,8 @@ Def: Def = ImportDef
 //         test/abseil-cpp 안에 build.bbx 파일이 있으면 오류
 NamespaceDef = SimpleName (WS "at"&Tk WS PathDirection)? WS '{' (WS Defs)? WS '}'
                {NamespaceDef(name=$0, path=$1, body=$4 ?: [])}
-PathDirection: PathDirection = String | Path
-Path = <Word (WS '/' WS Word)* {Path(dirs=[$0] + $1)}>
+PathDirection: PathDirection = StringLiteral | Path
+Path = <PathToken (WS '/' WS PathToken)* {Path(dirs=[$0] + $1)}>
 PathName = <'a-zA-Z0-9_\-'+ {str($0)}>
 
 // e.g. abseilCpp from test/abseil-cpp
@@ -135,8 +134,10 @@ UnionType = <NoUnionType (WS '|' WS NoUnionType)* {UnionType(elems=[$0] + $1)}>
 SimpleName = <('a-zA-z' 'a-zA-Z0-9_'* {str($0, $1)})&Tk>-Keyword
 Name = SimpleName (WS '.' WS SimpleName)* {Name(tokens=[$0] + $1)}
 
+PathToken = <'a-zA-Z0-9_'+> {str($0)}
+
 // literal에서 사용되면 ambiguous해지는 것만 막으면 될듯?
-Keyword = "true" | "false" | "none" | "this"
+Keyword = "true" | "false" | "this"
 
 Tk = <'a-zA-Z0-9_'+> | <'+\-*/!&|=<>'+>
 

@@ -1,0 +1,83 @@
+syntax = "proto3";
+
+package com.giyeok.bibix.repo;
+
+option java_outer_classname = "BibixRepoProto";
+
+import "ids.proto";
+import "values.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+
+message BibixRepoData {
+  // source id hash -> source id
+  // target id hash -> target id(including args map & input hashes)
+
+  // target id hex -> target data
+  map<string, TargetIdData> target_id_data = 1;
+  map<string, TargetState> target_states = 2;
+
+  // user defined output name -> target id hex
+  map<string, string> output_names = 3;
+}
+
+message TargetState {
+  // unique_run_id는 빌드가 실행될 때마다 랜덤하게 발급되는 고유 ID
+  string unique_run_id = 1;
+  google.protobuf.Timestamp build_start_time = 2;
+  InputHashes input_hashes = 3;
+  bytes input_hash_string = 4;
+
+  message BuildSucceeded {
+    google.protobuf.Timestamp build_end_time = 1;
+    BibixValue result_value = 2;
+    // object id는 뭐지 근데..?
+    optional bytes object_id = 3;
+  }
+
+  message BuildFailed {
+    google.protobuf.Timestamp build_fail_time = 1;
+    string error_message = 2;
+  }
+
+  oneof state {
+    google.protobuf.Empty build_started = 5;
+    BuildSucceeded build_succeeded = 6;
+    BuildFailed build_failed = 7;
+  }
+}
+
+// log는 양이 많아질 수도 있고, BibixRepoData는 바이너리로 저장해도 별 문제가 없을것 같지만 log는 human-readable하게 저장하는 것이 좋을 것 같아서 별도 파일로 저장한다
+message BibixTargetLogs {
+  // target_logs도 map으로 하고 싶은데 그러면 TargetLogs builder를 얻어올 수가 없어서 repeated로 사용
+  repeated TargetLogs target_logs = 1;
+  // action은 target과 별도로 관리 - target id가 없기 때문
+  repeated ActionLogs action_logs = 2;
+}
+
+message TargetLogs {
+  string unique_run_id = 1;
+  string target_id = 2;
+  repeated LogBlock blocks = 3;
+}
+
+message ActionLogs {
+  string unique_run_id = 1;
+  int32 project_id = 2;
+  int32 import_instance_id = 3;
+  string action_name = 4;
+  repeated LogBlock blocks = 5;
+}
+
+message LogBlock {
+  LogLevel level = 1;
+  google.protobuf.Timestamp time = 2;
+  string message = 3;
+}
+
+enum LogLevel {
+  UNSPECIFIED = 0;
+  VERBOSE = 1;
+  INFO = 8;
+  ERROR = 15;
+}
