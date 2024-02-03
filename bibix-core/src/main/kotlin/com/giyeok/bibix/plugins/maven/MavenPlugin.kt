@@ -16,7 +16,7 @@ val mavenPlugin = PreloadedPlugin.fromScript(
     }
     class MavenRepo(name: string, repoType: RepoType, url: string)
     
-    class MavenArtifactName(group: string, artifact: string, version?: string)
+    class MavenArtifactName(group: string, artifact: string, version?: string, classifier?: string)
     var excludes: set<MavenArtifactName> = []
     
     var defaultRepos: list<MavenRepo> = [
@@ -27,6 +27,7 @@ val mavenPlugin = PreloadedPlugin.fromScript(
       group: string,
       artifact: string,
       version?: string,
+      classifier?: string,
       scope: ScopeType = ScopeType.compile,
       extension: string = "jar",
       repos: list<MavenRepo> = defaultRepos,

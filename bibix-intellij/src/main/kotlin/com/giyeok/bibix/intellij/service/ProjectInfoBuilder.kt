@@ -281,7 +281,7 @@ class ProjectInfoBuilder(
   fun libIdFromOrigin(origin: ClassOrigin): String = when (origin) {
     is LocalBuilt -> "built: ${origin.objHash}"
     is LocalLib -> "local: ${origin.path.absolutePathString()}"
-    is MavenDep -> "maven: ${origin.group}:${origin.artifact}:${origin.version}"
+    is MavenDep -> "maven: ${origin.repo}:${origin.group}:${origin.artifact}:${origin.version}:${origin.classifier}"
   }
 
   fun isModule(origin: ClassOrigin) = when (origin) {
@@ -308,6 +308,7 @@ class ProjectInfoBuilder(
         artifactId = "scala-compiler",
         extension = "jar",
         version = scalaVersion,
+        classifier = null,
         scope = "compile",
         javaScope = "jar",
         repos = listOf(),
@@ -321,6 +322,7 @@ class ProjectInfoBuilder(
         artifactId = "scala-reflect",
         extension = "jar",
         version = scalaVersion,
+        classifier = null,
         scope = "compile",
         javaScope = "jar",
         repos = listOf(),
@@ -334,6 +336,7 @@ class ProjectInfoBuilder(
         artifactId = "scala-library",
         extension = "jar",
         version = scalaVersion,
+        classifier = null,
         scope = "compile",
         javaScope = "jar",
         repos = listOf(),

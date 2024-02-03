@@ -5,10 +5,15 @@ import java.nio.file.Path
 import java.util.LinkedList
 
 class ResolveClassPkgs {
-  data class MavenArtifact(val repo: String, val group: String, val artifact: String)
+  data class MavenArtifact(
+    val repo: String,
+    val group: String,
+    val artifact: String,
+    val classifier: String
+  )
 
   companion object {
-    fun MavenDep.toMavenArtifact() = MavenArtifact(repo, group, artifact)
+    fun MavenDep.toMavenArtifact() = MavenArtifact(repo, group, artifact, classifier)
 
     fun CpInfo.toPaths(): List<Path> = when (this) {
       is ClassesInfo -> this.classDirs + this.resDirs

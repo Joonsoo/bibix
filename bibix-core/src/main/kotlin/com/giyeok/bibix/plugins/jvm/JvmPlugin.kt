@@ -27,7 +27,7 @@ val jvmPlugin = PreloadedPlugin.fromScript(
 
     super class ClassOrigin {MavenDep, LocalLib, LocalBuilt}
 
-    class MavenDep(repo: string, group: string, artifact: string, version: string)
+    class MavenDep(repo: string, group: string, artifact: string, version: string, classifier: string = "")
     // TODO LocalBuilt는 뭐가 들어가야되지..? objHash, builder name
     class LocalLib(path: path)
     class LocalBuilt(objHash: string, builderName: string)

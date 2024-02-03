@@ -148,6 +148,7 @@ data class MavenDep(
   val group: String,
   val artifact: String,
   val version: String,
+  val classifier: String,
 ): ClassOrigin() {
   companion object {
     fun fromBibix(value: BibixValue): MavenDep {
@@ -158,6 +159,7 @@ data class MavenDep(
         group = (value["group"]!! as StringValue).value,
         artifact = (value["artifact"]!! as StringValue).value,
         version = (value["version"]!! as StringValue).value,
+        classifier = (value["classifier"] as StringValue).value,
       )
     }
   }
@@ -170,6 +172,7 @@ data class MavenDep(
       "group" to StringValue(this.group),
       "artifact" to StringValue(this.artifact),
       "version" to StringValue(this.version),
+      "classifier" to StringValue(this.classifier),
     )
   )
 }

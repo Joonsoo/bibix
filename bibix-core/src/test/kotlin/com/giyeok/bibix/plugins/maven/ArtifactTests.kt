@@ -20,6 +20,7 @@ class ArtifactTests {
       "maven-resolver-transport-http",
       "jar",
       "1.9.5",
+      null,
       "compile",
       "jar",
       listOf(),
@@ -39,6 +40,7 @@ class ArtifactTests {
       "firebase-admin",
       "jar",
       "9.1.1",
+      null,
       "compile",
       "jar",
       listOf(),
@@ -58,14 +60,34 @@ class ArtifactTests {
       "grpc-netty-shaded",
       "jar",
       "1.54.0",
+      null,
       "compile",
       "jar",
       listOf(),
       setOf()
     )
     assert(artifact.runtimeDeps.any {
-      it.origin == MavenDep("central", "io.perfmark", "perfmark-api", "0.25.0")
+      it.origin == MavenDep("central", "io.perfmark", "perfmark-api", "0.25.0", "")
     })
+    println(artifact)
+  }
+
+  @Test
+  fun testLibGdx(): Unit = runBlocking {
+    val artifact = Artifact.resolveArtifact(
+      BuildEnv(OS.Linux("debian", "???"), Architecture.X86_64),
+      DummyProgressLogger,
+      Path("bbxbuild/shared/com.giyeok.bibix.plugins.maven"),
+      "com.badlogicgames.gdx",
+      "gdx-backend-lwjgl3",
+      "jar",
+      "1.12.1",
+      null,
+      "compile",
+      "jar",
+      listOf(),
+      setOf()
+    )
     println(artifact)
   }
 }

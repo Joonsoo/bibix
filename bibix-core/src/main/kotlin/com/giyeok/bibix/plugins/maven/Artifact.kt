@@ -61,6 +61,7 @@ class Artifact {
       val artifactId = (context.arguments.getValue("artifact") as StringValue).value
       val extension = (context.arguments.getValue("extension") as StringValue).value
       val version = (context.arguments["version"] as? StringValue)?.value
+      val classifier = (context.arguments["classifier"] as? StringValue)?.value
       val scope = (context.arguments.getValue("scope") as EnumValue).value
       val javaScope = when (scope) {
         "compile" -> JavaScopes.COMPILE
@@ -97,6 +98,7 @@ class Artifact {
         artifactId,
         extension,
         version,
+        classifier,
         scope,
         javaScope,
         repos,
@@ -116,6 +118,7 @@ class Artifact {
       artifactId: String,
       extension: String,
       version: String?,
+      classifier: String?,
       scope: String,
       javaScope: String,
       repos: List<Int>,
@@ -125,7 +128,7 @@ class Artifact {
       val session: RepositorySystemSession =
         newRepositorySystemSession(mavenReposDir, system, buildEnv, logger)
 
-      val artifact = DefaultArtifact(groupId, artifactId, "", extension, version)
+      val artifact = DefaultArtifact(groupId, artifactId, classifier ?: "", extension, version)
       val repositories = newRepositories(system, session)
 
       val artifactRequest = ArtifactRequest()
@@ -170,7 +173,7 @@ class Artifact {
     }
 
     private fun mavenDep(repo: String, artifact: Artifact): MavenDep =
-      MavenDep(repo, artifact.groupId, artifact.artifactId, artifact.version)
+      MavenDep(repo, artifact.groupId, artifact.artifactId, artifact.version, artifact.classifier)
 
     private fun newRepositorySystem(): RepositorySystem {
       // from https://github.com/snyk/aether-demo/blob/master/aether-demo-snippets/src/main/java/org/eclipse/aether/examples/manual/ManualRepositorySystemFactory.java
