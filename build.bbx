@@ -1,7 +1,6 @@
 import jvm
 import maven
 import file
-from bibix.plugins import scala
 from bibix.plugins import ktjvm
 from bibix.plugins import protobuf
 from bibix.plugins import grpc
@@ -13,13 +12,13 @@ import git("https://github.com/Joonsoo/jparser.git") as jparser
 var java.jdkVersion = "21"
 var java.srcVersion = "21"
 var java.outVersion = "21"
-kotlinVersion = "1.9.21"
+kotlinVersion = "1.9.22"
 var ktjvm.compilerVersion = kotlinVersion
 var ktjvm.sdkVersion = kotlinVersion
 var ktjvm.outVersion = "21"
 import git("https://github.com/Joonsoo/sugarproto") as sugarproto
 
-bibixVersion = "0.7.1"
+bibixVersion = "0.8.0"
 
 base {
   proto {
@@ -75,7 +74,6 @@ parser {
     resources = glob("bibix-parser/src/generated/resources/**"),
     deps = [
       jparser.ktparser.main,
-      // ...jparserDeps,
       // maven.artifact("org.scala-lang", "scala-library", "2.13.10"),
       // ...protobufDeps
     ],
@@ -215,14 +213,6 @@ action buildRelease {
   file.copyFile(core.uberJar, "release")
   file.copyFile(intellij.uberJar, "release")
 }
-
-jparserDeps = [
-  jvm.lib("lib/jparser-base-proto-0.5.0.jar"),
-  jvm.lib("lib/jparser-milestone2-proto-0.5.0.jar"),
-  jvm.lib("lib/jparser-mgroup2-proto-0.5.0.jar"),
-  jvm.lib("lib/jparser-ktlib-0.5.0.jar"),
-  jvm.lib("lib/jparser-ktparser-0.5.0.jar"),
-]
 
 kotlinxCoroutinesVersion = "1.7.3"
 kotlinxCoroutinesDeps = [

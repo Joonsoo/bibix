@@ -84,7 +84,13 @@ class TypeEvaluator(
         }
       }
 
-      is TupleTypeNode -> TODO()
+      is TupleTypeNode -> {
+        BuildTaskResult.WithResultList(typeNode.elemTypes.map {
+          EvalType(projectId, it)
+        }) { types ->
+          BuildTaskResult.TypeResult(TupleType(types.map { (it as BuildTaskResult.TypeResult).type }))
+        }
+      }
 
       is LocalDataClassTypeRef ->
         BuildTaskResult.TypeResult(
