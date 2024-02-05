@@ -158,14 +158,16 @@ class ProjectInfoBuilder(
       }
 
       "ktjvm.library" -> {
-        val sdkVersion = targetIdData.argsMap.pairsList.find { it.name == "sdkVersion" }
+        val sdk = targetIdData.argsMap.pairsList.find { it.name == "sdk" }
         val outVersion = targetIdData.argsMap.pairsList.find { it.name == "outVersion" }
-        this.usingSdks.add(sdkVersion {
-          // TODO val sdkVersion = (module.allArgs["sdkVersion"] as StringValue).value
-          this.ktjvmSdkVersion = (sdkVersion!!.value.toBibix() as StringValue).value
-          usedKtJvmSdkVersions.getOrPut(this.ktjvmSdkVersion) { mutableListOf() }
-            .addAll(classPkg.deps)
-        })
+        if (sdk != null) {
+          this.usingSdks.add(sdkVersion {
+            // TODO val sdkVersion = (module.allArgs["sdkVersion"] as StringValue).value
+            this.ktjvmSdkVersion = ClassPkg.fromBibix(sdk.value.toBibix()).origin.toString()
+            usedKtJvmSdkVersions.getOrPut(this.ktjvmSdkVersion) { mutableListOf() }
+              .addAll(classPkg.deps)
+          })
+        }
         this.usingSdks.add(sdkVersion {
           // TODO val jdkVersion = (module.allArgs["outVersion"] as StringValue).value
           this.jdkVersion = (outVersion!!.value.toBibix() as StringValue).value
@@ -174,14 +176,16 @@ class ProjectInfoBuilder(
       }
 
       "scala.library" -> {
-        val sdkVersion = targetIdData.argsMap.pairsList.find { it.name == "sdkVersion" }
+        val sdk = targetIdData.argsMap.pairsList.find { it.name == "sdk" }
         val outVersion = targetIdData.argsMap.pairsList.find { it.name == "outVersion" }
-        this.usingSdks.add(sdkVersion {
-          // TODO val sdkVersion = (module.allArgs["sdkVersion"] as StringValue).value
-          this.scalaSdkVersion = (sdkVersion!!.value.toBibix() as StringValue).value
-          usedScalaSdkVersions.getOrPut(this.scalaSdkVersion) { mutableListOf() }
-            .addAll(classPkg.deps)
-        })
+        if (sdk != null) {
+          this.usingSdks.add(sdkVersion {
+            // TODO val sdkVersion = (module.allArgs["sdkVersion"] as StringValue).value
+            this.scalaSdkVersion = ClassPkg.fromBibix(sdk.value.toBibix()).origin.toString()
+            usedScalaSdkVersions.getOrPut(this.scalaSdkVersion) { mutableListOf() }
+              .addAll(classPkg.deps)
+          })
+        }
         this.usingSdks.add(sdkVersion {
           // TODO val jdkVersion = (module.allArgs["outVersion"] as StringValue).value
           this.jdkVersion = (outVersion!!.value.toBibix() as StringValue).value

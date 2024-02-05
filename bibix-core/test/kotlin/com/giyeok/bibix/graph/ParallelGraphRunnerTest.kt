@@ -4,7 +4,11 @@ import com.giyeok.bibix.base.Architecture
 import com.giyeok.bibix.base.BuildEnv
 import com.giyeok.bibix.base.OS
 import com.giyeok.bibix.frontend.BuildFrontend
-import com.giyeok.bibix.graph.runner.*
+import com.giyeok.bibix.graph.runner.BuildGraphRunner
+import com.giyeok.bibix.graph.runner.ClassPkgRunner
+import com.giyeok.bibix.graph.runner.EvalTarget
+import com.giyeok.bibix.graph.runner.ExecutorTracker
+import com.giyeok.bibix.graph.runner.ParallelGraphRunner
 import com.giyeok.bibix.plugins.prelude.preludePlugin
 import com.giyeok.bibix.repo.BibixRepo
 import kotlinx.coroutines.runBlocking
@@ -12,7 +16,6 @@ import org.codehaus.plexus.classworlds.ClassWorld
 import org.junit.jupiter.api.Test
 import java.nio.file.FileSystems
 import java.nio.file.Path
-import java.util.concurrent.Executors
 import kotlin.io.path.absolute
 
 class ParallelGraphRunnerTest {
@@ -30,7 +33,6 @@ class ParallelGraphRunnerTest {
       fileSystem = FileSystems.getDefault(),
       repo = repo,
       classPkgRunner = ClassPkgRunner(ClassWorld()),
-      taskResultCache = TaskResultCache(),
     )
     val tracker = ExecutorTracker(4)
 

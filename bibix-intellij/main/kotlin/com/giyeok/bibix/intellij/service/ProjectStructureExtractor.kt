@@ -3,6 +3,7 @@ package com.giyeok.bibix.intellij.service
 import com.giyeok.bibix.base.BibixValue
 import com.giyeok.bibix.base.FileValue
 import com.giyeok.bibix.base.ListValue
+import com.giyeok.bibix.base.NoneValue
 import com.giyeok.bibix.base.SetValue
 import com.giyeok.bibix.frontend.BuildFrontend
 import com.giyeok.bibix.graph.BibixProjectLocation
@@ -186,8 +187,17 @@ class ProjectStructureExtractor(projectLocation: BibixProjectLocation) {
           noReuse = true,
         ) { context ->
           val srcs = context.arguments.getValue("srcs").toCollectionOfFile()
-          val deps = context.arguments.getValue("deps").toCollectionOfPkgs()
+          val deps0 = context.arguments.getValue("deps").toCollectionOfPkgs()
+          val sdk = context.arguments["sdk"]?.let { value ->
+            if (value == NoneValue) null else ClassPkg.fromBibix(value)
+          }
           val runtimeDeps = context.arguments.getValue("runtimeDeps").toCollectionOfPkgs()
+          // TODO deps에 stdlib dependency 추가
+          val deps = when (candidate.moduleType!!) {
+            JVMModules.JAVA -> deps0
+            JVMModules.KTJVM -> listOfNotNull(sdk) + deps0
+            JVMModules.SCALA -> listOfNotNull(sdk) + deps0
+          }
           val resultValue = ClassPkg(
             origin = LocalBuilt(
               context.targetId,
