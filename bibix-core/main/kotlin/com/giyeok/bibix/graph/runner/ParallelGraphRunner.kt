@@ -160,22 +160,55 @@ class ParallelGraphRunner(
     }
   }
 
-  private suspend fun runTaskToFinalOrFailure(
-    taskRels: TaskRelManager,
-    task: BuildTask
-  ): Deferred<FailureOr<BuildTaskResult.FinalResult>> {
-    val result = try {
+  private val cacheMutex = Mutex()
+  private val cache =
+    mutableMapOf<CacheableBuildTask, MutableStateFlow<FailureOr<BuildTaskResult>?>>()
+
+  private suspend fun runBuildTaskOrFailure(task: BuildTask): FailureOr<BuildTaskResult> {
+    return try {
       FailureOr.Result(safeRunnerRun { runner.runBuildTask(task) })
     } catch (e: Throwable) {
       FailureOr.Failure(e)
     }
+  }
+
+  private suspend fun cacheOrRunBuildTask(
+    taskRels: TaskRelManager,
+    task: BuildTask
+  ): FailureOr<BuildTaskResult> = when (task) {
+    is CacheableBuildTask -> {
+      val existing = cacheMutex.withLock { cache[task] }
+      if (existing != null) {
+        existing.value ?: existing.filterNotNull().first()
+      } else {
+        val flow = MutableStateFlow<FailureOr<BuildTaskResult>?>(null)
+        cacheMutex.withLock {
+          cache[task] = flow
+        }
+        val result = runBuildTaskOrFailure(task)
+        val finalResult = handleResultOrFailure(taskRels, task, result).await()
+        flow.value = finalResult
+        finalResult
+      }
+    }
+
+    else -> runBuildTaskOrFailure(task)
+  }
+
+  suspend fun runTaskToFinalOrFailure(
+    taskRels: TaskRelManager,
+    task: BuildTask
+  ): Deferred<FailureOr<BuildTaskResult.FinalResult>> {
+    val result = cacheOrRunBuildTask(taskRels, task)
     return handleResultOrFailure(taskRels, task, result)
   }
 
   suspend fun runTasksOrFailure(tasks: List<BuildTask>): Map<BuildTask, FailureOr<BuildTaskResult.FinalResult>> {
     val taskRels = TaskRelManager()
     tasks.forEach { taskRels.addRootTask(it) }
-    val results = tasks.map { runTaskToFinalOrFailure(taskRels, it) }.awaitAll()
+    val results = tasks.map {
+      runTaskToFinalOrFailure(taskRels, it)
+    }.awaitAll()
     return tasks.zip(results).toMap()
   }
 
@@ -186,7 +219,7 @@ class ParallelGraphRunner(
   }
 }
 
-sealed class FailureOr<T> {
+sealed class FailureOr<out T> {
   data class Result<T>(val result: T): FailureOr<T>()
   data class Failure<T>(val error: Throwable): FailureOr<T>() {
     init {

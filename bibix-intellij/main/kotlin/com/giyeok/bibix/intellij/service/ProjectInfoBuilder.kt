@@ -374,7 +374,7 @@ class ProjectInfoBuilder(
   ): List<BibixIntellijProto.ContentRoot> {
     // 공통 ancestor directory 및 각 파일의 package 이름을 고려해서 content root
     val sourceCodeRoots = sources.associate { sourcePath ->
-      println("sourcePackage: ${sourcePath.absolutePathString()}")
+      // println("sourcePackage: ${sourcePath.absolutePathString()}")
       val sourcePackage = sourcePath.bufferedReader().use {
         SourceCodePackageNameReader.readPackageName(it)
       }

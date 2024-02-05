@@ -30,6 +30,6 @@ class ProjectExtractTests {
     val project = impl.loadProject(loadProjectReq {
       this.projectRoot = "/home/joonsoo/Documents/workspace/jparser/"
     })
-    // println(project)
+    println(project)
   }
 }

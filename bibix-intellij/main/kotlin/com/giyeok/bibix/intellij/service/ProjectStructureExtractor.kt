@@ -1,7 +1,6 @@
 package com.giyeok.bibix.intellij.service
 
 import com.giyeok.bibix.base.BibixValue
-import com.giyeok.bibix.base.BuildContext
 import com.giyeok.bibix.base.FileValue
 import com.giyeok.bibix.base.ListValue
 import com.giyeok.bibix.base.SetValue
@@ -14,6 +13,7 @@ import com.giyeok.bibix.graph.runner.BuildTaskResult
 import com.giyeok.bibix.graph.runner.EvalCallee
 import com.giyeok.bibix.graph.runner.EvalTarget
 import com.giyeok.bibix.graph.runner.ExprEvaluator
+import com.giyeok.bibix.graph.runner.FailureOr
 import com.giyeok.bibix.graph.runner.organizeParams
 import com.giyeok.bibix.graph.runner.requiredParamNames
 import com.giyeok.bibix.graph.runner.toValue
@@ -24,7 +24,6 @@ import com.giyeok.bibix.plugins.jvm.ClassesInfo
 import com.giyeok.bibix.plugins.jvm.LocalBuilt
 import kotlinx.coroutines.runBlocking
 import java.nio.file.Path
-import java.util.concurrent.atomic.AtomicInteger
 
 class ProjectStructureExtractor(projectLocation: BibixProjectLocation) {
   val buildFrontend = BuildFrontend(
@@ -41,8 +40,6 @@ class ProjectStructureExtractor(projectLocation: BibixProjectLocation) {
     val evalCallee: EvalCallee,
     var callee: BuildTaskResult.BuildRuleResult? = null,
     var moduleType: JVMModules? = null,
-    var buildContext: BuildContext? = null,
-    var result: ClassPkg? = null,
   )
 
   private var targets: List<Candidate> = listOf()
@@ -103,17 +100,23 @@ class ProjectStructureExtractor(projectLocation: BibixProjectLocation) {
       buildFrontend.parallelRunner.runTasksOrFailure(targets.map { it.evalTarget })
     }
 
-    results.forEach { (key, result) ->
-      println("$key: ${result.toString().substring(0, 100)}")
-    }
-
     val projectInfoBuilder = ProjectInfoBuilder(
       buildFrontend.mainProjectLocation,
       targets.mapNotNull { target ->
-        target.result?.let { classPkg ->
-          if (classPkg.origin is LocalBuilt) {
-            target.name to classPkg
-          } else null
+        results[target.evalTarget]?.let { result ->
+          when (result) {
+            is FailureOr.Result -> {
+              val classPkg = ClassPkg.fromBibix(result.result.toValue())
+              if (classPkg.origin is LocalBuilt) {
+                target.name to classPkg
+              } else null
+            }
+
+            is FailureOr.Failure -> {
+              println("Failed to process ${target.evalTarget.name}")
+              null
+            }
+          }
         }
       }.toMap(),
       buildFrontend.repo.repoData
@@ -126,23 +129,12 @@ class ProjectStructureExtractor(projectLocation: BibixProjectLocation) {
     val candidate = evalTargets[task]
     if (candidate != null) {
       check(task is EvalTarget)
-      val result = candidate.result
-      if (result != null) {
-        return BuildTaskResult.ValueOfTargetResult(
-          result.toBibix(),
-          candidate.buildContext!!.targetId
-        )
-      }
-
       return processCandidate(candidate)
     }
     return null
   }
 
-  private val counter = AtomicInteger(0)
-
   private fun processCandidate(candidate: Candidate): BuildTaskResult {
-    println("processCandidate: ${counter.incrementAndGet()} ${candidate.evalTarget.name}")
     val task = candidate.evalTarget
     val exprNodeId =
       buildFrontend.buildGraphRunner.multiGraph.getProjectGraph(task.projectId).targets.getValue(
@@ -162,19 +154,16 @@ class ProjectStructureExtractor(projectLocation: BibixProjectLocation) {
     val namedParams = exprNode.namedParams.entries.toList()
 
     return BuildTaskResult.WithResultList(
-      listOf(EvalCallee(task.projectId, task.importInstanceId, exprNode.callee)) +
-        exprNode.posParams.map { evaluator.evalTask(it) } +
+      exprNode.posParams.map { evaluator.evalTask(it) } +
         namedParams.map { evaluator.evalTask(it.value) }
     ) { results ->
-      check(results.size == 1 + exprNode.posParams.size + exprNode.namedParams.size)
-      val callee = results.first()
-      val buildRule = callee as BuildTaskResult.BuildRuleResult
-      check(buildRule == candidate.callee)
+      check(results.size == exprNode.posParams.size + exprNode.namedParams.size)
+      val buildRule = candidate.callee!!
 
-      val posArgs = results.drop(1).take(exprNode.posParams.size).map { argResult ->
+      val posArgs = results.take(exprNode.posParams.size).map { argResult ->
         argResult.toValue()
       }
-      val namedArgs = namedParams.zip(results.drop(1 + exprNode.posParams.size))
+      val namedArgs = namedParams.zip(results.drop(exprNode.posParams.size))
         .associate { (param, argResult) ->
           param.key to argResult.toValue()
         }
@@ -208,10 +197,6 @@ class ProjectStructureExtractor(projectLocation: BibixProjectLocation) {
             deps = deps,
             runtimeDeps = runtimeDeps,
           )
-          synchronized(candidate) {
-            candidate.buildContext = context
-            candidate.result = resultValue
-          }
           BuildTaskResult.ValueOfTargetResult(resultValue.toBibix(), context.targetId)
         }
       }
