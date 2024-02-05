@@ -54,7 +54,7 @@ class ProjectInfoBuilder(
     classPkg.runtimeDeps.forEach { traverseClassPkg(it) }
   }
 
-  fun build(): BibixIntellijProto.BibixProjectInfo {
+  fun build(buildFrontend: BuildFrontend): BibixIntellijProto.BibixProjectInfo {
     val moduleContentRoots = sourceFiles.map { (origin, files) ->
       origin to getContentRoots(files.srcs.toSet(), files.resDirs.toSet())
     }.toMap()
@@ -102,40 +102,48 @@ class ProjectInfoBuilder(
               }
             }
           }
-        }
-        )
+        })
       }
 
+      val resolvedScalaCompilers =
+        usedScalaSdkVersions.values.map { it.languageVersion }.distinct()
+          .associateWith { languageVersion ->
+            Artifact.resolveArtifact(
+              buildFrontend.buildEnv,
+              DummyProgressLogger,
+              buildFrontend.repo.prepareSharedDirectory(Artifact.sharedRepoName),
+              groupId = "org.scala-lang",
+              artifactId = "scala-compiler",
+              extension = "jar",
+              version = languageVersion,
+              classifier = null,
+              scope = "compile",
+              javaScope = "jar",
+              repos = listOf(),
+              excludes = setOf(),
+            )
+          }
+
       this.sdkInfo = sdkInfo {
-        usedKotlinJvmSdkVersions.forEach { (sdkVersion, artifactCandidates) ->
-          val mavenDeps = artifactCandidates.map { it.origin }.filterIsInstance<MavenDep>()
-          val artifacts = mavenDeps.filter {
-            it.artifact.startsWith("kotlin-stdlib") && it.version == sdkVersion
-          }.distinct()
+        usedKotlinJvmSdkVersions.forEach { (sdkVersion, sdkInfo) ->
+          val sdkOrigin = sdkInfo.sdkClassPkg.origin
+          check(sdkOrigin is MavenDep)
           this.ktjvmSdks.add(kotlinJvmSdk {
             this.version = sdkVersion
-            this.sdkLibraryIds.addAll(artifacts.map { libIdFromOrigin(it) })
+            this.sdkLibraryIds.add(libIdFromOrigin(sdkOrigin))
           })
         }
 
-        usedScalaSdkVersions.forEach { (sdkVersion, artifactCandidates) ->
-          val mavenDeps = artifactCandidates.map { it.origin }.filterIsInstance<MavenDep>()
-          val origins = mavenDeps.filter {
-            it.artifact == "scala-library" && it.version == sdkVersion
-          }.distinct()
-          val originSet = origins.toSet()
+        usedScalaSdkVersions.forEach { (sdkVersion, sdkInfo) ->
+          val sdkOrigin = sdkInfo.sdkClassPkg.origin
+          check(sdkOrigin is MavenDep)
           this.scalaSdks.add(scalaSdk {
             this.version = sdkVersion
-            this.scalaLanguageVersion = sdkVersion
-            val artifacts = artifactCandidates.filter { it.origin in originSet }
-            val cps = ResolveClassPkgs.flattenClassPkgs(artifacts, null)
-            this.compilerClasspaths.addAll(cps.inputDeps.flatMap {
-              when (val cp = it.value.cpinfo) {
-                is ClassesInfo -> cp.classDirs
-                is JarInfo -> listOf(cp.jar)
-              }
-            }.map { it.absolutePathString() })
-            this.sdkLibraryIds.addAll(origins.map { libIdFromOrigin(it) })
+            this.scalaLanguageVersion = sdkInfo.languageVersion
+            val compiler = resolvedScalaCompilers.getValue(sdkInfo.languageVersion)
+            val cps = ResolveClassPkgs.resolveClassPkgs(listOf(compiler), null)
+            this.compilerClasspaths.addAll(cps.cps.map { it.absolutePathString() })
+            this.sdkLibraryIds.add(libIdFromOrigin(sdkOrigin))
           })
         }
       }
@@ -147,9 +155,16 @@ class ProjectInfoBuilder(
     return "$rootModuleName.$userName"
   }
 
+  private data class KotlinSdk(val versionName: String, val sdkClassPkg: ClassPkg)
+  private data class ScalaSdk(
+    val versionName: String,
+    val languageVersion: String,
+    val sdkClassPkg: ClassPkg
+  )
+
   private val usedExternalLibraries = mutableMapOf<ClassOrigin, ClassPkg>()
-  private val usedKotlinJvmSdkVersions = mutableMapOf<String, MutableList<ClassPkg>>()
-  private val usedScalaSdkVersions = mutableMapOf<String, MutableList<ClassPkg>>()
+  private val usedKotlinJvmSdkVersions = mutableMapOf<String, KotlinSdk>()
+  private val usedScalaSdkVersions = mutableMapOf<String, ScalaSdk>()
 
   private fun createModule(
     moduleName: String,
@@ -167,7 +182,6 @@ class ProjectInfoBuilder(
         val srcVersion = targetIdData.argsMap.pairsList.find { it.name == "srcVersion" }
         this.usingSdks.add(sdkVersion {
           // assuming java
-          // TODO val jdkVersion = (module.allArgs["jdkVersion"] as StringValue).value
           this.jdkVersion = (srcVersion?.value?.toBibix() as? StringValue)?.value ?: "21"
         })
         this.moduleType = "java"
@@ -180,15 +194,12 @@ class ProjectInfoBuilder(
           val sdkClassPkg = ClassPkg.fromBibix(sdk.value.toBibix())
           if (sdkClassPkg.origin is MavenDep) {
             this.usingSdks.add(sdkVersion {
-              // TODO val sdkVersion = (module.allArgs["sdkVersion"] as StringValue).value
               this.ktjvmSdkVersion = (sdkClassPkg.origin as MavenDep).version
-              usedKotlinJvmSdkVersions.getOrPut(this.ktjvmSdkVersion) { mutableListOf() }
-                .addAll(classPkg.deps)
+              usedKotlinJvmSdkVersions[ktjvmSdkVersion] = KotlinSdk(ktjvmSdkVersion, sdkClassPkg)
             })
           }
         }
         this.usingSdks.add(sdkVersion {
-          // TODO val jdkVersion = (module.allArgs["outVersion"] as StringValue).value
           this.jdkVersion = (outVersion!!.value.toBibix() as StringValue).value
         })
         this.moduleType = "ktjvm"
@@ -197,22 +208,19 @@ class ProjectInfoBuilder(
       "scala.library" -> {
         val sdk = targetIdData.argsMap.pairsList.find { it.name == "sdk" }
         val outVersion = targetIdData.argsMap.pairsList.find { it.name == "outVersion" }
-        val compilerVersion =
+        val languageVersion =
           (targetIdData.argsMap.pairsList.find { it.name == "compilerVersion" }!!.value.toBibix() as StringValue).value
         if (sdk != null) {
           val sdkClassPkg = ClassPkg.fromBibix(sdk.value.toBibix())
           if (sdkClassPkg.origin is MavenDep) {
-            // compilerVersion에 해당하는 컴파일러 받아와서 전달하기
-            println(compilerVersion)
             this.usingSdks.add(sdkVersion {
               this.scalaSdkVersion = (sdkClassPkg.origin as MavenDep).version
-              usedScalaSdkVersions.getOrPut(this.scalaSdkVersion) { mutableListOf() }
-                .addAll(classPkg.deps)
+              usedScalaSdkVersions[scalaSdkVersion] =
+                ScalaSdk(scalaSdkVersion, languageVersion, sdkClassPkg)
             })
           }
         }
         this.usingSdks.add(sdkVersion {
-          // TODO val jdkVersion = (module.allArgs["outVersion"] as StringValue).value
           this.jdkVersion = (outVersion!!.value.toBibix() as StringValue).value
         })
         this.moduleType = "scala"
@@ -425,7 +433,7 @@ class ProjectInfoBuilder(
       }
     }
 
-    val srcRoots = sourceCodeRoots.values.distinct().map { source ->
+    val srcRoots = sourceCodeRoots.values.distinct().toSet().roots().sorted().map { source ->
       contentRoot {
         this.contentRootName = "Sources"
         this.contentRootType = "src"
@@ -487,3 +495,10 @@ class ProjectInfoBuilder(
     }
   }
 }
+
+fun Set<Path>.roots(): List<Path> = this.filter { dir ->
+  // dir이 다른 누군가(ancestor)의 sub인 경우가 없으면(dir.startsWith(ancestor))
+  this.all { ancestor ->
+    if (dir == ancestor) true else !dir.startsWith(ancestor)
+  }
+}.sorted()

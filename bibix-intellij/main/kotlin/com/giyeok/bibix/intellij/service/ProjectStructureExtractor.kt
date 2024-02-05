@@ -126,7 +126,7 @@ class ProjectStructureExtractor(projectLocation: BibixProjectLocation) {
       buildFrontend.repo.repoData
     )
 
-    return projectInfoBuilder.build()
+    return projectInfoBuilder.build(buildFrontend)
   }
 
   private fun interceptTask(task: BuildTask): BuildTaskResult? {

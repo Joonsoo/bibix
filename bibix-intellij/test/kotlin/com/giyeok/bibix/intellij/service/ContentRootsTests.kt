@@ -5,6 +5,7 @@ import com.giyeok.bibix.intellij.service.ProjectInfoBuilder.Companion.commonAnce
 import com.google.common.jimfs.Jimfs
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test
+import kotlin.io.path.Path
 import kotlin.io.path.createDirectories
 import kotlin.io.path.writeText
 
@@ -34,5 +35,14 @@ class ContentRootsTests {
       this.contentRootType = "src"
       this.contentRootPath = "/testproject/src/main/kotlin"
     })
+  }
+
+  @Test
+  fun testRoots() {
+    val paths = setOf(
+      Path("/a/b/c"),
+      Path("/a/b"),
+    )
+    println(paths.roots())
   }
 }
