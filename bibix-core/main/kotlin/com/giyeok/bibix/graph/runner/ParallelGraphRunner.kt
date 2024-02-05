@@ -177,19 +177,22 @@ class ParallelGraphRunner(
     task: BuildTask
   ): FailureOr<BuildTaskResult> = when (task) {
     is CacheableBuildTask -> {
-      val existing = cacheMutex.withLock { cache[task] }
-      if (existing != null) {
-        existing.value ?: existing.filterNotNull().first()
-      } else {
-        val flow = MutableStateFlow<FailureOr<BuildTaskResult>?>(null)
-        cacheMutex.withLock {
+      val flow: MutableStateFlow<FailureOr<BuildTaskResult>?>
+
+      cacheMutex.withLock {
+        val existing = cache[task]
+        if (existing != null) {
+          return existing.value ?: existing.filterNotNull().first()
+        } else {
+          flow = MutableStateFlow(null)
           cache[task] = flow
         }
-        val result = runBuildTaskOrFailure(task)
-        val finalResult = handleResultOrFailure(taskRels, task, result).await()
-        flow.value = finalResult
-        finalResult
       }
+
+      val result = runBuildTaskOrFailure(task)
+      val finalResult = handleResultOrFailure(taskRels, task, result).await()
+      flow.value = finalResult
+      finalResult
     }
 
     else -> runBuildTaskOrFailure(task)
