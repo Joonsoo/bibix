@@ -25,6 +25,9 @@ import com.giyeok.bibix.plugins.jvm.ClassesInfo
 import com.giyeok.bibix.plugins.jvm.LocalBuilt
 import kotlinx.coroutines.runBlocking
 import java.nio.file.Path
+import kotlin.io.path.absolute
+import kotlin.io.path.isDirectory
+import kotlin.io.path.listDirectoryEntries
 
 class ProjectStructureExtractor(projectLocation: BibixProjectLocation) {
   val buildFrontend = BuildFrontend(
@@ -187,6 +190,8 @@ class ProjectStructureExtractor(projectLocation: BibixProjectLocation) {
           noReuse = true,
         ) { context ->
           val srcs = context.arguments.getValue("srcs").toCollectionOfFile()
+          val resources = context.arguments.getValue("resources").toCollectionOfFile()
+          val resDirs = findResourceDirectoriesOf(resources)
           val deps0 = context.arguments.getValue("deps").toCollectionOfPkgs()
           val sdk = context.arguments["sdk"]?.let { value ->
             if (value == NoneValue) null else ClassPkg.fromBibix(value)
@@ -203,7 +208,7 @@ class ProjectStructureExtractor(projectLocation: BibixProjectLocation) {
               context.targetId,
               candidate.moduleType!!.builderName
             ),
-            cpinfo = ClassesInfo(listOf(), listOf(), srcs),
+            cpinfo = ClassesInfo(listOf(), resDirs, srcs),
             deps = deps,
             runtimeDeps = runtimeDeps,
           )
@@ -230,4 +235,32 @@ fun BibixValue.toCollectionOfPkgs(): List<ClassPkg> = when (this) {
   is ListValue -> this.values.map { ClassPkg.fromBibix(it) }
   is SetValue -> this.values.map { ClassPkg.fromBibix(it) }
   else -> throw IllegalStateException()
+}
+
+fun allFilesOf(directory: Path): Set<Path> =
+  directory.listDirectoryEntries().flatMap { sub ->
+    if (sub.isDirectory()) {
+      allFilesOf(sub)
+    } else {
+      listOf(sub)
+    }
+  }.toSet()
+
+fun findResourceDirectoriesOf(paths: Collection<Path>): List<Path> {
+  val mutPaths = paths.toMutableSet()
+  val resDirs = mutableSetOf<Path>()
+  while (mutPaths.isNotEmpty()) {
+    val path = mutPaths.first()
+    val directory = path.parent
+    val dirFiles = allFilesOf(directory)
+    if (paths.containsAll(dirFiles)) {
+      resDirs.removeIf { it.startsWith(directory) }
+      resDirs.add(directory)
+      mutPaths.removeAll(dirFiles)
+    } else {
+      resDirs.add(path)
+    }
+    mutPaths.remove(path)
+  }
+  return resDirs.map { it.absolute() }.toList().sorted()
 }
