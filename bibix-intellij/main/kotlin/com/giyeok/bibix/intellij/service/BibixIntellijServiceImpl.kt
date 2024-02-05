@@ -55,6 +55,7 @@ class BibixIntellijServiceImpl(
       }
 
       runBlocking {
+        println("Finished loading project at $projectRoot")
         flow.emit(loaded)
       }
     }
