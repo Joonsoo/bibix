@@ -94,7 +94,7 @@ data class JarInfo(
     "JarInfo",
     listOfNotNull(
       "jar" to FileValue(this.jar),
-      this.sourceJar?.let { "sourceJar" to FileValue(it) },
+      "sourceJar" to (this.sourceJar?.let { FileValue(it) } ?: NoneValue),
     ).toMap()
   )
 }

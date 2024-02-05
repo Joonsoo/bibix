@@ -25,6 +25,7 @@ class BuildGraphRunner(
   val repo: BibixRepo,
   val classPkgRunner: ClassPkgRunner,
   val fileHashStore: FileHashStore,
+  val taskInterceptor: ((BuildTask) -> BuildTaskResult?)? = null
 ) {
   companion object {
     fun create(
@@ -35,6 +36,7 @@ class BuildGraphRunner(
       fileSystem: FileSystem,
       repo: BibixRepo,
       classPkgRunner: ClassPkgRunner,
+      taskInterceptor: ((BuildTask) -> BuildTaskResult?)? = null
     ): BuildGraphRunner {
       val preludeNames = NameLookupTable.fromDefs(preludePlugin.defs).names.keys
 
@@ -89,447 +91,472 @@ class BuildGraphRunner(
         fileSystem = fileSystem,
         repo = repo,
         classPkgRunner = classPkgRunner,
-        fileHashStore = FileHashStore()
+        fileHashStore = FileHashStore(),
+        taskInterceptor = taskInterceptor,
       )
     }
   }
 
-  fun runBuildTask(buildTask: BuildTask): BuildTaskResult = when (buildTask) {
-    is EvalTarget -> {
-      val exprNodeId =
-        multiGraph.getProjectGraph(buildTask.projectId).targets.getValue(buildTask.name)
-      BuildTaskResult.WithResult(
-        EvalExpr(buildTask.projectId, exprNodeId, buildTask.importInstanceId, null)
-      ) { result ->
-        // TODO if buildTask.projectId == 1이면 outputs 폴더에 링크 만들기
-        if (buildTask.projectId == 1) {
-          if (result is BuildTaskResult.ValueOfTargetResult) {
-            repo.linkNameToObjectIfExists(buildTask.name, result.targetId)
+  fun runBuildTask(buildTask: BuildTask): BuildTaskResult {
+    taskInterceptor?.let { interceptor ->
+      val interceptorResult = interceptor(buildTask)
+      if (interceptorResult != null) {
+        return interceptorResult
+      }
+    }
+    return when (buildTask) {
+      is EvalTarget -> {
+        val exprNodeId =
+          multiGraph.getProjectGraph(buildTask.projectId).targets.getValue(buildTask.name)
+        BuildTaskResult.WithResult(
+          EvalExpr(buildTask.projectId, exprNodeId, buildTask.importInstanceId, null)
+        ) { result ->
+          // TODO if buildTask.projectId == 1이면 outputs 폴더에 링크 만들기
+          if (buildTask.projectId == 1) {
+            if (result is BuildTaskResult.ValueOfTargetResult) {
+              repo.linkNameToObjectIfExists(buildTask.name, result.targetId)
+            }
+          }
+          when (result) {
+            is BuildTaskResult.ResultWithValue -> result
+            is BuildTaskResult.TypeCastFailResult -> throw IllegalStateException()
+            else -> throw AssertionError()
           }
         }
-        when (result) {
-          is BuildTaskResult.ResultWithValue -> result
-          is BuildTaskResult.TypeCastFailResult -> throw IllegalStateException()
-          else -> throw AssertionError()
+      }
+
+      is EvalAction -> {
+        val action =
+          multiGraph.getProjectGraph(buildTask.projectId).actions.getValue(buildTask.name)
+        BuildTaskResult.ActionResult(
+          buildTask.projectId,
+          buildTask.importInstanceId,
+          buildTask.name,
+          action
+        )
+      }
+
+      is ExecAction -> executeAction(buildTask)
+      is ExecActionCallExpr -> executeActionCallExpr(buildTask)
+
+      is EvalVar -> {
+        val buildGraph = multiGraph.getProjectGraph(buildTask.projectId)
+        val varDef = buildGraph.vars[buildTask.name]
+        checkNotNull(varDef)
+
+        val varRedefs =
+          importInstances[buildTask.projectId]?.get(buildTask.importInstanceId) ?: mapOf()
+        val varExpr = varRedefs[buildTask.name] ?: varDef.defaultValue?.let {
+          GlobalExprNodeId(buildTask.projectId, buildTask.importInstanceId, it)
         }
-      }
-    }
-
-    is EvalAction -> {
-      val action = multiGraph.getProjectGraph(buildTask.projectId).actions.getValue(buildTask.name)
-      BuildTaskResult.ActionResult(
-        buildTask.projectId,
-        buildTask.importInstanceId,
-        buildTask.name,
-        action
-      )
-    }
-
-    is ExecAction -> executeAction(buildTask)
-    is ExecActionCallExpr -> executeActionCallExpr(buildTask)
-
-    is EvalVar -> {
-      val buildGraph = multiGraph.getProjectGraph(buildTask.projectId)
-      val varDef = buildGraph.vars[buildTask.name]
-      checkNotNull(varDef)
-
-      val varRedefs =
-        importInstances[buildTask.projectId]?.get(buildTask.importInstanceId) ?: mapOf()
-      val varExpr = varRedefs[buildTask.name] ?: varDef.defaultValue?.let {
-        GlobalExprNodeId(buildTask.projectId, buildTask.importInstanceId, it)
-      }
-      checkNotNull(varExpr)
-      BuildTaskResult.WithResult(
-        EvalExpr(varExpr.projectId, varExpr.exprNodeId, varExpr.importInstanceId, null)
-      ) { result ->
-        check(result is BuildTaskResult.ResultWithValue)
-        result
-      }
-    }
-
-    is EvalExpr -> {
-      val evaluator = ExprEvaluator(
-        buildGraphRunner = this,
-        projectId = buildTask.projectId,
-        importInstanceId = buildTask.importInstanceId,
-        localLets = buildTask.localVars,
-        thisValue = buildTask.thisValue,
-      )
-      evaluator.evaluateExpr(buildTask.exprNodeId)
-    }
-
-    is EvalCallExpr -> {
-      val evaluator = ExprEvaluator(
-        buildGraphRunner = this,
-        projectId = buildTask.projectId,
-        importInstanceId = buildTask.importInstanceId,
-        localLets = mapOf(),
-        thisValue = null,
-      )
-      evaluator.evaluateCallExpr(buildTask)
-    }
-
-    is EvalCallee -> {
-      // -> BuildRuleResult
-      // -> ActionRuleResult
-      // -> DataClassResult
-      // -> ActionResult
-
-      fun processEntity(
-        projectId: Int,
-        importInstanceId: Int,
-        memberName: BibixName,
-        entity: BuildGraphEntity?
-      ): BuildTaskResult = when (entity) {
-        is BuildGraphEntity.BuildRule -> BuildTaskResult.WithResult(
-          EvalBuildRule(projectId, importInstanceId, memberName)
-        ) { it }
-
-        is BuildGraphEntity.DataClass -> BuildTaskResult.WithResult(
-          EvalDataClass(projectId, importInstanceId, memberName)
-        ) { it }
-
-        is BuildGraphEntity.ActionRule -> BuildTaskResult.WithResult(
-          EvalActionRule(projectId, importInstanceId, memberName)
-        ) { it }
-
-        is BuildGraphEntity.Action -> BuildTaskResult.WithResult(
-          EvalAction(projectId, importInstanceId, memberName)
-        ) { it }
-
-        else -> throw IllegalStateException()
-      }
-
-      when (val callee = buildTask.callee) {
-        is Callee.ImportedCallee -> BuildTaskResult.WithResult(
-          Import(buildTask.projectId, buildTask.importInstanceId, callee.importName)
+        checkNotNull(varExpr)
+        BuildTaskResult.WithResult(
+          EvalExpr(varExpr.projectId, varExpr.exprNodeId, varExpr.importInstanceId, null)
         ) { result ->
-          check(result is BuildTaskResult.BuildRuleResult || result is BuildTaskResult.DataClassResult || result is BuildTaskResult.ActionRuleResult)
+          check(result is BuildTaskResult.ResultWithValue)
           result
         }
+      }
 
-        is Callee.ImportedMemberCallee -> {
-          BuildTaskResult.WithResult(
+      is EvalExpr -> {
+        val evaluator = ExprEvaluator(
+          buildGraphRunner = this,
+          projectId = buildTask.projectId,
+          importInstanceId = buildTask.importInstanceId,
+          localLets = buildTask.localVars,
+          thisValue = buildTask.thisValue,
+        )
+        evaluator.evaluateExpr(buildTask.exprNodeId)
+      }
+
+      is EvalCallExpr -> {
+        val evaluator = ExprEvaluator(
+          buildGraphRunner = this,
+          projectId = buildTask.projectId,
+          importInstanceId = buildTask.importInstanceId,
+          localLets = mapOf(),
+          thisValue = null,
+        )
+        evaluator.evaluateCallExpr(buildTask)
+      }
+
+      is EvalCallee -> {
+        // -> BuildRuleResult
+        // -> ActionRuleResult
+        // -> DataClassResult
+        // -> ActionResult
+
+        fun processEntity(
+          projectId: Int,
+          importInstanceId: Int,
+          memberName: BibixName,
+          entity: BuildGraphEntity?
+        ): BuildTaskResult = when (entity) {
+          is BuildGraphEntity.BuildRule -> BuildTaskResult.WithResult(
+            EvalBuildRule(projectId, importInstanceId, memberName)
+          ) { it }
+
+          is BuildGraphEntity.DataClass -> BuildTaskResult.WithResult(
+            EvalDataClass(projectId, importInstanceId, memberName)
+          ) { it }
+
+          is BuildGraphEntity.ActionRule -> BuildTaskResult.WithResult(
+            EvalActionRule(projectId, importInstanceId, memberName)
+          ) { it }
+
+          is BuildGraphEntity.Action -> BuildTaskResult.WithResult(
+            EvalAction(projectId, importInstanceId, memberName)
+          ) { it }
+
+          else -> throw IllegalStateException()
+        }
+
+        when (val callee = buildTask.callee) {
+          is Callee.ImportedCallee -> BuildTaskResult.WithResult(
             Import(buildTask.projectId, buildTask.importInstanceId, callee.importName)
-          ) { importResult ->
-            check(importResult is BuildTaskResult.ImportInstanceResult)
-
-            val importedGraph = multiGraph.getProjectGraph(importResult.projectId)
-            val memberName = BibixName(callee.memberNames)
-            processEntity(
-              importResult.projectId,
-              importResult.importInstanceId,
-              memberName,
-              importedGraph.findName(memberName)
-            )
+          ) { result ->
+            check(result is BuildTaskResult.BuildRuleResult || result is BuildTaskResult.DataClassResult || result is BuildTaskResult.ActionRuleResult)
+            result
           }
-        }
 
-        is Callee.LocalBuildRule -> BuildTaskResult.WithResult(
-          EvalBuildRule(buildTask.projectId, buildTask.importInstanceId, callee.name)
-        ) { it }
+          is Callee.ImportedMemberCallee -> {
+            BuildTaskResult.WithResult(
+              Import(buildTask.projectId, buildTask.importInstanceId, callee.importName)
+            ) { importResult ->
+              check(importResult is BuildTaskResult.ImportInstanceResult)
 
-        is Callee.LocalDataClass -> BuildTaskResult.WithResult(
-          EvalDataClass(buildTask.projectId, buildTask.importInstanceId, callee.name)
-        ) { it }
+              val importedGraph = multiGraph.getProjectGraph(importResult.projectId)
+              val memberName = BibixName(callee.memberNames)
+              processEntity(
+                importResult.projectId,
+                importResult.importInstanceId,
+                memberName,
+                importedGraph.findName(memberName)
+              )
+            }
+          }
 
-        is Callee.LocalActionRule -> BuildTaskResult.WithResult(
-          EvalActionRule(buildTask.projectId, buildTask.importInstanceId, callee.name)
-        ) { it }
+          is Callee.LocalBuildRule -> BuildTaskResult.WithResult(
+            EvalBuildRule(buildTask.projectId, buildTask.importInstanceId, callee.name)
+          ) { it }
 
-        is Callee.LocalAction -> BuildTaskResult.WithResult(
-          EvalAction(buildTask.projectId, buildTask.importInstanceId, callee.name)
-        ) { it }
+          is Callee.LocalDataClass -> BuildTaskResult.WithResult(
+            EvalDataClass(buildTask.projectId, buildTask.importInstanceId, callee.name)
+          ) { it }
 
-        is Callee.PreludeMember -> {
-          val preludeGraph = multiGraph.getProjectGraph(2)
-          val localEntity = preludeGraph.findName(callee.name)
-          if (localEntity != null) {
-            processEntity(2, 0, callee.name, localEntity)
-          } else {
-            // prelude에 import bibix 가 있어서..
-            lookupFromImport(preludeGraph, 2, 0, callee.name) { it }
+          is Callee.LocalActionRule -> BuildTaskResult.WithResult(
+            EvalActionRule(buildTask.projectId, buildTask.importInstanceId, callee.name)
+          ) { it }
+
+          is Callee.LocalAction -> BuildTaskResult.WithResult(
+            EvalAction(buildTask.projectId, buildTask.importInstanceId, callee.name)
+          ) { it }
+
+          is Callee.PreludeMember -> {
+            val preludeGraph = multiGraph.getProjectGraph(2)
+            val localEntity = preludeGraph.findName(callee.name)
+            if (localEntity != null) {
+              processEntity(2, 0, callee.name, localEntity)
+            } else {
+              // prelude에 import bibix 가 있어서..
+              lookupFromImport(preludeGraph, 2, 0, callee.name) { it }
+            }
           }
         }
       }
-    }
 
-    is TypeCastValue -> {
-      ValueCaster(this, buildTask.valueProjectId)
-        .castValue(buildTask.value, buildTask.type)
-    }
-
-    is FinalizeBuildRuleReturnValue -> {
-      ValueCaster(this, buildTask.projectId)
-        .finalizeBuildRuleReturnValue(
-          buildTask.buildRuleDefCtx,
-          buildTask.value
-        )
-    }
-
-    is EvalBuildRuleMeta -> {
-      val buildGraph = multiGraph.getProjectGraph(buildTask.projectId)
-
-      val buildRule = buildGraph.buildRules.getValue(buildTask.name)
-
-      withParamTypes(buildTask.projectId, buildRule.def.params, buildRule.params) { paramTypes ->
-        BuildTaskResult.BuildRuleMetaResult(
-          buildTask.projectId,
-          buildTask.name,
-          buildTask.importInstanceId,
-          buildRule,
-          paramTypes,
-        )
+      is TypeCastValue -> {
+        ValueCaster(this, buildTask.valueProjectId)
+          .castValue(buildTask.value, buildTask.type)
       }
-    }
 
-    is EvalBuildRule -> {
-      val buildGraph = multiGraph.getProjectGraph(buildTask.projectId)
+      is FinalizeBuildRuleReturnValue -> {
+        ValueCaster(this, buildTask.projectId)
+          .finalizeBuildRuleReturnValue(
+            buildTask.buildRuleDefCtx,
+            buildTask.value
+          )
+      }
 
-      val buildRule = buildGraph.buildRules.getValue(buildTask.name)
+      is EvalBuildRuleMeta -> {
+        val buildGraph = multiGraph.getProjectGraph(buildTask.projectId)
 
-      withParamTypes(buildTask.projectId, buildRule.def.params, buildRule.params) { paramTypes ->
-        withImplTarget(
-          buildTask.projectId,
-          buildTask.importInstanceId,
-          buildRule.implTarget,
-          buildRule.implClassName,
-        ) { impl ->
-          BuildTaskResult.BuildRuleResult(
+        val buildRule = buildGraph.buildRules.getValue(buildTask.name)
+
+        withParamTypes(buildTask.projectId, buildRule.def.params, buildRule.params) { paramTypes ->
+          BuildTaskResult.BuildRuleMetaResult(
             buildTask.projectId,
             buildTask.name,
             buildTask.importInstanceId,
             buildRule,
             paramTypes,
-            impl,
-            buildRule.implMethodName
           )
         }
       }
-    }
 
-    is EvalActionRule -> {
-      val buildGraph = multiGraph.getProjectGraph(buildTask.projectId)
+      is EvalBuildRule -> {
+        val buildGraph = multiGraph.getProjectGraph(buildTask.projectId)
 
-      val actionRule = buildGraph.actionRules.getValue(buildTask.name)
+        val buildRule = buildGraph.buildRules.getValue(buildTask.name)
 
-      withParamTypes(buildTask.projectId, actionRule.def.params, actionRule.params) { paramTypes ->
-        withImplTarget(
-          buildTask.projectId,
-          buildTask.importInstanceId,
-          actionRule.implTarget,
-          actionRule.implClassName
-        ) { impl ->
-          BuildTaskResult.ActionRuleResult(
+        withParamTypes(buildTask.projectId, buildRule.def.params, buildRule.params) { paramTypes ->
+          withImplTarget(
             buildTask.projectId,
-            buildTask.name,
             buildTask.importInstanceId,
-            actionRule,
-            paramTypes,
-            impl,
-            actionRule.implMethodName
+            buildRule.implTarget,
+            buildRule.implClassName,
+          ) { impl ->
+            BuildTaskResult.BuildRuleResult(
+              buildTask.projectId,
+              buildTask.name,
+              buildTask.importInstanceId,
+              buildRule,
+              paramTypes,
+              impl,
+              buildRule.implMethodName
+            )
+          }
+        }
+      }
+
+      is EvalActionRule -> {
+        val buildGraph = multiGraph.getProjectGraph(buildTask.projectId)
+
+        val actionRule = buildGraph.actionRules.getValue(buildTask.name)
+
+        withParamTypes(
+          buildTask.projectId,
+          actionRule.def.params,
+          actionRule.params
+        ) { paramTypes ->
+          withImplTarget(
+            buildTask.projectId,
+            buildTask.importInstanceId,
+            actionRule.implTarget,
+            actionRule.implClassName
+          ) { impl ->
+            BuildTaskResult.ActionRuleResult(
+              buildTask.projectId,
+              buildTask.name,
+              buildTask.importInstanceId,
+              actionRule,
+              paramTypes,
+              impl,
+              actionRule.implMethodName
+            )
+          }
+        }
+      }
+
+      is EvalImportSource -> handleEvalImportSource(buildTask)
+
+      is Import -> handleImportTask(buildTask)
+
+      is ImportFromPrelude -> {
+        val projectId = 2
+        val name = buildTask.name
+
+        val buildGraph = multiGraph.getProjectGraph(projectId)
+
+        val target = buildGraph.targets[name]
+        val buildRule = buildGraph.buildRules[name]
+        val varDef = buildGraph.vars[name]
+        val dataClass = buildGraph.dataClasses[name]
+        val superClass = buildGraph.superClasses[name]
+        val enum = buildGraph.enums[name]
+        val action = buildGraph.actions[name]
+        val actionRule = buildGraph.actionRules[name]
+
+        // 중복된 이름이 있으면 안됨
+        check(
+          listOf(
+            target != null,
+            buildRule != null,
+            varDef != null,
+            dataClass != null,
+            superClass != null,
+            enum != null,
+            action != null,
+            actionRule != null
+          ).count { it } <= 1
+        ) { "Duplicate name: $name at $projectId" }
+
+        when {
+          target != null ->
+            BuildTaskResult.WithResult(EvalTarget(projectId, 0, name)) { it }
+
+          buildRule != null ->
+            BuildTaskResult.WithResult(EvalBuildRule(projectId, 0, name)) { it }
+
+          varDef != null ->
+            BuildTaskResult.WithResult(EvalVar(projectId, 0, name)) { it }
+
+          dataClass != null ->
+            BuildTaskResult.WithResult(EvalDataClass(projectId, 0, name)) { it }
+
+          superClass != null ->
+            BuildTaskResult.WithResult(EvalSuperClass(projectId, name.toString())) { it }
+
+          enum != null -> {
+            BuildTaskResult.EnumTypeResult(
+              projectId,
+              checkNotNull(buildGraph.packageName),
+              name,
+              enum.def.values
+            )
+          }
+
+          action != null ->
+            BuildTaskResult.WithResult(EvalAction(projectId, 0, name)) { it }
+
+          actionRule != null ->
+            BuildTaskResult.WithResult(EvalActionRule(projectId, 0, name)) { it }
+
+          else ->
+            lookupFromImport(buildGraph, projectId, 0, name) { it }
+        }
+      }
+
+      is NewImportInstance -> {
+        val instances = importInstances.getOrPut(buildTask.projectId) { HashBiMap.create() }
+        val existing = instances.inverse()[buildTask.redefs]
+        if (existing != null) {
+          BuildTaskResult.ImportInstanceResult(buildTask.projectId, existing)
+        } else {
+          val newImportInstanceId = (instances.keys.maxOrNull() ?: 0) + 1
+          instances[newImportInstanceId] = buildTask.redefs
+          BuildTaskResult.ImportInstanceResult(buildTask.projectId, newImportInstanceId)
+        }
+      }
+
+      is EvalDataClass -> {
+        val buildGraph = multiGraph.getProjectGraph(buildTask.projectId)
+        val dataClassDef = checkNotNull(buildGraph.dataClasses[buildTask.className])
+        val fields = dataClassDef.fields.entries.sortedBy { it.key }
+        val fieldTasks = fields.map { EvalType(buildTask.projectId, it.value) }
+        val customCastTypeTasks =
+          dataClassDef.customAutoCasts.map { EvalType(buildTask.projectId, it.first) }
+
+        BuildTaskResult.WithResultList(fieldTasks + customCastTypeTasks) { typeResults ->
+          check(fields.size + customCastTypeTasks.size == typeResults.size)
+
+          val fieldTypes = typeResults.take(fields.size).map {
+            check(it is BuildTaskResult.TypeResult)
+            it.type
+          }
+          val customCastTypes = typeResults.drop(fields.size).map {
+            check(it is BuildTaskResult.TypeResult)
+            it.type
+          }
+          val fieldTypeMap = fields.zip(fieldTypes).associate { (field, type) -> field.key to type }
+          BuildTaskResult.DataClassResult(
+            projectId = buildTask.projectId,
+            packageName = checkNotNull(buildGraph.packageName),
+            name = buildTask.className,
+            importInstanceId = buildTask.importInstanceId,
+            dataClassDef = dataClassDef,
+            fieldTypes = dataClassDef.def.fields.map { field ->
+              Pair(field.name, fieldTypeMap.getValue(field.name))
+            },
+            customCasts = customCastTypes.zip(dataClassDef.customAutoCasts.map { it.second })
           )
         }
       }
-    }
 
-    is EvalImportSource -> handleEvalImportSource(buildTask)
+      is EvalDataClassByName -> {
+        val projectId = multiGraph.getProjectIdByPackageName(buildTask.packageName)
+          ?: throw IllegalStateException()
+        BuildTaskResult.WithResult(
+          EvalDataClass(
+            projectId,
+            0,
+            BibixName(buildTask.className)
+          )
+        ) { it }
+      }
 
-    is Import -> handleImportTask(buildTask)
+      is EvalSuperClass -> {
+        val className = BibixName(buildTask.className)
+        val buildGraph = multiGraph.getProjectGraph(buildTask.projectId)
+        val cls = buildGraph.superClasses[className] ?: throw IllegalStateException()
 
-    is ImportFromPrelude -> {
-      val projectId = 2
-      val name = buildTask.name
+        fun collectSubTypes(name: BibixName): BuildTaskResult.SuperClassHierarchyResult.SubType {
+          val dataClass = buildGraph.dataClasses[name]
+          val superClass = buildGraph.superClasses[name]
 
-      val buildGraph = multiGraph.getProjectGraph(projectId)
+          return when {
+            dataClass != null -> {
+              check(superClass == null)
+              BuildTaskResult.SuperClassHierarchyResult.SubType(name, listOf())
+            }
 
-      val target = buildGraph.targets[name]
-      val buildRule = buildGraph.buildRules[name]
-      val varDef = buildGraph.vars[name]
-      val dataClass = buildGraph.dataClasses[name]
-      val superClass = buildGraph.superClasses[name]
-      val enum = buildGraph.enums[name]
-      val action = buildGraph.actions[name]
-      val actionRule = buildGraph.actionRules[name]
+            superClass != null -> {
+              val subs = superClass.subTypes.map { collectSubTypes(BibixName(it)) }
+              BuildTaskResult.SuperClassHierarchyResult.SubType(name, subs)
+            }
 
-      // 중복된 이름이 있으면 안됨
-      check(
-        listOf(
-          target != null,
-          buildRule != null,
-          varDef != null,
-          dataClass != null,
-          superClass != null,
-          enum != null,
-          action != null,
-          actionRule != null
-        ).count { it } <= 1
-      ) { "Duplicate name: $name at $projectId" }
+            else -> throw IllegalStateException()
+          }
+        }
 
-      when {
-        target != null ->
-          BuildTaskResult.WithResult(EvalTarget(projectId, 0, name)) { it }
+        val subs = cls.subTypes.map { collectSubTypes(BibixName(it)) }
 
-        buildRule != null ->
-          BuildTaskResult.WithResult(EvalBuildRule(projectId, 0, name)) { it }
+        BuildTaskResult.SuperClassHierarchyResult(
+          buildTask.projectId,
+          checkNotNull(buildGraph.packageName),
+          className,
+          subs
+        )
+      }
 
-        varDef != null ->
-          BuildTaskResult.WithResult(EvalVar(projectId, 0, name)) { it }
+      is EvalSuperClassByName -> {
+        val projectId = multiGraph.getProjectIdByPackageName(buildTask.packageName)
+          ?: throw IllegalStateException()
 
-        dataClass != null ->
-          BuildTaskResult.WithResult(EvalDataClass(projectId, 0, name)) { it }
+        BuildTaskResult.WithResult(EvalSuperClass(projectId, buildTask.className)) { it }
+      }
 
-        superClass != null ->
-          BuildTaskResult.WithResult(EvalSuperClass(projectId, name.toString())) { it }
+      is EvalTypeByName -> {
+        val projectId = multiGraph.getProjectIdByPackageName(buildTask.packageName)
+          ?: throw IllegalStateException()
+        val buildGraph = multiGraph.getProjectGraph(projectId)
 
-        enum != null -> {
+        val className = BibixName(buildTask.className)
+        val dataClass = buildGraph.dataClasses[className]
+        val superClass = buildGraph.superClasses[className]
+        val enum = buildGraph.enums[className]
+
+        if (dataClass != null) {
+          check(superClass == null && enum == null)
+          BuildTaskResult.WithResult(EvalDataClass(projectId, 0, className)) { it }
+        } else if (superClass != null) {
+          check(enum == null)
+          BuildTaskResult.WithResult(
+            EvalSuperClassByName(buildTask.packageName, buildTask.className)
+          ) { it }
+        } else {
+          check(enum != null)
           BuildTaskResult.EnumTypeResult(
             projectId,
-            checkNotNull(buildGraph.packageName),
-            name,
+            buildTask.packageName,
+            className,
             enum.def.values
           )
         }
-
-        action != null ->
-          BuildTaskResult.WithResult(EvalAction(projectId, 0, name)) { it }
-
-        actionRule != null ->
-          BuildTaskResult.WithResult(EvalActionRule(projectId, 0, name)) { it }
-
-        else ->
-          lookupFromImport(buildGraph, projectId, 0, name) { it }
-      }
-    }
-
-    is NewImportInstance -> {
-      val instances = importInstances.getOrPut(buildTask.projectId) { HashBiMap.create() }
-      val existing = instances.inverse()[buildTask.redefs]
-      if (existing != null) {
-        BuildTaskResult.ImportInstanceResult(buildTask.projectId, existing)
-      } else {
-        val newImportInstanceId = (instances.keys.maxOrNull() ?: 0) + 1
-        instances[newImportInstanceId] = buildTask.redefs
-        BuildTaskResult.ImportInstanceResult(buildTask.projectId, newImportInstanceId)
-      }
-    }
-
-    is EvalDataClass -> {
-      val buildGraph = multiGraph.getProjectGraph(buildTask.projectId)
-      val dataClassDef = checkNotNull(buildGraph.dataClasses[buildTask.className])
-      val fields = dataClassDef.fields.entries.sortedBy { it.key }
-      val fieldTasks = fields.map { EvalType(buildTask.projectId, it.value) }
-      val customCastTypeTasks =
-        dataClassDef.customAutoCasts.map { EvalType(buildTask.projectId, it.first) }
-
-      BuildTaskResult.WithResultList(fieldTasks + customCastTypeTasks) { typeResults ->
-        check(fields.size + customCastTypeTasks.size == typeResults.size)
-
-        val fieldTypes = typeResults.take(fields.size).map {
-          check(it is BuildTaskResult.TypeResult)
-          it.type
-        }
-        val customCastTypes = typeResults.drop(fields.size).map {
-          check(it is BuildTaskResult.TypeResult)
-          it.type
-        }
-        val fieldTypeMap = fields.zip(fieldTypes).associate { (field, type) -> field.key to type }
-        BuildTaskResult.DataClassResult(
-          projectId = buildTask.projectId,
-          packageName = checkNotNull(buildGraph.packageName),
-          name = buildTask.className,
-          importInstanceId = buildTask.importInstanceId,
-          dataClassDef = dataClassDef,
-          fieldTypes = dataClassDef.def.fields.map { field ->
-            Pair(field.name, fieldTypeMap.getValue(field.name))
-          },
-          customCasts = customCastTypes.zip(dataClassDef.customAutoCasts.map { it.second })
-        )
-      }
-    }
-
-    is EvalDataClassByName -> {
-      val projectId = multiGraph.getProjectIdByPackageName(buildTask.packageName)
-        ?: throw IllegalStateException()
-      BuildTaskResult.WithResult(EvalDataClass(projectId, 0, BibixName(buildTask.className))) { it }
-    }
-
-    is EvalSuperClass -> {
-      val className = BibixName(buildTask.className)
-      val buildGraph = multiGraph.getProjectGraph(buildTask.projectId)
-      val cls = buildGraph.superClasses[className] ?: throw IllegalStateException()
-
-      fun collectSubTypes(name: BibixName): BuildTaskResult.SuperClassHierarchyResult.SubType {
-        val dataClass = buildGraph.dataClasses[name]
-        val superClass = buildGraph.superClasses[name]
-
-        return when {
-          dataClass != null -> {
-            check(superClass == null)
-            BuildTaskResult.SuperClassHierarchyResult.SubType(name, listOf())
-          }
-
-          superClass != null -> {
-            val subs = superClass.subTypes.map { collectSubTypes(BibixName(it)) }
-            BuildTaskResult.SuperClassHierarchyResult.SubType(name, subs)
-          }
-
-          else -> throw IllegalStateException()
-        }
       }
 
-      val subs = cls.subTypes.map { collectSubTypes(BibixName(it)) }
-
-      BuildTaskResult.SuperClassHierarchyResult(
-        buildTask.projectId,
-        checkNotNull(buildGraph.packageName),
-        className,
-        subs
-      )
-    }
-
-    is EvalSuperClassByName -> {
-      val projectId = multiGraph.getProjectIdByPackageName(buildTask.packageName)
-        ?: throw IllegalStateException()
-
-      BuildTaskResult.WithResult(EvalSuperClass(projectId, buildTask.className)) { it }
-    }
-
-    is EvalTypeByName -> {
-      val projectId = multiGraph.getProjectIdByPackageName(buildTask.packageName)
-        ?: throw IllegalStateException()
-      val buildGraph = multiGraph.getProjectGraph(projectId)
-
-      val className = BibixName(buildTask.className)
-      val dataClass = buildGraph.dataClasses[className]
-      val superClass = buildGraph.superClasses[className]
-      val enum = buildGraph.enums[className]
-
-      if (dataClass != null) {
-        check(superClass == null && enum == null)
-        BuildTaskResult.WithResult(EvalDataClass(projectId, 0, className)) { it }
-      } else if (superClass != null) {
-        check(enum == null)
-        BuildTaskResult.WithResult(
-          EvalSuperClassByName(buildTask.packageName, buildTask.className)
-        ) { it }
-      } else {
-        check(enum != null)
-        BuildTaskResult.EnumTypeResult(projectId, buildTask.packageName, className, enum.def.values)
+      is EvalType -> {
+        val buildGraph = multiGraph.getProjectGraph(buildTask.projectId)
+        val packageName = multiGraph.projectPackages[buildTask.projectId]
+        TypeEvaluator(
+          multiGraph,
+          buildTask.projectId,
+          // buildTask.importInstanceId,
+          0,
+          packageName,
+          buildGraph.typeGraph
+        ).evaluateType(buildTask.typeNodeId)
       }
-    }
-
-    is EvalType -> {
-      val buildGraph = multiGraph.getProjectGraph(buildTask.projectId)
-      val packageName = multiGraph.projectPackages[buildTask.projectId]
-      TypeEvaluator(
-        multiGraph,
-        buildTask.projectId,
-        // buildTask.importInstanceId,
-        0,
-        packageName,
-        buildGraph.typeGraph
-      ).evaluateType(buildTask.typeNodeId)
     }
   }
 

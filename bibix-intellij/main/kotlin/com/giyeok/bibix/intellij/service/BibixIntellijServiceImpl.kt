@@ -46,16 +46,13 @@ class BibixIntellijServiceImpl(
 
     val flow = MutableStateFlow<BibixProjectInfo?>(null)
     memos[key] = ProjectInfoMemo(scriptHash, Instant.now(), flow)
-    workers.submit {
+    workers.execute {
       val loaded = try {
-        ProjectStructureExtractor.loadProject(projectRoot, scriptName)
+        ProjectStructureExtractor(BibixProjectLocation.of(projectRoot, scriptName)).loadProject()
       } catch (e: Exception) {
         e.printStackTrace()
         throw StatusException(Status.FAILED_PRECONDITION)
       }
-
-      println(loaded)
-      println("Done")
 
       runBlocking {
         flow.emit(loaded)

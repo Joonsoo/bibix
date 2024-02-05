@@ -120,7 +120,7 @@ class ProjectInfoBuilder(
 
         usedScalaSdkVersions.forEach { (sdkVersion, artifactCandidates) ->
           val mavenDeps = artifactCandidates.map { it.origin }.filterIsInstance<MavenDep>()
-          TODO()
+          // TODO()
         }
       }
     }

@@ -7,7 +7,6 @@ import com.giyeok.bibix.graph.BibixName
 import com.giyeok.bibix.repo.BibixRepo
 import com.giyeok.bibix.repo.BibixRepoProto
 import com.giyeok.bibix.repo.hashString
-import com.giyeok.bibix.repo.inputHashesFromPaths
 import com.giyeok.bibix.utils.toBibix
 import com.giyeok.bibix.utils.toHexString
 import com.giyeok.bibix.utils.toInstant
@@ -66,11 +65,12 @@ fun organizeParamsAndRunBuildRule(
   }
 }
 
-private fun withBuildContext(
+fun withBuildContext(
   buildGraphRunner: BuildGraphRunner,
   callerProjectId: Int,
   buildRule: BuildTaskResult.BuildRuleResult,
   args: Map<String, BibixValue>,
+  noReuse: Boolean = false,
   block: (BuildContext) -> BuildTaskResult
 ): BuildTaskResult {
   val argsMap = argsMapFrom(args)
@@ -109,11 +109,11 @@ private fun withBuildContext(
 
   val repo = buildGraphRunner.repo
 
-  val noReuse = buildRule.buildRuleDef.def.mods.contains(BibixAst.BuildRuleMod.NoReuse)
+  val noReuseModifier = buildRule.buildRuleDef.def.mods.contains(BibixAst.BuildRuleMod.NoReuse)
 
   val (reuse, prevState) =
     repo.targetStarted(targetIdHex, targetIdData, inputHashes, inputHashString) { prevState ->
-      if (noReuse) null else {
+      if (noReuse || noReuseModifier) null else {
         val prevTargetIdData = repo.getTargetIdData(targetIdHex)
         // 혹시나 불일치하는 경우가 생기지 않는지 확인
         check(prevTargetIdData == targetIdData)

@@ -1,6 +1,5 @@
 package com.giyeok.bibix.plugins.bibix
 
-import com.giyeok.bibix.base.EnumValue
 import com.giyeok.bibix.base.TypeValue
 
 fun isNullableType(type: TypeValue.UnionTypeValue): TypeValue? =

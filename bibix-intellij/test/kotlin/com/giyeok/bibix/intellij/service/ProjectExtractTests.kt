@@ -23,4 +23,13 @@ class ProjectExtractTests {
     })
     println(project)
   }
+
+  @Test
+  fun test1(): Unit = runBlocking {
+    val impl = BibixIntellijServiceImpl()
+    val project = impl.loadProject(loadProjectReq {
+      this.projectRoot = "/home/joonsoo/Documents/workspace/jparser/"
+    })
+    // println(project)
+  }
 }

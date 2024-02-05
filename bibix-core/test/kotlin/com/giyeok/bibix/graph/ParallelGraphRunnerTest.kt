@@ -30,6 +30,7 @@ class ParallelGraphRunnerTest {
       fileSystem = FileSystems.getDefault(),
       repo = repo,
       classPkgRunner = ClassPkgRunner(ClassWorld()),
+      taskResultCache = TaskResultCache(),
     )
     val tracker = ExecutorTracker(4)
 

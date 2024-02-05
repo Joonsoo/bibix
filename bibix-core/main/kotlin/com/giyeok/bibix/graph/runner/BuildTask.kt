@@ -7,6 +7,7 @@ import com.giyeok.bibix.graph.*
 import com.giyeok.bibix.plugins.jvm.ClassPkg
 
 sealed class BuildTask
+sealed class CacheableBuildTask: BuildTask()
 
 // TODO BuildTask들은 ParallelGraphRunner에서 해시/동일성 비교가 계속 이루어지므로 가볍게 만들기
 //  - 특히 BibixValue는 runner 같은 곳에 등록하고 ID만 사용하도록 하거나 하는 식으로 변경할 것
@@ -15,7 +16,7 @@ data class EvalTarget(
   val projectId: Int,
   val importInstanceId: Int,
   val name: BibixName
-): BuildTask()
+): CacheableBuildTask()
 
 data class EvalAction(
   val projectId: Int,
@@ -109,7 +110,7 @@ data class EvalCallExpr(
   val projectId: Int,
   val importInstanceId: Int,
   val params: Map<String, BibixValue>
-): BuildTask()
+): CacheableBuildTask()
 
 data class EvalCallee(
   val projectId: Int,

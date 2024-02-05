@@ -19,11 +19,11 @@ class ExprEvaluator(
   private val projectPackageName: String? get() = multiGraph.projectPackages[projectId]
 
   private val buildGraph get() = multiGraph.getProjectGraph(projectId)
-  private val exprGraph get() = buildGraph.exprGraph
+  val exprGraph get() = buildGraph.exprGraph
 
   private val valueCaster: ValueCaster get() = ValueCaster(buildGraphRunner, projectId)
 
-  private fun evalTask(exprNodeId: ExprNodeId) =
+  fun evalTask(exprNodeId: ExprNodeId) =
     // isRunningActionStmt는 action stmt에서도 가장 바깥의 call expr에만 적용되면 됨
     EvalExpr(projectId, exprNodeId, importInstanceId, localLets, thisValue)
 

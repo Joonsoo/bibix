@@ -27,7 +27,8 @@ class BuildFrontend(
   prelude: PreloadedPlugin = preludePlugin,
   preloadedPlugins: Map<String, PreloadedPlugin> = defaultPreloadedPlugins,
   classPkgRunner: ClassPkgRunner = ClassPkgRunner(ClassWorld()),
-  val debuggingMode: Boolean = false
+  val taskInterceptor: ((BuildTask) -> BuildTaskResult?)? = null,
+  val debuggingMode: Boolean = false,
 ) {
   companion object {
     val defaultPreloadedPlugins = mapOf(
@@ -54,6 +55,7 @@ class BuildFrontend(
     fileSystem = FileSystems.getDefault(),
     repo = repo,
     classPkgRunner = classPkgRunner,
+    taskInterceptor = taskInterceptor
   )
 
   val jobExecutorTracker = ExecutorTracker(getMaxThreads())
