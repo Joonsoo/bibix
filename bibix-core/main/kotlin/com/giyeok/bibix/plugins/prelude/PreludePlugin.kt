@@ -34,7 +34,7 @@ val preludeSource =
     ): BibixProject = native:com.giyeok.bibix.plugins.prelude.Git
 
     noreuse def glob(
-      pattern: {string, set<string>}
+      pattern: string | set<string>
     ): set<file> = native:com.giyeok.bibix.plugins.prelude.Glob
 
     env = currentEnv()

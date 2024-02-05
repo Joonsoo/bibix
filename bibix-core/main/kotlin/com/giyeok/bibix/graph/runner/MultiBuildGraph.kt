@@ -29,7 +29,7 @@ class MultiBuildGraph private constructor(
     val graph: BuildGraph,
   )
 
-  private fun nextProjectId(): Int = projectGraphs.keys.max() + 1
+  private fun nextProjectId(): Int = (projectGraphs.keys.maxOrNull() ?: 0) + 1
 
   fun addProject(
     location: BibixProjectLocation,

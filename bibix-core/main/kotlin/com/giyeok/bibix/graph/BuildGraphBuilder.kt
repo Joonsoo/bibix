@@ -500,7 +500,6 @@ class BuildGraphBuilder(
         listOf("buildrule") -> BuildRuleDefType
         listOf("actionrule") -> ActionRuleDefType
         listOf("type") -> TypeType
-        listOf("none") -> NoneType
         else -> null
       }
       if (basicType != null) {
@@ -536,6 +535,8 @@ class BuildGraphBuilder(
         addNode(node)
       }
     }
+
+    is BibixAst.NoneType -> addNode(BasicTypeNode(NoneType))
 
     is BibixAst.TupleType -> {
       val elemTypes = type.elems.map { addType(it, ctx) }

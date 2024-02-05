@@ -179,6 +179,7 @@ class ValueCaster(
             ) { dataClass ->
               check(dataClass is BuildTaskResult.DataClassResult)
 
+              // TODO dataClass의 필드 중 optional이거나 default가 있는 경우 처리
               check(dataClass.fieldTypes.size == value.values.size)
               organizeParamsForDataClass(projectId, dataClass, value.values, mapOf()) {
                 BuildTaskResult.ValueResult(it)
@@ -192,10 +193,9 @@ class ValueCaster(
             ) { dataClass ->
               check(dataClass is BuildTaskResult.DataClassResult)
 
-              check(dataClass.fieldTypes.size == value.values.size)
-              check(dataClass.fieldTypes.map { it.first }.toSet() == value.names.toSet())
-
-              throw IllegalStateException("TODO()")
+              organizeParamsForDataClass(projectId, dataClass, listOf(), value.valuesMap) {
+                BuildTaskResult.ValueResult(it)
+              }
             }
           }
 
