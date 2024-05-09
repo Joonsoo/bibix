@@ -5,9 +5,9 @@ A language-neutral, declarative, and extensible software building tool.
 
 ## Getting started
 
-1. Install
+### 1. Install
 
-  * The instruction here should work on other linux or mac.
+  * The instruction here should work on linux and mac.
   * Bibix needs JVM to run. Please make sure you have the latest version of JRE or JDK on your computer.
   * Download the `bibix-0.8.1-all.jar` from the [release page](https://github.com/Joonsoo/bibix/releases/tag/0.8.1) and put the file into the appropriate directory.
     * I would recommend to create a new folder named like "bibix" under your home directory.
@@ -16,7 +16,7 @@ A language-neutral, declarative, and extensible software building tool.
   * Make the `bibix` file you just created executable by running `chmod u+x bibix`
   * Add the `bibix` script accessible by adding the directory to your PATH variable in `~/.bashrc` or `~/.zprofile` file.
 
-2. Add `build.bbx` file to your project
+### 2. Add `build.bbx` file to your project
 
   * When you run the bibix interpreter on a directory, bibix first tries to find the `build.bbx` file in the directory.
   * `build.bbx` file defines the build rules of your project.
@@ -51,7 +51,7 @@ test = java.library(
     * `main` and `test` are common names you may want to use in the project.
     * Because bibix does not assume that these modules are related in any ways, you need to explicitly add `main` to `deps` of `test`.
 
-3. Build
+### 3. Build
 
   * To build the `main` target, simply run `bibix main` in the project directory.
   * After long list of build progress log, the build result will be shown like this:
@@ -60,7 +60,7 @@ test = java.library(
   * You can find the built classes under the directory shown after `classDirs` in the line. In my case, the compiled .class files will be under `<projectroot/bbxbuild/objects/4be6d79d1b7136609880c66cc25efc43cda017ca` directory.
   * The symbolic link to the directory is also created at `bbxbuild/outputs/main`.
 
-4. Make jar
+### 4. Make jar file
 
   * Bibix does not implicitly create other targets or actions. Therefore, you need to explicitly add the following lines to create jar files by adding the following lines to your build.bbx file.
 
@@ -76,7 +76,7 @@ uberJar = jar.uberJar([main], "main-all.jar")
   * `uberJar: file(<projectroot>/bbxbuild/objects/730c73fe939217ce81f9efdf55eeed620ebae454/main-all.jar)`
   * You can find the generated jar file at `<projectroot>/bbxbuild/objects/730c73fe939217ce81f9efdf55eeed620ebae454/main-all.jar` or `<projectroot>/bbxbuild/outputs/uberJar/main-all.jar`.
 
-5. (WIP) Run junit tests
+### 5. (WIP) Run junit tests
 
   * This section is a WIP. The instructions in this section may not work as intended or documented here.
   * Again, bibix does not implicitly add targets or actions. You need to explicitly declare an "action" to run your unit tests.
