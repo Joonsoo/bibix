@@ -120,17 +120,11 @@ action runTests {
   * [intro.md](intro.md)
     * More detailed and informal (and uncompleted) introduction about bibix. Written in Korean.
   * [blog](https://giyeok.com/categories.html#bibix)
-    * Personal thoughts on the build tools and design decisions of bibix. Written in Korean.
+    * Thoughts on the build tools and design decisions of bibix. Written in Korean.
   * [bibix-plugins](https://github.com/Joonsoo/bibix-plugins)
-    * Includes a few common plugins, including:
-      - 자바 코드를 컴파일하기 위한 java
-      - JVM 코틀린을 컴파일하기 위한 ktjvm
-      - jar 파일을 만들기 위한 jar
-      - 프로토콜 버퍼 코드를 컴파일해주는 protobuf
-      - 프로토버프 메시지를 이용해 rpc 기능을 지원하는 grpc
-      - 압축을 위한 tar, xz, gzip
-      - 간단한 텍스트 템플릿을 사용할 수 있는 mustache
-    * You can use the plugins from the repository by simply adding a line like `from bibix.plugins import ktjvm`
+    * Includes a few common plugins, including java, ktjvm, jar, protobuf, grpc, tar, xz, gzip, and mustache.
+    * You can use the plugins from the repository by simply adding a line like `from bibix.plugins import ktjvm`.
+    * `bibix.plugins` points to the github repository.
   * [jparser](https://github.com/Joonsoo/jparser)
     * The grammar of the bibix build script is defined [here](https://github.com/Joonsoo/bibix/blob/main/grammar/bibix.cdg).
     * The grammar definition is written in CDG format. For more information, see [jparser](https://github.com/Joonsoo/jparser) project.
