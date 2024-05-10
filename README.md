@@ -56,8 +56,8 @@ test = java.library(
   * To build the `main` target, simply run `bibix main` in the project directory.
   * After long list of build progress log, the build result will be shown like this:
     * `main: com.giyeok.bibix.plugins.jvm::ClassPkg(cpinfo=com.giyeok.bibix.plugins.jvm::ClassesInfo(classDirs={dir(<projectroot>/bbxbuild/objects/4be6d79d1b7136609880c66cc25efc43cda017ca)}, resDirs={}, srcs={file(...)}), deps={...}, nativeLibDirs={}, ...)`
-    * The last line can be very long as it contains all information about its dependencies.
-  * You can find the built classes under the directory shown after `classDirs` in the line. In my case, the compiled .class files will be under `<projectroot/bbxbuild/objects/4be6d79d1b7136609880c66cc25efc43cda017ca` directory.
+    * This line can be very long as it contains all information about its dependencies, including transitive dependencies.
+  * You can find the compiled class files under the directory shown after `classDirs` in the line. In my case, the compiled .class files are under `<projectroot/bbxbuild/objects/4be6d79d1b7136609880c66cc25efc43cda017ca` directory.
   * The symbolic link to the directory is also created at `bbxbuild/outputs/main`.
 
 ### 4. Make jar file
