@@ -48,8 +48,8 @@ test = java.library(
     * `main` is the java library that is compiled from the .java files under src/main/java and has 2 dependencies of GSON and Guava from maven central repository.
     * `test` is the java library that is compiled from the .java files under src/test/java and has 2 dependenceis of `main` and junit from maven central repository.
   * The names `main` and `test` do not have specific meaning for bibix, that is, bibix treats `main` and `test` equally.
-    * `main` and `test` are common names you may want to use in the project.
-    * Because bibix does not assume that these modules are related in any ways, you need to explicitly add `main` to `deps` of `test`.
+    * `main` and `test` are common names you may want to use in your projects.
+    * Because bibix does not assume that these modules are related in any ways, you need to explicitly add `main` to the list of `deps` of `test`.
 
 ### 3. Build
 
