@@ -9,12 +9,12 @@ A language-neutral, declarative, and extensible software building tool.
 
   * The instruction here should work on linux and mac.
   * Bibix needs JVM to run. Please make sure you have the latest version of JRE or JDK on your computer.
-  * Download the `bibix-0.8.1-all.jar` from the [release page](https://github.com/Joonsoo/bibix/releases/tag/0.8.1) and put the file into the appropriate directory.
-    * I would recommend to create a new folder named "bibix" under your home directory.
-  * Add a file named `bibix` in the same directory where the jar file is located and add the following line:
+  * Create a bibix installation directory. I recommend to create a new folder named "bibix" under your home directory.
+  * Download the `bibix-0.8.1-all.jar` from the [release page](https://github.com/Joonsoo/bibix/releases/tag/0.8.1) to the installation directory.
+  * Add a file named `bibix` in the installation directory (where the jar file is located) and add:
     * `java -jar /Users/joonsoo/Documents/apps/bibix/bibix-0.8.1-all.jar "$@"`
   * Make the `bibix` file you just created executable by running `chmod u+x bibix`
-  * Add the `bibix` script accessible by adding the directory to your PATH variable in `~/.bashrc` or `~/.zprofile` file.
+  * Make the `bibix` script accessible from anywhere by adding the installation directory to PATH variable in `~/.bashrc` or `~/.zprofile` file.
 
 ### 2. Add `build.bbx` file to your project
 
