@@ -56,13 +56,15 @@ test = java.library(
   * To build the `main` target, simply run `bibix main` in the project directory.
   * After long list of build progress log, the build result will be shown like this:
     * `main: com.giyeok.bibix.plugins.jvm::ClassPkg(cpinfo=com.giyeok.bibix.plugins.jvm::ClassesInfo(classDirs={dir(<projectroot>/bbxbuild/objects/4be6d79d1b7136609880c66cc25efc43cda017ca)}, resDirs={}, srcs={file(...)}), deps={...}, nativeLibDirs={}, ...)`
+    * This line shows the build result value of the target `main` is an instance of `ClassPkg` class and the instance has following fields.
     * This line can be very long as it contains all information about its dependencies, including transitive dependencies.
   * You can find the compiled class files under the directory shown after `classDirs` in the line. In my case, the compiled .class files are under `<projectroot/bbxbuild/objects/4be6d79d1b7136609880c66cc25efc43cda017ca` directory.
   * The symbolic link to the directory is also created at `bbxbuild/outputs/main`.
 
 ### 4. Make jar file
 
-  * Bibix does not implicitly create other targets or actions. Therefore, you need to explicitly add the following lines to create jar files by adding the following lines to your build.bbx file.
+  * Bibix does not implicitly create other targets or actions.
+  * Therefore, if you want to make jar files, you need to explicitly define the rules for making jar files. The following snippet shows how to define such rules to generate jar file.
 
 ```
 from bibix.plugins import jar
@@ -72,13 +74,15 @@ uberJar = jar.uberJar([main], "main-all.jar")
 
   * Now you can simply run `bibix uberJar` to create the uber jar file for your `main` target.
     * It may take some time to run the command, because it will need to download kotlin stdlib to compile the `jar` plugin.
+    * It will be faster after the first run, since the downloaded kotlin stdlib (and other maven dependencies as well) are cached in `bbxbuild/shared` directory.
   * After the build is done, bibix will print out the last line like the following:
   * `uberJar: file(<projectroot>/bbxbuild/objects/730c73fe939217ce81f9efdf55eeed620ebae454/main-all.jar)`
-  * You can find the generated jar file at `<projectroot>/bbxbuild/objects/730c73fe939217ce81f9efdf55eeed620ebae454/main-all.jar` or `<projectroot>/bbxbuild/outputs/uberJar/main-all.jar`.
+    * This means the build result value of `uberJar` target is the file `bbxbuild/objects/730c73fe939217ce81f9efdf55eeed620ebae454/main-all.jar`, which is the generated uber jar file.
+  * The symbolic link to the directory will be created at `bbxbuild/outputs/uberJar`, so you can access to the generated uber jar at `<projectroot>/bbxbuild/outputs/uberJar/main-all.jar`.
 
 ### 5. (WIP) Run junit tests
 
-  * This section is a WIP. The instructions in this section may not work as intended or documented here.
+  * This section is a WIP. The instructions in this section may not work as documented here.
   * Again, bibix does not implicitly add targets or actions. You need to explicitly declare an "action" to run your unit tests.
 
 ```
@@ -90,8 +94,8 @@ action runTests {
 ```
 
   * Now, you can run the tests in `test` target by running `bibix runTests`.
-  * This time, `runTests` is an "action", where `main`, `test`, and `uberJar` were "target"s. A target must create a result value and may be reused if no argument values or input files have been changed. On the other hand, an action does not return a value and will be always executed whenever user runs the action command.
-  * If the test succeeded, the result will be saved in the `bbxbuil/logs` folder. The directory stores the log files created while running bibix.
+  * `runTests` is an "action", while `main`, `test`, and `uberJar` were "target"s. A target must create a result value and may be reused if no argument values or input files have been changed. On the other hand, an action does not return a value and will always be executed whenever the user runs the action.
+  * The test result will be saved in the `bbxbuil/logs` folder, which stores the log files created while running bibix.
   * Find and open the last log. If the test was successful, the file should contain the lines like the following:
 
 ```
@@ -118,7 +122,7 @@ action runTests {
 
 ## See also
   * [intro.md](intro.md)
-    * More detailed and informal (and uncompleted) introduction about bibix. Written in Korean.
+    * More detailed and informal (and incomplete) introduction about bibix. Written in Korean.
   * [blog](https://giyeok.com/categories.html#bibix)
     * Thoughts on the build tools and design decisions of bibix. Written in Korean.
   * [bibix-plugins](https://github.com/Joonsoo/bibix-plugins)
