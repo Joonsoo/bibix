@@ -13,6 +13,9 @@
 4. 이제 IntelliJ에서 프로젝트를 새로 열기 위해 File > Open... 를 실행하는 경우 build.bbx 파일이 있으면 비빅스 프로젝트로 열 수 있고, 비빅스 프로젝트로 열면 오른쪽에 빨간색 숟가락 아이콘(숟가락이라고 그린거임..)을 눌러 Bibix 탭을 열어서 "Reload All Bibix Projects" 버튼 눌러서 새로 고침 가능
 
 
+> gradle 등의 intellij 플러그인도 비슷한 방식으로 동작하는데, 그들은 자동으로 daemon 을 받아서 알아서 실행시켜주기 때문에 직접 대몬 프로세스를 띄우거나 할 필요가 없다. bibix intellij 플러그인에도 그런 기능이 있으면 좋겠지만... 혹시 관심이 있다면.. [github](https://github.com/Joonsoo/bibix-intellij-plugin)과 [블로그](https://giyeok.com/2023/01/26/bibix-3) 확인 요망
+
+
 ## Troubleshooting
 
 ### JVM 버전 때문에 뭔가 안되는 경우
