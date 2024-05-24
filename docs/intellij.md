@@ -16,11 +16,16 @@
 > gradle 등의 intellij 플러그인도 비슷한 방식으로 동작하는데, 그들은 자동으로 daemon 을 받아서 알아서 실행시켜주기 때문에 직접 대몬 프로세스를 띄우거나 할 필요가 없다. bibix intellij 플러그인에도 그런 기능이 있으면 좋겠지만... 혹시 관심이 있다면.. [github](https://github.com/Joonsoo/bibix-intellij-plugin)과 [블로그](https://giyeok.com/2023/01/26/bibix-3) 확인 요망
 
 
+## 한계
+
+- 지금 bibix-intellij-daemon은 java, ktjvm(코틀린), scala 만 지원됨
+
+
 ## Troubleshooting
 
 ### JVM 버전 때문에 뭔가 안되는 경우
 
-bibix의 기본 플러그인 프로젝트인 [bibix-plugins](https://github.com/Joonsoo/bibix-plugins)에서는 java는 21 버전을, 코틀린을 1.9.20 버전을 기본으로 사용하고 있고, release 페이지에 업로드된 jar 파일들도 JRE 버전 21에서 컴파일되어 있다. 비빅스가 코틀린은 필요한 버전을 다운로드 받아서 사용하므로 신경 쓸 필요가 없지만 JVM은 최신 버전으로 설치한다.
+  bibix의 기본 플러그인 프로젝트인 [bibix-plugins](https://github.com/Joonsoo/bibix-plugins)에서는 java는 21 버전을, 코틀린을 1.9.20 버전을 기본으로 사용하고 있고, release 페이지에 업로드된 jar 파일들도 JRE 버전 21에서 컴파일되어 있다. 비빅스가 코틀린은 필요한 버전을 다운로드 받아서 사용하므로 신경 쓸 필요가 없지만 JVM은 최신 버전으로 설치한다.
 
 ### 메인 메뉴에서 Build > Build Project 등을 사용하는 경우 빌드를 저장할 디렉토리가 설정되어 있지 않다거나 SDK가 설정되지 않았다고 하는 경우
   1. "Project" 탭을 연다. 기본 단축키 Alt-1
@@ -51,3 +56,11 @@ bibix의 기본 플러그인 프로젝트인 [bibix-plugins](https://github.com/
   2. 실행할 Configuration을 선택하고 JRE 값이 잘 설정되어 있는지 확인한다.
 
 ![Run Configuration](./run_config.png)
+
+
+### 새 모듈을 추가했는데 모듈의 sources root가 제대로 설정되지 않는 경우
+
+  - bibix-intellij-daemon은 모듈 구조를 파악할 때 build.bbx 파일만 보는 것이 아니고, 각 모듈의 소스 코드(srcs에 지정된 파일들)을 읽어서, 그 파일에서 설정한 package를 반영한다.
+  - 따라서 build.bbx에서 어떤 모듈을 추가했는데, srcs에 빈 리스트를 주고 있으면 모듈 구조가 제대로 파악되지 않는다.
+  - 또 보통은 자바, 코틀린, 스칼라 모두 package는 파일의 가장 위(주석 제외)에 정의하게 되어 있고 그런 경우엔 문제가 없는데, 코틀린의 경우 package 문 앞에 annotation이 올 수가 있고, 그런 경우 파싱에 실패해서 제대로 모듈 구조가 설정되지 않는다.
+  - 이 부분은 현재 비빅스 intellij daemon의 한계로, Project Structure 창을 열어서 직접 수정해주어야 한다.
