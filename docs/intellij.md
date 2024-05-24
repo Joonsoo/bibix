@@ -15,6 +15,10 @@
 
 ## Troubleshooting
 
+### JVM 버전 때문에 뭔가 안되는 경우
+
+bibix의 기본 플러그인 프로젝트인 [bibix-plugins](https://github.com/Joonsoo/bibix-plugins)에서는 java는 21 버전을, 코틀린을 1.9.20 버전을 기본으로 사용하고 있고, release 페이지에 업로드된 jar 파일들도 JRE 버전 21에서 컴파일되어 있다. 비빅스가 코틀린은 필요한 버전을 다운로드 받아서 사용하므로 신경 쓸 필요가 없지만 JVM은 최신 버전으로 설치한다.
+
 ### 메인 메뉴에서 Build > Build Project 등을 사용하는 경우 빌드를 저장할 디렉토리가 설정되어 있지 않다거나 SDK가 설정되지 않았다고 하는 경우
   1. "Project" 탭을 연다. 기본 단축키 Alt-1
 
