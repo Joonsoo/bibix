@@ -61,6 +61,9 @@
 ### 새 모듈을 추가했는데 모듈의 sources root가 제대로 설정되지 않는 경우
 
   - bibix-intellij-daemon은 모듈 구조를 파악할 때 build.bbx 파일만 보는 것이 아니고, 각 모듈의 소스 코드(srcs에 지정된 파일들)을 읽어서, 그 파일에서 설정한 package를 반영한다.
-  - 따라서 build.bbx에서 어떤 모듈을 추가했는데, srcs에 빈 리스트를 주고 있으면 모듈 구조가 제대로 파악되지 않는다.
-  - 또 보통은 자바, 코틀린, 스칼라 모두 package는 파일의 가장 위(주석 제외)에 정의하게 되어 있고 그런 경우엔 문제가 없는데, 코틀린의 경우 package 문 앞에 annotation이 올 수가 있고, 그런 경우 파싱에 실패해서 제대로 모듈 구조가 설정되지 않는다.
-  - 이 부분은 현재 비빅스 intellij daemon의 한계로, Project Structure 창을 열어서 직접 수정해주어야 한다.
+  - bibix는 소스 코드가 여러 디렉토리에 나뉘어져 있어도 되도록 설계된 반면, intellij는 한 모듈의 소스 코드는 한 디렉토리에 모여 있어야 되는 것으로 설계되어 있기 때문에 생기는 차이점때문에 이렇게 설계한 것. intellij에서 bibix를 사용하려면 intellij에서 요구하는대로 한 모듈의 소스 코드들이 한 디렉토리에 모여 있어야 한다.
+  - 따라서 build.bbx에서 어떤 모듈을 추가했는데, srcs에 빈 리스트를 주고 있으면 모듈 구조가 제대로 파악되지 않아서 intellij에서 모듈 구조가 이상하게 나타날 수 있다.
+    - 이 문제를 해결하는 가장 쉬운 방법은 srcs에 빈 리스트를 주지 않는 것이다. glob을 사용하고 있다면 해당 디렉토리에 실제로 소스 코드 파일을 추가하고, package 문을 추가하고 프로젝트를 reload한다.
+  - 또, 코틀린의 경우 package 문 앞에 annotation이 올 수 있는데, 이 경우 bibix-intellij-daemon이 해당 파일을 파싱할 수 없어서 제대로 모듈 구조가 파악되지 않을 수 있다.
+    - 이 부분은 현재 비빅스 intellij daemon의 한계로, Project Structure 창을 열어서 직접 수정해주어야 한다.
+    - Project Structure에서 왼쪽에서 Modules를 선택하고, 소스 루트가 제대로 설정되지 않은 모듈을 선택한 다음 오른쪽에서 Sources 탭을 선택하고 "+Add Content Root"로 소스 코드 루트를 선택해서 설정한다.
