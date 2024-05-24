@@ -121,8 +121,10 @@ action runTests {
 
 
 ## See also
-  * [intro.md](intro.md)
-    * More detailed and informal (and incomplete) introduction about bibix. Written in Korean.
+  * [intellij.md](docs/intellij.md)
+    * Explains how to use bibix with IntelliJ. Korean.
+  * [intro.md](docs/intro.md)
+    * More detailed and informal (and incomplete) introduction about bibix. Korean.
   * [blog](https://giyeok.com/categories.html#bibix)
     * Thoughts on the build tools and design decisions of bibix. Written in Korean.
   * [bibix-plugins](https://github.com/Joonsoo/bibix-plugins)
