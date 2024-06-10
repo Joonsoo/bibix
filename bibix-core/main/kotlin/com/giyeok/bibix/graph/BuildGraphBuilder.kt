@@ -326,7 +326,7 @@ class BuildGraphBuilder(
           is DataClassNameEntry -> Callee.LocalDataClass(entry.name)
           is ImportNameEntry -> Callee.ImportedCallee(entry.name)
           is ActionNameEntry -> Callee.LocalAction(entry.name)
-          else -> throw IllegalStateException("Invalid callee")
+          else -> throw IllegalStateException("Invalid callee: $nameTokens")
         }
       }
 
@@ -336,7 +336,7 @@ class BuildGraphBuilder(
       is NameFromPrelude ->
         Callee.PreludeMember(lookupResult.name)
 
-      else -> throw IllegalStateException("Invalid callee")
+      else -> throw IllegalStateException("Invalid callee: $nameTokens")
     }
 
   private fun addCallExpr(expr: BibixAst.CallExpr, ctx: GraphBuildContext): CallExprAddResult {

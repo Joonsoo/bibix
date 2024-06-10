@@ -43,8 +43,8 @@ ClassBodyElem: ClassBodyElem = ActionRuleDef | ClassCastDef
 // casting하는 대상 타입의 type parameter?
 ClassCastDef = "as"&Tk WS TypeExpr WS '=' WS Expr {ClassCastDef(castTo=$2, expr=$6)}
 
-VarDef = "var"&Tk WS SimpleName (WS ':' WS TypeExpr)? (WS '=' WS Expr)?
-         {VarDef(name=$2, typ=$3, defaultValue=$4)}
+VarDef = "var"&Tk WS SimpleName (WS '?')? (WS ':' WS TypeExpr)? (WS '=' WS Expr)?
+         {VarDef(name=$2, isOptional=ispresent($3), typ=$4, defaultValue=$5)}
 VarRedefs = "var"&Tk WS VarRedef (WS ',' WS VarRedef)* {VarRedefs(redefs=[$2] + $3)}
 VarRedef = SimpleName (WS '.' WS SimpleName)+ WS '=' WS Expr
            {VarRedef(nameTokens=[$0] + $1, redefValue=$5)}
