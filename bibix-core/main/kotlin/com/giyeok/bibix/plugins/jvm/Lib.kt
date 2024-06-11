@@ -9,6 +9,9 @@ class Lib {
       (context.arguments.getValue("deps") as SetValue).values.map { ClassPkg.fromBibix(it) }
     val runtimeDeps =
       (context.arguments.getValue("runtimeDeps") as SetValue).values.map { ClassPkg.fromBibix(it) }
-    return ClassPkg(LocalLib(path), JarInfo(path, null), deps, runtimeDeps).toBibix()
+    val sourceJar = context.arguments.getValue("srcJar").let { srcs ->
+      if (srcs == NoneValue) null else (srcs as FileValue).file
+    }
+    return ClassPkg(LocalLib(path), JarInfo(path, sourceJar), deps, runtimeDeps).toBibix()
   }
 }

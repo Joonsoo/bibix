@@ -12,7 +12,7 @@ class GenRuleImplTemplateKt {
     p.println("  fun ${rule.implMethodName}(context: BuildContext): BuildRuleReturn {")
     rule.params.forEach { param ->
       val paramConvert = if (param.optional) {
-        "context.arguments[\"${param.name}\"]?.let { arg -> ${bibixValueToKt("arg", param.type)} }"
+        "context.arguments.getValue(\"${param.name}\").let { arg -> if (arg == NoneValue) null else ${bibixValueToKt("arg", param.type)} }"
       } else {
         bibixValueToKt("context.arguments.getValue(\"${param.name}\")", param.type)
       }

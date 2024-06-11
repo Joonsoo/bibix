@@ -53,6 +53,8 @@ val jvmPlugin = PreloadedPlugin.fromScript(
       path: path,
       deps: set<ClassPkg> = [],
       runtimeDeps: set<ClassPkg> = [],
+      srcJar?: file,
+      nativeLibDirs: set<directory> = [],
     ): ClassPkg = native:com.giyeok.bibix.plugins.jvm.Lib
 
     action def run(
