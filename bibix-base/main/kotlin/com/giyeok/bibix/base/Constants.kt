@@ -7,5 +7,5 @@ object Constants {
   const val BIBIX_PLUGINS_GIT_URL = "https://github.com/Joonsoo/bibix-plugins.git"
 
   // 현재 bibix 버전
-  const val BIBIX_VERSION = "0.8.1"
+  const val BIBIX_VERSION = "0.8.2"
 }
