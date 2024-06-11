@@ -211,6 +211,7 @@ class ProjectStructureExtractor(projectLocation: BibixProjectLocation) {
             cpinfo = ClassesInfo(listOf(), resDirs, srcs),
             deps = deps,
             runtimeDeps = runtimeDeps,
+            nativeLibDirs = listOf(),
           )
           BuildTaskResult.ValueOfTargetResult(resultValue.toBibix(), context.targetId)
         }

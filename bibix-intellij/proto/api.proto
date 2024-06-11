@@ -77,6 +77,7 @@ message ExternalLibrary {
   string description = 2;
   repeated string classpaths = 3;
   repeated string sources = 4;
+  repeated string native_lib_dirs = 5;
 }
 
 message SdkInfo {

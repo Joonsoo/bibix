@@ -18,7 +18,6 @@ val jvmPlugin = PreloadedPlugin.fromScript(
       cpinfo: CpInfo,
       deps: set<ClassPkg>,
       runtimeDeps: set<ClassPkg> = [],
-      // nativeLibDirs는 아직 쓰이는데 없음
       nativeLibDirs: set<directory> = [],
     ) {
       // resources는 classpath의 일부로 취급

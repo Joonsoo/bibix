@@ -200,6 +200,76 @@ public object ExternalLibraryKt {
     @kotlin.jvm.JvmName("clearSources")
     public fun com.google.protobuf.kotlin.DslList<kotlin.String, SourcesProxy>.clear() {
       _builder.clearSources()
+    }
+    /**
+     * An uninstantiable, behaviorless type to represent the field in
+     * generics.
+     */
+    @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
+    public class NativeLibDirsProxy private constructor() : com.google.protobuf.kotlin.DslProxy()
+    /**
+     * `repeated string native_lib_dirs = 5;`
+     * @return A list containing the nativeLibDirs.
+     */
+    public val nativeLibDirs: com.google.protobuf.kotlin.DslList<kotlin.String, NativeLibDirsProxy>
+      @kotlin.jvm.JvmSynthetic
+      get() = com.google.protobuf.kotlin.DslList(
+        _builder.getNativeLibDirsList()
+      )
+    /**
+     * `repeated string native_lib_dirs = 5;`
+     * @param value The nativeLibDirs to add.
+     */
+    @kotlin.jvm.JvmSynthetic
+    @kotlin.jvm.JvmName("addNativeLibDirs")
+    public fun com.google.protobuf.kotlin.DslList<kotlin.String, NativeLibDirsProxy>.add(value: kotlin.String) {
+      _builder.addNativeLibDirs(value)
+    }
+    /**
+     * `repeated string native_lib_dirs = 5;`
+     * @param value The nativeLibDirs to add.
+     */
+    @kotlin.jvm.JvmSynthetic
+    @kotlin.jvm.JvmName("plusAssignNativeLibDirs")
+    @Suppress("NOTHING_TO_INLINE")
+    public inline operator fun com.google.protobuf.kotlin.DslList<kotlin.String, NativeLibDirsProxy>.plusAssign(value: kotlin.String) {
+      add(value)
+    }
+    /**
+     * `repeated string native_lib_dirs = 5;`
+     * @param values The nativeLibDirs to add.
+     */
+    @kotlin.jvm.JvmSynthetic
+    @kotlin.jvm.JvmName("addAllNativeLibDirs")
+    public fun com.google.protobuf.kotlin.DslList<kotlin.String, NativeLibDirsProxy>.addAll(values: kotlin.collections.Iterable<kotlin.String>) {
+      _builder.addAllNativeLibDirs(values)
+    }
+    /**
+     * `repeated string native_lib_dirs = 5;`
+     * @param values The nativeLibDirs to add.
+     */
+    @kotlin.jvm.JvmSynthetic
+    @kotlin.jvm.JvmName("plusAssignAllNativeLibDirs")
+    @Suppress("NOTHING_TO_INLINE")
+    public inline operator fun com.google.protobuf.kotlin.DslList<kotlin.String, NativeLibDirsProxy>.plusAssign(values: kotlin.collections.Iterable<kotlin.String>) {
+      addAll(values)
+    }
+    /**
+     * `repeated string native_lib_dirs = 5;`
+     * @param index The index to set the value at.
+     * @param value The nativeLibDirs to set.
+     */
+    @kotlin.jvm.JvmSynthetic
+    @kotlin.jvm.JvmName("setNativeLibDirs")
+    public operator fun com.google.protobuf.kotlin.DslList<kotlin.String, NativeLibDirsProxy>.set(index: kotlin.Int, value: kotlin.String) {
+      _builder.setNativeLibDirs(index, value)
+    }/**
+     * `repeated string native_lib_dirs = 5;`
+     */
+    @kotlin.jvm.JvmSynthetic
+    @kotlin.jvm.JvmName("clearNativeLibDirs")
+    public fun com.google.protobuf.kotlin.DslList<kotlin.String, NativeLibDirsProxy>.clear() {
+      _builder.clearNativeLibDirs()
     }}
 }
 @kotlin.jvm.JvmSynthetic

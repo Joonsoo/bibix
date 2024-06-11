@@ -12,6 +12,15 @@ class Lib {
     val sourceJar = context.arguments.getValue("srcJar").let { srcs ->
       if (srcs == NoneValue) null else (srcs as FileValue).file
     }
-    return ClassPkg(LocalLib(path), JarInfo(path, sourceJar), deps, runtimeDeps).toBibix()
+    val nativeLibDirs = (context.arguments.getValue("nativeLibDirs") as SetValue).values.map {
+      (it as DirectoryValue).directory
+    }
+    return ClassPkg(
+      origin = LocalLib(path),
+      cpinfo = JarInfo(path, sourceJar),
+      deps = deps,
+      runtimeDeps = runtimeDeps,
+      nativeLibDirs = nativeLibDirs
+    ).toBibix()
   }
 }

@@ -33,6 +33,7 @@ data class ClassPkg(
   val cpinfo: CpInfo,
   val deps: List<ClassPkg>,
   val runtimeDeps: List<ClassPkg>,
+  val nativeLibDirs: List<Path>,
 ) {
   companion object {
     fun fromBibix(value: BibixValue): ClassPkg {
@@ -43,6 +44,7 @@ data class ClassPkg(
         cpinfo = CpInfo.fromBibix(value["cpinfo"]!!),
         deps = (value["deps"]!! as SetValue).values.map { fromBibix(it) },
         runtimeDeps = (value["runtimeDeps"]!! as SetValue).values.map { fromBibix(it) },
+        nativeLibDirs = (value["nativeLibDirs"]!! as SetValue).values.map { (it as DirectoryValue).directory },
       )
     }
   }
@@ -55,6 +57,7 @@ data class ClassPkg(
       "cpinfo" to this.cpinfo.toBibix(),
       "deps" to SetValue(this.deps.map { it.toBibix() }),
       "runtimeDeps" to SetValue(this.runtimeDeps.map { it.toBibix() }),
+      "nativeLibDirs" to SetValue(this.nativeLibDirs.map { DirectoryValue(it) }),
     )
   )
 }

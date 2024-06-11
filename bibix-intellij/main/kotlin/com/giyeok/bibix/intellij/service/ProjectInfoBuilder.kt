@@ -102,6 +102,7 @@ class ProjectInfoBuilder(
               }
             }
           }
+          this.nativeLibDirs.addAll(pkg.nativeLibDirs.map { it.absolutePathString() })
         })
       }
 

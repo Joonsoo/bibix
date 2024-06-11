@@ -9072,6 +9072,31 @@ public final class BibixIntellijProto {
      */
     com.google.protobuf.ByteString
         getSourcesBytes(int index);
+
+    /**
+     * <code>repeated string native_lib_dirs = 5;</code>
+     * @return A list containing the nativeLibDirs.
+     */
+    java.util.List<java.lang.String>
+        getNativeLibDirsList();
+    /**
+     * <code>repeated string native_lib_dirs = 5;</code>
+     * @return The count of nativeLibDirs.
+     */
+    int getNativeLibDirsCount();
+    /**
+     * <code>repeated string native_lib_dirs = 5;</code>
+     * @param index The index of the element to return.
+     * @return The nativeLibDirs at the given index.
+     */
+    java.lang.String getNativeLibDirs(int index);
+    /**
+     * <code>repeated string native_lib_dirs = 5;</code>
+     * @param index The index of the value to return.
+     * @return The bytes of the nativeLibDirs at the given index.
+     */
+    com.google.protobuf.ByteString
+        getNativeLibDirsBytes(int index);
   }
   /**
    * Protobuf type {@code com.giyeok.bibix.intellij.ExternalLibrary}
@@ -9091,6 +9116,8 @@ public final class BibixIntellijProto {
       classpaths_ =
           com.google.protobuf.LazyStringArrayList.emptyList();
       sources_ =
+          com.google.protobuf.LazyStringArrayList.emptyList();
+      nativeLibDirs_ =
           com.google.protobuf.LazyStringArrayList.emptyList();
     }
 
@@ -9266,6 +9293,43 @@ public final class BibixIntellijProto {
       return sources_.getByteString(index);
     }
 
+    public static final int NATIVE_LIB_DIRS_FIELD_NUMBER = 5;
+    @SuppressWarnings("serial")
+    private com.google.protobuf.LazyStringArrayList nativeLibDirs_ =
+        com.google.protobuf.LazyStringArrayList.emptyList();
+    /**
+     * <code>repeated string native_lib_dirs = 5;</code>
+     * @return A list containing the nativeLibDirs.
+     */
+    public com.google.protobuf.ProtocolStringList
+        getNativeLibDirsList() {
+      return nativeLibDirs_;
+    }
+    /**
+     * <code>repeated string native_lib_dirs = 5;</code>
+     * @return The count of nativeLibDirs.
+     */
+    public int getNativeLibDirsCount() {
+      return nativeLibDirs_.size();
+    }
+    /**
+     * <code>repeated string native_lib_dirs = 5;</code>
+     * @param index The index of the element to return.
+     * @return The nativeLibDirs at the given index.
+     */
+    public java.lang.String getNativeLibDirs(int index) {
+      return nativeLibDirs_.get(index);
+    }
+    /**
+     * <code>repeated string native_lib_dirs = 5;</code>
+     * @param index The index of the value to return.
+     * @return The bytes of the nativeLibDirs at the given index.
+     */
+    public com.google.protobuf.ByteString
+        getNativeLibDirsBytes(int index) {
+      return nativeLibDirs_.getByteString(index);
+    }
+
     private byte memoizedIsInitialized = -1;
     @java.lang.Override
     public final boolean isInitialized() {
@@ -9291,6 +9355,9 @@ public final class BibixIntellijProto {
       }
       for (int i = 0; i < sources_.size(); i++) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 4, sources_.getRaw(i));
+      }
+      for (int i = 0; i < nativeLibDirs_.size(); i++) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 5, nativeLibDirs_.getRaw(i));
       }
       getUnknownFields().writeTo(output);
     }
@@ -9323,6 +9390,14 @@ public final class BibixIntellijProto {
         size += dataSize;
         size += 1 * getSourcesList().size();
       }
+      {
+        int dataSize = 0;
+        for (int i = 0; i < nativeLibDirs_.size(); i++) {
+          dataSize += computeStringSizeNoTag(nativeLibDirs_.getRaw(i));
+        }
+        size += dataSize;
+        size += 1 * getNativeLibDirsList().size();
+      }
       size += getUnknownFields().getSerializedSize();
       memoizedSize = size;
       return size;
@@ -9346,6 +9421,8 @@ public final class BibixIntellijProto {
           .equals(other.getClasspathsList())) return false;
       if (!getSourcesList()
           .equals(other.getSourcesList())) return false;
+      if (!getNativeLibDirsList()
+          .equals(other.getNativeLibDirsList())) return false;
       if (!getUnknownFields().equals(other.getUnknownFields())) return false;
       return true;
     }
@@ -9368,6 +9445,10 @@ public final class BibixIntellijProto {
       if (getSourcesCount() > 0) {
         hash = (37 * hash) + SOURCES_FIELD_NUMBER;
         hash = (53 * hash) + getSourcesList().hashCode();
+      }
+      if (getNativeLibDirsCount() > 0) {
+        hash = (37 * hash) + NATIVE_LIB_DIRS_FIELD_NUMBER;
+        hash = (53 * hash) + getNativeLibDirsList().hashCode();
       }
       hash = (29 * hash) + getUnknownFields().hashCode();
       memoizedHashCode = hash;
@@ -9504,6 +9585,8 @@ public final class BibixIntellijProto {
             com.google.protobuf.LazyStringArrayList.emptyList();
         sources_ =
             com.google.protobuf.LazyStringArrayList.emptyList();
+        nativeLibDirs_ =
+            com.google.protobuf.LazyStringArrayList.emptyList();
         return this;
       }
 
@@ -9551,6 +9634,10 @@ public final class BibixIntellijProto {
           sources_.makeImmutable();
           result.sources_ = sources_;
         }
+        if (((from_bitField0_ & 0x00000010) != 0)) {
+          nativeLibDirs_.makeImmutable();
+          result.nativeLibDirs_ = nativeLibDirs_;
+        }
       }
 
       @java.lang.Override
@@ -9592,6 +9679,16 @@ public final class BibixIntellijProto {
           } else {
             ensureSourcesIsMutable();
             sources_.addAll(other.sources_);
+          }
+          onChanged();
+        }
+        if (!other.nativeLibDirs_.isEmpty()) {
+          if (nativeLibDirs_.isEmpty()) {
+            nativeLibDirs_ = other.nativeLibDirs_;
+            bitField0_ |= 0x00000010;
+          } else {
+            ensureNativeLibDirsIsMutable();
+            nativeLibDirs_.addAll(other.nativeLibDirs_);
           }
           onChanged();
         }
@@ -9643,6 +9740,12 @@ public final class BibixIntellijProto {
                 sources_.add(s);
                 break;
               } // case 34
+              case 42: {
+                java.lang.String s = input.readStringRequireUtf8();
+                ensureNativeLibDirsIsMutable();
+                nativeLibDirs_.add(s);
+                break;
+              } // case 42
               default: {
                 if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                   done = true; // was an endgroup tag
@@ -10022,6 +10125,117 @@ public final class BibixIntellijProto {
         ensureSourcesIsMutable();
         sources_.add(value);
         bitField0_ |= 0x00000008;
+        onChanged();
+        return this;
+      }
+
+      private com.google.protobuf.LazyStringArrayList nativeLibDirs_ =
+          com.google.protobuf.LazyStringArrayList.emptyList();
+      private void ensureNativeLibDirsIsMutable() {
+        if (!nativeLibDirs_.isModifiable()) {
+          nativeLibDirs_ = new com.google.protobuf.LazyStringArrayList(nativeLibDirs_);
+        }
+        bitField0_ |= 0x00000010;
+      }
+      /**
+       * <code>repeated string native_lib_dirs = 5;</code>
+       * @return A list containing the nativeLibDirs.
+       */
+      public com.google.protobuf.ProtocolStringList
+          getNativeLibDirsList() {
+        nativeLibDirs_.makeImmutable();
+        return nativeLibDirs_;
+      }
+      /**
+       * <code>repeated string native_lib_dirs = 5;</code>
+       * @return The count of nativeLibDirs.
+       */
+      public int getNativeLibDirsCount() {
+        return nativeLibDirs_.size();
+      }
+      /**
+       * <code>repeated string native_lib_dirs = 5;</code>
+       * @param index The index of the element to return.
+       * @return The nativeLibDirs at the given index.
+       */
+      public java.lang.String getNativeLibDirs(int index) {
+        return nativeLibDirs_.get(index);
+      }
+      /**
+       * <code>repeated string native_lib_dirs = 5;</code>
+       * @param index The index of the value to return.
+       * @return The bytes of the nativeLibDirs at the given index.
+       */
+      public com.google.protobuf.ByteString
+          getNativeLibDirsBytes(int index) {
+        return nativeLibDirs_.getByteString(index);
+      }
+      /**
+       * <code>repeated string native_lib_dirs = 5;</code>
+       * @param index The index to set the value at.
+       * @param value The nativeLibDirs to set.
+       * @return This builder for chaining.
+       */
+      public Builder setNativeLibDirs(
+          int index, java.lang.String value) {
+        if (value == null) { throw new NullPointerException(); }
+        ensureNativeLibDirsIsMutable();
+        nativeLibDirs_.set(index, value);
+        bitField0_ |= 0x00000010;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string native_lib_dirs = 5;</code>
+       * @param value The nativeLibDirs to add.
+       * @return This builder for chaining.
+       */
+      public Builder addNativeLibDirs(
+          java.lang.String value) {
+        if (value == null) { throw new NullPointerException(); }
+        ensureNativeLibDirsIsMutable();
+        nativeLibDirs_.add(value);
+        bitField0_ |= 0x00000010;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string native_lib_dirs = 5;</code>
+       * @param values The nativeLibDirs to add.
+       * @return This builder for chaining.
+       */
+      public Builder addAllNativeLibDirs(
+          java.lang.Iterable<java.lang.String> values) {
+        ensureNativeLibDirsIsMutable();
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, nativeLibDirs_);
+        bitField0_ |= 0x00000010;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string native_lib_dirs = 5;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearNativeLibDirs() {
+        nativeLibDirs_ =
+          com.google.protobuf.LazyStringArrayList.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000010);;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string native_lib_dirs = 5;</code>
+       * @param value The bytes of the nativeLibDirs to add.
+       * @return This builder for chaining.
+       */
+      public Builder addNativeLibDirsBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) { throw new NullPointerException(); }
+        checkByteStringIsUtf8(value);
+        ensureNativeLibDirsIsMutable();
+        nativeLibDirs_.add(value);
+        bitField0_ |= 0x00000010;
         onChanged();
         return this;
       }
@@ -16652,40 +16866,41 @@ public final class BibixIntellijProto {
       "\001(\t\022\031\n\021content_root_path\030\003 \001(\t\"d\n\nSdkVer" +
       "sion\022\025\n\013jdk_version\030\001 \001(\tH\000\022\033\n\021ktjvm_sdk" +
       "_version\030\002 \001(\tH\000\022\033\n\021scala_sdk_version\030\003 " +
-      "\001(\tH\000B\005\n\003sdk\"_\n\017ExternalLibrary\022\022\n\nlibra" +
+      "\001(\tH\000B\005\n\003sdk\"x\n\017ExternalLibrary\022\022\n\nlibra" +
       "ry_id\030\001 \001(\t\022\023\n\013description\030\002 \001(\t\022\022\n\nclas" +
-      "spaths\030\003 \003(\t\022\017\n\007sources\030\004 \003(\t\"\177\n\007SdkInfo" +
-      "\022;\n\nktjvm_sdks\030\001 \003(\0132\'.com.giyeok.bibix." +
-      "intellij.KotlinJvmSdk\0227\n\nscala_sdks\030\002 \003(" +
-      "\0132#.com.giyeok.bibix.intellij.ScalaSdk\"8" +
-      "\n\014KotlinJvmSdk\022\017\n\007version\030\001 \001(\t\022\027\n\017sdk_l" +
-      "ibrary_ids\030\002 \003(\t\"q\n\010ScalaSdk\022\017\n\007version\030" +
-      "\001 \001(\t\022\036\n\026scala_language_version\030\002 \001(\t\022\033\n" +
-      "\023compiler_classpaths\030\003 \003(\t\022\027\n\017sdk_librar" +
-      "y_ids\030\004 \003(\t\"\035\n\006Action\022\023\n\013action_name\030\001 \001" +
-      "(\t\"<\n\017BuildTargetsReq\022\022\n\nproject_id\030\001 \001(" +
-      "\t\022\025\n\rbuild_targets\030\002 \003(\t\"\021\n\017BuildTargets" +
-      "Res\"\024\n\022BuildTargetsUpdate\"8\n\021ExecuteActi" +
-      "onsReq\022\022\n\nproject_id\030\001 \001(\t\022\017\n\007actions\030\002 " +
-      "\003(\t\"\023\n\021ExecuteActionsRes\"\025\n\023ExecuteActio" +
-      "nUpdate*\\\n\016DependencyType\022\032\n\026DEPENDENCY_" +
-      "UNSPECIFIED\020\000\022\026\n\022COMPILE_DEPENDENCY\020\001\022\026\n" +
-      "\022RUNTIME_DEPENDENCY\020\0022\302\004\n\024BibixIntellijS" +
-      "ervice\022e\n\013loadProject\022).com.giyeok.bibix" +
-      ".intellij.LoadProjectReq\032+.com.giyeok.bi" +
-      "bix.intellij.BibixProjectInfo\022f\n\014buildTa" +
-      "rgets\022*.com.giyeok.bibix.intellij.BuildT" +
-      "argetsReq\032*.com.giyeok.bibix.intellij.Bu" +
-      "ildTargetsRes\022t\n\025buildTargetsStreaming\022*" +
-      ".com.giyeok.bibix.intellij.BuildTargetsR" +
-      "eq\032-.com.giyeok.bibix.intellij.BuildTarg" +
-      "etsUpdate0\001\022l\n\016executeActions\022,.com.giye" +
-      "ok.bibix.intellij.ExecuteActionsReq\032,.co" +
-      "m.giyeok.bibix.intellij.ExecuteActionsRe" +
-      "s\022w\n\027executeActionsStreaming\022*.com.giyeo" +
-      "k.bibix.intellij.BuildTargetsReq\032..com.g" +
-      "iyeok.bibix.intellij.ExecuteActionUpdate" +
-      "0\001B\024B\022BibixIntellijProtob\006proto3"
+      "spaths\030\003 \003(\t\022\017\n\007sources\030\004 \003(\t\022\027\n\017native_" +
+      "lib_dirs\030\005 \003(\t\"\177\n\007SdkInfo\022;\n\nktjvm_sdks\030" +
+      "\001 \003(\0132\'.com.giyeok.bibix.intellij.Kotlin" +
+      "JvmSdk\0227\n\nscala_sdks\030\002 \003(\0132#.com.giyeok." +
+      "bibix.intellij.ScalaSdk\"8\n\014KotlinJvmSdk\022" +
+      "\017\n\007version\030\001 \001(\t\022\027\n\017sdk_library_ids\030\002 \003(" +
+      "\t\"q\n\010ScalaSdk\022\017\n\007version\030\001 \001(\t\022\036\n\026scala_" +
+      "language_version\030\002 \001(\t\022\033\n\023compiler_class" +
+      "paths\030\003 \003(\t\022\027\n\017sdk_library_ids\030\004 \003(\t\"\035\n\006" +
+      "Action\022\023\n\013action_name\030\001 \001(\t\"<\n\017BuildTarg" +
+      "etsReq\022\022\n\nproject_id\030\001 \001(\t\022\025\n\rbuild_targ" +
+      "ets\030\002 \003(\t\"\021\n\017BuildTargetsRes\"\024\n\022BuildTar" +
+      "getsUpdate\"8\n\021ExecuteActionsReq\022\022\n\nproje" +
+      "ct_id\030\001 \001(\t\022\017\n\007actions\030\002 \003(\t\"\023\n\021ExecuteA" +
+      "ctionsRes\"\025\n\023ExecuteActionUpdate*\\\n\016Depe" +
+      "ndencyType\022\032\n\026DEPENDENCY_UNSPECIFIED\020\000\022\026" +
+      "\n\022COMPILE_DEPENDENCY\020\001\022\026\n\022RUNTIME_DEPEND" +
+      "ENCY\020\0022\302\004\n\024BibixIntellijService\022e\n\013loadP" +
+      "roject\022).com.giyeok.bibix.intellij.LoadP" +
+      "rojectReq\032+.com.giyeok.bibix.intellij.Bi" +
+      "bixProjectInfo\022f\n\014buildTargets\022*.com.giy" +
+      "eok.bibix.intellij.BuildTargetsReq\032*.com" +
+      ".giyeok.bibix.intellij.BuildTargetsRes\022t" +
+      "\n\025buildTargetsStreaming\022*.com.giyeok.bib" +
+      "ix.intellij.BuildTargetsReq\032-.com.giyeok" +
+      ".bibix.intellij.BuildTargetsUpdate0\001\022l\n\016" +
+      "executeActions\022,.com.giyeok.bibix.intell" +
+      "ij.ExecuteActionsReq\032,.com.giyeok.bibix." +
+      "intellij.ExecuteActionsRes\022w\n\027executeAct" +
+      "ionsStreaming\022*.com.giyeok.bibix.intelli" +
+      "j.BuildTargetsReq\032..com.giyeok.bibix.int" +
+      "ellij.ExecuteActionUpdate0\001B\024B\022BibixInte" +
+      "llijProtob\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -16738,7 +16953,7 @@ public final class BibixIntellijProto {
     internal_static_com_giyeok_bibix_intellij_ExternalLibrary_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_giyeok_bibix_intellij_ExternalLibrary_descriptor,
-        new java.lang.String[] { "LibraryId", "Description", "Classpaths", "Sources", });
+        new java.lang.String[] { "LibraryId", "Description", "Classpaths", "Sources", "NativeLibDirs", });
     internal_static_com_giyeok_bibix_intellij_SdkInfo_descriptor =
       getDescriptor().getMessageTypes().get(6);
     internal_static_com_giyeok_bibix_intellij_SdkInfo_fieldAccessorTable = new

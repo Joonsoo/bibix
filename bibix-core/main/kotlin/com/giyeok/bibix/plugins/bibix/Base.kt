@@ -14,6 +14,7 @@ class Base {
       LocalLib(classpath),
       JarInfo(classpath, null),
       listOf(),
+      listOf(),
       listOf()
     ).toBibix()
   }

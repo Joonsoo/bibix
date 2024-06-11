@@ -166,6 +166,7 @@ class Artifact {
           JarInfo(artifactResult.artifact.file.toPath(), null),
           compileDeps.map { traverse(it) },
           runtimeDeps.map { traverse(it) },
+          listOf()
         )
       }
 
