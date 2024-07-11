@@ -260,3 +260,9 @@ grpcDeps = [
 ]
 
 uberJars = (base: base.uberJar, core: core.uberJar, intellij: intellij.uberJar)
+
+ccflyer {
+  main = ktjvm.library(
+    srcs = glob("ccflyer/main/kotlin/**.kt"),
+  )
+}
