@@ -18,6 +18,9 @@ var ktjvm.sdkVersion = kotlinVersion
 var ktjvm.outVersion = "21"
 import git("https://github.com/Joonsoo/sugarproto") as sugarproto
 
+var protobuf.protobufVersion = protobufVersion
+var grpc.grpcVersion = grpcVersion
+
 bibixVersion = "0.8.2"
 
 base {
@@ -222,7 +225,7 @@ kotlinxCoroutinesDeps = [
   maven.artifact("org.jetbrains.kotlinx", "kotlinx-coroutines-jdk9", kotlinxCoroutinesVersion),
 ]
 
-protobufVersion = "3.25.1"
+protobufVersion = "3.25.8"
 protobufDeps = [
   maven.artifact("com.google.protobuf", "protobuf-java", protobufVersion),
   maven.artifact("com.google.protobuf", "protobuf-java-util", protobufVersion),
@@ -250,13 +253,13 @@ truthDeps = [
 
 jimfsDep = maven.artifact("com.google.jimfs", "jimfs", "1.2")
 
-grpcVersion = "1.60.0"
+grpcVersion = "1.73.0"
 grpcDeps = [
   maven.artifact("io.grpc", "grpc-api", grpcVersion),
   maven.artifact("io.grpc", "grpc-services", grpcVersion),
   maven.artifact("io.grpc", "grpc-stub", grpcVersion),
   maven.artifact("io.grpc", "grpc-netty-shaded", grpcVersion),
-  maven.artifact("io.grpc", "grpc-kotlin-stub", "1.4.1"),
+  maven.artifact("io.grpc", "grpc-kotlin-stub", "1.4.3"),
 ]
 
 uberJars = (base: base.uberJar, core: core.uberJar, intellij: intellij.uberJar)
@@ -264,5 +267,9 @@ uberJars = (base: base.uberJar, core: core.uberJar, intellij: intellij.uberJar)
 ccflyer {
   main = ktjvm.library(
     srcs = glob("ccflyer/main/kotlin/**.kt"),
+    deps = [
+      maven.artifact("com.google.code.gson", "gson", "2.10.1"),
+      ...kotlinxCoroutinesDeps,
+    ],
   )
 }

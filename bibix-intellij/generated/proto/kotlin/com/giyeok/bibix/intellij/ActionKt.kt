@@ -54,7 +54,6 @@ public object ActionKt {
   }
 }
 @kotlin.jvm.JvmSynthetic
-@com.google.errorprone.annotations.CheckReturnValue
-public inline fun com.giyeok.bibix.intellij.BibixIntellijProto.Action.copy(block: com.giyeok.bibix.intellij.ActionKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.intellij.BibixIntellijProto.Action =
-  com.giyeok.bibix.intellij.ActionKt.Dsl._create(this.toBuilder()).apply { block() }._build()
+public inline fun com.giyeok.bibix.intellij.BibixIntellijProto.Action.copy(block: `com.giyeok.bibix.intellij`.ActionKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.intellij.BibixIntellijProto.Action =
+  `com.giyeok.bibix.intellij`.ActionKt.Dsl._create(this.toBuilder()).apply { block() }._build()
 

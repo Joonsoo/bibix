@@ -80,7 +80,6 @@ public object LoadProjectReqKt {
   }
 }
 @kotlin.jvm.JvmSynthetic
-@com.google.errorprone.annotations.CheckReturnValue
-public inline fun com.giyeok.bibix.intellij.BibixIntellijProto.LoadProjectReq.copy(block: com.giyeok.bibix.intellij.LoadProjectReqKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.intellij.BibixIntellijProto.LoadProjectReq =
-  com.giyeok.bibix.intellij.LoadProjectReqKt.Dsl._create(this.toBuilder()).apply { block() }._build()
+public inline fun com.giyeok.bibix.intellij.BibixIntellijProto.LoadProjectReq.copy(block: `com.giyeok.bibix.intellij`.LoadProjectReqKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.intellij.BibixIntellijProto.LoadProjectReq =
+  `com.giyeok.bibix.intellij`.LoadProjectReqKt.Dsl._create(this.toBuilder()).apply { block() }._build()
 

@@ -80,7 +80,6 @@ public object ContentRootKt {
   }
 }
 @kotlin.jvm.JvmSynthetic
-@com.google.errorprone.annotations.CheckReturnValue
-public inline fun com.giyeok.bibix.intellij.BibixIntellijProto.ContentRoot.copy(block: com.giyeok.bibix.intellij.ContentRootKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.intellij.BibixIntellijProto.ContentRoot =
-  com.giyeok.bibix.intellij.ContentRootKt.Dsl._create(this.toBuilder()).apply { block() }._build()
+public inline fun com.giyeok.bibix.intellij.BibixIntellijProto.ContentRoot.copy(block: `com.giyeok.bibix.intellij`.ContentRootKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.intellij.BibixIntellijProto.ContentRoot =
+  `com.giyeok.bibix.intellij`.ContentRootKt.Dsl._create(this.toBuilder()).apply { block() }._build()
 

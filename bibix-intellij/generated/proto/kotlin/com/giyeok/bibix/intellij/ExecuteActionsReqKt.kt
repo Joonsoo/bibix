@@ -116,7 +116,6 @@ public object ExecuteActionsReqKt {
     }}
 }
 @kotlin.jvm.JvmSynthetic
-@com.google.errorprone.annotations.CheckReturnValue
-public inline fun com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsReq.copy(block: com.giyeok.bibix.intellij.ExecuteActionsReqKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsReq =
-  com.giyeok.bibix.intellij.ExecuteActionsReqKt.Dsl._create(this.toBuilder()).apply { block() }._build()
+public inline fun com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsReq.copy(block: `com.giyeok.bibix.intellij`.ExecuteActionsReqKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsReq =
+  `com.giyeok.bibix.intellij`.ExecuteActionsReqKt.Dsl._create(this.toBuilder()).apply { block() }._build()
 

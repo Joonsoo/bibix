@@ -33,7 +33,6 @@ public object ExecuteActionUpdateKt {
   }
 }
 @kotlin.jvm.JvmSynthetic
-@com.google.errorprone.annotations.CheckReturnValue
-public inline fun com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionUpdate.copy(block: com.giyeok.bibix.intellij.ExecuteActionUpdateKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionUpdate =
-  com.giyeok.bibix.intellij.ExecuteActionUpdateKt.Dsl._create(this.toBuilder()).apply { block() }._build()
+public inline fun com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionUpdate.copy(block: `com.giyeok.bibix.intellij`.ExecuteActionUpdateKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionUpdate =
+  `com.giyeok.bibix.intellij`.ExecuteActionUpdateKt.Dsl._create(this.toBuilder()).apply { block() }._build()
 

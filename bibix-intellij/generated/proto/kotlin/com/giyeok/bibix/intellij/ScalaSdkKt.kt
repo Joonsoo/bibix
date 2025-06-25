@@ -203,7 +203,6 @@ public object ScalaSdkKt {
     }}
 }
 @kotlin.jvm.JvmSynthetic
-@com.google.errorprone.annotations.CheckReturnValue
-public inline fun com.giyeok.bibix.intellij.BibixIntellijProto.ScalaSdk.copy(block: com.giyeok.bibix.intellij.ScalaSdkKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.intellij.BibixIntellijProto.ScalaSdk =
-  com.giyeok.bibix.intellij.ScalaSdkKt.Dsl._create(this.toBuilder()).apply { block() }._build()
+public inline fun com.giyeok.bibix.intellij.BibixIntellijProto.ScalaSdk.copy(block: `com.giyeok.bibix.intellij`.ScalaSdkKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.intellij.BibixIntellijProto.ScalaSdk =
+  `com.giyeok.bibix.intellij`.ScalaSdkKt.Dsl._create(this.toBuilder()).apply { block() }._build()
 

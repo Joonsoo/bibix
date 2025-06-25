@@ -116,7 +116,6 @@ public object KotlinJvmSdkKt {
     }}
 }
 @kotlin.jvm.JvmSynthetic
-@com.google.errorprone.annotations.CheckReturnValue
-public inline fun com.giyeok.bibix.intellij.BibixIntellijProto.KotlinJvmSdk.copy(block: com.giyeok.bibix.intellij.KotlinJvmSdkKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.intellij.BibixIntellijProto.KotlinJvmSdk =
-  com.giyeok.bibix.intellij.KotlinJvmSdkKt.Dsl._create(this.toBuilder()).apply { block() }._build()
+public inline fun com.giyeok.bibix.intellij.BibixIntellijProto.KotlinJvmSdk.copy(block: `com.giyeok.bibix.intellij`.KotlinJvmSdkKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.intellij.BibixIntellijProto.KotlinJvmSdk =
+  `com.giyeok.bibix.intellij`.KotlinJvmSdkKt.Dsl._create(this.toBuilder()).apply { block() }._build()
 

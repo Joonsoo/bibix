@@ -116,7 +116,6 @@ public object BuildTargetsReqKt {
     }}
 }
 @kotlin.jvm.JvmSynthetic
-@com.google.errorprone.annotations.CheckReturnValue
-public inline fun com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsReq.copy(block: com.giyeok.bibix.intellij.BuildTargetsReqKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsReq =
-  com.giyeok.bibix.intellij.BuildTargetsReqKt.Dsl._create(this.toBuilder()).apply { block() }._build()
+public inline fun com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsReq.copy(block: `com.giyeok.bibix.intellij`.BuildTargetsReqKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsReq =
+  `com.giyeok.bibix.intellij`.BuildTargetsReqKt.Dsl._create(this.toBuilder()).apply { block() }._build()
 

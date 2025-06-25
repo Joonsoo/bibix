@@ -273,7 +273,6 @@ public object ExternalLibraryKt {
     }}
 }
 @kotlin.jvm.JvmSynthetic
-@com.google.errorprone.annotations.CheckReturnValue
-public inline fun com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary.copy(block: com.giyeok.bibix.intellij.ExternalLibraryKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary =
-  com.giyeok.bibix.intellij.ExternalLibraryKt.Dsl._create(this.toBuilder()).apply { block() }._build()
+public inline fun com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary.copy(block: `com.giyeok.bibix.intellij`.ExternalLibraryKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.intellij.BibixIntellijProto.ExternalLibrary =
+  `com.giyeok.bibix.intellij`.ExternalLibraryKt.Dsl._create(this.toBuilder()).apply { block() }._build()
 

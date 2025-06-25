@@ -5,14 +5,14 @@ import static io.grpc.MethodDescriptor.generateFullMethodName;
 /**
  */
 @javax.annotation.Generated(
-    value = "by gRPC proto compiler (version 1.53.0)",
+    value = "by gRPC proto compiler (version 1.73.0)",
     comments = "Source: api.proto")
 @io.grpc.stub.annotations.GrpcGenerated
 public final class BibixIntellijServiceGrpc {
 
   private BibixIntellijServiceGrpc() {}
 
-  public static final String SERVICE_NAME = "com.giyeok.bibix.intellij.BibixIntellijService";
+  public static final java.lang.String SERVICE_NAME = "com.giyeok.bibix.intellij.BibixIntellijService";
 
   // Static method descriptors that strictly reflect the proto.
   private static volatile io.grpc.MethodDescriptor<com.giyeok.bibix.intellij.BibixIntellijProto.LoadProjectReq,
@@ -185,6 +185,21 @@ public final class BibixIntellijServiceGrpc {
   }
 
   /**
+   * Creates a new blocking-style stub that supports all types of calls on the service
+   */
+  public static BibixIntellijServiceBlockingV2Stub newBlockingV2Stub(
+      io.grpc.Channel channel) {
+    io.grpc.stub.AbstractStub.StubFactory<BibixIntellijServiceBlockingV2Stub> factory =
+      new io.grpc.stub.AbstractStub.StubFactory<BibixIntellijServiceBlockingV2Stub>() {
+        @java.lang.Override
+        public BibixIntellijServiceBlockingV2Stub newStub(io.grpc.Channel channel, io.grpc.CallOptions callOptions) {
+          return new BibixIntellijServiceBlockingV2Stub(channel, callOptions);
+        }
+      };
+    return BibixIntellijServiceBlockingV2Stub.newStub(factory, channel);
+  }
+
+  /**
    * Creates a new blocking-style stub that supports unary and streaming output calls on the service
    */
   public static BibixIntellijServiceBlockingStub newBlockingStub(
@@ -216,87 +231,60 @@ public final class BibixIntellijServiceGrpc {
 
   /**
    */
-  public static abstract class BibixIntellijServiceImplBase implements io.grpc.BindableService {
+  public interface AsyncService {
 
     /**
      */
-    public void loadProject(com.giyeok.bibix.intellij.BibixIntellijProto.LoadProjectReq request,
+    default void loadProject(com.giyeok.bibix.intellij.BibixIntellijProto.LoadProjectReq request,
         io.grpc.stub.StreamObserver<com.giyeok.bibix.intellij.BibixIntellijProto.BibixProjectInfo> responseObserver) {
       io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getLoadProjectMethod(), responseObserver);
     }
 
     /**
      */
-    public void buildTargets(com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsReq request,
+    default void buildTargets(com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsReq request,
         io.grpc.stub.StreamObserver<com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsRes> responseObserver) {
       io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getBuildTargetsMethod(), responseObserver);
     }
 
     /**
      */
-    public void buildTargetsStreaming(com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsReq request,
+    default void buildTargetsStreaming(com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsReq request,
         io.grpc.stub.StreamObserver<com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsUpdate> responseObserver) {
       io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getBuildTargetsStreamingMethod(), responseObserver);
     }
 
     /**
      */
-    public void executeActions(com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsReq request,
+    default void executeActions(com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsReq request,
         io.grpc.stub.StreamObserver<com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsRes> responseObserver) {
       io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getExecuteActionsMethod(), responseObserver);
     }
 
     /**
      */
-    public void executeActionsStreaming(com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsReq request,
+    default void executeActionsStreaming(com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsReq request,
         io.grpc.stub.StreamObserver<com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionUpdate> responseObserver) {
       io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getExecuteActionsStreamingMethod(), responseObserver);
-    }
-
-    @java.lang.Override public final io.grpc.ServerServiceDefinition bindService() {
-      return io.grpc.ServerServiceDefinition.builder(getServiceDescriptor())
-          .addMethod(
-            getLoadProjectMethod(),
-            io.grpc.stub.ServerCalls.asyncUnaryCall(
-              new MethodHandlers<
-                com.giyeok.bibix.intellij.BibixIntellijProto.LoadProjectReq,
-                com.giyeok.bibix.intellij.BibixIntellijProto.BibixProjectInfo>(
-                  this, METHODID_LOAD_PROJECT)))
-          .addMethod(
-            getBuildTargetsMethod(),
-            io.grpc.stub.ServerCalls.asyncUnaryCall(
-              new MethodHandlers<
-                com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsReq,
-                com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsRes>(
-                  this, METHODID_BUILD_TARGETS)))
-          .addMethod(
-            getBuildTargetsStreamingMethod(),
-            io.grpc.stub.ServerCalls.asyncServerStreamingCall(
-              new MethodHandlers<
-                com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsReq,
-                com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsUpdate>(
-                  this, METHODID_BUILD_TARGETS_STREAMING)))
-          .addMethod(
-            getExecuteActionsMethod(),
-            io.grpc.stub.ServerCalls.asyncUnaryCall(
-              new MethodHandlers<
-                com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsReq,
-                com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsRes>(
-                  this, METHODID_EXECUTE_ACTIONS)))
-          .addMethod(
-            getExecuteActionsStreamingMethod(),
-            io.grpc.stub.ServerCalls.asyncServerStreamingCall(
-              new MethodHandlers<
-                com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsReq,
-                com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionUpdate>(
-                  this, METHODID_EXECUTE_ACTIONS_STREAMING)))
-          .build();
     }
   }
 
   /**
+   * Base class for the server implementation of the service BibixIntellijService.
    */
-  public static final class BibixIntellijServiceStub extends io.grpc.stub.AbstractAsyncStub<BibixIntellijServiceStub> {
+  public static abstract class BibixIntellijServiceImplBase
+      implements io.grpc.BindableService, AsyncService {
+
+    @java.lang.Override public final io.grpc.ServerServiceDefinition bindService() {
+      return BibixIntellijServiceGrpc.bindService(this);
+    }
+  }
+
+  /**
+   * A stub to allow clients to do asynchronous rpc calls to service BibixIntellijService.
+   */
+  public static final class BibixIntellijServiceStub
+      extends io.grpc.stub.AbstractAsyncStub<BibixIntellijServiceStub> {
     private BibixIntellijServiceStub(
         io.grpc.Channel channel, io.grpc.CallOptions callOptions) {
       super(channel, callOptions);
@@ -350,8 +338,66 @@ public final class BibixIntellijServiceGrpc {
   }
 
   /**
+   * A stub to allow clients to do synchronous rpc calls to service BibixIntellijService.
    */
-  public static final class BibixIntellijServiceBlockingStub extends io.grpc.stub.AbstractBlockingStub<BibixIntellijServiceBlockingStub> {
+  public static final class BibixIntellijServiceBlockingV2Stub
+      extends io.grpc.stub.AbstractBlockingStub<BibixIntellijServiceBlockingV2Stub> {
+    private BibixIntellijServiceBlockingV2Stub(
+        io.grpc.Channel channel, io.grpc.CallOptions callOptions) {
+      super(channel, callOptions);
+    }
+
+    @java.lang.Override
+    protected BibixIntellijServiceBlockingV2Stub build(
+        io.grpc.Channel channel, io.grpc.CallOptions callOptions) {
+      return new BibixIntellijServiceBlockingV2Stub(channel, callOptions);
+    }
+
+    /**
+     */
+    public com.giyeok.bibix.intellij.BibixIntellijProto.BibixProjectInfo loadProject(com.giyeok.bibix.intellij.BibixIntellijProto.LoadProjectReq request) {
+      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+          getChannel(), getLoadProjectMethod(), getCallOptions(), request);
+    }
+
+    /**
+     */
+    public com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsRes buildTargets(com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsReq request) {
+      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+          getChannel(), getBuildTargetsMethod(), getCallOptions(), request);
+    }
+
+    /**
+     */
+    @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/10918")
+    public io.grpc.stub.BlockingClientCall<?, com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsUpdate>
+        buildTargetsStreaming(com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsReq request) {
+      return io.grpc.stub.ClientCalls.blockingV2ServerStreamingCall(
+          getChannel(), getBuildTargetsStreamingMethod(), getCallOptions(), request);
+    }
+
+    /**
+     */
+    public com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsRes executeActions(com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsReq request) {
+      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+          getChannel(), getExecuteActionsMethod(), getCallOptions(), request);
+    }
+
+    /**
+     */
+    @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/10918")
+    public io.grpc.stub.BlockingClientCall<?, com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionUpdate>
+        executeActionsStreaming(com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsReq request) {
+      return io.grpc.stub.ClientCalls.blockingV2ServerStreamingCall(
+          getChannel(), getExecuteActionsStreamingMethod(), getCallOptions(), request);
+    }
+  }
+
+  /**
+   * A stub to allow clients to do limited synchronous rpc calls to service BibixIntellijService.
+   */
+  public static final class BibixIntellijServiceBlockingStub
+      extends io.grpc.stub.AbstractBlockingStub<BibixIntellijServiceBlockingStub> {
     private BibixIntellijServiceBlockingStub(
         io.grpc.Channel channel, io.grpc.CallOptions callOptions) {
       super(channel, callOptions);
@@ -402,8 +448,10 @@ public final class BibixIntellijServiceGrpc {
   }
 
   /**
+   * A stub to allow clients to do ListenableFuture-style rpc calls to service BibixIntellijService.
    */
-  public static final class BibixIntellijServiceFutureStub extends io.grpc.stub.AbstractFutureStub<BibixIntellijServiceFutureStub> {
+  public static final class BibixIntellijServiceFutureStub
+      extends io.grpc.stub.AbstractFutureStub<BibixIntellijServiceFutureStub> {
     private BibixIntellijServiceFutureStub(
         io.grpc.Channel channel, io.grpc.CallOptions callOptions) {
       super(channel, callOptions);
@@ -451,10 +499,10 @@ public final class BibixIntellijServiceGrpc {
       io.grpc.stub.ServerCalls.ServerStreamingMethod<Req, Resp>,
       io.grpc.stub.ServerCalls.ClientStreamingMethod<Req, Resp>,
       io.grpc.stub.ServerCalls.BidiStreamingMethod<Req, Resp> {
-    private final BibixIntellijServiceImplBase serviceImpl;
+    private final AsyncService serviceImpl;
     private final int methodId;
 
-    MethodHandlers(BibixIntellijServiceImplBase serviceImpl, int methodId) {
+    MethodHandlers(AsyncService serviceImpl, int methodId) {
       this.serviceImpl = serviceImpl;
       this.methodId = methodId;
     }
@@ -499,6 +547,46 @@ public final class BibixIntellijServiceGrpc {
     }
   }
 
+  public static final io.grpc.ServerServiceDefinition bindService(AsyncService service) {
+    return io.grpc.ServerServiceDefinition.builder(getServiceDescriptor())
+        .addMethod(
+          getLoadProjectMethod(),
+          io.grpc.stub.ServerCalls.asyncUnaryCall(
+            new MethodHandlers<
+              com.giyeok.bibix.intellij.BibixIntellijProto.LoadProjectReq,
+              com.giyeok.bibix.intellij.BibixIntellijProto.BibixProjectInfo>(
+                service, METHODID_LOAD_PROJECT)))
+        .addMethod(
+          getBuildTargetsMethod(),
+          io.grpc.stub.ServerCalls.asyncUnaryCall(
+            new MethodHandlers<
+              com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsReq,
+              com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsRes>(
+                service, METHODID_BUILD_TARGETS)))
+        .addMethod(
+          getBuildTargetsStreamingMethod(),
+          io.grpc.stub.ServerCalls.asyncServerStreamingCall(
+            new MethodHandlers<
+              com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsReq,
+              com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsUpdate>(
+                service, METHODID_BUILD_TARGETS_STREAMING)))
+        .addMethod(
+          getExecuteActionsMethod(),
+          io.grpc.stub.ServerCalls.asyncUnaryCall(
+            new MethodHandlers<
+              com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsReq,
+              com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsRes>(
+                service, METHODID_EXECUTE_ACTIONS)))
+        .addMethod(
+          getExecuteActionsStreamingMethod(),
+          io.grpc.stub.ServerCalls.asyncServerStreamingCall(
+            new MethodHandlers<
+              com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsReq,
+              com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionUpdate>(
+                service, METHODID_EXECUTE_ACTIONS_STREAMING)))
+        .build();
+  }
+
   private static abstract class BibixIntellijServiceBaseDescriptorSupplier
       implements io.grpc.protobuf.ProtoFileDescriptorSupplier, io.grpc.protobuf.ProtoServiceDescriptorSupplier {
     BibixIntellijServiceBaseDescriptorSupplier() {}
@@ -522,9 +610,9 @@ public final class BibixIntellijServiceGrpc {
   private static final class BibixIntellijServiceMethodDescriptorSupplier
       extends BibixIntellijServiceBaseDescriptorSupplier
       implements io.grpc.protobuf.ProtoMethodDescriptorSupplier {
-    private final String methodName;
+    private final java.lang.String methodName;
 
-    BibixIntellijServiceMethodDescriptorSupplier(String methodName) {
+    BibixIntellijServiceMethodDescriptorSupplier(java.lang.String methodName) {
       this.methodName = methodName;
     }
 

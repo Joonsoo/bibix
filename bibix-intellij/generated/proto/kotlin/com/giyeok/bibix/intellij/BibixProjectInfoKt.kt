@@ -375,9 +375,8 @@ public object BibixProjectInfoKt {
   }
 }
 @kotlin.jvm.JvmSynthetic
-@com.google.errorprone.annotations.CheckReturnValue
-public inline fun com.giyeok.bibix.intellij.BibixIntellijProto.BibixProjectInfo.copy(block: com.giyeok.bibix.intellij.BibixProjectInfoKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.intellij.BibixIntellijProto.BibixProjectInfo =
-  com.giyeok.bibix.intellij.BibixProjectInfoKt.Dsl._create(this.toBuilder()).apply { block() }._build()
+public inline fun com.giyeok.bibix.intellij.BibixIntellijProto.BibixProjectInfo.copy(block: `com.giyeok.bibix.intellij`.BibixProjectInfoKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.intellij.BibixIntellijProto.BibixProjectInfo =
+  `com.giyeok.bibix.intellij`.BibixProjectInfoKt.Dsl._create(this.toBuilder()).apply { block() }._build()
 
 public val com.giyeok.bibix.intellij.BibixIntellijProto.BibixProjectInfoOrBuilder.sdkInfoOrNull: com.giyeok.bibix.intellij.BibixIntellijProto.SdkInfo?
   get() = if (hasSdkInfo()) getSdkInfo() else null

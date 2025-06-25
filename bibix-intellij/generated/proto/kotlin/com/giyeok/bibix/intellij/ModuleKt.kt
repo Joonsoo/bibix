@@ -588,17 +588,14 @@ public object ModuleKt {
   }
 }
 @kotlin.jvm.JvmSynthetic
-@com.google.errorprone.annotations.CheckReturnValue
-public inline fun com.giyeok.bibix.intellij.BibixIntellijProto.Module.copy(block: com.giyeok.bibix.intellij.ModuleKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.intellij.BibixIntellijProto.Module =
-  com.giyeok.bibix.intellij.ModuleKt.Dsl._create(this.toBuilder()).apply { block() }._build()
+public inline fun com.giyeok.bibix.intellij.BibixIntellijProto.Module.copy(block: `com.giyeok.bibix.intellij`.ModuleKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.intellij.BibixIntellijProto.Module =
+  `com.giyeok.bibix.intellij`.ModuleKt.Dsl._create(this.toBuilder()).apply { block() }._build()
 
 @kotlin.jvm.JvmSynthetic
-@com.google.errorprone.annotations.CheckReturnValue
-public inline fun com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDep.copy(block: com.giyeok.bibix.intellij.ModuleKt.ModuleDepKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDep =
-  com.giyeok.bibix.intellij.ModuleKt.ModuleDepKt.Dsl._create(this.toBuilder()).apply { block() }._build()
+public inline fun com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDep.copy(block: `com.giyeok.bibix.intellij`.ModuleKt.ModuleDepKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.intellij.BibixIntellijProto.Module.ModuleDep =
+  `com.giyeok.bibix.intellij`.ModuleKt.ModuleDepKt.Dsl._create(this.toBuilder()).apply { block() }._build()
 
 @kotlin.jvm.JvmSynthetic
-@com.google.errorprone.annotations.CheckReturnValue
-public inline fun com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDep.copy(block: com.giyeok.bibix.intellij.ModuleKt.LibraryDepKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDep =
-  com.giyeok.bibix.intellij.ModuleKt.LibraryDepKt.Dsl._create(this.toBuilder()).apply { block() }._build()
+public inline fun com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDep.copy(block: `com.giyeok.bibix.intellij`.ModuleKt.LibraryDepKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.intellij.BibixIntellijProto.Module.LibraryDep =
+  `com.giyeok.bibix.intellij`.ModuleKt.LibraryDepKt.Dsl._create(this.toBuilder()).apply { block() }._build()
 

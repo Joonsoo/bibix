@@ -29,7 +29,6 @@ public object BuildTargetsResKt {
   }
 }
 @kotlin.jvm.JvmSynthetic
-@com.google.errorprone.annotations.CheckReturnValue
-public inline fun com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsRes.copy(block: com.giyeok.bibix.intellij.BuildTargetsResKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsRes =
-  com.giyeok.bibix.intellij.BuildTargetsResKt.Dsl._create(this.toBuilder()).apply { block() }._build()
+public inline fun com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsRes.copy(block: `com.giyeok.bibix.intellij`.BuildTargetsResKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.intellij.BibixIntellijProto.BuildTargetsRes =
+  `com.giyeok.bibix.intellij`.BuildTargetsResKt.Dsl._create(this.toBuilder()).apply { block() }._build()
 

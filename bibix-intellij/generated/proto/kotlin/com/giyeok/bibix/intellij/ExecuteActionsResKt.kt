@@ -29,7 +29,6 @@ public object ExecuteActionsResKt {
   }
 }
 @kotlin.jvm.JvmSynthetic
-@com.google.errorprone.annotations.CheckReturnValue
-public inline fun com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsRes.copy(block: com.giyeok.bibix.intellij.ExecuteActionsResKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsRes =
-  com.giyeok.bibix.intellij.ExecuteActionsResKt.Dsl._create(this.toBuilder()).apply { block() }._build()
+public inline fun com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsRes.copy(block: `com.giyeok.bibix.intellij`.ExecuteActionsResKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.intellij.BibixIntellijProto.ExecuteActionsRes =
+  `com.giyeok.bibix.intellij`.ExecuteActionsResKt.Dsl._create(this.toBuilder()).apply { block() }._build()
 

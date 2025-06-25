@@ -108,7 +108,6 @@ public object SdkVersionKt {
   }
 }
 @kotlin.jvm.JvmSynthetic
-@com.google.errorprone.annotations.CheckReturnValue
-public inline fun com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion.copy(block: com.giyeok.bibix.intellij.SdkVersionKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion =
-  com.giyeok.bibix.intellij.SdkVersionKt.Dsl._create(this.toBuilder()).apply { block() }._build()
+public inline fun com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion.copy(block: `com.giyeok.bibix.intellij`.SdkVersionKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.intellij.BibixIntellijProto.SdkVersion =
+  `com.giyeok.bibix.intellij`.SdkVersionKt.Dsl._create(this.toBuilder()).apply { block() }._build()
 

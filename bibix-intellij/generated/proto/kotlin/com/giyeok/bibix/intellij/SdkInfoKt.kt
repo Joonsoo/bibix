@@ -173,7 +173,6 @@ public object SdkInfoKt {
   }
 }
 @kotlin.jvm.JvmSynthetic
-@com.google.errorprone.annotations.CheckReturnValue
-public inline fun com.giyeok.bibix.intellij.BibixIntellijProto.SdkInfo.copy(block: com.giyeok.bibix.intellij.SdkInfoKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.intellij.BibixIntellijProto.SdkInfo =
-  com.giyeok.bibix.intellij.SdkInfoKt.Dsl._create(this.toBuilder()).apply { block() }._build()
+public inline fun com.giyeok.bibix.intellij.BibixIntellijProto.SdkInfo.copy(block: `com.giyeok.bibix.intellij`.SdkInfoKt.Dsl.() -> kotlin.Unit): com.giyeok.bibix.intellij.BibixIntellijProto.SdkInfo =
+  `com.giyeok.bibix.intellij`.SdkInfoKt.Dsl._create(this.toBuilder()).apply { block() }._build()
 
