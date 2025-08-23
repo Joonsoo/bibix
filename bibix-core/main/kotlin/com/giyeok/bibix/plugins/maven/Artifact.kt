@@ -210,7 +210,7 @@ class Artifact {
       // -Dos.detected.name=linux -Dos.detected.arch=x86_64 -Dos.detected.classifier=linux-x86_64
       val osName = when (buildEnv.os) {
         is OS.Linux -> "linux"
-        is OS.MacOSX -> "macosx"
+        is OS.MacOSX -> "osx"
         is OS.Windows -> "windows"
         OS.Unknown -> "???"
       }
