@@ -8,6 +8,20 @@ class ExecutorTracker(threadCount: Int) {
   private val threadTasks = mutableListOf<BuildTask?>()
   private val taskThreadId = mutableMapOf<BuildTask, Int>()
 
+  // ANSI escape codes
+  private val ESC = "\u001B"
+  private val CURSOR_UP = "$ESC[1A"
+  private val ERASE_LINE = "$ESC[2K"
+  private val RESET = "$ESC[0m"
+  private val BOLD = "$ESC[1m"
+  private val CYAN = "$ESC[36m"
+  private val DIM = "$ESC[2m"
+
+  private val SPINNER_FRAMES = listOf("⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏")
+  private var spinnerIdx = 0
+  private var occupiedLines = 0
+  private var lastPrintedMs = 0L
+
   val executor = Executors.newFixedThreadPool(threadCount) { runnable ->
     val thread = synchronized(this) {
       val threadId = threads.size
@@ -64,9 +78,31 @@ class ExecutorTracker(threadCount: Int) {
   }
 
   fun printStatus() = synchronized(this) {
-    threadTasks.forEachIndexed { index, buildTask ->
-      println("$index: ${buildTask.toString().take(100)}")
+    val now = System.currentTimeMillis()
+    if (now - lastPrintedMs < 100) return
+    lastPrintedMs = now
+
+    // 이전 출력 줄 지우기
+    if (occupiedLines > 0) {
+      repeat(occupiedLines) {
+        print(CURSOR_UP + ERASE_LINE + "\r")
+      }
     }
-    println()
+
+    val activeTasks = threadTasks.filterNotNull()
+    spinnerIdx = (spinnerIdx + 1) % SPINNER_FRAMES.size
+    val spinner = "$CYAN${SPINNER_FRAMES[spinnerIdx]}$RESET"
+
+    if (activeTasks.isEmpty()) {
+      println("$spinner $DIM대기 중...$RESET")
+      occupiedLines = 1
+    } else {
+      val lines = activeTasks.map { task ->
+        val label = task.toString().take(100)
+        "$spinner $BOLD$label$RESET"
+      }
+      lines.forEach { println(it) }
+      occupiedLines = lines.size
+    }
   }
 }
