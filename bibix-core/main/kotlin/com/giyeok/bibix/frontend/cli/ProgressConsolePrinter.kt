@@ -4,28 +4,45 @@ import com.giyeok.bibix.frontend.ProgressNotifier
 import com.giyeok.bibix.frontend.ThreadState
 import com.giyeok.bibix.interpreter.BibixInterpreter
 import com.giyeok.bibix.interpreter.task.Task
+import com.github.ajalt.mordant.animation.animation
+import com.github.ajalt.mordant.rendering.TextColors.cyan
+import com.github.ajalt.mordant.rendering.TextColors.red
+import com.github.ajalt.mordant.rendering.TextStyles.bold
+import com.github.ajalt.mordant.rendering.TextStyles.dim
+import com.github.ajalt.mordant.terminal.Terminal
+import com.github.ajalt.mordant.widgets.Text
 import java.time.Duration
 import java.time.Instant
 
 class ProgressConsolePrinter : ProgressNotifier {
   private lateinit var interpreter: BibixInterpreter
   private var lastPrinted: Instant? = null
-  private var occupiedLines = 0
   private var spinnerIdx = 0
 
-  // ANSI escape codes
-  private val ESC = "\u001B"
-  private val CURSOR_UP = "$ESC[1A"
-  private val ERASE_LINE = "$ESC[2K"
-  private val RESET = "$ESC[0m"
-  private val BOLD = "$ESC[1m"
-  private val CYAN = "$ESC[36m"
-  private val YELLOW = "$ESC[33m"
-  private val GREEN = "$ESC[32m"
-  private val RED = "$ESC[31m"
-  private val DIM = "$ESC[2m"
-
-  private val SPINNER_FRAMES = listOf("⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏")
+  private val spinnerFrames = listOf("⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏")
+  private val terminal = Terminal()
+  private val animation = terminal.animation<List<ThreadState?>> { states ->
+    val activeStates = states.filterNotNull().filter { it.isActive }
+    val now = Instant.now()
+    val spinner = cyan(spinnerFrames[spinnerIdx])
+    Text(buildString {
+      if (activeStates.isEmpty()) {
+        append("$spinner ${dim("대기 중...")}")
+      } else {
+        activeStates.forEachIndexed { i, state ->
+          if (i > 0) appendLine()
+          val label = bold(taskShortLabel(state.task))
+          val msg = when (state.lastMessage.level) {
+            "E" -> red(state.lastMessage.message.take(80))
+            "V" -> dim(state.lastMessage.message.take(80))
+            else -> state.lastMessage.message.take(80)
+          }
+          val elapsed = formatElapsed(Duration.between(state.lastMessage.time, now))
+          append("$spinner $label  $msg  ${dim("($elapsed)")}")
+        }
+      }
+    })
+  }
 
   override fun setInterpreter(interpreter: BibixInterpreter) {
     this.interpreter = interpreter
@@ -35,46 +52,8 @@ class ProgressConsolePrinter : ProgressNotifier {
     val now = Instant.now()
     if (lastPrinted == null || Duration.between(lastPrinted, now) >= Duration.ofMillis(100)) {
       lastPrinted = now
-
-      // 이전에 출력한 줄들을 위로 올라가며 지운다
-      if (occupiedLines > 0) {
-        repeat(occupiedLines) {
-          print(CURSOR_UP + ERASE_LINE + "\r")
-        }
-      }
-
-      val progresses = progressesFunc()
-      val activeStates = progresses.filterNotNull().filter { it.isActive }
-
-      spinnerIdx = (spinnerIdx + 1) % SPINNER_FRAMES.size
-      val spinner = CYAN + SPINNER_FRAMES[spinnerIdx] + RESET
-
-      val lines = mutableListOf<String>()
-
-      if (activeStates.isEmpty()) {
-        lines += "$spinner $DIM대기 중...$RESET"
-      } else {
-        for (state in activeStates) {
-          val taskLabel = taskShortLabel(state.task)
-          val level = state.lastMessage.level
-          val msg = state.lastMessage.message.take(80)
-
-          val levelColor = when (level) {
-            "E" -> RED
-            "V" -> DIM
-            else -> ""
-          }
-          val msgColored = "$levelColor$msg$RESET"
-
-          val elapsed = Duration.between(state.lastMessage.time, now)
-          val elapsedStr = formatElapsed(elapsed)
-
-          lines += "$spinner $BOLD$taskLabel$RESET  $msgColored  $DIM($elapsedStr)$RESET"
-        }
-      }
-
-      occupiedLines = lines.size
-      lines.forEach { println(it) }
+      spinnerIdx = (spinnerIdx + 1) % spinnerFrames.size
+      animation.update(progressesFunc())
     }
   }
 
